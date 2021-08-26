@@ -329,10 +329,17 @@ bool DataBroker::run_time(
     return true;
 }
 
-// TODO decide default qos
 eprosima::fastdds::dds::DomainParticipantQos DataBroker::default_participant_qos()
 {
-    return eprosima::fastdds::dds::DomainParticipantQos();
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos;
+
+    // By default use UDPv4 due to communication failures between dockers sharing the network with the host
+    // When it is solved in Fast-DDS delete the following lines and use the default builtin transport.
+    participant_qos.transport().use_builtin_transports = false;
+    auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+    participant_qos.transport().user_transports.push_back(udp_transport);
+
+    return participant_qos;
 }
 
 // TODO add debug traces

@@ -239,20 +239,25 @@ eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
     return eprosima::fastrtps::rtps::GUID_t().guidPrefix;
 }
 
-// TODO decide default QoS
 eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::default_datawriter_qos()
 {
-    eprosima::fastdds::dds::DataWriterQos dw;
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos;
 
-    dw.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
+    datawriter_qos.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
+    datawriter_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    datawriter_qos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
 
-    return dw;
+    return datawriter_qos;
 }
 
-// TODO decide default QoS
 eprosima::fastdds::dds::DataReaderQos DataBrokerParticipant::default_datareader_qos()
 {
-    return eprosima::fastdds::dds::DataReaderQos();
+    eprosima::fastdds::dds::DataReaderQos datareader_qos;
+
+    datareader_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+    datareader_qos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+
+    return datareader_qos;
 }
 
 bool DataBrokerParticipant::register_type_()
