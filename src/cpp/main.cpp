@@ -55,7 +55,6 @@ int main(
 #endif // if defined(_WIN32)
 
     eprosima::fastdds::dds::Log::SetVerbosity(eprosima::fastdds::dds::Log::Kind::Info);
-    eprosima::fastdds::dds::Log::SetCategoryFilter(std::regex("DATABROKER"));
 
     DataBrokerConfiguration configuration;
 

@@ -121,3 +121,15 @@ target_link_libraries(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+
+###############################################################################
+# Logging.
+###############################################################################
+option(LOG_INFO OFF)
+
+if (LOG_INFO)
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE FASTDDS_ENFORCE_LOG_INFO
+        PRIVATE HAVE_LOG_NO_INFO=0
+        )
+endif()
