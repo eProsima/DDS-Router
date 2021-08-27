@@ -13,31 +13,43 @@
 // limitations under the License.
 
 /**
- * @file utils.hpp
+ * @file utils.cpp
  *
  */
 
-#ifndef EPROSIMA_DATABROKER_UTILS_HPP
-#define EPROSIMA_DATABROKER_UTILS_HPP
-
-#include <algorithm>
-#include <string>
-#include <vector>
+#include <databroker/utils.hpp>
 
 namespace eprosima {
 namespace databroker {
 namespace utils {
 
 void to_lowercase(
-        std::string& input);
+        std::string& input)
+{
+    std::for_each(input.begin(), input.end(), [](char & c){c = ::tolower(c);});
+}
 
 bool split_string(
-        std::string input,
-        std::vector<std::string>& output,
-        const std::string& separator = ";");
+    std::string input,
+    std::vector<std::string>& output,
+    const std::string& separator /* = ";" */)
+{
+    while(input.size()){
+        int index = input.find(separator);
+        if(index != std::string::npos)
+        {
+            output.push_back(input.substr(0, index));
+            input = input.substr(index + separator.size());
+        }
+        else
+        {
+            output.push_back(input);
+            break;
+        }
+    }
+    return true;
+}
 
 } /* namespace utils */
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* EPROSIMA_DATABROKER_UTILS_HPP */

@@ -49,19 +49,21 @@ public:
 
     virtual bool init(eprosima::fastdds::dds::DomainParticipantQos pqos);
 
+    virtual bool enable();
+
     virtual void add_topic(const std::string& topic_name);
 
     virtual void stop_topic(const std::string& topic);
 
     virtual void send_data(const std::string& topic, StdString& data);
 
-    eprosima::fastrtps::rtps::GUID_t guid();
+    virtual eprosima::fastrtps::rtps::GuidPrefix_t guid();
 
 protected:
 
-    eprosima::fastdds::dds::DataWriterQos default_datawriter_qos();
+    virtual eprosima::fastdds::dds::DataWriterQos default_datawriter_qos();
 
-    eprosima::fastdds::dds::DataReaderQos default_datareader_qos();
+    virtual eprosima::fastdds::dds::DataReaderQos default_datareader_qos();
 
     virtual bool register_type_();
 
@@ -77,7 +79,7 @@ protected:
 
     virtual eprosima::fastdds::dds::Topic* get_topic_(const std::string& topic_name);
 
-    std::string name();
+    virtual std::string name();
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
     eprosima::fastdds::dds::Publisher* publisher_;

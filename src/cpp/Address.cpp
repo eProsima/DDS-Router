@@ -18,6 +18,7 @@
  */
 
 #include <databroker/Address.hpp>
+#include <databroker/utils.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -54,7 +55,7 @@ Address::Address(
     : Address()
 {
     std::vector<std::string> fields;
-    Address::split_string(address, fields, ",");
+    utils::split_string(address, fields, ",");
 
     if (fields.size() == 2)
     {
@@ -84,14 +85,13 @@ Address::~Address()
 {
 }
 
-std::vector<Address> Address::read_addresses_vector(const std::string& addresses)
+bool Address::read_addresses_vector(const std::string& addresses, std::vector<Address>& result)
 {
-    std::vector<Address> result;
     std::vector<std::string> addresses_split;
 
-    if (!Address::split_string(addresses, addresses_split))
+    if (!utils::split_string(addresses, addresses_split))
     {
-        return result;
+        return false;
     }
 
     for (auto add : addresses_split)
@@ -99,7 +99,7 @@ std::vector<Address> Address::read_addresses_vector(const std::string& addresses
         result.push_back(Address(add));
     }
 
-    return result;
+    return true;
 }
 
 Address Address::read_address(const std::string& address)
@@ -141,27 +141,6 @@ std::string Address::guid_to_string(
     std::ostringstream guid_ostream;
     guid_ostream << guid;
     return guid_ostream.str();
-}
-
-bool Address::split_string(
-    std::string input,
-    std::vector<std::string>& output,
-    const std::string& separator /* = ";" */)
-{
-    while(input.size()){
-        int index = input.find(separator);
-        if(index != std::string::npos)
-        {
-            output.push_back(input.substr(0, index));
-            input = input.substr(index + separator.size());
-        }
-        else
-        {
-            output.push_back(input);
-            break;
-        }
-    }
-    return true;
 }
 
 } /* namespace databroker */

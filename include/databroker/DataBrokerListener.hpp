@@ -70,9 +70,15 @@ public:
 
 protected:
 
+    bool is_topic_blocked(const std::string& topic);
+
     eprosima::fastrtps::rtps::GuidPrefix_t local_guid_prefix_();
 
     eprosima::fastrtps::rtps::GuidPrefix_t wan_guid_prefix_();
+
+    void retrieve_local_guid_prefix_();
+
+    void retrieve_wan_guid_prefix_();
 
     static std::string demangle_topic(const std::string& topic_name);
 
@@ -87,6 +93,8 @@ protected:
     bool wan_guid_set_;
 
     bool enabled_;
+
+    std::recursive_mutex mutex_;
 };
 
 } /* namespace databroker */

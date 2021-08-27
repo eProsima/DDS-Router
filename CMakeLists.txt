@@ -63,7 +63,8 @@ find_package(fastrtps REQUIRED)
 # include thirdparty header-only projects
 include_directories(thirdparty/optionparser)
 
-option(FASTDDS_ENFORCE_LOG_INFO ON)
+# include external required packages
+find_package(yaml-cpp REQUIRED)
 
 ###############################################################################
 # Compile library.
@@ -113,7 +114,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}>)
 
-target_link_libraries(${PROJECT_NAME} fastrtps fastcdr)
+target_link_libraries(${PROJECT_NAME}
+    fastrtps
+    fastcdr
+    yaml-cpp)
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR})

@@ -53,7 +53,7 @@ struct Address
 
     virtual ~Address();
 
-    static std::vector<Address> read_addresses_vector(const std::string& addresses);
+    static bool read_addresses_vector(const std::string& addresses, std::vector<Address>& result);
 
     static Address read_address(const std::string& address);
 
@@ -69,11 +69,6 @@ struct Address
 
     static std::string guid_to_string(
         const eprosima::fastrtps::rtps::GuidPrefix_t& guid);
-
-    static bool split_string(
-        std::string input,
-        std::vector<std::string>& output,
-        const std::string& separator = ";");
 
     std::string ip;
     uint32_t port;
