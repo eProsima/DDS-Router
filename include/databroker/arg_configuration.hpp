@@ -246,7 +246,7 @@ const option::Descriptor usage[] = {
     {
         optionIndex::SERVER_GUID,
         0,
-        "s",
+        "g",
         "server-guid",
         Arg::String,
         "  -g \t--server-guid\t<string>  \t" \
@@ -338,7 +338,7 @@ const option::Descriptor usage[] = {
         "  -i \t--interactive\t  \t" \
         "Use DataBroker in interactive mode. " \
         "Interactive mode keeps DataBroker listening for user commands. " \
-        "These commands are 'help', 'add <topic>', 'remove <topic', 'exit'."
+        "These commands are 'help', 'add <topic>', 'remove <topic>', 'exit'."
     },
 
     { 0, 0, 0, 0, 0, 0 }

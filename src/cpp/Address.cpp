@@ -17,6 +17,8 @@
  *
  */
 
+#include <fastdds/dds/log/Log.hpp>
+
 #include <databroker/Address.hpp>
 #include <databroker/utils.hpp>
 
@@ -72,7 +74,7 @@ Address::Address(
     }
     else
     {
-        std::cerr << "ERROR Incorrect address format " << address << std::endl;
+        logError(DATABROKER_ADDRESS, "ERROR Incorrect address format " << address);
     }
 }
 

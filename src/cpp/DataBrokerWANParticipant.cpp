@@ -13,23 +13,28 @@
 // limitations under the License.
 
 /**
- * @file DataBrokerROSParticipant.cpp
+ * @file DataBrokerParticipant.cpp
  *
  */
 
-#include <databroker/DataBrokerROSParticipant.hpp>
+#include <databroker/DataBrokerWANParticipant.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-std::string DataBrokerROSParticipant::type_name_()
+DataBrokerWANParticipant::DataBrokerWANParticipant(
+        eprosima::fastdds::dds::DomainParticipantListener* listener,
+        eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
+        uint32_t domain /* = 0 */,
+        std::string name /* = "DataBroker Participant" */)
+    : DataBrokerParticipant(listener_, domain, name)
+    , guid_(server_guid)
 {
-    return "std_msgs::msg::dds_::String_";
 }
 
-std::string DataBrokerROSParticipant::topic_mangled_(const std::string& topic_name)
+eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerWANParticipant::guid()
 {
-    return "rt/" + topic_name;
+    return guid_;
 }
 
 } /* namespace databroker */

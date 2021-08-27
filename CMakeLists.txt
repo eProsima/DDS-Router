@@ -97,9 +97,6 @@ file(GLOB HEADERS
         "include/**/*.hxx"
     )
 
-message(STATUS "Sources: ${SOURCES}")
-message(STATUS "Headers: ${HEADERS}")
-
 add_executable(${PROJECT_NAME}
         # src/cpp/main.cpp
         ${SOURCES}
@@ -125,7 +122,12 @@ install(TARGETS ${PROJECT_NAME}
 ###############################################################################
 # Logging.
 ###############################################################################
-option(LOG_INFO OFF)
+# In Debug, log set to ON
+if ("Debug" STREQUAL ${CMAKE_BUILD_TYPE})
+    option(LOG_INFO "Compile logInfo messages" ON)
+else()
+    option(LOG_INFO "Compile logInfo messages" OFF)
+endif()
 
 if (LOG_INFO)
     target_compile_definitions(${PROJECT_NAME}

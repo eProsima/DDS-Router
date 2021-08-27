@@ -67,15 +67,9 @@ protected:
 
     virtual bool register_type_();
 
-    virtual std::string topic_mangled_(const std::string& topic_name)
-    {
-        return topic_name;
-    }
+    virtual std::string topic_mangled_(const std::string& topic_name);
 
-    virtual std::string type_name_()
-    {
-        return "StdString";
-    }
+    virtual std::string type_name_();
 
     virtual eprosima::fastdds::dds::Topic* get_topic_(const std::string& topic_name);
 

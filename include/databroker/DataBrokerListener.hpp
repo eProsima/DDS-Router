@@ -65,9 +65,6 @@ public:
             eprosima::fastdds::dds::DomainParticipant* participant,
             eprosima::fastrtps::rtps::WriterDiscoveryInfo&& info) override;
 
-    void on_data_on_readers(
-            eprosima::fastdds::dds::Subscriber* sub) override;
-
 protected:
 
     bool is_topic_blocked(const std::string& topic);

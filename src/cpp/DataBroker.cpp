@@ -87,13 +87,13 @@ bool DataBroker::init(const std::vector<std::string>& initial_topics)
 
         if (!wan_->init(wan_participant_qos()))
         {
-            std::cerr << "Error initializing External Participant" << std::endl;
+            logError(DATABROKER, "Error initializing External Participant");
             return false;
         }
 
         if (!local_->init(default_participant_qos()))
         {
-            std::cerr << "Error initializing Internal Participant" << std::endl;
+            logError(DATABROKER, "Error initializing Internal Participant");
             return false;
         }
 
@@ -103,13 +103,13 @@ bool DataBroker::init(const std::vector<std::string>& initial_topics)
         // Enabled Participants
         if (!wan_->enable())
         {
-            std::cerr << "Error enabling External Participant" << std::endl;
+            logError(DATABROKER, "Error enabling External Participant");
             return false;
         }
 
         if (!local_->enable())
         {
-            std::cerr << "Error enabling Internal Participant" << std::endl;
+            logError(DATABROKER, "Error enabling Internal Participant");
             return false;
         }
 
@@ -131,7 +131,7 @@ bool DataBroker::run(bool interactive, uint32_t seconds /* = 0 */)
 {
     if (!enabled_)
     {
-        std::cerr << "WARNING DataBroker running without being initialized" << std::endl;
+        logError(DATABROKER, "WARNING DataBroker running without being initialized");
         init(std::vector<std::string>());
     }
 
@@ -253,7 +253,7 @@ Command DataBroker::read_command(const std::string& input, std::vector<std::stri
         // Should not have arguments
         if (args.size() != it->second.size())
         {
-            std::cout << "Command " << command_word << " requires " << it->second.size() << " arguments" << std::endl;
+            std::cout << "Command " << command_word << " requires " << it->second.size() << " argument(s)" << std::endl;
             command = ERROR;
         }
     }
