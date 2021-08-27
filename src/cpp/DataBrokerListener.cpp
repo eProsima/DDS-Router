@@ -70,6 +70,8 @@ void DataBrokerListener::on_data_available(
 {
     StdString data;
     eprosima::fastdds::dds::SampleInfo info;
+    std::string topic_name = demangle_topic(reader->get_topicdescription()->get_name());
+
     if (reader->take_next_sample(&data, &info) == ReturnCode_t::RETCODE_OK)
     {
         if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
@@ -79,32 +81,40 @@ void DataBrokerListener::on_data_available(
                 info.sample_identity.writer_guid().guidPrefix != wan_guid_prefix_())
             {
                 // If the topic of this reader is blocked, read the data but not send it
-                if (!is_topic_blocked(reader->get_topicdescription()->get_name()))
+                if (!is_topic_blocked(topic_name))
                 {
                     if (reader->guid().guidPrefix == local_guid_prefix_())
                     {
-                        logInfo(DATABROKER_LISTENER, "Local Reader in topic " << reader->get_topicdescription()->get_name()
+                        logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << topic_name
                             << " received data " << data.x() << " from " << info.sample_identity.writer_guid() << "\n"
                             << "Sending through Remote Writer.");
-                        wan_->send_data(demangle_topic(reader->get_topicdescription()->get_name()), data);
+
+                        // Sending data through WAN
+                        wan_->send_data(demangle_topic(topic_name), data);
                     }
                     else if (reader->guid().guidPrefix == wan_guid_prefix_())
                     {
-                        logInfo(DATABROKER_LISTENER, "Remote Reader in topic " << reader->get_topicdescription()->get_name()
+                        logInfo(DATABROKER_LISTENER_EXTERNAL, "Remote Reader in topic " << topic_name
                             << " received data " << data.x() << " from " << info.sample_identity.writer_guid()  << "\n"
                             << "Sending through Local Writer.");
-                        local_->send_data(demangle_topic(reader->get_topicdescription()->get_name()), data);
+
+                        // Sending data locally
+                        local_->send_data(demangle_topic(topic_name), data);
                     }
                     else
                     {
-                        logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+                        logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
                     }
+                }
+                else
+                {
+                    logInfo(DATABROKER_LISTENER, "Data in topic blocked " << topic_name);
                 }
             }
         }
         else
         {
-            logError(DATABROKER_LISTENER, "WARNING - Listener received a non ALIVE instace");
+            logWarning(DATABROKER_LISTENER, "Listener received a non ALIVE instace");
         }
     }
 }
@@ -117,34 +127,36 @@ void DataBrokerListener::on_subscription_matched(
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Local Reader in topic " << reader->get_topicdescription()->get_name()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << reader->get_topicdescription()->get_name()
                 << " matched with Writer " << info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "External Reader in topic " << reader->get_topicdescription()->get_name()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
+                << reader->get_topicdescription()->get_name()
                 << " matched with Writer " << info.last_publication_handle);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
     else
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Local Reader in topic " << reader->get_topicdescription()->get_name()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << reader->get_topicdescription()->get_name()
                 << " unmatched with Writer " << info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "External Reader in topic " << reader->get_topicdescription()->get_name()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
+                << reader->get_topicdescription()->get_name()
                 << " unmatched with Writer " << info.last_publication_handle);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
 }
@@ -157,34 +169,34 @@ void DataBrokerListener::on_publication_matched(
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Local Writer in topic " << writer->get_topic()->get_name()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Local Writer in topic " << writer->get_topic()->get_name()
                 << " matched with Reader " << info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "External Writer in topic " << writer->get_topic()->get_name()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Writer in topic " << writer->get_topic()->get_name()
                 << " matched with Reader " << info.last_subscription_handle);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
     else
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Local Writer in topic " << writer->get_topic()->get_name()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Local Writer in topic " << writer->get_topic()->get_name()
                 << " unmatched with Reader " << info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "External Writer in topic " << writer->get_topic()->get_name()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Writer in topic " << writer->get_topic()->get_name()
                 << " unmatched with Reader " << info.last_subscription_handle);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
 }
@@ -197,15 +209,16 @@ void DataBrokerListener::on_participant_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Participant found in local network with guid: " << info.info.m_guid);
+            logInfo(DATABROKER_LISTENER_LOCAL, "Participant found in local network with guid: " << info.info.m_guid);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Participant found in external network with guid: " << info.info.m_guid);
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Participant found in external network with guid: "
+                << info.info.m_guid);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
     else if (info.status == eprosima::fastrtps::rtps::ParticipantDiscoveryInfo::DROPPED_PARTICIPANT ||
@@ -213,15 +226,16 @@ void DataBrokerListener::on_participant_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Participant dropped in local network with guid: " << info.info.m_guid);
+            logInfo(DATABROKER_LISTENER_LOCAL, "Participant dropped in local network with guid: " << info.info.m_guid);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Participant dropped in external network with guid: " << info.info.m_guid);
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Participant dropped in external network with guid: "
+                << info.info.m_guid);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
 }
@@ -234,34 +248,37 @@ void DataBrokerListener::on_subscriber_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Subscription found in local network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Subscription found in local network in topic " << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Subscription found in external network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription found in external network in topic "
+                    << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
     else if (info.status == eprosima::fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Subscription dropped in local network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Subscription dropped in local network in topic "
+                    << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Subscription dropped in external network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription dropped in external network in topic "
+                    << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
 }
@@ -274,34 +291,36 @@ void DataBrokerListener::on_publisher_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Publication found in local network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Publication found in local network in topic " << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Publication found in external network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication found in external network in topic "
+                    << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
     else if (info.status == eprosima::fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Publication dropped in local network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_LOCAL, "Publication dropped in local network in topic " << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER, "Publication dropped in external network in topic " << info.info.topicName()
+            logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication dropped in external network in topic "
+                    << info.info.topicName()
                     << " with guid " << info.info.guid().guidPrefix);
         }
         else
         {
-            logError(DATABROKER_LISTENER, "ERROR - Listener attached to a non related Participant");
+            logError(DATABROKER_LISTENER, "Listener attached to a non related Participant");
         }
     }
 }

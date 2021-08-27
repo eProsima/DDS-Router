@@ -83,7 +83,7 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         // Set actual name stored
         pqos.name(fastrtps::string_255(name()));
 
-        logInfo(DATABROKER_PARTICIPANT, "Initialiing Participant '" << name() << "'");
+        logInfo(DATABROKER_PARTICIPANT, "Initializing Participant '" << name() << "'");
 
         // Mask is needed to block data_on_readers callback
         eprosima::fastdds::dds::StatusMask mask =
@@ -101,7 +101,7 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
 
         if (!participant_)
         {
-            logError(DATABROKER_PARTICIPANT, "ERROR initializing Participant '" << pqos.name() << "'");
+            logError(DATABROKER_PARTICIPANT, "Error initializing Participant '" << pqos.name() << "'");
             return false;
         }
 
@@ -109,7 +109,7 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         publisher_ = participant_->create_publisher(eprosima::fastdds::dds::PUBLISHER_QOS_DEFAULT);
         if (!publisher_)
         {
-            logError(DATABROKER_PARTICIPANT, "ERROR initializing Publisher for Participant " << pqos.name());
+            logError(DATABROKER_PARTICIPANT, "Error initializing Publisher for Participant " << pqos.name());
             return false;
         }
 
@@ -117,7 +117,7 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         subscriber_ = participant_->create_subscriber(eprosima::fastdds::dds::SUBSCRIBER_QOS_DEFAULT);
         if (!subscriber_)
         {
-            logError(DATABROKER_PARTICIPANT, "ERROR initializing Subscriber for Participant " << pqos.name());
+            logError(DATABROKER_PARTICIPANT, "Error initializing Subscriber for Participant " << pqos.name());
             return false;
         }
 
@@ -177,7 +177,7 @@ void DataBrokerParticipant::add_topic(const std::string& topic_name)
 
     if (!topic)
     {
-        logError(DATABROKER_PARTICIPANT, "ERROR creating topic " << topic_name << " in Participant " << name());
+        logError(DATABROKER_PARTICIPANT, "Error creating topic " << topic_name << " in Participant " << name());
         return;
     }
 
@@ -190,6 +190,8 @@ void DataBrokerParticipant::add_topic(const std::string& topic_name)
     eprosima::fastdds::dds::DataReader* dr = subscriber_->create_datareader(
         topic,
         default_datareader_qos());
+
+    logInfo(DATABROKER_PARTICIPANT, "Topic '" << topic_name << "' created in Participant " << name());
 
     // Store new objects in maps
     topics_[topic_name] = topic;
@@ -211,13 +213,15 @@ void DataBrokerParticipant::send_data(const std::string& topic, StdString& data)
     auto it = datawriters_.find(topic);
     if (it == datawriters_.end())
     {
-        logError(DATABROKER_PARTICIPANT, "ERROR datawriter missing for topic " << topic << " in Participant " << name());
+        logError(DATABROKER_PARTICIPANT, "Datawriter missing for topic " << topic << " in Participant " << name());
         return;
     }
 
     eprosima::fastdds::dds::DataWriter* dw = it->second;
 
     dw->write(&data);
+
+    logInfo(DATABROKER_PARTICIPANT, "Data sent in topic " << topic << " in Participant " << name());
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
@@ -258,7 +262,8 @@ eprosima::fastdds::dds::Topic* DataBrokerParticipant::get_topic_(const std::stri
 {
     std::string topic_mangled = topic_mangled_(topic_name);
 
-    logInfo(DATABROKER_PARTICIPANT, "Adding topic '" << topic_mangled << "' endpoints for Participant " << name());
+    logInfo(DATABROKER_PARTICIPANT, "Adding topic mangled '" << topic_mangled << "' endpoints for Participant "
+            << name());
 
     // Create Topic
     return participant_->create_topic(

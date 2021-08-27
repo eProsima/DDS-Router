@@ -392,7 +392,8 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
 
         pqos.wire_protocol().builtin.discovery_config.m_DiscoveryServers.push_back(server_attr);
 
-        logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator);
+        logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator
+                << " to server " << server_attr.guidPrefix);
     }
 
     // TODO decide the discovery server configuration
@@ -409,7 +410,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
 
 void DataBroker::add_topic_(const std::string& topic)
 {
-    std::cout << "Adding topic " << topic << " to whitelist" << std::endl;
+    logInfo(DATABROKER,"Adding topic " << topic << " to whitelist");
 
     topics_[topic] = true;
     local_->add_topic(topic);
