@@ -27,7 +27,7 @@ DataBrokerWANParticipant::DataBrokerWANParticipant(
         eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
         uint32_t domain /* = 0 */,
         std::string name /* = "DataBroker Participant" */)
-    : DataBrokerParticipant(listener_, domain, name)
+    : DataBrokerParticipant(listener, domain, name)
     , guid_(server_guid)
 {
 }
