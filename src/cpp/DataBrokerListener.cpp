@@ -42,6 +42,10 @@ bool DataBrokerListener::init(
     local_ = local;
     wan_ = wan;
 
+    // Get their guids so in callbacks there is no need to access Participants
+    retrieve_wan_guid_prefix_();
+    retrieve_local_guid_prefix_();
+
     // Should always be true
     std::cout << "Listener initialized" << std::endl;
     return local_ && wan_;
@@ -49,7 +53,14 @@ bool DataBrokerListener::init(
 
 void DataBrokerListener::block_topic(const std::string& topic)
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     topics_blocked_.insert(topic);
+}
+
+bool DataBrokerListener::is_topic_blocked(const std::string& topic)
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return topics_blocked_.find(topic) != topics_blocked_.end();
 }
 
 void DataBrokerListener::on_data_available(
@@ -66,7 +77,7 @@ void DataBrokerListener::on_data_available(
                 info.sample_identity.writer_guid().guidPrefix != wan_guid_prefix_())
             {
                 // If the topic of this reader is blocked, read the data but not send it
-                if (topics_blocked_.find(reader->get_topicdescription()->get_name()) == topics_blocked_.end())
+                if (!is_topic_blocked(reader->get_topicdescription()->get_name()))
                 {
                     if (reader->guid().guidPrefix == local_guid_prefix_())
                     {
@@ -86,6 +97,9 @@ void DataBrokerListener::on_data_available(
                     }
                     else
                     {
+                        std::cerr << "local: " << local_guid_prefix_() << std::endl;
+                        std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+                        std::cerr << "this guid: " << reader->guid().guidPrefix << std::endl;
                         std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
                     }
                 }
@@ -116,6 +130,9 @@ void DataBrokerListener::on_subscription_matched(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << reader->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -133,6 +150,9 @@ void DataBrokerListener::on_subscription_matched(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << reader->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -156,6 +176,9 @@ void DataBrokerListener::on_publication_matched(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << writer->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -173,6 +196,9 @@ void DataBrokerListener::on_publication_matched(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << writer->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -194,6 +220,9 @@ void DataBrokerListener::on_participant_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -210,6 +239,9 @@ void DataBrokerListener::on_participant_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -233,6 +265,9 @@ void DataBrokerListener::on_subscriber_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -250,6 +285,9 @@ void DataBrokerListener::on_subscriber_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -273,6 +311,9 @@ void DataBrokerListener::on_publisher_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -290,6 +331,9 @@ void DataBrokerListener::on_publisher_discovery(
         }
         else
         {
+            std::cerr << "local: " << local_guid_prefix_() << std::endl;
+            std::cerr << "wan: " << wan_guid_prefix_() << std::endl;
+            std::cerr << "this guid: " << participant->guid().guidPrefix << std::endl;
             std::cerr << "ERROR - Listener attached to a non related Participant" << std::endl;
         }
     }
@@ -297,28 +341,38 @@ void DataBrokerListener::on_publisher_discovery(
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerListener::local_guid_prefix_()
 {
-    if (!local_guid_set_)
-    {
-        local_guid_ = local_->guid().guidPrefix;
-        if (local_guid_ != eprosima::fastrtps::rtps::GUID_t::unknown().guidPrefix)
-        {
-            local_guid_set_ = true;
-        }
-    }
+    retrieve_local_guid_prefix_();
     return local_guid_;
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerListener::wan_guid_prefix_()
 {
+    retrieve_wan_guid_prefix_();
+    return wan_guid_;
+}
+
+void DataBrokerListener::retrieve_local_guid_prefix_()
+{
+    if (!local_guid_set_)
+    {
+        local_guid_ = local_->guid();
+        if (local_guid_ != eprosima::fastrtps::rtps::GUID_t::unknown().guidPrefix)
+        {
+            local_guid_set_ = true;
+        }
+    }
+}
+
+void DataBrokerListener::retrieve_wan_guid_prefix_()
+{
     if (!wan_guid_set_)
     {
-        wan_guid_ = wan_->guid().guidPrefix;
+        wan_guid_ = wan_->guid();
         if (wan_guid_ != eprosima::fastrtps::rtps::GUID_t::unknown().guidPrefix)
         {
             wan_guid_set_ = true;
         }
     }
-    return wan_guid_;
 }
 
 void DataBrokerListener::on_data_on_readers(

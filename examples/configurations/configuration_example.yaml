@@ -1,0 +1,49 @@
+# ARGUMENTS
+# Id of the local Discovery Server (seed to generate the GUID)
+# In case 'server-guid' is set, this value is discarded
+server-id: 0
+
+# GUID of the local Discovery Server
+server-guid: "01.0f.00.44.41.54.41.5f.42.52.4f.4b"
+
+# Addresses where the Discovery Server will listen for WAN connections
+listening-addresses:
+  [
+    {
+      ip: "127.0.0.1",
+      port: 11800
+    }
+  ]
+
+# Addresses where the Discovery Server will connect with
+connection-addresses:
+  [
+    {
+      ip: "127.0.0.1",
+      port: 11801,
+      id: 1
+    },
+    {
+      ip: "127.0.0.1",
+      port: 11802,
+      guid: "01.0f.02.44.41.54.41.5f.42.52.4f.4b"
+    }
+  ]
+
+# Topics allowed to be retransmitted
+whitelist:
+  [
+    "HelloWorld",
+    "chatter"
+  ]
+
+# FLAGS
+# Connect to an internal ROS2 network
+ros: true
+
+# Use UDP connection
+udp: false
+
+# Launch application in interactive mode: listening for user commands
+# This option is not compatible with running the application in background
+interactive: false

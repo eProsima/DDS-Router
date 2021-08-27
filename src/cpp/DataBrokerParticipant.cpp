@@ -127,12 +127,36 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         }
     }
 
-    enabled_ = true;
-
     std::cout << "DataBroker Participant with name " << pqos.name() << " initialized" << std::endl;
 
     return true;
 }
+
+bool DataBrokerParticipant::enable()
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (!enabled_)
+    {
+        if (!participant_)
+        {
+            logError(DATABROKER, "Trying to enable a Participant not created");
+            return false;
+        }
+
+        if (participant_->enable() != eprosima::fastrtps::types::ReturnCode_t::RETCODE_OK)
+        {
+            logError(DATABROKER, "Fail to enable Participant " << name());
+            return false;
+        }
+        enabled_ = true;
+    }
+
+    std::cout << "DataBroker Participant with name " << name() << " enabled" << std::endl;
+
+    return true;
+}
+
 
 void DataBrokerParticipant::add_topic(const std::string& topic_name)
 {
@@ -194,15 +218,15 @@ void DataBrokerParticipant::send_data(const std::string& topic, StdString& data)
     dw->write(&data);
 }
 
-eprosima::fastrtps::rtps::GUID_t DataBrokerParticipant::guid()
+eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (participant_)
     {
-        return participant_->guid();
+        return participant_->guid().guidPrefix;
     }
 
-    return eprosima::fastrtps::rtps::GUID_t();
+    return eprosima::fastrtps::rtps::GUID_t().guidPrefix;
 }
 
 // TODO decide default QoS

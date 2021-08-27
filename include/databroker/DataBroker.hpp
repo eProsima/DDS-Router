@@ -31,6 +31,34 @@
 namespace eprosima {
 namespace databroker {
 
+enum Command
+{
+    UNKNOWN,
+    ERROR,
+    CMD_HELP,
+    ADD_TOPIC,
+    REMOVE_TOPIC,
+    LOAD_FILE,
+    EXIT,
+    VOID
+};
+
+static const std::map<Command, std::list<std::string>> COMMAND_KEYWORDS =
+    {
+        {Command::CMD_HELP, {"h","help"}},
+        {Command::ADD_TOPIC, {"a","add"}},
+        {Command::REMOVE_TOPIC, {"r","rm", "remove"}},
+        {Command::LOAD_FILE, {"l","load"}},
+        {Command::EXIT, {"e","q", "exit", "quit"}}
+    };
+
+static const std::map<Command, std::vector<std::string>> COMMAND_ARGUMENTS =
+    {
+        {Command::ADD_TOPIC, {"topic_name"}},
+        {Command::REMOVE_TOPIC, {"topic_name"}},
+        {Command::LOAD_FILE, {"file_path"}}
+    };
+
 class DataBroker
 {
 public:
@@ -62,6 +90,12 @@ protected:
 
     bool run_interactive();
     bool run_time(const uint32_t seconds);
+
+    Command read_command(const std::string& input, std::vector<std::string>& args);
+
+    void print_help();
+
+    void stop_all_topics();
 
 private:
 

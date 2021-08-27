@@ -20,7 +20,7 @@ Those without default value are flags and their default value is _non active_ or
 
 - `-h / --help`
 - `-s / --server-id (0)`
-- `-g / --server-guid (0)`
+- `-g / --server-guid ("01.0f.00.44.41.54.41.5f.42.52.4f.4b")`
 - `-l / --listening-addresses ("127.0.0.1,11800") ["127.0.0.1,11800;192.168.1.1,11801"]`
 - `-c / --connection-addresses ("") ["127.0.0.1,11800,0;192.168.1.1,11801,1"]`
 - `-i / --interactive`
@@ -34,7 +34,7 @@ Those without default value are flags and their default value is _non active_ or
 ### Commands
 
 - `h / help`
-- `a / add <topic name>`
-- `r / rm / remove <topic name>`
+- `a / add <topic name> [<topic name> ...]`
+- `r / rm / remove <topic name> [<topic name> ---]`
 - `l / load [<file path>]`
 - `e / x / exit`
