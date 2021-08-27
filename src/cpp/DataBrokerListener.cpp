@@ -53,13 +53,15 @@ bool DataBrokerListener::init(
     return local_ && wan_;
 }
 
-void DataBrokerListener::block_topic(const std::string& topic)
+void DataBrokerListener::block_topic(
+        const std::string& topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     topics_blocked_.insert(topic);
 }
 
-bool DataBrokerListener::is_topic_blocked(const std::string& topic)
+bool DataBrokerListener::is_topic_blocked(
+        const std::string& topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     return topics_blocked_.find(topic) != topics_blocked_.end();
@@ -78,7 +80,7 @@ void DataBrokerListener::on_data_available(
         {
             // If it comes from this DataBroker, avoid resending it (is still read to remove it)
             if (info.sample_identity.writer_guid().guidPrefix != local_guid_prefix_() &&
-                info.sample_identity.writer_guid().guidPrefix != wan_guid_prefix_())
+                    info.sample_identity.writer_guid().guidPrefix != wan_guid_prefix_())
             {
                 // If the topic of this reader is blocked, read the data but not send it
                 if (!is_topic_blocked(topic_name))
@@ -86,8 +88,8 @@ void DataBrokerListener::on_data_available(
                     if (reader->guid().guidPrefix == local_guid_prefix_())
                     {
                         logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << topic_name
-                            << " received data " << data.x() << " from " << info.sample_identity.writer_guid() << "\n"
-                            << "Sending through Remote Writer.");
+                                                                                    << " received data " << data.x() << " from " << info.sample_identity.writer_guid() << "\n"
+                                                                                    << "Sending through Remote Writer.");
 
                         // Sending data through WAN
                         wan_->send_data(demangle_topic(topic_name), data);
@@ -95,8 +97,8 @@ void DataBrokerListener::on_data_available(
                     else if (reader->guid().guidPrefix == wan_guid_prefix_())
                     {
                         logInfo(DATABROKER_LISTENER_EXTERNAL, "Remote Reader in topic " << topic_name
-                            << " received data " << data.x() << " from " << info.sample_identity.writer_guid()  << "\n"
-                            << "Sending through Local Writer.");
+                                                                                        << " received data " << data.x() << " from " << info.sample_identity.writer_guid()  << "\n"
+                                                                                        << "Sending through Local Writer.");
 
                         // Sending data locally
                         local_->send_data(demangle_topic(topic_name), data);
@@ -127,14 +129,16 @@ void DataBrokerListener::on_subscription_matched(
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << reader->get_topicdescription()->get_name()
-                << " matched with Writer " << info.last_publication_handle);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Local Reader in topic " << reader->get_topicdescription()->get_name()
+                                             << " matched with Writer " <<
+                            info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
-                << reader->get_topicdescription()->get_name()
-                << " matched with Writer " << info.last_publication_handle);
+                    << reader->get_topicdescription()->get_name()
+                    << " matched with Writer " << info.last_publication_handle);
         }
         else
         {
@@ -145,14 +149,16 @@ void DataBrokerListener::on_subscription_matched(
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Local Reader in topic " << reader->get_topicdescription()->get_name()
-                << " unmatched with Writer " << info.last_publication_handle);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Local Reader in topic " << reader->get_topicdescription()->get_name()
+                                             << " unmatched with Writer " <<
+                            info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
-                << reader->get_topicdescription()->get_name()
-                << " unmatched with Writer " << info.last_publication_handle);
+                    << reader->get_topicdescription()->get_name()
+                    << " unmatched with Writer " << info.last_publication_handle);
         }
         else
         {
@@ -169,13 +175,17 @@ void DataBrokerListener::on_publication_matched(
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Local Writer in topic " << writer->get_topic()->get_name()
-                << " matched with Reader " << info.last_subscription_handle);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Local Writer in topic " << writer->get_topic()->get_name()
+                                             << " matched with Reader " <<
+                            info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Writer in topic " << writer->get_topic()->get_name()
-                << " matched with Reader " << info.last_subscription_handle);
+            logInfo(DATABROKER_LISTENER_EXTERNAL,
+                    "External Writer in topic " << writer->get_topic()->get_name()
+                                                << " matched with Reader " <<
+                            info.last_subscription_handle);
         }
         else
         {
@@ -186,13 +196,17 @@ void DataBrokerListener::on_publication_matched(
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Local Writer in topic " << writer->get_topic()->get_name()
-                << " unmatched with Reader " << info.last_subscription_handle);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Local Writer in topic " << writer->get_topic()->get_name()
+                                             << " unmatched with Reader " <<
+                            info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Writer in topic " << writer->get_topic()->get_name()
-                << " unmatched with Reader " << info.last_subscription_handle);
+            logInfo(DATABROKER_LISTENER_EXTERNAL,
+                    "External Writer in topic " << writer->get_topic()->get_name()
+                                                << " unmatched with Reader " <<
+                            info.last_subscription_handle);
         }
         else
         {
@@ -214,7 +228,7 @@ void DataBrokerListener::on_participant_discovery(
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL, "Participant found in external network with guid: "
-                << info.info.m_guid);
+                    << info.info.m_guid);
         }
         else
         {
@@ -231,7 +245,7 @@ void DataBrokerListener::on_participant_discovery(
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL, "Participant dropped in external network with guid: "
-                << info.info.m_guid);
+                    << info.info.m_guid);
         }
         else
         {
@@ -248,8 +262,10 @@ void DataBrokerListener::on_subscriber_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Subscription found in local network in topic " << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Subscription found in local network in topic " << info.info.topicName()
+                                                                    << " with guid " <<
+                            info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -291,8 +307,10 @@ void DataBrokerListener::on_publisher_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Publication found in local network in topic " << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Publication found in local network in topic " << info.info.topicName()
+                                                                   << " with guid " <<
+                            info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -309,8 +327,10 @@ void DataBrokerListener::on_publisher_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Publication dropped in local network in topic " << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            logInfo(DATABROKER_LISTENER_LOCAL,
+                    "Publication dropped in local network in topic " << info.info.topicName()
+                                                                     << " with guid " <<
+                            info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -361,7 +381,8 @@ void DataBrokerListener::retrieve_wan_guid_prefix_()
     }
 }
 
-std::string DataBrokerListener::demangle_topic(const std::string& topic_name)
+std::string DataBrokerListener::demangle_topic(
+        const std::string& topic_name)
 {
     if (topic_name.rfind("rt/", 0) == 0)
     {

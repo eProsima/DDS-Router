@@ -32,10 +32,10 @@ namespace databroker {
 
 
 static const std::regex ipv4_port_id("(^(((((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5}),([0-9]+));)*"
-                              "((((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5}),([0-9]+))?))$)");
+        "((((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5}),([0-9]+))?))$)");
 
 static const std::regex ipv4_port("(^(((((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5}));)*"
-                              "(((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5})))$)");
+        "(((([0-9]{1,3}\\.){1,3})([0-9]{1,3})),([0-9]{1,5})))$)");
 
 /*
  * Struct to parse the executable arguments
@@ -171,6 +171,7 @@ struct Arg : public option::Arg
         }
         return option::ARG_ILLEGAL;
     }
+
 };
 
 /*
@@ -227,7 +228,7 @@ const option::Descriptor usage[] = {
         "  -t \t--time\t<uint>  \t" \
         "Time in seconds that the DataBroker will run before shutting down. " \
         "With interactive mode active, this argument will not be used. " \
-        "With argument 0 will run forever. "\
+        "With argument 0 will run forever. " \
         "Default: 0"
     },
 

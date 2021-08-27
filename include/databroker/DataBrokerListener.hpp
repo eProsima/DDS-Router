@@ -39,7 +39,8 @@ public:
             DataBrokerParticipant* local,
             DataBrokerParticipant* wan);
 
-    void block_topic(const std::string& topic);
+    void block_topic(
+            const std::string& topic);
 
     void on_data_available(
             eprosima::fastdds::dds::DataReader* reader) override;
@@ -67,7 +68,8 @@ public:
 
 protected:
 
-    bool is_topic_blocked(const std::string& topic);
+    bool is_topic_blocked(
+            const std::string& topic);
 
     eprosima::fastrtps::rtps::GuidPrefix_t local_guid_prefix_();
 
@@ -77,7 +79,8 @@ protected:
 
     void retrieve_wan_guid_prefix_();
 
-    static std::string demangle_topic(const std::string& topic_name);
+    static std::string demangle_topic(
+            const std::string& topic_name);
 
     DataBrokerParticipant* local_;
     DataBrokerParticipant* wan_;

@@ -26,17 +26,21 @@ namespace utils {
 void to_lowercase(
         std::string& input)
 {
-    std::for_each(input.begin(), input.end(), [](char & c){c = ::tolower(c);});
+    std::for_each(input.begin(), input.end(), [](char& c)
+            {
+                c = ::tolower(c);
+            });
 }
 
 bool split_string(
-    std::string input,
-    std::vector<std::string>& output,
-    const std::string& separator /* = ";" */)
+        std::string input,
+        std::vector<std::string>& output,
+        const std::string& separator /* = ";" */)
 {
-    while(input.size()){
+    while (input.size())
+    {
         int index = input.find(separator);
-        if(index != std::string::npos)
+        if (index != std::string::npos)
         {
             output.push_back(input.substr(0, index));
             input = input.substr(index + separator.size());

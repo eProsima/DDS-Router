@@ -176,7 +176,7 @@ int main(
     }
 
     // Run DataBroker instance
-    if(db.run(configuration.interactive, configuration.seconds))
+    if (db.run(configuration.interactive, configuration.seconds))
     {
         return 0;
     }

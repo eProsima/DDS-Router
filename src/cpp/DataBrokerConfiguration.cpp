@@ -63,14 +63,14 @@ bool DataBrokerConfiguration::load_configuration_file(
         // Server ID
         if (config_node["server-id"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>() );
+            configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>());
             logInfo(DATABROKER_CONFIGURATION, "Server GUID set by id: " << configuration.server_guid);
         }
 
         // Server GUID
         if (config_node["server-guid"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>() );
+            configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>());
             logInfo(DATABROKER_CONFIGURATION, "Server GUID set: " << configuration.server_guid);
         }
 

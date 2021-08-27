@@ -27,7 +27,8 @@ std::string DataBrokerROSParticipant::type_name_()
     return "std_msgs::msg::dds_::String_";
 }
 
-std::string DataBrokerROSParticipant::topic_mangled_(const std::string& topic_name)
+std::string DataBrokerROSParticipant::topic_mangled_(
+        const std::string& topic_name)
 {
     return "rt/" + topic_name;
 }

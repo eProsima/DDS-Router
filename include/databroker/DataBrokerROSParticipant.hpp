@@ -35,7 +35,8 @@ protected:
 
     std::string type_name_() override;
 
-    std::string topic_mangled_(const std::string& topic_name) override;
+    std::string topic_mangled_(
+            const std::string& topic_name) override;
 };
 
 } /* namespace databroker */

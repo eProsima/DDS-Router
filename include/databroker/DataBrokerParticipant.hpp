@@ -41,21 +41,26 @@ class DataBrokerParticipant
 public:
 
     DataBrokerParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener,
-        uint32_t domain = 0,
-        std::string name = "DataBroker Participant");
+            eprosima::fastdds::dds::DomainParticipantListener* listener,
+            uint32_t domain = 0,
+            std::string name = "DataBroker Participant");
 
     virtual ~DataBrokerParticipant();
 
-    virtual bool init(eprosima::fastdds::dds::DomainParticipantQos pqos);
+    virtual bool init(
+            eprosima::fastdds::dds::DomainParticipantQos pqos);
 
     virtual bool enable();
 
-    virtual void add_topic(const std::string& topic_name);
+    virtual void add_topic(
+            const std::string& topic_name);
 
-    virtual void stop_topic(const std::string& topic);
+    virtual void stop_topic(
+            const std::string& topic);
 
-    virtual void send_data(const std::string& topic, StdString& data);
+    virtual void send_data(
+            const std::string& topic,
+            StdString& data);
 
     virtual eprosima::fastrtps::rtps::GuidPrefix_t guid();
 
@@ -67,11 +72,13 @@ protected:
 
     virtual bool register_type_();
 
-    virtual std::string topic_mangled_(const std::string& topic_name);
+    virtual std::string topic_mangled_(
+            const std::string& topic_name);
 
     virtual std::string type_name_();
 
-    virtual eprosima::fastdds::dds::Topic* get_topic_(const std::string& topic_name);
+    virtual eprosima::fastdds::dds::Topic* get_topic_(
+            const std::string& topic_name);
 
     virtual std::string name();
 
