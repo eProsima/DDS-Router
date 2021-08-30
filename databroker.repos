@@ -21,5 +21,5 @@ repositories:
         version: master
     databroker:
         type: git
-        url: https://gitlab.intranet.eprosima.com/rapyuta/databroker
-        version: master
+        url: https://github.com/eProsima/databroker
+        version: main
