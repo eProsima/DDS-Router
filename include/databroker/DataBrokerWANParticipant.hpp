@@ -33,16 +33,9 @@ public:
             eprosima::fastdds::dds::DomainParticipantListener* listener,
             eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
             uint32_t domain = 0,
-            std::string name = "DataBroker Participant")
-        : DataBrokerParticipant(listener, domain, name)
-        , guid_(server_guid)
-    {
-    }
+            std::string name = "DataBroker Participant");
 
-    eprosima::fastrtps::rtps::GuidPrefix_t guid() override
-    {
-        return guid_;
-    }
+    eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
 
 protected:
 

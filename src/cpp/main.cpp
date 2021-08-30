@@ -55,7 +55,6 @@ int main(
 #endif // if defined(_WIN32)
 
     eprosima::fastdds::dds::Log::SetVerbosity(eprosima::fastdds::dds::Log::Kind::Info);
-    eprosima::fastdds::dds::Log::SetCategoryFilter(std::regex("DATABROKER"));
 
     DataBrokerConfiguration configuration;
 
@@ -105,7 +104,7 @@ int main(
                 case optionIndex::WHITELIST:
                     if (!utils::split_string(opt.arg, configuration.active_topics))
                     {
-                        std::cerr << "Error parsing whitelist" << std::endl;
+                        logError(DATABROKER, "Error parsing whitelist");
                         return 10;
                     }
                     break;
@@ -126,7 +125,7 @@ int main(
                     configuration.listening_addresses.clear();
                     if (!Address::read_addresses_vector(opt.arg, configuration.listening_addresses))
                     {
-                        std::cerr << "Error parsing listening addreses" << std::endl;
+                        logError(DATABROKER, "Error parsing listening addreses");
                         return 10;
                     }
                     break;
@@ -135,7 +134,7 @@ int main(
                     configuration.connection_addresses.clear();
                     if (!Address::read_addresses_vector(opt.arg, configuration.connection_addresses))
                     {
-                        std::cerr << "Error parsing connection addreses" << std::endl;
+                        logError(DATABROKER, "Error parsing connection addreses");
                         return 10;
                     }
                     break;
@@ -172,12 +171,12 @@ int main(
     // Configure DataBroker
     if (!db.init(configuration.active_topics))
     {
-        std::cerr << "Error initializing DataBroker" << std::endl;
+        logError(DATABROKER, "Error initializing DataBroker");
         return 2;
     }
 
     // Run DataBroker instance
-    if(db.run(configuration.interactive, configuration.seconds))
+    if (db.run(configuration.interactive, configuration.seconds))
     {
         return 0;
     }

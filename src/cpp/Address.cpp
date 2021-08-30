@@ -17,6 +17,8 @@
  *
  */
 
+#include <fastdds/dds/log/Log.hpp>
+
 #include <databroker/Address.hpp>
 #include <databroker/utils.hpp>
 
@@ -72,7 +74,7 @@ Address::Address(
     }
     else
     {
-        std::cerr << "ERROR Incorrect address format " << address << std::endl;
+        logError(DATABROKER_ADDRESS, "ERROR Incorrect address format " << address);
     }
 }
 
@@ -85,7 +87,9 @@ Address::~Address()
 {
 }
 
-bool Address::read_addresses_vector(const std::string& addresses, std::vector<Address>& result)
+bool Address::read_addresses_vector(
+        const std::string& addresses,
+        std::vector<Address>& result)
 {
     std::vector<std::string> addresses_split;
 
@@ -102,12 +106,14 @@ bool Address::read_addresses_vector(const std::string& addresses, std::vector<Ad
     return true;
 }
 
-Address Address::read_address(const std::string& address)
+Address Address::read_address(
+        const std::string& address)
 {
     return Address(address);
 }
 
-bool Address::correct_ip(const std::string& ip)
+bool Address::correct_ip(
+        const std::string& ip)
 {
     // TODO
     return false;
@@ -119,7 +125,7 @@ eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server()
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
-    uint8_t id)
+        uint8_t id)
 {
     eprosima::fastrtps::rtps::GuidPrefix_t guid;
     std::istringstream(SERVER_DEFAULT_GUID) >> guid;
@@ -128,7 +134,7 @@ eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
-    const std::string& server_guid)
+        const std::string& server_guid)
 {
     eprosima::fastrtps::rtps::GuidPrefix_t guid;
     std::istringstream(server_guid) >> guid;
@@ -136,7 +142,7 @@ eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
 }
 
 std::string Address::guid_to_string(
-    const eprosima::fastrtps::rtps::GuidPrefix_t& guid)
+        const eprosima::fastrtps::rtps::GuidPrefix_t& guid)
 {
     std::ostringstream guid_ostream;
     guid_ostream << guid;

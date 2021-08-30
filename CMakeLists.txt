@@ -97,9 +97,6 @@ file(GLOB HEADERS
         "include/**/*.hxx"
     )
 
-message(STATUS "Sources: ${SOURCES}")
-message(STATUS "Headers: ${HEADERS}")
-
 add_executable(${PROJECT_NAME}
         # src/cpp/main.cpp
         ${SOURCES}
@@ -121,3 +118,21 @@ target_link_libraries(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+
+###############################################################################
+# Logging.
+###############################################################################
+# In Debug, log set to ON
+if ("Debug" STREQUAL ${CMAKE_BUILD_TYPE})
+    option(LOG_INFO "Compile logInfo messages" ON)
+else()
+    option(LOG_INFO "Compile logInfo messages" OFF)
+endif()
+
+if (LOG_INFO)
+    message(STATUS "Compiling logInfo messages for Databroker")
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE FASTDDS_ENFORCE_LOG_INFO
+        PRIVATE HAVE_LOG_NO_INFO=0
+        )
+endif()

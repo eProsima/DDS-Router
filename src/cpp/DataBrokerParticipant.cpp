@@ -42,6 +42,8 @@ DataBrokerParticipant::~DataBrokerParticipant()
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
+    logInfo(DATABROKER_PARTICIPANT, "Destroying Participant " << name());
+
     if (enabled_)
     {
         for (auto writer : datawriters_)
@@ -72,7 +74,8 @@ DataBrokerParticipant::~DataBrokerParticipant()
     // Warning: Do not destroy the Listener, as it is not created in this class
 }
 
-bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pqos)
+bool DataBrokerParticipant::init(
+        eprosima::fastdds::dds::DomainParticipantQos pqos)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -81,25 +84,25 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         // Set actual name stored
         pqos.name(fastrtps::string_255(name()));
 
-        std::cout << "DEBUG initialiing Participant '" << name() << "'" << std::endl;
+        logInfo(DATABROKER_PARTICIPANT, "Initializing Participant '" << name() << "'");
 
         // Mask is needed to block data_on_readers callback
         eprosima::fastdds::dds::StatusMask mask =
-            eprosima::fastdds::dds::StatusMask::data_available() <<
-            eprosima::fastdds::dds::StatusMask::subscription_matched() <<
-            eprosima::fastdds::dds::StatusMask::publication_matched();
+                eprosima::fastdds::dds::StatusMask::data_available() <<
+                eprosima::fastdds::dds::StatusMask::subscription_matched() <<
+                eprosima::fastdds::dds::StatusMask::publication_matched();
 
         // Create Participant
         participant_ =
-            eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(
-                domain_,
-                pqos,
-                listener_,
-                mask);
+                eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(
+            domain_,
+            pqos,
+            listener_,
+            mask);
 
         if (!participant_)
         {
-            std::cerr << "ERROR initializing Participant '" << pqos.name() << "'" << std::endl;
+            logError(DATABROKER_PARTICIPANT, "Error initializing Participant '" << pqos.name() << "'");
             return false;
         }
 
@@ -107,7 +110,7 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         publisher_ = participant_->create_publisher(eprosima::fastdds::dds::PUBLISHER_QOS_DEFAULT);
         if (!publisher_)
         {
-            std::cerr << "ERROR initializing Publisher for Participant " << pqos.name() << std::endl;
+            logError(DATABROKER_PARTICIPANT, "Error initializing Publisher for Participant " << pqos.name());
             return false;
         }
 
@@ -115,19 +118,19 @@ bool DataBrokerParticipant::init(eprosima::fastdds::dds::DomainParticipantQos pq
         subscriber_ = participant_->create_subscriber(eprosima::fastdds::dds::SUBSCRIBER_QOS_DEFAULT);
         if (!subscriber_)
         {
-            std::cerr << "ERROR initializing Subscriber for Participant " << pqos.name() << std::endl;
+            logError(DATABROKER_PARTICIPANT, "Error initializing Subscriber for Participant " << pqos.name());
             return false;
         }
 
         // Registergin type
-        if(!register_type_())
+        if (!register_type_())
         {
-            logError(DATABROKER, "Error registering type in Participant " << name());
+            logError(DATABROKER_PARTICIPANT, "Error registering type in Participant " << name());
             return false;
         }
     }
 
-    std::cout << "DataBroker Participant with name " << pqos.name() << " initialized" << std::endl;
+    logInfo(DATABROKER_PARTICIPANT, "DataBroker Participant with name " << pqos.name() << " initialized");
 
     return true;
 }
@@ -140,25 +143,25 @@ bool DataBrokerParticipant::enable()
     {
         if (!participant_)
         {
-            logError(DATABROKER, "Trying to enable a Participant not created");
+            logError(DATABROKER_PARTICIPANT, "Trying to enable a Participant not created");
             return false;
         }
 
         if (participant_->enable() != eprosima::fastrtps::types::ReturnCode_t::RETCODE_OK)
         {
-            logError(DATABROKER, "Fail to enable Participant " << name());
+            logError(DATABROKER_PARTICIPANT, "Fail to enable Participant " << name());
             return false;
         }
         enabled_ = true;
     }
 
-    std::cout << "DataBroker Participant with name " << name() << " enabled" << std::endl;
+    logInfo(DATABROKER_PARTICIPANT, "DataBroker Participant with name " << name() << " enabled");
 
     return true;
 }
 
-
-void DataBrokerParticipant::add_topic(const std::string& topic_name)
+void DataBrokerParticipant::add_topic(
+        const std::string& topic_name)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -175,7 +178,7 @@ void DataBrokerParticipant::add_topic(const std::string& topic_name)
 
     if (!topic)
     {
-        std::cerr << "ERROR creating topic " << topic_name << std::endl;
+        logError(DATABROKER_PARTICIPANT, "Error creating topic " << topic_name << " in Participant " << name());
         return;
     }
 
@@ -189,19 +192,24 @@ void DataBrokerParticipant::add_topic(const std::string& topic_name)
         topic,
         default_datareader_qos());
 
+    logInfo(DATABROKER_PARTICIPANT, "Topic '" << topic_name << "' created in Participant " << name());
+
     // Store new objects in maps
     topics_[topic_name] = topic;
     datawriters_[topic_name] = dw;
     datareaders_[topic_name] = dr;
 }
 
-void DataBrokerParticipant::stop_topic(const std::string& topic)
+void DataBrokerParticipant::stop_topic(
+        const std::string& topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     // TODO
 }
 
-void DataBrokerParticipant::send_data(const std::string& topic, StdString& data)
+void DataBrokerParticipant::send_data(
+        const std::string& topic,
+        StdString& data)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -209,13 +217,15 @@ void DataBrokerParticipant::send_data(const std::string& topic, StdString& data)
     auto it = datawriters_.find(topic);
     if (it == datawriters_.end())
     {
-        std::cerr << "ERROR datawriter missing for topic " << topic << std::endl;
+        logError(DATABROKER_PARTICIPANT, "Datawriter missing for topic " << topic << " in Participant " << name());
         return;
     }
 
     eprosima::fastdds::dds::DataWriter* dw = it->second;
 
     dw->write(&data);
+
+    logInfo(DATABROKER_PARTICIPANT, "Data sent in topic " << topic << " in Participant " << name());
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
@@ -252,22 +262,35 @@ bool DataBrokerParticipant::register_type_()
     return type_.register_type(participant_) == eprosima::fastrtps::types::ReturnCode_t::RETCODE_OK;
 }
 
-eprosima::fastdds::dds::Topic* DataBrokerParticipant::get_topic_(const std::string& topic_name)
+eprosima::fastdds::dds::Topic* DataBrokerParticipant::get_topic_(
+        const std::string& topic_name)
 {
     std::string topic_mangled = topic_mangled_(topic_name);
 
-    std::cout << "Adding topic '" << topic_mangled << "' endpoints for Participant " << name() << std::endl;
+    logInfo(DATABROKER_PARTICIPANT, "Adding topic mangled '" << topic_mangled << "' endpoints for Participant "
+                                                             << name());
 
     // Create Topic
     return participant_->create_topic(
-            topic_mangled,
-            type_name_(),
-            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        topic_mangled,
+        type_name_(),
+        eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 }
 
 std::string DataBrokerParticipant::name()
 {
     return name_;
+}
+
+std::string DataBrokerParticipant::topic_mangled_(
+        const std::string& topic_name)
+{
+    return topic_name;
+}
+
+std::string DataBrokerParticipant::type_name_()
+{
+    return "StdString";
 }
 
 } /* namespace databroker */

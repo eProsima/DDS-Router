@@ -34,41 +34,46 @@ namespace databroker {
 struct Address
 {
     Address(
-        const std::string& ip,
-        const uint32_t port,
-        const eprosima::fastrtps::rtps::GuidPrefix_t& guid);
+            const std::string& ip,
+            const uint32_t port,
+            const eprosima::fastrtps::rtps::GuidPrefix_t& guid);
 
     Address(
-        const std::string& ip,
-        const uint32_t port,
-        const uint32_t id);
+            const std::string& ip,
+            const uint32_t port,
+            const uint32_t id);
 
     Address(
-        const std::string& ip,
-        const uint32_t port,
-        const std::string& guid);
+            const std::string& ip,
+            const uint32_t port,
+            const std::string& guid);
 
-    Address(const std::string& address);
+    Address(
+            const std::string& address);
     Address();
 
     virtual ~Address();
 
-    static bool read_addresses_vector(const std::string& addresses, std::vector<Address>& result);
+    static bool read_addresses_vector(
+            const std::string& addresses,
+            std::vector<Address>& result);
 
-    static Address read_address(const std::string& address);
+    static Address read_address(
+            const std::string& address);
 
-    static bool correct_ip(const std::string& ip);
+    static bool correct_ip(
+            const std::string& ip);
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server();
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server(
-        uint8_t id);
+            uint8_t id);
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server(
-        const std::string& server_guid);
+            const std::string& server_guid);
 
     static std::string guid_to_string(
-        const eprosima::fastrtps::rtps::GuidPrefix_t& guid);
+            const eprosima::fastrtps::rtps::GuidPrefix_t& guid);
 
     std::string ip;
     uint32_t port;

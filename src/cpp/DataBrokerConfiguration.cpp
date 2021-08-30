@@ -58,16 +58,20 @@ bool DataBrokerConfiguration::load_configuration_file(
     {
         config_node = YAML::LoadFile(file_path);
 
+        logInfo(DATABROKER_CONFIGURATION, "Loaded file " << file_path);
+
         // Server ID
         if (config_node["server-id"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>() );
+            configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>());
+            logInfo(DATABROKER_CONFIGURATION, "Server GUID set by id: " << configuration.server_guid);
         }
 
         // Server GUID
         if (config_node["server-guid"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>() );
+            configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>());
+            logInfo(DATABROKER_CONFIGURATION, "Server GUID set: " << configuration.server_guid);
         }
 
         // Listening address
@@ -86,6 +90,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                     new_address.port = address["port"].as<uint32_t>();
                 }
                 configuration.listening_addresses.push_back(new_address);
+                logInfo(DATABROKER_CONFIGURATION, "Adding address to listening addresses: " << new_address);
             }
         }
 
@@ -113,6 +118,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                     new_address.guid = Address::guid_server(address["guid"].as<std::string>());
                 }
                 configuration.connection_addresses.push_back(new_address);
+                logInfo(DATABROKER_CONFIGURATION, "Adding address to connection addresses: " << new_address);
             }
         }
 
@@ -123,6 +129,7 @@ bool DataBrokerConfiguration::load_configuration_file(
             for (auto topic : config_node["whitelist"])
             {
                 configuration.active_topics.push_back(topic.as<std::string>());
+                logInfo(DATABROKER_CONFIGURATION, "Adding topic to whitelist: " << topic.as<std::string>());
             }
         }
 
@@ -130,25 +137,37 @@ bool DataBrokerConfiguration::load_configuration_file(
         if (config_node["ros"])
         {
             configuration.ros = config_node["ros"].as<bool>();
+            if (configuration.ros)
+            {
+                logInfo(DATABROKER_CONFIGURATION, "Connecting to a local ROS2 network");
+            }
         }
 
         // UDP
         if (config_node["udp"])
         {
             configuration.udp = config_node["udp"].as<bool>();
+            if (configuration.ros)
+            {
+                logInfo(DATABROKER_CONFIGURATION, "Using UDP transport");
+            }
         }
 
         // Interactive
         if (config_node["interactive"])
         {
             configuration.interactive = config_node["interactive"].as<bool>();
+            if (configuration.ros)
+            {
+                logInfo(DATABROKER_CONFIGURATION, "Set interactive mode");
+            }
         }
     }
     catch (const std::exception& e)
     {
         if (verbose)
         {
-            logError(DATABROKER, e.what());
+            logError(DATABROKER_CONFIGURATION, e.what());
         }
         else
         {

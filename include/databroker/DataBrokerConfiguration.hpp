@@ -47,8 +47,8 @@ struct DataBrokerConfiguration
 
     static bool load_configuration_file(
             DataBrokerConfiguration& configuration,
-            const std::string& file_path="DATABROKER_CONFIGURATION.yaml",
-            bool verbose=false);
+            const std::string& file_path = "DATABROKER_CONFIGURATION.yaml",
+            bool verbose = false);
 };
 
 } /* namespace databroker */

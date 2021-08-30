@@ -68,7 +68,8 @@ DataBroker::~DataBroker()
     delete local_;
 }
 
-bool DataBroker::init(const std::vector<std::string>& initial_topics)
+bool DataBroker::init(
+        const std::vector<std::string>& initial_topics)
 {
     logInfo(DATABROKER, "Intializing DataBroker");
 
@@ -87,13 +88,13 @@ bool DataBroker::init(const std::vector<std::string>& initial_topics)
 
         if (!wan_->init(wan_participant_qos()))
         {
-            std::cerr << "Error initializing External Participant" << std::endl;
+            logError(DATABROKER, "Error initializing External Participant");
             return false;
         }
 
         if (!local_->init(default_participant_qos()))
         {
-            std::cerr << "Error initializing Internal Participant" << std::endl;
+            logError(DATABROKER, "Error initializing Internal Participant");
             return false;
         }
 
@@ -103,13 +104,13 @@ bool DataBroker::init(const std::vector<std::string>& initial_topics)
         // Enabled Participants
         if (!wan_->enable())
         {
-            std::cerr << "Error enabling External Participant" << std::endl;
+            logError(DATABROKER, "Error enabling External Participant");
             return false;
         }
 
         if (!local_->enable())
         {
-            std::cerr << "Error enabling Internal Participant" << std::endl;
+            logError(DATABROKER, "Error enabling Internal Participant");
             return false;
         }
 
@@ -127,11 +128,13 @@ bool DataBroker::init(const std::vector<std::string>& initial_topics)
     return true;
 }
 
-bool DataBroker::run(bool interactive, uint32_t seconds /* = 0 */)
+bool DataBroker::run(
+        bool interactive,
+        uint32_t seconds /* = 0 */)
 {
     if (!enabled_)
     {
-        std::cerr << "WARNING DataBroker running without being initialized" << std::endl;
+        logError(DATABROKER, "WARNING DataBroker running without being initialized");
         init(std::vector<std::string>());
     }
 
@@ -144,6 +147,7 @@ bool DataBroker::run(bool interactive, uint32_t seconds /* = 0 */)
         return run_time(seconds);
     }
 }
+
 bool DataBroker::run_interactive()
 {
     logInfo(DATABROKER, "Running DataBroker in interactive mode");
@@ -209,7 +213,9 @@ bool DataBroker::run_interactive()
     return true;
 }
 
-Command DataBroker::read_command(const std::string& input, std::vector<std::string>& args)
+Command DataBroker::read_command(
+        const std::string& input,
+        std::vector<std::string>& args)
 {
     // Get all arguments
     args.clear();
@@ -253,7 +259,7 @@ Command DataBroker::read_command(const std::string& input, std::vector<std::stri
         // Should not have arguments
         if (args.size() != it->second.size())
         {
-            std::cout << "Command " << command_word << " requires " << it->second.size() << " arguments" << std::endl;
+            std::cout << "Command " << command_word << " requires " << it->second.size() << " argument(s)" << std::endl;
             command = ERROR;
         }
     }
@@ -306,7 +312,8 @@ void DataBroker::print_help()
     std::cout << print << std::endl;
 }
 
-bool DataBroker::run_time(const uint32_t seconds)
+bool DataBroker::run_time(
+        const uint32_t seconds)
 {
     if (seconds > 0)
     {
@@ -346,7 +353,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
             // In case of using TCP, configure listening address
             // Create TCPv4 transport
             std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+                    std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
 
             descriptor->add_listener_port(address.port);
             descriptor->set_WAN_address(address.ip);
@@ -392,7 +399,9 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
 
         pqos.wire_protocol().builtin.discovery_config.m_DiscoveryServers.push_back(server_attr);
 
-        logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator);
+        logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator
+                                                                                      << " to server " <<
+                        server_attr.guidPrefix);
     }
 
     // TODO decide the discovery server configuration
@@ -402,21 +411,23 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
 
     // Set this participant as a SERVER
     pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
-        fastrtps::rtps::DiscoveryProtocol::SERVER;
+            fastrtps::rtps::DiscoveryProtocol::SERVER;
 
     return pqos;
 }
 
-void DataBroker::add_topic_(const std::string& topic)
+void DataBroker::add_topic_(
+        const std::string& topic)
 {
-    std::cout << "Adding topic " << topic << " to whitelist" << std::endl;
+    logInfo(DATABROKER, "Adding topic " << topic << " to whitelist");
 
     topics_[topic] = true;
     local_->add_topic(topic);
     wan_->add_topic(topic);
 }
 
-void DataBroker::remove_topic_(const std::string& topic)
+void DataBroker::remove_topic_(
+        const std::string& topic)
 {
     topics_[topic] = false;
     listener_.block_topic(topic);

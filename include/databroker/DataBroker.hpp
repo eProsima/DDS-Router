@@ -44,39 +44,42 @@ enum Command
 };
 
 static const std::map<Command, std::list<std::string>> COMMAND_KEYWORDS =
-    {
-        {Command::CMD_HELP, {"h","help"}},
-        {Command::ADD_TOPIC, {"a","add"}},
-        {Command::REMOVE_TOPIC, {"r","rm", "remove"}},
-        {Command::LOAD_FILE, {"l","load"}},
-        {Command::EXIT, {"e","q", "exit", "quit"}}
-    };
+{
+    {Command::CMD_HELP, {"h", "help"}},
+    {Command::ADD_TOPIC, {"a", "add"}},
+    {Command::REMOVE_TOPIC, {"r", "rm", "remove"}},
+    {Command::LOAD_FILE, {"l", "load"}},
+    {Command::EXIT, {"e", "q", "exit", "quit"}}
+};
 
 static const std::map<Command, std::vector<std::string>> COMMAND_ARGUMENTS =
-    {
-        {Command::ADD_TOPIC, {"topic_name"}},
-        {Command::REMOVE_TOPIC, {"topic_name"}},
-        {Command::LOAD_FILE, {"file_path"}}
-    };
+{
+    {Command::ADD_TOPIC, {"topic_name"}},
+    {Command::REMOVE_TOPIC, {"topic_name"}},
+    {Command::LOAD_FILE, {"file_path"}}
+};
 
 class DataBroker
 {
 public:
 
     DataBroker(
-        const uint32_t domain,
-        const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
-        const std::vector<Address>& listening_address,
-        const std::vector<Address>& connection_addresses,
-        bool internal_ros,
-        bool udp);
+            const uint32_t domain,
+            const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
+            const std::vector<Address>& listening_address,
+            const std::vector<Address>& connection_addresses,
+            bool internal_ros,
+            bool udp);
 
     virtual ~DataBroker();
 
-    bool init(const std::vector<std::string>& initial_topics);
+    bool init(
+            const std::vector<std::string>& initial_topics);
 
     // 0 seconds means forever
-    bool run(bool interactive, const uint32_t seconds = 0);
+    bool run(
+            bool interactive,
+            const uint32_t seconds = 0);
 
 protected:
 
@@ -84,14 +87,19 @@ protected:
 
     eprosima::fastdds::dds::DomainParticipantQos wan_participant_qos();
 
-    void add_topic_(const std::string& topic);
+    void add_topic_(
+            const std::string& topic);
 
-    void remove_topic_(const std::string& topic);
+    void remove_topic_(
+            const std::string& topic);
 
     bool run_interactive();
-    bool run_time(const uint32_t seconds);
+    bool run_time(
+            const uint32_t seconds);
 
-    Command read_command(const std::string& input, std::vector<std::string>& args);
+    Command read_command(
+            const std::string& input,
+            std::vector<std::string>& args);
 
     void print_help();
 
