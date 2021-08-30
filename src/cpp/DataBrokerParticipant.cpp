@@ -256,7 +256,11 @@ eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
 
 eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::default_datawriter_qos()
 {
-    return eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos = eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
+
+    datawriter_qos.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
+
+    return datawriter_qos;
 }
 
 eprosima::fastdds::dds::DataReaderQos DataBrokerParticipant::default_datareader_qos()
