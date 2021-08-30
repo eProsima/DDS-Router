@@ -21,8 +21,6 @@
 #include <stdlib.h>     // for using the function sleep
 
 #include <fastdds/dds/log/Log.hpp>
-#include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
-#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 
 #include <databroker/DataBroker.hpp>
 #include <databroker/DataBrokerROSParticipant.hpp>
@@ -56,7 +54,7 @@ DataBroker::DataBroker(
     }
     else
     {
-        local_ = new DataBrokerParticipant(&listener_, domain, "Internal_DataBroker_Participant");
+        local_ = new DataBrokerLocalParticipant(&listener_, domain, "Internal_DataBroker_Participant");
     }
 }
 
@@ -86,13 +84,13 @@ bool DataBroker::init(
             return false;
         }
 
-        if (!wan_->init(wan_participant_qos()))
+        if (!wan_->init(wan_->wan_participant_qos(server_guid_, listening_addresses_, connection_addresses_, udp_)))
         {
             logError(DATABROKER, "Error initializing External Participant");
             return false;
         }
 
-        if (!local_->init(default_participant_qos()))
+        if (!local_->init(local_->default_participant_qos()))
         {
             logError(DATABROKER, "Error initializing Internal Participant");
             return false;
@@ -327,100 +325,6 @@ bool DataBroker::run_time(
     }
 
     return true;
-}
-
-eprosima::fastdds::dds::DomainParticipantQos DataBroker::default_participant_qos()
-{
-    eprosima::fastdds::dds::DomainParticipantQos participant_qos;
-
-    // By default use UDPv4 due to communication failures between dockers sharing the network with the host
-    // When it is solved in Fast-DDS delete the following lines and use the default builtin transport.
-    participant_qos.transport().use_builtin_transports = false;
-    auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
-    participant_qos.transport().user_transports.push_back(udp_transport);
-
-    return participant_qos;
-}
-
-// TODO add debug traces
-eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
-{
-    eprosima::fastdds::dds::DomainParticipantQos pqos = default_participant_qos();
-
-    // Configuring Server Guid
-    pqos.wire_protocol().prefix = server_guid_;
-
-    logInfo(DATABROKER, "External Discovery Server set with guid " << server_guid_);
-
-    for (auto address : listening_addresses_)
-    {
-        // Configuring transport
-        if (!udp_)
-        {
-            // In case of using TCP, configure listening address
-            // Create TCPv4 transport
-            std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                    std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
-
-            descriptor->add_listener_port(address.port);
-            descriptor->set_WAN_address(address.ip);
-
-            descriptor->sendBufferSize = 0;
-            descriptor->receiveBufferSize = 0;
-
-            pqos.transport().user_transports.push_back(descriptor);
-
-            logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
-        }
-
-        // Create Locator
-        eprosima::fastrtps::rtps::Locator_t locator;
-        locator.kind = udp_ ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
-
-        eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
-        eprosima::fastrtps::rtps::IPLocator::setWan(locator, address.ip);
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port);
-        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port);
-
-        pqos.wire_protocol().builtin.metatrafficUnicastLocatorList.push_back(locator);
-
-        logInfo(DATABROKER, "External Discovery Server configure listening locator " << locator);
-    }
-
-    // Configure connection addresses
-    for (auto address : connection_addresses_)
-    {
-        eprosima::fastrtps::rtps::RemoteServerAttributes server_attr;
-
-        // Set Server GUID
-        server_attr.guidPrefix = address.guid;
-
-        // Discovery server locator configuration TCP
-        eprosima::fastrtps::rtps::Locator_t locator;
-        locator.kind = udp_ ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
-
-        eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port);
-        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port);
-        server_attr.metatrafficUnicastLocatorList.push_back(locator);
-
-        pqos.wire_protocol().builtin.discovery_config.m_DiscoveryServers.push_back(server_attr);
-
-        logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator
-                                                                                      << " to server " <<
-                server_attr.guidPrefix);
-    }
-
-    // TODO decide the discovery server configuration
-    pqos.wire_protocol().builtin.discovery_config.leaseDuration = fastrtps::c_TimeInfinite;
-    pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod =
-            fastrtps::Duration_t(2, 0);
-
-    // Set this participant as a SERVER
-    pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
-            fastrtps::rtps::DiscoveryProtocol::SERVER;
-
-    return pqos;
 }
 
 void DataBroker::add_topic_(

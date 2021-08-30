@@ -21,6 +21,7 @@
 #define EPROSIMA_DATABROKER_DATABROKERWANPARTICIPANT_HPP
 
 #include <databroker/DataBrokerParticipant.hpp>
+#include <databroker/Address.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -36,6 +37,12 @@ public:
             std::string name = "DataBroker Participant");
 
     eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
+
+    eprosima::fastdds::dds::DomainParticipantQos wan_participant_qos(
+            const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
+            const std::vector<Address>& listening_addresses,
+            const std::vector<Address>& connection_addresses,
+            const bool& udp);
 
 protected:
 

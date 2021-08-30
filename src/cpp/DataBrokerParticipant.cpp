@@ -18,6 +18,8 @@
  */
 
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
+#include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 
 #include <StdString/StdStringPubSubTypes.h>
 
@@ -158,6 +160,19 @@ bool DataBrokerParticipant::enable()
     logInfo(DATABROKER_PARTICIPANT, "DataBroker Participant with name " << name() << " enabled");
 
     return true;
+}
+
+eprosima::fastdds::dds::DomainParticipantQos DataBrokerParticipant::default_participant_qos()
+{
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos;
+
+    // By default use UDPv4 due to communication failures between dockers sharing the network with the host
+    // When it is solved in Fast-DDS delete the following lines and use the default builtin transport.
+    participant_qos.transport().use_builtin_transports = false;
+    auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+    participant_qos.transport().user_transports.push_back(udp_transport);
+
+    return participant_qos;
 }
 
 void DataBrokerParticipant::add_topic(
