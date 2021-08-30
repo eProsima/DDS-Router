@@ -39,6 +39,10 @@ public:
 
 protected:
 
+    eprosima::fastdds::dds::DataWriterQos default_datawriter_qos() override;
+
+    eprosima::fastdds::dds::DataReaderQos default_datareader_qos() override;
+
     eprosima::fastrtps::rtps::GuidPrefix_t guid_;
 
 };

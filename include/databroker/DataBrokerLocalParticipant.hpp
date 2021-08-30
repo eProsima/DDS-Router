@@ -13,33 +13,37 @@
 // limitations under the License.
 
 /**
- * @file DataBrokerROSParticipant.hpp
+ * @file DataBrokerParticipant.hpp
  *
  */
 
-#ifndef EPROSIMA_DATABROKER_DATABROKERROSPARTICIPANT_HPP
-#define EPROSIMA_DATABROKER_DATABROKERROSPARTICIPANT_HPP
+#ifndef EPROSIMA_DATABROKER_DATABROKERLOCALPARTICIPANT_HPP
+#define EPROSIMA_DATABROKER_DATABROKERLOCALPARTICIPANT_HPP
 
-#include <databroker/DataBrokerLocalParticipant.hpp>
+#include <mutex>
+
+#include <databroker/DataBrokerParticipant.hpp>
+
+#include <StdString/StdString.h>
 
 namespace eprosima {
 namespace databroker {
 
-class DataBrokerROSParticipant : public DataBrokerLocalParticipant
+class DataBrokerLocalParticipant : public DataBrokerParticipant
 {
 public:
 
-    using DataBrokerLocalParticipant::DataBrokerLocalParticipant;
+    using DataBrokerParticipant::DataBrokerParticipant;
 
 protected:
 
-    std::string type_name_() override;
+    eprosima::fastdds::dds::DataWriterQos default_datawriter_qos() override;
 
-    std::string topic_mangled_(
-            const std::string& topic_name) override;
+    eprosima::fastdds::dds::DataReaderQos default_datareader_qos() override;
+
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* EPROSIMA_DATABROKER_DATABROKERROSPARTICIPANT_HPP */
+#endif /* EPROSIMA_DATABROKER_DATABROKERLOCALPARTICIPANT_HPP */

@@ -13,31 +13,16 @@
 // limitations under the License.
 
 /**
- * @file DataBrokerParticipant.cpp
+ * @file DataBrokerLocalParticipant.cpp
  *
  */
 
-#include <databroker/DataBrokerWANParticipant.hpp>
+#include <databroker/DataBrokerLocalParticipant.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-DataBrokerWANParticipant::DataBrokerWANParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener,
-        eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
-        uint32_t domain /* = 0 */,
-        std::string name /* = "DataBroker Participant" */)
-    : DataBrokerParticipant(listener, domain, name)
-    , guid_(server_guid)
-{
-}
-
-eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerWANParticipant::guid()
-{
-    return guid_;
-}
-
-eprosima::fastdds::dds::DataWriterQos DataBrokerWANParticipant::default_datawriter_qos()
+eprosima::fastdds::dds::DataWriterQos DataBrokerLocalParticipant::default_datawriter_qos()
 {
     eprosima::fastdds::dds::DataWriterQos datawriter_qos = DataBrokerParticipant::default_datawriter_qos();
 
@@ -48,12 +33,12 @@ eprosima::fastdds::dds::DataWriterQos DataBrokerWANParticipant::default_datawrit
     return datawriter_qos;
 }
 
-eprosima::fastdds::dds::DataReaderQos DataBrokerWANParticipant::default_datareader_qos()
+eprosima::fastdds::dds::DataReaderQos DataBrokerLocalParticipant::default_datareader_qos()
 {
     eprosima::fastdds::dds::DataReaderQos datareader_qos = DataBrokerParticipant::default_datareader_qos();
 
-    datareader_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
-    datareader_qos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+    datareader_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+    datareader_qos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
 
     return datareader_qos;
 }
