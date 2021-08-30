@@ -71,7 +71,7 @@ jobs:
       - uses: ./src/databroker/.github/actions/install-apt-packages
       - uses: ./src/databroker/.github/actions/install-gtest
       - uses: ./src/databroker/.github/actions/install-python-packages
-      - uses: ./src/databroker/.github/actions/fetch-fastdds-statistics-backend-repos
+      - uses: ./src/databroker/.github/actions/fetch-fastdds-repos
 
       - name: Build workspace
         run: |
