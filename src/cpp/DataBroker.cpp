@@ -408,7 +408,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBroker::wan_participant_qos()
 
         logInfo(DATABROKER, "External Discovery Server configure connection locator " << locator
                                                                                       << " to server " <<
-                        server_attr.guidPrefix);
+                server_attr.guidPrefix);
     }
 
     // TODO decide the discovery server configuration
