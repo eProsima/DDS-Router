@@ -44,6 +44,9 @@ ros: true
 # Use UDP connection
 udp: false
 
+# Use TLS security
+tls: false
+
 # Launch application in interactive mode: listening for user commands
 # This option is not compatible with running the application in background
 interactive: false

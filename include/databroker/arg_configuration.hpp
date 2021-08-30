@@ -191,6 +191,7 @@ enum  optionIndex
     LISTENING_ADDRESSES,
     CONNECTION_ADDRESSES,
     INTERACTIVE,
+    TLS,
 };
 
 /*
@@ -340,6 +341,16 @@ const option::Descriptor usage[] = {
         "Use DataBroker in interactive mode. " \
         "Interactive mode keeps DataBroker listening for user commands. " \
         "These commands are 'help', 'add <topic>', 'remove <topic>', 'exit'."
+    },
+
+    {
+        optionIndex::TLS,
+        0,
+        "",
+        "tls",
+        Arg::Optional,
+        "   \t--tls\t  \t" \
+        "Active TLS security (only available whit TCP, not compatible with '--udp' option)." \
     },
 
     { 0, 0, 0, 0, 0, 0 }

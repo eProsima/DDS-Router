@@ -30,17 +30,33 @@
 namespace eprosima {
 namespace databroker {
 
-struct DataBrokerConfiguration
+struct DataBrokerParticipantConfiguration
+{
+    uint32_t domain;
+};
+
+struct DataBrokerLocalParticipantConfiguration : public DataBrokerParticipantConfiguration
+{
+    bool ros;
+};
+
+struct DataBrokerWANParticipantConfiguration : public DataBrokerParticipantConfiguration
 {
     eprosima::fastrtps::rtps::GuidPrefix_t server_guid;
     std::vector<Address> listening_addresses;
     std::vector<Address> connection_addresses;
+    bool udp;
+    bool tls;
+};
+
+struct DataBrokerConfiguration
+{
+    DataBrokerLocalParticipantConfiguration local_configuration;
+    DataBrokerWANParticipantConfiguration wan_configuration;
+
     std::vector<std::string> active_topics;
     uint32_t seconds;
     bool interactive;
-    uint32_t domain;
-    bool ros;
-    bool udp;
 
     static bool load_default_configuration(
             DataBrokerConfiguration& configuration);

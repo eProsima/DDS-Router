@@ -30,13 +30,15 @@ namespace databroker {
 
 DataBrokerParticipant::DataBrokerParticipant(
         eprosima::fastdds::dds::DomainParticipantListener* listener,
-        uint32_t domain /* = 0 */,
-        std::string name /* = "DataBroker Participant" */)
+        DataBrokerParticipantConfiguration configuration)
     : listener_(listener)
-    , type_(new StdStringPubSubType())
-    , domain_(domain)
-    , name_(name)
-    , enabled_(false)
+    , configuration_(configuration)
+{
+}
+
+DataBrokerParticipant::DataBrokerParticipant(
+        eprosima::fastdds::dds::DomainParticipantListener* listener)
+    : listener_(listener)
 {
 }
 
@@ -76,13 +78,14 @@ DataBrokerParticipant::~DataBrokerParticipant()
     // Warning: Do not destroy the Listener, as it is not created in this class
 }
 
-bool DataBrokerParticipant::init(
-        eprosima::fastdds::dds::DomainParticipantQos pqos)
+bool DataBrokerParticipant::init()
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (!enabled_)
     {
+        eprosima::fastdds::dds::DomainParticipantQos pqos = participant_qos();
+
         // Set actual name stored
         pqos.name(fastrtps::string_255(name()));
 
@@ -97,7 +100,7 @@ bool DataBrokerParticipant::init(
         // Create Participant
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(
-            domain_,
+            configuration_.domain,
             pqos,
             listener_,
             mask);
@@ -132,7 +135,7 @@ bool DataBrokerParticipant::init(
         }
     }
 
-    logInfo(DATABROKER_PARTICIPANT, "DataBroker Participant with name " << pqos.name() << " initialized");
+    logInfo(DATABROKER_PARTICIPANT, "DataBroker Participant with name " << name() << " initialized");
 
     return true;
 }
@@ -162,7 +165,7 @@ bool DataBrokerParticipant::enable()
     return true;
 }
 
-eprosima::fastdds::dds::DomainParticipantQos DataBrokerParticipant::default_participant_qos()
+eprosima::fastdds::dds::DomainParticipantQos DataBrokerParticipant::participant_qos()
 {
     eprosima::fastdds::dds::DomainParticipantQos participant_qos;
 
@@ -200,12 +203,12 @@ void DataBrokerParticipant::add_topic(
     // Create DataWriter
     eprosima::fastdds::dds::DataWriter* dw = publisher_->create_datawriter(
         topic,
-        default_datawriter_qos());
+        datawriter_qos());
 
     // Create DataReader
     eprosima::fastdds::dds::DataReader* dr = subscriber_->create_datareader(
         topic,
-        default_datareader_qos());
+        datareader_qos());
 
     logInfo(DATABROKER_PARTICIPANT, "Topic '" << topic_name << "' created in Participant " << name());
 
@@ -254,7 +257,7 @@ eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
     return eprosima::fastrtps::rtps::GUID_t().guidPrefix;
 }
 
-eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::default_datawriter_qos()
+eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::datawriter_qos()
 {
     eprosima::fastdds::dds::DataWriterQos datawriter_qos = eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
 
@@ -263,7 +266,7 @@ eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::default_datawriter_
     return datawriter_qos;
 }
 
-eprosima::fastdds::dds::DataReaderQos DataBrokerParticipant::default_datareader_qos()
+eprosima::fastdds::dds::DataReaderQos DataBrokerParticipant::datareader_qos()
 {
     return eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
 }
@@ -290,11 +293,6 @@ eprosima::fastdds::dds::Topic* DataBrokerParticipant::get_topic_(
         eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 }
 
-std::string DataBrokerParticipant::name()
-{
-    return name_;
-}
-
 std::string DataBrokerParticipant::topic_mangled_(
         const std::string& topic_name)
 {
@@ -304,6 +302,11 @@ std::string DataBrokerParticipant::topic_mangled_(
 std::string DataBrokerParticipant::type_name_()
 {
     return "StdString";
+}
+
+std::string DataBrokerParticipant::name()
+{
+    return "DataBroker_Participant";
 }
 
 } /* namespace databroker */

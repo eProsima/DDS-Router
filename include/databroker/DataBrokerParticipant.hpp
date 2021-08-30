@@ -32,6 +32,7 @@
 #include <fastdds/dds/subscriber/DataReader.hpp>
 
 #include <StdString/StdString.h>
+#include <databroker/DataBrokerConfiguration.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -41,14 +42,15 @@ class DataBrokerParticipant
 public:
 
     DataBrokerParticipant(
-            eprosima::fastdds::dds::DomainParticipantListener* listener,
-            uint32_t domain = 0,
-            std::string name = "DataBroker Participant");
+        eprosima::fastdds::dds::DomainParticipantListener* listener,
+        DataBrokerParticipantConfiguration configuration);
+
+    DataBrokerParticipant(
+        eprosima::fastdds::dds::DomainParticipantListener* listener);
 
     virtual ~DataBrokerParticipant();
 
-    virtual bool init(
-            eprosima::fastdds::dds::DomainParticipantQos pqos);
+    virtual bool init();
 
     virtual bool enable();
 
@@ -64,13 +66,13 @@ public:
 
     virtual eprosima::fastrtps::rtps::GuidPrefix_t guid();
 
-    eprosima::fastdds::dds::DomainParticipantQos default_participant_qos();
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos();
 
 protected:
 
-    virtual eprosima::fastdds::dds::DataWriterQos default_datawriter_qos();
+    virtual eprosima::fastdds::dds::DataWriterQos datawriter_qos();
 
-    virtual eprosima::fastdds::dds::DataReaderQos default_datareader_qos();
+    virtual eprosima::fastdds::dds::DataReaderQos datareader_qos();
 
     virtual bool register_type_();
 
@@ -96,10 +98,10 @@ protected:
 
     eprosima::fastdds::dds::TypeSupport type_;
 
+    DataBrokerParticipantConfiguration configuration_;
+
     std::recursive_mutex mutex_;
 
-    std::string name_;
-    uint32_t domain_;
     bool enabled_;
 };
 

@@ -23,7 +23,6 @@
 #include <fastdds/dds/log/Log.hpp>
 
 #include <databroker/DataBroker.hpp>
-#include <databroker/DataBrokerROSParticipant.hpp>
 #include <databroker/DataBrokerWANParticipant.hpp>
 #include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/utils.hpp>
@@ -31,31 +30,13 @@
 namespace eprosima {
 namespace databroker {
 
-DataBroker::DataBroker(
-        const uint32_t domain,
-        const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
-        const std::vector<Address>& listening_address,
-        const std::vector<Address>& connection_addresses,
-        bool internal_ros,
-        bool udp)
-    : server_guid_(server_guid)
-    , listening_addresses_(listening_address)
-    , connection_addresses_(connection_addresses)
-    , udp_(udp)
-    , enabled_(false)
+DataBroker::DataBroker(DataBrokerConfiguration configuration)
+    : configuration_(configuration)
 {
     logInfo(DATABROKER, "Creating DataBroker instance");
 
-    wan_ = new DataBrokerWANParticipant(&listener_, server_guid, domain, "External_DataBroker_Participant");
-
-    if (internal_ros)
-    {
-        local_ = new DataBrokerROSParticipant(&listener_, domain, "Internal_ROS2_DataBroker_Participant");
-    }
-    else
-    {
-        local_ = new DataBrokerLocalParticipant(&listener_, domain, "Internal_DataBroker_Participant");
-    }
+    wan_ = new DataBrokerWANParticipant(&listener_, configuration.wan_configuration);
+    local_ = new DataBrokerLocalParticipant(&listener_, configuration.local_configuration);
 }
 
 DataBroker::~DataBroker()
@@ -66,8 +47,7 @@ DataBroker::~DataBroker()
     delete local_;
 }
 
-bool DataBroker::init(
-        const std::vector<std::string>& initial_topics)
+bool DataBroker::init()
 {
     logInfo(DATABROKER, "Intializing DataBroker");
 
@@ -84,13 +64,13 @@ bool DataBroker::init(
             return false;
         }
 
-        if (!wan_->init(wan_->wan_participant_qos(server_guid_, listening_addresses_, connection_addresses_, udp_)))
+        if (!wan_->init())
         {
             logError(DATABROKER, "Error initializing External Participant");
             return false;
         }
 
-        if (!local_->init(local_->default_participant_qos()))
+        if (!local_->init())
         {
             logError(DATABROKER, "Error initializing Internal Participant");
             return false;
@@ -113,7 +93,7 @@ bool DataBroker::init(
         }
 
         // When initializing the DataBroker, add the topics that are already set
-        for (auto topic : initial_topics)
+        for (auto topic : configuration_.active_topics)
         {
             add_topic_(topic);
         }
@@ -126,23 +106,21 @@ bool DataBroker::init(
     return true;
 }
 
-bool DataBroker::run(
-        bool interactive,
-        uint32_t seconds /* = 0 */)
+bool DataBroker::run()
 {
     if (!enabled_)
     {
         logError(DATABROKER, "WARNING DataBroker running without being initialized");
-        init(std::vector<std::string>());
+        init();
     }
 
-    if (interactive)
+    if (configuration_.interactive)
     {
         return run_interactive();
     }
     else
     {
-        return run_time(seconds);
+        return run_time(configuration_.seconds);
     }
 }
 

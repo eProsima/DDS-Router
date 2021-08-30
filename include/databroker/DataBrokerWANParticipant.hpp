@@ -21,6 +21,7 @@
 #define EPROSIMA_DATABROKER_DATABROKERWANPARTICIPANT_HPP
 
 #include <databroker/DataBrokerParticipant.hpp>
+#include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/Address.hpp>
 
 namespace eprosima {
@@ -31,26 +32,30 @@ class DataBrokerWANParticipant : public DataBrokerParticipant
 public:
 
     DataBrokerWANParticipant(
-            eprosima::fastdds::dds::DomainParticipantListener* listener,
-            eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
-            uint32_t domain = 0,
-            std::string name = "DataBroker Participant");
+        eprosima::fastdds::dds::DomainParticipantListener* listener,
+        DataBrokerWANParticipantConfiguration configuration);
+
+    // DataBrokerWANParticipant(
+    //         eprosima::fastdds::dds::DomainParticipantListener* listener,
+    //         eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
+    //         uint32_t domain = 0,
+    //         std::string name = "DataBroker Participant");
 
     eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
 
-    eprosima::fastdds::dds::DomainParticipantQos wan_participant_qos(
-            const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
-            const std::vector<Address>& listening_addresses,
-            const std::vector<Address>& connection_addresses,
-            const bool& udp);
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos();
+
+    std::string name() override;
 
 protected:
 
-    eprosima::fastdds::dds::DataWriterQos default_datawriter_qos() override;
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos() override;
 
-    eprosima::fastdds::dds::DataReaderQos default_datareader_qos() override;
+    eprosima::fastdds::dds::DataReaderQos datareader_qos() override;
 
-    eprosima::fastrtps::rtps::GuidPrefix_t guid_;
+    DataBrokerWANParticipantConfiguration configuration_;
+
+    // eprosima::fastrtps::rtps::GuidPrefix_t guid_;
 
 };
 
