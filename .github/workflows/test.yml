@@ -1,0 +1,160 @@
+name: test
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+
+  ubuntu-build-test:
+    runs-on: ubuntu-latest
+    environment:
+      name: codecov
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - name: Install apt packages
+        uses: ./src/databroker/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/databroker/.github/actions/install-gtest
+
+      - name: Install Python packages
+        uses: ./src/databroker/.github/actions/install-python-packages
+
+      - name: Fetch Fast DDS repositories
+        uses: ./src/databroker/.github/actions/fetch-fastdds-repos
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          colcon build \
+            --event-handlers=console_direct+ \
+            --mixin coverage-gcc asan-gcc
+
+      - name: Run tests
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select databroker \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: colcon-logs-ubuntu
+          path: log/
+        if: always()
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - uses: ./src/databroker/.github/actions/install-apt-packages
+      - uses: ./src/databroker/.github/actions/install-gtest
+      - uses: ./src/databroker/.github/actions/install-python-packages
+      - uses: ./src/databroker/.github/actions/fetch-fastdds-statistics-backend-repos
+
+      - name: Build workspace
+        run: |
+          colcon build \
+            --event-handlers=console_direct+ \
+
+      - name: Run clang-tidy
+        run: |
+          cd build/databroker
+          run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
+
+      - name: Upload clang results
+        uses: actions/upload-artifact@v1
+        with:
+          name: clang_results
+          path: ${{ github.workspace }}/clang_results.yml
+
+  uncrustify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - name: Fetch all branches and tags
+        run: |
+          cd src/databroker
+          git fetch --prune --unshallow
+
+      - uses: ./src/databroker/.github/actions/install-apt-packages
+      - uses: ./src/databroker/.github/actions/install-python-packages
+
+      - name: Install uncrustify
+        run: |
+          git clone https://github.com/uncrustify/uncrustify.git \
+            --branch uncrustify-0.71.0 \
+            --single-branch uncrustify
+          mkdir -p uncrustify/build
+          cd uncrustify/build
+          cmake ..
+          sudo cmake --build . --target install
+          cd ../..
+          sudo rm -rf uncrustify
+
+      - name: Clone ament_lint
+        run: |
+          git clone https://github.com/ament/ament_lint.git src/ament_lint
+
+      - name: Build ament_uncrustify
+        run: colcon build --packages-up-to ament_uncrustify
+
+      - name: Fetch uncrustify config file
+        run: |
+          curl \
+            -l https://raw.githubusercontent.com/eProsima/cpp-style/master/uncrustify.cfg \
+            -o uncrustify.cfg
+
+      - name: Get difference
+        run: |
+          cd src/databroker
+          echo "MODIFIED_FILES=$(git diff --name-only origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -e '\.h' -e '\.hpp' -e '\.cpp' -e '\.ipp' | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Check difference
+        run: |
+          cd src/databroker
+          if [[ -z "${MODIFIED_FILES}" ]]
+          then
+            touch empty.hpp
+            echo "MODIFIED_FILES=empty.hpp" >> $GITHUB_ENV
+          fi
+
+      - name: Check style
+        run: |
+          source install/local_setup.bash
+          cd src/databroker
+          ament_uncrustify \
+            -c ../../uncrustify.cfg \
+            --language CPP \
+            --xunit-file ../../uncrustify_results.xml \
+            ${MODIFIED_FILES}
+
+      - name: Upload uncrustify results
+        uses: actions/upload-artifact@v1
+        with:
+          name: uncrustify_results
+          path: uncrustify_results.xml
