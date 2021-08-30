@@ -64,6 +64,8 @@ public:
 
     virtual eprosima::fastrtps::rtps::GuidPrefix_t guid();
 
+    eprosima::fastdds::dds::DomainParticipantQos default_participant_qos();
+
 protected:
 
     virtual eprosima::fastdds::dds::DataWriterQos default_datawriter_qos();

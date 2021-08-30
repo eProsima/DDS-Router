@@ -20,16 +20,16 @@
 #ifndef EPROSIMA_DATABROKER_DATABROKERROSPARTICIPANT_HPP
 #define EPROSIMA_DATABROKER_DATABROKERROSPARTICIPANT_HPP
 
-#include <databroker/DataBrokerParticipant.hpp>
+#include <databroker/DataBrokerLocalParticipant.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class DataBrokerROSParticipant : public DataBrokerParticipant
+class DataBrokerROSParticipant : public DataBrokerLocalParticipant
 {
 public:
 
-    using DataBrokerParticipant::DataBrokerParticipant;
+    using DataBrokerLocalParticipant::DataBrokerLocalParticipant;
 
 protected:
 

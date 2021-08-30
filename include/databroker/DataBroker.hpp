@@ -25,7 +25,9 @@
 
 #include <databroker/DataBrokerListener.hpp>
 #include <databroker/DataBrokerParticipant.hpp>
+#include <databroker/DataBrokerLocalParticipant.hpp>
 #include <databroker/DataBrokerROSParticipant.hpp>
+#include <databroker/DataBrokerWANParticipant.hpp>
 #include <databroker/Address.hpp>
 
 namespace eprosima {
@@ -83,10 +85,6 @@ public:
 
 protected:
 
-    eprosima::fastdds::dds::DomainParticipantQos default_participant_qos();
-
-    eprosima::fastdds::dds::DomainParticipantQos wan_participant_qos();
-
     void add_topic_(
             const std::string& topic);
 
@@ -107,8 +105,8 @@ protected:
 
 private:
 
-    DataBrokerParticipant* local_;
-    DataBrokerParticipant* wan_;
+    DataBrokerLocalParticipant* local_;
+    DataBrokerWANParticipant* wan_;
 
     DataBrokerListener listener_;
 

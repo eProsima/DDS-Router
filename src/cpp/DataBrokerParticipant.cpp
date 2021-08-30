@@ -18,6 +18,8 @@
  */
 
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
+#include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 
 #include <StdString/StdStringPubSubTypes.h>
 
@@ -160,6 +162,19 @@ bool DataBrokerParticipant::enable()
     return true;
 }
 
+eprosima::fastdds::dds::DomainParticipantQos DataBrokerParticipant::default_participant_qos()
+{
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos;
+
+    // By default use UDPv4 due to communication failures between dockers sharing the network with the host
+    // When it is solved in Fast-DDS delete the following lines and use the default builtin transport.
+    participant_qos.transport().use_builtin_transports = false;
+    auto udp_transport = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+    participant_qos.transport().user_transports.push_back(udp_transport);
+
+    return participant_qos;
+}
+
 void DataBrokerParticipant::add_topic(
         const std::string& topic_name)
 {
@@ -239,20 +254,18 @@ eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerParticipant::guid()
     return eprosima::fastrtps::rtps::GUID_t().guidPrefix;
 }
 
-// TODO decide default QoS
 eprosima::fastdds::dds::DataWriterQos DataBrokerParticipant::default_datawriter_qos()
 {
-    eprosima::fastdds::dds::DataWriterQos dw;
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos = eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
 
-    dw.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
+    datawriter_qos.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
 
-    return dw;
+    return datawriter_qos;
 }
 
-// TODO decide default QoS
 eprosima::fastdds::dds::DataReaderQos DataBrokerParticipant::default_datareader_qos()
 {
-    return eprosima::fastdds::dds::DataReaderQos();
+    return eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
 }
 
 bool DataBrokerParticipant::register_type_()
