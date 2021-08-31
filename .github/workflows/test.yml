@@ -42,8 +42,10 @@ jobs:
 
       - name: Build workspace
         run: |
+          cat src/databroker/.github/workflows/test_colcon.meta
           colcon build \
             --event-handlers=console_direct+ \
+            --metas src/databroker/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
