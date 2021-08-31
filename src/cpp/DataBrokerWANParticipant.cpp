@@ -75,15 +75,15 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 descriptor->apply_security = true;
 
                 // Private key
-                descriptor->tls_config.password = "test";
-                descriptor->tls_config.private_key_file = "server.pem";
+                descriptor->tls_config.password = configuration_.tls_password;
+                descriptor->tls_config.private_key_file = configuration_.tls_private_key;
 
                 // Own certificate and valid certificates
-                descriptor->tls_config.cert_chain_file = "ca.pem";
-                descriptor->tls_config.verify_file = "ca.pem";
+                descriptor->tls_config.cert_chain_file = configuration_.tls_verify_ca;
+                descriptor->tls_config.verify_file = configuration_.tls_verify_ca;
 
                 // DH
-                descriptor->tls_config.tmp_dh_file = "dh2048.pem";
+                descriptor->tls_config.tmp_dh_file = configuration_.tls_dh;
 
                 // Options
                 descriptor->tls_config.add_option(

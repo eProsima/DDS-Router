@@ -120,6 +120,7 @@ int main(
 
                 case optionIndex::ROS:
                     configuration.local_configuration.ros = true;
+                    break;
 
                 case optionIndex::LISTENING_ADDRESSES:
                     configuration.wan_configuration.listening_addresses.clear();
