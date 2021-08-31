@@ -45,7 +45,13 @@ ros: true
 udp: false
 
 # Use TLS security
-tls: false
+# To active TLS all this files must be set and exist
+tls:
+  tls_private_key: "pk.pem"
+  tls_password: "password"
+  tls_dh: "dh.pem"
+  tls_ca: "ca.pem"
+  tls_verify_ca: "ca.pem"
 
 # Launch application in interactive mode: listening for user commands
 # This option is not compatible with running the application in background

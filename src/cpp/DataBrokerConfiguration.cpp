@@ -35,7 +35,6 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.seconds = 0;
     configuration.interactive = false;
     // configuration.active_topics = std::vector<std::string>();
-
     configuration.wan_configuration.domain = 0;
     configuration.wan_configuration.server_guid = Address::guid_server();
     // configuration.wan_configuration.connection_addresses = std::vector<Address>();
@@ -43,6 +42,12 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.wan_configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
     configuration.wan_configuration.udp = false;
     configuration.wan_configuration.tls = false;
+
+    configuration.wan_configuration.tls_private_key = "pk.pem";
+    configuration.wan_configuration.tls_password = "password";
+    configuration.wan_configuration.tls_dh = "dh.pem";
+    configuration.wan_configuration.tls_ca = "ca.pem";
+    configuration.wan_configuration.tls_verify_ca = "ca.pem";
 
     configuration.local_configuration.domain = 0;
     configuration.local_configuration.ros = false;

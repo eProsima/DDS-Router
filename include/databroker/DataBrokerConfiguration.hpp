@@ -47,6 +47,11 @@ struct DataBrokerWANParticipantConfiguration : public DataBrokerParticipantConfi
     std::vector<Address> connection_addresses;
     bool udp;
     bool tls;
+    std::string tls_private_key;
+    std::string tls_password;
+    std::string tls_dh;
+    std::string tls_ca;
+    std::string tls_verify_ca;
 };
 
 struct DataBrokerConfiguration

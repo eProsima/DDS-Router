@@ -68,6 +68,33 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
             pqos.transport().user_transports.push_back(descriptor);
 
             logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
+
+            if (configuration_.tls)
+            {
+                // Apply security ON
+                descriptor->apply_security = true;
+
+                // Private key
+                descriptor->tls_config.password = "test";
+                descriptor->tls_config.private_key_file = "server.pem";
+
+                // Own certificate and valid certificates
+                descriptor->tls_config.cert_chain_file = "ca.pem";
+                descriptor->tls_config.verify_file = "ca.pem";
+
+                // DH
+                descriptor->tls_config.tmp_dh_file = "dh2048.pem";
+
+                // Options
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::DEFAULT_WORKAROUNDS);
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::SINGLE_DH_USE);
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
+                descriptor->tls_config.verify_mode =
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
+            }
         }
 
         // Create Locator
