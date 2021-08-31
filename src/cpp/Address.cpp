@@ -125,7 +125,7 @@ eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server()
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
-        uint8_t id)
+        uint16_t id)
 {
     eprosima::fastrtps::rtps::GuidPrefix_t guid;
     std::istringstream(SERVER_DEFAULT_GUID) >> guid;

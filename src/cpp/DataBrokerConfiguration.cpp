@@ -50,9 +50,6 @@ bool DataBrokerConfiguration::load_configuration_file(
         const std::string& file_path /* ="DATABROKER_CONFIGURATION.yaml" */,
         bool verbose /* = false */)
 {
-    // Open file
-    std::ifstream file;
-
     YAML::Node config_node;
     try
     {
@@ -111,7 +108,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                 }
                 if (address["id"])
                 {
-                    new_address.guid = Address::guid_server(address["id"].as<uint8_t>());
+                    new_address.guid = Address::guid_server(address["id"].as<uint16_t>());
                 }
                 if (address["guid"])
                 {

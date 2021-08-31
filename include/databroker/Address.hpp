@@ -67,7 +67,7 @@ struct Address
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server();
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server(
-            uint8_t id);
+            uint16_t id);
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server(
             const std::string& server_guid);
