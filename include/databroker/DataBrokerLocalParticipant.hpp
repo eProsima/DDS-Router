@@ -51,6 +51,8 @@ protected:
     std::string topic_mangled_(
             const std::string& topic_name) override;
 
+    const DataBrokerParticipantConfiguration& get_configuration_() override;
+
     DataBrokerLocalParticipantConfiguration configuration_;
 };
 

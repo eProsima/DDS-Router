@@ -33,12 +33,14 @@ DataBrokerParticipant::DataBrokerParticipant(
         DataBrokerParticipantConfiguration configuration)
     : listener_(listener)
     , configuration_(configuration)
+    , type_(new StdStringPubSubType())
 {
 }
 
 DataBrokerParticipant::DataBrokerParticipant(
         eprosima::fastdds::dds::DomainParticipantListener* listener)
     : listener_(listener)
+    , type_(new StdStringPubSubType())
 {
 }
 
@@ -100,7 +102,7 @@ bool DataBrokerParticipant::init()
         // Create Participant
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(
-            configuration_.domain,
+            get_configuration_().domain,
             pqos,
             listener_,
             mask);
@@ -307,6 +309,11 @@ std::string DataBrokerParticipant::type_name_()
 std::string DataBrokerParticipant::name()
 {
     return "DataBroker_Participant";
+}
+
+const DataBrokerParticipantConfiguration& DataBrokerParticipant::get_configuration_()
+{
+    return configuration_;
 }
 
 } /* namespace databroker */

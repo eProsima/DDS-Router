@@ -173,5 +173,10 @@ std::string DataBrokerWANParticipant::name()
     return "External_DataBroker_Participant";
 }
 
+const DataBrokerParticipantConfiguration& DataBrokerWANParticipant::get_configuration_()
+{
+    return configuration_;
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */

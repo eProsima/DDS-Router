@@ -53,6 +53,8 @@ protected:
 
     eprosima::fastdds::dds::DataReaderQos datareader_qos() override;
 
+    const DataBrokerParticipantConfiguration& get_configuration_() override;
+
     DataBrokerWANParticipantConfiguration configuration_;
 
     // eprosima::fastrtps::rtps::GuidPrefix_t guid_;

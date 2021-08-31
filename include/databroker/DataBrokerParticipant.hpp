@@ -66,9 +66,9 @@ public:
 
     virtual eprosima::fastrtps::rtps::GuidPrefix_t guid();
 
-    eprosima::fastdds::dds::DomainParticipantQos participant_qos();
-
 protected:
+
+    virtual eprosima::fastdds::dds::DomainParticipantQos participant_qos();
 
     virtual eprosima::fastdds::dds::DataWriterQos datawriter_qos();
 
@@ -85,6 +85,8 @@ protected:
             const std::string& topic_name);
 
     virtual std::string name();
+
+    virtual const DataBrokerParticipantConfiguration& get_configuration_();
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
     eprosima::fastdds::dds::Publisher* publisher_;

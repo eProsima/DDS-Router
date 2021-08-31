@@ -81,6 +81,10 @@ std::string DataBrokerLocalParticipant::name()
     return "Internal_" + std::string(configuration_.ros ? "ROS_" : "") + "DataBroker_Participant";
 }
 
+const DataBrokerParticipantConfiguration& DataBrokerLocalParticipant::get_configuration_()
+{
+    return configuration_;
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
