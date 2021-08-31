@@ -57,8 +57,6 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.local_configuration.domain = 0;
     configuration.local_configuration.ros = false;
 
-    load_configuration_file(configuration);
-
     return true;
 }
 
@@ -67,12 +65,14 @@ bool DataBrokerConfiguration::load_configuration_file(
         const std::string& file_path /* ="DATABROKER_CONFIGURATION.yaml" */,
         bool verbose /* = false */)
 {
+    // TODO add log comments
     YAML::Node config_node;
+
+    logInfo(DATABROKER_CONFIGURATION, "Loading configuration file '" << file_path << "'");
+
     try
     {
         config_node = YAML::LoadFile(file_path);
-
-        logInfo(DATABROKER_CONFIGURATION, "Loaded file " << file_path);
 
         // Server ID
         if (config_node["server-id"])
@@ -206,6 +206,8 @@ bool DataBrokerConfiguration::load_configuration_file(
                 logInfo(DATABROKER_CONFIGURATION, "Set interactive mode");
             }
         }
+
+        logInfo(DATABROKER_CONFIGURATION, "Loaded configuration file '" << file_path << "'");
     }
     catch (const std::exception& e)
     {

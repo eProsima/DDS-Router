@@ -294,12 +294,12 @@ bool DataBroker::run_time(
 {
     if (seconds > 0)
     {
-        logInfo(DATABROKER, "Running DataBroker for " << seconds << " seconds");
+        std::cout << "Running DataBroker for " << seconds << " seconds" << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(seconds));
     }
     else
     {
-        logInfo(DATABROKER, "Running DataBroker until SIGINT is received");
+        std::cout << "Running DataBroker until SIGINT is received" << std::endl;
         std::this_thread::sleep_until(std::chrono::time_point<std::chrono::system_clock>::max());
     }
 

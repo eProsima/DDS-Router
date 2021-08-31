@@ -30,7 +30,8 @@
 namespace eprosima {
 namespace databroker {
 
-constexpr const char* DEFAULT_CONFIGURATION_FILE = "DATABROKER_CONFIGURATION.yaml";
+#define DEFAULT_CONFIGURATION_FILE "DATABROKER_CONFIGURATION.yaml"
+
 constexpr const char* DEFAULT_PRIVATE_KEY_FILE = "databroker.key";
 constexpr const char* DEFAULT_DH_PARAMS_FILE = "dh_params.pem";
 constexpr const char* DEFAULT_CA_CERTIFICATE_FILE = "ca.crt";

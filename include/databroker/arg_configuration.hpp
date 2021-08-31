@@ -22,10 +22,12 @@
 
 #include <algorithm>
 #include <regex>
+#include <unistd.h>
 
 #include <optionparser.h>
 
 #include <databroker/Address.hpp>
+#include <databroker/DataBrokerConfiguration.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -129,7 +131,25 @@ struct Arg : public option::Arg
         }
         if (msg)
         {
-            print_error("Option '", option, "' requires a numeric argument\n");
+            print_error("Option '", option, "' requires a text argument\n");
+        }
+        return option::ARG_ILLEGAL;
+    }
+
+    static option::ArgStatus File(
+            const option::Option& option,
+            bool msg)
+    {
+        if (option.arg != 0)
+        {
+            if (access( option.arg, F_OK ) != -1)
+            {
+                return option::ARG_OK;
+            }
+        }
+        if (msg)
+        {
+            print_error("Option '", option, "' requires an existing file as argument\n");
         }
         return option::ARG_ILLEGAL;
     }
@@ -192,6 +212,7 @@ enum  optionIndex
     CONNECTION_ADDRESSES,
     INTERACTIVE,
     TLS,
+    CONFIGURATION_FILE,
 };
 
 /*
@@ -351,6 +372,18 @@ const option::Descriptor usage[] = {
         Arg::Optional,
         "   \t--tls\t  \t" \
         "Active TLS security (only available whit TCP, not compatible with '--udp' option)." \
+    },
+
+    {
+        optionIndex::CONFIGURATION_FILE,
+        0,
+        "y",
+        "configuration-file",
+        Arg::File,
+        "  -y \t--configuration-file\t<file path>  \t" \
+        "Path to the YAML configuration file with." \
+        "The arguments passed to this executable will overwrite the specific configurations from the file." \
+        "Default: " DEFAULT_CONFIGURATION_FILE
     },
 
     { 0, 0, 0, 0, 0, 0 }

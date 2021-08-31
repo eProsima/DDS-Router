@@ -84,6 +84,23 @@ int main(
             return 0;
         }
 
+        if (options[optionIndex::CONFIGURATION_FILE])
+        {
+            if (!DataBrokerConfiguration::load_configuration_file(
+                    configuration,
+                    options[optionIndex::CONFIGURATION_FILE].arg,
+                    true))
+            {
+                logError(DATABROKER, "Error parsing configuration file");
+                return 10;
+            }
+        }
+        else
+        {
+            // Load default configuration file
+            DataBrokerConfiguration::load_configuration_file(configuration);
+        }
+
         for (int i = 0; i < parse.optionsCount(); ++i)
         {
             option::Option& opt = buffer[i];
@@ -152,6 +169,9 @@ int main(
 
                 case optionIndex::TLS:
                     configuration.wan_configuration.tls = true;
+                    break;
+
+                default:
                     break;
             }
         }
