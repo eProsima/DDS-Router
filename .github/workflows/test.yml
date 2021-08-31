@@ -61,34 +61,6 @@ jobs:
           path: log/
         if: always()
 
-  clang-tidy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          path: src/databroker
-
-      - uses: ./src/databroker/.github/actions/install-apt-packages
-      - uses: ./src/databroker/.github/actions/install-gtest
-      - uses: ./src/databroker/.github/actions/install-python-packages
-      - uses: ./src/databroker/.github/actions/fetch-fastdds-repos
-
-      - name: Build workspace
-        run: |
-          colcon build \
-            --event-handlers=console_direct+ \
-
-      - name: Run clang-tidy
-        run: |
-          cd build/databroker
-          run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
-
-      - name: Upload clang results
-        uses: actions/upload-artifact@v1
-        with:
-          name: clang_results
-          path: ${{ github.workspace }}/clang_results.yml
-
   uncrustify:
     runs-on: ubuntu-latest
     steps:
