@@ -5,7 +5,7 @@ Those have been the commands use to generate this example keys and certificates
 ## Priate key
 
 ```sh
-openssl genrsa -des3 -out pk.pem 2048
+openssl genrsa -des3 -out pk.key 2048
 # password
 ```
 

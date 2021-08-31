@@ -32,23 +32,28 @@ namespace databroker {
 bool DataBrokerConfiguration::load_default_configuration(
         DataBrokerConfiguration& configuration)
 {
+    // DataBroker configuration
     configuration.seconds = 0;
     configuration.interactive = false;
     // configuration.active_topics = std::vector<std::string>();
+
+    // WAN Participant configuration
     configuration.wan_configuration.domain = 0;
     configuration.wan_configuration.server_guid = Address::guid_server();
     // configuration.wan_configuration.connection_addresses = std::vector<Address>();
     // configuration.wan_configuration.listening_addresses = std::vector<Address>();
     configuration.wan_configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
     configuration.wan_configuration.udp = false;
+
+    // WAN Participant TLS configuration
     configuration.wan_configuration.tls = false;
-
-    configuration.wan_configuration.tls_private_key = "pk.pem";
+    configuration.wan_configuration.tls_private_key = DEFAULT_PRIVATE_KEY_FILE;
     configuration.wan_configuration.tls_password = "password";
-    configuration.wan_configuration.tls_dh = "dh.pem";
-    configuration.wan_configuration.tls_ca = "ca.pem";
-    configuration.wan_configuration.tls_verify_ca = "ca.pem";
+    configuration.wan_configuration.tls_dh = DEFAULT_DH_FILE;
+    configuration.wan_configuration.tls_ca = DEFAULT_CA_FILE;
+    configuration.wan_configuration.tls_verify_ca = DEFAULT_VERIFY_CA_FILE;
 
+    // Local Participant configuration
     configuration.local_configuration.domain = 0;
     configuration.local_configuration.ros = false;
 
@@ -165,8 +170,30 @@ bool DataBrokerConfiguration::load_configuration_file(
         // TLS
         if (config_node["tls"])
         {
-            configuration.wan_configuration.tls = config_node["tls"].as<bool>();
-            if (configuration.local_configuration.ros)
+
+            if (config_node["tls"]["private_key"] &&
+                config_node["tls"]["password"] &&
+                config_node["tls"]["dh"] &&
+                config_node["tls"]["ca"] &&
+                config_node["tls"]["verify_ca"])
+            {
+                configuration.wan_configuration.tls_private_key = config_node["tls"]["private_key"].as<std::string>();
+                configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
+                configuration.wan_configuration.tls_dh = config_node["tls"]["dh"].as<std::string>();
+                configuration.wan_configuration.tls_ca = config_node["tls"]["ca"].as<std::string>();
+                configuration.wan_configuration.tls_verify_ca = config_node["tls"]["verify_ca"].as<std::string>();
+                configuration.wan_configuration.tls = true;
+            }
+            else
+            {
+                if (verbose)
+                {
+                    logWarning(DATABROKER_CONFIGURATION, "TLS configuration requires all fields fulfilled");
+                }
+                configuration.wan_configuration.tls = false;
+            }
+
+            if (configuration.wan_configuration.tls)
             {
                 logInfo(DATABROKER_CONFIGURATION, "Using TLS security");
             }

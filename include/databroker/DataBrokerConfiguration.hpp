@@ -30,6 +30,12 @@
 namespace eprosima {
 namespace databroker {
 
+constexpr const char* DEFAULT_CONFIGURATION_FILE = "DATABROKER_CONFIGURATION.yaml";
+constexpr const char* DEFAULT_PRIVATE_KEY_FILE = "PK.key";
+constexpr const char* DEFAULT_DH_FILE = "DH.pem";
+constexpr const char* DEFAULT_CA_FILE = "CA.pem";
+constexpr const char* DEFAULT_VERIFY_CA_FILE = "CA.pem";
+
 struct DataBrokerParticipantConfiguration
 {
     uint32_t domain;
@@ -68,7 +74,7 @@ struct DataBrokerConfiguration
 
     static bool load_configuration_file(
             DataBrokerConfiguration& configuration,
-            const std::string& file_path = "DATABROKER_CONFIGURATION.yaml",
+            const std::string& file_path = DEFAULT_CONFIGURATION_FILE,
             bool verbose = false);
 };
 

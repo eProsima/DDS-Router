@@ -140,6 +140,7 @@ int main(
                     break;
 
                 case optionIndex::INTERACTIVE:
+                    // Use default configuration
                     configuration.interactive = true;
                     break;
 
