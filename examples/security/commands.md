@@ -2,22 +2,31 @@
 
 Those have been the commands use to generate this example keys and certificates
 
-## Priate key
+## Certification Authority
 
 ```sh
-openssl genrsa -des3 -out pk.key 2048
-# password
+openssl ecparam -name prime256v1 -genkey -noout -out ca.key
+openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 3650
+# ES .
 ```
 
-## CA Certificate
+## DataBroker Certificate
 
 ```sh
-openssl req -x509 -new -nodes -key pk.pem -sha256 -days 1825 -out ca.pem
-# ES
+openssl ecparam -name prime256v1 -genkey -noout -out db.key
+openssl req -new -sha256 -key db.key -out db.csr
+# ES .
+openssl x509 -req -in db.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out db.crt -days 1000 -sha256
+openssl dhparam -out dbparam.pem 2048
 ```
 
-## DH param
+## Use
 
-```sh
-openssl dhparam -out dh.pem 2048
+```yaml
+tls:
+  private_key: "db.key"
+  password: ""
+  dh: "dbparam.pem"
+  ca: "sb.crt"
+  cert: "ca.crt"
 ```

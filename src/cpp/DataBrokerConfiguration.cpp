@@ -51,7 +51,7 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.wan_configuration.tls_password = "password";
     configuration.wan_configuration.tls_dh = DEFAULT_DH_FILE;
     configuration.wan_configuration.tls_ca = DEFAULT_CA_FILE;
-    configuration.wan_configuration.tls_verify_ca = DEFAULT_VERIFY_CA_FILE;
+    configuration.wan_configuration.tls_cert = DEFAULT_CERT_FILE;
 
     // Local Participant configuration
     configuration.local_configuration.domain = 0;
@@ -181,7 +181,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                 configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
                 configuration.wan_configuration.tls_dh = config_node["tls"]["dh"].as<std::string>();
                 configuration.wan_configuration.tls_ca = config_node["tls"]["ca"].as<std::string>();
-                configuration.wan_configuration.tls_verify_ca = config_node["tls"]["verify_ca"].as<std::string>();
+                configuration.wan_configuration.tls_cert = config_node["tls"]["verify_ca"].as<std::string>();
                 configuration.wan_configuration.tls = true;
             }
             else

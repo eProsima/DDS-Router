@@ -31,10 +31,10 @@ namespace eprosima {
 namespace databroker {
 
 constexpr const char* DEFAULT_CONFIGURATION_FILE = "DATABROKER_CONFIGURATION.yaml";
-constexpr const char* DEFAULT_PRIVATE_KEY_FILE = "PK.key";
-constexpr const char* DEFAULT_DH_FILE = "DH.pem";
-constexpr const char* DEFAULT_CA_FILE = "CA.pem";
-constexpr const char* DEFAULT_VERIFY_CA_FILE = "CA.pem";
+constexpr const char* DEFAULT_PRIVATE_KEY_FILE = "db.key";
+constexpr const char* DEFAULT_DH_FILE = "dbparam.pem";
+constexpr const char* DEFAULT_CA_FILE = "ca.crt";
+constexpr const char* DEFAULT_CERT_FILE = "db.crt";
 
 struct DataBrokerParticipantConfiguration
 {
@@ -57,7 +57,7 @@ struct DataBrokerWANParticipantConfiguration : public DataBrokerParticipantConfi
     std::string tls_password;
     std::string tls_dh;
     std::string tls_ca;
-    std::string tls_verify_ca;
+    std::string tls_cert;
 };
 
 struct DataBrokerConfiguration

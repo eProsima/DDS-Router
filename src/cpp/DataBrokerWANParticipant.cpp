@@ -79,8 +79,8 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 descriptor->tls_config.private_key_file = configuration_.tls_private_key;
 
                 // Own certificate and valid certificates
-                descriptor->tls_config.cert_chain_file = configuration_.tls_verify_ca;
-                descriptor->tls_config.verify_file = configuration_.tls_verify_ca;
+                descriptor->tls_config.cert_chain_file = configuration_.tls_ca;
+                descriptor->tls_config.verify_file = configuration_.tls_cert;
 
                 // DH
                 descriptor->tls_config.tmp_dh_file = configuration_.tls_dh;
