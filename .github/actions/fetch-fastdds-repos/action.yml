@@ -1,0 +1,10 @@
+name: 'fetch-fastdds-repos'
+description: 'Fetch Fast DDS and its dependencies'
+runs:
+  using: "composite"
+  steps:
+    - id: fetch-fastdds-repos
+      run: |
+        wget https://raw.githubusercontent.com/eProsima/Fast-DDS/master/fastrtps.repos
+        vcs import src <  fastrtps.repos
+      shell: bash
