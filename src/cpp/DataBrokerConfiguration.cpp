@@ -171,30 +171,29 @@ bool DataBrokerConfiguration::load_configuration_file(
         // TLS
         if (config_node["tls"])
         {
-
-            if (config_node["tls"]["private_key"] &&
-                    config_node["tls"]["password"] &&
-                    config_node["tls"]["dh"] &&
-                    config_node["tls"]["ca"] &&
-                    config_node["tls"]["verify_ca"])
+            // In case any field is missing, the defaukt configuration will be used
+            if (config_node["tls"]["private_key"])
             {
                 configuration.wan_configuration.tls_private_key = config_node["tls"]["private_key"].as<std::string>();
-                configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
-                configuration.wan_configuration.tls_dh_params = config_node["tls"]["dh"].as<std::string>();
-                configuration.wan_configuration.tls_ca_cert = config_node["tls"]["ca"].as<std::string>();
-                configuration.wan_configuration.tls_cert = config_node["tls"]["verify_ca"].as<std::string>();
-                configuration.wan_configuration.tls = true;
             }
-            else
+            if (config_node["tls"]["password"])
             {
-                logWarning(DATABROKER_CONFIGURATION, "TLS configuration requires all fields fulfilled");
-                configuration.wan_configuration.tls = false;
+                configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
+            }
+            if (config_node["tls"]["dh_params"])
+            {
+                configuration.wan_configuration.tls_dh_params = config_node["tls"]["dh_params"].as<std::string>();
+            }
+            if (config_node["tls"]["ca_cert"])
+            {
+                configuration.wan_configuration.tls_ca_cert = config_node["tls"]["ca_cert"].as<std::string>();
+            }
+            if (config_node["tls"]["cert"])
+            {
+                configuration.wan_configuration.tls_cert = config_node["tls"]["cert"].as<std::string>();
             }
 
-            if (configuration.wan_configuration.tls)
-            {
-                logInfo(DATABROKER_CONFIGURATION, "Using TLS security");
-            }
+            logInfo(DATABROKER_CONFIGURATION, "Using TLS security");
         }
 
         // Interactive

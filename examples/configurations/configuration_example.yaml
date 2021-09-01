@@ -1,6 +1,7 @@
 # ARGUMENTS
 
-## DATABROKER CONFIGURATION
+###########################
+# DATABROKER CONFIGURATION
 # Launch application in interactive mode: listening for user commands
 # This option is not compatible with running the application in background
 interactive: false
@@ -17,7 +18,8 @@ whitelist:
     "chatter"
   ]
 
-## DATABROKER PARTICIPANT WAN CONFIGURATION
+###########################################
+# DATABROKER PARTICIPANT WAN CONFIGURATION
 # Id of the local Discovery Server (seed to generate the GUID)
 # In case 'server-guid' is set, this value is discarded
 server-id: 0
@@ -60,9 +62,10 @@ tls:
   password: "password"
   dh_params: "dh_params.pem"
   ca_cert: "ca.crt"
-  certificate: "databroker.crt"
+  cert: "databroker.crt"
 
-## DATABROKER PARTICIPANT LOCAL CONFIGURATION
+#############################################
+# DATABROKER PARTICIPANT LOCAL CONFIGURATION
 # Connect to an internal ROS2 network
 ros: true
 

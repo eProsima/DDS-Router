@@ -22,11 +22,11 @@ udp: false
 
 # Inactive by default
 # tls:
-#   private_key: "pk.pem"
+#   private_key: "databroker.key"
 #   password: "password"
-#   dh: "dh.pem"
-#   ca: "ca.pem"
-#   verify_ca: "ca.pem"
+#   dh_params: "dh_params.pem"
+#   ca_cert: "ca.crt"
+#   cert: "databroker.crt"
 
 ## DATABROKER PARTICIPANT LOCAL CONFIGURATION
 ros: false
