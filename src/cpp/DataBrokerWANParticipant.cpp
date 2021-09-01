@@ -65,10 +65,6 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
             descriptor->sendBufferSize = 0;
             descriptor->receiveBufferSize = 0;
 
-            pqos.transport().user_transports.push_back(descriptor);
-
-            logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
-
             if (configuration_.tls)
             {
                 // Apply security ON
@@ -79,8 +75,8 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 descriptor->tls_config.private_key_file = configuration_.tls_private_key;
 
                 // Own certificate and valid certificates
-                descriptor->tls_config.cert_chain_file = configuration_.tls_ca_cert;
-                descriptor->tls_config.verify_file = configuration_.tls_cert;
+                descriptor->tls_config.cert_chain_file = configuration_.tls_cert;
+                descriptor->tls_config.verify_file = configuration_.tls_ca_cert;
 
                 // DH
                 descriptor->tls_config.tmp_dh_file = configuration_.tls_dh_params;
@@ -94,7 +90,13 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                     eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
                 descriptor->tls_config.verify_mode =
                         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
+
+                logInfo(DATABROKER, "External Discovery Server configure with TLS");
             }
+
+            pqos.transport().user_transports.push_back(descriptor);
+
+            logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
         }
 
         // Create Locator

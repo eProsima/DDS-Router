@@ -193,6 +193,8 @@ bool DataBrokerConfiguration::load_configuration_file(
                 configuration.wan_configuration.tls_cert = config_node["tls"]["cert"].as<std::string>();
             }
 
+            configuration.wan_configuration.tls = true;
+
             logInfo(DATABROKER_CONFIGURATION, "Using TLS security");
         }
 
