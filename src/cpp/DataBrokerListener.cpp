@@ -53,14 +53,14 @@ bool DataBrokerListener::init(
     return local_ && wan_;
 }
 
-void DataBrokerListener::block_topic(
+void DataBrokerListener::lock_topic(
         const std::string& topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     topics_blocked_.insert(topic);
 }
 
-void DataBrokerListener::unblock_topic(
+void DataBrokerListener::unlock_topic(
         const std::string& topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);

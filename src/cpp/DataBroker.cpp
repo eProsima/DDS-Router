@@ -311,16 +311,9 @@ void DataBroker::add_topic_(
 {
     logInfo(DATABROKER, "Adding topic " << topic << " to whitelist");
 
-    auto it = topics_.find(topic);
-    if (it != topics_.end())
-    {
-        if (!it->second)
-        {
-            listener_.unblock_topic(topic);
-        }
-    }
-
     topics_[topic] = true;
+    // The topic needs to be unlocked in case it was locked before
+    listener_.unlock_topic(topic);
     local_->add_topic(topic);
     wan_->add_topic(topic);
 }
@@ -329,7 +322,7 @@ void DataBroker::remove_topic_(
         const std::string& topic)
 {
     topics_[topic] = false;
-    listener_.block_topic(topic);
+    listener_.lock_topic(topic);
 }
 
 void DataBroker::stop_all_topics()
