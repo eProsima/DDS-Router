@@ -35,12 +35,6 @@ public:
             eprosima::fastdds::dds::DomainParticipantListener* listener,
             DataBrokerWANParticipantConfiguration configuration);
 
-    // DataBrokerWANParticipant(
-    //         eprosima::fastdds::dds::DomainParticipantListener* listener,
-    //         eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
-    //         uint32_t domain = 0,
-    //         std::string name = "DataBroker Participant");
-
     eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
 
     eprosima::fastdds::dds::DomainParticipantQos participant_qos();
@@ -56,9 +50,6 @@ protected:
     const DataBrokerParticipantConfiguration& get_configuration_() override;
 
     DataBrokerWANParticipantConfiguration configuration_;
-
-    // eprosima::fastrtps::rtps::GuidPrefix_t guid_;
-
 };
 
 } /* namespace databroker */

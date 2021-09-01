@@ -35,13 +35,13 @@ bool DataBrokerConfiguration::load_default_configuration(
     // DataBroker configuration
     configuration.seconds = 0;
     configuration.interactive = false;
-    // configuration.active_topics = std::vector<std::string>();
+    configuration.active_topics = std::vector<std::string>();
 
     // WAN Participant configuration
     configuration.wan_configuration.domain = 0;
     configuration.wan_configuration.server_guid = Address::guid_server();
-    // configuration.wan_configuration.connection_addresses = std::vector<Address>();
-    // configuration.wan_configuration.listening_addresses = std::vector<Address>();
+    configuration.wan_configuration.connection_addresses = std::vector<Address>();
+    configuration.wan_configuration.listening_addresses = std::vector<Address>();
     configuration.wan_configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
     configuration.wan_configuration.udp = false;
 
@@ -187,10 +187,7 @@ bool DataBrokerConfiguration::load_configuration_file(
             }
             else
             {
-                if (verbose)
-                {
-                    logWarning(DATABROKER_CONFIGURATION, "TLS configuration requires all fields fulfilled");
-                }
+                logWarning(DATABROKER_CONFIGURATION, "TLS configuration requires all fields fulfilled");
                 configuration.wan_configuration.tls = false;
             }
 
