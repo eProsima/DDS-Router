@@ -49,9 +49,9 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.wan_configuration.tls = false;
     configuration.wan_configuration.tls_private_key = DEFAULT_PRIVATE_KEY_FILE;
     configuration.wan_configuration.tls_password = "password";
-    configuration.wan_configuration.tls_dh = DEFAULT_DH_FILE;
-    configuration.wan_configuration.tls_ca = DEFAULT_CA_FILE;
-    configuration.wan_configuration.tls_cert = DEFAULT_CERT_FILE;
+    configuration.wan_configuration.tls_dh_params = DEFAULT_DH_PARAMS_FILE;
+    configuration.wan_configuration.tls_ca_cert = DEFAULT_CA_CERTIFICATE_FILE;
+    configuration.wan_configuration.tls_cert = DEFAULT_CERTIFICATE_FILE;
 
     // Local Participant configuration
     configuration.local_configuration.domain = 0;
@@ -84,7 +84,8 @@ bool DataBrokerConfiguration::load_configuration_file(
         // Server GUID
         if (config_node["server-guid"])
         {
-            configuration.wan_configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>());
+            configuration.wan_configuration.server_guid = Address::guid_server(
+                config_node["server-guid"].as<std::string>());
             logInfo(DATABROKER_CONFIGURATION, "Server GUID set: " << configuration.wan_configuration.server_guid);
         }
 
@@ -172,15 +173,15 @@ bool DataBrokerConfiguration::load_configuration_file(
         {
 
             if (config_node["tls"]["private_key"] &&
-                config_node["tls"]["password"] &&
-                config_node["tls"]["dh"] &&
-                config_node["tls"]["ca"] &&
-                config_node["tls"]["verify_ca"])
+                    config_node["tls"]["password"] &&
+                    config_node["tls"]["dh"] &&
+                    config_node["tls"]["ca"] &&
+                    config_node["tls"]["verify_ca"])
             {
                 configuration.wan_configuration.tls_private_key = config_node["tls"]["private_key"].as<std::string>();
                 configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
-                configuration.wan_configuration.tls_dh = config_node["tls"]["dh"].as<std::string>();
-                configuration.wan_configuration.tls_ca = config_node["tls"]["ca"].as<std::string>();
+                configuration.wan_configuration.tls_dh_params = config_node["tls"]["dh"].as<std::string>();
+                configuration.wan_configuration.tls_ca_cert = config_node["tls"]["ca"].as<std::string>();
                 configuration.wan_configuration.tls_cert = config_node["tls"]["verify_ca"].as<std::string>();
                 configuration.wan_configuration.tls = true;
             }

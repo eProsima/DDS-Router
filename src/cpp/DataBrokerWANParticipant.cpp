@@ -79,11 +79,11 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 descriptor->tls_config.private_key_file = configuration_.tls_private_key;
 
                 // Own certificate and valid certificates
-                descriptor->tls_config.cert_chain_file = configuration_.tls_ca;
+                descriptor->tls_config.cert_chain_file = configuration_.tls_ca_cert;
                 descriptor->tls_config.verify_file = configuration_.tls_cert;
 
                 // DH
-                descriptor->tls_config.tmp_dh_file = configuration_.tls_dh;
+                descriptor->tls_config.tmp_dh_file = configuration_.tls_dh_params;
 
                 // Options
                 descriptor->tls_config.add_option(
@@ -93,7 +93,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 descriptor->tls_config.add_option(
                     eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
                 descriptor->tls_config.verify_mode =
-                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
+                        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
             }
         }
 

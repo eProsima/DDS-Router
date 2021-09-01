@@ -47,11 +47,11 @@ udp: false
 # Use TLS security
 # To active TLS all this files must be set and exist
 tls:
-  private_key: "pk.pem"
+  private_key: "databroker.key"
   password: "password"
-  dh: "dh.pem"
-  ca: "ca.pem"
-  verify_ca: "ca.pem"
+  dh_params: "dh_params.pem"
+  ca_cert: "ca.crt"
+  certificate: "databroker.crt"
 
 # Launch application in interactive mode: listening for user commands
 # This option is not compatible with running the application in background
