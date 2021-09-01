@@ -42,6 +42,9 @@ public:
     void block_topic(
             const std::string& topic);
 
+    void DataBrokerListener::unblock_topic(
+            const std::string& topic);
+
     void on_data_available(
             eprosima::fastdds::dds::DataReader* reader) override;
 

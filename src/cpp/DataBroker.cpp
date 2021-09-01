@@ -311,6 +311,15 @@ void DataBroker::add_topic_(
 {
     logInfo(DATABROKER, "Adding topic " << topic << " to whitelist");
 
+    auto it = topics_.find(topic);
+    if (it != topics_.end())
+    {
+        if (!it->second)
+        {
+            listener_.unblock_topic(topic);
+        }
+    }
+
     topics_[topic] = true;
     local_->add_topic(topic);
     wan_->add_topic(topic);
