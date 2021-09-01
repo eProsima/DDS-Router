@@ -32,8 +32,8 @@ class DataBrokerWANParticipant : public DataBrokerParticipant
 public:
 
     DataBrokerWANParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener,
-        DataBrokerWANParticipantConfiguration configuration);
+            eprosima::fastdds::dds::DomainParticipantListener* listener,
+            DataBrokerWANParticipantConfiguration configuration);
 
     // DataBrokerWANParticipant(
     //         eprosima::fastdds::dds::DomainParticipantListener* listener,

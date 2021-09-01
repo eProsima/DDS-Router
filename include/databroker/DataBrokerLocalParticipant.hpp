@@ -35,8 +35,8 @@ class DataBrokerLocalParticipant : public DataBrokerParticipant
 public:
 
     DataBrokerLocalParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener,
-        DataBrokerLocalParticipantConfiguration configuration);
+            eprosima::fastdds::dds::DomainParticipantListener* listener,
+            DataBrokerLocalParticipantConfiguration configuration);
 
     std::string name() override;
 

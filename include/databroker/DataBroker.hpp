@@ -65,7 +65,8 @@ class DataBroker
 {
 public:
 
-    DataBroker(DataBrokerConfiguration configuration);
+    DataBroker(
+            DataBrokerConfiguration configuration);
 
     virtual ~DataBroker();
 

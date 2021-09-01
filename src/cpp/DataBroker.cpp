@@ -30,7 +30,8 @@
 namespace eprosima {
 namespace databroker {
 
-DataBroker::DataBroker(DataBrokerConfiguration configuration)
+DataBroker::DataBroker(
+        DataBrokerConfiguration configuration)
     : configuration_(configuration)
 {
     logInfo(DATABROKER, "Creating DataBroker instance");

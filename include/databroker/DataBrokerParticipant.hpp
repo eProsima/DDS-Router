@@ -42,11 +42,11 @@ class DataBrokerParticipant
 public:
 
     DataBrokerParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener,
-        DataBrokerParticipantConfiguration configuration);
+            eprosima::fastdds::dds::DomainParticipantListener* listener,
+            DataBrokerParticipantConfiguration configuration);
 
     DataBrokerParticipant(
-        eprosima::fastdds::dds::DomainParticipantListener* listener);
+            eprosima::fastdds::dds::DomainParticipantListener* listener);
 
     virtual ~DataBrokerParticipant();
 
