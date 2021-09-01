@@ -206,6 +206,20 @@ bool DataBrokerConfiguration::load_configuration_file(
             }
         }
 
+        // time
+        if (config_node["time"])
+        {
+            configuration.seconds = config_node["time"].as<uint32_t>();
+            logInfo(DATABROKER_CONFIGURATION, "Set time to " << configuration.seconds << " seconds");
+        }
+
+        // Domain
+        if (config_node["domain"])
+        {
+            configuration.local_configuration.domain = config_node["domain"].as<uint32_t>();
+            logInfo(DATABROKER_CONFIGURATION, "Using internal domain " << configuration.local_configuration.domain);
+        }
+
         logInfo(DATABROKER_CONFIGURATION, "Loaded configuration file '" << file_path << "'");
     }
     catch (const std::exception& e)

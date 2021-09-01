@@ -132,7 +132,6 @@ int main(
 
                 case optionIndex::DOMAIN:
                     configuration.local_configuration.domain = std::stol(opt.arg);
-                    configuration.wan_configuration.domain = std::stol(opt.arg);
                     break;
 
                 case optionIndex::ROS:
