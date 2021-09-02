@@ -81,7 +81,7 @@ struct DataBrokerConfiguration
 
     static bool reload_configuration_file(
             DataBrokerConfiguration& configuration,
-            const std::string& file_path);
+            const std::string& file_path = "");
 };
 
 } /* namespace databroker */

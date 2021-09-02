@@ -165,7 +165,7 @@ bool DataBroker::run_interactive()
                 break;
 
             case Command::RELOAD_FILE:
-                if (DataBrokerConfiguration::reload_configuration_file(configuration_, configuration_.config_file))
+                if (DataBrokerConfiguration::reload_configuration_file(configuration_))
                 {
                     stop_all_topics();
                     for (std::string topic : configuration_.active_topics)
@@ -175,7 +175,7 @@ bool DataBroker::run_interactive()
                 }
                 else
                 {
-                    std::cout << "Error reading configuration file " << configuration_.config_file << std::endl;
+                    std::cout << "Error reloading configuration file " << configuration_.config_file << std::endl;
                 }
 
                 break;
@@ -237,16 +237,7 @@ Command DataBroker::read_command(
     // Check if command should have arguments
     auto it = COMMAND_ARGUMENTS.find(command);
 
-    if (it == COMMAND_ARGUMENTS.end())
-    {
-        // Should not have arguments
-        if (!args.empty())
-        {
-            std::cout << "Command " << command_word << " does not have arguments" << std::endl;
-            command = ERROR;
-        }
-    }
-    else
+    if (it != COMMAND_ARGUMENTS.end())
     {
         // Should not have arguments
         if (args.size() != it->second.size())

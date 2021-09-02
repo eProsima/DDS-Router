@@ -274,12 +274,16 @@ bool DataBrokerConfiguration::load_configuration_file(
 
 bool DataBrokerConfiguration::reload_configuration_file(
         DataBrokerConfiguration& configuration,
-        const std::string& file_path)
+        const std::string& file_path /* = "" */)
 {
     YAML::Node config_node;
 
-    logInfo(DATABROKER_CONFIGURATION, "Loading configuration file '" << file_path << "'");
-    configuration.config_file = file_path;
+    if (!file_path.empty())
+    {
+        configuration.config_file = file_path;
+    }
+
+    logInfo(DATABROKER_CONFIGURATION, "Reloading configuration file '" << configuration.config_file.c_str() << "'");
 
     try
     {

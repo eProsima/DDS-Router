@@ -58,6 +58,9 @@ static const std::map<Command, std::list<std::string>> COMMAND_KEYWORDS =
 
 static const std::map<Command, std::vector<std::string>> COMMAND_ARGUMENTS =
 {
+    {Command::CMD_HELP, {}},
+    {Command::RELOAD_FILE, {}},
+    {Command::EXIT, {}},
     {Command::ADD_TOPIC, {"topic_name"}},
     {Command::REMOVE_TOPIC, {"topic_name"}},
     {Command::LOAD_FILE, {"file_path"}},
