@@ -131,7 +131,6 @@ bool DataBroker::run_interactive()
 
     std::string input;
     std::vector<std::string> args;
-    DataBrokerConfiguration configuration;
 
     std::cout << "Running DataBroker in interactive mode. Write a command:" << std::endl;
     std::cout << "> " << std::flush;
@@ -151,18 +150,34 @@ bool DataBroker::run_interactive()
                 break;
 
             case Command::LOAD_FILE:
-                if (!DataBrokerConfiguration::load_configuration_file(configuration, args[0], true))
-                {
-                    std::cout << "Error reading configuration file " << args[0] << std::endl;
-                }
-                else
+                if (DataBrokerConfiguration::reload_configuration_file(configuration_, args[0]))
                 {
                     stop_all_topics();
-                    for (std::string topic : configuration.active_topics)
+                    for (std::string topic : configuration_.active_topics)
                     {
                         add_topic_(topic);
                     }
                 }
+                else
+                {
+                    std::cout << "Error reading configuration file " << args[0] << std::endl;
+                }
+                break;
+
+            case Command::RELOAD_FILE:
+                if (DataBrokerConfiguration::reload_configuration_file(configuration_, configuration_.config_file))
+                {
+                    stop_all_topics();
+                    for (std::string topic : configuration_.active_topics)
+                    {
+                        add_topic_(topic);
+                    }
+                }
+                else
+                {
+                    std::cout << "Error reading configuration file " << configuration_.config_file << std::endl;
+                }
+
                 break;
 
             case Command::EXIT:
