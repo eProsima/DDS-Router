@@ -176,22 +176,50 @@ bool DataBrokerConfiguration::load_configuration_file(
             {
                 configuration.wan_configuration.tls_private_key = config_node["tls"]["private_key"].as<std::string>();
             }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a private key file");
+                return false;
+            }
+
             if (config_node["tls"]["password"])
             {
                 configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
             }
+            else
+            {
+                configuration.wan_configuration.tls_password = "";
+            }
+
             if (config_node["tls"]["dh_params"])
             {
                 configuration.wan_configuration.tls_dh_params = config_node["tls"]["dh_params"].as<std::string>();
             }
+            else
+            {
+                configuration.wan_configuration.tls_dh_params = "";
+            }
+
             if (config_node["tls"]["ca_cert"])
             {
                 configuration.wan_configuration.tls_ca_cert = config_node["tls"]["ca_cert"].as<std::string>();
             }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a verify CA certificate file");
+                return false;
+            }
+
             if (config_node["tls"]["cert"])
             {
                 configuration.wan_configuration.tls_cert = config_node["tls"]["cert"].as<std::string>();
             }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a certificate file");
+                return false;
+            }
+
 
             configuration.wan_configuration.tls = true;
 

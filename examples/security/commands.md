@@ -5,36 +5,36 @@ Those have been the commands use to generate this example keys and certificates
 ## Certification Authority (CA)
 
 ```sh
-# Generate the Certificate Authority (CA) Private Key
+# Generate the Certificate Authority (CA) Private Key > ca.key
 openssl ecparam -name prime256v1 -genkey -noout -out ca.key
 
-# Generate the Certificate Authority Certificate
-openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 3650
+# Generate the Certificate Authority Certificate > ca.crt
+openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 3650 -config ca.cnf
 ```
 
 ## DataBroker Certificate
 
 ```sh
-# Generate the Databroker Certificate Private Key
-openssl ecparam -name prime256v1 -genkey -noout -out db.key
+# Generate the Databroker Certificate Private Key > databroker.key
+openssl ecparam -name prime256v1 -genkey -noout -out databroker.key
 
-# Generate the Databroker Certificate Signing Request
-openssl req -new -sha256 -key db.key -out db.csr
+# Generate the Databroker Certificate Signing Request  > databroker.csr
+openssl req -new -sha256 -key databroker.key -out databroker.csr -config databroker.cnf
 
-# Generate the Databroker Certificate (computed on the CA side)
-openssl x509 -req -in db.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out db.crt -days 1000 -sha256
+# Generate the Databroker Certificate (computed on the CA side) > databroker.crt
+openssl x509 -req -in databroker.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out databroker.crt -days 1000 -sha256
 
-# Generate the Diffie-Hellman (DF) parameters to define how OpenSSL performs de DF key-exchange.
-openssl dhparam -out dbparam.pem 2048
+# Generate the Diffie-Hellman (DF) parameters to define how OpenSSL performs de DF key-exchange > db_params.pem
+openssl dhparam -out db_params.pem 2048
 ```
 
 ## Use
 
 ```yaml
 tls:
-  private_key: "db.key"
-  password: ""
-  dh: "dbparam.pem"
-  ca: "sb.crt"
+  private_key: "databroker.key"
+  ca: "databroker.crt"
   cert: "ca.crt"
+  dh_params: "db_params.pem"
+  password: ""
 ```
