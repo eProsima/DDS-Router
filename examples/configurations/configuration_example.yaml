@@ -1,4 +1,25 @@
 # ARGUMENTS
+
+###########################
+# DATABROKER CONFIGURATION
+# Launch application in interactive mode: listening for user commands
+# This option is not compatible with running the application in background
+interactive: false
+
+# Time to keep running
+# Does not have effect if `interactive` set to true
+# 0 means run forever
+time: 600
+
+# Topics allowed to be retransmitted
+whitelist:
+  [
+    "HelloWorld",
+    "chatter"
+  ]
+
+###########################################
+# DATABROKER PARTICIPANT WAN CONFIGURATION
 # Id of the local Discovery Server (seed to generate the GUID)
 # In case 'server-guid' is set, this value is discarded
 server-id: 0
@@ -30,20 +51,23 @@ connection-addresses:
     }
   ]
 
-# Topics allowed to be retransmitted
-whitelist:
-  [
-    "HelloWorld",
-    "chatter"
-  ]
-
-# FLAGS
-# Connect to an internal ROS2 network
-ros: true
-
 # Use UDP connection
 udp: false
 
-# Launch application in interactive mode: listening for user commands
-# This option is not compatible with running the application in background
-interactive: false
+# Use TLS security
+# To active TLS all this files must be set and exist
+# Do not have any effect if `udp` is set
+tls:
+  private_key: "databroker.key"
+  password: "password"
+  dh_params: "dh_params.pem"
+  ca_cert: "ca.crt"
+  cert: "databroker.crt"
+
+#############################################
+# DATABROKER PARTICIPANT LOCAL CONFIGURATION
+# Connect to an internal ROS2 network
+ros: true
+
+# Domain ID
+domain: 0

@@ -132,7 +132,7 @@ void DataBrokerListener::on_subscription_matched(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Local Reader in topic " << reader->get_topicdescription()->get_name()
                                              << " matched with Writer " <<
-                            info.last_publication_handle);
+                    info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -152,7 +152,7 @@ void DataBrokerListener::on_subscription_matched(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Local Reader in topic " << reader->get_topicdescription()->get_name()
                                              << " unmatched with Writer " <<
-                            info.last_publication_handle);
+                    info.last_publication_handle);
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -178,14 +178,14 @@ void DataBrokerListener::on_publication_matched(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Local Writer in topic " << writer->get_topic()->get_name()
                                              << " matched with Reader " <<
-                            info.last_subscription_handle);
+                    info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL,
                     "External Writer in topic " << writer->get_topic()->get_name()
                                                 << " matched with Reader " <<
-                            info.last_subscription_handle);
+                    info.last_subscription_handle);
         }
         else
         {
@@ -199,14 +199,14 @@ void DataBrokerListener::on_publication_matched(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Local Writer in topic " << writer->get_topic()->get_name()
                                              << " unmatched with Reader " <<
-                            info.last_subscription_handle);
+                    info.last_subscription_handle);
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
             logInfo(DATABROKER_LISTENER_EXTERNAL,
                     "External Writer in topic " << writer->get_topic()->get_name()
                                                 << " unmatched with Reader " <<
-                            info.last_subscription_handle);
+                    info.last_subscription_handle);
         }
         else
         {
@@ -265,7 +265,7 @@ void DataBrokerListener::on_subscriber_discovery(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Subscription found in local network in topic " << info.info.topicName()
                                                                     << " with guid " <<
-                            info.info.guid().guidPrefix);
+                    info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -310,7 +310,7 @@ void DataBrokerListener::on_publisher_discovery(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Publication found in local network in topic " << info.info.topicName()
                                                                    << " with guid " <<
-                            info.info.guid().guidPrefix);
+                    info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
@@ -330,7 +330,7 @@ void DataBrokerListener::on_publisher_discovery(
             logInfo(DATABROKER_LISTENER_LOCAL,
                     "Publication dropped in local network in topic " << info.info.topicName()
                                                                      << " with guid " <<
-                            info.info.guid().guidPrefix);
+                    info.info.guid().guidPrefix);
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {

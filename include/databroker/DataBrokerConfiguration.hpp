@@ -30,24 +30,52 @@
 namespace eprosima {
 namespace databroker {
 
-struct DataBrokerConfiguration
+#define DEFAULT_CONFIGURATION_FILE "DATABROKER_CONFIGURATION.yaml"
+
+constexpr const char* DEFAULT_PRIVATE_KEY_FILE = "databroker.key";
+constexpr const char* DEFAULT_DH_PARAMS_FILE = "dh_params.pem";
+constexpr const char* DEFAULT_CA_CERTIFICATE_FILE = "ca.crt";
+constexpr const char* DEFAULT_CERTIFICATE_FILE = "databroker.crt";
+
+struct DataBrokerParticipantConfiguration
+{
+    uint32_t domain;
+};
+
+struct DataBrokerLocalParticipantConfiguration : public DataBrokerParticipantConfiguration
+{
+    bool ros;
+};
+
+struct DataBrokerWANParticipantConfiguration : public DataBrokerParticipantConfiguration
 {
     eprosima::fastrtps::rtps::GuidPrefix_t server_guid;
     std::vector<Address> listening_addresses;
     std::vector<Address> connection_addresses;
+    bool udp;
+    bool tls;
+    std::string tls_private_key;
+    std::string tls_password;
+    std::string tls_dh_params;
+    std::string tls_ca_cert;
+    std::string tls_cert;
+};
+
+struct DataBrokerConfiguration
+{
+    DataBrokerLocalParticipantConfiguration local_configuration;
+    DataBrokerWANParticipantConfiguration wan_configuration;
+
     std::vector<std::string> active_topics;
     uint32_t seconds;
     bool interactive;
-    uint32_t domain;
-    bool ros;
-    bool udp;
 
     static bool load_default_configuration(
             DataBrokerConfiguration& configuration);
 
     static bool load_configuration_file(
             DataBrokerConfiguration& configuration,
-            const std::string& file_path = "DATABROKER_CONFIGURATION.yaml",
+            const std::string& file_path = DEFAULT_CONFIGURATION_FILE,
             bool verbose = false);
 };
 

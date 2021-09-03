@@ -32,15 +32,30 @@ namespace databroker {
 bool DataBrokerConfiguration::load_default_configuration(
         DataBrokerConfiguration& configuration)
 {
-    configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
+    // DataBroker configuration
     configuration.seconds = 0;
     configuration.interactive = false;
-    configuration.ros = false;
-    configuration.domain = 0;
-    configuration.udp = false;
-    configuration.server_guid = Address::guid_server();
+    configuration.active_topics = std::vector<std::string>();
 
-    load_configuration_file(configuration);
+    // WAN Participant configuration
+    configuration.wan_configuration.domain = 0;
+    configuration.wan_configuration.server_guid = Address::guid_server();
+    configuration.wan_configuration.connection_addresses = std::vector<Address>();
+    configuration.wan_configuration.listening_addresses = std::vector<Address>();
+    configuration.wan_configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
+    configuration.wan_configuration.udp = false;
+
+    // WAN Participant TLS configuration
+    configuration.wan_configuration.tls = false;
+    configuration.wan_configuration.tls_private_key = DEFAULT_PRIVATE_KEY_FILE;
+    configuration.wan_configuration.tls_password = "password";
+    configuration.wan_configuration.tls_dh_params = DEFAULT_DH_PARAMS_FILE;
+    configuration.wan_configuration.tls_ca_cert = DEFAULT_CA_CERTIFICATE_FILE;
+    configuration.wan_configuration.tls_cert = DEFAULT_CERTIFICATE_FILE;
+
+    // Local Participant configuration
+    configuration.local_configuration.domain = 0;
+    configuration.local_configuration.ros = false;
 
     return true;
 }
@@ -50,31 +65,34 @@ bool DataBrokerConfiguration::load_configuration_file(
         const std::string& file_path /* ="DATABROKER_CONFIGURATION.yaml" */,
         bool verbose /* = false */)
 {
+    // TODO add log comments
     YAML::Node config_node;
+
+    logInfo(DATABROKER_CONFIGURATION, "Loading configuration file '" << file_path << "'");
+
     try
     {
         config_node = YAML::LoadFile(file_path);
 
-        logInfo(DATABROKER_CONFIGURATION, "Loaded file " << file_path);
-
         // Server ID
         if (config_node["server-id"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>());
-            logInfo(DATABROKER_CONFIGURATION, "Server GUID set by id: " << configuration.server_guid);
+            configuration.wan_configuration.server_guid = Address::guid_server(config_node["server-id"].as<int>());
+            logInfo(DATABROKER_CONFIGURATION, "Server GUID set by id: " << configuration.wan_configuration.server_guid);
         }
 
         // Server GUID
         if (config_node["server-guid"])
         {
-            configuration.server_guid = Address::guid_server(config_node["server-guid"].as<std::string>());
-            logInfo(DATABROKER_CONFIGURATION, "Server GUID set: " << configuration.server_guid);
+            configuration.wan_configuration.server_guid = Address::guid_server(
+                config_node["server-guid"].as<std::string>());
+            logInfo(DATABROKER_CONFIGURATION, "Server GUID set: " << configuration.wan_configuration.server_guid);
         }
 
         // Listening address
         if (config_node["listening-addresses"])
         {
-            configuration.listening_addresses.clear();
+            configuration.wan_configuration.listening_addresses.clear();
             for (auto address : config_node["listening-addresses"])
             {
                 Address new_address;
@@ -86,7 +104,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                 {
                     new_address.port = address["port"].as<uint32_t>();
                 }
-                configuration.listening_addresses.push_back(new_address);
+                configuration.wan_configuration.listening_addresses.push_back(new_address);
                 logInfo(DATABROKER_CONFIGURATION, "Adding address to listening addresses: " << new_address);
             }
         }
@@ -94,7 +112,7 @@ bool DataBrokerConfiguration::load_configuration_file(
         // Connection address
         if (config_node["connection-addresses"])
         {
-            configuration.connection_addresses.clear();
+            configuration.wan_configuration.connection_addresses.clear();
             for (auto address : config_node["connection-addresses"])
             {
                 Address new_address;
@@ -114,7 +132,7 @@ bool DataBrokerConfiguration::load_configuration_file(
                 {
                     new_address.guid = Address::guid_server(address["guid"].as<std::string>());
                 }
-                configuration.connection_addresses.push_back(new_address);
+                configuration.wan_configuration.connection_addresses.push_back(new_address);
                 logInfo(DATABROKER_CONFIGURATION, "Adding address to connection addresses: " << new_address);
             }
         }
@@ -133,8 +151,8 @@ bool DataBrokerConfiguration::load_configuration_file(
         // ROS
         if (config_node["ros"])
         {
-            configuration.ros = config_node["ros"].as<bool>();
-            if (configuration.ros)
+            configuration.local_configuration.ros = config_node["ros"].as<bool>();
+            if (configuration.local_configuration.ros)
             {
                 logInfo(DATABROKER_CONFIGURATION, "Connecting to a local ROS2 network");
             }
@@ -143,22 +161,96 @@ bool DataBrokerConfiguration::load_configuration_file(
         // UDP
         if (config_node["udp"])
         {
-            configuration.udp = config_node["udp"].as<bool>();
-            if (configuration.ros)
+            configuration.wan_configuration.udp = config_node["udp"].as<bool>();
+            if (configuration.local_configuration.ros)
             {
                 logInfo(DATABROKER_CONFIGURATION, "Using UDP transport");
             }
+        }
+
+        // TLS
+        if (config_node["tls"])
+        {
+            // In case any field is missing, the defaukt configuration will be used
+            if (config_node["tls"]["private_key"])
+            {
+                configuration.wan_configuration.tls_private_key = config_node["tls"]["private_key"].as<std::string>();
+            }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a private key file");
+                return false;
+            }
+
+            if (config_node["tls"]["password"])
+            {
+                configuration.wan_configuration.tls_password = config_node["tls"]["password"].as<std::string>();
+            }
+            else
+            {
+                configuration.wan_configuration.tls_password = "";
+            }
+
+            if (config_node["tls"]["dh_params"])
+            {
+                configuration.wan_configuration.tls_dh_params = config_node["tls"]["dh_params"].as<std::string>();
+            }
+            else
+            {
+                configuration.wan_configuration.tls_dh_params = "";
+            }
+
+            if (config_node["tls"]["ca_cert"])
+            {
+                configuration.wan_configuration.tls_ca_cert = config_node["tls"]["ca_cert"].as<std::string>();
+            }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a verify CA certificate file");
+                return false;
+            }
+
+            if (config_node["tls"]["cert"])
+            {
+                configuration.wan_configuration.tls_cert = config_node["tls"]["cert"].as<std::string>();
+            }
+            else
+            {
+                logError(DATABROKER_CONFIGURATION, "TLS configuration needs a certificate file");
+                return false;
+            }
+
+
+            configuration.wan_configuration.tls = true;
+
+            logInfo(DATABROKER_CONFIGURATION, "Using TLS security");
         }
 
         // Interactive
         if (config_node["interactive"])
         {
             configuration.interactive = config_node["interactive"].as<bool>();
-            if (configuration.ros)
+            if (configuration.local_configuration.ros)
             {
                 logInfo(DATABROKER_CONFIGURATION, "Set interactive mode");
             }
         }
+
+        // time
+        if (config_node["time"])
+        {
+            configuration.seconds = config_node["time"].as<uint32_t>();
+            logInfo(DATABROKER_CONFIGURATION, "Set time to " << configuration.seconds << " seconds");
+        }
+
+        // Domain
+        if (config_node["domain"])
+        {
+            configuration.local_configuration.domain = config_node["domain"].as<uint32_t>();
+            logInfo(DATABROKER_CONFIGURATION, "Using internal domain " << configuration.local_configuration.domain);
+        }
+
+        logInfo(DATABROKER_CONFIGURATION, "Loaded configuration file '" << file_path << "'");
     }
     catch (const std::exception& e)
     {

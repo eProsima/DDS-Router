@@ -23,43 +23,36 @@
 #include <databroker/DataBrokerWANParticipant.hpp>
 #include <databroker/Address.hpp>
 
-
 namespace eprosima {
 namespace databroker {
 
 DataBrokerWANParticipant::DataBrokerWANParticipant(
         eprosima::fastdds::dds::DomainParticipantListener* listener,
-        eprosima::fastrtps::rtps::GuidPrefix_t server_guid,
-        uint32_t domain /* = 0 */,
-        std::string name /* = "DataBroker Participant" */)
-    : DataBrokerParticipant(listener, domain, name)
-    , guid_(server_guid)
+        DataBrokerWANParticipantConfiguration configuration)
+    : DataBrokerParticipant(listener)
+    , configuration_(configuration)
 {
 }
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerWANParticipant::guid()
 {
-    return guid_;
+    return configuration_.server_guid;
 }
 
 // TODO add debug traces
-eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_participant_qos(
-        const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
-        const std::vector<Address>& listening_addresses,
-        const std::vector<Address>& connection_addresses,
-        const bool& udp)
+eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participant_qos()
 {
-    eprosima::fastdds::dds::DomainParticipantQos pqos = default_participant_qos();
+    eprosima::fastdds::dds::DomainParticipantQos pqos = DataBrokerParticipant::participant_qos();
 
     // Configuring Server Guid
-    pqos.wire_protocol().prefix = server_guid;
+    pqos.wire_protocol().prefix = configuration_.server_guid;
 
-    logInfo(DATABROKER, "External Discovery Server set with guid " << server_guid);
+    logInfo(DATABROKER, "External Discovery Server set with guid " << configuration_.server_guid);
 
-    for (auto address : listening_addresses)
+    for (auto address : configuration_.listening_addresses)
     {
         // Configuring transport
-        if (!udp)
+        if (!configuration_.udp)
         {
             // In case of using TCP, configure listening address
             // Create TCPv4 transport
@@ -72,6 +65,35 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_parti
             descriptor->sendBufferSize = 0;
             descriptor->receiveBufferSize = 0;
 
+            if (configuration_.tls)
+            {
+                // Apply security ON
+                descriptor->apply_security = true;
+
+                // Private key
+                descriptor->tls_config.password = configuration_.tls_password;
+                descriptor->tls_config.private_key_file = configuration_.tls_private_key;
+
+                // Own certificate and valid certificates
+                descriptor->tls_config.cert_chain_file = configuration_.tls_cert;
+                descriptor->tls_config.verify_file = configuration_.tls_ca_cert;
+
+                // DH
+                descriptor->tls_config.tmp_dh_file = configuration_.tls_dh_params;
+
+                // Options
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::DEFAULT_WORKAROUNDS);
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::SINGLE_DH_USE);
+                descriptor->tls_config.add_option(
+                    eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
+                descriptor->tls_config.verify_mode =
+                        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
+
+                logInfo(DATABROKER, "External Discovery Server configure with TLS");
+            }
+
             pqos.transport().user_transports.push_back(descriptor);
 
             logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
@@ -79,7 +101,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_parti
 
         // Create Locator
         eprosima::fastrtps::rtps::Locator_t locator;
-        locator.kind = udp ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
+        locator.kind = configuration_.udp ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
 
         eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
         eprosima::fastrtps::rtps::IPLocator::setWan(locator, address.ip);
@@ -92,7 +114,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_parti
     }
 
     // Configure connection addresses
-    for (auto address : connection_addresses)
+    for (auto address : configuration_.connection_addresses)
     {
         eprosima::fastrtps::rtps::RemoteServerAttributes server_attr;
 
@@ -101,7 +123,7 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_parti
 
         // Discovery server locator configuration TCP
         eprosima::fastrtps::rtps::Locator_t locator;
-        locator.kind = udp ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
+        locator.kind = configuration_.udp ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
 
         eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
         eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port);
@@ -127,9 +149,9 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::wan_parti
     return pqos;
 }
 
-eprosima::fastdds::dds::DataWriterQos DataBrokerWANParticipant::default_datawriter_qos()
+eprosima::fastdds::dds::DataWriterQos DataBrokerWANParticipant::datawriter_qos()
 {
-    eprosima::fastdds::dds::DataWriterQos datawriter_qos = DataBrokerParticipant::default_datawriter_qos();
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos = DataBrokerParticipant::datawriter_qos();
 
     datawriter_qos.publish_mode().kind = eprosima::fastdds::dds::PublishModeQosPolicyKind::ASYNCHRONOUS_PUBLISH_MODE;
     datawriter_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
@@ -138,14 +160,24 @@ eprosima::fastdds::dds::DataWriterQos DataBrokerWANParticipant::default_datawrit
     return datawriter_qos;
 }
 
-eprosima::fastdds::dds::DataReaderQos DataBrokerWANParticipant::default_datareader_qos()
+eprosima::fastdds::dds::DataReaderQos DataBrokerWANParticipant::datareader_qos()
 {
-    eprosima::fastdds::dds::DataReaderQos datareader_qos = DataBrokerParticipant::default_datareader_qos();
+    eprosima::fastdds::dds::DataReaderQos datareader_qos = DataBrokerParticipant::datareader_qos();
 
     datareader_qos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
     datareader_qos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
 
     return datareader_qos;
+}
+
+std::string DataBrokerWANParticipant::name()
+{
+    return "External_DataBroker_Participant";
+}
+
+const DataBrokerParticipantConfiguration& DataBrokerWANParticipant::get_configuration_()
+{
+    return configuration_;
 }
 
 } /* namespace databroker */

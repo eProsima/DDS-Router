@@ -25,6 +25,7 @@
 #include <databroker/DataBrokerParticipant.hpp>
 
 #include <StdString/StdString.h>
+#include <databroker/DataBrokerConfiguration.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -33,14 +34,26 @@ class DataBrokerLocalParticipant : public DataBrokerParticipant
 {
 public:
 
-    using DataBrokerParticipant::DataBrokerParticipant;
+    DataBrokerLocalParticipant(
+            eprosima::fastdds::dds::DomainParticipantListener* listener,
+            DataBrokerLocalParticipantConfiguration configuration);
+
+    std::string name() override;
 
 protected:
 
-    eprosima::fastdds::dds::DataWriterQos default_datawriter_qos() override;
+    eprosima::fastdds::dds::DataWriterQos datawriter_qos() override;
 
-    eprosima::fastdds::dds::DataReaderQos default_datareader_qos() override;
+    eprosima::fastdds::dds::DataReaderQos datareader_qos() override;
 
+    std::string type_name_() override;
+
+    std::string topic_mangled_(
+            const std::string& topic_name) override;
+
+    const DataBrokerParticipantConfiguration& get_configuration_() override;
+
+    DataBrokerLocalParticipantConfiguration configuration_;
 };
 
 } /* namespace databroker */

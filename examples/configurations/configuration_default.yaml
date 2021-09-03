@@ -1,0 +1,34 @@
+## DATABROKER CONFIGURATION
+interactive: false
+
+time: 0
+
+whitelist: []
+
+## DATABROKER PARTICIPANT WAN CONFIGURATION
+server-id: 0
+
+listening-addresses:
+  [
+    {
+      ip: "127.0.0.1",
+      port: 11800
+    }
+  ]
+
+connection-addresses: []
+
+udp: false
+
+# Inactive by default
+# tls:
+#   private_key: "databroker.key"
+#   password: "password"
+#   dh_params: "dh_params.pem"
+#   ca_cert: "ca.crt"
+#   cert: "databroker.crt"
+
+## DATABROKER PARTICIPANT LOCAL CONFIGURATION
+ros: false
+
+domain: 0

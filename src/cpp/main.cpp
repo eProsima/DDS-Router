@@ -84,6 +84,23 @@ int main(
             return 0;
         }
 
+        if (options[optionIndex::CONFIGURATION_FILE])
+        {
+            if (!DataBrokerConfiguration::load_configuration_file(
+                        configuration,
+                        options[optionIndex::CONFIGURATION_FILE].arg,
+                        true))
+            {
+                logError(DATABROKER, "Error parsing configuration file");
+                return 10;
+            }
+        }
+        else
+        {
+            // Load default configuration file
+            DataBrokerConfiguration::load_configuration_file(configuration);
+        }
+
         for (int i = 0; i < parse.optionsCount(); ++i)
         {
             option::Option& opt = buffer[i];
@@ -94,11 +111,11 @@ int main(
                     break;
 
                 case optionIndex::SERVER_ID:
-                    configuration.server_guid = Address::guid_server(std::stol(opt.arg));
+                    configuration.wan_configuration.server_guid = Address::guid_server(std::stol(opt.arg));
                     break;
 
                 case optionIndex::SERVER_GUID:
-                    configuration.server_guid = Address::guid_server(opt.arg);
+                    configuration.wan_configuration.server_guid = Address::guid_server(opt.arg);
                     break;
 
                 case optionIndex::WHITELIST:
@@ -110,20 +127,20 @@ int main(
                     break;
 
                 case optionIndex::UDP:
-                    configuration.udp = true;
+                    configuration.wan_configuration.udp = true;
                     break;
 
                 case optionIndex::DOMAIN:
-                    configuration.domain = std::stol(opt.arg);
+                    configuration.local_configuration.domain = std::stol(opt.arg);
                     break;
 
                 case optionIndex::ROS:
-                    configuration.ros = true;
+                    configuration.local_configuration.ros = true;
                     break;
 
                 case optionIndex::LISTENING_ADDRESSES:
-                    configuration.listening_addresses.clear();
-                    if (!Address::read_addresses_vector(opt.arg, configuration.listening_addresses))
+                    configuration.wan_configuration.listening_addresses.clear();
+                    if (!Address::read_addresses_vector(opt.arg, configuration.wan_configuration.listening_addresses))
                     {
                         logError(DATABROKER, "Error parsing listening addreses");
                         return 10;
@@ -131,8 +148,8 @@ int main(
                     break;
 
                 case optionIndex::CONNECTION_ADDRESSES:
-                    configuration.connection_addresses.clear();
-                    if (!Address::read_addresses_vector(opt.arg, configuration.connection_addresses))
+                    configuration.wan_configuration.connection_addresses.clear();
+                    if (!Address::read_addresses_vector(opt.arg, configuration.wan_configuration.connection_addresses))
                     {
                         logError(DATABROKER, "Error parsing connection addreses");
                         return 10;
@@ -140,12 +157,20 @@ int main(
                     break;
 
                 case optionIndex::INTERACTIVE:
+                    // Use default configuration
                     configuration.interactive = true;
                     break;
 
                 case optionIndex::UNKNOWN_OPT:
                     option::printUsage(fwrite, stdout, usage, columns);
                     return 5;
+                    break;
+
+                case optionIndex::TLS:
+                    configuration.wan_configuration.tls = true;
+                    break;
+
+                default:
                     break;
             }
         }
@@ -160,23 +185,17 @@ int main(
 
     // Create DataBroker instance
     // Addresses cannot be modified in run time, so they are set in construction
-    DataBroker db(
-        configuration.domain,
-        configuration.server_guid,
-        configuration.listening_addresses,
-        configuration.connection_addresses,
-        configuration.ros,
-        configuration.udp);
+    DataBroker db(configuration);
 
     // Configure DataBroker
-    if (!db.init(configuration.active_topics))
+    if (!db.init())
     {
         logError(DATABROKER, "Error initializing DataBroker");
         return 2;
     }
 
     // Run DataBroker instance
-    if (db.run(configuration.interactive, configuration.seconds))
+    if (db.run())
     {
         return 0;
     }

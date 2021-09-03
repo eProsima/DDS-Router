@@ -24,9 +24,9 @@
 #include <vector>
 
 #include <databroker/DataBrokerListener.hpp>
+#include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/DataBrokerParticipant.hpp>
 #include <databroker/DataBrokerLocalParticipant.hpp>
-#include <databroker/DataBrokerROSParticipant.hpp>
 #include <databroker/DataBrokerWANParticipant.hpp>
 #include <databroker/Address.hpp>
 
@@ -66,22 +66,14 @@ class DataBroker
 public:
 
     DataBroker(
-            const uint32_t domain,
-            const eprosima::fastrtps::rtps::GuidPrefix_t& server_guid,
-            const std::vector<Address>& listening_address,
-            const std::vector<Address>& connection_addresses,
-            bool internal_ros,
-            bool udp);
+            DataBrokerConfiguration configuration);
 
     virtual ~DataBroker();
 
-    bool init(
-            const std::vector<std::string>& initial_topics);
+    bool init();
 
     // 0 seconds means forever
-    bool run(
-            bool interactive,
-            const uint32_t seconds = 0);
+    bool run();
 
 protected:
 
@@ -110,12 +102,10 @@ private:
 
     DataBrokerListener listener_;
 
+    DataBrokerConfiguration configuration_;
+
     std::map<std::string, bool> topics_;
 
-    eprosima::fastrtps::rtps::GuidPrefix_t server_guid_;
-    std::vector<Address> listening_addresses_;
-    std::vector<Address> connection_addresses_;
-    bool udp_;
     bool enabled_;
 };
 
