@@ -39,7 +39,10 @@ public:
             DataBrokerParticipant* local,
             DataBrokerParticipant* wan);
 
-    void block_topic(
+    void lock_topic(
+            const std::string& topic);
+
+    void unlock_topic(
             const std::string& topic);
 
     void on_data_available(

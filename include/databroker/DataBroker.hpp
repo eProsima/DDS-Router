@@ -41,6 +41,7 @@ enum Command
     ADD_TOPIC,
     REMOVE_TOPIC,
     LOAD_FILE,
+    RELOAD_FILE,
     EXIT,
     VOID
 };
@@ -51,14 +52,18 @@ static const std::map<Command, std::list<std::string>> COMMAND_KEYWORDS =
     {Command::ADD_TOPIC, {"a", "add"}},
     {Command::REMOVE_TOPIC, {"r", "rm", "remove"}},
     {Command::LOAD_FILE, {"l", "load"}},
+    {Command::RELOAD_FILE, {"rl", "reload"}},
     {Command::EXIT, {"e", "q", "exit", "quit"}}
 };
 
 static const std::map<Command, std::vector<std::string>> COMMAND_ARGUMENTS =
 {
+    {Command::CMD_HELP, {}},
+    {Command::RELOAD_FILE, {}},
+    {Command::EXIT, {}},
     {Command::ADD_TOPIC, {"topic_name"}},
     {Command::REMOVE_TOPIC, {"topic_name"}},
-    {Command::LOAD_FILE, {"file_path"}}
+    {Command::LOAD_FILE, {"file_path"}},
 };
 
 class DataBroker

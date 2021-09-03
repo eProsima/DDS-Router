@@ -33,6 +33,7 @@ namespace databroker {
 DataBroker::DataBroker(
         DataBrokerConfiguration configuration)
     : configuration_(configuration)
+    , enabled_(false)
 {
     logInfo(DATABROKER, "Creating DataBroker instance");
 
@@ -131,7 +132,6 @@ bool DataBroker::run_interactive()
 
     std::string input;
     std::vector<std::string> args;
-    DataBrokerConfiguration configuration;
 
     std::cout << "Running DataBroker in interactive mode. Write a command:" << std::endl;
     std::cout << "> " << std::flush;
@@ -143,26 +143,46 @@ bool DataBroker::run_interactive()
         switch (read_command(input, args))
         {
             case Command::ADD_TOPIC:
+                std::cout << "Adding topic: " << args[0] << std::endl;
                 add_topic_(args[0]);
                 break;
 
             case Command::REMOVE_TOPIC:
+                std::cout << "Removing topic: " << args[0] << std::endl;
                 remove_topic_(args[0]);
                 break;
 
             case Command::LOAD_FILE:
-                if (!DataBrokerConfiguration::load_configuration_file(configuration, args[0], true))
-                {
-                    std::cout << "Error reading configuration file " << args[0] << std::endl;
-                }
-                else
+                std::cout << "Loading file: " << args[0] << std::endl;
+                if (DataBrokerConfiguration::reload_configuration_file(configuration_, args[0]))
                 {
                     stop_all_topics();
-                    for (std::string topic : configuration.active_topics)
+                    for (std::string topic : configuration_.active_topics)
                     {
                         add_topic_(topic);
                     }
                 }
+                else
+                {
+                    std::cout << "Error reading configuration file " << args[0] << std::endl;
+                }
+                break;
+
+            case Command::RELOAD_FILE:
+                std::cout << "Reloading file: " << configuration_.config_file << std::endl;
+                if (DataBrokerConfiguration::reload_configuration_file(configuration_))
+                {
+                    stop_all_topics();
+                    for (std::string topic : configuration_.active_topics)
+                    {
+                        add_topic_(topic);
+                    }
+                }
+                else
+                {
+                    std::cout << "Error reloading configuration file " << configuration_.config_file << std::endl;
+                }
+
                 break;
 
             case Command::EXIT:
@@ -180,6 +200,7 @@ bool DataBroker::run_interactive()
             case Command::ERROR:
                 std::cout << "Error in command: '" << input << "'.\n"
                     "use command 'help' to check available commands and their arguments" << std::endl;
+                break;
 
             default:
                 break;
@@ -222,16 +243,7 @@ Command DataBroker::read_command(
     // Check if command should have arguments
     auto it = COMMAND_ARGUMENTS.find(command);
 
-    if (it == COMMAND_ARGUMENTS.end())
-    {
-        // Should not have arguments
-        if (!args.empty())
-        {
-            std::cout << "Command " << command_word << " does not have arguments" << std::endl;
-            command = ERROR;
-        }
-    }
-    else
+    if (it != COMMAND_ARGUMENTS.end())
     {
         // Should not have arguments
         if (args.size() != it->second.size())
@@ -309,9 +321,11 @@ bool DataBroker::run_time(
 void DataBroker::add_topic_(
         const std::string& topic)
 {
-    logInfo(DATABROKER, "Adding topic " << topic << " to whitelist");
+    logInfo(DATABROKER, "Adding topic '" << topic << "' to whitelist");
 
     topics_[topic] = true;
+    // The topic needs to be unlocked in case it was locked before
+    listener_.unlock_topic(topic);
     local_->add_topic(topic);
     wan_->add_topic(topic);
 }
@@ -319,8 +333,10 @@ void DataBroker::add_topic_(
 void DataBroker::remove_topic_(
         const std::string& topic)
 {
+    logInfo(DATABROKER, "Removing topic '" << topic << "' from whitelist");
+
     topics_[topic] = false;
-    listener_.block_topic(topic);
+    listener_.lock_topic(topic);
 }
 
 void DataBroker::stop_all_topics()

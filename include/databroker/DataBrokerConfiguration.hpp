@@ -69,6 +69,7 @@ struct DataBrokerConfiguration
     std::vector<std::string> active_topics;
     uint32_t seconds;
     bool interactive;
+    std::string config_file;
 
     static bool load_default_configuration(
             DataBrokerConfiguration& configuration);
@@ -77,6 +78,10 @@ struct DataBrokerConfiguration
             DataBrokerConfiguration& configuration,
             const std::string& file_path = DEFAULT_CONFIGURATION_FILE,
             bool verbose = false);
+
+    static bool reload_configuration_file(
+            DataBrokerConfiguration& configuration,
+            const std::string& file_path = "");
 };
 
 } /* namespace databroker */

@@ -70,6 +70,10 @@ bool DataBrokerConfiguration::load_configuration_file(
 
     logInfo(DATABROKER_CONFIGURATION, "Loading configuration file '" << file_path << "'");
 
+    // Whenever the configuration file option is set, the default file path is changed. This is because, even
+    // if it fails the first time to load the file, the user might change the file and want to reload it.
+    configuration.config_file = file_path;
+
     try
     {
         config_node = YAML::LoadFile(file_path);
@@ -262,6 +266,43 @@ bool DataBrokerConfiguration::load_configuration_file(
         {
             logInfo(DATABROKER, e.what());
         }
+        return false;
+    }
+
+    return true;
+}
+
+bool DataBrokerConfiguration::reload_configuration_file(
+        DataBrokerConfiguration& configuration,
+        const std::string& file_path /* = "" */)
+{
+    YAML::Node config_node;
+
+    if (!file_path.empty())
+    {
+        configuration.config_file = file_path;
+    }
+
+    logInfo(DATABROKER_CONFIGURATION, "Reloading configuration file '" << configuration.config_file.c_str() << "'");
+
+    try
+    {
+        config_node = YAML::LoadFile(configuration.config_file);
+
+        // Whitelist
+        if (config_node["whitelist"])
+        {
+            configuration.active_topics.clear();
+            for (auto topic : config_node["whitelist"])
+            {
+                configuration.active_topics.push_back(topic.as<std::string>());
+                logInfo(DATABROKER_CONFIGURATION, "Adding topic to whitelist: " << topic.as<std::string>());
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        logWarning(DATABROKER_CONFIGURATION, e.what());
         return false;
     }
 
