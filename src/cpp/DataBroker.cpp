@@ -18,6 +18,7 @@
  */
 
 #include <cctype>       // for using tolower
+#include <csignal>      // for signal handler
 #include <stdlib.h>     // for using the function sleep
 
 #include <fastdds/dds/log/Log.hpp>
@@ -29,6 +30,11 @@
 
 namespace eprosima {
 namespace databroker {
+
+// Initialize static variable
+std::atomic<bool> DataBroker::stop_(false);
+std::mutex DataBroker::stop_mutex_cv_;
+std::condition_variable DataBroker::stop_cv_;
 
 DataBroker::DataBroker(
         DataBrokerConfiguration configuration)
@@ -115,6 +121,12 @@ bool DataBroker::run()
         logError(DATABROKER, "WARNING DataBroker running without being initialized");
         init();
     }
+
+    // Handle SIGINT signal
+    signal(SIGINT, [](int signum)
+        {
+            static_cast<void>(signum); DataBroker::stop();
+        });
 
     if (configuration_.interactive)
     {
@@ -304,15 +316,31 @@ void DataBroker::print_help()
 bool DataBroker::run_time(
         const uint32_t seconds)
 {
+    // Start file watcher thread
+    //TODO
+    // file_watcher_ = std::thread(&EngineParticipant::runThread, this, samples, static_cast<long>(period * 1000), data_size);
+
     if (seconds > 0)
     {
-        std::cout << "Running DataBroker for " << seconds << " seconds" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(seconds));
+        std::cout << "Running DataBroker for " << seconds << " seconds or untirl SIGINT is received" << std::endl;
+
+        // Wait with a condition variable and a limited time
+        std::unique_lock<std::mutex> lck(stop_mutex_cv_);
+        stop_cv_.wait_for(lck, std::chrono::seconds(seconds), []
+                {
+                    return is_stopped();
+                });
     }
     else
     {
         std::cout << "Running DataBroker until SIGINT is received" << std::endl;
-        std::this_thread::sleep_until(std::chrono::time_point<std::chrono::system_clock>::max());
+
+        // Wait with a condition variable
+        std::unique_lock<std::mutex> lck(stop_mutex_cv_);
+        stop_cv_.wait(lck, []
+                {
+                    return is_stopped();
+                });
     }
 
     return true;
@@ -345,6 +373,17 @@ void DataBroker::stop_all_topics()
     {
         remove_topic_(topic.first);
     }
+}
+
+void DataBroker::stop()
+{
+    stop_ = true;
+    stop_cv_.notify_one();
+}
+
+bool DataBroker::is_stopped()
+{
+    return stop_;
 }
 
 } /* namespace databroker */
