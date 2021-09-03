@@ -87,9 +87,9 @@ int main(
         if (options[optionIndex::CONFIGURATION_FILE])
         {
             if (!DataBrokerConfiguration::load_configuration_file(
-                    configuration,
-                    options[optionIndex::CONFIGURATION_FILE].arg,
-                    true))
+                        configuration,
+                        options[optionIndex::CONFIGURATION_FILE].arg,
+                        true))
             {
                 logError(DATABROKER, "Error parsing configuration file");
                 return 10;
