@@ -34,6 +34,7 @@ DataBrokerParticipant::DataBrokerParticipant(
     : listener_(listener)
     , configuration_(configuration)
     , type_(new StdStringPubSubType())
+    , enabled_(false)
 {
 }
 
@@ -41,6 +42,7 @@ DataBrokerParticipant::DataBrokerParticipant(
         eprosima::fastdds::dds::DomainParticipantListener* listener)
     : listener_(listener)
     , type_(new StdStringPubSubType())
+    , enabled_(false)
 {
 }
 

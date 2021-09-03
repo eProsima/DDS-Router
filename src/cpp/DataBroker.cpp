@@ -33,6 +33,7 @@ namespace databroker {
 DataBroker::DataBroker(
         DataBrokerConfiguration configuration)
     : configuration_(configuration)
+    , enabled_(false)
 {
     logInfo(DATABROKER, "Creating DataBroker instance");
 
@@ -199,6 +200,7 @@ bool DataBroker::run_interactive()
             case Command::ERROR:
                 std::cout << "Error in command: '" << input << "'.\n"
                     "use command 'help' to check available commands and their arguments" << std::endl;
+                break;
 
             default:
                 break;
