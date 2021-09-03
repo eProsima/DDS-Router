@@ -33,8 +33,8 @@ openssl x509 -req -in databroker.csr -CA ca.crt -CAkey ca.key -CAcreateserial -o
 ## DH PARAMETERS
 
 ```sh
-# Generate the Diffie-Hellman (DF) parameters to define how OpenSSL performs de DF key-exchange > db_params.pem
-openssl dhparam -out db_params.pem 2048
+# Generate the Diffie-Hellman (DF) parameters to define how OpenSSL performs de DF key-exchange > dh_params.pem
+openssl dhparam -out dh_params.pem 2048
 ```
 
 ## Use
@@ -44,6 +44,6 @@ tls:
   private_key: "databroker.key"
   ca: "databroker.crt"
   cert: "ca.crt"
-  dh_params: "db_params.pem"
+  dh_params: "dh_params.pem"
   password: ""
 ```
