@@ -142,14 +142,17 @@ bool DataBroker::run_interactive()
         switch (read_command(input, args))
         {
             case Command::ADD_TOPIC:
+                std::cout << "Adding topic: " << args[0] << std::endl;
                 add_topic_(args[0]);
                 break;
 
             case Command::REMOVE_TOPIC:
+                std::cout << "Removing topic: " << args[0] << std::endl;
                 remove_topic_(args[0]);
                 break;
 
             case Command::LOAD_FILE:
+                std::cout << "Loading file: " << args[0] << std::endl;
                 if (DataBrokerConfiguration::reload_configuration_file(configuration_, args[0]))
                 {
                     stop_all_topics();
@@ -165,6 +168,7 @@ bool DataBroker::run_interactive()
                 break;
 
             case Command::RELOAD_FILE:
+                std::cout << "Reloading file: " << configuration_.config_file << std::endl;
                 if (DataBrokerConfiguration::reload_configuration_file(configuration_))
                 {
                     stop_all_topics();
@@ -315,7 +319,7 @@ bool DataBroker::run_time(
 void DataBroker::add_topic_(
         const std::string& topic)
 {
-    logInfo(DATABROKER, "Adding topic " << topic << " to whitelist");
+    logInfo(DATABROKER, "Adding topic '" << topic << "' to whitelist");
 
     topics_[topic] = true;
     // The topic needs to be unlocked in case it was locked before
@@ -327,6 +331,8 @@ void DataBroker::add_topic_(
 void DataBroker::remove_topic_(
         const std::string& topic)
 {
+    logInfo(DATABROKER, "Removing topic '" << topic << "' from whitelist");
+
     topics_[topic] = false;
     listener_.lock_topic(topic);
 }
