@@ -26,6 +26,8 @@
 #include <string>
 #include <vector>
 
+#include <FileWatch.hpp>
+
 #include <databroker/DataBrokerListener.hpp>
 #include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/DataBrokerParticipant.hpp>
@@ -107,6 +109,12 @@ protected:
 
     static bool is_stopped();
 
+    bool start_watch_file_();
+
+    bool finish_watch_file_();
+
+    bool reload_configuration_file_(const std::string& path = "");
+
 private:
 
     DataBrokerLocalParticipant* local_;
@@ -123,6 +131,8 @@ private:
     static std::atomic<bool> stop_;
     static std::mutex stop_mutex_cv_;
     static std::condition_variable stop_cv_;
+
+    filewatch::FileWatch<std::string>* file_watch_handler_;
 
     // TODO
     // std::thread file_watcher_;

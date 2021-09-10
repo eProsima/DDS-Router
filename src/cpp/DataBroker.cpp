@@ -19,6 +19,7 @@
 
 #include <cctype>       // for using tolower
 #include <csignal>      // for signal handler
+#include <exception>
 #include <stdlib.h>     // for using the function sleep
 
 #include <fastdds/dds/log/Log.hpp>
@@ -166,31 +167,15 @@ bool DataBroker::run_interactive()
 
             case Command::LOAD_FILE:
                 std::cout << "Loading file: " << args[0] << std::endl;
-                if (DataBrokerConfiguration::reload_configuration_file(configuration_, args[0]))
+                if (!reload_configuration_file_(args[0]))
                 {
-                    stop_all_topics();
-                    for (std::string topic : configuration_.active_topics)
-                    {
-                        add_topic_(topic);
-                    }
-                }
-                else
-                {
-                    std::cout << "Error reading configuration file " << args[0] << std::endl;
+                    std::cout << "Error loading configuration file " << args[0] << std::endl;
                 }
                 break;
 
             case Command::RELOAD_FILE:
                 std::cout << "Reloading file: " << configuration_.config_file << std::endl;
-                if (DataBrokerConfiguration::reload_configuration_file(configuration_))
-                {
-                    stop_all_topics();
-                    for (std::string topic : configuration_.active_topics)
-                    {
-                        add_topic_(topic);
-                    }
-                }
-                else
+                if (!reload_configuration_file_())
                 {
                     std::cout << "Error reloading configuration file " << configuration_.config_file << std::endl;
                 }
@@ -317,8 +302,7 @@ bool DataBroker::run_time(
         const uint32_t seconds)
 {
     // Start file watcher thread
-    //TODO
-    // file_watcher_ = std::thread(&EngineParticipant::runThread, this, samples, static_cast<long>(period * 1000), data_size);
+    start_watch_file_();
 
     if (seconds > 0)
     {
@@ -342,6 +326,8 @@ bool DataBroker::run_time(
                     return is_stopped();
                 });
     }
+
+    finish_watch_file_();
 
     return true;
 }
@@ -384,6 +370,59 @@ void DataBroker::stop()
 bool DataBroker::is_stopped()
 {
     return stop_;
+}
+
+bool DataBroker::start_watch_file_()
+{
+    logInfo(DATABROKER_FILE_WATCHER, "Watching file: " << configuration_.config_file);
+
+    try
+    {
+        file_watch_handler_ = new filewatch::FileWatch<std::string>(
+            configuration_.config_file,
+            [this](const std::string& path, const filewatch::Event change_type)
+            {
+                switch (change_type)
+                {
+                    case filewatch::Event::modified:
+                        logInfo(DATABROKER_FILE_WATCHER, "File: " << path << " modified. Reloading.");
+                        DataBrokerConfiguration::reload_configuration_file(configuration_, path);
+                        break;
+                    default:
+                        // No-op
+                        break;
+                }
+            });
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << "Error creating file watcher: " << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool DataBroker::finish_watch_file_()
+{
+    logInfo(DATABROKER_FILE_WATCHER, "Stop watching file: " << configuration_.config_file);
+    delete file_watch_handler_;
+    return true;
+}
+
+bool DataBroker::reload_configuration_file_(const std::string& path /* = "" */)
+{
+    if (DataBrokerConfiguration::reload_configuration_file(configuration_, path))
+    {
+        stop_all_topics();
+        for (std::string topic : configuration_.active_topics)
+        {
+            add_topic_(topic);
+        }
+
+        return true;
+    }
+    return false;
 }
 
 } /* namespace databroker */
