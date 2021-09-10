@@ -62,6 +62,7 @@ find_package(fastrtps REQUIRED)
 
 # include thirdparty header-only projects
 include_directories(thirdparty/optionparser)
+include_directories(thirdparty/filewatch)
 
 # include external required packages
 find_package(yaml-cpp REQUIRED)
