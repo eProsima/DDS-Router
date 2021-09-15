@@ -134,8 +134,7 @@ private:
 
     filewatch::FileWatch<std::string>* file_watch_handler_;
 
-    // TODO
-    // std::thread file_watcher_;
+    std::recursive_mutex topics_mutex_;
 };
 
 } /* namespace databroker */

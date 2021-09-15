@@ -335,6 +335,8 @@ bool DataBroker::run_time(
 void DataBroker::add_topic_(
         const std::string& topic)
 {
+    std::unique_lock<std::recursive_mutex> lck(topics_mutex_);
+
     logInfo(DATABROKER, "Adding topic '" << topic << "' to whitelist");
 
     topics_[topic] = true;
@@ -347,6 +349,8 @@ void DataBroker::add_topic_(
 void DataBroker::remove_topic_(
         const std::string& topic)
 {
+    std::unique_lock<std::recursive_mutex> lck(topics_mutex_);
+
     logInfo(DATABROKER, "Removing topic '" << topic << "' from whitelist");
 
     topics_[topic] = false;
@@ -355,6 +359,8 @@ void DataBroker::remove_topic_(
 
 void DataBroker::stop_all_topics()
 {
+    std::unique_lock<std::recursive_mutex> lck(topics_mutex_);
+
     for (auto topic : topics_)
     {
         remove_topic_(topic.first);
@@ -386,7 +392,7 @@ bool DataBroker::start_watch_file_()
                 {
                     case filewatch::Event::modified:
                         logInfo(DATABROKER_FILE_WATCHER, "File: " << path << " modified. Reloading.");
-                        DataBrokerConfiguration::reload_configuration_file(configuration_, path);
+                        reload_configuration_file_();
                         break;
                     default:
                         // No-op
@@ -412,6 +418,8 @@ bool DataBroker::finish_watch_file_()
 
 bool DataBroker::reload_configuration_file_(const std::string& path /* = "" */)
 {
+    std::unique_lock<std::recursive_mutex> lck(topics_mutex_);
+
     if (DataBrokerConfiguration::reload_configuration_file(configuration_, path))
     {
         stop_all_topics();
