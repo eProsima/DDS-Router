@@ -322,7 +322,7 @@ bool DataBroker::run_time(
 
     if (seconds > 0)
     {
-        std::cout << "Running DataBroker for " << seconds << " seconds or untirl SIGINT is received" << std::endl;
+        std::cout << "Running DataBroker for " << seconds << " seconds or until SIGINT is received" << std::endl;
 
         // Wait with a condition variable and a limited time
         std::unique_lock<std::mutex> lck(stop_mutex_cv_);
