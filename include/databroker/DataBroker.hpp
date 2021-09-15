@@ -20,6 +20,9 @@
 #ifndef EPROSIMA_DATABROKER_DATABROKER_HPP
 #define EPROSIMA_DATABROKER_DATABROKER_HPP
 
+#include <atomic>
+#include <condition_variable>
+#include <mutex>
 #include <string>
 #include <vector>
 
@@ -80,6 +83,8 @@ public:
     // 0 seconds means forever
     bool run();
 
+    static void stop();
+
 protected:
 
     void add_topic_(
@@ -100,6 +105,8 @@ protected:
 
     void stop_all_topics();
 
+    static bool is_stopped();
+
 private:
 
     DataBrokerLocalParticipant* local_;
@@ -112,6 +119,13 @@ private:
     std::map<std::string, bool> topics_;
 
     bool enabled_;
+
+    static std::atomic<bool> stop_;
+    static std::mutex stop_mutex_cv_;
+    static std::condition_variable stop_cv_;
+
+    // TODO
+    // std::thread file_watcher_;
 };
 
 } /* namespace databroker */
