@@ -124,9 +124,9 @@ bool DataBroker::run()
 
     // Handle SIGINT signal
     signal(SIGINT, [](int signum)
-        {
-            static_cast<void>(signum); DataBroker::stop();
-        });
+            {
+                static_cast<void>(signum); DataBroker::stop();
+            });
 
     if (configuration_.interactive)
     {
