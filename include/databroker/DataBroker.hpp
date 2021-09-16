@@ -113,7 +113,8 @@ protected:
 
     bool finish_watch_file_();
 
-    bool reload_configuration_file_(const std::string& path = "");
+    bool reload_configuration_file_(
+            const std::string& path = "");
 
 private:
 

@@ -416,7 +416,8 @@ bool DataBroker::finish_watch_file_()
     return true;
 }
 
-bool DataBroker::reload_configuration_file_(const std::string& path /* = "" */)
+bool DataBroker::reload_configuration_file_(
+        const std::string& path /* = "" */)
 {
     std::unique_lock<std::recursive_mutex> lck(topics_mutex_);
 
