@@ -124,6 +124,11 @@ eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server()
     return guid_server(0);
 }
 
+eprosima::fastrtps::rtps::GuidPrefix_t Address::ros_discovery_server_guid()
+{
+    return guid_server(ROS_DISCOVERY_SERVER_GUID);
+}
+
 eprosima::fastrtps::rtps::GuidPrefix_t Address::guid_server(
         uint16_t id)
 {

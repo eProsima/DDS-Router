@@ -21,6 +21,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <fastdds/dds/log/Log.hpp>
+#include <fastdds/rtps/attributes/RTPSParticipantAttributes.h>
 
 #include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/Address.hpp>
@@ -56,6 +57,11 @@ bool DataBrokerConfiguration::load_default_configuration(
     // Local Participant configuration
     configuration.local_configuration.domain = 0;
     configuration.local_configuration.ros = false;
+    configuration.local_configuration.discovery_config.discovery_protocol =
+            eprosima::fastrtps::rtps::DiscoveryProtocol::SIMPLE;
+    configuration.local_configuration.discovery_config.listening_addresses = std::vector<Address>();
+    configuration.local_configuration.discovery_config.server_guid =
+            eprosima::fastrtps::rtps::GUID_t::unknown().guidPrefix;
 
     return true;
 }
@@ -166,7 +172,7 @@ bool DataBrokerConfiguration::load_configuration_file(
         if (config_node["udp"])
         {
             configuration.wan_configuration.udp = config_node["udp"].as<bool>();
-            if (configuration.local_configuration.ros)
+            if (configuration.wan_configuration.udp)
             {
                 logInfo(DATABROKER_CONFIGURATION, "Using UDP transport");
             }
@@ -252,6 +258,37 @@ bool DataBrokerConfiguration::load_configuration_file(
         {
             configuration.local_configuration.domain = config_node["domain"].as<uint32_t>();
             logInfo(DATABROKER_CONFIGURATION, "Using internal domain " << configuration.local_configuration.domain);
+        }
+
+        // LOCAL DISCOVERY
+        if (config_node["local-discovery"])
+        {
+            if (config_node["local-discovery"]["kind"])
+            {
+                if (config_node["local-discovery"]["kind"].as<std::string>() == "discovery-server")
+                {
+                    configuration.local_configuration.discovery_config.discovery_protocol =
+                            eprosima::fastrtps::rtps::DiscoveryProtocol::SERVER;
+
+                    configuration.local_configuration.discovery_config.listening_addresses.clear();
+                    for (auto address : config_node["local-discovery"]["listening-addresses"])
+                    {
+                        Address new_address;
+                        if (address["ip"])
+                        {
+                            new_address.ip = address["ip"].as<std::string>();
+                        }
+                        if (address["port"])
+                        {
+                            new_address.port = address["port"].as<uint32_t>();
+                        }
+                        configuration.local_configuration.discovery_config.listening_addresses.push_back(new_address);
+                    }
+
+                    configuration.local_configuration.discovery_config.server_guid =
+                            Address::ros_discovery_server_guid();
+                }
+            }
         }
 
         logInfo(DATABROKER_CONFIGURATION, "Loaded configuration file '" << file_path << "'");

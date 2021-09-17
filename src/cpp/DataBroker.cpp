@@ -26,6 +26,7 @@
 
 #include <databroker/DataBroker.hpp>
 #include <databroker/DataBrokerWANParticipant.hpp>
+#include <databroker/DataBrokerLocalParticipant.hpp>
 #include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/utils.hpp>
 

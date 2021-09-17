@@ -38,6 +38,10 @@ public:
             eprosima::fastdds::dds::DomainParticipantListener* listener,
             DataBrokerLocalParticipantConfiguration configuration);
 
+    eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
+
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos();
+
     std::string name() override;
 
 protected:
