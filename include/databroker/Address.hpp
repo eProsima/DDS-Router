@@ -28,6 +28,7 @@
 namespace eprosima {
 namespace databroker {
 
+#define ROS_DISCOVERY_SERVER_GUID "44.53.00.5f.45.50.52.4f.53.49.4d.41"
 #define SERVER_DEFAULT_GUID "01.0f.00.44.41.54.41.5f.42.52.4f.4b"
 #define SERVER_DEFAULT_GUID_ID_INDEX 2
 
@@ -65,6 +66,8 @@ struct Address
             const std::string& ip);
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server();
+
+    static eprosima::fastrtps::rtps::GuidPrefix_t ros_discovery_server_guid();
 
     static eprosima::fastrtps::rtps::GuidPrefix_t guid_server(
             uint16_t id);

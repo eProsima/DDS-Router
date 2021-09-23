@@ -24,6 +24,7 @@
 #include <vector>
 
 #include <fastdds/rtps/common/GuidPrefix_t.hpp>
+#include <fastdds/rtps/attributes/RTPSParticipantAttributes.h>
 
 #include <databroker/Address.hpp>
 
@@ -45,7 +46,10 @@ struct DataBrokerParticipantConfiguration
 struct DataBrokerLocalParticipantConfiguration : public DataBrokerParticipantConfiguration
 {
     bool ros;
+    bool discovery_server;
+    std::vector<Address> listening_addresses;
 };
+
 
 struct DataBrokerWANParticipantConfiguration : public DataBrokerParticipantConfiguration
 {

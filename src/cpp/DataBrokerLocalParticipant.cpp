@@ -17,6 +17,9 @@
  *
  */
 
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
+
+#include <databroker/Address.hpp>
 #include <databroker/DataBrokerLocalParticipant.hpp>
 
 namespace eprosima {
@@ -28,6 +31,44 @@ DataBrokerLocalParticipant::DataBrokerLocalParticipant(
     : DataBrokerParticipant(listener)
     , configuration_(configuration)
 {
+}
+
+eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerLocalParticipant::guid()
+{
+    if (configuration_.discovery_server)
+    {
+        return Address::ros_discovery_server_guid();
+    }
+    else
+    {
+        return DataBrokerParticipant::guid();
+    }
+}
+
+eprosima::fastdds::dds::DomainParticipantQos DataBrokerLocalParticipant::participant_qos()
+{
+    eprosima::fastdds::dds::DomainParticipantQos pqos = DataBrokerParticipant::participant_qos();
+
+    if (configuration_.discovery_server)
+    {
+        // Set this participant as a SERVER
+        pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
+                fastrtps::rtps::DiscoveryProtocol::SERVER;
+
+        // Configuring Server Guid
+        pqos.wire_protocol().prefix = Address::ros_discovery_server_guid();
+
+        for (auto address : configuration_.listening_addresses)
+        {
+            eprosima::fastdds::rtps::Locator server_locator;
+            server_locator.kind = LOCATOR_KIND_UDPv4;
+            eprosima::fastrtps::rtps::IPLocator::setIPv4(server_locator, address.ip);
+            eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(server_locator, address.port);
+            pqos.wire_protocol().builtin.metatrafficUnicastLocatorList.push_back(server_locator);
+        }
+    }
+
+    return pqos;
 }
 
 eprosima::fastdds::dds::DataWriterQos DataBrokerLocalParticipant::datawriter_qos()
