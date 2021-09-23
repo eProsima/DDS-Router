@@ -44,7 +44,6 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.wan_configuration.server_guid = Address::guid_server();
     configuration.wan_configuration.connection_addresses = std::vector<Address>();
     configuration.wan_configuration.listening_addresses = std::vector<Address>();
-    configuration.wan_configuration.listening_addresses.push_back(Address("127.0.0.1,11800"));
     configuration.wan_configuration.udp = false;
 
     // WAN Participant TLS configuration
