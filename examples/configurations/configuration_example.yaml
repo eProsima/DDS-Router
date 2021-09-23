@@ -71,3 +71,14 @@ ros: true
 
 # Domain ID
 domain: 0
+
+# Local Discovery Server
+local-discovery:
+  discovery-server: true
+  listening-addresses:
+    [
+      {
+        ip: "127.0.0.1",
+        port: 11811
+      }
+    ]
