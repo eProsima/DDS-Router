@@ -137,11 +137,6 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                 server_attr.guidPrefix);
     }
 
-    // TODO decide the discovery server configuration
-    // pqos.wire_protocol().builtin.discovery_config.leaseDuration = fastrtps::c_TimeInfinite;
-    // pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod =
-    //         fastrtps::Duration_t(2, 0);
-
     // Set this participant as a SERVER
     pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
             fastrtps::rtps::DiscoveryProtocol::SERVER;

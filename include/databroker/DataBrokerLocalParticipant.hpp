@@ -40,7 +40,7 @@ public:
 
     eprosima::fastrtps::rtps::GuidPrefix_t guid() override;
 
-    eprosima::fastdds::dds::DomainParticipantQos participant_qos();
+    eprosima::fastdds::dds::DomainParticipantQos participant_qos() override;
 
     std::string name() override;
 

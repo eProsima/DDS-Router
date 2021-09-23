@@ -46,14 +46,10 @@ struct DataBrokerParticipantConfiguration
 struct DataBrokerLocalParticipantConfiguration : public DataBrokerParticipantConfiguration
 {
     bool ros;
-
-    struct DataBrokerLocalParticipantDiscoveryConfiguration
-    {
-        eprosima::fastrtps::rtps::DiscoveryProtocol discovery_protocol;
-        std::vector<Address> listening_addresses;
-        eprosima::fastrtps::rtps::GuidPrefix_t server_guid;
-    }
-    discovery_config;
+    bool discovery_server;
+    eprosima::fastrtps::rtps::DiscoveryProtocol discovery_protocol;
+    std::vector<Address> listening_addresses;
+    eprosima::fastrtps::rtps::GuidPrefix_t server_guid;
 };
 
 
