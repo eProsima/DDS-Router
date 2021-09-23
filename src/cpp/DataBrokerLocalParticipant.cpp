@@ -35,9 +35,9 @@ DataBrokerLocalParticipant::DataBrokerLocalParticipant(
 
 eprosima::fastrtps::rtps::GuidPrefix_t DataBrokerLocalParticipant::guid()
 {
-    if (configuration_.discovery_protocol == fastrtps::rtps::DiscoveryProtocol::SERVER)
+    if (configuration_.discovery_server)
     {
-        return configuration_.server_guid;
+        return Address::ros_discovery_server_guid();
     }
     else
     {
@@ -49,15 +49,14 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerLocalParticipant::partici
 {
     eprosima::fastdds::dds::DomainParticipantQos pqos = DataBrokerParticipant::participant_qos();
 
-    if (configuration_.discovery_protocol ==
-            fastrtps::rtps::DiscoveryProtocol::SERVER)
+    if (configuration_.discovery_server)
     {
         // Set this participant as a SERVER
         pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
                 fastrtps::rtps::DiscoveryProtocol::SERVER;
 
         // Configuring Server Guid
-        pqos.wire_protocol().prefix = configuration_.server_guid;
+        pqos.wire_protocol().prefix = Address::ros_discovery_server_guid();
 
         for (auto address : configuration_.listening_addresses)
         {

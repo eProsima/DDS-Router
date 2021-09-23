@@ -58,11 +58,7 @@ bool DataBrokerConfiguration::load_default_configuration(
     configuration.local_configuration.domain = 0;
     configuration.local_configuration.ros = false;
     configuration.local_configuration.discovery_server = false;
-    configuration.local_configuration.discovery_protocol =
-            eprosima::fastrtps::rtps::DiscoveryProtocol::SIMPLE;
     configuration.local_configuration.listening_addresses = std::vector<Address>();
-    configuration.local_configuration.server_guid =
-            eprosima::fastrtps::rtps::GUID_t::unknown().guidPrefix;
 
     return true;
 }
@@ -270,14 +266,9 @@ bool DataBrokerConfiguration::load_configuration_file(
                         config_node["local-discovery"]["discovery-server"].as<bool>();
                 if (configuration.local_configuration.discovery_server)
                 {
-                    configuration.local_configuration.discovery_protocol =
-                            eprosima::fastrtps::rtps::DiscoveryProtocol::SERVER;
-
                     configuration.local_configuration.listening_addresses.clear();
-                    bool empty_listening_addresses = true;
                     for (auto address : config_node["local-discovery"]["listening-addresses"])
                     {
-                        empty_listening_addresses = false;
                         Address new_address;
                         if (address["ip"])
                         {
@@ -290,14 +281,11 @@ bool DataBrokerConfiguration::load_configuration_file(
                         configuration.local_configuration.listening_addresses.push_back(new_address);
                     }
 
-                    if (empty_listening_addresses)
+                    if (configuration.local_configuration.listening_addresses.empty())
                     {
                         logError(DATABROKER_CONFIGURATION, "No listening addresses set for local discovery server")
                         return false;
                     }
-
-                    configuration.local_configuration.server_guid =
-                            Address::ros_discovery_server_guid();
                 }
             }
         }
