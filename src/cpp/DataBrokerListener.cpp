@@ -136,16 +136,24 @@ void DataBrokerListener::on_subscription_matched(
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Local Reader in topic " << reader->get_topicdescription()->get_name()
-                                             << " matched with Writer " <<
-                    info.last_publication_handle);
+            // Skip own subscription found
+            if (fastrtps::rtps::iHandle2GUID(info.last_publication_handle).guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Local Reader in topic " << reader->get_topicdescription()->get_name()
+                                                << " matched with Writer " <<
+                        info.last_publication_handle);
+            }
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
-                    << reader->get_topicdescription()->get_name()
-                    << " matched with Writer " << info.last_publication_handle);
+            // Skip own subscription found
+            if (fastrtps::rtps::iHandle2GUID(info.last_publication_handle).guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
+                        << reader->get_topicdescription()->get_name()
+                        << " matched with Writer " << info.last_publication_handle);
+            }
         }
         else
         {
@@ -156,16 +164,24 @@ void DataBrokerListener::on_subscription_matched(
     {
         if (reader->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Local Reader in topic " << reader->get_topicdescription()->get_name()
-                                             << " unmatched with Writer " <<
-                    info.last_publication_handle);
+            // Only remote subscriptions
+            if (fastrtps::rtps::iHandle2GUID(info.last_publication_handle).guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Local Reader in topic " << reader->get_topicdescription()->get_name()
+                                                << " unmatched with Writer " <<
+                        info.last_publication_handle);
+            }
         }
         else if (reader->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
-                    << reader->get_topicdescription()->get_name()
-                    << " unmatched with Writer " << info.last_publication_handle);
+            // Only remote subscriptions
+            if (fastrtps::rtps::iHandle2GUID(info.last_publication_handle).guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "External Reader in topic "
+                        << reader->get_topicdescription()->get_name()
+                        << " unmatched with Writer " << info.last_publication_handle);
+            }
         }
         else
         {
@@ -182,17 +198,25 @@ void DataBrokerListener::on_publication_matched(
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Local Writer in topic " << writer->get_topic()->get_name()
-                                             << " matched with Reader " <<
-                    info.last_subscription_handle);
+            // Skip own subscription found
+            if (fastrtps::rtps::iHandle2GUID(info.last_subscription_handle).guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Local Writer in topic " << writer->get_topic()->get_name()
+                                                << " matched with Reader " <<
+                        info.last_subscription_handle);
+            }
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL,
-                    "External Writer in topic " << writer->get_topic()->get_name()
-                                                << " matched with Reader " <<
-                    info.last_subscription_handle);
+            // Skip own subscription found
+            if (fastrtps::rtps::iHandle2GUID(info.last_subscription_handle).guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL,
+                        "External Writer in topic " << writer->get_topic()->get_name()
+                                                    << " matched with Reader " <<
+                        info.last_subscription_handle);
+            }
         }
         else
         {
@@ -203,17 +227,25 @@ void DataBrokerListener::on_publication_matched(
     {
         if (writer->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Local Writer in topic " << writer->get_topic()->get_name()
-                                             << " unmatched with Reader " <<
-                    info.last_subscription_handle);
+            // Only remote subscriptions
+            if (fastrtps::rtps::iHandle2GUID(info.last_subscription_handle).guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Local Writer in topic " << writer->get_topic()->get_name()
+                                                << " unmatched with Reader " <<
+                        info.last_subscription_handle);
+            }
         }
         else if (writer->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL,
-                    "External Writer in topic " << writer->get_topic()->get_name()
-                                                << " unmatched with Reader " <<
-                    info.last_subscription_handle);
+            // Only remote subscriptions
+            if (fastrtps::rtps::iHandle2GUID(info.last_subscription_handle).guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL,
+                        "External Writer in topic " << writer->get_topic()->get_name()
+                                                    << " unmatched with Reader " <<
+                        info.last_subscription_handle);
+            }
         }
         else
         {
@@ -269,16 +301,24 @@ void DataBrokerListener::on_subscriber_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Subscription found in local network in topic " << info.info.topicName()
-                                                                    << " with guid " <<
-                    info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Subscription found in local network in topic " << info.info.topicName()
+                                                                        << " with guid " <<
+                        info.info.guid().guidPrefix);
+            }
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription found in external network in topic "
-                    << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription found in external network in topic "
+                        << info.info.topicName()
+                        << " with guid " << info.info.guid().guidPrefix);
+            }
         }
         else
         {
@@ -289,15 +329,23 @@ void DataBrokerListener::on_subscriber_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL, "Subscription dropped in local network in topic "
-                    << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL, "Subscription dropped in local network in topic "
+                        << info.info.topicName()
+                        << " with guid " << info.info.guid().guidPrefix);
+            }
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription dropped in external network in topic "
-                    << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "Subscription dropped in external network in topic "
+                        << info.info.topicName()
+                        << " with guid " << info.info.guid().guidPrefix);
+            }
         }
         else
         {
@@ -314,16 +362,24 @@ void DataBrokerListener::on_publisher_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Publication found in local network in topic " << info.info.topicName()
-                                                                   << " with guid " <<
-                    info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Publication found in local network in topic " << info.info.topicName()
+                                                                    << " with guid " <<
+                        info.info.guid().guidPrefix);
+            }
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication found in external network in topic "
-                    << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication found in external network in topic "
+                        << info.info.topicName()
+                        << " with guid " << info.info.guid().guidPrefix);
+            }
         }
         else
         {
@@ -334,16 +390,24 @@ void DataBrokerListener::on_publisher_discovery(
     {
         if (participant->guid().guidPrefix == local_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_LOCAL,
-                    "Publication dropped in local network in topic " << info.info.topicName()
-                                                                     << " with guid " <<
-                    info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != local_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_LOCAL,
+                        "Publication dropped in local network in topic " << info.info.topicName()
+                                                                        << " with guid " <<
+                        info.info.guid().guidPrefix);
+            }
         }
         else if (participant->guid().guidPrefix == wan_guid_prefix_())
         {
-            logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication dropped in external network in topic "
-                    << info.info.topicName()
-                    << " with guid " << info.info.guid().guidPrefix);
+            // Skip own subscription found
+            if (info.info.guid().guidPrefix != wan_guid_prefix_())
+            {
+                logInfo(DATABROKER_LISTENER_EXTERNAL, "Publication dropped in external network in topic "
+                        << info.info.topicName()
+                        << " with guid " << info.info.guid().guidPrefix);
+            }
         }
         else
         {
