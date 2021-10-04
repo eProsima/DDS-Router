@@ -24,6 +24,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <FileWatch.hpp>
@@ -116,6 +117,9 @@ protected:
     bool reload_configuration_file_(
             const std::string& path = "");
 
+    void check_config_file_(
+            const uint32_t wait_duration_sec);
+
 private:
 
     DataBrokerLocalParticipant* local_;
@@ -136,6 +140,8 @@ private:
     filewatch::FileWatch<std::string>* file_watch_handler_;
 
     std::recursive_mutex topics_mutex_;
+
+    std::thread update_config_thread_;
 };
 
 } /* namespace databroker */
