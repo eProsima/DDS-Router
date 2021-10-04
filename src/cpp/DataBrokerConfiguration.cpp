@@ -35,6 +35,7 @@ bool DataBrokerConfiguration::load_default_configuration(
 {
     // DataBroker configuration
     configuration.seconds = 0;
+    configuration.reload_config_seconds = 0;
     configuration.interactive = false;
     configuration.active_topics = std::vector<std::string>();
 
@@ -250,6 +251,14 @@ bool DataBrokerConfiguration::load_configuration_file(
             logInfo(DATABROKER_CONFIGURATION, "Set time to " << configuration.seconds << " seconds");
         }
 
+        // Time interval in seconds to reload the configuration file
+        if (config_node["reload"])
+        {
+            configuration.reload_config_seconds = config_node["reload"].as<uint32_t>();
+            logInfo(DATABROKER_CONFIGURATION,
+                    "Set reload time interval to " << configuration.reload_config_seconds << " seconds");
+        }
+
         // Domain
         if (config_node["domain"])
         {
@@ -343,6 +352,33 @@ bool DataBrokerConfiguration::reload_configuration_file(
     }
 
     return true;
+}
+
+std::set<std::string> DataBrokerConfiguration::read_topics_from_configuration_file(
+        const std::string& file_path /* = "" */)
+{
+    std::set<std::string> topics;
+    YAML::Node config_node;
+
+    try
+    {
+        config_node = YAML::LoadFile(file_path);
+
+        // Whitelist
+        if (config_node["whitelist"])
+        {
+            for (auto topic : config_node["whitelist"])
+            {
+                topics.insert(topic.as<std::string>());
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        logWarning(DATABROKER_CONFIGURATION, e.what());
+    }
+
+    return topics;
 }
 
 } /* namespace databroker */

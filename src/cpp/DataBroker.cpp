@@ -21,6 +21,8 @@
 #include <csignal>      // for signal handler
 #include <exception>
 #include <stdlib.h>     // for using the function sleep
+#include <thread>
+#include <chrono>
 
 #include <fastdds/dds/log/Log.hpp>
 
@@ -136,6 +138,11 @@ bool DataBroker::run()
     }
     else
     {
+        if (configuration_.reload_config_seconds > 0)
+        {
+            update_config_thread_ = std::thread(
+                &DataBroker::check_config_file_, this, configuration_.reload_config_seconds);
+        }
         return run_time(configuration_.seconds);
     }
 }
@@ -328,6 +335,11 @@ bool DataBroker::run_time(
                 });
     }
 
+    if (update_config_thread_.joinable())
+    {
+        update_config_thread_.detach();
+    }
+
     finish_watch_file_();
 
     return true;
@@ -433,6 +445,33 @@ bool DataBroker::reload_configuration_file_(
         return true;
     }
     return false;
+}
+
+void DataBroker::check_config_file_(
+        const uint32_t wait_duration_sec)
+{
+    while (true)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait_duration_sec * 1000));
+        std::set<std::string> new_topics;
+        std::set<std::string> old_topics;
+
+        for (std::map<std::string, bool>::iterator it = topics_.begin(); it != topics_.end(); ++it)
+        {
+            if (it->second)
+            {
+                old_topics.insert(it->first);
+            }
+        }
+
+        new_topics = DataBrokerConfiguration::read_topics_from_configuration_file(
+            configuration_.config_file);
+
+        if (old_topics != new_topics)
+        {
+            reload_configuration_file_(configuration_.config_file);
+        }
+    }
 }
 
 } /* namespace databroker */

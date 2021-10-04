@@ -74,6 +74,8 @@ struct DataBrokerConfiguration
     uint32_t seconds;
     bool interactive;
     std::string config_file;
+    //! Time interval in seconds to reload the configuration file
+    uint32_t reload_config_seconds;
 
     static bool load_default_configuration(
             DataBrokerConfiguration& configuration);
@@ -85,6 +87,9 @@ struct DataBrokerConfiguration
 
     static bool reload_configuration_file(
             DataBrokerConfiguration& configuration,
+            const std::string& file_path = "");
+
+    static std::set<std::string> read_topics_from_configuration_file(
             const std::string& file_path = "");
 };
 
