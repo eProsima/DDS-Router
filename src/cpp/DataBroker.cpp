@@ -141,7 +141,7 @@ bool DataBroker::run()
         if (configuration_.reload_config_seconds > 0)
         {
             update_config_thread_ = std::thread(
-                    &DataBroker::check_config_file_, this, configuration_.reload_config_seconds);
+                &DataBroker::check_config_file_, this, configuration_.reload_config_seconds);
         }
         return run_time(configuration_.seconds);
     }
@@ -335,7 +335,7 @@ bool DataBroker::run_time(
                 });
     }
 
-    if(update_config_thread_.joinable())
+    if (update_config_thread_.joinable())
     {
         update_config_thread_.detach();
     }
@@ -461,7 +461,7 @@ void DataBroker::check_config_file_(
         new_topics.clear();
         old_topics.clear();
 
-        for(std::map<std::string, bool>::iterator it = topics_.begin(); it != topics_.end(); ++it)
+        for (std::map<std::string, bool>::iterator it = topics_.begin(); it != topics_.end(); ++it)
         {
             if (it->second)
             {
@@ -470,7 +470,7 @@ void DataBroker::check_config_file_(
         }
 
         new_topics = DataBrokerConfiguration::read_topics_from_configuration_file(
-                configuration_.config_file);
+            configuration_.config_file);
 
         if (old_topics != new_topics)
         {

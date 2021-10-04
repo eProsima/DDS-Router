@@ -355,7 +355,7 @@ bool DataBrokerConfiguration::reload_configuration_file(
 }
 
 std::set<std::string> DataBrokerConfiguration::read_topics_from_configuration_file(
-    const std::string& file_path /* = "" */)
+        const std::string& file_path /* = "" */)
 {
     std::set<std::string> topics;
     YAML::Node config_node;
