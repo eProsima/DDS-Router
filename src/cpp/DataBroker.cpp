@@ -450,16 +450,11 @@ bool DataBroker::reload_configuration_file_(
 void DataBroker::check_config_file_(
         const uint32_t wait_duration_sec)
 {
-    std::set<std::string> new_topics;
-    std::set<std::string> old_topics;
-
-    logError(DATABROKER_DEBUG, "File watcher thread.")
-
     while (true)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(wait_duration_sec * 1000));
-        new_topics.clear();
-        old_topics.clear();
+        std::set<std::string> new_topics;
+        std::set<std::string> old_topics;
 
         for (std::map<std::string, bool>::iterator it = topics_.begin(); it != topics_.end(); ++it)
         {
