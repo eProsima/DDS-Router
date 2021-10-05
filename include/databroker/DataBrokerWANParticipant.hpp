@@ -20,6 +20,7 @@
 #ifndef EPROSIMA_DATABROKER_DATABROKERWANPARTICIPANT_HPP
 #define EPROSIMA_DATABROKER_DATABROKERWANPARTICIPANT_HPP
 
+#include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
 #include <databroker/DataBrokerParticipant.hpp>
 #include <databroker/DataBrokerConfiguration.hpp>
 #include <databroker/Address.hpp>
@@ -46,6 +47,9 @@ protected:
     eprosima::fastdds::dds::DataWriterQos datawriter_qos() override;
 
     eprosima::fastdds::dds::DataReaderQos datareader_qos() override;
+
+    void enable_tls_(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor);
 
     const DataBrokerParticipantConfiguration& get_configuration_() override;
 
