@@ -49,7 +49,7 @@ protected:
     eprosima::fastdds::dds::DataReaderQos datareader_qos() override;
 
     void enable_tls_(
-        std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor);
+            std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor);
 
     const DataBrokerParticipantConfiguration& get_configuration_() override;
 
