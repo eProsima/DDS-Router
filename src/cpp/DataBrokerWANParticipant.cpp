@@ -66,7 +66,7 @@ void DataBrokerWANParticipant::enable_tls_(
     descriptor->tls_config.verify_mode =
             eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER;
 
-    logInfo(DATABROKER, "External Discovery Server configure with TLS");
+    logInfo(DATABROKER, "External Discovery Server configured with TLS");
 }
 
 eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participant_qos()
@@ -82,11 +82,11 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
     {
         // In case of using TCP, configure listening address
         // Create TCPv4 transport
-        std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
-
         if (configuration_.listening_addresses.empty())
         {
+            std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
+                    std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+
             if (configuration_.tls)
             {
                 enable_tls_(descriptor);
@@ -98,6 +98,9 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
         {
             for (auto address : configuration_.listening_addresses)
             {
+                std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
+                    std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+
                 descriptor->add_listener_port(address.port);
                 descriptor->set_WAN_address(address.ip);
 
@@ -109,27 +112,28 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
                     enable_tls_(descriptor);
                 }
 
-                logInfo(DATABROKER, "External Discovery Server configure TCP listening address " << address);
+                pqos.transport().user_transports.push_back(descriptor);
+
+                logInfo(DATABROKER, "External Discovery Server configured TCP listening address " << address);
             }
+
         }
     }
-    else
+
+    for (auto address : configuration_.listening_addresses)
     {
-        for (auto address : configuration_.listening_addresses)
-        {
-            // Create Locator
-            eprosima::fastrtps::rtps::Locator_t locator;
-            locator.kind = LOCATOR_KIND_UDPv4;
+        // Create Locator
+        eprosima::fastrtps::rtps::Locator_t locator;
+        locator.kind = configuration_.udp ? LOCATOR_KIND_UDPv4 : LOCATOR_KIND_TCPv4;
 
-            eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
-            eprosima::fastrtps::rtps::IPLocator::setWan(locator, address.ip);
-            eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port);
-            eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port);
+        eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip);
+        eprosima::fastrtps::rtps::IPLocator::setWan(locator, address.ip);
+        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port);
+        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port);
 
-            pqos.wire_protocol().builtin.metatrafficUnicastLocatorList.push_back(locator);
+        pqos.wire_protocol().builtin.metatrafficUnicastLocatorList.push_back(locator);
 
-            logInfo(DATABROKER, "External Discovery Server configure UDP listening locator " << locator);
-        }
+        logInfo(DATABROKER, "External Discovery Server configured listening locator " << locator);
     }
 
     // Configure connection addresses
