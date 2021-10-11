@@ -164,6 +164,8 @@ eprosima::fastdds::dds::DomainParticipantQos DataBrokerWANParticipant::participa
     pqos.wire_protocol().builtin.discovery_config.discoveryProtocol =
             fastrtps::rtps::DiscoveryProtocol::SERVER;
 
+    pqos.wire_protocol().builtin.discovery_config.leaseDuration = eprosima::fastrtps::c_TimeInfinite;
+
     return pqos;
 }
 
