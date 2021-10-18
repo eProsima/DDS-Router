@@ -13,23 +13,34 @@
 // limitations under the License.
 
 /**
- * @file IEventListener.hpp
+ * @file Endpoint.hpp
  */
 
-#ifndef _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
-#define _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
+#ifndef _DATABROKER_DYNAMIC_QOS_HPP_
+#define _DATABROKER_DYNAMIC_QOS_HPP_
+
+#include <databroker/dynamic/QoS.hpp>
+#include <databroker/dynamic/Topic.hpp>
+#include <databroker/types/Guid.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class IEventListener
+enum EndpointKind
 {
-public:
+    WRITER,
+    READER
+}
 
-    virtual void on_triggered();
+struct Endpoint
+{
+    EndpointKind kind;
+    Guid guid;
+    QoS qos;
+    Topic topic;
 };
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_ */
+#endif /* _DATABROKER_DYNAMIC_QOS_HPP_ */

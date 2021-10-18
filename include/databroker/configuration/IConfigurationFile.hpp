@@ -44,9 +44,9 @@ public:
         return file_name_;
     }
 
-    ReturnCode load();
+    virtual ReturnCode load();
 
-    bool reload();
+    virtual bool reload();
 
 protected:
 

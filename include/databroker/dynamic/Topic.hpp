@@ -13,23 +13,24 @@
 // limitations under the License.
 
 /**
- * @file IEventListener.hpp
+ * @file Topic.hpp
  */
 
-#ifndef _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
-#define _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
+#ifndef _DATABROKER_DYNAMIC_TOPIC_HPP_
+#define _DATABROKER_DYNAMIC_TOPIC_HPP_
+
+#include <string>
 
 namespace eprosima {
 namespace databroker {
 
-class IEventListener
+struct Topic
 {
-public:
-
-    virtual void on_triggered();
+    std::string topic_name_;
+    std::string topic_type_;
 };
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_ */
+#endif /* _DATABROKER_DYNAMIC_TOPIC_HPP_ */

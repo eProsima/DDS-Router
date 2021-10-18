@@ -16,8 +16,8 @@
  * @file ReturnCode.hpp
  */
 
-#ifndef _DATABROKER_TYPES_TYPES_HPP_
-#define _DATABROKER_TYPES_TYPES_HPP_
+#ifndef _DATABROKER_TYPES_RETURNCODE_HPP_
+#define _DATABROKER_TYPES_RETURNCODE_HPP_
 
 #include <fastrtps/types/TypesBase.h>
 
@@ -35,4 +35,4 @@ class ReturnCode: public eprosima::fastrtps::types::ReturnCode_t
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_TYPES_TYPES_HPP_ */
+#endif /* _DATABROKER_TYPES_RETURNCODE_HPP_ */

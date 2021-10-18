@@ -13,44 +13,51 @@
 // limitations under the License.
 
 /**
- * @file Databroker.hpp
+ * @file DiscoveryDatabase.hpp
  */
 
-#ifndef _DATABROKER_CORE_DATABROKER_HPP_
-#define _DATABROKER_CORE_DATABROKER_HPP_
+#ifndef _DATABROKER_DYNAMIC_DISCOVERYDATABASE_HPP_
+#define _DATABROKER_DYNAMIC_DISCOVERYDATABASE_HPP_
 
 #include <string>
 #include <map>
 
-#include <databroker/types/ReturnCode.hpp>
-#include <databroker/configuration/DatabrokerConfiguration.hpp>
-#include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/dynamic/Entities.hpp>
+#include <databroker/dynamic/QoS.hpp>
+#include <databroker/dynamic/Topic.hpp>
+#include <databroker/types/Guid.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class Databroker
+class DiscoveryDatabase
 {
 public:
 
-    ReturnCode init(const DatabrokerConfiguration& configuration);
+    bool topic_exists(const Topic& topic);
 
-    ReturnCode run();
+    bool entity_exists(const Guid& guid);
 
-    ReturnCode stop();
+    ReturnCode add_entity(
+        const Entity& new_entity);
 
-    ReturnCode reload_topics();
+    ReturnCode modify_entity(
+        const Entity& new_entity);
 
-    ReturnCode on_entity_discovered(Entity new_entity);
+    ReturnCode erase_entity(
+        const Guid& guid_of_entity_to_erase);
+
+    ReturnCode erase_entity(
+        const Entity& entity_to_erase);
 
 protected:
 
-    DatabrokerConfiguration configuration_;
+    std::map<Guid, Entity> entities_;
 
-    std::map<std::string, IDatabrokerParticipant> participants_;
+    std::vector<Topic> topics_;
 };
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_CORE_DATABROKER_HPP_ */
+#endif /* _DATABROKER_DYNAMIC_DISCOVERYDATABASE_HPP_ */

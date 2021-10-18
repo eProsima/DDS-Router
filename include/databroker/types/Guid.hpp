@@ -13,23 +13,23 @@
 // limitations under the License.
 
 /**
- * @file IEventListener.hpp
+ * @file Guid.hpp
  */
 
-#ifndef _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
-#define _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_
+#ifndef _DATABROKER_TYPES_GUID_HPP_
+#define _DATABROKER_TYPES_GUID_HPP_
+
+#include <fastrtps/rtos/common/Guid.h>
 
 namespace eprosima {
 namespace databroker {
 
-class IEventListener
+class Guid: public eprosima::fastrtps::rtps::GUID_t
 {
-public:
 
-    virtual void on_triggered();
-};
+}
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_INTERFACE_IEVENTLISTENER_HPP_ */
+#endif /* _DATABROKER_TYPES_GUID_HPP_ */
