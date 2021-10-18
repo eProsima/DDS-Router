@@ -19,10 +19,12 @@
 #ifndef _DATABROKER_CONFIGURATION_DATABROKERPARTICIPANTCONFIGURATION_HPP_
 #define _DATABROKER_CONFIGURATION_DATABROKERPARTICIPANTCONFIGURATION_HPP_
 
+#include <databroker/configuration/IConfigurationFile.hpp>
+
 namespace eprosima {
 namespace databroker {
 
-struct DatabrokerParticipantConfiguration
+struct DatabrokerParticipantConfiguration : public IConfigurationFile
 {
 };
 

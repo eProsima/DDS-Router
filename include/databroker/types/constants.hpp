@@ -13,22 +13,20 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerConfiguration.hpp
+ * @file types.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
-#define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
+#ifndef _DATABROKER_TYPES_CONSTANTS_HPP_
+#define _DATABROKER_TYPES_CONSTANTS_HPP_
 
-#include <databroker/configuration/IConfigurationFile.hpp>
+#include <string>
 
 namespace eprosima {
 namespace databroker {
 
-struct DatabrokerConfiguration : public IConfigurationFile
-{
-};
+constexpr char* DEFAULT_CONFIGURATION_FILE_NAME("DATABROKER_CONFIGURATION.yaml");
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_ */
+#endif /* _DATABROKER_TYPES_CONSTANTS_HPP_ */

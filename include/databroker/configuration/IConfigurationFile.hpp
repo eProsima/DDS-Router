@@ -13,22 +13,47 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerConfiguration.hpp
+ * @file IConfigurationFile.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
-#define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
+#ifndef _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_
+#define _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_
 
-#include <databroker/configuration/IConfigurationFile.hpp>
+#include <string>
+
+#include <databroker/types/constants.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-struct DatabrokerConfiguration : public IConfigurationFile
+class IConfigurationFile
 {
+public:
+
+    IConfigurationFile()
+        : file_name_(DEFAULT_CONFIGURATION_FILE_NAME)
+    {}
+
+    IConfigurationFile(const std::string& file_name)
+        : file_name_(file_name)
+    {}
+
+    const std::string& file_name() const
+    {
+        return file_name_;
+    }
+
+    ReturnCode load();
+
+    bool reload();
+
+protected:
+
+    std::string file_name_;
 };
 
 } /* namespace rtps */
 } /* namespace databroker */
 
-#endif /* _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_ */
+#endif /* _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_ */
