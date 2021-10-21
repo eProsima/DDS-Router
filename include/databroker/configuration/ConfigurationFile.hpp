@@ -13,14 +13,15 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerConfiguration.hpp
+ * @file ConfigurationFile.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
-#define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
+#ifndef _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_
+#define _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_
+
+#include <string>
 
 #include <databroker/configuration/IConfigurationHandler.hpp>
-#include <databroker/configuration/ConfigurationFile.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -28,11 +29,24 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerConfiguration : public ConfigurationFile, public IAllowedTopicConfiguration
+class ConfigurationFile : IConfigurationHandler
 {
+public:
+
+    ConfigurationFile(std::string file_name);
+
+    ReturnCode load() override;
+
+    const RawConfiguration& get_raw() const override;
+
+    ReturnCode reload() override;
+
+protected:
+
+    std::string file_name_;
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_ */
+#endif /* _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_ */

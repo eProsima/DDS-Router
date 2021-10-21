@@ -19,41 +19,43 @@
 #ifndef _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_
 #define _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_
 
-#include <string>
-
 #include <databroker/types/constants.hpp>
 #include <databroker/types/ReturnCode.hpp>
+#include <databroker/types/RawConfiguration.hpp>
+#include <databroker/topic/AbstractTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class IConfigurationFile
+/**
+ * TODO
+ */
+class IConfigurationHandler
 {
 public:
 
-    IConfigurationFile()
-        : file_name_(DEFAULT_CONFIGURATION_FILE_NAME)
-    {}
-
-    IConfigurationFile(const std::string& file_name)
-        : file_name_(file_name)
-    {}
-
-    const std::string& file_name() const
-    {
-        return file_name_;
-    }
-
     virtual ReturnCode load();
 
-    virtual bool reload();
+    virtual const RawConfiguration& get_raw() const;
 
-protected:
-
-    std::string file_name_;
+    virtual ReturnCode reload(); // NO_DATA in case it has not been updated
 };
 
-} /* namespace rtps */
+class IAllowedTopicConfiguration
+{
+public:
+    virtual std::list<AbstractTopic> whitelist() const;
+    virtual std::list<AbstractTopic> blacklist() const;
+};
+
+// TODO: create new interfaces for common configurations
+class IListeningAddressConfiguration
+{
+public:
+    // TODO
+};
+
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_CONFIGURATION_ICONFIGURATION_HPP_ */
