@@ -19,14 +19,35 @@
 #ifndef _DATABROKER_READER_IDATABROKERREADER_HPP_
 #define _DATABROKER_READER_IDATABROKERREADER_HPP_
 
+#include <functional>
+
+#include <databroker/types/Data.hpp>
+#include <databroker/types/ReturnCode.hpp>
+#include <databroker/topic/RealTopic.hpp>
+#include <databroker/communication/PayloadPool.hpp>
+
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class IDatabrokerReader
 {
+public:
+
+    IDatabrokerReader(RealTopic, std::shared_ptr<PayloadPool>, std::function<void()> on_data_available_lambda);
+
+    ReturnCode init();
+
+    ReturnCode enable();
+
+    ReturnCode disable();
+
+    ReturnCode take(DataReceived&); // This data read must be inside a PayloadPool
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_READER_IDATABROKERREADER_HPP_ */

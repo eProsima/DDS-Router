@@ -19,14 +19,41 @@
 #ifndef _DATABROKER_PARTICIPANT_IDATABROKERPARTICIPANT_HPP_
 #define _DATABROKER_PARTICIPANT_IDATABROKERPARTICIPANT_HPP_
 
+#include <databroker/communication/PayloadPool.hpp>
+#include <databroker/configuration/DatabrokerParticipantConfiguration.hpp>
+#include <databroker/reader/IDatabrokerReader.hpp>
+#include <databroker/types/Endpoint.hpp>
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/writer/IDatabrokerWriter.hpp>
+
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class IDatabrokerParticipant
 {
+public:
+
+    IDatabrokerParticipant(
+        ParticipantId id,
+        DatabrokerParticipantConfiguration,
+        std::function<void(Endpoint)>);
+
+    ReturnCode init();
+
+    std::shared_ptr<IDatabrokerWriter> create_writer(
+            RealTopic,
+            std::shared_ptr<PayloadPool>);
+
+    std::shared_ptr<IDatabrokerReader> create_reader(
+            RealTopic,
+            std::shared_ptr<PayloadPool>,
+            std::function<void()> on_data_available_lambda); // lambda as listener
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_PARTICIPANT_IDATABROKERPARTICIPANT_HPP_ */

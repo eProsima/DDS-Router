@@ -13,20 +13,29 @@
 // limitations under the License.
 
 /**
- * @file TrackListener.hpp
+ * @file DatabrokerParticipantFactory.hpp
  */
 
-#ifndef _DATABROKER_READER_TRACKLISTENER_HPP_
-#define _DATABROKER_READER_TRACKLISTENER_HPP_
+#ifndef _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
+#define _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
+
+#include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class TrackListener
+class DatabrokerParticipantFactory
 {
+public:
+
+    std::shared_ptr<IDatabrokerParticipant> create_participant(
+        ParticipantId id,
+        DatabrokerParticipantConfiguration,
+        std::function<void(Endpoint)>);
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
-#endif /* _DATABROKER_READER_TRACKLISTENER_HPP_ */
+#endif /* _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_ */

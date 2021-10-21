@@ -19,14 +19,33 @@
 #ifndef _DATABROKER_WRITER_IDATABROKERWRITER_HPP_
 #define _DATABROKER_WRITER_IDATABROKERWRITER_HPP_
 
+#include <databroker/types/Data.hpp>
+#include <databroker/types/ReturnCode.hpp>
+#include <databroker/topic/RealTopic.hpp>
+#include <databroker/communication/PayloadPool.hpp>
+
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class IDatabrokerWriter
 {
+public:
+
+    IDatabrokerWriter(RealTopic, std::shared_ptr<PayloadPool>);
+
+    ReturnCode init();
+
+    ReturnCode enable();
+
+    ReturnCode disable();
+
+    ReturnCode write(DataReceived&);
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_WRITER_IDATABROKERWRITER_HPP_ */

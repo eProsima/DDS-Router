@@ -22,42 +22,40 @@
 #include <string>
 #include <map>
 
-#include <databroker/dynamic/Entities.hpp>
-#include <databroker/dynamic/QoS.hpp>
-#include <databroker/dynamic/Topic.hpp>
+#include <databroker/topic/RealTopic.hpp>
 #include <databroker/types/Guid.hpp>
+#include <databroker/types/Endpoint.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class DiscoveryDatabase
 {
 public:
 
-    bool topic_exists(const Topic& topic);
+    bool topic_exists(const RealTopic& topic);
 
-    bool entity_exists(const Guid& guid);
+    bool endpoint_exists(const Guid& guid);
 
-    ReturnCode add_entity(
-        const Entity& new_entity);
+    ReturnCode add_or_modify_endpoint(
+        const Endpoint& new_endpoint);
 
-    ReturnCode modify_entity(
-        const Entity& new_entity);
+    ReturnCode erase_endpoint(
+        const Guid& guid_of_endpoint_to_erase);
 
-    ReturnCode erase_entity(
-        const Guid& guid_of_entity_to_erase);
-
-    ReturnCode erase_entity(
-        const Entity& entity_to_erase);
+    ReturnCode erase_endpoint(
+        const Endpoint& endpoint_to_erase);
 
 protected:
 
-    std::map<Guid, Entity> entities_;
-
-    std::vector<Topic> topics_;
+    std::map<Guid, Endpoint> entities_;
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_DYNAMIC_DISCOVERYDATABASE_HPP_ */
