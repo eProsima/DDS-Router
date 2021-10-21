@@ -19,16 +19,25 @@
 #ifndef _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_
 #define _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_
 
+#include <fastdds/rtps/history/IPayloadPool.h>
 #include <rtps/history/TopicPayloadPool.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class PayloadPool : public TopicPayloadPool
+// TODO: is this needed?
+// class IPayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
+// {
+// };
+
+/**
+ * TODO
+ */
+class PayloadPool : public eprosima::fastrtps::rtps::TopicPayloadPool
 {
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_ */

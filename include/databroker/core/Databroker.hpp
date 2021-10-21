@@ -19,38 +19,49 @@
 #ifndef _DATABROKER_CORE_DATABROKER_HPP_
 #define _DATABROKER_CORE_DATABROKER_HPP_
 
-#include <string>
 #include <map>
 
-#include <databroker/types/ReturnCode.hpp>
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class Databroker
 {
 public:
 
-    ReturnCode init(const DatabrokerConfiguration& configuration);
+    Databroker(DatabrokerConfiguration);
 
-    ReturnCode run();
+    ReturnCode init();
 
-    ReturnCode stop();
+    // EVENTS
+    void stop();
 
-    ReturnCode reload_topics();
+    void reload_configuration();
 
-    ReturnCode on_entity_discovered(Entity new_entity);
+    void endpoint_discovered(Endpoint);
 
 protected:
 
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> participants_;
+
+    std::map<RealTopic, Bridge> bridges;
+
     DatabrokerConfiguration configuration_;
 
-    std::map<std::string, IDatabrokerParticipant> participants_;
+    AllowedTopicList allowed_topics_;
+
+    std::map<DatabrokerParticipantId, AllowedTopicList> allowed_topics_by_participant_;
+
+    DiscoveryDatabase discovery_database_;
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_CORE_DATABROKER_HPP_ */

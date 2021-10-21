@@ -19,14 +19,52 @@
 #ifndef _DATABROKER_COMMUNICATION_TRACK_HPP_
 #define _DATABROKER_COMMUNICATION_TRACK_HPP_
 
+#include <databroker/communication/PayloadPool.hpp>
+#include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/reader/IDatabrokerReader.hpp>
+#include <databroker/writer/IDatabrokerWriter.hpp>
+
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class Track
 {
+public:
+
+    Track(
+        RealTopic,
+        IDatabrokerParticipant source,
+        std::list<std::shared_ptr<IDatabrokerParticipant>> targets);
+
+    ReturnCode init();
+
+    ReturnCode enable();
+
+    ReturnCode disable();
+
+protected:
+
+    ReturnCode transmit_();
+
+protected:
+
+    PayloadPool pool_;
+
+    std::shared_ptr<IDatabrokerParticipant> source;
+
+    std::list<std::shared_ptr<IDatabrokerParticipant>> targets;
+
+    std::shared_ptr<IDatabrokerReader> reader_;
+
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_;
+
+    std::atomic<bool> are_data_available_;
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_COMMUNICATION_TRACK_HPP_ */

@@ -19,14 +19,39 @@
 #ifndef _DATABROKER_COMMUNICATION_BRIDGE_HPP_
 #define _DATABROKER_COMMUNICATION_BRIDGE_HPP_
 
+#include <databroker/communication/Track.hpp>
+#include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/types/ParticipantId.hpp>
+
 namespace eprosima {
 namespace databroker {
 
+/**
+ * TODO
+ */
 class Bridge
 {
+public:
+    Bridge(
+        RealTopic,
+        std::shared_ptr<IDatabrokerParticipant>);
+
+    ReturnCode init();
+
+    ReturnCode enable();
+
+    ReturnCode disable();
+
+protected:
+
+    const RealTopic topic_;
+
+    const std::list<std::shared_ptr<IDatabrokerParticipant>> participants_;
+
+    std::map<ParticipantId, Track> tracks;
 };
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_COMMUNICATION_BRIDGE_HPP_ */
