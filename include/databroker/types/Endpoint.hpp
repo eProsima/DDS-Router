@@ -13,21 +13,46 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file Endpoint.hpp
  */
 
-#ifndef _DATABROKER_TYPES_GUID_HPP_
-#define _DATABROKER_TYPES_GUID_HPP_
+#ifndef _DATABROKER_TYPES_ENDPOINT_HPP_
+#define _DATABROKER_TYPES_ENDPOINT_HPP_
 
-#include <fastrtps/rtps/common/Guid.h>
+#include <databroker/types/Guid.hpp>
+#include <databroker/types/QoS.hpp>
+#include <databroker/topic/DatabrokerTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+//! Possible kinds of the endpoint
+enum EndpointKind
+{
+    WRITER,
+    READER
+};
+
+//! Data collection to describe an Endpoint
+struct Endpoint
+{
+    //! Kind of the endpoint
+    EndpointKind kind;
+
+    //! Unique id of the endpoint
+    Guid guid;
+
+    //! Attributes of the endpoint
+    QoS qos;
+
+    //! Topic that this endpoint belongs to
+    RealTopic topic;
+
+    //! Whether the endpoint is currently active
+    bool active;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_GUID_HPP_ */
+#endif /* _DATABROKER_TYPES_ENDPOINT_HPP_ */

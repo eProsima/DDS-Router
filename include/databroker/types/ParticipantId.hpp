@@ -13,21 +13,21 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file ParticipantId.hpp
  */
 
-#ifndef _DATABROKER_TYPES_GUID_HPP_
-#define _DATABROKER_TYPES_GUID_HPP_
+#ifndef _DATABROKER_TYPES_PARTICIPANTID_HPP_
+#define _DATABROKER_TYPES_PARTICIPANTID_HPP_
 
-#include <fastrtps/rtps/common/Guid.h>
+#include <string>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+//! Unique Id for each Databroker Participant
+using ParticipantId = std::string;
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_GUID_HPP_ */
+#endif /* _DATABROKER_TYPES_PARTICIPANTID_HPP_ */

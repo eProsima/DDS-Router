@@ -13,20 +13,20 @@
 // limitations under the License.
 
 /**
- * @file types.hpp
+ * @file constants.hpp
+ *
+ * This file contains constant values common for the whole project
  */
 
 #ifndef _DATABROKER_TYPES_CONSTANTS_HPP_
 #define _DATABROKER_TYPES_CONSTANTS_HPP_
-
-#include <string>
 
 namespace eprosima {
 namespace databroker {
 
 constexpr char* DEFAULT_CONFIGURATION_FILE_NAME("DATABROKER_CONFIGURATION.yaml");
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_TYPES_CONSTANTS_HPP_ */

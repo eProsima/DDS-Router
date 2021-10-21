@@ -13,21 +13,31 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file Data.hpp
  */
 
-#ifndef _DATABROKER_TYPES_GUID_HPP_
-#define _DATABROKER_TYPES_GUID_HPP_
+#ifndef _DATABROKER_TYPES_DATA_HPP_
+#define _DATABROKER_TYPES_DATA_HPP_
 
-#include <fastrtps/rtps/common/Guid.h>
+#include <databroker/types/QoS.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+//! Payload references the raw data received.
+using Payload = void*; // maybe SerializedPayload_t
+
+//! Structure of the Data received from a Reader containing the data itself and the attributes of the suorce
+struct DataReceived
+{
+    //! Payload of the data received
+    Payload data;
+
+    //! Attributes of the source entity that has transmit the data
+    QoS source_qos;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_GUID_HPP_ */
+#endif /* _DATABROKER_TYPES_DATA_HPP_ */

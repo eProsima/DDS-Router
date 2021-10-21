@@ -13,21 +13,21 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file RawConfiguration.hpp
  */
 
-#ifndef _DATABROKER_TYPES_GUID_HPP_
-#define _DATABROKER_TYPES_GUID_HPP_
+#ifndef _DATABROKER_TYPES_RAWCONFIGURATION_HPP_
+#define _DATABROKER_TYPES_RAWCONFIGURATION_HPP_
 
-#include <fastrtps/rtps/common/Guid.h>
+#include <yaml-cpp/yaml.h>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+//! Configuration in dictionary format
+using RawConfiguration = YAML::Node;
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_GUID_HPP_ */
+#endif /* _DATABROKER_TYPES_RAWCONFIGURATION_HPP_ */

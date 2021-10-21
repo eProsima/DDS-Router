@@ -13,21 +13,34 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file QoS.hpp
  */
 
-#ifndef _DATABROKER_TYPES_GUID_HPP_
-#define _DATABROKER_TYPES_GUID_HPP_
+#ifndef _DATABROKER_TYPES_QOS_HPP_
+#define _DATABROKER_TYPES_QOS_HPP_
 
-#include <fastrtps/rtps/common/Guid.h>
+#include <fastdds/rtps/common/Types.h>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+//! Durability kind enumeration
+using DurabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t;
+
+//! Reliability kind enumeration
+using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
+
+//! Collection of attributes of an Endpoint
+struct QoS
+{
+    //! Durability kind
+    DurabilityKind durability;
+
+    //! Reliability kind
+    ReliabilityKind reliability;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_GUID_HPP_ */
+#endif /* _DATABROKER_TYPES_QOS_HPP_ */

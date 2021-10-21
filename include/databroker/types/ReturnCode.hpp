@@ -26,13 +26,14 @@ namespace databroker {
 
 class ReturnCode: public eprosima::fastrtps::types::ReturnCode_t
 {
-    bool operator bool() const
+    //! Specify the operator so OK code could be translated to True.
+    bool operator ()() const
     {
-        return value_ == 0;
+        return RETCODE_OK == *this;
     }
-}
+};
 
-} /* namespace rtps */
 } /* namespace databroker */
+} /* namespace eprosima */
 
 #endif /* _DATABROKER_TYPES_RETURNCODE_HPP_ */

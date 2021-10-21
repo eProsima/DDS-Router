@@ -14,15 +14,24 @@
 
 /**
  * @file types.hpp
+ *
+ * This file includes every standard type of Databroker
  */
 
 #ifndef _DATABROKER_TYPES_TYPES_HPP_
 #define _DATABROKER_TYPES_TYPES_HPP_
 
-namespace eprosima {
-namespace databroker {
+// General types
+#include <databroker/types/constants.hpp>
+#include <databroker/types/macros.hpp>
 
-} /* namespace rtps */
-} /* namespace databroker */
+// Specific classes
+#include <databroker/types/Data.hpp>
+#include <databroker/types/Endpoint.hpp>
+#include <databroker/types/Guid.hpp>
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/QoS.hpp>
+#include <databroker/types/RawConfiguration.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 #endif /* _DATABROKER_TYPES_TYPES_HPP_ */
