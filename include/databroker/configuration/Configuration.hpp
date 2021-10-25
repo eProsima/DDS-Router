@@ -49,8 +49,8 @@ protected:
 class AllowedTopicConfiguration : public IConfiguration
 {
 public:
-    virtual std::list<AbstractTopic> whitelist() const;
-    virtual std::list<AbstractTopic> blacklist() const;
+    std::list<AbstractTopic> whitelist() const;
+    std::list<AbstractTopic> blacklist() const;
 };
 
 // TODO: create new interfaces for common configurations

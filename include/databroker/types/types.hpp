@@ -23,7 +23,6 @@
 
 // General types
 #include <databroker/types/constants.hpp>
-#include <databroker/types/macros.hpp>
 
 // Specific classes
 #include <databroker/types/Data.hpp>
@@ -33,5 +32,10 @@
 #include <databroker/types/QoS.hpp>
 #include <databroker/types/RawConfiguration.hpp>
 #include <databroker/types/ReturnCode.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
+#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/types/topic/RealTopic.hpp>
+
 
 #endif /* _DATABROKER_TYPES_TYPES_HPP_ */
