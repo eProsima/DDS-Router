@@ -57,11 +57,10 @@ local:
 #################################
 
 local_no_ros:
-  "./local_no_ros_participant_configuration.yaml"
-
+  filename: "./local_no_ros_participant_configuration.yaml"
 
 ###########################################################
-# ./local_participant_configuration.yaml
+# ./local_no_ros_participant_configuration.yaml
 ###########################################################
 
 type: local
