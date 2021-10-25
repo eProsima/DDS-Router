@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationFile.hpp
+ * @file ConfigurationHandlerFile.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_
-#define _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_
+#ifndef _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
+#define _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
 
 #include <string>
 
@@ -29,11 +29,11 @@ namespace databroker {
 /**
  * TODO
  */
-class ConfigurationFile : IConfigurationHandler
+class ConfigurationHandlerFile : IConfigurationHandler
 {
 public:
 
-    ConfigurationFile(std::string file_name);
+    ConfigurationHandlerFile(std::string file_name);
 
     ReturnCode load() override;
 
@@ -49,4 +49,4 @@ protected:
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_CONFIGURATION_CONFIGURATIONFILE_HPP_ */
+#endif /* _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_ */

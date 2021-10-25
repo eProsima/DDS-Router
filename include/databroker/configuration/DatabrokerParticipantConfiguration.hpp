@@ -19,7 +19,7 @@
 #ifndef _DATABROKER_CONFIGURATION_DATABROKERPARTICIPANTCONFIGURATION_HPP_
 #define _DATABROKER_CONFIGURATION_DATABROKERPARTICIPANTCONFIGURATION_HPP_
 
-#include <databroker/configuration/IConfigurationHandler.hpp>
+#include <databroker/configuration/Configuration.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -27,7 +27,7 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerParticipantConfiguration : public IConfigurationHandler, public IAllowedTopicConfiguration
+struct DatabrokerParticipantConfiguration : public AllowedTopicConfiguration
 {
 };
 

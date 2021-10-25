@@ -38,7 +38,7 @@ public:
 
     IDatabrokerParticipant(
         ParticipantId id,
-        DatabrokerParticipantConfiguration,
+        RawConfiguration,
         std::function<void(Endpoint)>);
 
     ReturnCode init();

@@ -21,9 +21,13 @@
 
 #include <map>
 
+#include <databroker/communication/Bridge.hpp>
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/topic/AllowedTopicList.hpp>
+#include <databroker/dynamic/DiscoveryDatabase.hpp>
 #include <databroker/types/ReturnCode.hpp>
+#include <databroker/types/ParticipantId.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -42,7 +46,7 @@ public:
     // EVENTS
     void stop();
 
-    void reload_configuration();
+    void reload_configuration(DatabrokerConfiguration);
 
     void endpoint_discovered(Endpoint);
 
@@ -56,7 +60,7 @@ protected:
 
     AllowedTopicList allowed_topics_;
 
-    std::map<DatabrokerParticipantId, AllowedTopicList> allowed_topics_by_participant_;
+    std::map<ParticipantId, AllowedTopicList> allowed_topics_by_participant_;
 
     DiscoveryDatabase discovery_database_;
 };

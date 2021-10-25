@@ -16,10 +16,12 @@
  * @file DatabrokerConfiguration.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
-#define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
+#ifndef _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_
+#define _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_
 
-#include <databroker/configuration/Configuration.hpp>
+#include <databroker/types/RawConfiguration.hpp>
+#include <databroker/topic/AbstractTopic.hpp>
+#include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -27,16 +29,38 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerConfiguration : public AllowedTopicConfiguration
+class IConfiguration
 {
-    DatabrokerConfiguration(const RawConfiguration&);
+public:
+    IConfiguration(const RawConfiguration&);
 
     // Read the Yaml and get the params required
     // Fail in case he configuration is not correct
-    ReturnCode load() override;
+    virtual ReturnCode load() = 0;
+
+protected:
+
+    RawConfiguration configuration_;
+};
+
+/**
+ * TODO
+ */
+class AllowedTopicConfiguration : public IConfiguration
+{
+public:
+    virtual std::list<AbstractTopic> whitelist() const;
+    virtual std::list<AbstractTopic> blacklist() const;
+};
+
+// TODO: create new interfaces for common configurations
+class ListeningAddressConfiguration
+{
+public:
+    // TODO
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_ */
+#endif /* _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_ */

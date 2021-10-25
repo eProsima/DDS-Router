@@ -31,7 +31,7 @@ public:
 
     std::shared_ptr<IDatabrokerParticipant> create_participant(
         ParticipantId id,
-        DatabrokerParticipantConfiguration,
+        RawConfiguration,
         std::function<void(Endpoint)>);
 };
 

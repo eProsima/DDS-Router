@@ -41,20 +41,6 @@ public:
     virtual ReturnCode reload(); // NO_DATA in case it has not been updated
 };
 
-class IAllowedTopicConfiguration
-{
-public:
-    virtual std::list<AbstractTopic> whitelist() const;
-    virtual std::list<AbstractTopic> blacklist() const;
-};
-
-// TODO: create new interfaces for common configurations
-class IListeningAddressConfiguration
-{
-public:
-    // TODO
-};
-
 } /* namespace databroker */
 } /* namespace eprosima */
 
