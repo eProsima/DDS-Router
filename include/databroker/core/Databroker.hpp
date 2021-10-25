@@ -23,9 +23,9 @@
 
 #include <databroker/communication/Bridge.hpp>
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
-#include <databroker/participant/IDatabrokerParticipant.hpp>
-#include <databroker/topic/AllowedTopicList.hpp>
+#include <databroker/dynamic/AllowedTopicList.hpp>
 #include <databroker/dynamic/DiscoveryDatabase.hpp>
+#include <databroker/participant/IDatabrokerParticipant.hpp>
 #include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/ParticipantId.hpp>
 

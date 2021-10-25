@@ -16,8 +16,8 @@
  * @file DatabrokerTopic.hpp
  */
 
-#ifndef _DATABROKER_TOPIC_DATABROKERTOPIC_HPP_
-#define _DATABROKER_TOPIC_DATABROKERTOPIC_HPP_
+#ifndef _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
+#define _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
 
 #include <string>
 
@@ -43,4 +43,4 @@ struct DatabrokerTopic
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TOPIC_DATABROKERTOPIC_HPP_ */
+#endif /* _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_ */

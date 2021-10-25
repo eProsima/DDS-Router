@@ -23,7 +23,7 @@
 
 #include <databroker/types/Data.hpp>
 #include <databroker/types/ReturnCode.hpp>
-#include <databroker/topic/RealTopic.hpp>
+#include <databroker/types/topic/RealTopic.hpp>
 #include <databroker/communication/PayloadPool.hpp>
 
 namespace eprosima {

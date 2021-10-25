@@ -22,7 +22,7 @@
 #include <databroker/types/constants.hpp>
 #include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/RawConfiguration.hpp>
-#include <databroker/topic/AbstractTopic.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
 
 namespace eprosima {
 namespace databroker {

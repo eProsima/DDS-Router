@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file AbstractTopic.hpp
+ * @file RealTopic.hpp
  */
 
-#ifndef _DATABROKER_TOPIC_ABSTRACTTOPIC_HPP_
-#define _DATABROKER_TOPIC_ABSTRACTTOPIC_HPP_
+#ifndef _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
+#define _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
 
-#include <databroker/topic/DatabrokerTopic.hpp>
+#include <databroker/types/topic/DatabrokerTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -27,23 +27,11 @@ namespace databroker {
 /**
  * TODO
  */
-struct AbstractTopic : public DatabrokerTopic
-{
-    virtual bool contains(const AbstractTopic& other) const;
-
-    virtual bool matches(const RealTopic& other) const;
-};
-
-// TODO: move to new files when created
-struct WildcardTopic : public AbstractTopic
-{
-};
-
-struct RegexTopic : public AbstractTopic
+struct RealTopic : public DatabrokerTopic
 {
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TOPIC_ABSTRACTTOPIC_HPP_ */
+#endif /* _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_ */

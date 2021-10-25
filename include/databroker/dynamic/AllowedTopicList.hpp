@@ -23,9 +23,9 @@
 #include <map>
 #include <string>
 
-#include <databroker/topic/DatabrokerTopic.hpp>
-#include <databroker/topic/AbstractTopic.hpp>
-#include <databroker/topic/RealTopic.hpp>
+#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
+#include <databroker/types/topic/RealTopic.hpp>
 #include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/RawConfiguration.hpp>
 

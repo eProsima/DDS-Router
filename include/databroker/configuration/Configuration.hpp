@@ -20,7 +20,7 @@
 #define _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_
 
 #include <databroker/types/RawConfiguration.hpp>
-#include <databroker/topic/AbstractTopic.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
 #include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {

@@ -21,7 +21,7 @@
 
 #include <databroker/types/Guid.hpp>
 #include <databroker/types/QoS.hpp>
-#include <databroker/topic/DatabrokerTopic.hpp>
+#include <databroker/types/topic/DatabrokerTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
