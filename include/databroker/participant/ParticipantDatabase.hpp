@@ -13,31 +13,23 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerParticipantFactory.hpp
+ * @file ParticipantDatabase.hpp
  */
 
-#ifndef _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
-#define _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
+#ifndef _DATABROKER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
+#define _DATABROKER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
 
-#include <databroker/participant/IDatabrokerParticipant.hpp>
-#include <databroker/types/ReturnCode.hpp>
+#include <map>
+
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/writer/IDatabrokerWriter.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class DatabrokerParticipantFactory
-{
-public:
-
-    std::shared_ptr<IDatabrokerParticipant> create_participant(
-        ParticipantId id,
-        RawConfiguration,
-        std::shared_ptr<PayloadPool>,
-        std::shared_ptr<DiscoveryDatabase>,
-        std::function<void(Endpoint)>);
-};
+using ParticipantDatabase = std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_ */
+#endif /* _DATABROKER_PARTICIPANT_PARTICIPANTDATABASE_HPP_ */

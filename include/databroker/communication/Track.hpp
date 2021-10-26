@@ -51,8 +51,6 @@ protected:
 
 protected:
 
-    PayloadPool payload_pool_;
-
     std::shared_ptr<IDatabrokerParticipant> source_participant_;
 
     std::list<std::shared_ptr<IDatabrokerParticipant>> target_participants_;

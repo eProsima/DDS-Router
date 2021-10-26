@@ -26,6 +26,7 @@
 #include <databroker/dynamic/AllowedTopicList.hpp>
 #include <databroker/dynamic/DiscoveryDatabase.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/participant/ParticipantDatabase.hpp>
 #include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/ParticipantId.hpp>
 
@@ -52,7 +53,9 @@ public:
 
 protected:
 
-    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> participants_;
+    PayloadPool payload_pool_;
+
+    std::shared_ptr<ParticipantDatabase> participants_;
 
     std::map<RealTopic, Bridge> bridges;
 
@@ -60,9 +63,7 @@ protected:
 
     AllowedTopicList allowed_topics_;
 
-    std::map<ParticipantId, AllowedTopicList> allowed_topics_by_participant_;
-
-    DiscoveryDatabase discovery_database_;
+    std::shared_ptr<DiscoveryDatabase> discovery_database_;
 };
 
 } /* namespace databroker */

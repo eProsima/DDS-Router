@@ -34,7 +34,7 @@ class Bridge
 public:
     Bridge(
         RealTopic,
-        std::shared_ptr<IDatabrokerParticipant>);
+        std::shared_ptr<ParticipantDatabase>);
 
     ReturnCode init();
 
@@ -46,7 +46,7 @@ protected:
 
     const RealTopic topic_;
 
-    const std::list<std::shared_ptr<IDatabrokerParticipant>> participants_;
+    const std::shared_ptr<ParticipantDatabase> participants_;
 
     std::map<ParticipantId, Track> tracks;
 };

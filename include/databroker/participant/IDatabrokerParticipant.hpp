@@ -39,17 +39,17 @@ public:
     IDatabrokerParticipant(
         ParticipantId id,
         RawConfiguration,
+        std::shared_ptr<PayloadPool>,
+        std::shared_ptr<DiscoveryDatabase>,
         std::function<void(Endpoint)>);
 
     ReturnCode init();
 
     std::shared_ptr<IDatabrokerWriter> create_writer(
-            RealTopic,
-            std::shared_ptr<PayloadPool>);
+            RealTopic);
 
     std::shared_ptr<IDatabrokerReader> create_reader(
             RealTopic,
-            std::shared_ptr<PayloadPool>,
             std::function<void()> on_data_available_lambda); // lambda as listener
 };
 

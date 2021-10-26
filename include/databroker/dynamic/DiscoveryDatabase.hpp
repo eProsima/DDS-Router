@@ -50,6 +50,9 @@ public:
     ReturnCode erase_endpoint(
         const Endpoint& endpoint_to_erase);
 
+    // TODO
+    // some way of allowing participants to subscribe to a callback when new information arrives
+
 protected:
 
     std::map<Guid, Endpoint> entities_;
