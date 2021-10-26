@@ -1,0 +1,331 @@
+name: test
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+
+  windows-build-test-release:
+    runs-on: windows-latest
+    environment:
+      name: codecov
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: databroker
+
+      - name: Install OpenSSL
+        uses: ./databroker/.github/actions/install-openssl-windows
+
+      - name: Install GoogleTest
+        shell: pwsh
+        run: >
+          cmake --find-package -DNAME=GTest -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
+          if ( $res -notlike '*GTest found.*')
+          {
+            git clone https://github.com/google/googletest.git;
+            cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
+              -B build\gtest -A x64 -T host=x64 googletest;
+            cmake --build build\gtest --config Release --target install
+          }
+
+      - name: Install foonatham memory
+        shell: pwsh
+        run: >
+          git clone --recurse-submodules --branch v0.6-2 https://github.com/foonathan/memory.git;
+          cmake -DBUILD_SHARED_LIBS=OFF -DFOONATHAN_MEMORY_BUILD_TOOLS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON `
+            -DFOONATHAN_MEMORY_BUILD_TESTS=OFF -Ax64 -T host=x64 -B build\memory memory;
+          cmake --build build\memory --config Release --target install
+
+      - name: Install Fast-CDR
+        shell: pwsh
+        run: >
+          git clone https://github.com/eProsima/Fast-CDR.git;
+          cmake -Ax64 -T host=x64 -B build\fastcdr Fast-CDR;
+          cmake --build build\fastcdr --config Release --target install
+
+      - name: Install Fast-DDS
+        shell: pwsh
+        run: >
+          git clone https://github.com/eProsima/Fast-DDS.git;
+          cmake -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
+            -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
+          cmake --build build\fastdds --config Release --target install
+
+      - name: Install databroker
+        shell: pwsh
+        run: >
+          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest' -DBUILD_APP_TESTS=ON -DBUILD_MOCK=ON `
+            -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
+          cmake --build build\databroker --config Release --target install
+
+      - name: Run tests
+        shell: pwsh
+        run: ctest -C Release --test-dir build\databroker -V --timeout 60
+
+  windows-build-test-debug:
+    runs-on: windows-latest
+    environment:
+      name: codecov
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: databroker
+
+      - name: Install OpenSSL
+        uses: ./databroker/.github/actions/install-openssl-windows
+
+      - name: Install GoogleTest
+        shell: pwsh
+        run: >
+          cmake --find-package -DNAME=GTest -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
+          if ( $res -notlike '*GTest found.*')
+          {
+            git clone https://github.com/google/googletest.git;
+            cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
+              -B build\gtest -A x64 -T host=x64 googletest;
+            cmake --build build\gtest --config Debug --target install;
+            cmake --build build\gtest --config Release --target install
+          }
+
+      - name: Install foonatham memory
+        shell: pwsh
+        run: >
+          git clone --recurse-submodules --branch v0.6-2 https://github.com/foonathan/memory.git;
+          cmake -DBUILD_SHARED_LIBS=OFF -DFOONATHAN_MEMORY_BUILD_TOOLS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON `
+            -DFOONATHAN_MEMORY_BUILD_TESTS=OFF -Ax64 -T host=x64 -B build\memory memory;
+          cmake --build build\memory --config Debug --target install
+
+      - name: Install Fast-CDR
+        shell: pwsh
+        run: >
+          git clone https://github.com/eProsima/Fast-CDR.git;
+          cmake -Ax64 -T host=x64 -B build\fastcdr Fast-CDR;
+          cmake --build build\fastcdr --config Debug --target install
+
+      - name: Install Fast-DDS
+        shell: pwsh
+        run: >
+          git clone https://github.com/eProsima/Fast-DDS.git;
+          cmake -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
+            -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
+          cmake --build build\fastdds --config Debug --target install
+
+      - name: Install databroker
+        shell: pwsh
+        run: >
+          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest' -DBUILD_APP_TESTS=ON -DBUILD_MOCK=ON `
+          -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
+          cmake --build build\databroker --config Debug --target install
+
+      - name: Run tests
+        shell: pwsh
+        run: ctest -C Debug --test-dir build\databroker -V --timeout 60
+
+  ubuntu-build-test:
+    runs-on: ubuntu-latest
+    environment:
+      name: codecov
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - name: Install apt packages
+        uses: ./src/databroker/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/databroker/.github/actions/install-gtest
+
+      - name: Install Python packages
+        uses: ./src/databroker/.github/actions/install-python-packages
+
+      - name: Fetch Fast DDS repositories
+        uses: ./src/databroker/.github/actions/fetch-fastdds-statistics-backend-repos
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          cat src/databroker/.github/workflows/test_colcon.meta
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/databroker/.github/workflows/test_colcon.meta \
+            --mixin coverage-gcc asan-gcc
+
+      - name: Run tests
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select databroker \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure
+
+      # - name: Generate coverage report
+      #   run: |
+      #     cp src/databroker/codecov.yml .
+      #     mkdir coverage-report
+      #     gcovr \
+      #     --root src/databroker/ \
+      #     --object-directory build/databroker \
+      #     --output coverage-report/coverage.xml \
+      #     --xml-pretty \
+      #     --exclude='.*docs/.*' \
+      #     --exclude='.*test/.*' \
+      #     --exclude='.*mock/.*' \
+      #     --exclude='.*github/.*' \
+      #     --exclude-unreachable-branches
+
+      # - name: Upload coverage
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: coverage-report
+      #     path: coverage-report/
+
+      # - name: Upload documentation
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: Documentation HTML
+      #     path: install/databroker/docs/fastdds_monitor_docs/sphinx/html/
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     file: coverage-report/coverage.xml
+      #     root_dir: src/databroker
+      #     fail_ci_if_error: true
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: colcon-logs-ubuntu
+          path: log/
+        if: always()
+
+      # - name: Upload spelling errors
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: spelling_errors.txt
+      #     path: build/databroker/docs/test/spelling/output.txt
+      #   continue-on-error: true
+
+  clang-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - uses: ./src/databroker/.github/actions/install-apt-packages
+      - uses: ./src/databroker/.github/actions/install-gtest
+      - uses: ./src/databroker/.github/actions/install-python-packages
+      - uses: ./src/databroker/.github/actions/fetch-fastdds-repos
+
+      - name: Build workspace
+        run: |
+          cat src/databroker/.github/workflows/clang_colcon.meta
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/databroker/.github/workflows/clang_colcon.meta
+
+      - name: Run clang-tidy
+        run: |
+          cd build/databroker
+          run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
+
+      - name: Upload clang results
+        uses: actions/upload-artifact@v1
+        with:
+          name: clang_results
+          path: ${{ github.workspace }}/clang_results.yml
+
+  uncrustify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: src/databroker
+
+      - name: Fetch all branches and tags
+        run: |
+          cd src/databroker
+          git fetch --prune --unshallow
+
+      - uses: ./src/databroker/.github/actions/install-apt-packages
+      - uses: ./src/databroker/.github/actions/install-python-packages
+
+      - name: Install uncrustify
+        run: |
+          git clone https://github.com/uncrustify/uncrustify.git \
+            --branch uncrustify-0.71.0 \
+            --single-branch uncrustify
+          mkdir -p uncrustify/build
+          cd uncrustify/build
+          cmake ..
+          sudo cmake --build . --target install
+          cd ../..
+          sudo rm -rf uncrustify
+
+      - name: Clone ament_lint
+        run: |
+          git clone https://github.com/ament/ament_lint.git src/ament_lint
+
+      - name: Build ament_uncrustify
+        run: colcon build --packages-up-to ament_uncrustify
+
+      - name: Fetch uncrustify config file
+        run: |
+          curl \
+            -l https://raw.githubusercontent.com/eProsima/cpp-style/master/uncrustify.cfg \
+            -o uncrustify.cfg
+
+      - name: Get difference
+        run: |
+          cd src/databroker
+          echo "MODIFIED_FILES=$(git diff --name-only origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -e '\.h' -e '\.hpp' -e '\.cpp' -e '\.ipp' | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Check difference
+        run: |
+          cd src/databroker
+          if [[ -z "${MODIFIED_FILES}" ]]
+          then
+            touch empty.hpp
+            echo "MODIFIED_FILES=empty.hpp" >> $GITHUB_ENV
+          fi
+
+      - name: Check style
+        run: |
+          source install/local_setup.bash
+          cd src/databroker
+          ament_uncrustify \
+            -c ../../uncrustify.cfg \
+            --language CPP \
+            --xunit-file ../../uncrustify_results.xml \
+            ${MODIFIED_FILES}
+
+      - name: Upload uncrustify results
+        uses: actions/upload-artifact@v1
+        with:
+          name: uncrustify_results
+          path: uncrustify_results.xml
