@@ -20,7 +20,8 @@ jobs:
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Sync eProsima/databroker repository
+        uses: actions/checkout@v2
         with:
           path: databroker
 
@@ -82,7 +83,8 @@ jobs:
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Sync eProsima/databroker repository
+        uses: actions/checkout@v2
         with:
           path: databroker
 
@@ -142,7 +144,8 @@ jobs:
       name: codecov
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Sync eProsima/databroker repository
+        uses: actions/checkout@v2
         with:
           path: src/databroker
 
@@ -156,7 +159,7 @@ jobs:
         uses: ./src/databroker/.github/actions/install-python-packages
 
       - name: Fetch Fast DDS repositories
-        uses: ./src/databroker/.github/actions/fetch-fastdds-statistics-backend-repos
+        uses: ./src/databroker/.github/actions/fetch-fastdds-repos
 
       - name: Update colcon mixin
         run: |
@@ -233,14 +236,22 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Sync eProsima/databroker repository
+        uses: actions/checkout@v2
         with:
           path: src/databroker
 
-      - uses: ./src/databroker/.github/actions/install-apt-packages
-      - uses: ./src/databroker/.github/actions/install-gtest
-      - uses: ./src/databroker/.github/actions/install-python-packages
-      - uses: ./src/databroker/.github/actions/fetch-fastdds-repos
+      - name: Install apt packages
+        uses: ./src/databroker/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/databroker/.github/actions/install-gtest
+
+      - name: Install Python packages
+        uses: ./src/databroker/.github/actions/install-python-packages
+
+      - name: Fetch Fast DDS repositories
+        uses: ./src/databroker/.github/actions/fetch-fastdds-repos
 
       - name: Build workspace
         run: |
@@ -263,7 +274,8 @@ jobs:
   uncrustify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Sync eProsima/databroker repository
+        uses: actions/checkout@v2
         with:
           path: src/databroker
 
@@ -272,8 +284,11 @@ jobs:
           cd src/databroker
           git fetch --prune --unshallow
 
-      - uses: ./src/databroker/.github/actions/install-apt-packages
-      - uses: ./src/databroker/.github/actions/install-python-packages
+      - name: Install apt packages
+        uses: ./src/databroker/.github/actions/install-apt-packages
+
+      - name: Install Python packages
+        uses: ./src/databroker/.github/actions/install-python-packages
 
       - name: Install uncrustify
         run: |
