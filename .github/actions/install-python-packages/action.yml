@@ -1,0 +1,20 @@
+name: 'install-python-packages'
+description: 'Install necessary python packages'
+runs:
+  using: "composite"
+  steps:
+    - id: install-python-packages
+      run: |
+        sudo pip3 install -U \
+          sphinx==3.0.3 \
+          doc8==0.8.0 \
+          sphinx_rtd_theme==0.4.3 \
+          sphinxcontrib.spelling==5.0.0 \
+          sphinxcontrib-imagehelper==1.1.1 \
+          colcon-common-extensions \
+          colcon-mixin \
+          vcstool \
+          GitPython \
+          setuptools \
+          gcovr
+      shell: bash

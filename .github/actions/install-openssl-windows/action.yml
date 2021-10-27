@@ -1,0 +1,14 @@
+name: Install OpenSSL
+description: Install and setup OpenSSL for linking and building in Windows
+runs:
+  using: composite
+  steps:
+  - run: >
+      cmake --find-package -DNAME=OpenSSL -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
+      if ( $res -notlike '*OpenSSL found.*')
+      {
+        choco install openssl -yr --no-progress;
+        @(ls -Path C:\Windows\System32\* -Include libssl-*.dll; ls -Path C:\Windows\SysWOW64\* -Include libssl-*.dll)
+        | rm -ErrorAction SilentlyContinue
+      }
+    shell: pwsh
