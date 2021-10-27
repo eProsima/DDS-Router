@@ -1,0 +1,16 @@
+name: Install foonathan memory
+description: Install and setup foonathan memory for linking and building application in Windows
+inputs:
+  cmake_build_type:
+    description: 'Specifies the build type on single-configuration generators'
+    required: true
+    default: 'Release'
+runs:
+  using: composite
+  steps:
+  - run: >
+      git clone --recurse-submodules --branch v0.6-2 https://github.com/foonathan/memory.git;
+      cmake -DBUILD_SHARED_LIBS=OFF -DFOONATHAN_MEMORY_BUILD_TOOLS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON `
+        -DFOONATHAN_MEMORY_BUILD_TESTS=OFF -Ax64 -T host=x64 -B build\memory memory;
+      cmake --build build\memory --config ${{ inputs.cmake_build_type }} --target install
+    shell: pwsh

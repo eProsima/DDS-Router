@@ -1,5 +1,5 @@
 name: Install Fast DDS
-description: Install and setup Fast DDS for linking and building test application in Windows
+description: Install and setup Fast DDS for linking and building application in Windows
 inputs:
   cmake_build_type:
     description: 'Specifies the build type on single-configuration generators'

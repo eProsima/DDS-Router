@@ -32,21 +32,16 @@ jobs:
         uses: ./databroker/.github/actions/install-gtest-windows
 
       - name: Install foonatham memory
-        shell: pwsh
-        run: >
-          git clone --recurse-submodules --branch v0.6-2 https://github.com/foonathan/memory.git;
-          cmake -DBUILD_SHARED_LIBS=OFF -DFOONATHAN_MEMORY_BUILD_TOOLS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON `
-            -DFOONATHAN_MEMORY_BUILD_TESTS=OFF -Ax64 -T host=x64 -B build\memory memory;
-          cmake --build build\memory --config Release --target install
+        uses: ./databroker/.github/actions/install-foonathan-memory-windows
+        with:
+          cmake_build_type: "Release"
 
-      - name: Install Fast-CDR
-        shell: pwsh
-        run: >
-          git clone https://github.com/eProsima/Fast-CDR.git;
-          cmake -Ax64 -T host=x64 -B build\fastcdr Fast-CDR;
-          cmake --build build\fastcdr --config Release --target install
+      - name: Install Fast CDR
+        uses: ./databroker/.github/actions/install-fastcdr-windows
+        with:
+          cmake_build_type: "Release"
 
-      - name: Install Fast-DDS
+      - name: Install Fast DDS
         uses: ./databroker/.github/actions/install-fastdds-windows
         with:
           cmake_build_type: "Release"
@@ -83,21 +78,16 @@ jobs:
         uses: ./databroker/.github/actions/install-gtest-windows
 
       - name: Install foonatham memory
-        shell: pwsh
-        run: >
-          git clone --recurse-submodules --branch v0.6-2 https://github.com/foonathan/memory.git;
-          cmake -DBUILD_SHARED_LIBS=OFF -DFOONATHAN_MEMORY_BUILD_TOOLS=ON -DCMAKE_POSITION_INDEPENDENT_CODE=ON `
-            -DFOONATHAN_MEMORY_BUILD_TESTS=OFF -Ax64 -T host=x64 -B build\memory memory;
-          cmake --build build\memory --config Debug --target install
+        uses: ./databroker/.github/actions/install-foonathan-memory-windows
+        with:
+          cmake_build_type: "Debug"
 
-      - name: Install Fast-CDR
-        shell: pwsh
-        run: >
-          git clone https://github.com/eProsima/Fast-CDR.git;
-          cmake -Ax64 -T host=x64 -B build\fastcdr Fast-CDR;
-          cmake --build build\fastcdr --config Debug --target install
+      - name: Install Fast CDR
+        uses: ./databroker/.github/actions/install-fastcdr-windows
+        with:
+          cmake_build_type: "Debug"
 
-      - name: Install Fast-DDS
+      - name: Install Fast DDS
         uses: ./databroker/.github/actions/install-fastdds-windows
         with:
           cmake_build_type: "Debug"
