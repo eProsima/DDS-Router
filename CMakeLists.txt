@@ -71,28 +71,25 @@ find_package(yaml-cpp REQUIRED)
 ###############################################################################
 
 # Project sources
-file(GLOB SOURCES
+file(GLOB SOURCES_FILES
         "src/**/*.c"
         "src/**/*.cpp"
         "src/**/*.cxx"
     )
 
 # Project headers
-file(GLOB HEADERS
+file(GLOB HEADERS_FILES
         "include/**/*.h"
         "include/**/*.hpp"
         "include/**/*.hxx"
     )
 
-message(STATUS "Sources: ${SOURCES}")
-message(STATUS "Headers: ${HEADERS}")
+message(STATUS "Sources: ${SOURCES_FILES}")
+message(STATUS "Headers: ${HEADERS_FILES}")
 
 add_executable(${PROJECT_NAME}
-        # src/cpp/main.cpp
-        ${SOURCES}
-        ${TYPES_SOURCES}
-        ${TYPES_HEADERS}
-        ${HEADERS}
+        ${SOURCES_FILES}
+        ${HEADERS_FILES}
     )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

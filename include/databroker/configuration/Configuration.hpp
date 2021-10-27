@@ -41,22 +41,6 @@ public:
     virtual ReturnCode load() = 0;
 
 protected:
-
-    RawConfiguration configuration_;
-};
-
-/**
- * TODO
- */
-class AllowedTopicConfiguration : public IConfiguration
-{
-public:
-
-    std::list<AbstractTopic> whitelist() const;
-    std::list<AbstractTopic> blacklist() const;
-};
-
-// TODO: create new interfaces for common configurations
 class ListeningAddressConfiguration
 {
 public:

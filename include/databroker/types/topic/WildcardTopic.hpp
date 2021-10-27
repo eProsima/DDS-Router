@@ -13,18 +13,33 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
- *
+ * @file WildcardTopic.hpp
  */
 
-int main(
-        int argc,
-        char** argv)
+#ifndef _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
+#define _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
+
+#include <databroker/types/topic/AbstractTopic.hpp>
+
+namespace eprosima {
+namespace databroker {
+
+// TODO: move to new files when created
+class WildcardTopic : public AbstractTopic
 {
-    // TODO: main
+public:
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+    using AbstractTopic::AbstractTopic;
 
-    return 0;
-}
+    ~WildcardTopic()
+    {}
+
+    bool contains(const AbstractTopic& other) const override;
+
+    bool matches(const RealTopic& other) const override;
+};
+
+} /* namespace databroker */
+} /* namespace eprosima */
+
+#endif /* _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_ */

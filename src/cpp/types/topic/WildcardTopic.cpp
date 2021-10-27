@@ -13,18 +13,14 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
+ * @file WildcardTopic.cpp
  *
  */
 
-int main(
-        int argc,
-        char** argv)
-{
-    // TODO: main
+#include <databroker/types/topic/WildcardTopic.hpp>
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+namespace eprosima {
+namespace databroker {
 
-    return 0;
-}
+} /* namespace databroker */
+} /* namespace eprosima */

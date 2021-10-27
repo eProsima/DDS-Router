@@ -29,6 +29,16 @@ namespace databroker {
  */
 struct DatabrokerTopic
 {
+    DatabrokerTopic(
+            std::string topic_name,
+            std::string topic_type)
+        : topic_name_(topic_name)
+        , topic_type_(topic_type)
+    {}
+
+    virtual ~DatabrokerTopic()
+    {}
+
     // VARIABLES
     std::string topic_name_;
     std::string topic_type_;
