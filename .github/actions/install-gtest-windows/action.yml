@@ -1,0 +1,15 @@
+name: Install GTest
+description: Install and setup GTest for linking and building test application in Windows
+runs:
+  using: composite
+  steps:
+  - run: >
+      cmake --find-package -DNAME=GTest -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
+      if ( $res -notlike '*GTest found.*')
+      {
+        git clone https://github.com/google/googletest.git;
+        cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
+          -B build\gtest -A x64 -T host=x64 googletest;
+        cmake --build build\gtest --config Release --target install
+      }
+    shell: pwsh

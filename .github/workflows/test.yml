@@ -28,17 +28,8 @@ jobs:
       - name: Install OpenSSL
         uses: ./databroker/.github/actions/install-openssl-windows
 
-      - name: Install GoogleTest
-        shell: pwsh
-        run: >
-          cmake --find-package -DNAME=GTest -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
-          if ( $res -notlike '*GTest found.*')
-          {
-            git clone https://github.com/google/googletest.git;
-            cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
-              -B build\gtest -A x64 -T host=x64 googletest;
-            cmake --build build\gtest --config Release --target install
-          }
+      - name: Install GTest
+        uses: ./databroker/.github/actions/install-gtest-windows
 
       - name: Install foonatham memory
         shell: pwsh
@@ -91,18 +82,8 @@ jobs:
       - name: Install OpenSSL
         uses: ./databroker/.github/actions/install-openssl-windows
 
-      - name: Install GoogleTest
-        shell: pwsh
-        run: >
-          cmake --find-package -DNAME=GTest -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST | Tee-Object -Variable res;
-          if ( $res -notlike '*GTest found.*')
-          {
-            git clone https://github.com/google/googletest.git;
-            cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
-              -B build\gtest -A x64 -T host=x64 googletest;
-            cmake --build build\gtest --config Debug --target install;
-            cmake --build build\gtest --config Release --target install
-          }
+      - name: Install GTest
+        uses: ./databroker/.github/actions/install-gtest-windows
 
       - name: Install foonatham memory
         shell: pwsh
@@ -153,7 +134,7 @@ jobs:
         uses: ./src/databroker/.github/actions/install-apt-packages
 
       - name: Install GTest
-        uses: ./src/databroker/.github/actions/install-gtest
+        uses: ./src/databroker/.github/actions/install-gtest-linux
 
       - name: Install Python packages
         uses: ./src/databroker/.github/actions/install-python-packages
@@ -245,7 +226,7 @@ jobs:
         uses: ./src/databroker/.github/actions/install-apt-packages
 
       - name: Install GTest
-        uses: ./src/databroker/.github/actions/install-gtest
+        uses: ./src/databroker/.github/actions/install-gtest-linux
 
       - name: Install Python packages
         uses: ./src/databroker/.github/actions/install-python-packages

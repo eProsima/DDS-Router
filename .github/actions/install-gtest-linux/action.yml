@@ -1,5 +1,5 @@
 name: Install GTest
-description: Install and setup GTest for linking and building test application
+description: Install and setup GTest for linking and building test application in Linux
 runs:
   using: composite
   steps:
