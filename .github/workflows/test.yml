@@ -47,12 +47,9 @@ jobs:
           cmake --build build\fastcdr --config Release --target install
 
       - name: Install Fast-DDS
-        shell: pwsh
-        run: >
-          git clone https://github.com/eProsima/Fast-DDS.git;
-          cmake -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
-            -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
-          cmake --build build\fastdds --config Release --target install
+        uses: ./databroker/.github/actions/install-fastdds-windows
+        with:
+          cmake_build_type: "Release"
 
       - name: Install databroker
         shell: pwsh
@@ -101,12 +98,9 @@ jobs:
           cmake --build build\fastcdr --config Debug --target install
 
       - name: Install Fast-DDS
-        shell: pwsh
-        run: >
-          git clone https://github.com/eProsima/Fast-DDS.git;
-          cmake -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
-            -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
-          cmake --build build\fastdds --config Debug --target install
+        uses: ./databroker/.github/actions/install-fastdds-windows
+        with:
+          cmake_build_type: "Debug"
 
       - name: Install databroker
         shell: pwsh
