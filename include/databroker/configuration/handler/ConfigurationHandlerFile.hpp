@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <databroker/configuration/IConfigurationHandler.hpp>
+#include <databroker/configuration/handler/IConfigurationHandler.hpp>
 
 namespace eprosima {
 namespace databroker {
