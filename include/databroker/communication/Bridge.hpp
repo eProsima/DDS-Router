@@ -21,6 +21,7 @@
 
 #include <databroker/communication/Track.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/participant/ParticipantDatabase.hpp>
 #include <databroker/types/ParticipantId.hpp>
 
 namespace eprosima {

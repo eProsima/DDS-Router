@@ -29,6 +29,8 @@ namespace databroker {
  */
 struct RealTopic : public DatabrokerTopic
 {
+    bool operator <(
+            const DatabrokerTopic& other) const;
 };
 
 } /* namespace databroker */

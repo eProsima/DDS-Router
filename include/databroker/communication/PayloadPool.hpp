@@ -19,21 +19,34 @@
 #ifndef _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_
 #define _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_
 
+#include <fastdds/rtps/common/CacheChange.h>
+#include <fastdds/rtps/common/SerializedPayload.h>
 #include <fastdds/rtps/history/IPayloadPool.h>
 
 namespace eprosima {
 namespace databroker {
 
-// TODO: is this needed?
-// class IPayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
-// {
-// };
-
 /**
  * TODO
  */
-class PayloadPool : public eprosima::fastrtps::rtps::TopicPayloadPool
+class PayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
 {
+public:
+    PayloadPool() = default;
+
+    virtual ~PayloadPool();
+
+    bool get_payload(
+            uint32_t size,
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+
+    bool get_payload(
+            fastrtps::rtps::SerializedPayload_t& data,
+            IPayloadPool*& data_owner,
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+
+    bool release_payload(
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
 };
 
 } /* namespace databroker */

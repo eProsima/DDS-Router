@@ -39,21 +39,6 @@ Databroker::Databroker(const DatabrokerConfiguration& configuration)
         , participant_factory_()
         , enabled_(false)
 {
-    // TODO
-}
-
-Databroker::~Databroker()
-{
-    // TODO
-    // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
-}
-
-void Databroker::init()
-{
-    const std::lock_guard<std::recursive_mutex> lock(mutex_);
-
-    // Init own congiguration
-    configuration_.load();
     // Init topic allowed
     init_allowed_topics_();
     // Load Participants
@@ -61,13 +46,12 @@ void Databroker::init()
     // Create Bridges
     init_bridges_();
 
-    enabled_.store(true);
-}
+    enabled_.store(true);}
 
-// EVENTS
-void Databroker::stop()
+Databroker::~Databroker()
 {
     // TODO
+    // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
 }
 
 void Databroker::reload_configuration(const DatabrokerConfiguration&)
@@ -104,6 +88,9 @@ void Databroker::init_participants_()
                 participant_info.second,
                 payload_pool_,
                 discovery_database_);
+
+        // create_participant should throw an exception in fail, never return nullptr
+        assert(nullptr != new_participant);
 
         participants_database_->add_participant(
             participant_info.first,
