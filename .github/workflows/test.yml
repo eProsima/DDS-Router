@@ -13,8 +13,8 @@ jobs:
 
   windows-build-test-release:
     runs-on: windows-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -62,8 +62,8 @@ jobs:
 
   windows-build-test-debug:
     runs-on: windows-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -111,8 +111,8 @@ jobs:
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
 
     steps:
       - name: Sync eProsima/databroker repository
