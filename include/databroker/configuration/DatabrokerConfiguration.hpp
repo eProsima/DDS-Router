@@ -44,6 +44,9 @@ public:
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
+    // TODO: This method will dissapear once the dynamic module is implemented
+    std::set<RealTopic> real_topics() const;
+
 protected:
 
     std::list<AbstractTopic*> common_topic_list_get_(

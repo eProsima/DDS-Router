@@ -13,30 +13,28 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerParticipantFactory.hpp
+ * @file InitializationException.hpp
  */
 
-#ifndef _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
-#define _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
+#ifndef _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
+#define _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
 
-#include <databroker/participant/IDatabrokerParticipant.hpp>
-#include <databroker/types/ReturnCode.hpp>
+#include <databroker/exceptions/DatabrokerException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class DatabrokerParticipantFactory
+/**
+ * @brief TODO
+ */
+class InitializationException : public DatabrokerException
 {
-public:
-
-    std::shared_ptr<IDatabrokerParticipant> create_participant(
-        ParticipantId id,
-        RawConfiguration,
-        std::shared_ptr<PayloadPool>,
-        std::shared_ptr<DiscoveryDatabase>);
+    // Use parent class constructors
+    using DatabrokerException::DatabrokerException;
 };
 
-} /* namespace databroker */
-} /* namespace eprosima */
+} // namespace databroker
+} // namespace eprosima
 
-#endif /* _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_ */
+#endif // _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
+

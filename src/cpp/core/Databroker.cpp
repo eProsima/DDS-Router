@@ -17,8 +17,12 @@
  *
  */
 
+#include <cassert>
+
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
 #include <databroker/core/Databroker.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
+#include <databroker/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -30,7 +34,7 @@ Databroker::Databroker(const DatabrokerConfiguration& configuration)
         , participants_database_(new ParticipantDatabase())
         , discovery_database_(new DiscoveryDatabase())
         , allowed_topics_()
-        , bridges()
+        , bridges_()
         , configuration_(configuration)
         , participant_factory_()
         , enabled_(false)
@@ -44,18 +48,20 @@ Databroker::~Databroker()
     // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
 }
 
-ReturnCode Databroker::init()
+void Databroker::init()
 {
+    const std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     // Init own congiguration
     configuration_.load();
     // Init topic allowed
-    init_allowes_topics_();
+    init_allowed_topics_();
     // Load Participants
     init_participants_();
     // Create Bridges
     init_bridges_();
 
-    return ReturnCode::RETCODE_OK;
+    enabled_.store(true);
 }
 
 // EVENTS
@@ -67,26 +73,92 @@ void Databroker::stop()
 void Databroker::reload_configuration(const DatabrokerConfiguration&)
 {
     // TODO
+    throw UnsupportedException("Databroker::reload_configuration not supported yet");
 }
 
 void Databroker::endpoint_discovered(const Endpoint&)
 {
     // TODO
+    throw UnsupportedException("Databroker::endpoint_discovered not supported yet");
 }
 
-ReturnCode Databroker::init_allowes_topics_()
+void Databroker::init_allowed_topics_()
 {
-    // TODO
+    allowed_topics_.reload(
+        configuration_.whitelist(),
+        configuration_.blacklist());
 }
 
-ReturnCode Databroker::init_participants_()
+void Databroker::init_participants_()
 {
-    // TODO
+    for (std::pair<const eprosima::databroker::ParticipantId, eprosima::databroker::RawConfiguration> participant_info :
+            configuration_.participants_configurations())
+    {
+        std::shared_ptr<IDatabrokerParticipant> new_participant;
+
+        // Create participant
+        // This should not be in try catch case as if it fails the whole init must fail
+        new_participant =
+            participant_factory_.create_participant(
+                participant_info.first,
+                participant_info.second,
+                payload_pool_,
+                discovery_database_);
+
+        participants_database_->add_participant(
+            participant_info.first,
+            new_participant);
+    }
 }
 
-ReturnCode Databroker::init_bridges_()
+void Databroker::init_bridges_()
+{
+    for (RealTopic topic : configuration_.real_topics())
+    {
+       discovered_topic_(topic);
+    }
+}
+
+void Databroker::discovered_topic_(const RealTopic& topic)
+{
+    if (allowed_topics_.is_topic_allowed(topic))
+    {
+        active_topic_(topic);
+    }
+}
+
+void Databroker::active_topic_(const RealTopic& topic)
+{
+    auto it_topic = current_topics_.find(topic);
+
+    if (it_topic == current_topics_.end())
+    {
+        // The topic does not exist
+        current_topics_[topic] = true;
+
+        create_new_bridge(topic);
+    }
+    else
+    {
+        // The topic already exists, so activate it. Bridge handles double activation
+        auto it_bridge = bridges_.find(topic);
+
+        // The bridges and the current topics must be coherent
+        assert(it_bridge != bridges_.end());
+
+        it_bridge->second.enable();
+    }
+}
+
+void Databroker::create_new_bridge(const RealTopic& topic)
+{
+    bridges_.emplace(topic, Bridge(topic, participants_database_));
+}
+
+void Databroker::deactive_topic_(const RealTopic&)
 {
     // TODO
+    throw UnsupportedException("Databroker::reload_configuration not supported yet");
 }
 
 } /* namespace databroker */

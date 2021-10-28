@@ -36,11 +36,10 @@ class IDatabrokerParticipant
 public:
 
     IDatabrokerParticipant(
-            ParticipantId id,
-            RawConfiguration,
-            std::shared_ptr<PayloadPool>,
-            std::shared_ptr<DiscoveryDatabase>,
-            std::function<void(Endpoint)>);
+        ParticipantId id,
+        RawConfiguration,
+        std::shared_ptr<PayloadPool>,
+        std::shared_ptr<DiscoveryDatabase>);
 
     std::shared_ptr<IDatabrokerWriter> create_writer(
             RealTopic);

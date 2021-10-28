@@ -38,7 +38,7 @@ public:
             ParticipantId id,
             std::shared_ptr<IDatabrokerParticipant> participant);
 
-    std::shared_ptr<IDatabrokerParticipant> get_participant(const ParticipantId& id);
+    std::shared_ptr<IDatabrokerParticipant> get_participant(const ParticipantId& id) const;
 
 protected:
 

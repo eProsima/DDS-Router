@@ -62,11 +62,15 @@ public:
     ReturnCode allow_topics_by_default(
             bool status);
 
+    ReturnCode reload(
+            const std::list<AbstractTopic*>& whitelist,
+            const std::list<AbstractTopic*>& blacklist);
+
 protected:
 
-    std::list<AbstractTopic> blacklist_;
+    std::list<AbstractTopic*> blacklist_;
 
-    std::list<AbstractTopic> whitelist_;
+    std::list<AbstractTopic*> whitelist_;
 
     bool allow_topics_by_default_,
 };
