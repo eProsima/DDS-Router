@@ -44,6 +44,7 @@ public:
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
+    //! Ad hoc function to find real topics within the whitelist
     // TODO: This method will dissapear once the dynamic module is implemented
     std::set<RealTopic> real_topics() const;
 

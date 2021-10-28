@@ -24,6 +24,7 @@
 #include <databroker/reader/IDatabrokerReader.hpp>
 #include <databroker/types/Endpoint.hpp>
 #include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/RawConfiguration.hpp>
 #include <databroker/writer/IDatabrokerWriter.hpp>
 
 namespace eprosima {

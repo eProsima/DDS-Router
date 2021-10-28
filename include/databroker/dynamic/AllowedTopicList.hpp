@@ -39,7 +39,9 @@ class AllowedTopicList
 {
 public:
     // Allow all topics by default
-    AllowedTopicList();
+    AllowedTopicList() = default;
+
+    virtual ~AllowedTopicList();
 
     void clear();
 

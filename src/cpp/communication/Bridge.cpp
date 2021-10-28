@@ -13,31 +13,43 @@
 // limitations under the License.
 
 /**
- * @file RealTopic.hpp
+ * @file Bridge.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
-
-#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/communication/Bridge.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-struct RealTopic : public DatabrokerTopic
-{
-    // Inherit parent constructors
-    using DatabrokerTopic::DatabrokerTopic;
+// TODO: Add logs
 
-    static bool is_real_topic(
-        const std::string& topic_name,
-        const std::string& type_name);
-};
+Bridge::Bridge(
+        const RealTopic& topic,
+        std::shared_ptr<ParticipantDatabase> participant_database)
+    : topic_(topic)
+    , participants_(participant_database)
+{
+    // TODO
+}
+
+Bridge::~Bridge()
+{
+    // TODO
+}
+
+ReturnCode Bridge::enable()
+{
+    // TODO
+    throw UnsupportedException("Bridge::enable not supported yet");
+}
+
+ReturnCode Bridge::disable()
+{
+    // TODO
+    throw UnsupportedException("Bridge::disable not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_ */

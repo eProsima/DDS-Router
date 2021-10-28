@@ -13,31 +13,31 @@
 // limitations under the License.
 
 /**
- * @file RealTopic.hpp
+ * @file DatabrokerParticipantFactory.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
-
-#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/participant/DatabrokerParticipantFactory.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-struct RealTopic : public DatabrokerTopic
-{
-    // Inherit parent constructors
-    using DatabrokerTopic::DatabrokerTopic;
+// TODO: Add logs
 
-    static bool is_real_topic(
-        const std::string& topic_name,
-        const std::string& type_name);
-};
+DatabrokerParticipantFactory::~DatabrokerParticipantFactory()
+{
+}
+
+std::shared_ptr<IDatabrokerParticipant> DatabrokerParticipantFactory::create_participant(
+        ParticipantId,
+        RawConfiguration,
+        std::shared_ptr<PayloadPool>,
+        std::shared_ptr<DiscoveryDatabase>)
+{
+    // TODO
+    throw UnsupportedException("DatabrokerParticipantFactory::create_participant not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_ */

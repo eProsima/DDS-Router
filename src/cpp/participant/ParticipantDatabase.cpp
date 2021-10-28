@@ -13,35 +13,35 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerParticipantFactory.hpp
+ * @file ParticipantDatabase.cpp
+ *
  */
 
-#ifndef _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
-#define _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
-
-#include <databroker/participant/IDatabrokerParticipant.hpp>
-#include <databroker/types/RawConfiguration.hpp>
-#include <databroker/types/ReturnCode.hpp>
+#include <databroker/participant/ParticipantDatabase.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-class DatabrokerParticipantFactory
+// TODO: Add logs
+
+ParticipantDatabase::~ParticipantDatabase()
 {
-public:
+}
 
-    DatabrokerParticipantFactory() = default;
-
-    virtual ~DatabrokerParticipantFactory();
-
-    std::shared_ptr<IDatabrokerParticipant> create_participant(
+std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::add_participant(
         ParticipantId id,
-        RawConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload,
-        std::shared_ptr<DiscoveryDatabase> discovery_database);
-};
+        std::shared_ptr<IDatabrokerParticipant> participant)
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
+}
+
+std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(const ParticipantId& id) const
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_ */
