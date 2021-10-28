@@ -52,7 +52,7 @@ jobs:
       - name: Install databroker
         shell: pwsh
         run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest' -DBUILD_APP_TESTS=ON -DBUILD_MOCK=ON `
+          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
             -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
           cmake --build build\databroker --config Release --target install
 
@@ -101,7 +101,7 @@ jobs:
       - name: Install databroker
         shell: pwsh
         run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest' -DBUILD_APP_TESTS=ON -DBUILD_MOCK=ON `
+          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
           -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
           cmake --build build\databroker --config Debug --target install
 
