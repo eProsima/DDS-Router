@@ -25,7 +25,33 @@ namespace eprosima {
 namespace databroker {
 
 //! Unique Id for each Databroker Participant
-using ParticipantId = std::string;
+class ParticipantId
+{
+public:
+
+    ParticipantId();
+
+    ParticipantId(const std::string& id);
+
+    virtual ~ParticipantId();
+
+    bool is_valid() const;
+
+    static ParticipantId invalid();
+
+    static bool is_valid_id(const std::string& id);
+
+    // OPERATOR OVERLOAD
+    bool operator==(const ParticipantId& other) const;
+
+    bool operator<(const ParticipantId& other) const;
+
+protected:
+
+    static const std::string INVALID_ID; // __invalid_databroker_participant__
+
+    std::string id_;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */

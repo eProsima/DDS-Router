@@ -35,7 +35,7 @@ struct DatabrokerConfiguration : public IConfiguration
 
     virtual ~DatabrokerConfiguration();
 
-    ReturnCode load() override;
+    void load() override;
 
     std::list<AbstractTopic*> whitelist() const;
 
@@ -46,8 +46,6 @@ struct DatabrokerConfiguration : public IConfiguration
 protected:
 
     std::list<AbstractTopic*> common_topic_list_get_(const char* list_tag) const;
-
-    bool is_valid_participant_name_(const std::string& tag) const;
 
     const RawConfiguration raw_configuration_;
 };

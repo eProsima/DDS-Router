@@ -20,6 +20,7 @@
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
 #include <databroker/types/configuration_tags.hpp>
 #include <databroker/types/topic/WildcardTopic.hpp>
+#include <databroker/exceptions/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -35,10 +36,9 @@ DatabrokerConfiguration::~DatabrokerConfiguration()
 {
 }
 
-ReturnCode DatabrokerConfiguration::load()
+void DatabrokerConfiguration::load()
 {
     // Lazy load. Does not do anything and find valules in get methods
-    return ReturnCode::RETCODE_OK;
 }
 
 std::list<AbstractTopic*> DatabrokerConfiguration::whitelist() const
@@ -64,7 +64,7 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
             std::string value_str = participant_it->first.as<std::string>();
 
             // Check if it is a valid name for a participant
-            if (!is_valid_participant_name_(value_str))
+            if (!ParticipantId::is_valid_id(value_str))
             {
                 continue;
             }
@@ -76,6 +76,7 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
     catch (const std::exception& e)
     {
         // TODO: Add Warning
+        throw ConfigurationException(e.what());
     }
 
     return result;
@@ -123,14 +124,10 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(const 
     catch (const std::exception& e)
     {
         // TODO: Add Warning
+        throw ConfigurationException(e.what());
     }
 
     return result;
-}
-
-bool DatabrokerConfiguration::is_valid_participant_name_(const std::string& tag) const
-{
-    return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
 }
 
 } /* namespace databroker */

@@ -13,43 +13,36 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerConfiguration.hpp
+ * @file ParticipantId.cpp
+ *
  */
 
-#ifndef _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_
-#define _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_
-
-#include <databroker/types/RawConfiguration.hpp>
-#include <databroker/types/topic/AbstractTopic.hpp>
-#include <databroker/types/ReturnCode.hpp>
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/configuration_tags.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-class IConfiguration
+const std::string ParticipantId::INVALID_ID = "__invalid_databroker_participant__";
+
+ParticipantId::ParticipantId(const std::string& id)
+        : id_(id)
 {
-public:
+}
 
-    IConfiguration(
-            const RawConfiguration&);
-
-    // Read the Yaml and get the params required
-    // Fail in case he configuration is not correct
-    virtual void load() = 0;
-};
-
-protected:
-class ListeningAddressConfiguration
+ParticipantId::~ParticipantId()
 {
-public:
+}
 
-    // TODO
-};
+bool ParticipantId::is_valid_id(const std::string& tag)
+{
+    return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
+}
+
+bool ParticipantId::operator<(const ParticipantId& other) const
+{
+    return id_ < other.id_;
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_CONFIGURATION_CONFIGURATION_HPP_ */
