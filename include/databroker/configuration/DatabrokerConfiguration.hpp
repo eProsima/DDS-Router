@@ -19,8 +19,8 @@
 #ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
 #define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
 
-#include <databroker/configuration/Configuration.hpp>
 #include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/RawConfiguration.hpp>
 #include <databroker/types/topic/AbstractTopic.hpp>
 
 namespace eprosima {
@@ -29,13 +29,11 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerConfiguration : public IConfiguration
+struct DatabrokerConfiguration
 {
     DatabrokerConfiguration(const RawConfiguration& raw_configuration);
 
     virtual ~DatabrokerConfiguration();
-
-    void load() override;
 
     std::list<AbstractTopic*> whitelist() const;
 

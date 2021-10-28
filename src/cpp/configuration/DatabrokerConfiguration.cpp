@@ -36,11 +36,6 @@ DatabrokerConfiguration::~DatabrokerConfiguration()
 {
 }
 
-void DatabrokerConfiguration::load()
-{
-    // Lazy load. Does not do anything and find valules in get methods
-}
-
 std::list<AbstractTopic*> DatabrokerConfiguration::whitelist() const
 {
     return common_topic_list_get_(WHITELIST_TAG);
