@@ -34,10 +34,12 @@ struct DatabrokerTopic
     std::string topic_type_;
 
     // OPERATOR OVERLOAD
-    bool operator==(const DatabrokerTopic& other) const
+    bool operator ==(
+            const DatabrokerTopic& other) const
     {
         return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_;
     }
+
 };
 
 } /* namespace databroker */

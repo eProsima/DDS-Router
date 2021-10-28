@@ -36,13 +36,17 @@ class IDatabrokerReader
 {
 public:
 
-    IDatabrokerReader(RealTopic, std::shared_ptr<PayloadPool>, std::function<void()> on_data_available_lambda);
+    IDatabrokerReader(
+            RealTopic,
+            std::shared_ptr<PayloadPool>,
+            std::function<void()> on_data_available_lambda);
 
     ReturnCode enable();
 
     ReturnCode disable();
 
-    ReturnCode take(DataReceived&); // This data read must be inside a PayloadPool
+    ReturnCode take(
+            DataReceived&);         // This data read must be inside a PayloadPool
 };
 
 } /* namespace databroker */

@@ -32,7 +32,9 @@ namespace databroker {
 class IConfiguration
 {
 public:
-    IConfiguration(const RawConfiguration&);
+
+    IConfiguration(
+            const RawConfiguration&);
 
     // Read the Yaml and get the params required
     // Fail in case he configuration is not correct
@@ -49,6 +51,7 @@ protected:
 class AllowedTopicConfiguration : public IConfiguration
 {
 public:
+
     std::list<AbstractTopic> whitelist() const;
     std::list<AbstractTopic> blacklist() const;
 };
@@ -57,6 +60,7 @@ public:
 class ListeningAddressConfiguration
 {
 public:
+
     // TODO
 };
 

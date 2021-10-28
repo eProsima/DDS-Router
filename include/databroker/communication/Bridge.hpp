@@ -32,9 +32,10 @@ namespace databroker {
 class Bridge
 {
 public:
+
     Bridge(
-        RealTopic,
-        std::shared_ptr<ParticipantDatabase>);
+            RealTopic,
+            std::shared_ptr<ParticipantDatabase>);
 
     ReturnCode enable();
 

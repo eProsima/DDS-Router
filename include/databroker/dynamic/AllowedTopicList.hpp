@@ -40,24 +40,29 @@ class AllowedTopicList
     // Allow all topics by default
     AllowedTopicList();
 
-    AllowedTopicList(RawConfiguration configuration);
+    AllowedTopicList(
+            RawConfiguration configuration);
 
     AllowedTopicList(
-        bool allow_topics_by_default,
-        const std::vector<AbstractTopic>& whitelist,
-        const std::vector<AbstractTopic>& blacklist); // blocked_topics or allowed_topics depending on use_whitelist
+            bool allow_topics_by_default,
+            const std::vector<AbstractTopic>& whitelist,
+            const std::vector<AbstractTopic>& blacklist); // blocked_topics or allowed_topics depending on use_whitelist
 
     ReturnCode clear();
 
-    ReturnCode block_topic(const AbstractTopic& new_topic);
+    ReturnCode block_topic(
+            const AbstractTopic& new_topic);
 
-    ReturnCode allow_topic(const AbstractTopic& topic);
+    ReturnCode allow_topic(
+            const AbstractTopic& topic);
 
-    bool is_topic_allowed(const RealTopic& topic) const;
+    bool is_topic_allowed(
+            const RealTopic& topic) const;
 
     bool are_topics_allowed_by_default() const;
 
-    ReturnCode allow_topics_by_default(bool status);
+    ReturnCode allow_topics_by_default(
+            bool status);
 
 protected:
 

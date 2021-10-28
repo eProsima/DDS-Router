@@ -33,7 +33,8 @@ class ConfigurationHandlerFile : IConfigurationHandler
 {
 public:
 
-    ConfigurationHandlerFile(std::string file_name);
+    ConfigurationHandlerFile(
+            std::string file_name);
 
     ReturnCode load() override;
 

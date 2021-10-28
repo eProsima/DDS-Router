@@ -29,7 +29,8 @@ namespace databroker {
  */
 struct DatabrokerConfiguration : public AllowedTopicConfiguration
 {
-    DatabrokerConfiguration(const RawConfiguration&);
+    DatabrokerConfiguration(
+            const RawConfiguration&);
 
     // Read the Yaml and get the params required
     // Fail in case he configuration is not correct

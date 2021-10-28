@@ -30,9 +30,11 @@ namespace databroker {
  */
 struct AbstractTopic : public DatabrokerTopic
 {
-    virtual bool contains(const AbstractTopic& other) const;
+    virtual bool contains(
+            const AbstractTopic& other) const;
 
-    virtual bool matches(const RealTopic& other) const;
+    virtual bool matches(
+            const RealTopic& other) const;
 };
 
 // TODO: move to new files when created

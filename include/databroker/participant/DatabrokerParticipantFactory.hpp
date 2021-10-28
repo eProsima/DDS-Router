@@ -30,11 +30,11 @@ class DatabrokerParticipantFactory
 public:
 
     std::shared_ptr<IDatabrokerParticipant> create_participant(
-        ParticipantId id,
-        RawConfiguration,
-        std::shared_ptr<PayloadPool>,
-        std::shared_ptr<DiscoveryDatabase>,
-        std::function<void(Endpoint)>);
+            ParticipantId id,
+            RawConfiguration,
+            std::shared_ptr<PayloadPool>,
+            std::shared_ptr<DiscoveryDatabase>,
+            std::function<void(Endpoint)>);
 };
 
 } /* namespace databroker */

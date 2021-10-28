@@ -40,14 +40,17 @@ class Databroker
 {
 public:
 
-    Databroker(DatabrokerConfiguration);
+    Databroker(
+            DatabrokerConfiguration);
 
     ~Databroker();
 
     // EVENTS
-    void reload_configuration(DatabrokerConfiguration);
+    void reload_configuration(
+            DatabrokerConfiguration);
 
-    void endpoint_discovered(Endpoint);
+    void endpoint_discovered(
+            Endpoint);
 
 protected:
 

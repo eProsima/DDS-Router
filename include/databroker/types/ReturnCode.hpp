@@ -24,13 +24,14 @@
 namespace eprosima {
 namespace databroker {
 
-class ReturnCode: public eprosima::fastrtps::types::ReturnCode_t
+class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
     //! Specify the operator so OK code could be translated to True.
     bool operator ()() const
     {
         return RETCODE_OK == *this;
     }
+
 };
 
 } /* namespace databroker */

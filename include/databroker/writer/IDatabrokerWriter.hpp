@@ -34,13 +34,16 @@ class IDatabrokerWriter
 {
 public:
 
-    IDatabrokerWriter(RealTopic, std::shared_ptr<PayloadPool>);
+    IDatabrokerWriter(
+            RealTopic,
+            std::shared_ptr<PayloadPool>);
 
     ReturnCode enable();
 
     ReturnCode disable();
 
-    ReturnCode write(DataReceived&);
+    ReturnCode write(
+            DataReceived&);
 };
 
 } /* namespace databroker */

@@ -35,9 +35,9 @@ class Track
 public:
 
     Track(
-        RealTopic,
-        IDatabrokerParticipant source,
-        std::list<std::shared_ptr<IDatabrokerParticipant>> targets);
+            RealTopic,
+            IDatabrokerParticipant source,
+            std::list<std::shared_ptr<IDatabrokerParticipant>> targets);
 
     ReturnCode enable();
 
