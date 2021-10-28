@@ -19,7 +19,6 @@
 #ifndef _DATABROKER_COMMUNICATION_TRACK_HPP_
 #define _DATABROKER_COMMUNICATION_TRACK_HPP_
 
-#include <databroker/communication/PayloadPool.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
 #include <databroker/reader/IDatabrokerReader.hpp>
 #include <databroker/writer/IDatabrokerWriter.hpp>

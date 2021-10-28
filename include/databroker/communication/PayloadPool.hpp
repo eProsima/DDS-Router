@@ -20,7 +20,6 @@
 #define _DATABROKER_COMMUNICATION_PAYLOADPOOL_HPP_
 
 #include <fastdds/rtps/history/IPayloadPool.h>
-#include <rtps/history/TopicPayloadPool.hpp>
 
 namespace eprosima {
 namespace databroker {

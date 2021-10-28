@@ -37,11 +37,9 @@ namespace databroker {
  */
 class AllowedTopicList
 {
+public:
     // Allow all topics by default
     AllowedTopicList();
-
-    AllowedTopicList(
-            RawConfiguration configuration);
 
     AllowedTopicList(
             bool allow_topics_by_default,

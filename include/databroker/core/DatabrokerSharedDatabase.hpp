@@ -13,23 +13,15 @@
 // limitations under the License.
 
 /**
- * @file Databroker.hpp
+ * @file DatabrokerSharedDatabase.hpp
  */
 
-#ifndef _DATABROKER_CORE_DATABROKER_HPP_
-#define _DATABROKER_CORE_DATABROKER_HPP_
+#ifndef _DATABROKER_CORE_DATABROKERSHAREDDATABASE_HPP_
+#define _DATABROKER_CORE_DATABROKERSHAREDDATABASE_HPP_
 
-#include <map>
-
-#include <databroker/communication/Bridge.hpp>
-#include <databroker/configuration/DatabrokerConfiguration.hpp>
-#include <databroker/dynamic/AllowedTopicList.hpp>
 #include <databroker/dynamic/DiscoveryDatabase.hpp>
-#include <databroker/participant/IDatabrokerParticipant.hpp>
 #include <databroker/participant/ParticipantDatabase.hpp>
-#include <databroker/participant/DatabrokerParticipantFactory.hpp>
 #include <databroker/types/ReturnCode.hpp>
-#include <databroker/types/ParticipantId.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -37,15 +29,20 @@ namespace databroker {
 /**
  * TODO
  */
-class Databroker
+class DatabrokerSharedDatabase
 {
 public:
 
-    Databroker(const DatabrokerConfiguration& configuration);
+    DatabrokerSharedDatabase(const DatabrokerConfiguration& configuration);
 
-    virtual ~Databroker();
+    virtual ~DatabrokerSharedDatabase();
+
+    ReturnCode init();
 
     // EVENTS
+
+    void stop();
+
     void reload_configuration(const DatabrokerConfiguration& configuration);
 
     void endpoint_discovered(const Endpoint& endpoint);
@@ -84,7 +81,7 @@ protected:
     /////
     // AUXILIAR VARIABLES
 
-    //! Whether the Databroker has been initialized or stopped
+    //! Whether the DatabrokerSharedDatabase has been initialized or stopped
     bool enabled_;
 
 };
@@ -92,4 +89,4 @@ protected:
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_CORE_DATABROKER_HPP_ */
+#endif /* _DATABROKER_CORE_DATABROKERSHAREDDATABASE_HPP_ */

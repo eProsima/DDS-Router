@@ -20,7 +20,6 @@
 #define _DATABROKER_PARTICIPANT_IDATABROKERPARTICIPANT_HPP_
 
 #include <databroker/communication/PayloadPool.hpp>
-#include <databroker/configuration/DatabrokerParticipantConfiguration.hpp>
 #include <databroker/reader/IDatabrokerReader.hpp>
 #include <databroker/types/Endpoint.hpp>
 #include <databroker/types/ParticipantId.hpp>

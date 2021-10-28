@@ -22,12 +22,28 @@
 #include <map>
 
 #include <databroker/types/ParticipantId.hpp>
-#include <databroker/writer/IDatabrokerWriter.hpp>
+#include <databroker/participant/IDatabrokerParticipant.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-using ParticipantDatabase = std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>
+class ParticipantDatabase
+{
+public:
+
+    virtual ~ParticipantDatabase();
+
+    // WARNING only used by Databroker
+    std::shared_ptr<IDatabrokerParticipant> add_participant(
+            ParticipantId id,
+            std::shared_ptr<IDatabrokerParticipant> participant);
+
+    std::shared_ptr<IDatabrokerParticipant> get_participant(const ParticipantId& id);
+
+protected:
+
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> participants_;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */
