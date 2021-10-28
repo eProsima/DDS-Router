@@ -16,8 +16,8 @@
  * @file ConfigurationException.hpp
  */
 
-#ifndef _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-#define _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#ifndef _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+#define _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
 
 #include <databroker/exceptions/DatabrokerException.hpp>
 
@@ -25,7 +25,8 @@ namespace eprosima {
 namespace databroker {
 
 /**
- * @brief TODO
+ * @brief Base class for all exceptions thrown by the eProsima statistics backend library.
+ *
  */
 class ConfigurationException : public DatabrokerException
 {
@@ -36,5 +37,5 @@ class ConfigurationException : public DatabrokerException
 } // namespace databroker
 } // namespace eprosima
 
-#endif // _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#endif // _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
 

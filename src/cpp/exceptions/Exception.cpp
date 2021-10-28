@@ -13,28 +13,30 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationException.hpp
+ * @file DatabrokerException.cpp
  */
-
-#ifndef _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-#define _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
 
 #include <databroker/exceptions/DatabrokerException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * @brief TODO
- */
-class ConfigurationException : public DatabrokerException
+DatabrokerException::DatabrokerException(
+        const char* message) noexcept
+    : message_(message)
 {
-    // Use parent class constructors
-    using DatabrokerException::DatabrokerException;
-};
+}
+
+DatabrokerException::DatabrokerException(
+        const std::string& message)
+    : message_(message)
+{
+}
+
+const char* DatabrokerException::what() const noexcept
+{
+    return message_.c_str();
+}
 
 } // namespace databroker
 } // namespace eprosima
-
-#endif // _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-

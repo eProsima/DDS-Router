@@ -26,7 +26,7 @@ namespace eprosima {
 namespace databroker {
 
 /**
- * @brief Base class for all exceptions thrown by the eProsima statistics backend library.
+ * @brief Base class for all exceptions thrown by the eProsima Databroker library.
  *
  */
 class DatabrokerException : public std::exception
