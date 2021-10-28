@@ -1,0 +1,72 @@
+
+whitelist:
+  [
+    {name: "*chatter"},
+    {name: "HelloWorldTopic", type: "HelloWorld"}
+  ]
+
+blacklist:
+  [
+    {name: "*ros*"}
+  ]
+
+#################################
+
+wan:
+  type: "wan"
+  id: 1
+  listening-addresses:
+    [
+      {
+        ip: "2.2.2.2",
+        port: 11800,
+        transport: "udp"
+      }
+    ]
+
+#################################
+
+k8s:
+  type: "wan"
+  id: 2
+  connection-addresses:
+    [
+      {
+        ip: "8.8.8.8",
+        port: 36000,
+        id: 0
+      }
+    ]
+
+#################################
+
+local:
+  type: ros
+  domain: 2
+  discovery-server:
+    id: 3
+    listening-addresses:
+    [
+      {
+        ip: "127.0.0.1",
+        port: 11811,
+        transport: "udp"
+      }
+    ]
+
+#################################
+
+local_no_ros:
+  filename: "./local_no_ros_participant_configuration.yaml"
+
+###########################################################
+# ./local_no_ros_participant_configuration.yaml
+###########################################################
+
+type: local
+blacklist:
+  [
+    {name: "*ros*"},
+    {name: "*rt*"}
+  ]
+domain: 1

@@ -1,0 +1,23 @@
+
+whitelist:
+  [
+    {name: "HelloWorldTopic", type: "HelloWorld"}
+  ]
+
+#################################
+
+wan:
+  type: wan
+  listening-addresses:
+    [
+      {
+        ip: "2.2.2.2",
+        port: 11800,
+        transport: "tcp"
+      }
+    ]
+
+#################################
+
+local:
+  type: local
