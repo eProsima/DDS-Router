@@ -38,8 +38,6 @@ public:
 
     IDatabrokerReader(RealTopic, std::shared_ptr<PayloadPool>, std::function<void()> on_data_available_lambda);
 
-    ReturnCode init();
-
     ReturnCode enable();
 
     ReturnCode disable();

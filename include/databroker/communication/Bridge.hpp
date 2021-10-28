@@ -36,8 +36,6 @@ public:
         RealTopic,
         std::shared_ptr<ParticipantDatabase>);
 
-    ReturnCode init();
-
     ReturnCode enable();
 
     ReturnCode disable();

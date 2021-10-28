@@ -42,11 +42,9 @@ public:
 
     Databroker(DatabrokerConfiguration);
 
-    ReturnCode init();
+    ~Databroker();
 
     // EVENTS
-    void stop();
-
     void reload_configuration(DatabrokerConfiguration);
 
     void endpoint_discovered(Endpoint);

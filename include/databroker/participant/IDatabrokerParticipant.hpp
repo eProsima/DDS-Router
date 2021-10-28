@@ -43,8 +43,6 @@ public:
         std::shared_ptr<DiscoveryDatabase>,
         std::function<void(Endpoint)>);
 
-    ReturnCode init();
-
     std::shared_ptr<IDatabrokerWriter> create_writer(
             RealTopic);
 

@@ -39,8 +39,6 @@ public:
         IDatabrokerParticipant source,
         std::list<std::shared_ptr<IDatabrokerParticipant>> targets);
 
-    ReturnCode init();
-
     ReturnCode enable();
 
     ReturnCode disable();

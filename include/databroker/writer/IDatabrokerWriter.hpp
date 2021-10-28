@@ -36,8 +36,6 @@ public:
 
     IDatabrokerWriter(RealTopic, std::shared_ptr<PayloadPool>);
 
-    ReturnCode init();
-
     ReturnCode enable();
 
     ReturnCode disable();
