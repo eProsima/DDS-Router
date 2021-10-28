@@ -31,8 +31,7 @@ public:
 
     using AbstractTopic::AbstractTopic;
 
-    ~WildcardTopic()
-    {}
+    virtual ~WildcardTopic();
 
     bool contains(const AbstractTopic& other) const override;
 

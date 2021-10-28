@@ -34,7 +34,8 @@ public:
 
     using DatabrokerTopic::DatabrokerTopic;
 
-    virtual ~AbstractTopic();
+    virtual ~AbstractTopic()
+    {};
 
     virtual bool contains(const AbstractTopic& other) const = 0;
 

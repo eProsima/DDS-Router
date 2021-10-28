@@ -71,14 +71,14 @@ find_package(yaml-cpp REQUIRED)
 ###############################################################################
 
 # Project sources
-file(GLOB SOURCES_FILES
+file(GLOB_RECURSE SOURCES_FILES
         "src/**/*.c"
         "src/**/*.cpp"
         "src/**/*.cxx"
     )
 
 # Project headers
-file(GLOB HEADERS_FILES
+file(GLOB_RECURSE HEADERS_FILES
         "include/**/*.h"
         "include/**/*.hpp"
         "include/**/*.hxx"
