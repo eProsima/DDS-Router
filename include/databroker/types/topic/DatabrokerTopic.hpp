@@ -31,27 +31,24 @@ struct DatabrokerTopic
 {
     DatabrokerTopic(
             std::string topic_name,
-            std::string topic_type)
-        : topic_name_(topic_name)
-        , topic_type_(topic_type)
-    {
-    }
+            std::string topic_type);
 
-    virtual ~DatabrokerTopic()
-    {
-    }
+    virtual ~DatabrokerTopic();
 
-    // VARIABLES
-    std::string topic_name_;
-    std::string topic_type_;
+    const std::string& topic_name() const;
+
+    const std::string& topic_type() const;
 
     // OPERATOR OVERLOAD
     bool operator ==(
-            const DatabrokerTopic& other) const
-    {
-        return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_;
-    }
+            const DatabrokerTopic& other) const;
 
+    bool operator <(
+            const DatabrokerTopic& other) const;
+protected:
+
+    std::string topic_name_;
+    std::string topic_type_;
 };
 
 } /* namespace databroker */
