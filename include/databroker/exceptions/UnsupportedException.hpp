@@ -13,18 +13,29 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
- *
+ * @file UnsupportedException.hpp
  */
 
-int main(
-        int argc,
-        char** argv)
+#ifndef _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+#define _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+
+#include <databroker/exceptions/DatabrokerException.hpp>
+
+namespace eprosima {
+namespace databroker {
+
+/**
+ * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
+ *
+ */
+class UnsupportedException : public DatabrokerException
 {
-    // TODO: main
+    // Use parent class constructors
+    using DatabrokerException::DatabrokerException;
+};
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+} // namespace databroker
+} // namespace eprosima
 
-    return 0;
-}
+#endif // _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+

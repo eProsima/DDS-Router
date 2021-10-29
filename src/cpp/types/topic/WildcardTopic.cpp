@@ -13,18 +13,34 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
+ * @file WildcardTopic.cpp
  *
  */
 
-int main(
-        int argc,
-        char** argv)
+#include <databroker/types/topic/WildcardTopic.hpp>
+
+namespace eprosima {
+namespace databroker {
+
+WildcardTopic::~WildcardTopic()
 {
-    // TODO: main
-
-    static_cast<void>(argc);
-    static_cast<void>(argv);
-
-    return 0;
 }
+
+bool WildcardTopic::contains(
+        const AbstractTopic& other) const
+{
+    // TODO
+    static_cast<void> (other);
+    return false;
+}
+
+bool WildcardTopic::matches(
+        const RealTopic& other) const
+{
+    // TODO
+    static_cast<void> (other);
+    return false;
+}
+
+} /* namespace databroker */
+} /* namespace eprosima */

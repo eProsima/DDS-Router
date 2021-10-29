@@ -26,6 +26,10 @@ namespace databroker {
 
 class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
+
+    //! Inherit Parent class constructors
+    using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
+
     //! Specify the operator so OK code could be translated to True.
     bool operator ()() const
     {

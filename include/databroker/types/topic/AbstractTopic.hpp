@@ -28,22 +28,26 @@ namespace databroker {
 /**
  * TODO
  */
-struct AbstractTopic : public DatabrokerTopic
+class AbstractTopic : public DatabrokerTopic
 {
+public:
+
+    using DatabrokerTopic::DatabrokerTopic;
+
+    virtual ~AbstractTopic()
+    {
+    }
+
     virtual bool contains(
-            const AbstractTopic& other) const;
+            const AbstractTopic& other) const = 0;
 
     virtual bool matches(
-            const RealTopic& other) const;
-};
-
-// TODO: move to new files when created
-struct WildcardTopic : public AbstractTopic
-{
+            const RealTopic& other) const = 0;
 };
 
 struct RegexTopic : public AbstractTopic
 {
+    using AbstractTopic::AbstractTopic;
 };
 
 } /* namespace databroker */

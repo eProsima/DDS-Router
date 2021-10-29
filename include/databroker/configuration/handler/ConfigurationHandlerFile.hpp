@@ -13,51 +13,41 @@
 // limitations under the License.
 
 /**
- * @file ParticipantId.hpp
+ * @file ConfigurationHandlerFile.hpp
  */
 
-#ifndef _DATABROKER_TYPES_PARTICIPANTID_HPP_
-#define _DATABROKER_TYPES_PARTICIPANTID_HPP_
+#ifndef _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
+#define _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
 
 #include <string>
+
+#include <databroker/configuration/handler/IConfigurationHandler.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-//! Unique Id for each Databroker Participant
-class ParticipantId
+/**
+ * TODO
+ */
+class ConfigurationHandlerFile : IConfigurationHandler
 {
 public:
 
-    ParticipantId();
+    ConfigurationHandlerFile(
+            std::string file_name);
 
-    ParticipantId(
-            const std::string& id);
+    ReturnCode load() override;
 
-    virtual ~ParticipantId();
+    const RawConfiguration& get_raw() const override;
 
-    bool is_valid() const;
-
-    static ParticipantId invalid();
-
-    static bool is_valid_id(
-            const std::string& id);
-
-    // OPERATOR OVERLOAD
-    bool operator ==(
-            const ParticipantId& other) const;
-
-    bool operator <(
-            const ParticipantId& other) const;
+    ReturnCode reload() override;
 
 protected:
 
-    static const std::string INVALID_ID; // __invalid_databroker_participant__
-
-    std::string id_;
+    std::string file_name_;
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_PARTICIPANTID_HPP_ */
+#endif /* _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_ */

@@ -13,41 +13,34 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationHandlerFile.hpp
+ * @file WildcardTopic.hpp
  */
 
-#ifndef _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
-#define _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
+#ifndef _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
+#define _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 
-#include <string>
-
-#include <databroker/configuration/IConfigurationHandler.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-class ConfigurationHandlerFile : IConfigurationHandler
+// TODO: move to new files when created
+class WildcardTopic : public AbstractTopic
 {
 public:
 
-    ConfigurationHandlerFile(
-            std::string file_name);
+    using AbstractTopic::AbstractTopic;
 
-    ReturnCode load() override;
+    virtual ~WildcardTopic();
 
-    const RawConfiguration& get_raw() const override;
+    bool contains(
+            const AbstractTopic& other) const override;
 
-    ReturnCode reload() override;
-
-protected:
-
-    std::string file_name_;
+    bool matches(
+            const RealTopic& other) const override;
 };
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_ */
+#endif /* _DATABROKER_TYPES_TOPIC_WILDCARDTOPIC_HPP_ */

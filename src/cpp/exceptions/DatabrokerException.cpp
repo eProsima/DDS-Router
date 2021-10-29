@@ -13,18 +13,30 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
- *
+ * @file DatabrokerException.cpp
  */
 
-int main(
-        int argc,
-        char** argv)
+#include <databroker/exceptions/DatabrokerException.hpp>
+
+namespace eprosima {
+namespace databroker {
+
+DatabrokerException::DatabrokerException(
+        const char* message) noexcept
+    : message_(message)
 {
-    // TODO: main
-
-    static_cast<void>(argc);
-    static_cast<void>(argv);
-
-    return 0;
 }
+
+DatabrokerException::DatabrokerException(
+        const std::string& message)
+    : message_(message)
+{
+}
+
+const char* DatabrokerException::what() const noexcept
+{
+    return message_.c_str();
+}
+
+} // namespace databroker
+} // namespace eprosima

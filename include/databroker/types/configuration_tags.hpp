@@ -13,18 +13,24 @@
 // limitations under the License.
 
 /**
- * @file main.cpp
+ * @file configuration_tags.hpp
  *
+ * This file contains constant values common for the whole project
  */
 
-int main(
-        int argc,
-        char** argv)
-{
-    // TODO: main
+#ifndef _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_
+#define _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+namespace eprosima {
+namespace databroker {
 
-    return 0;
-}
+// Topics related tags
+constexpr const char* WHITELIST_TAG("whitelist");
+constexpr const char* BLACKLIST_TAG("blacklist");
+constexpr const char* TOPIC_NAME_TAG("name");
+constexpr const char* TOPIC_TYPE_NAME_TAG("type");
+
+} /* namespace databroker */
+} /* namespace eprosima */
+
+#endif /* _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_ */

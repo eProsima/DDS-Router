@@ -19,7 +19,9 @@
 #ifndef _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
 #define _DATABROKER_CONFIGURATION_DATABROKERCONFIGURATION_HPP_
 
-#include <databroker/configuration/Configuration.hpp>
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/RawConfiguration.hpp>
+#include <databroker/types/topic/AbstractTopic.hpp>
 
 namespace eprosima {
 namespace databroker {
@@ -27,14 +29,27 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerConfiguration : public AllowedTopicConfiguration
+class DatabrokerConfiguration
 {
-    DatabrokerConfiguration(
-            const RawConfiguration&);
+public:
 
-    // Read the Yaml and get the params required
-    // Fail in case he configuration is not correct
-    ReturnCode load() override;
+    DatabrokerConfiguration(
+            const RawConfiguration& raw_configuration);
+
+    virtual ~DatabrokerConfiguration();
+
+    std::list<AbstractTopic*> whitelist() const;
+
+    std::list<AbstractTopic*> blacklist() const;
+
+    std::map<ParticipantId, RawConfiguration> participants_configurations() const;
+
+protected:
+
+    std::list<AbstractTopic*> common_topic_list_get_(
+            const char* list_tag) const;
+
+    const RawConfiguration raw_configuration_;
 };
 
 } /* namespace databroker */

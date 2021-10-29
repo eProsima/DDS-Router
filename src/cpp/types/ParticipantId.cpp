@@ -13,28 +13,39 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationException.hpp
+ * @file ParticipantId.cpp
+ *
  */
 
-#ifndef _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-#define _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-
-#include <databroker/exceptions/DatabrokerException.hpp>
+#include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/configuration_tags.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * @brief TODO
- */
-class ConfigurationException : public DatabrokerException
+const std::string ParticipantId::INVALID_ID = "__invalid_databroker_participant__";
+
+ParticipantId::ParticipantId(
+        const std::string& id)
+    : id_(id)
 {
-    // Use parent class constructors
-    using DatabrokerException::DatabrokerException;
-};
+}
 
-} // namespace databroker
-} // namespace eprosima
+ParticipantId::~ParticipantId()
+{
+}
 
-#endif // _DATABROKER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+bool ParticipantId::is_valid_id(
+        const std::string& tag)
+{
+    return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
+}
 
+bool ParticipantId::operator <(
+        const ParticipantId& other) const
+{
+    return id_ < other.id_;
+}
+
+} /* namespace databroker */
+} /* namespace eprosima */
