@@ -26,6 +26,7 @@ namespace databroker {
 
 //! Configuration in dictionary format
 using RawConfiguration = YAML::Node;
+using RawConfigurationType = YAML::NodeType;
 
 } /* namespace databroker */
 } /* namespace eprosima */

@@ -31,6 +31,10 @@ DatabrokerConfiguration::DatabrokerConfiguration(
         const RawConfiguration& raw_configuration)
     : raw_configuration_(raw_configuration)
 {
+    if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
+    {
+        throw ConfigurationException("Databroker expects a map as base yaml type or an empty configuration");
+    }
 }
 
 DatabrokerConfiguration::~DatabrokerConfiguration()

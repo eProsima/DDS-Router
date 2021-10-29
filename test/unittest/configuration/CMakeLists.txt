@@ -34,6 +34,7 @@ set(TEST_LIST
         real_topics
         whitelist_wildcard
         blacklist_wildcard
+        constructor_fail
         participants_configurations_fail
         real_topics_fail
         whitelist_wildcard_fail
