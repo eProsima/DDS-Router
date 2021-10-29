@@ -29,8 +29,10 @@ namespace databroker {
 /**
  * TODO
  */
-struct DatabrokerConfiguration
+class DatabrokerConfiguration
 {
+public:
+
     DatabrokerConfiguration(const RawConfiguration& raw_configuration);
 
     virtual ~DatabrokerConfiguration();

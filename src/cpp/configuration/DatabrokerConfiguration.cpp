@@ -70,8 +70,8 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
     }
     catch (const std::exception& e)
     {
-        // TODO: Add Warning
-        throw ConfigurationException(e.what());
+        // TODO: Add Warning with e what
+        throw ConfigurationException("Error while getting participant configurations in Databroker configuration.");
     }
 
     return result;
@@ -119,7 +119,10 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(const 
     catch (const std::exception& e)
     {
         // TODO: Add Warning
-        throw ConfigurationException(e.what());
+        throw ConfigurationException(
+            std::string("Error while getting topic list ") +
+            list_tag +
+            std::string(" in Databroker configuration."));
     }
 
     return result;

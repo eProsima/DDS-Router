@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationException.hpp
+ * @file UnsupportedException.hpp
  */
 
 #ifndef _DATABROKER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
@@ -25,10 +25,10 @@ namespace eprosima {
 namespace databroker {
 
 /**
- * @brief Base class for all exceptions thrown by the eProsima statistics backend library.
+ * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
  *
  */
-class ConfigurationException : public DatabrokerException
+class UnsupportedException : public DatabrokerException
 {
     // Use parent class constructors
     using DatabrokerException::DatabrokerException;
