@@ -19,7 +19,7 @@
 # TEST_HEADERS -> headers for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
-function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST)
+function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST TEST_EXTRA_LIBRARIES)
 
     message(STATUS "Adding executable test: " ${TEST_NAME})
 
@@ -41,10 +41,7 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST)
     ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/cpp)
 
-    target_link_libraries( ${EXECUTABLE_TEST_NAME} PUBLIC
-            ${GTEST_LIBRARIES}
-            $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi> # TODO remove this when new parameter is added to function
-        )
+    target_link_libraries(${EXECUTABLE_TEST_NAME} PUBLIC ${GTEST_LIBRARIES} ${TEST_EXTRA_LIBRARIES})
 
     get_win32_path_dependencies(${EXECUTABLE_TEST_NAME} TEST_FRIENDLY_PATH)
 
@@ -60,5 +57,6 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST)
 
 endfunction(add_unittest_executable)
 
+add_subdirectory(configuration)
 add_subdirectory(types)
 

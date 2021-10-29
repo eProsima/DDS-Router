@@ -36,11 +36,15 @@ set(TEST_LIST
         stdout_operator
     )
 
+set(TEST_EXTRA_LIBRARIES
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_HEADERS}"
         "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
 
 #############
@@ -64,11 +68,15 @@ set(TEST_LIST
         is_non_real_topic
     )
 
+set(TEST_EXTRA_LIBRARIES
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_HEADERS}"
         "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
 
 #################
@@ -98,9 +106,14 @@ set(TEST_LIST
         # contains_wildcard
     )
 
+set(TEST_EXTRA_LIBRARIES
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_HEADERS}"
         "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
