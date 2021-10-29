@@ -35,11 +35,14 @@ public:
     using DatabrokerTopic::DatabrokerTopic;
 
     virtual ~AbstractTopic()
-    {};
+    {
+    }
 
-    virtual bool contains(const AbstractTopic& other) const = 0;
+    virtual bool contains(
+            const AbstractTopic& other) const = 0;
 
-    virtual bool matches(const RealTopic& other) const = 0;
+    virtual bool matches(
+            const RealTopic& other) const = 0;
 };
 
 struct RegexTopic : public AbstractTopic

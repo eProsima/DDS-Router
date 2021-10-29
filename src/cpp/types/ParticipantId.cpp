@@ -25,8 +25,9 @@ namespace databroker {
 
 const std::string ParticipantId::INVALID_ID = "__invalid_databroker_participant__";
 
-ParticipantId::ParticipantId(const std::string& id)
-        : id_(id)
+ParticipantId::ParticipantId(
+        const std::string& id)
+    : id_(id)
 {
 }
 
@@ -34,12 +35,14 @@ ParticipantId::~ParticipantId()
 {
 }
 
-bool ParticipantId::is_valid_id(const std::string& tag)
+bool ParticipantId::is_valid_id(
+        const std::string& tag)
 {
     return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
 }
 
-bool ParticipantId::operator<(const ParticipantId& other) const
+bool ParticipantId::operator <(
+        const ParticipantId& other) const
 {
     return id_ < other.id_;
 }

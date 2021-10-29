@@ -33,7 +33,8 @@ class DatabrokerConfiguration
 {
 public:
 
-    DatabrokerConfiguration(const RawConfiguration& raw_configuration);
+    DatabrokerConfiguration(
+            const RawConfiguration& raw_configuration);
 
     virtual ~DatabrokerConfiguration();
 
@@ -45,7 +46,8 @@ public:
 
 protected:
 
-    std::list<AbstractTopic*> common_topic_list_get_(const char* list_tag) const;
+    std::list<AbstractTopic*> common_topic_list_get_(
+            const char* list_tag) const;
 
     const RawConfiguration raw_configuration_;
 };

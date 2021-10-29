@@ -34,10 +34,12 @@ struct DatabrokerTopic
             std::string topic_type)
         : topic_name_(topic_name)
         , topic_type_(topic_type)
-    {}
+    {
+    }
 
     virtual ~DatabrokerTopic()
-    {}
+    {
+    }
 
     // VARIABLES
     std::string topic_name_;

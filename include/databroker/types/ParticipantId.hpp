@@ -31,7 +31,8 @@ public:
 
     ParticipantId();
 
-    ParticipantId(const std::string& id);
+    ParticipantId(
+            const std::string& id);
 
     virtual ~ParticipantId();
 
@@ -39,12 +40,15 @@ public:
 
     static ParticipantId invalid();
 
-    static bool is_valid_id(const std::string& id);
+    static bool is_valid_id(
+            const std::string& id);
 
     // OPERATOR OVERLOAD
-    bool operator==(const ParticipantId& other) const;
+    bool operator ==(
+            const ParticipantId& other) const;
 
-    bool operator<(const ParticipantId& other) const;
+    bool operator <(
+            const ParticipantId& other) const;
 
 protected:
 

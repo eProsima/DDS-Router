@@ -33,9 +33,11 @@ public:
 
     virtual ~WildcardTopic();
 
-    bool contains(const AbstractTopic& other) const override;
+    bool contains(
+            const AbstractTopic& other) const override;
 
-    bool matches(const RealTopic& other) const override;
+    bool matches(
+            const RealTopic& other) const override;
 };
 
 } /* namespace databroker */

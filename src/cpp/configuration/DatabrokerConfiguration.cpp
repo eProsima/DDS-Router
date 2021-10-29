@@ -27,7 +27,8 @@ namespace databroker {
 
 // TODO: Add logs
 
-DatabrokerConfiguration::DatabrokerConfiguration(const RawConfiguration& raw_configuration)
+DatabrokerConfiguration::DatabrokerConfiguration(
+        const RawConfiguration& raw_configuration)
     : raw_configuration_(raw_configuration)
 {
 }
@@ -52,9 +53,9 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
 
     try
     {
-        for (YAML::const_iterator  participant_it = raw_configuration_.begin();
-            participant_it != raw_configuration_.end();
-            ++participant_it)
+        for (YAML::const_iterator participant_it = raw_configuration_.begin();
+                participant_it != raw_configuration_.end();
+                ++participant_it)
         {
             std::string value_str = participant_it->first.as<std::string>();
 
@@ -77,7 +78,8 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
     return result;
 }
 
-std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(const char* list_tag) const
+std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
+        const char* list_tag) const
 {
     // TODO: support regex topic
 
@@ -120,9 +122,9 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(const 
     {
         // TODO: Add Warning
         throw ConfigurationException(
-            std::string("Error while getting topic list ") +
-            list_tag +
-            std::string(" in Databroker configuration."));
+                  std::string("Error while getting topic list ") +
+                  list_tag +
+                  std::string(" in Databroker configuration."));
     }
 
     return result;

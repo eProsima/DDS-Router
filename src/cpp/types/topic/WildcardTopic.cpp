@@ -23,16 +23,19 @@ namespace eprosima {
 namespace databroker {
 
 WildcardTopic::~WildcardTopic()
-{}
+{
+}
 
-bool WildcardTopic::contains(const AbstractTopic& other) const
+bool WildcardTopic::contains(
+        const AbstractTopic& other) const
 {
     // TODO
     static_cast<void> (other);
     return false;
 }
 
-bool WildcardTopic::matches(const RealTopic& other) const
+bool WildcardTopic::matches(
+        const RealTopic& other) const
 {
     // TODO
     static_cast<void> (other);
