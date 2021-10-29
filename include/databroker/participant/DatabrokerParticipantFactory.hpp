@@ -35,10 +35,10 @@ public:
     virtual ~DatabrokerParticipantFactory();
 
     std::shared_ptr<IDatabrokerParticipant> create_participant(
-        ParticipantId id,
-        RawConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload,
-        std::shared_ptr<DiscoveryDatabase> discovery_database);
+            ParticipantId id,
+            RawConfiguration participant_configuration,
+            std::shared_ptr<PayloadPool> payload,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
 };
 
 } /* namespace databroker */

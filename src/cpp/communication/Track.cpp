@@ -41,6 +41,5 @@ Track::~Track()
     // TODO
 }
 
-
 } /* namespace databroker */
 } /* namespace eprosima */

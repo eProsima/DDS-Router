@@ -33,7 +33,8 @@ class DatabrokerSharedDatabase
 {
 public:
 
-    DatabrokerSharedDatabase(const DatabrokerConfiguration& configuration);
+    DatabrokerSharedDatabase(
+            const DatabrokerConfiguration& configuration);
 
     virtual ~DatabrokerSharedDatabase();
 
@@ -43,9 +44,11 @@ public:
 
     void stop();
 
-    void reload_configuration(const DatabrokerConfiguration& configuration);
+    void reload_configuration(
+            const DatabrokerConfiguration& configuration);
 
-    void endpoint_discovered(const Endpoint& endpoint);
+    void endpoint_discovered(
+            const Endpoint& endpoint);
 
 protected:
 

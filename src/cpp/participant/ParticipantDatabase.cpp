@@ -37,7 +37,8 @@ std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::add_participant(
     throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
 }
 
-std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(const ParticipantId& id) const
+std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(
+        const ParticipantId& id) const
 {
     // TODO
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");

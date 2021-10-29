@@ -32,6 +32,7 @@ namespace databroker {
 class PayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
 {
 public:
+
     PayloadPool() = default;
 
     virtual ~PayloadPool();

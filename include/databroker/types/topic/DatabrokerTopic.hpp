@@ -45,6 +45,7 @@ struct DatabrokerTopic
 
     bool operator <(
             const DatabrokerTopic& other) const;
+
 protected:
 
     std::string topic_name_;

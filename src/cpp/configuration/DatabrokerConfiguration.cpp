@@ -93,7 +93,8 @@ std::set<RealTopic> DatabrokerConfiguration::real_topics() const
     return result;
 }
 
-std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(const char* list_tag) const
+std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
+        const char* list_tag) const
 {
     // TODO: support regex topic
 

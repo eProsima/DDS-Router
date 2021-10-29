@@ -27,10 +27,12 @@ DatabrokerTopic::DatabrokerTopic(
         std::string topic_type)
     : topic_name_(topic_name)
     , topic_type_(topic_type)
-{}
+{
+}
 
 DatabrokerTopic::~DatabrokerTopic()
-{}
+{
+}
 
 const std::string& DatabrokerTopic::topic_name() const
 {

@@ -33,8 +33,8 @@ struct RealTopic : public DatabrokerTopic
     using DatabrokerTopic::DatabrokerTopic;
 
     static bool is_real_topic(
-        const std::string& topic_name,
-        const std::string& type_name);
+            const std::string& topic_name,
+            const std::string& type_name);
 };
 
 } /* namespace databroker */

@@ -43,14 +43,17 @@ class Databroker
 {
 public:
 
-    Databroker(const DatabrokerConfiguration& configuration);
+    Databroker(
+            const DatabrokerConfiguration& configuration);
 
     virtual ~Databroker();
 
     // EVENTS
-    void reload_configuration(const DatabrokerConfiguration& configuration);
+    void reload_configuration(
+            const DatabrokerConfiguration& configuration);
 
-    void endpoint_discovered(const Endpoint& endpoint);
+    void endpoint_discovered(
+            const Endpoint& endpoint);
 
 protected:
 
@@ -67,16 +70,20 @@ protected:
     void init_bridges_();
 
     //! New Topic found, check if it shuld be activated
-    void discovered_topic_(const RealTopic& topic);
+    void discovered_topic_(
+            const RealTopic& topic);
 
     //! Active a topic within the Databroker context
-    void active_topic_(const RealTopic& topic);
+    void active_topic_(
+            const RealTopic& topic);
 
     //! Create a new bridge for a topic recently discovererd
-    void create_new_bridge(const RealTopic& topic);
+    void create_new_bridge(
+            const RealTopic& topic);
 
     //! Deactive a topic within the Databroker context
-    void deactive_topic_(const RealTopic& topic);
+    void deactive_topic_(
+            const RealTopic& topic);
 
     /////
     // DATA STORAGE

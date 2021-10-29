@@ -29,15 +29,16 @@ namespace databroker {
 
 // TODO: Add logs
 
-Databroker::Databroker(const DatabrokerConfiguration& configuration)
-        : payload_pool_(new PayloadPool())
-        , participants_database_(new ParticipantDatabase())
-        , discovery_database_(new DiscoveryDatabase())
-        , allowed_topics_()
-        , bridges_()
-        , configuration_(configuration)
-        , participant_factory_()
-        , enabled_(false)
+Databroker::Databroker(
+        const DatabrokerConfiguration& configuration)
+    : payload_pool_(new PayloadPool())
+    , participants_database_(new ParticipantDatabase())
+    , discovery_database_(new DiscoveryDatabase())
+    , allowed_topics_()
+    , bridges_()
+    , configuration_(configuration)
+    , participant_factory_()
+    , enabled_(false)
 {
     // Init topic allowed
     init_allowed_topics_();
@@ -46,7 +47,8 @@ Databroker::Databroker(const DatabrokerConfiguration& configuration)
     // Create Bridges
     init_bridges_();
 
-    enabled_.store(true);}
+    enabled_.store(true);
+}
 
 Databroker::~Databroker()
 {
@@ -54,13 +56,15 @@ Databroker::~Databroker()
     // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
 }
 
-void Databroker::reload_configuration(const DatabrokerConfiguration&)
+void Databroker::reload_configuration(
+        const DatabrokerConfiguration&)
 {
     // TODO
     throw UnsupportedException("Databroker::reload_configuration not supported yet");
 }
 
-void Databroker::endpoint_discovered(const Endpoint&)
+void Databroker::endpoint_discovered(
+        const Endpoint&)
 {
     // TODO
     throw UnsupportedException("Databroker::endpoint_discovered not supported yet");
@@ -83,11 +87,11 @@ void Databroker::init_participants_()
         // Create participant
         // This should not be in try catch case as if it fails the whole init must fail
         new_participant =
-            participant_factory_.create_participant(
-                participant_info.first,
-                participant_info.second,
-                payload_pool_,
-                discovery_database_);
+                participant_factory_.create_participant(
+            participant_info.first,
+            participant_info.second,
+            payload_pool_,
+            discovery_database_);
 
         // create_participant should throw an exception in fail, never return nullptr
         assert(nullptr != new_participant);
@@ -102,11 +106,12 @@ void Databroker::init_bridges_()
 {
     for (RealTopic topic : configuration_.real_topics())
     {
-       discovered_topic_(topic);
+        discovered_topic_(topic);
     }
 }
 
-void Databroker::discovered_topic_(const RealTopic& topic)
+void Databroker::discovered_topic_(
+        const RealTopic& topic)
 {
     if (allowed_topics_.is_topic_allowed(topic))
     {
@@ -114,7 +119,8 @@ void Databroker::discovered_topic_(const RealTopic& topic)
     }
 }
 
-void Databroker::active_topic_(const RealTopic& topic)
+void Databroker::active_topic_(
+        const RealTopic& topic)
 {
     auto it_topic = current_topics_.find(topic);
 
@@ -137,12 +143,14 @@ void Databroker::active_topic_(const RealTopic& topic)
     }
 }
 
-void Databroker::create_new_bridge(const RealTopic& topic)
+void Databroker::create_new_bridge(
+        const RealTopic& topic)
 {
     bridges_.emplace(topic, Bridge(topic, participants_database_));
 }
 
-void Databroker::deactive_topic_(const RealTopic&)
+void Databroker::deactive_topic_(
+        const RealTopic&)
 {
     // TODO
     throw UnsupportedException("Databroker::reload_configuration not supported yet");
