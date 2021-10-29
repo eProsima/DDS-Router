@@ -82,6 +82,8 @@ jobs:
 
       - name: Install yaml-cpp
         uses: ./databroker/.github/actions/install-yamlcpp-windows
+        with:
+          cmake_build_type: "Debug"
 
       - name: Install foonatham memory
         uses: ./databroker/.github/actions/install-foonathan-memory-windows
