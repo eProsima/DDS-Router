@@ -13,27 +13,23 @@
 // limitations under the License.
 
 /**
- * @file configuration_tags.hpp
+ * @file utils.hpp
  *
  * This file contains constant values common for the whole project
  */
 
-#ifndef _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_
-#define _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_
+#ifndef _DATABROKER_TYPES_UTILS_HPP_
+#define _DATABROKER_TYPES_UTILS_HPP_
+
+#include <set>
+#include <string>
 
 namespace eprosima {
 namespace databroker {
 
-//! Retrieve a set with every tag used in the configuration of the Databroker or the Participants
 std::set<std::string> databroker_tags();
-
-// Topics related tags
-constexpr const char* WHITELIST_TAG("whitelist");
-constexpr const char* BLACKLIST_TAG("blacklist");
-constexpr const char* TOPIC_NAME_TAG("name");
-constexpr const char* TOPIC_TYPE_NAME_TAG("type");
 
 } /* namespace databroker */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_TYPES_CONFIGURATIONTAGS_HPP_ */
+#endif /* _DATABROKER_TYPES_UTILS_HPP_ */
