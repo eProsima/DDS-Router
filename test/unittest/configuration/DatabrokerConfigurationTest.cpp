@@ -151,6 +151,9 @@ std::set<std::pair<std::string, std::string>> random_abstract_topic_names()
         };
 }
 
+/*
+ * Unioin of real and non real topic names
+ */
 std::set<std::pair<std::string, std::string>> random_topic_names()
 {
     std::set<std::pair<std::string, std::string>> all_topics;
@@ -164,6 +167,52 @@ std::set<std::pair<std::string, std::string>> random_topic_names()
     return all_topics;
 }
 
+/*
+ * Random participant id
+ *
+ * TODO: create really random names
+ */
+std::string random_participant_name(uint16_t seed)
+{
+    return std::string("PartName_") + std::to_string(seed);
+}
+
+/*
+ * Random participant configuration
+ *
+ * TODO: create really random configurations
+ */
+RawConfiguration random_participant_configuration(uint16_t seed)
+{
+    RawConfiguration config;
+
+    for (int i=(seed); i>0; i--)
+    {
+        std::string tag("tag" + std::to_string(i));
+
+        if (i % 4 == 0)
+        {
+            // Each 4 tags add an array
+            config[tag].push_back("value1");
+            config[tag].push_back("value2");
+        }
+        else if(i % 2 == 0)
+        {
+            // Each 4 tags add a map
+            RawConfiguration sub_map;
+            sub_map["x"] = "y";
+            sub_map["a"] = "b";
+            config[tag] = sub_map;
+        }
+        else
+        {
+            // The rest are direct values
+            config[tag] = "Random value";
+        }
+    }
+
+    return config;
+}
 
 /**
  * Test DatabrokerConfiguration constructor to check it does not fail
@@ -191,11 +240,70 @@ TEST(DatabrokerConfigurationTest, constructor)
 
 /**
  * Test get participants configurations
+ *
+ * CASES:
+ *  Empty configuration
+ *  Other tags that are not participant valid ids
+ *  One Participant Configuration
+ *  Many Participant Configurations
  */
 TEST(DatabrokerConfigurationTest, participants_configurations)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Empty configuration
+    RawConfiguration yaml1;
+    DatabrokerConfiguration config1(yaml1);
+    EXPECT_TRUE(config1.participants_configurations().empty());
+
+    // Other tags that are not participant valid ids
+    RawConfiguration yaml2;
+    add_topics_to_list_to_yaml(yaml2, WHITELIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml2, BLACKLIST_TAG, random_real_topic_names());
+    DatabrokerConfiguration config2(yaml2);
+    EXPECT_TRUE(config2.participants_configurations().empty());
+
+    // One Participant Configuration
+    RawConfiguration listening_addresses;
+    RawConfiguration address1;
+    RawConfiguration address2;
+    address1["ip"] = "127.0.0.1";
+    address1["port"] = "31415";
+    listening_addresses.push_back(address1);
+    address2["ip"] = "8.8.8.8";
+    address2["port"] = "6666";
+    listening_addresses.push_back(address2);
+
+    RawConfiguration participant_config;
+    participant_config["type"] = "wan";
+    participant_config["listening-addresses"] = listening_addresses;
+
+    std::string participant_name_str = "wanParticipant";
+    ParticipantId participant_name(participant_name_str);
+    RawConfiguration yaml3;
+    yaml3[participant_name_str] = participant_config;
+
+    DatabrokerConfiguration config3(yaml3);
+    auto result3 = config3.participants_configurations();
+    ASSERT_EQ(1, result3.size());
+    EXPECT_TRUE(result3.find(participant_name) != result3.end());
+    EXPECT_EQ(participant_config, result3[participant_name]);
+
+    // Many Participant Configurations
+    RawConfiguration yaml4;
+    for (int i=0; i<10; i++)
+    {
+        yaml4[random_participant_name(i)] = random_participant_configuration(i);
+    }
+    DatabrokerConfiguration config4(yaml4);
+    auto result4 = config4.participants_configurations();
+
+    for (int i=0; i<10; i++)
+    {
+        ParticipantId id(random_participant_name(i));
+        // WARNING: comparing two YAMLs is not correclty done in some occasions
+        // TODO: check that are actually the same yaml
+        ASSERT_EQ(result4[id].size(), random_participant_configuration(i).size());
+        // std::cout << result4[id].size() << std::endl; // -> this goes from 0 to 9
+    }
 }
 
 /**
@@ -368,11 +476,15 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
  * Test get blacklist with wildcards from yaml
  *
  * TODO: when regex is implemented, create a common test case
- *
  */
 TEST(DatabrokerConfigurationTest, whitelist_and_blacklist)
 {
-
+    RawConfiguration yaml;
+    add_topics_to_list_to_yaml(yaml, WHITELIST_TAG, random_real_topic_names());
+    add_topics_to_list_to_yaml(yaml, BLACKLIST_TAG, random_abstract_topic_names());
+    DatabrokerConfiguration config(yaml);
+    EXPECT_EQ(config.whitelist().size(), random_real_topic_names().size());
+    EXPECT_EQ(config.blacklist().size(), random_abstract_topic_names().size());
 }
 
 /******************************
@@ -430,17 +542,6 @@ TEST(DatabrokerConfigurationTest, real_topics_fail)
  * TODO: when regex is implemented, create a common test case
  */
 TEST(DatabrokerConfigurationTest, whitelist_wildcard_fail)
-{
-    // TODO
-    ASSERT_TRUE(false);
-}
-
-/**
- * Test get blacklist with wildcards from yaml negative cases
- *
- * TODO: when regex is implemented, create a common test case
- */
-TEST(DatabrokerConfigurationTest, blacklist_wildcard_fail)
 {
     // TODO
     ASSERT_TRUE(false);
