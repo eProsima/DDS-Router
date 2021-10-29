@@ -13,8 +13,8 @@ jobs:
 
   windows-build-test-release:
     runs-on: windows-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -62,8 +62,8 @@ jobs:
 
   windows-build-test-debug:
     runs-on: windows-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -82,6 +82,8 @@ jobs:
 
       - name: Install yaml-cpp
         uses: ./databroker/.github/actions/install-yamlcpp-windows
+        with:
+          cmake_build_type: "Debug"
 
       - name: Install foonatham memory
         uses: ./databroker/.github/actions/install-foonathan-memory-windows
@@ -111,8 +113,8 @@ jobs:
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
-    environment:
-      name: codecov
+    # environment:
+    #   name: codecov
 
     steps:
       - name: Sync eProsima/databroker repository
