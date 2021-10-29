@@ -34,6 +34,9 @@ public:
     //! Using parent constructos
     using AbstractTopic::AbstractTopic;
 
+    //! Constructor that allows any type
+    WildcardTopic(const std::string& topic_name);
+
     //! Destructor
     virtual ~WildcardTopic();
 

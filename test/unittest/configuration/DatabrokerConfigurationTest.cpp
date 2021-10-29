@@ -19,8 +19,9 @@
 
 #include <databroker/configuration/DatabrokerConfiguration.hpp>
 #include <databroker/exceptions/ConfigurationException.hpp>
-#include <databroker/types/RawConfiguration.hpp>
 #include <databroker/types/configuration_tags.hpp>
+#include <databroker/types/RawConfiguration.hpp>
+#include <databroker/types/topic/WildcardTopic.hpp>
 
 using namespace eprosima::databroker;
 
@@ -30,11 +31,11 @@ using namespace eprosima::databroker;
 
 /*
  * Add a topic to a list in a yaml
- * If name or type is not given, it will not be added
+ * If name or type is not given, that tag will not be added
  */
 void add_topic_to_list_to_yaml(
     RawConfiguration& yaml,
-    const char* list,
+    const char* list_tag,
     std::string topic_name = "",
     std::string topic_type = "")
 {
@@ -50,7 +51,117 @@ void add_topic_to_list_to_yaml(
         topic[TOPIC_TYPE_NAME_TAG] = topic_type;
     }
 
-    yaml[list].push_back(topic);
+    yaml[list_tag].push_back(topic);
+}
+
+/*
+ * Add a list of topics to a list in a yaml
+ * If name or type is not given, that tag will not be added
+ */
+void add_topics_to_list_to_yaml(
+    RawConfiguration& yaml,
+    const char* list_tag,
+    std::set<std::pair<std::string, std::string>> names)
+{
+    for (std::pair<std::string, std::string> name : names)
+    {
+        add_topic_to_list_to_yaml(yaml, list_tag, name.first, name.second);
+    }
+}
+
+/*
+ * Check if a topic is inside a list returned by whitelist or blacklist Databroker methods
+ */
+bool topic_in_list(
+    std::list<AbstractTopic*> list,
+    WildcardTopic compared_topic)
+{
+    for (AbstractTopic* topic : list)
+    {
+        // Check class and internal variables
+        if (typeid(*topic) == typeid(compared_topic) &&
+            compared_topic == *topic)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * Check if a topic is inside a list returned by real_topics Databroker methods
+ */
+bool topic_in_real_list(
+    std::set<RealTopic> list,
+    RealTopic compared_topic)
+{
+    for (RealTopic topic : list)
+    {
+        // Check class and internal variables
+        if (typeid(topic) == typeid(compared_topic) &&
+            compared_topic == topic)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/*
+ * Random Real topic names to test different configurations
+ */
+std::set<std::pair<std::string, std::string>> random_real_topic_names()
+{
+    return
+        {
+            {"TopicName1", "TopicType1"},
+            {"TopicName2", "TopicType2"},
+            {"TopicName3", "TopicType3"},
+
+            {"rt/chatter", "std::str::main::other_namespace"},
+
+            {"real/rare_topic.name", "real/rare_topic.type"},
+        };
+}
+
+/*
+ * Random Non Real topic names to test different configurations
+ */
+std::set<std::pair<std::string, std::string>> random_abstract_topic_names()
+{
+    return
+        {
+            {"rt/chatter", "*"},
+            {"*", "std::str"},
+
+            {"rt/chatter", "std::str*"},
+            {"rt/chatter/*", "std::str"},
+            {"rt/chatter/*", "std::str*"},
+
+            {"rt/chatter", "*::std::str"},
+            {"*/rt/chatter", "std::str"},
+            {"*/rt/chatter", "*::std::str"},
+
+            {"rt/chatter", "*::std::str*"},
+            {"*/rt/chatter/*", "std::str"},
+            {"*/rt/chatter/*", "*::std::str*"},
+
+            {"rt/chatter", ""},
+            {"*/rt/chatter/*", ""},
+        };
+}
+
+std::set<std::pair<std::string, std::string>> random_topic_names()
+{
+    std::set<std::pair<std::string, std::string>> all_topics;
+    std::set<std::pair<std::string, std::string>> real_topics = random_real_topic_names();
+    std::set<std::pair<std::string, std::string>> abs_topics = random_abstract_topic_names();
+    std::set_union(
+        real_topics.begin(), real_topics.end(),
+        abs_topics.begin(), abs_topics.end(),
+        std::inserter(all_topics, all_topics.begin()));
+
+    return all_topics;
 }
 
 
@@ -89,11 +200,66 @@ TEST(DatabrokerConfigurationTest, participants_configurations)
 
 /**
  * Test get real topics from whitelist
+ *
+ * CASES:
+ *  Empty configuration
+ *  Empty whitelist
+ *  Whitelist with only non Real topics
+ *  Whitelist with only Real topics
+ *  Whitelist with random topics
  */
 TEST(DatabrokerConfigurationTest, real_topics)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Empty configuration
+    RawConfiguration yaml1;
+    DatabrokerConfiguration config1(yaml1);
+    EXPECT_TRUE(config1.real_topics().empty());
+
+    // Empty whitelist
+    RawConfiguration yaml2;
+    add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic2", "type2");
+    DatabrokerConfiguration config2(yaml2);
+    EXPECT_TRUE(config2.real_topics().empty());
+
+    // Whitelist with only non Real topics
+    RawConfiguration yaml3;
+    add_topics_to_list_to_yaml(yaml3, WHITELIST_TAG, random_abstract_topic_names());
+    DatabrokerConfiguration config3(yaml3);
+    EXPECT_TRUE(config3.real_topics().empty());
+
+    // Whitelist with only non Real topics
+    RawConfiguration yaml4;
+    add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_real_topic_names());
+    DatabrokerConfiguration config4(yaml4);
+    auto result4 = config4.real_topics();
+    EXPECT_FALSE(result4.empty());
+    for (auto topic_name : random_real_topic_names())
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+        EXPECT_TRUE(topic_in_real_list(result4, topic));
+    }
+
+    // Whitelist with random topics
+    RawConfiguration yaml5;
+    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_topic_names());
+    DatabrokerConfiguration config5(yaml5);
+    auto result5 = config5.real_topics();
+    EXPECT_FALSE(result5.empty());
+
+    uint16_t real_topics = 0;
+    for (auto topic_name : random_topic_names())
+    {
+        bool real_topic = RealTopic::is_real_topic(topic_name.first, topic_name.second);
+
+        if (real_topic)
+        {
+            ++real_topics;
+            RealTopic topic(topic_name.first, topic_name.second);
+            EXPECT_TRUE(topic_in_real_list(result5, topic));
+        }
+    }
+    EXPECT_EQ(real_topics, result5.size());
 }
 
 /*********************************
@@ -104,22 +270,109 @@ TEST(DatabrokerConfigurationTest, real_topics)
  * Test get whitelist with wildcards from yaml
  *
  * TODO: when regex is implemented, create a common test case
+ *
+ * CASES:
+ *  Empty configuration
+ *  Empty whitelist
+ *  Whitelist with some examples
+ *  Whitelist with random topics
+ *  Whitelist and blacklist with random topics
  */
 TEST(DatabrokerConfigurationTest, whitelist_wildcard)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Empty configuration
+    RawConfiguration yaml1;
+    DatabrokerConfiguration config1(yaml1);
+    EXPECT_TRUE(config1.whitelist().empty());
+
+    // Empty whitelist
+    RawConfiguration yaml2;
+    add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic2", "type2");
+    DatabrokerConfiguration config2(yaml2);
+    EXPECT_TRUE(config2.whitelist().empty());
+
+    // Empty whitelist
+    RawConfiguration yaml3;
+    add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic2*", "type2*");
+    DatabrokerConfiguration config3(yaml3);
+    auto result3 = config3.whitelist();
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
+
+    // Whitelist with random topics
+    RawConfiguration yaml4;
+    add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_topic_names());
+    DatabrokerConfiguration config4(yaml4);
+    EXPECT_EQ(config4.whitelist().size(), random_topic_names().size());
+
+    // Whitelist and blacklist with random topics
+    RawConfiguration yaml5;
+    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml5, BLACKLIST_TAG, random_real_topic_names());
+    DatabrokerConfiguration config5(yaml5);
+    EXPECT_EQ(config5.whitelist().size(), random_abstract_topic_names().size());
 }
 
 /**
  * Test get blacklist with wildcards from yaml
  *
  * TODO: when regex is implemented, create a common test case
+ *
+ * CASES:
+ *  Empty configuration
+ *  Empty blacklist
+ *  Blacklist with some examples
+ *  Blacklist with random topics
+ *  Blacklist and whitelist with random topics
  */
 TEST(DatabrokerConfigurationTest, blacklist_wildcard)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Empty configuration
+    RawConfiguration yaml1;
+    DatabrokerConfiguration config1(yaml1);
+    EXPECT_TRUE(config1.blacklist().empty());
+
+    // Empty blacklist
+    RawConfiguration yaml2;
+    add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic2", "type2");
+    DatabrokerConfiguration config2(yaml2);
+    EXPECT_TRUE(config2.blacklist().empty());
+
+    // Empty blacklist
+    RawConfiguration yaml3;
+    add_topic_to_list_to_yaml(yaml3, BLACKLIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml3, BLACKLIST_TAG, "topic2*", "type2*");
+    DatabrokerConfiguration config3(yaml3);
+    auto result3 = config3.blacklist();
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
+
+    // Blacklist with random topics
+    RawConfiguration yaml4;
+    add_topics_to_list_to_yaml(yaml4, BLACKLIST_TAG, random_topic_names());
+    DatabrokerConfiguration config4(yaml4);
+    EXPECT_EQ(config4.blacklist().size(), random_topic_names().size());
+
+    // Blacklist and whitelist with random topics
+    RawConfiguration yaml5;
+    add_topics_to_list_to_yaml(yaml5, BLACKLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_real_topic_names());
+    DatabrokerConfiguration config5(yaml5);
+    EXPECT_EQ(config5.blacklist().size(), random_abstract_topic_names().size());
+}
+
+/**
+ * Test get blacklist with wildcards from yaml
+ *
+ * TODO: when regex is implemented, create a common test case
+ *
+ */
+TEST(DatabrokerConfigurationTest, whitelist_and_blacklist)
+{
+
 }
 
 /******************************
