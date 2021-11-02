@@ -26,7 +26,6 @@
 #include <databroker/types/topic/DatabrokerTopic.hpp>
 #include <databroker/types/topic/AbstractTopic.hpp>
 #include <databroker/types/topic/RealTopic.hpp>
-#include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/RawConfiguration.hpp>
 
 namespace eprosima {
@@ -46,6 +45,10 @@ public:
 
     void clear();
 
+    void reload(
+            const std::list<AbstractTopic*>& whitelist,
+            const std::list<AbstractTopic*>& blacklist);
+
     void block_topic(
             const AbstractTopic& new_topic);
 
@@ -54,15 +57,6 @@ public:
 
     bool is_topic_allowed(
             const RealTopic& topic) const;
-
-    bool are_topics_allowed_by_default() const;
-
-    void allow_topics_by_default(
-            bool status);
-
-    void reload(
-            const std::list<AbstractTopic*>& whitelist,
-            const std::list<AbstractTopic*>& blacklist);
 
 protected:
 

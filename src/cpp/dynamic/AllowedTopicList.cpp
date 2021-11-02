@@ -56,19 +56,6 @@ bool AllowedTopicList::is_topic_allowed(
     throw UnsupportedException("AllowedTopicList::is_topic_allowed not supported yet");
 }
 
-bool AllowedTopicList::are_topics_allowed_by_default() const
-{
-    // TODO
-    throw UnsupportedException("AllowedTopicList::are_topics_allowed_by_default not supported yet");
-}
-
-void AllowedTopicList::allow_topics_by_default(
-        bool status)
-{
-    // TODO
-    throw UnsupportedException("AllowedTopicList::allow_topics_by_default not supported yet");
-}
-
 void AllowedTopicList::reload(
         const std::list<AbstractTopic*>& whitelist,
         const std::list<AbstractTopic*>& blacklist)

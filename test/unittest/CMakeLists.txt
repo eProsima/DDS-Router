@@ -59,4 +59,5 @@ endfunction(add_unittest_executable)
 
 add_subdirectory(configuration)
 add_subdirectory(types)
+add_subdirectory(dynamic)
 
