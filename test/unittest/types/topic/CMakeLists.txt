@@ -41,3 +41,30 @@ add_unittest_executable(
         "${TEST_HEADERS}"
         "${TEST_LIST}"
     )
+
+#############
+# RealTopic #
+#############
+
+set(TEST_NAME RealTopicTest)
+
+set(TEST_SOURCES
+        RealTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+    )
+
+set(TEST_HEADERS
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/topic/RealTopic.hpp
+    )
+
+set(TEST_LIST
+        is_real_topic
+        is_non_real_topic
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_HEADERS}"
+        "${TEST_LIST}"
+    )
