@@ -24,6 +24,13 @@ namespace eprosima {
 namespace databroker {
 
 // TODO: Add logs
+AllowedTopicList::AllowedTopicList(
+        const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
+        const std::list<std::shared_ptr<AbstractTopic>>& blacklist)
+    : whitelist_(whitelist)
+    , blacklist_(blacklist)
+{
+}
 
 AllowedTopicList::~AllowedTopicList()
 {
@@ -35,20 +42,6 @@ void AllowedTopicList::clear()
     throw UnsupportedException("AllowedTopicList::clear not supported yet");
 }
 
-void AllowedTopicList::block_topic(
-        const AbstractTopic& new_topic)
-{
-    // TODO
-    throw UnsupportedException("AllowedTopicList::block_topic not supported yet");
-}
-
-void AllowedTopicList::allow_topic(
-        const AbstractTopic& topic)
-{
-    // TODO
-    throw UnsupportedException("AllowedTopicList::allow_topic not supported yet");
-}
-
 bool AllowedTopicList::is_topic_allowed(
         const RealTopic& topic) const
 {
@@ -56,12 +49,11 @@ bool AllowedTopicList::is_topic_allowed(
     throw UnsupportedException("AllowedTopicList::is_topic_allowed not supported yet");
 }
 
-void AllowedTopicList::reload(
-        const std::list<AbstractTopic*>& whitelist,
-        const std::list<AbstractTopic*>& blacklist)
+bool AllowedTopicList::operator ==(
+        const AllowedTopicList& other) const
 {
     // TODO
-    throw UnsupportedException("AllowedTopicList::reload not supported yet");
+    throw UnsupportedException("AllowedTopicList::operator== not supported yet");
 }
 
 } /* namespace databroker */

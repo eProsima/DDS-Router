@@ -38,9 +38,9 @@ public:
 
     virtual ~DatabrokerConfiguration();
 
-    std::list<AbstractTopic*> whitelist() const;
+    std::list<std::shared_ptr<AbstractTopic>> whitelist() const;
 
-    std::list<AbstractTopic*> blacklist() const;
+    std::list<std::shared_ptr<AbstractTopic>> blacklist() const;
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
@@ -50,7 +50,7 @@ public:
 
 protected:
 
-    std::list<AbstractTopic*> common_topic_list_get_(
+    std::list<std::shared_ptr<AbstractTopic>> common_topic_list_get_(
             const char* list_tag) const;
 
     const RawConfiguration raw_configuration_;

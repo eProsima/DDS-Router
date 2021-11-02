@@ -38,31 +38,28 @@ class AllowedTopicList
 {
 public:
 
-    // Allow all topics by default
     AllowedTopicList() = default;
+
+    // Allow all topics by default
+    AllowedTopicList(
+            const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
+            const std::list<std::shared_ptr<AbstractTopic>>& blacklist);
 
     virtual ~AllowedTopicList();
 
     void clear();
 
-    void reload(
-            const std::list<AbstractTopic*>& whitelist,
-            const std::list<AbstractTopic*>& blacklist);
-
-    void block_topic(
-            const AbstractTopic& new_topic);
-
-    void allow_topic(
-            const AbstractTopic& topic);
-
     bool is_topic_allowed(
             const RealTopic& topic) const;
 
+    bool operator ==(
+            const AllowedTopicList& other) const;
+
 protected:
 
-    std::list<AbstractTopic*> blacklist_;
+    std::list<std::shared_ptr<AbstractTopic>> blacklist_;
 
-    std::list<AbstractTopic*> whitelist_;
+    std::list<std::shared_ptr<AbstractTopic>> whitelist_;
 
     bool allow_topics_by_default_;
 };
