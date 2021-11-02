@@ -65,8 +65,23 @@ bool DatabrokerTopic::operator <(
     }
     else
     {
-        return topic_type_.compare(other.topic_type_);
+        // To equal name, compare type
+        // WARNING: do not return value from compare, as -1 != false
+        if (topic_type_.compare(other.topic_type_) < 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+}
+
+std::ostream &operator<<(std::ostream &os, const DatabrokerTopic& a)
+{
+    os << "{<" << a.topic_name() << ">:<" << a.topic_type() << ">}";
+    return os;
 }
 
 } /* namespace databroker */
