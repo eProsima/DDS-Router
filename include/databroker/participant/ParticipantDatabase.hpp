@@ -31,6 +31,8 @@ class ParticipantDatabase
 {
 public:
 
+    ParticipantDatabase() = default;
+
     virtual ~ParticipantDatabase();
 
     // WARNING only used by Databroker
