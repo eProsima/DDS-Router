@@ -88,9 +88,9 @@ set(TEST_HEADERS
     )
 
 set(TEST_LIST
-        contains
+        contains_wildcard
         matches
-        non_contains
+        non_contains_wildcard
         non_matches
     )
 
