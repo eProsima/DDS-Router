@@ -17,6 +17,7 @@
  *
  */
 
+#include <databroker/exceptions/UnsupportedException.hpp>
 #include <databroker/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
@@ -31,7 +32,7 @@ bool WildcardTopic::contains(
 {
     // TODO
     static_cast<void> (other);
-    return false;
+    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
 }
 
 bool WildcardTopic::matches(
@@ -39,7 +40,7 @@ bool WildcardTopic::matches(
 {
     // TODO
     static_cast<void> (other);
-    return false;
+    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
 }
 
 } /* namespace databroker */
