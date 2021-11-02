@@ -79,6 +79,8 @@ jobs:
 
       - name: Install GTest
         uses: ./databroker/.github/actions/install-gtest-windows
+        with:
+          cmake_build_type: "Debug"
 
       - name: Install yaml-cpp
         uses: ./databroker/.github/actions/install-yamlcpp-windows
