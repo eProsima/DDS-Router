@@ -19,13 +19,50 @@
 
 using namespace eprosima::databroker;
 
+using pair_topic_type = std::pair<std::string, std::string>;
+
+// TODO: extend contains tests for regex topics
+
 /**
  * Test WildcardTopic contains method for positive cases
  */
-TEST(WildcardTopicTest, contains)
+TEST(WildcardTopicTest, contains_wildcard)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<                            // Test cases
+        std::pair<
+            pair_topic_type,                // Wildcard Topic
+            std::vector<pair_topic_type>    // List of accepted RealTopics
+        >> test_cases = {
+
+            {{"topic", "*"},
+                {{"topic", "type"}, {"topic", "type*"}, {"topic", "*type"}, {"topic", "type1*"}}},
+
+            {{"topic", "type*"},
+                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type1*"}}},
+
+            {{"*", "type"},
+                {{"topic", "type"}, {"*topic", "type"}, {"topic*", "type"}, {"*rt/topic", "type"}}},
+
+            {{"*topic", "type"},
+                {{"topic", "type"}, {"std_topic", "type"}, {"*rt/topic", "type"}}},
+
+            {{"topic*", "type*"},
+                {{"topic", "type"}}},
+    };
+
+    for (auto test_case : test_cases)
+    {
+        // Create Wildcard topic
+        WildcardTopic wt(test_case.first.first, test_case.first.second);
+
+        // For every topic to test, create a RealTopic and test
+        for (auto real_topic_names : test_case.second)
+        {
+            WildcardTopic real_topic(real_topic_names.first, real_topic_names.second);
+
+            ASSERT_TRUE(wt.contains(real_topic));
+        }
+    }
 }
 
 /**
@@ -33,17 +70,83 @@ TEST(WildcardTopicTest, contains)
  */
 TEST(WildcardTopicTest, matches)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<                            // Test cases
+        std::pair<
+            pair_topic_type,                // Wildcard Topic
+            std::vector<pair_topic_type>    // List of accepted RealTopics
+        >> test_cases = {
+
+            {{"topic", "*"},
+                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
+
+            {{"topic", "type*"},
+                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
+
+            {{"*", "type"},
+                {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
+
+            {{"*topic", "type"},
+                {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
+
+            {{"topic", "type"},
+                {{"topic", "type"}}},
+    };
+
+    for (auto test_case : test_cases)
+    {
+        // Create Wildcard topic
+        WildcardTopic wt(test_case.first.first, test_case.first.second);
+
+        // For every topic to test, create a RealTopic and test
+        for (auto real_topic_names : test_case.second)
+        {
+            RealTopic real_topic(real_topic_names.first, real_topic_names.second);
+
+            ASSERT_TRUE(wt.matches(real_topic));
+        }
+    }
 }
 
 /**
  * Test WildcardTopic contains method for negative cases
  */
-TEST(WildcardTopicTest, non_contains)
+TEST(WildcardTopicTest, non_contains_wildcard)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<                            // Test cases
+        std::pair<
+            pair_topic_type,                // Wildcard Topic
+            std::vector<pair_topic_type>    // List of accepted RealTopics
+        >> test_cases = {
+
+            {{"topic", "*"},
+                {{"topic1", "type"}, {"topic*", "type"}, {"*", "type"}, {"*topic", "*"}, {"*", "*"}}},
+
+            {{"topic", "type*"},
+                {{"topic*", "type"}, {"topic", "*type"}, {"*", "*"}}},
+
+            {{"*", "type"},
+                {{"topic", "type1"}, {"topic", "type*"}, {"topic*", "*"}, {"*", "type*"}, {"*", "*"}}},
+
+            {{"*topic", "type"},
+                {{"topic", "type*"}, {"topic*", "type"}, {"*", "*"}}},
+
+            {{"topic*", "type*"},
+                {{"*topic", "type"}, {"topic", "*type"}, {"*", "*"}}},
+    };
+
+    for (auto test_case : test_cases)
+    {
+        // Create Wildcard topic
+        WildcardTopic wt(test_case.first.first, test_case.first.second);
+
+        // For every topic to test, create a RealTopic and test
+        for (auto real_topic_names : test_case.second)
+        {
+            WildcardTopic real_topic(real_topic_names.first, real_topic_names.second);
+
+            ASSERT_FALSE(wt.contains(real_topic));
+        }
+    }
 }
 
 /**
@@ -51,8 +154,41 @@ TEST(WildcardTopicTest, non_contains)
  */
 TEST(WildcardTopicTest, non_matches)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<                            // Test cases
+        std::pair<
+            pair_topic_type,                // Wildcard Topic
+            std::vector<pair_topic_type>    // List of accepted RealTopics
+        >> test_cases = {
+
+            {{"topic", "*"},
+                {{"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type1"}}},
+
+            {{"topic", "type*"},
+                {{"topic1", "type"}, {"topic", "std::type"}, {"topic", "std::type1"}}},
+
+            {{"*", "type"},
+                {{"topic", "type1"}, {"std_topic", "type1"}, {"topic", "std::type"}}},
+
+            {{"*topic", "type"},
+                {{"topic", "type1"}, {"std_topic1", "type"}, {"rt/topic1", "type"}}},
+
+            {{"topic", "type"},
+                {{"topic", "type1"}, {"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type"}}},
+    };
+
+    for (auto test_case : test_cases)
+    {
+        // Create Wildcard topic
+        WildcardTopic wt(test_case.first.first, test_case.first.second);
+
+        // For every topic to test, create a RealTopic and test
+        for (auto real_topic_names : test_case.second)
+        {
+            RealTopic real_topic(real_topic_names.first, real_topic_names.second);
+
+            ASSERT_FALSE(wt.matches(real_topic));
+        }
+    }
 }
 
 int main(
