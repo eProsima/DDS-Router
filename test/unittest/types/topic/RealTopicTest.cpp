@@ -19,13 +19,27 @@
 
 using namespace eprosima::databroker;
 
+using pair_topic_type = std::pair<std::string, std::string>;
+
 /**
  * Test RealTopic is_real_topic method for positive cases
  */
 TEST(RealTopicTest, is_real_topic)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> topics = {
+        {"topic1", "type1"},
+        {"topic1", "type2"},
+        {"topic2", "type1"},
+
+        {"rt/chatter", "std::std_msg::string"},
+
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    for (pair_topic_type topic : topics)
+    {
+        ASSERT_TRUE(RealTopic::is_real_topic(topic.first, topic.second));
+    }
 }
 
 /**
@@ -33,8 +47,34 @@ TEST(RealTopicTest, is_real_topic)
  */
 TEST(RealTopicTest, is_non_real_topic)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> topics = {
+        {"topic", "type*"},
+        {"topic*", "type"},
+        {"topic*", "type*"},
+
+        {"topic", "*type"},
+        {"*topic", "type"},
+        {"*topic", "*type"},
+
+        {"topic", "*type*"},
+        {"*topic*", "type"},
+        {"*topic*", "*type*"},
+
+        {"topic", "ty*pe"},
+        {"top*ic", "type"},
+        {"top*ic", "ty*pe"},
+
+        {"*", "type"},
+        {"topic", "*"},
+        {"*", "*"},
+
+        // TODO add regex cases
+    };
+
+    for (pair_topic_type topic : topics)
+    {
+        ASSERT_FALSE(RealTopic::is_real_topic(topic.first, topic.second));
+    }
 }
 
 int main(
