@@ -33,14 +33,35 @@ ParticipantId::ParticipantId(
 {
 }
 
+ParticipantId::ParticipantId()
+    : id_(INVALID_ID)
+{
+}
+
 ParticipantId::~ParticipantId()
 {
+}
+
+ParticipantId ParticipantId::invalid()
+{
+    return ParticipantId();
 }
 
 bool ParticipantId::is_valid_id(
         const std::string& tag)
 {
     return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
+}
+
+bool ParticipantId::is_valid() const
+{
+    return id_ != INVALID_ID;
+}
+
+bool ParticipantId::operator ==(
+        const ParticipantId& other) const
+{
+    return id_ == other.id_;
 }
 
 bool ParticipantId::operator <(

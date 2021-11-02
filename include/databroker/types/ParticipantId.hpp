@@ -36,12 +36,12 @@ public:
 
     virtual ~ParticipantId();
 
-    bool is_valid() const;
-
     static ParticipantId invalid();
 
     static bool is_valid_id(
             const std::string& id);
+
+    bool is_valid() const;
 
     // OPERATOR OVERLOAD
     bool operator ==(
