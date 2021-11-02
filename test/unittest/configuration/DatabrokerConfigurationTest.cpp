@@ -70,6 +70,14 @@ void add_topics_to_list_to_yaml(
 }
 
 /*
+ * Add a tag with empty value
+ */
+void add_empty_tag_to_yaml(RawConfiguration& yaml, std::string tag)
+{
+    yaml[tag] = RawConfiguration();
+}
+
+/*
  * Check if a topic is inside a list returned by whitelist or blacklist Databroker methods
  */
 bool topic_in_list(
@@ -395,6 +403,7 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard)
 
     // Empty whitelist
     RawConfiguration yaml2;
+    add_empty_tag_to_yaml(yaml2, WHITELIST_TAG);
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic2", "type2");
     DatabrokerConfiguration config2(yaml2);
@@ -444,6 +453,8 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
 
     // Empty blacklist
     RawConfiguration yaml2;
+    add_empty_tag_to_yaml(yaml2, BLACKLIST_TAG);
+    std::cout << yaml2 << std::endl;
     add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic2", "type2");
     DatabrokerConfiguration config2(yaml2);
@@ -523,28 +534,63 @@ TEST(DatabrokerConfigurationTest, constructor_fail)
  */
 TEST(DatabrokerConfigurationTest, participants_configurations_fail)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // There is currently no way to induce an error when getting participant configurations
+    ASSERT_TRUE(true);
 }
 
 /**
  * Test get real topics from whitelist negative cases
+ *
+ * CASES:
+ *  Map instead of array in topics
  */
 TEST(DatabrokerConfigurationTest, real_topics_fail)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Map instead of array in whitelist
+    RawConfiguration map_config;
+    map_config["key1"] = "value1";
+    RawConfiguration yaml1;
+    yaml1[WHITELIST_TAG] = map_config;
+    DatabrokerConfiguration dc(yaml1);
+    EXPECT_THROW(dc.real_topics(), ConfigurationException);
 }
 
 /**
  * Test get whitelist with wildcards from yaml negative cases
  *
  * TODO: when regex is implemented, create a common test case
+ *
+ * CASES:
+ *  Map instead of array in topics
  */
 TEST(DatabrokerConfigurationTest, whitelist_wildcard_fail)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Map instead of array in whitelist
+    RawConfiguration map_config;
+    map_config["key1"] = "value1";
+    RawConfiguration yaml1;
+    yaml1[WHITELIST_TAG] = map_config;
+    DatabrokerConfiguration dc(yaml1);
+    EXPECT_THROW(dc.whitelist(), ConfigurationException);
+}
+
+/**
+ * Test get blacklist with wildcards from yaml negative cases
+ *
+ * TODO: when regex is implemented, create a common test case
+ *
+ * CASES:
+ *  Map instead of array in topics
+ */
+TEST(DatabrokerConfigurationTest, blacklist_wildcard_fail)
+{
+    // Map instead of array in blacklist
+    RawConfiguration map_config;
+    map_config["key1"] = "value1";
+    RawConfiguration yaml1;
+    yaml1[BLACKLIST_TAG] = map_config;
+    DatabrokerConfiguration dc(yaml1);
+    EXPECT_THROW(dc.blacklist(), ConfigurationException);
 }
 
 int main(
