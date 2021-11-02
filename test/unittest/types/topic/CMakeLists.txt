@@ -12,5 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(configuration_tags)
-add_subdirectory(topic)
+###################
+# DatabrokerTopic #
+###################
+
+set(TEST_NAME DatabrokerTopicTest)
+
+set(TEST_SOURCES
+        DatabrokerTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
+    )
+
+set(TEST_HEADERS
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/topic/DatabrokerTopic.hpp
+    )
+
+set(TEST_LIST
+        constructor
+        equal_operator
+        minor_operator
+        non_equal_operator
+        non_minor_operator
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_HEADERS}"
+        "${TEST_LIST}"
+    )
