@@ -19,13 +19,67 @@
 
 using namespace eprosima::databroker;
 
+using pair_topic_type = std::pair<std::string, std::string>;
+
+/*
+ * Return a list of non repeated random topic names
+ */
+std::vector<pair_topic_type> random_topic_names()
+{
+    return
+        {
+            {"topic1", "type1"},
+            {"topic2", "type2"},
+            {"topic3", "type3"},
+            {"topic1", "type2"},
+            {"topic1", "type3"},
+
+            {"*", "*"},
+            {"*rt", "*std"},
+            {"rt*", "std*"},
+            {"rt", "std*"},
+            {"rt*", "std"},
+
+            {".", "."},
+        };
+}
+
+/*
+ * Return a list of non repeated well sorted topic names
+ */
+std::vector<pair_topic_type> well_sorted_topic_names()
+{
+    return
+        {
+            {"*", "*"}, // Lowest element
+            {"*", "a"},
+            {"*", "b"},
+            {"*a", "*"},
+
+            {"Topic1", "Type1"},
+            {"Topic1", "type1"},
+
+            {"topic1", "type1"},
+            {"topic1", "type2"},
+            {"topic1", "type3"},
+            {"topic2", "type1"},
+            {"topic2", "type2"},
+            {"topic2", "type3"},
+            {"topic3", "type1"}, // Biggest element
+        };
+}
+
 /**
- * Test DatabrokerTopic constructor
+ * Test DatabrokerTopic constructor and std getter methods
  */
 TEST(DatabrokerTopicTest, constructor)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    for (pair_topic_type topic : random_topic_names())
+    {
+        DatabrokerTopic dt(topic.first, topic.second);
+        ASSERT_EQ(dt.topic_name(), topic.first);
+        ASSERT_EQ(dt.topic_type(), topic.second);
+    }
 }
 
 /**
@@ -33,8 +87,12 @@ TEST(DatabrokerTopicTest, constructor)
  */
 TEST(DatabrokerTopicTest, equal_operator)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    for (pair_topic_type topic : random_topic_names())
+    {
+        DatabrokerTopic dt1(topic.first, topic.second);
+        DatabrokerTopic dt2(topic.first, topic.second);
+        ASSERT_TRUE(dt1 == dt2);
+    }
 }
 
 /**
@@ -42,17 +100,42 @@ TEST(DatabrokerTopicTest, equal_operator)
  */
 TEST(DatabrokerTopicTest, minor_operator)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
+
+    for (int i=0; i<well_sorted_names.size(); ++i)
+    {
+        // Skip same topic
+        for (int j=(i+1); j<well_sorted_names.size(); ++j)
+        {
+            DatabrokerTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
+            DatabrokerTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
+            ASSERT_TRUE(dt1 < dt2) << dt1 << " < " << dt2;
+        }
+    }
 }
 
 /**
  * Test DatabrokerTopic == operator in negative cases
+ *
+ * Test that every name in random topics is different with the others
  */
 TEST(DatabrokerTopicTest, non_equal_operator)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> names = random_topic_names();
+
+    for (int i=0; i<names.size(); ++i)
+    {
+        for (int j=0; j<names.size(); ++j)
+        {
+            // Skip same topic
+            if (i != j)
+            {
+                DatabrokerTopic dt1(names[i].first, names[i].second);
+                DatabrokerTopic dt2(names[j].first, names[j].second);
+                ASSERT_FALSE(dt1 == dt2);
+            }
+        }
+    }
 }
 
 /**
@@ -60,8 +143,17 @@ TEST(DatabrokerTopicTest, non_equal_operator)
  */
 TEST(DatabrokerTopicTest, non_minor_operator)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
+
+    for (int i=0; i<well_sorted_names.size(); ++i)
+    {
+        for (int j=i; j<well_sorted_names.size(); ++j)
+        {
+            DatabrokerTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
+            DatabrokerTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
+            ASSERT_FALSE(dt2 < dt1) << dt2 << " < " << dt1;
+        }
+    }
 }
 
 int main(
