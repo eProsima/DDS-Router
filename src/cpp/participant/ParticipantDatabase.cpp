@@ -29,7 +29,7 @@ ParticipantDatabase::~ParticipantDatabase()
 {
 }
 
-std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::add_participant(
+void ParticipantDatabase::add_participant(
         ParticipantId id,
         std::shared_ptr<IDatabrokerParticipant> participant)
 {

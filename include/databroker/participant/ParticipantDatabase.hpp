@@ -36,7 +36,7 @@ public:
     virtual ~ParticipantDatabase();
 
     // WARNING only used by Databroker
-    std::shared_ptr<IDatabrokerParticipant> add_participant(
+    void add_participant(
             ParticipantId id,
             std::shared_ptr<IDatabrokerParticipant> participant);
 
