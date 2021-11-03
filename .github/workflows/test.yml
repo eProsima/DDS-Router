@@ -13,8 +13,8 @@ jobs:
 
   windows-build-test-release:
     runs-on: windows-latest
-    # environment:
-    #   name: codecov
+    environment:
+      name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -53,7 +53,7 @@ jobs:
         shell: pwsh
         run: >
           cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-            -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
+            -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_LIBRARY_TESTS=ON -B build\databroker -A x64 -T host=x64 databroker;
           cmake --build build\databroker --config Release --target install
 
       - name: Run tests
@@ -62,8 +62,8 @@ jobs:
 
   windows-build-test-debug:
     runs-on: windows-latest
-    # environment:
-    #   name: codecov
+    environment:
+      name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -79,6 +79,8 @@ jobs:
 
       - name: Install GTest
         uses: ./databroker/.github/actions/install-gtest-windows
+        with:
+          cmake_build_type: "Debug"
 
       - name: Install yaml-cpp
         uses: ./databroker/.github/actions/install-yamlcpp-windows
@@ -104,7 +106,7 @@ jobs:
         shell: pwsh
         run: >
           cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-          -DCMAKE_CXX_FLAGS="/WX /EHsc" -B build\databroker -A x64 -T host=x64 databroker;
+          -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_LIBRARY_TESTS=ON -B build\databroker -A x64 -T host=x64 databroker;
           cmake --build build\databroker --config Debug --target install
 
       - name: Run tests
@@ -113,8 +115,8 @@ jobs:
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
-    # environment:
-    #   name: codecov
+    environment:
+      name: codecov
 
     steps:
       - name: Sync eProsima/databroker repository
@@ -157,26 +159,33 @@ jobs:
             --event-handlers=console_direct+ \
             --return-code-on-test-failure
 
-      # - name: Generate coverage report
-      #   run: |
-      #     cp src/databroker/codecov.yml .
-      #     mkdir coverage-report
-      #     gcovr \
-      #     --root src/databroker/ \
-      #     --object-directory build/databroker \
-      #     --output coverage-report/coverage.xml \
-      #     --xml-pretty \
-      #     --exclude='.*docs/.*' \
-      #     --exclude='.*test/.*' \
-      #     --exclude='.*mock/.*' \
-      #     --exclude='.*github/.*' \
-      #     --exclude-unreachable-branches
+      - name: Generate coverage report
+        run: |
+          cp src/databroker/codecov.yml .
+          mkdir coverage-report
+          gcovr \
+          --root src/databroker/ \
+          --object-directory build/databroker \
+          --output coverage-report/coverage.xml \
+          --xml-pretty \
+          --exclude='.*docs/.*' \
+          --exclude='.*test/.*' \
+          --exclude='.*github/.*' \
+          --exclude-unreachable-branches
 
-      # - name: Upload coverage
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: coverage-report
-      #     path: coverage-report/
+      - name: Upload coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage-report
+          path: coverage-report/
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage-report/coverage.xml
+          root_dir: src/databroker
+          fail_ci_if_error: true
 
       # - name: Upload documentation
       #   uses: actions/upload-artifact@v1
@@ -184,13 +193,12 @@ jobs:
       #     name: Documentation HTML
       #     path: install/databroker/docs/fastdds_monitor_docs/sphinx/html/
 
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
+      # - name: Upload spelling errors
+      #   uses: actions/upload-artifact@v1
       #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     file: coverage-report/coverage.xml
-      #     root_dir: src/databroker
-      #     fail_ci_if_error: true
+      #     name: spelling_errors.txt
+      #     path: build/databroker/docs/test/spelling/output.txt
+      #   continue-on-error: true
 
       - name: Upload Logs
         uses: actions/upload-artifact@v1
@@ -198,13 +206,6 @@ jobs:
           name: colcon-logs-ubuntu
           path: log/
         if: always()
-
-      # - name: Upload spelling errors
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: spelling_errors.txt
-      #     path: build/databroker/docs/test/spelling/output.txt
-      #   continue-on-error: true
 
   clang-tidy:
     runs-on: ubuntu-latest

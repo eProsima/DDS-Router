@@ -105,3 +105,26 @@ target_link_libraries(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+
+###############################################################################
+# Test
+###############################################################################
+option(BUILD_TESTS "Build eProsima Databroker application and documentation tests" OFF)
+option(BUILD_APP_TESTS "Build eProsima Databroker application tests" OFF)
+option(BUILD_DOCUMENTATION_TESTS "Build eProsima Databroker documentation tests" OFF)
+
+if (BUILD_TESTS)
+    set(BUILD_APP_TESTS ON)
+    set(BUILD_DOCUMENTATION_TESTS ON)
+endif()
+
+if(BUILD_APP_TESTS OR BUILD_DOCUMENTATION_TESTS)
+    # CTest needs to be included here, otherwise it is not possible to run the tests from the root
+    # of the build directory
+    enable_testing()
+    include(CTest)
+endif()
+
+if (BUILD_APP_TESTS)
+    add_subdirectory(test)
+endif()

@@ -12,42 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file ParticipantId.cpp
- *
- */
+#include <iostream>
 
-#include <set>
+#include <gtest_aux.hpp>
+#include <gtest/gtest.h>
 
-#include <databroker/types/ParticipantId.hpp>
 #include <databroker/types/configuration_tags.hpp>
 
-namespace eprosima {
-namespace databroker {
+using namespace eprosima::databroker;
 
-const std::string ParticipantId::INVALID_ID = "__invalid_databroker_participant__";
-
-ParticipantId::ParticipantId(
-        const std::string& id)
-    : id_(id)
+TEST(configuration_tags, databroker_tags)
 {
+    std::set<std::string> retrieved_tags = databroker_tags();
+
+    std::set<std::string> current_tags =
+    {
+        WHITELIST_TAG,
+        BLACKLIST_TAG,
+        TOPIC_NAME_TAG,
+        TOPIC_TYPE_NAME_TAG
+    };
+
+    ASSERT_EQ(retrieved_tags, current_tags);
 }
 
-ParticipantId::~ParticipantId()
+int main(
+        int argc,
+        char** argv)
 {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
-
-bool ParticipantId::is_valid_id(
-        const std::string& tag)
-{
-    return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
-}
-
-bool ParticipantId::operator <(
-        const ParticipantId& other) const
-{
-    return id_ < other.id_;
-}
-
-} /* namespace databroker */
-} /* namespace eprosima */

@@ -1,5 +1,10 @@
 name: Install GTest
 description: Install and setup GTest for linking and building test application in Windows
+inputs:
+  cmake_build_type:
+    description: 'Specifies the build type on single-configuration generators'
+    required: true
+    default: 'Release'
 runs:
   using: composite
   steps:
@@ -10,6 +15,6 @@ runs:
         git clone https://github.com/google/googletest.git;
         cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\gtest' -Dgtest_force_shared_crt=ON -DBUILD_GMOCK=ON `
           -B build\gtest -A x64 -T host=x64 googletest;
-        cmake --build build\gtest --config Release --target install
+        cmake --build build\gtest --config ${{ inputs.cmake_build_type }} --target install
       }
     shell: pwsh
