@@ -13,31 +13,28 @@
 // limitations under the License.
 
 /**
- * @file RealTopic.hpp
+ * @file InitializationException.hpp
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_
+#ifndef _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
+#define _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
 
-#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/exceptions/DatabrokerException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
 /**
- * TODO
+ * @brief TODO
  */
-struct RealTopic : public DatabrokerTopic
+class InitializationException : public DatabrokerException
 {
-    // Inherit parent constructors
-    using DatabrokerTopic::DatabrokerTopic;
-
-    static bool is_real_topic(
-            const std::string& topic_name,
-            const std::string& type_name);
+    // Use parent class constructors
+    using DatabrokerException::DatabrokerException;
 };
 
-} /* namespace databroker */
-} /* namespace eprosima */
+} // namespace databroker
+} // namespace eprosima
 
-#endif /* _DATABROKER_TYPES_TOPIC_REALTOPIC_HPP_ */
+#endif // _DATABROKER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
+

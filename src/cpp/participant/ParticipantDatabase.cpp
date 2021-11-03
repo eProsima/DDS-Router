@@ -13,47 +13,36 @@
 // limitations under the License.
 
 /**
- * @file Bridge.hpp
+ * @file ParticipantDatabase.cpp
+ *
  */
 
-#ifndef _DATABROKER_COMMUNICATION_BRIDGE_HPP_
-#define _DATABROKER_COMMUNICATION_BRIDGE_HPP_
-
-#include <databroker/communication/Track.hpp>
-#include <databroker/participant/IDatabrokerParticipant.hpp>
 #include <databroker/participant/ParticipantDatabase.hpp>
-#include <databroker/types/ParticipantId.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-class Bridge
+// TODO: Add logs
+
+ParticipantDatabase::~ParticipantDatabase()
 {
-public:
+}
 
-    Bridge(
-            const RealTopic& topic,
-            std::shared_ptr<ParticipantDatabase> participant_database);
+void ParticipantDatabase::add_participant(
+        ParticipantId id,
+        std::shared_ptr<IDatabrokerParticipant> participant)
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
+}
 
-    virtual ~Bridge();
-
-    ReturnCode enable();
-
-    ReturnCode disable();
-
-protected:
-
-    const RealTopic topic_;
-
-    const std::shared_ptr<ParticipantDatabase> participants_;
-
-    std::map<ParticipantId, Track> tracks;
-};
+std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(
+        const ParticipantId& id) const
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_COMMUNICATION_BRIDGE_HPP_ */

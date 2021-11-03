@@ -13,46 +13,23 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerTopic.hpp
+ * @file RealTopic.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-
-#include <string>
+#include <databroker/types/topic/RealTopic.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-struct DatabrokerTopic
+bool RealTopic::is_real_topic(
+        const std::string& topic_name,
+        const std::string& type_name)
 {
-    DatabrokerTopic(
-            std::string topic_name,
-            std::string topic_type);
-
-    virtual ~DatabrokerTopic();
-
-    const std::string& topic_name() const;
-
-    const std::string& topic_type() const;
-
-    // OPERATOR OVERLOAD
-    bool operator ==(
-            const DatabrokerTopic& other) const;
-
-    bool operator <(
-            const DatabrokerTopic& other) const;
-
-protected:
-
-    std::string topic_name_;
-    std::string topic_type_;
-};
+    // TODO
+    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_ */

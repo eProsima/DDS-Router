@@ -13,47 +13,33 @@
 // limitations under the License.
 
 /**
- * @file Bridge.hpp
+ * @file Track.cpp
+ *
  */
 
-#ifndef _DATABROKER_COMMUNICATION_BRIDGE_HPP_
-#define _DATABROKER_COMMUNICATION_BRIDGE_HPP_
-
 #include <databroker/communication/Track.hpp>
-#include <databroker/participant/IDatabrokerParticipant.hpp>
-#include <databroker/participant/ParticipantDatabase.hpp>
-#include <databroker/types/ParticipantId.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-class Bridge
+// TODO: Add logs
+
+Track::Track(
+        const RealTopic& topic,
+        std::shared_ptr<IDatabrokerParticipant> source,
+        std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>&& targets)
+    : topic_(topic)
+    , source_participant_(source)
+    , target_participants_(targets)
 {
-public:
+    // TODO
+}
 
-    Bridge(
-            const RealTopic& topic,
-            std::shared_ptr<ParticipantDatabase> participant_database);
-
-    virtual ~Bridge();
-
-    ReturnCode enable();
-
-    ReturnCode disable();
-
-protected:
-
-    const RealTopic topic_;
-
-    const std::shared_ptr<ParticipantDatabase> participants_;
-
-    std::map<ParticipantId, Track> tracks;
-};
+Track::~Track()
+{
+    // TODO
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_COMMUNICATION_BRIDGE_HPP_ */

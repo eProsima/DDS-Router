@@ -20,10 +20,11 @@
 #define _DATABROKER_PARTICIPANT_IDATABROKERPARTICIPANT_HPP_
 
 #include <databroker/communication/PayloadPool.hpp>
-#include <databroker/configuration/DatabrokerParticipantConfiguration.hpp>
+#include <databroker/dynamic/DiscoveryDatabase.hpp>
 #include <databroker/reader/IDatabrokerReader.hpp>
 #include <databroker/types/Endpoint.hpp>
 #include <databroker/types/ParticipantId.hpp>
+#include <databroker/types/RawConfiguration.hpp>
 #include <databroker/writer/IDatabrokerWriter.hpp>
 
 namespace eprosima {
@@ -40,8 +41,7 @@ public:
             ParticipantId id,
             RawConfiguration,
             std::shared_ptr<PayloadPool>,
-            std::shared_ptr<DiscoveryDatabase>,
-            std::function<void(Endpoint)>);
+            std::shared_ptr<DiscoveryDatabase>);
 
     std::shared_ptr<IDatabrokerWriter> create_writer(
             RealTopic);

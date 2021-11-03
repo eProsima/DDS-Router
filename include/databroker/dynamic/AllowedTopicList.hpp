@@ -37,23 +37,19 @@ namespace databroker {
  */
 class AllowedTopicList
 {
+public:
+
     // Allow all topics by default
-    AllowedTopicList();
+    AllowedTopicList() = default;
 
-    AllowedTopicList(
-            RawConfiguration configuration);
+    virtual ~AllowedTopicList();
 
-    AllowedTopicList(
-            bool allow_topics_by_default,
-            const std::vector<AbstractTopic>& whitelist,
-            const std::vector<AbstractTopic>& blacklist); // blocked_topics or allowed_topics depending on use_whitelist
+    void clear();
 
-    ReturnCode clear();
-
-    ReturnCode block_topic(
+    void block_topic(
             const AbstractTopic& new_topic);
 
-    ReturnCode allow_topic(
+    void allow_topic(
             const AbstractTopic& topic);
 
     bool is_topic_allowed(
@@ -61,16 +57,20 @@ class AllowedTopicList
 
     bool are_topics_allowed_by_default() const;
 
-    ReturnCode allow_topics_by_default(
+    void allow_topics_by_default(
             bool status);
+
+    void reload(
+            const std::list<AbstractTopic*>& whitelist,
+            const std::list<AbstractTopic*>& blacklist);
 
 protected:
 
-    std::list<AbstractTopic> blacklist_;
+    std::list<AbstractTopic*> blacklist_;
 
-    std::list<AbstractTopic> whitelist_;
+    std::list<AbstractTopic*> whitelist_;
 
-    bool allow_topics_by_default_,
+    bool allow_topics_by_default_;
 };
 
 } /* namespace databroker */

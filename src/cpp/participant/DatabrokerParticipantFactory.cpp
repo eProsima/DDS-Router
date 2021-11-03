@@ -13,46 +13,31 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerTopic.hpp
+ * @file DatabrokerParticipantFactory.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-
-#include <string>
+#include <databroker/participant/DatabrokerParticipantFactory.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-struct DatabrokerTopic
+// TODO: Add logs
+
+DatabrokerParticipantFactory::~DatabrokerParticipantFactory()
 {
-    DatabrokerTopic(
-            std::string topic_name,
-            std::string topic_type);
+}
 
-    virtual ~DatabrokerTopic();
-
-    const std::string& topic_name() const;
-
-    const std::string& topic_type() const;
-
-    // OPERATOR OVERLOAD
-    bool operator ==(
-            const DatabrokerTopic& other) const;
-
-    bool operator <(
-            const DatabrokerTopic& other) const;
-
-protected:
-
-    std::string topic_name_;
-    std::string topic_type_;
-};
+std::shared_ptr<IDatabrokerParticipant> DatabrokerParticipantFactory::create_participant(
+        ParticipantId,
+        RawConfiguration,
+        std::shared_ptr<PayloadPool>,
+        std::shared_ptr<DiscoveryDatabase>)
+{
+    // TODO
+    throw UnsupportedException("DatabrokerParticipantFactory::create_participant not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_ */

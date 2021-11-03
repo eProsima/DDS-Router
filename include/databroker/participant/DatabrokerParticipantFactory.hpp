@@ -20,6 +20,7 @@
 #define _DATABROKER_PARTICIPANT_DATABROKERPARTICIPANTFACTORY_HPP_
 
 #include <databroker/participant/IDatabrokerParticipant.hpp>
+#include <databroker/types/RawConfiguration.hpp>
 #include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {
@@ -29,12 +30,15 @@ class DatabrokerParticipantFactory
 {
 public:
 
+    DatabrokerParticipantFactory() = default;
+
+    virtual ~DatabrokerParticipantFactory();
+
     std::shared_ptr<IDatabrokerParticipant> create_participant(
             ParticipantId id,
-            RawConfiguration,
-            std::shared_ptr<PayloadPool>,
-            std::shared_ptr<DiscoveryDatabase>,
-            std::function<void(Endpoint)>);
+            RawConfiguration participant_configuration,
+            std::shared_ptr<PayloadPool> payload,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
 };
 
 } /* namespace databroker */

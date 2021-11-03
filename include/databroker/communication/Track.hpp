@@ -19,7 +19,6 @@
 #ifndef _DATABROKER_COMMUNICATION_TRACK_HPP_
 #define _DATABROKER_COMMUNICATION_TRACK_HPP_
 
-#include <databroker/communication/PayloadPool.hpp>
 #include <databroker/participant/IDatabrokerParticipant.hpp>
 #include <databroker/reader/IDatabrokerReader.hpp>
 #include <databroker/writer/IDatabrokerWriter.hpp>
@@ -35,9 +34,11 @@ class Track
 public:
 
     Track(
-            RealTopic,
-            IDatabrokerParticipant source,
-            std::list<std::shared_ptr<IDatabrokerParticipant>> targets);
+            const RealTopic& topic,
+            std::shared_ptr<IDatabrokerParticipant> source,
+            std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>&& targets);
+
+    virtual ~Track();
 
     ReturnCode enable();
 
@@ -49,15 +50,17 @@ protected:
 
 protected:
 
+    RealTopic topic_;
+
     std::shared_ptr<IDatabrokerParticipant> source_participant_;
 
-    std::list<std::shared_ptr<IDatabrokerParticipant>> target_participants_;
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> target_participants_;
 
     std::shared_ptr<IDatabrokerReader> reader_;
 
     std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_;
 
-    std::atomic<bool> are_data_available_;
+    bool are_data_available_;
 };
 
 } /* namespace databroker */

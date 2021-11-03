@@ -13,46 +13,43 @@
 // limitations under the License.
 
 /**
- * @file DatabrokerTopic.hpp
+ * @file Bridge.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-#define _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
-
-#include <string>
+#include <databroker/communication/Bridge.hpp>
+#include <databroker/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-struct DatabrokerTopic
+// TODO: Add logs
+
+Bridge::Bridge(
+        const RealTopic& topic,
+        std::shared_ptr<ParticipantDatabase> participant_database)
+    : topic_(topic)
+    , participants_(participant_database)
 {
-    DatabrokerTopic(
-            std::string topic_name,
-            std::string topic_type);
+    // TODO
+}
 
-    virtual ~DatabrokerTopic();
+Bridge::~Bridge()
+{
+    // TODO
+}
 
-    const std::string& topic_name() const;
+ReturnCode Bridge::enable()
+{
+    // TODO
+    throw UnsupportedException("Bridge::enable not supported yet");
+}
 
-    const std::string& topic_type() const;
-
-    // OPERATOR OVERLOAD
-    bool operator ==(
-            const DatabrokerTopic& other) const;
-
-    bool operator <(
-            const DatabrokerTopic& other) const;
-
-protected:
-
-    std::string topic_name_;
-    std::string topic_type_;
-};
+ReturnCode Bridge::disable()
+{
+    // TODO
+    throw UnsupportedException("Bridge::disable not supported yet");
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_ */

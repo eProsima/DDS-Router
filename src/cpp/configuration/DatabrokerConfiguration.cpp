@@ -78,6 +78,21 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
     return result;
 }
 
+std::set<RealTopic> DatabrokerConfiguration::real_topics() const
+{
+    std::set<RealTopic> result;
+
+    for (AbstractTopic* topic : common_topic_list_get_(WHITELIST_TAG))
+    {
+        if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
+        {
+            result.emplace(RealTopic(topic->topic_name(), topic->topic_type()));
+        }
+    }
+
+    return result;
+}
+
 std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
         const char* list_tag) const
 {
