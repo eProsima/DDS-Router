@@ -19,6 +19,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/AllowedTopicList.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
     )
 
 set(TEST_HEADERS

@@ -63,6 +63,41 @@ void add_topics_to_list(
     }
 }
 
+/*
+ * Create an AllowedTopicList object with the whitelist and blacklist given by argument
+ * Check that all topics in real_topics_positive are allowed by the AllowedTopicList
+ * Check that all topics in real_topics_negative are not allowed by the AllowedTopicList
+ */
+void generic_test(
+        const std::vector<pair_topic_type>& whitelist_topics,
+        const std::vector<pair_topic_type>& blacklist_topics,
+        const std::vector<pair_topic_type>& real_topics_positive,
+        const std::vector<pair_topic_type>& real_topics_negative)
+{
+    // Create AllowedTopicList object
+    std::list<std::shared_ptr<AbstractTopic>> whitelist;
+    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+
+    add_topics_to_list(whitelist, whitelist_topics);
+    add_topics_to_list(blacklist, blacklist_topics);
+
+    AllowedTopicList atl(whitelist, blacklist);
+
+    // Test positive cases
+    for (pair_topic_type topic_name : real_topics_positive)
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+        ASSERT_TRUE(atl.is_topic_allowed(topic));
+    }
+
+    // Test negative cases
+    for (pair_topic_type topic_name : real_topics_negative)
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+        ASSERT_FALSE(atl.is_topic_allowed(topic));
+    }
+}
+
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
@@ -95,12 +130,11 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
 {
-    std::list<std::shared_ptr<AbstractTopic>> whitelist;
-    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+    std::vector<pair_topic_type> whitelist_topics;
+    std::vector<pair_topic_type> blacklist_topics;
+    std::vector<pair_topic_type> real_topics_negative;
 
-    AllowedTopicList atl(whitelist, blacklist);
-
-    std::vector<pair_topic_type> real_topics =
+    std::vector<pair_topic_type> real_topics_positive =
     {
         {"topic1", "type1"},
         {"topic2", "type2"},
@@ -108,12 +142,11 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    for (pair_topic_type topic_name : real_topics)
-    {
-        RealTopic topic(topic_name.first, topic_name.second);
-
-        ASSERT_TRUE(atl.is_topic_allowed(topic));
-    }
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -123,18 +156,13 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
 {
-    std::list<std::shared_ptr<AbstractTopic>> whitelist;
-    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+    std::vector<pair_topic_type> whitelist_topics;
 
     std::vector<pair_topic_type> blacklist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
-
-    add_topics_to_list(blacklist, blacklist_topics);
-
-    AllowedTopicList atl(whitelist, blacklist);
 
     std::vector<pair_topic_type> real_topics_positive =
     {
@@ -148,19 +176,11 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    for (pair_topic_type topic_name : real_topics_positive)
-    {
-        RealTopic topic(topic_name.first, topic_name.second);
-
-        ASSERT_TRUE(atl.is_topic_allowed(topic));
-    }
-
-    for (pair_topic_type topic_name : real_topics_negative)
-    {
-        RealTopic topic(topic_name.first, topic_name.second);
-
-        ASSERT_FALSE(atl.is_topic_allowed(topic));
-    }
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -170,8 +190,36 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> whitelist_topics;
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic1", "*"},
+        {"*", "HelloWorld"},
+        {"rt/chatter*", "std::*"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic2", "type2"},
+        {"rt/topic_info", "std::std_msgs::string"},
+        {"rt/chatter/pub", "std_type"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type1"},
+        {"topic1", "type2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"rt/chatter", "std::std_msgs::string"},
+        {"rt/chatter/pub", "std::type"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -181,8 +229,33 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> blacklist_topics;
+
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type1_"},
+        {"topic1_", "type1"},
+        {"topic2", "type2"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -192,8 +265,39 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> blacklist_topics;
+
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "*"},
+        {"*", "HelloWorld"},
+        {"rt/chatter*", "std::*"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "type1"},
+        {"topic1", "type2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"OtherTopic", "HelloWorld"},
+        {"rt/chatter", "std::std_msgs::string"},
+        {"rt/chatter/pub", "std::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic2", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorldType"},
+        {"rt/pub", "std::std_msgs::string"},
+        {"rt/chatter", "std_type"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -204,8 +308,39 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic2", "type2"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type2"},
+        {"topic2", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorldType"},
+        {"rt/chatter", "std::std_msgs::string"},
+        {"rt/pub", "std"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -216,8 +351,45 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "*"},
+        {"*", "HelloWorld"},
+        {"rt/pub*", "std_type::*"},
+    };
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic2", "*"},
+        {"*", "HelloWorldType"},
+        {"rt/chatter*", "std*"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "type1"},
+        {"topic1", "type2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"OtherTopic", "HelloWorld"},
+        {"rt/pub/topic", "std_type::string"},
+        {"rt/pub", "std_type::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic2", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorldType"},
+        {"OtherTopic", "HelloWorldType"},
+        {"rt/chatter", "std::std_msgs::string"},
+        {"rt/chatter/pub", "std"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -228,8 +400,40 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_entangled)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic2", "type2"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type2"},
+        {"topic2", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorldType"},
+        {"rt/chatter", "std::std_msgs::string"},
+        {"rt/pub", "std"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 /**
@@ -240,8 +444,46 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_enta
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_entangled)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::vector<pair_topic_type> whitelist_topics =
+    {
+        {"topic1", "*"},
+        {"*", "HelloWorld"},
+        {"rt*", "std*"},
+    };
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic1", "type*"},
+        {"*HelloWorld", "HelloWorld"},
+        {"rt/chatter*", "std::std_msgs*"},
+    };
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic1", "wtype1"},
+        {"topic1", "wtype2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"OtherTopic", "HelloWorld"},
+        {"rt/pub", "std_type::std_msgs::string"},
+        {"rt/chatter", "std_type::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type1"},
+        {"topic1", "type2"},
+        {"TopicHelloWorld", "HelloWorld"},
+        {"OtherHelloWorld", "HelloWorld"},
+        {"rt/chatter", "std_type::std_msgs::string"},
+        {"rt/chatter/pub", "std_type::std_msgs::string"},
+        {"rt/chatter", "std_type::std_msgs::int"},
+    };
+
+    generic_test(
+        whitelist_topics,
+        blacklist_topics,
+        real_topics_positive,
+        real_topics_negative);
 }
 
 int main(
