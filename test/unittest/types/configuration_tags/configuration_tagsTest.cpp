@@ -26,12 +26,12 @@ TEST(configuration_tags, databroker_tags)
     std::set<std::string> retrieved_tags = databroker_tags();
 
     std::set<std::string> current_tags =
-        {
-            WHITELIST_TAG,
-            BLACKLIST_TAG,
-            TOPIC_NAME_TAG,
-            TOPIC_TYPE_NAME_TAG
-        };
+    {
+        WHITELIST_TAG,
+        BLACKLIST_TAG,
+        TOPIC_NAME_TAG,
+        TOPIC_TYPE_NAME_TAG
+    };
 
     ASSERT_EQ(retrieved_tags, current_tags);
 }
