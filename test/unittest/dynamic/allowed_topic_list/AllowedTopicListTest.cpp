@@ -26,12 +26,42 @@ using pair_topic_type = std::pair<std::string, std::string>;
  * FILTER METHODS *
  ******************/
 
-/**
- *  Adding simple Whitelist and Blacklist
- *  Adding complex Whitelist and Blacklist
- *  Adding simple entangled Whitelist and Blacklist
- *  Adding complex entangled Whitelist and Blacklist
+/*
+ * Add a topic to a list
+ *
+ * TODO: Add regex when implemented
  */
+void add_topic_to_list(
+    std::list<std::shared_ptr<AbstractTopic>>& list,
+    pair_topic_type topic_name,
+    bool wildcard = true)
+{
+    if (wildcard)
+    {
+        list.push_back(
+            std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
+    }
+}
+
+/*
+ * Add several topic to a list
+ *
+ * TODO: Add regex when implemented
+ */
+void add_topics_to_list(
+    std::list<std::shared_ptr<AbstractTopic>>& list,
+    std::vector<pair_topic_type> topic_names,
+    bool wildcard = true)
+{
+    if (wildcard)
+    {
+        for (pair_topic_type topic_name : topic_names)
+        {
+            list.push_back(
+                std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
+        }
+    }
+}
 
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
@@ -93,8 +123,44 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    std::list<std::shared_ptr<AbstractTopic>> whitelist;
+    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+
+    std::vector<pair_topic_type> blacklist_topics =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    add_topics_to_list(blacklist, blacklist_topics);
+
+    AllowedTopicList atl(whitelist, blacklist);
+
+    std::vector<pair_topic_type> real_topics_positive =
+    {
+        {"topic2", "type2"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    std::vector<pair_topic_type> real_topics_negative =
+    {
+        {"topic1", "type1"},
+        {"HelloWorldTopic", "HelloWorld"},
+    };
+
+    for (pair_topic_type topic_name : real_topics_positive)
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+
+        ASSERT_TRUE(atl.is_topic_allowed(topic));
+    }
+
+    for (pair_topic_type topic_name : real_topics_negative)
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+
+        ASSERT_FALSE(atl.is_topic_allowed(topic));
+    }
 }
 
 /**
