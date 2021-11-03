@@ -22,129 +22,157 @@ using namespace eprosima::databroker;
 
 using pair_topic_type = std::pair<std::string, std::string>;
 
-/**********************
- * MANAGEMENT METHODS *
- **********************/
-
-/**
- * Test \c AllowedTopicList \c clear method
- */
-TEST(AllowedTopicListTest, clear)
-{
-    // TODO
-    ASSERT_TRUE(false);
-}
-
-/**
- * Test \c AllowedTopicList \c reload method
- */
-TEST(AllowedTopicListTest, reload)
-{
-    // TODO
-    ASSERT_TRUE(false);
-}
-
 /******************
  * FILTER METHODS *
  ******************/
 
 /**
- * Test \c AllowedTopicList \c is_topic_allowed method for positive cases
- *
- * CASES:
- *  With empty list
- *  Adding simple Blacklist
- *  Adding complex Blacklist
- *  Adding simple Whitelist
- *  Adding complex Whitelist
  *  Adding simple Whitelist and Blacklist
  *  Adding complex Whitelist and Blacklist
  *  Adding simple entangled Whitelist and Blacklist
  *  Adding complex entangled Whitelist and Blacklist
  */
-TEST(AllowedTopicListTest, is_topic_allowed)
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using default constructor
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
 {
-    // With empty list
+    AllowedTopicList atl;
+
+    std::vector<pair_topic_type> real_topics =
     {
-        AllowedTopicList atl;
+        {"topic1", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
 
-        std::vector<pair_topic_type> real_topics =
-        {
-            {"topic1", "type1"},
-            {"topic2", "type2"},
-            {"HelloWorldTopic", "HelloWorld"},
-            {"rt/chatter", "std::std_msgs::string"},
-        };
-
-        for (pair_topic_type topic_name : real_topics)
-        {
-            RealTopic topic(topic_name.first, topic_name.second);
-
-            ASSERT_TRUE(atl.is_topic_allowed(topic));
-        }
-    }
-    // Adding simple Blacklist
+    for (pair_topic_type topic_name : real_topics)
     {
-        // TODO
-        ASSERT_TRUE(false);
-    }
+        RealTopic topic(topic_name.first, topic_name.second);
 
-    // Adding complex Blacklist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding simple Whitelist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding complex Whitelist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding simple Whitelist and Blacklist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding complex Whitelist and Blacklist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding simple entangled Whitelist and Blacklist
-    {
-        // TODO
-        ASSERT_TRUE(false);
-    }
-
-    // Adding complex entangled Whitelist and Blacklist
-    {
-        // TODO
-        ASSERT_TRUE(false);
+        ASSERT_TRUE(atl.is_topic_allowed(topic));
     }
 }
 
 /**
- * Test \c AllowedTopicList \c is_topic_allowed method for negative cases
- *  Adding simple Blacklist
- *  Adding complex Blacklist
- *  Adding full Blacklist
- *  Adding simple Whitelist
- *  Adding complex Whitelist
- *  Adding simple Whitelist and Blacklist
- *  Adding complex Whitelist and Blacklist
- *  Adding simple entangled Whitelist and Blacklist
- *  Adding complex entangled Whitelist and Blacklist
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using empty lists
  */
-TEST(AllowedTopicListTest, is_topic_not_allowed)
+TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
+{
+    std::list<std::shared_ptr<AbstractTopic>> whitelist;
+    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+
+    AllowedTopicList atl(whitelist, blacklist);
+
+    std::vector<pair_topic_type> real_topics =
+    {
+        {"topic1", "type1"},
+        {"topic2", "type2"},
+        {"HelloWorldTopic", "HelloWorld"},
+        {"rt/chatter", "std::std_msgs::string"},
+    };
+
+    for (pair_topic_type topic_name : real_topics)
+    {
+        RealTopic topic(topic_name.first, topic_name.second);
+
+        ASSERT_TRUE(atl.is_topic_allowed(topic));
+    }
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using simple blacklist: only with real topics
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using complex blacklist: with wildcards that superpose
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using simple whitelist: only with real topics
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using complex whitelist: with wildcards that superpose
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using simple whitelist and simple blacklist: only with real topics
+ * Lists do not superpose to each other
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using complex whitelist and complex blacklist: with wildcards that superpose
+ * Lists do not superpose to each other
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using simple whitelist and simple blacklist: only with real topics
+ * Blacklist has topics that block the whitelist ones
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_entangled)
+{
+    // TODO
+    ASSERT_TRUE(false);
+}
+
+/**
+ * Test \c AllowedTopicList \c is_topic_allowed method
+ *
+ * Case using complex whitelist and complex blacklist: with wildcards that superpose
+ * Blacklist has topics that block the whitelist ones
+ */
+TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_entangled)
 {
     // TODO
     ASSERT_TRUE(false);
