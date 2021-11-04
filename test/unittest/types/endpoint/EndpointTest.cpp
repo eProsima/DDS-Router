@@ -67,6 +67,19 @@ RealTopic random_topic(uint seed = 0)
     return RealTopic("TopicName_" + std::to_string(seed), "TopicType_" + std::to_string(seed));
 }
 
+// Get a random topic name
+EndpointKind random_endpoint_kind(uint seed = 0)
+{
+    if(seed % 2)
+    {
+        return EndpointKind::READER;
+    }
+    else
+    {
+        return EndpointKind::WRITER;
+    }
+}
+
 // Get a random guid
 Guid random_valid_guid(uint seed = 0)
 {
@@ -87,79 +100,242 @@ TEST(EndpointTest, constructor)
     QoS qos = random_qos();
     RealTopic topic = random_topic();
 
-    Endpoint(kind, guid, qos, topic);
+    Endpoint endpoint(kind, guid, qos, topic);
+
+    ASSERT_EQ(endpoint.kind(), kind);
+    ASSERT_EQ(endpoint.guid(), guid);
+    ASSERT_EQ(endpoint.qos(), qos);
+    ASSERT_EQ(endpoint.topic(), topic);
 }
 
 /**
  * Test \c Endpoint \c kind getter method
+ *
+ * CASES:
+ *  Writer
+ *  Reader
  */
 TEST(EndpointTest, kind_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid;
+    QoS qos = random_qos();
+    RealTopic topic = random_topic();
+
+    // Writer
+    {
+        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
+        ASSERT_EQ(endpoint.kind(), EndpointKind::WRITER);
+    }
+
+    // Reader
+    {
+        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+        ASSERT_EQ(endpoint.kind(), EndpointKind::READER);
+    }
 }
 
 /**
  * Test \c Endpoint \c guid getter method
+ *
+ * CASES:
+ *  Default guid
+ *  Random guids
  */
 TEST(EndpointTest, guid_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    QoS qos = random_qos();
+    RealTopic topic = random_topic();
+    EndpointKind kind = random_endpoint_kind();
+
+    // Default guid
+    {
+        Guid guid;
+        Endpoint endpoint(kind, guid, qos, topic);
+        ASSERT_EQ(endpoint.guid(), guid);
+    }
+
+    // Random guids
+    {
+        for (uint i=0; i<10; i++)
+        {
+            Guid guid = random_valid_guid(i);
+            Endpoint endpoint(kind, guid, qos, topic);
+            ASSERT_EQ(endpoint.guid(), random_valid_guid(i)) << i;
+        }
+    }
 }
 
 /**
  * Test \c Endpoint \c qos getter method
+ *
+ * CASES:
+ *  Random QoS
  */
 TEST(EndpointTest, qos_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid = random_valid_guid();
+    RealTopic topic = random_topic();
+    EndpointKind kind = random_endpoint_kind();
+
+    // Random guids
+    {
+        for (uint i=0; i<8; i++)
+        {
+            QoS qos = random_qos(i);
+            Endpoint endpoint(kind, guid, qos, topic);
+            ASSERT_EQ(endpoint.qos(), random_qos(i)) << i;
+        }
+    }
 }
 
 /**
  * Test \c Endpoint \c topic getter method
+ *
+ * CASES:
+ *  Random Topics
  */
 TEST(EndpointTest, topic_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid = random_valid_guid();
+    EndpointKind kind = random_endpoint_kind();
+    QoS qos = random_qos();
+
+    // Random guids
+    {
+        for (uint i=0; i<10; i++)
+        {
+            RealTopic topic = random_topic(i);
+            Endpoint endpoint(kind, guid, qos, topic);
+            ASSERT_EQ(endpoint.topic(), random_topic(i)) << i;
+        }
+    }
 }
 
 /**
  * Test \c Endpoint \c active getter method
+ *
+ * CASES:
+ *  Default value
+ *  Change to invalid
+ *  Change to invalid and to valid
  */
 TEST(EndpointTest, active_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid = random_valid_guid();
+    RealTopic topic = random_topic();
+    EndpointKind kind = random_endpoint_kind();
+    QoS qos = random_qos();
+
+    // Default value
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        ASSERT_TRUE(endpoint.active());
+    }
+
+    // Change to invalid
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        endpoint.active(false);
+        ASSERT_FALSE(endpoint.active());
+    }
+
+    // Change to invalid and to valid
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        endpoint.active(false);
+        endpoint.active(true);
+        ASSERT_TRUE(endpoint.active());
+    }
 }
 
 /**
  * Test \c Endpoint \c active setter method
+ *
+ * Same test as active_setter
+ * CASES:
+ *  Default value
+ *  Change to invalid
+ *  Change to invalid and to valid
  */
 TEST(EndpointTest, active_setter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid = random_valid_guid();
+    RealTopic topic = random_topic();
+    EndpointKind kind = random_endpoint_kind();
+    QoS qos = random_qos();
+
+    // Default value
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        ASSERT_TRUE(endpoint.active());
+    }
+
+    // Change to invalid
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        endpoint.active(false);
+        ASSERT_FALSE(endpoint.active());
+    }
+
+    // Change to invalid and to valid
+    {
+        Endpoint endpoint(kind, guid, qos, topic);
+        endpoint.active(false);
+        endpoint.active(true);
+        ASSERT_TRUE(endpoint.active());
+    }
 }
 
 /**
  * Test \c Endpoint \c is_writer getter method
+ *
+ * CASES:
+ *  Writer
+ *  Reader
  */
 TEST(EndpointTest, is_writer)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid;
+    QoS qos = random_qos();
+    RealTopic topic = random_topic();
+
+    // Writer
+    {
+        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
+        ASSERT_TRUE(endpoint.is_writer());
+    }
+
+    // Reader
+    {
+        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+        ASSERT_FALSE(endpoint.is_writer());
+    }
 }
 
 /**
  * Test \c Endpoint \c is_reader getter method
+ *
+ * CASES:
+ *  Writer
+ *  Reader
  */
 TEST(EndpointTest, is_reader)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    Guid guid;
+    QoS qos = random_qos();
+    RealTopic topic = random_topic();
+
+    // Writer
+    {
+        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
+        ASSERT_FALSE(endpoint.is_reader());
+    }
+
+    // Reader
+    {
+        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+        ASSERT_TRUE(endpoint.is_reader());
+    }
 }
 
 int main(

@@ -25,7 +25,7 @@ namespace eprosima {
 namespace databroker {
 
 //! Unique Id of every Endpoint
-class Guid : eprosima::fastrtps::rtps::GUID_t
+class Guid : public eprosima::fastrtps::rtps::GUID_t
 {
 public:
 

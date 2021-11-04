@@ -40,5 +40,11 @@ ReliabilityKind QoS::reliability() const
     return reliability_;
 }
 
+bool QoS::operator ==(
+        const QoS& other) const
+{
+    return durability_ == other.durability_ && reliability_ == other.reliability_;
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */

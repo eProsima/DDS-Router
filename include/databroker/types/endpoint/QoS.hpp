@@ -53,6 +53,10 @@ public:
     //! Whether this QoS is set with durability
     ReliabilityKind reliability() const;
 
+    // OPERATOR OVERLOAD
+    bool operator ==(
+            const QoS& other) const;
+
 protected:
     //! Durability kind
     DurabilityKind durability_;
