@@ -37,6 +37,8 @@ public:
     //! Destructor
     virtual ~WildcardTopic();
 
+    // TODO: extend test and documentation to admit ? and []
+
     //! Override \c contains method from \c AbstractTopic
     bool contains(
             const AbstractTopic& other) const override;
