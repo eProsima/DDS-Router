@@ -1,7 +1,7 @@
 
 whitelist:
   [
-    {name: "HelloWorldTopic", type: "HelloWorld"}
+    {name: "*", type: "*"}
   ]
 
 #################################
@@ -21,3 +21,4 @@ wan:
 
 local:
   type: local
+  domain: 1

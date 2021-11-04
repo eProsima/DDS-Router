@@ -19,7 +19,7 @@
 #ifndef _DATABROKER_TYPES_DATA_HPP_
 #define _DATABROKER_TYPES_DATA_HPP_
 
-#include <databroker/types/QoS.hpp>
+#include <databroker/types/endpoint/QoS.hpp>
 
 namespace eprosima {
 namespace databroker {

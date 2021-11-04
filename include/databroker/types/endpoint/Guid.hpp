@@ -25,7 +25,16 @@ namespace eprosima {
 namespace databroker {
 
 //! Unique Id of every Endpoint
-using Guid = eprosima::fastrtps::rtps::GUID_t;
+class Guid : eprosima::fastrtps::rtps::GUID_t
+{
+public:
+
+    //! Using parent constructors
+    using eprosima::fastrtps::rtps::GUID_t::GUID_t;
+
+    // Whether the guid is a valid one
+    bool is_valid() const;
+};
 
 } /* namespace databroker */
 } /* namespace eprosima */

@@ -30,9 +30,43 @@ using DurabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t;
 //! Reliability kind enumeration
 using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 
-//! Collection of attributes of an Endpoint
-struct QoS
+/**
+ * Collection of attributes of an Endpoint
+ *
+ * Only Durability <volatile | transient_local> are allowed
+ * Only Reliability <reliable | best_effort> are allowed
+ */
+class QoS
 {
+public:
+
+    /**
+     * Constructor of QoS class by its variables
+     *
+     * @param durability: durability kind
+     * @param reliability: reliability kind
+     */
+    QoS(
+        DurabilityKind durability,
+        ReliabilityKind reliability);
+
+    /**
+     * Constructor of QoS class by the QoS accepted possibilities
+     *
+     * @param is_volatile: whether the endpoint is volatile
+     * @param is_reliable: whether the endpoint is reliable
+     */
+    QoS(
+        bool is_volatile,
+        bool is_reliable);
+
+    //! Whether this QoS is set with reliability
+    bool is_reliable() const;
+
+    //! Whether this QoS is set with durability
+    bool is_volatile() const;
+
+protected:
     //! Durability kind
     DurabilityKind durability;
 
