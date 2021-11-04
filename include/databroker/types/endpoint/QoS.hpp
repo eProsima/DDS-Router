@@ -32,9 +32,6 @@ using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 
 /**
  * Collection of attributes of an Endpoint
- *
- * Only Durability <volatile | transient_local> are allowed
- * Only Reliability <reliable | best_effort> are allowed
  */
 class QoS
 {
@@ -50,28 +47,18 @@ public:
         DurabilityKind durability,
         ReliabilityKind reliability);
 
-    /**
-     * Constructor of QoS class by the QoS accepted possibilities
-     *
-     * @param is_volatile: whether the endpoint is volatile
-     * @param is_reliable: whether the endpoint is reliable
-     */
-    QoS(
-        bool is_volatile,
-        bool is_reliable);
-
     //! Whether this QoS is set with reliability
-    bool is_reliable() const;
+    DurabilityKind durability() const;
 
     //! Whether this QoS is set with durability
-    bool is_volatile() const;
+    ReliabilityKind reliability() const;
 
 protected:
     //! Durability kind
-    DurabilityKind durability;
+    DurabilityKind durability_;
 
     //! Reliability kind
-    ReliabilityKind reliability;
+    ReliabilityKind reliability_;
 };
 
 } /* namespace databroker */

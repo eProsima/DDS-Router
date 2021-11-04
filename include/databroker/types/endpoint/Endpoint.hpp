@@ -79,12 +79,6 @@ public:
     //! Whether the endpoint is a reader
     bool is_reader() const;
 
-    //! Whether this QoS is set with reliability
-    bool is_reliable() const;
-
-    //! Whether this QoS is set with durability
-    bool is_volatile() const;
-
 protected:
     //! Kind of the endpoint
     EndpointKind kind_;
