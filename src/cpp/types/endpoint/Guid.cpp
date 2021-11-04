@@ -22,5 +22,11 @@
 namespace eprosima {
 namespace databroker {
 
+bool Guid::is_valid() const
+{
+    return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
+        entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */

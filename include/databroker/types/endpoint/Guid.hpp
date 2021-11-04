@@ -32,7 +32,11 @@ public:
     //! Using parent constructors
     using eprosima::fastrtps::rtps::GUID_t::GUID_t;
 
-    // Whether the guid is a valid one
+    /**
+     * Whether the guid is a valid one
+     *
+     * To be valid, the GuidPrefix and the EntityId must be set
+     */
     bool is_valid() const;
 };
 
