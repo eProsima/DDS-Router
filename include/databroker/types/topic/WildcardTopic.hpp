@@ -41,7 +41,11 @@ public:
     bool contains(
             const AbstractTopic& other) const override;
 
-    //! Override \c matches method from \c AbstractTopic
+    /**
+     * Override \c matches method from \c AbstractTopic
+     *
+     * It uses \c fnmatch function, so it also contamplates ? and [] apart from *
+     */
     bool matches(
             const RealTopic& other) const override;
 };

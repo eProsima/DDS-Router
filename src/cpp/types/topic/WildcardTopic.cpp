@@ -17,7 +17,8 @@
  *
  */
 
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <fnmatch.h>
+
 #include <databroker/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
@@ -30,17 +31,21 @@ WildcardTopic::~WildcardTopic()
 bool WildcardTopic::contains(
         const AbstractTopic& other) const
 {
-    // TODO
+    // TODO: implement
     static_cast<void> (other);
-    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
+    return false;
 }
 
 bool WildcardTopic::matches(
         const RealTopic& other) const
 {
-    // TODO
-    static_cast<void> (other);
-    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
+    if (fnmatch(this->topic_name().c_str(), other.topic_name().c_str(), FNM_NOESCAPE) == 0)
+    {
+        // Topic name mathes, check if type matches
+        std::cout << "Checking type: " << other.topic_type().c_str() << " ~ " << this->topic_type().c_str() << std::endl;
+        return (fnmatch(this->topic_type().c_str(), other.topic_type().c_str(), FNM_NOESCAPE) == 0);
+    }
+    return false;
 }
 
 } /* namespace databroker */

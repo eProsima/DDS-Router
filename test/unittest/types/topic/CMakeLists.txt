@@ -88,10 +88,12 @@ set(TEST_HEADERS
     )
 
 set(TEST_LIST
-        contains_wildcard
         matches
-        non_contains_wildcard
         non_matches
+
+        # Not supported (TODO)
+        # non_contains_wildcard
+        # contains_wildcard
     )
 
 add_unittest_executable(

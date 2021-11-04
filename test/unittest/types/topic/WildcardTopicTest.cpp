@@ -102,7 +102,7 @@ TEST(WildcardTopicTest, matches)
         {
             RealTopic real_topic(real_topic_names.first, real_topic_names.second);
 
-            ASSERT_TRUE(wt.matches(real_topic));
+            ASSERT_TRUE(wt.matches(real_topic)) << "wildcard: " << wt << " ; real: " << real_topic;
         }
     }
 }
