@@ -24,26 +24,95 @@ using namespace eprosima::databroker;
  */
 TEST(QoSTest, constructor)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    DurabilityKind durability;
+    ReliabilityKind reliability;
+
+    QoS qos(durability, reliability);
+
+    ASSERT_EQ(qos.durability(), durability);
+    ASSERT_EQ(qos.reliability(), reliability);
 }
 
 /**
  * Test \c QoS \c durability getter method
+ *
+ * CASES:
+ *  Volatile
+ *  TransientLocal
+ *  Transient
+ *  Persistent
  */
 TEST(QoSTest, durability_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Volatile
+    {
+        DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
+        ReliabilityKind reliability;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.durability(), eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE);
+    }
+
+    // TransientLocal
+    {
+        DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+        ReliabilityKind reliability;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.durability(), eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL);
+    }
+
+    // Transient
+    {
+        DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT;
+        ReliabilityKind reliability;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.durability(), eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT);
+    }
+
+    // Persistent
+    {
+        DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::PERSISTENT;
+        ReliabilityKind reliability;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.durability(), eprosima::fastrtps::rtps::DurabilityKind_t::PERSISTENT);
+    }
 }
 
 /**
  * Test \c QoS \c reliability getter method
+ *
+ * CASES:
+ *  Best effort
+ *  Reliable
  */
 TEST(QoSTest, reliability_getter)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    // Best effort
+    {
+        DurabilityKind durability;
+        ReliabilityKind reliability = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.reliability(), eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT);
+    }
+
+    // Reliable
+    {
+        DurabilityKind durability;
+        ReliabilityKind reliability = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+        QoS qos(durability, reliability);
+
+        ASSERT_EQ(qos.reliability(), eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE);
+    }
 }
 
 int main(

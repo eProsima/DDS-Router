@@ -22,5 +22,23 @@
 namespace eprosima {
 namespace databroker {
 
+QoS::QoS(
+        DurabilityKind durability,
+        ReliabilityKind reliability)
+    : durability_(durability)
+    , reliability_(reliability)
+{
+}
+
+DurabilityKind QoS::durability() const
+{
+    return durability_;
+}
+
+ReliabilityKind QoS::reliability() const
+{
+    return reliability_;
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */
