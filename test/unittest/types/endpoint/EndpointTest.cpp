@@ -16,16 +16,78 @@
 #include <gtest/gtest.h>
 
 #include <databroker/types/endpoint/Endpoint.hpp>
+#include <databroker/types/endpoint/QoS.hpp>
+#include <databroker/types/endpoint/Guid.hpp>
 
 using namespace eprosima::databroker;
+
+// Get a random QoS configuration
+QoS random_qos(uint seed = 0)
+{
+    DurabilityKind durability;
+    ReliabilityKind reliability;
+
+    if (seed % 2)
+    {
+        reliability = ReliabilityKind::BEST_EFFORT;
+    }
+    else
+    {
+        reliability = ReliabilityKind::RELIABLE;
+    }
+
+    switch ((seed/2) % 4)
+    {
+    case 0:
+        durability = DurabilityKind::VOLATILE;
+        break;
+
+    case 1:
+        durability = DurabilityKind::TRANSIENT_LOCAL;
+        break;
+
+    case 2:
+        durability = DurabilityKind::TRANSIENT;
+        break;
+
+    case 3:
+        durability = DurabilityKind::PERSISTENT;
+        break;
+
+    default:
+        break;
+    }
+
+    return QoS(durability, reliability);
+}
+
+// Get a random topic name
+RealTopic random_topic(uint seed = 0)
+{
+    return RealTopic("TopicName_" + std::to_string(seed), "TopicType_" + std::to_string(seed));
+}
+
+// Get a random guid
+Guid random_valid_guid(uint seed = 0)
+{
+    eprosima::fastrtps::rtps::GuidPrefix_t guid_prefix;
+    std::istringstream("44.53.00.5f.45.50.52.4f.53.49.4d." + std::to_string(seed)) >> guid_prefix;
+    return Guid(
+        guid_prefix,
+        seed);
+}
 
 /**
  * Test \c Endpoint constructor
  */
 TEST(EndpointTest, constructor)
 {
-    // TODO
-    ASSERT_TRUE(false);
+    EndpointKind kind;
+    Guid guid;
+    QoS qos = random_qos();
+    RealTopic topic = random_topic();
+
+    Endpoint(kind, guid, qos, topic);
 }
 
 /**
