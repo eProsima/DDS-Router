@@ -84,10 +84,17 @@ set(TEST_NAME EndpointTest)
 
 set(TEST_SOURCES
         EndpointTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp # TODO: Remove when not needed
     )
 
 set(TEST_HEADERS
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/QoS.hpp
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/Guid.hpp
         ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/Endpoint.hpp
     )
 

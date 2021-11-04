@@ -22,5 +22,58 @@
 namespace eprosima {
 namespace databroker {
 
+Endpoint::Endpoint(
+        const EndpointKind& kind,
+        const Guid& guid,
+        const QoS& qos,
+        const RealTopic& topic)
+    : kind_(kind)
+    , guid_(guid)
+    , qos_(qos)
+    , topic_(topic)
+    , active_(true)
+{
+}
+
+EndpointKind Endpoint::kind() const
+{
+    return kind_;
+}
+
+Guid Endpoint::guid() const
+{
+    return guid_;
+}
+
+QoS Endpoint::qos() const
+{
+    return qos_;
+}
+
+RealTopic Endpoint::topic() const
+{
+    return topic_;
+}
+
+bool Endpoint::active() const
+{
+    return active_;
+}
+
+void Endpoint::active(bool status)
+{
+    active_ = status;
+}
+
+bool Endpoint::is_writer() const
+{
+    return kind() == EndpointKind::WRITER;
+}
+
+bool Endpoint::is_reader() const
+{
+    return kind() == EndpointKind::READER;
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */
