@@ -32,22 +32,22 @@ TEST(WildcardTopicTest, contains_wildcard)
         std::pair<
             pair_topic_type,                // Wildcard Topic
             std::vector<pair_topic_type>    // List of accepted RealTopics
-        >> test_cases = {
+            >> test_cases = {
 
-            {{"topic", "*"},
-                {{"topic", "type"}, {"topic", "type*"}, {"topic", "*type"}, {"topic", "type1*"}}},
+        {{"topic", "*"},
+            {{"topic", "type"}, {"topic", "type*"}, {"topic", "*type"}, {"topic", "type1*"}}},
 
-            {{"topic", "type*"},
-                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type1*"}}},
+        {{"topic", "type*"},
+            {{"topic", "type"}, {"topic", "type1"}, {"topic", "type1*"}}},
 
-            {{"*", "type"},
-                {{"topic", "type"}, {"*topic", "type"}, {"topic*", "type"}, {"*rt/topic", "type"}}},
+        {{"*", "type"},
+            {{"topic", "type"}, {"*topic", "type"}, {"topic*", "type"}, {"*rt/topic", "type"}}},
 
-            {{"*topic", "type"},
-                {{"topic", "type"}, {"std_topic", "type"}, {"*rt/topic", "type"}}},
+        {{"*topic", "type"},
+            {{"topic", "type"}, {"std_topic", "type"}, {"*rt/topic", "type"}}},
 
-            {{"topic*", "type*"},
-                {{"topic", "type"}}},
+        {{"topic*", "type*"},
+            {{"topic", "type"}}},
     };
 
     for (auto test_case : test_cases)
@@ -74,22 +74,22 @@ TEST(WildcardTopicTest, matches)
         std::pair<
             pair_topic_type,                // Wildcard Topic
             std::vector<pair_topic_type>    // List of accepted RealTopics
-        >> test_cases = {
+            >> test_cases = {
 
-            {{"topic", "*"},
-                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
+        {{"topic", "*"},
+            {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
 
-            {{"topic", "type*"},
-                {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
+        {{"topic", "type*"},
+            {{"topic", "type"}, {"topic", "type1"}, {"topic", "type2"}}},
 
-            {{"*", "type"},
-                {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
+        {{"*", "type"},
+            {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
 
-            {{"*topic", "type"},
-                {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
+        {{"*topic", "type"},
+            {{"topic", "type"}, {"std_topic", "type"}, {"rt/topic", "type"}}},
 
-            {{"topic", "type"},
-                {{"topic", "type"}}},
+        {{"topic", "type"},
+            {{"topic", "type"}}},
     };
 
     for (auto test_case : test_cases)
@@ -116,22 +116,22 @@ TEST(WildcardTopicTest, non_contains_wildcard)
         std::pair<
             pair_topic_type,                // Wildcard Topic
             std::vector<pair_topic_type>    // List of accepted RealTopics
-        >> test_cases = {
+            >> test_cases = {
 
-            {{"topic", "*"},
-                {{"topic1", "type"}, {"topic*", "type"}, {"*", "type"}, {"*topic", "*"}, {"*", "*"}}},
+        {{"topic", "*"},
+            {{"topic1", "type"}, {"topic*", "type"}, {"*", "type"}, {"*topic", "*"}, {"*", "*"}}},
 
-            {{"topic", "type*"},
-                {{"topic*", "type"}, {"topic", "*type"}, {"*", "*"}}},
+        {{"topic", "type*"},
+            {{"topic*", "type"}, {"topic", "*type"}, {"*", "*"}}},
 
-            {{"*", "type"},
-                {{"topic", "type1"}, {"topic", "type*"}, {"topic*", "*"}, {"*", "type*"}, {"*", "*"}}},
+        {{"*", "type"},
+            {{"topic", "type1"}, {"topic", "type*"}, {"topic*", "*"}, {"*", "type*"}, {"*", "*"}}},
 
-            {{"*topic", "type"},
-                {{"topic", "type*"}, {"topic*", "type"}, {"*", "*"}}},
+        {{"*topic", "type"},
+            {{"topic", "type*"}, {"topic*", "type"}, {"*", "*"}}},
 
-            {{"topic*", "type*"},
-                {{"*topic", "type"}, {"topic", "*type"}, {"*", "*"}}},
+        {{"topic*", "type*"},
+            {{"*topic", "type"}, {"topic", "*type"}, {"*", "*"}}},
     };
 
     for (auto test_case : test_cases)
@@ -158,22 +158,22 @@ TEST(WildcardTopicTest, non_matches)
         std::pair<
             pair_topic_type,                // Wildcard Topic
             std::vector<pair_topic_type>    // List of accepted RealTopics
-        >> test_cases = {
+            >> test_cases = {
 
-            {{"topic", "*"},
-                {{"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type1"}}},
+        {{"topic", "*"},
+            {{"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type1"}}},
 
-            {{"topic", "type*"},
-                {{"topic1", "type"}, {"topic", "std::type"}, {"topic", "std::type1"}}},
+        {{"topic", "type*"},
+            {{"topic1", "type"}, {"topic", "std::type"}, {"topic", "std::type1"}}},
 
-            {{"*", "type"},
-                {{"topic", "type1"}, {"std_topic", "type1"}, {"topic", "std::type"}}},
+        {{"*", "type"},
+            {{"topic", "type1"}, {"std_topic", "type1"}, {"topic", "std::type"}}},
 
-            {{"*topic", "type"},
-                {{"topic", "type1"}, {"std_topic1", "type"}, {"rt/topic1", "type"}}},
+        {{"*topic", "type"},
+            {{"topic", "type1"}, {"std_topic1", "type"}, {"rt/topic1", "type"}}},
 
-            {{"topic", "type"},
-                {{"topic", "type1"}, {"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type"}}},
+        {{"topic", "type"},
+            {{"topic", "type1"}, {"topic1", "type"}, {"topic1", "type1"}, {"std_topic", "type"}}},
     };
 
     for (auto test_case : test_cases)
