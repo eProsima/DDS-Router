@@ -80,7 +80,7 @@ bool DatabrokerTopic::operator <(
 
 std::ostream &operator<<(std::ostream &os, const DatabrokerTopic& a)
 {
-    os << "{<" << a.topic_name() << ">:<" << a.topic_type() << ">}";
+    os << "{" << a.topic_name() << ", " << a.topic_type() << "}";
     return os;
 }
 
