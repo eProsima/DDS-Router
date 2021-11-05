@@ -49,13 +49,14 @@ struct DatabrokerTopic
 
 protected:
 
-
     std::string topic_name_;
     std::string topic_type_;
 };
 
 //! Serialization method
-std::ostream &operator<<(std::ostream &os, const DatabrokerTopic& a);
+std::ostream& operator <<(
+        std::ostream& os,
+        const DatabrokerTopic& a);
 
 } /* namespace databroker */
 } /* namespace eprosima */

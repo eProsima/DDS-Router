@@ -102,10 +102,10 @@ TEST(DatabrokerTopicTest, minor_operator)
 {
     std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
 
-    for (int i=0; i<well_sorted_names.size(); ++i)
+    for (int i = 0; i < well_sorted_names.size(); ++i)
     {
         // Skip same topic
-        for (int j=(i+1); j<well_sorted_names.size(); ++j)
+        for (int j = (i + 1); j < well_sorted_names.size(); ++j)
         {
             DatabrokerTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
             DatabrokerTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
@@ -123,9 +123,9 @@ TEST(DatabrokerTopicTest, non_equal_operator)
 {
     std::vector<pair_topic_type> names = random_topic_names();
 
-    for (int i=0; i<names.size(); ++i)
+    for (int i = 0; i < names.size(); ++i)
     {
-        for (int j=0; j<names.size(); ++j)
+        for (int j = 0; j < names.size(); ++j)
         {
             // Skip same topic
             if (i != j)
@@ -145,9 +145,9 @@ TEST(DatabrokerTopicTest, non_minor_operator)
 {
     std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
 
-    for (int i=0; i<well_sorted_names.size(); ++i)
+    for (int i = 0; i < well_sorted_names.size(); ++i)
     {
-        for (int j=i; j<well_sorted_names.size(); ++j)
+        for (int j = i; j < well_sorted_names.size(); ++j)
         {
             DatabrokerTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
             DatabrokerTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
