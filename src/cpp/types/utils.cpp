@@ -13,37 +13,33 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
+ * @file configuration_tags.cpp
  *
  */
 
-#include <databroker/types/topic/WildcardTopic.hpp>
+#include <set>
+
+#if defined(_WIN32)
+#include "Shlwapi.h"
+#else
+#include <fnmatch.h>
+#endif // if defined(_WIN32)
+
 #include <databroker/types/utils.hpp>
+#include <databroker/types/configuration_tags.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-WildcardTopic::~WildcardTopic()
+bool match_pattern(const std::string& pattern, const std::string& str)
 {
-}
-
-bool WildcardTopic::contains(
-        const AbstractTopic& other) const
-{
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
-}
-
-bool WildcardTopic::matches(
-        const RealTopic& other) const
-{
-    if (match_pattern(this->topic_name(), other.topic_name()))
-    {
-        // Topic name mathes, check if type matches
-        return match_pattern(this->topic_type(), other.topic_type());
-    }
-    return false;
+#if defined(_WIN32)
+    // Windows implementation
+    return PathMatchSpec(str.c_str(), pattern.c_str());
+#else
+    // Posix implementation
+    return (fnmatch(pattern.c_str(), str.c_str(), FNM_NOESCAPE) == 0);
+#endif // defined(_WIN32)
 }
 
 } /* namespace databroker */

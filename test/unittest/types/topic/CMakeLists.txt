@@ -81,6 +81,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp # TODO: Remove when not needed
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
 set(TEST_HEADERS
