@@ -94,7 +94,7 @@ protected:
 
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
-    std::map<RealTopic, Bridge> bridges_;
+    std::map<RealTopic, std::unique_ptr<Bridge>> bridges_;
 
     std::map<RealTopic, bool> current_topics_;
 

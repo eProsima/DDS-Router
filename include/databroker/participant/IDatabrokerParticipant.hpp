@@ -43,6 +43,8 @@ public:
             std::shared_ptr<PayloadPool>,
             std::shared_ptr<DiscoveryDatabase>);
 
+    ParticipantId id() const;
+
     std::shared_ptr<IDatabrokerWriter> create_writer(
             RealTopic);
 

@@ -43,6 +43,10 @@ public:
     std::shared_ptr<IDatabrokerParticipant> get_participant(
             const ParticipantId& id) const;
 
+    std::vector<ParticipantId> get_participant_ids() const;
+
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> get_participant_map() const;
+
 protected:
 
     std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> participants_;
