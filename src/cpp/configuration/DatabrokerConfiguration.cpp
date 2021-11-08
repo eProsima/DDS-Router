@@ -129,7 +129,7 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
                     new_topic_type = topic[TOPIC_TYPE_NAME_TAG].as<std::string>();
                 }
 
-                if (new_topic_type.empty())
+                if (new_topic_type.empty() || new_topic_type != "")
                 {
                     result.push_back(new WildcardTopic(new_topic_name));
                 }

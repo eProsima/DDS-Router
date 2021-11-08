@@ -372,7 +372,7 @@ TEST(DatabrokerConfigurationTest, real_topics)
         {
             ++real_topics;
             RealTopic topic(topic_name.first, topic_name.second);
-            EXPECT_TRUE(topic_in_real_list(result5, topic));
+            EXPECT_TRUE(topic_in_real_list(result5, topic)) << topic;
         }
     }
     EXPECT_EQ(real_topics, result5.size());
