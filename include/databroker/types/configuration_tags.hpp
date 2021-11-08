@@ -25,7 +25,7 @@ namespace eprosima {
 namespace databroker {
 
 //! Retrieve a set with every tag used in the configuration of the Databroker or the Participants
-std::set<std::string> databroker_tags();
+std::set<std::string> databroker_tags() noexcept;
 
 // Topics related tags
 constexpr const char* WHITELIST_TAG("whitelist");

@@ -27,8 +27,6 @@
 namespace eprosima {
 namespace databroker {
 
-std::set<std::string> databroker_tags();
-
 } /* namespace databroker */
 } /* namespace eprosima */
 
