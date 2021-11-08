@@ -33,6 +33,7 @@ set(TEST_LIST
         minor_operator
         non_equal_operator
         non_minor_operator
+        stdout_operator
     )
 
 add_unittest_executable(

@@ -156,6 +156,21 @@ TEST(DatabrokerTopicTest, non_minor_operator)
     }
 }
 
+/**
+ * Test the DatabrokerTopic << operator
+ */
+TEST(DatabrokerTopicTest, stdout_operator)
+{
+    std::vector<pair_topic_type> topics = {{"topic1", "type1"}, {"topic2", "type2"}};
+    DatabrokerTopic dt("topic1", "type1");
+
+    testing::internal::CaptureStdout();
+    std::cout << dt;
+    std::string dt_string = testing::internal::GetCapturedStdout();
+    ASSERT_EQ(dt_string, "{topic1, type1}");
+
+}
+
 int main(
         int argc,
         char** argv)
