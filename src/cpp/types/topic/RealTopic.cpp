@@ -28,7 +28,7 @@ namespace databroker {
 
 bool RealTopic::is_real_topic(
         const std::string& topic_name,
-        const std::string& type_name)
+        const std::string& type_name) noexcept
 {
     // TODO: extend with regex
     // It checks if topic name or type contain an invalid substring

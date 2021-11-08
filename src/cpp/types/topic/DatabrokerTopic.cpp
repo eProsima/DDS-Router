@@ -24,7 +24,7 @@ namespace databroker {
 
 DatabrokerTopic::DatabrokerTopic(
         std::string topic_name,
-        std::string topic_type)
+        std::string topic_type) noexcept
     : topic_name_(topic_name)
     , topic_type_(topic_type)
 {

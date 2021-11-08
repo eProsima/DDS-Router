@@ -35,7 +35,7 @@ struct DatabrokerTopic
      */
     DatabrokerTopic(
             std::string topic_name,
-            std::string topic_type);
+            std::string topic_type) noexcept;
 
     //! Destructor
     virtual ~DatabrokerTopic();
