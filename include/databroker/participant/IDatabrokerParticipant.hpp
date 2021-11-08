@@ -55,11 +55,11 @@ public:
             RealTopic);
 
     virtual std::shared_ptr<IDatabrokerReader> create_reader(
-            RealTopic); // lambda as listener
+            RealTopic);
 
 protected:
 
-    ParticipantId id_;
+    const ParticipantId id_;
 };
 
 } /* namespace databroker */

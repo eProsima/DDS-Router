@@ -40,13 +40,18 @@ public:
             RealTopic,
             std::shared_ptr<PayloadPool>);
 
-    ReturnCode enable();
+    virtual void enable();
 
-    ReturnCode disable();
+    /**
+     *
+     * ATTENTION: This method should stop calling the callback \c on_data_available_lambda if more data arrives while
+     * disabled.
+     */
+    virtual void disable();
 
-    ReturnCode set_on_data_available_callback();
+    virtual ReturnCode set_on_data_available_callback(std::function<void()> on_data_available_lambda);
 
-    ReturnCode take(
+    virtual ReturnCode take(
             DataReceived&);         // This data read must be inside a PayloadPool
 };
 
