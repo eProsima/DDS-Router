@@ -13,8 +13,6 @@ jobs:
 
   windows-build-test-release:
     runs-on: windows-latest
-    environment:
-      name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -62,8 +60,6 @@ jobs:
 
   windows-build-test-debug:
     runs-on: windows-latest
-    environment:
-      name: codecov
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
