@@ -25,16 +25,24 @@ namespace eprosima {
 namespace databroker {
 
 /**
- * TODO
+ * Class that represents a real topic working in a DDS network
  */
 struct RealTopic : public DatabrokerTopic
 {
-    // Inherit parent constructors
+    //! Inherit parent constructors
     using DatabrokerTopic::DatabrokerTopic;
 
+    /**
+     * Whether a topic name and topic type name could be used as a valid real DDS topic
+     *
+     * @param topic_name: topic name
+     * @param type_name: topic type name
+     *
+     * @return: true if a topic can be formed by these values
+     */
     static bool is_real_topic(
             const std::string& topic_name,
-            const std::string& type_name);
+            const std::string& type_name) noexcept;
 };
 
 } /* namespace databroker */

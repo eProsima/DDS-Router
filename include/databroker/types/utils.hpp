@@ -27,6 +27,11 @@
 namespace eprosima {
 namespace databroker {
 
+//! Perform the wildcard matching using file comparison method
+bool match_pattern(
+        const std::string& pattern,
+        const std::string& str);
+
 } /* namespace databroker */
 } /* namespace eprosima */
 

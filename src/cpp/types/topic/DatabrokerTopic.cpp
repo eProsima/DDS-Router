@@ -24,7 +24,7 @@ namespace databroker {
 
 DatabrokerTopic::DatabrokerTopic(
         std::string topic_name,
-        std::string topic_type)
+        std::string topic_type) noexcept
     : topic_name_(topic_name)
     , topic_type_(topic_type)
 {
@@ -65,8 +65,25 @@ bool DatabrokerTopic::operator <(
     }
     else
     {
-        return topic_type_.compare(other.topic_type_);
+        // To equal name, compare type
+        // WARNING: do not return value from compare, as -1 != false
+        if (topic_type_.compare(other.topic_type_) < 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const DatabrokerTopic& a)
+{
+    os << "{" << a.topic_name() << ", " << a.topic_type() << "}";
+    return os;
 }
 
 } /* namespace databroker */

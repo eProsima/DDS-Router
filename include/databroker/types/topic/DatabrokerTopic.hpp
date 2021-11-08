@@ -19,38 +19,68 @@
 #ifndef _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
 #define _DATABROKER_TYPES_TOPIC_DATABROKERTOPIC_HPP_
 
+#include <iostream>
 #include <string>
 
 namespace eprosima {
 namespace databroker {
 
 /**
- * TODO
+ * Generic class that contains all the data required by a Databroker Topic
  */
 struct DatabrokerTopic
 {
+    /**
+     * Std constructor by topic name and topic type name
+     */
     DatabrokerTopic(
             std::string topic_name,
-            std::string topic_type);
+            std::string topic_type) noexcept;
 
+    //! Destructor
     virtual ~DatabrokerTopic();
 
+    //! Topic name getter
     const std::string& topic_name() const;
 
+    //! Topic type name getter
     const std::string& topic_type() const;
 
     // OPERATOR OVERLOAD
+    /**
+     * Equal operator
+     *
+     * It compares that the topic name and topic type are equal
+     */
     bool operator ==(
             const DatabrokerTopic& other) const;
 
+    /**
+     * Minor operator
+     *
+     * It compares first the topic name, and if it is the same, it compares the topic type
+     */
     bool operator <(
             const DatabrokerTopic& other) const;
 
 protected:
 
+    //! Topic name
     std::string topic_name_;
+
+    //! Topic type name
     std::string topic_type_;
 };
+
+/**
+ * Serialization method
+ *
+ * It prints the topic name and type inside "{}" and each inside "<>"
+ * Example: {<TopicName>:<TopicType>}
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const DatabrokerTopic& a);
 
 } /* namespace databroker */
 } /* namespace eprosima */

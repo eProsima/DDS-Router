@@ -41,7 +41,10 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST)
     ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/cpp)
 
-    target_link_libraries(${EXECUTABLE_TEST_NAME} PUBLIC ${GTEST_LIBRARIES})
+    target_link_libraries( ${EXECUTABLE_TEST_NAME} PUBLIC
+            ${GTEST_LIBRARIES}
+            $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi> # TODO remove this when new parameter is added to function
+        )
 
     get_win32_path_dependencies(${EXECUTABLE_TEST_NAME} TEST_FRIENDLY_PATH)
 

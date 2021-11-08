@@ -17,6 +17,9 @@
  *
  */
 
+#include <string>
+#include <vector>
+
 #include <databroker/types/topic/RealTopic.hpp>
 #include <databroker/exceptions/UnsupportedException.hpp>
 
@@ -25,10 +28,23 @@ namespace databroker {
 
 bool RealTopic::is_real_topic(
         const std::string& topic_name,
-        const std::string& type_name)
+        const std::string& type_name) noexcept
 {
-    // TODO
-    throw UnsupportedException("RealTopic::is_real_topic not supported yet");
+    // TODO: extend with regex
+    // It checks if topic name or type contain an invalid substring
+    std::vector<std::string> invalid_substrings = {
+        "*", // Wildcard char
+    };
+
+    for (std::string invalid_substring : invalid_substrings)
+    {
+        if (topic_name.find(invalid_substring) != std::string::npos ||
+                type_name.find(invalid_substring) != std::string::npos)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 } /* namespace databroker */

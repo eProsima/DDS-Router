@@ -26,25 +26,52 @@ namespace eprosima {
 namespace databroker {
 
 /**
- * TODO
+ * Abstract class that represents a Topic filter
  */
 class AbstractTopic : public DatabrokerTopic
 {
 public:
 
+    //! Using parent constructos
     using DatabrokerTopic::DatabrokerTopic;
 
+    //! Destructor
     virtual ~AbstractTopic()
     {
     }
 
+    /**
+     * Whether this topic filters the same of the topic by argument.
+     *
+     * This method is used to prevent duplications in Abstract topic lists.
+     * If the topic \c other filters a subset of the topics filteres by \c this, it returns true.
+     *
+     * Example: {<*>:<*>} contains every AbstractTopic.
+     * Example: {<>:<>} is contained by every AbstractTopic.
+     *
+     * @param other: Other topic to check if it is contained
+     *
+     * @return: True if \c other topic filters a subset of \c this
+     */
     virtual bool contains(
             const AbstractTopic& other) const = 0;
 
+    /**
+     * Whether a Real Topic matches the filter of this topic.
+     *
+     * Virtual method. This method should be implemented in subclasses.
+     *
+     * @param real_topic: Real topic to check if it is filtered
+     *
+     * @return: True if \c real_topic matches with \c this filter
+     */
     virtual bool matches(
-            const RealTopic& other) const = 0;
+            const RealTopic& real_topic) const = 0;
 };
 
+/**
+ * TODO
+ */
 struct RegexTopic : public AbstractTopic
 {
     using AbstractTopic::AbstractTopic;

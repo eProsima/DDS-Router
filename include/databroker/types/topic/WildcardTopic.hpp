@@ -24,18 +24,30 @@
 namespace eprosima {
 namespace databroker {
 
-// TODO: move to new files when created
+/**
+ * Concrete class that represents an AbstractTopic that uses the special char "*" as any substring
+ */
 class WildcardTopic : public AbstractTopic
 {
 public:
 
+    //! Using parent constructos
     using AbstractTopic::AbstractTopic;
 
+    //! Destructor
     virtual ~WildcardTopic();
 
+    // TODO: extend test and documentation to admit ? and []
+
+    //! Override \c contains method from \c AbstractTopic
     bool contains(
             const AbstractTopic& other) const override;
 
+    /**
+     * Override \c matches method from \c AbstractTopic
+     *
+     * It uses \c fnmatch function, so it also contamplates ? and [] apart from *
+     */
     bool matches(
             const RealTopic& other) const override;
 };
