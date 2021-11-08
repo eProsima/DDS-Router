@@ -39,7 +39,7 @@ bool RealTopic::is_real_topic(
     for (std::string invalid_substring : invalid_substrings)
     {
         if (topic_name.find(invalid_substring) != std::string::npos ||
-            type_name.find(invalid_substring) != std::string::npos)
+                type_name.find(invalid_substring) != std::string::npos)
         {
             return false;
         }

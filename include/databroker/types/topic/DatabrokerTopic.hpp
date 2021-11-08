@@ -78,7 +78,9 @@ protected:
  * It prints the topic name and type inside "{}" and each inside "<>"
  * Example: {<TopicName>:<TopicType>}
  */
-std::ostream &operator<<(std::ostream &os, const DatabrokerTopic& a);
+std::ostream& operator <<(
+        std::ostream& os,
+        const DatabrokerTopic& a);
 
 } /* namespace databroker */
 } /* namespace eprosima */

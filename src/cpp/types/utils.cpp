@@ -31,7 +31,9 @@
 namespace eprosima {
 namespace databroker {
 
-bool match_pattern(const std::string& pattern, const std::string& str)
+bool match_pattern(
+        const std::string& pattern,
+        const std::string& str)
 {
 #if defined(_WIN32)
     // Windows implementation
