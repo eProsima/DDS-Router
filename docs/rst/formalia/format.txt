@@ -1,0 +1,40 @@
+Titles:
+
+    ##################
+    H1: document title
+    ##################
+
+    Introduction text.
+
+
+    *********
+    Sample H2
+    *********
+
+    Sample content.
+
+
+    **********
+    Another H2
+    **********
+
+    Sample H3
+    =========
+
+    Sample H4
+    ---------
+
+    Sample H5
+    ^^^^^^^^^
+
+    Sample H6
+    """""""""
+
+------------------------------------------------------------------------------------------------------------
+
+- Paths:
+
+    Absolute paths. The root directory is the diretory containing the 'conf.py' file.
+    Examples: /../code/CodeTester.cpp, /../code/XMLTester.xml, /01-figures/logo.png
+
+------------------------------------------------------------------------------------------------------------
