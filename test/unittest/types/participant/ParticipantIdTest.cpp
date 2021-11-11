@@ -48,8 +48,8 @@ std::vector<std::string> random_non_valid_ids()
 }
 
 /****************
- * CONSTRUCTORS *
- ****************/
+* CONSTRUCTORS *
+****************/
 
 /**
  * Test ParticipantId constructor without arguments
@@ -73,8 +73,8 @@ TEST(ParticipantIdTest, constructor)
 }
 
 /******************
- * STATIC METHODS *
- ******************/
+* STATIC METHODS *
+******************/
 
 /**
  * Test static \c ParticipantId \c is_valid_id method
@@ -86,8 +86,8 @@ TEST(ParticipantIdTest, invalid)
 }
 
 /******************
- * POSITIVE CASES *
- ******************/
+* POSITIVE CASES *
+******************/
 
 /**
  * Test static \c ParticipantId \c is_valid_id method
@@ -152,10 +152,10 @@ TEST(ParticipantIdTest, minor_operator)
     // Sort ids by string comparison
     std::sort(ids.begin(), ids.end());
 
-    for (int i=0; i<ids.size(); ++i)
+    for (int i = 0; i < ids.size(); ++i)
     {
         // Remove equal case
-        for (int j=(i+1); j<ids.size(); ++j)
+        for (int j = (i + 1); j < ids.size(); ++j)
         {
             ParticipantId pi1(ids[i]);
             ParticipantId pi2(ids[j]);
@@ -165,8 +165,8 @@ TEST(ParticipantIdTest, minor_operator)
 }
 
 /******************
- * NEGATIVE CASES *
- ******************/
+* NEGATIVE CASES *
+******************/
 
 /**
  * Test static \c ParticipantId \c is_valid_id method in negative cases
@@ -200,9 +200,9 @@ TEST(ParticipantIdTest, non_equal_operator)
 {
     std::vector<std::string> ids = random_valid_ids();
 
-    for (int i=0; i<ids.size(); ++i)
+    for (int i = 0; i < ids.size(); ++i)
     {
-        for (int j=0; j<ids.size(); ++j)
+        for (int j = 0; j < ids.size(); ++j)
         {
             // Remove equal case
             if (i != j)
@@ -225,10 +225,10 @@ TEST(ParticipantIdTest, non_minor_operator)
     // Sort ids by string comparison
     std::sort(ids.begin(), ids.end());
 
-    for (int i=0; i<ids.size(); ++i)
+    for (int i = 0; i < ids.size(); ++i)
     {
         // Remove equal case
-        for (int j=i; j<ids.size(); ++j)
+        for (int j = i; j < ids.size(); ++j)
         {
             ParticipantId pi1(ids[i]);
             ParticipantId pi2(ids[j]);
