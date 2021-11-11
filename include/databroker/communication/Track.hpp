@@ -66,7 +66,8 @@ public:
      *
      * Track creates in constructor all the inside Endponts needed, and thus it should not be copied
      */
-    void operator=(const Track&) = delete;
+    void operator =(
+            const Track&) = delete;
 
     /**
      * Enable Track in case it is not enabled
@@ -90,14 +91,14 @@ public:
 protected:
 
     /**
-     * Callback that will be called for the reader in case there are available data to read.
+     * Callback that will be called by the reader in case there are available data to read.
      *
      * This method is sent to the Reader so it could call it when there are new data.
      */
     void data_available();
 
     /**
-     * Callback that will be called fwhen there are no more data available to read.
+     * Callback that will be called when there are no more data available to read.
      */
     void no_more_data_available_();
 

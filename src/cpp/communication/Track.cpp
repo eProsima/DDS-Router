@@ -130,7 +130,10 @@ void Track::transmit_thread_function_()
         std::unique_lock<std::mutex> lock(available_data_mutex_);
         available_data_condition_variable_.wait(
             lock,
-            [this]{return this->are_data_available_ || this->exit_;});
+            [this]
+            {
+                return this->are_data_available_ || this->exit_;
+            });
 
         // Avoid start transmitting if it was awake to terminate
         if (should_transmit_())
