@@ -187,7 +187,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: Documentation HTML
-          path: install/databroker/docs/fastdds_monitor_docs/sphinx/html/
+          path: install/databroker/docs/ddsrouter_docs/sphinx/html/
 
       - name: Upload spelling errors
         uses: actions/upload-artifact@v1
