@@ -139,14 +139,14 @@ void Databroker::active_topic_(
         // The bridges and the current topics must be coherent
         assert(it_bridge != bridges_.end());
 
-        it_bridge->second.enable();
+        it_bridge->second->enable();
     }
 }
 
 void Databroker::create_new_bridge(
         const RealTopic& topic)
 {
-    bridges_.emplace(topic, Bridge(topic, participants_database_));
+    bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, true);
 }
 
 void Databroker::deactive_topic_(

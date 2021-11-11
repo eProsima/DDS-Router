@@ -27,11 +27,12 @@ namespace databroker {
 
 Track::Track(
         const RealTopic& topic,
-        std::shared_ptr<IDatabrokerParticipant> source,
-        std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>&& targets)
+        std::shared_ptr<IDatabrokerReader> reader,
+        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>>&& writers,
+        bool enable /* = false */)
     : topic_(topic)
-    , source_participant_(source)
-    , target_participants_(targets)
+    , reader_(reader)
+    , writers_(writers)
 {
     // TODO
 }
@@ -39,6 +40,18 @@ Track::Track(
 Track::~Track()
 {
     // TODO
+}
+
+void Track::enable()
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+}
+
+void Track::disable()
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::get_payload not supported yet");
 }
 
 } /* namespace databroker */

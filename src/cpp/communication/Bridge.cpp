@@ -27,28 +27,84 @@ namespace databroker {
 
 Bridge::Bridge(
         const RealTopic& topic,
-        std::shared_ptr<ParticipantDatabase> participant_database)
+        std::shared_ptr<ParticipantDatabase> participant_database,
+        bool enable /* = false */)
     : topic_(topic)
     , participants_(participant_database)
+    , enabled_(false)
 {
-    // TODO
+    std::vector<ParticipantId> ids = participants_->get_participant_ids();
+
+    // Generate readers and writers for each participant
+    for (ParticipantId id: ids)
+    {
+        std::shared_ptr<eprosima::databroker::IDatabrokerParticipant> participant = participants_->get_participant(id);
+        writers_[id] = participant->create_writer(topic);
+        readers_[id] = participant->create_reader(topic);
+    }
+
+    // Generate tracks
+    for (ParticipantId id: ids)
+    {
+        // List of all Participants
+        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_except_one =
+                writers_; // Create a copy of the map
+
+        // Get this Track source participant before removing it from map
+        writers_.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+
+        // This insert is required as there is no copy method for Track
+        // Track are always created disable and then enable with Bridge enable() method
+        tracks_[id] =
+                std::make_unique<Track>(topic_, readers_[id], std::move(writers_), false);
+    }
+
+    if (enable)
+    {
+        this->enable();
+    }
 }
 
 Bridge::~Bridge()
 {
-    // TODO
+    // Get mutex to prevent other thread to enable it
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    // Disable every Track before destroy
+    disable();
+
+    // Tracks will be deleted by their own as they are stored as unique ptrs in map
 }
 
-ReturnCode Bridge::enable()
+void Bridge::enable()
 {
-    // TODO
-    throw UnsupportedException("Bridge::enable not supported yet");
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (!enabled_)
+    {
+        // ATTENTION: reference needed or it would copy Track
+        for (auto& track_it : tracks_)
+        {
+            track_it.second->enable();
+        }
+
+        enabled_ = true;
+    }
 }
 
-ReturnCode Bridge::disable()
+void Bridge::disable()
 {
-    // TODO
-    throw UnsupportedException("Bridge::disable not supported yet");
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (enabled_)
+    {
+        // ATTENTION: reference needed or it would copy Track
+        for (auto& track_it : tracks_)
+        {
+            track_it.second->enable();
+        }
+
+        enabled_ = false;
+    }
 }
 
 } /* namespace databroker */

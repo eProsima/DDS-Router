@@ -35,14 +35,19 @@ public:
 
     Track(
             const RealTopic& topic,
-            std::shared_ptr<IDatabrokerParticipant> source,
-            std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>&& targets);
+            std::shared_ptr<IDatabrokerReader> reader,
+            std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>>&& writers,
+            bool enable = false);
 
     virtual ~Track();
 
-    ReturnCode enable();
+    //! Copy method not allowed
+    void operator =(
+            const Track&) = delete;
 
-    ReturnCode disable();
+    void enable();
+
+    void disable();
 
 protected:
 
@@ -51,10 +56,6 @@ protected:
 protected:
 
     RealTopic topic_;
-
-    std::shared_ptr<IDatabrokerParticipant> source_participant_;
-
-    std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> target_participants_;
 
     std::shared_ptr<IDatabrokerReader> reader_;
 

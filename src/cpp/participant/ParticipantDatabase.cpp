@@ -44,5 +44,17 @@ std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
 }
 
+std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+}
+
+std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> ParticipantDatabase::get_participant_map() const
+{
+    // TODO
+    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+}
+
 } /* namespace databroker */
 } /* namespace eprosima */
