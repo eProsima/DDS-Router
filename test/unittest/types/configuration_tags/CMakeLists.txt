@@ -24,8 +24,12 @@ set(TEST_HEADERS
 set(TEST_LIST
     databroker_tags)
 
+set(TEST_EXTRA_LIBRARIES
+    )
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_HEADERS}"
-    "${TEST_LIST}")
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")

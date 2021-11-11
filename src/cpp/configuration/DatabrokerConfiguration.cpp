@@ -31,6 +31,10 @@ DatabrokerConfiguration::DatabrokerConfiguration(
         const RawConfiguration& raw_configuration)
     : raw_configuration_(raw_configuration)
 {
+    if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
+    {
+        throw ConfigurationException("Databroker expects a map as base yaml type or an empty");
+    }
 }
 
 DatabrokerConfiguration::~DatabrokerConfiguration()
@@ -124,12 +128,16 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
                 {
                     new_topic_type = topic[TOPIC_TYPE_NAME_TAG].as<std::string>();
                 }
+
+                if (new_topic_type.empty())
+                {
+                    result.push_back(new WildcardTopic(new_topic_name));
+                }
                 else
                 {
-                    new_topic_type = "*";
+                    result.push_back(new WildcardTopic(new_topic_name, new_topic_type));
                 }
 
-                result.push_back(new WildcardTopic(new_topic_name, new_topic_type));
             }
         }
     }

@@ -23,6 +23,12 @@
 namespace eprosima {
 namespace databroker {
 
+WildcardTopic::WildcardTopic(
+        const std::string& topic_name)
+    : AbstractTopic(topic_name, "*")
+{
+}
+
 WildcardTopic::~WildcardTopic()
 {
 }
