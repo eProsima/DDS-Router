@@ -26,18 +26,18 @@
 using namespace eprosima::databroker;
 
 /***************
- * CONSTRUCTOR *
- ***************/
+* CONSTRUCTOR *
+***************/
 
 /*
  * Add a topic to a list in a yaml
  * If name or type is not given, that tag will not be added
  */
 void add_topic_to_list_to_yaml(
-    RawConfiguration& yaml,
-    const char* list_tag,
-    std::string topic_name = "",
-    std::string topic_type = "")
+        RawConfiguration& yaml,
+        const char* list_tag,
+        std::string topic_name = "",
+        std::string topic_type = "")
 {
     RawConfiguration topic;
 
@@ -59,9 +59,9 @@ void add_topic_to_list_to_yaml(
  * If name or type is not given, that tag will not be added
  */
 void add_topics_to_list_to_yaml(
-    RawConfiguration& yaml,
-    const char* list_tag,
-    std::set<std::pair<std::string, std::string>> names)
+        RawConfiguration& yaml,
+        const char* list_tag,
+        std::set<std::pair<std::string, std::string>> names)
 {
     for (std::pair<std::string, std::string> name : names)
     {
@@ -72,7 +72,9 @@ void add_topics_to_list_to_yaml(
 /*
  * Add a tag with empty value
  */
-void add_empty_tag_to_yaml(RawConfiguration& yaml, std::string tag)
+void add_empty_tag_to_yaml(
+        RawConfiguration& yaml,
+        std::string tag)
 {
     yaml[tag] = RawConfiguration();
 }
@@ -81,14 +83,14 @@ void add_empty_tag_to_yaml(RawConfiguration& yaml, std::string tag)
  * Check if a topic is inside a list returned by whitelist or blacklist Databroker methods
  */
 bool topic_in_list(
-    std::list<AbstractTopic*> list,
-    WildcardTopic compared_topic)
+        std::list<AbstractTopic*> list,
+        WildcardTopic compared_topic)
 {
     for (AbstractTopic* topic : list)
     {
         // Check class and internal variables
         if (typeid(*topic) == typeid(compared_topic) &&
-            compared_topic == *topic)
+                compared_topic == *topic)
         {
             return true;
         }
@@ -100,14 +102,14 @@ bool topic_in_list(
  * Check if a topic is inside a list returned by real_topics Databroker methods
  */
 bool topic_in_real_list(
-    std::set<RealTopic> list,
-    RealTopic compared_topic)
+        std::set<RealTopic> list,
+        RealTopic compared_topic)
 {
     for (RealTopic topic : list)
     {
         // Check class and internal variables
         if (typeid(topic) == typeid(compared_topic) &&
-            compared_topic == topic)
+                compared_topic == topic)
         {
             return true;
         }
@@ -204,7 +206,8 @@ size_t random_topic_names_number_valid_topics()
  *
  * TODO: create really random names
  */
-std::string random_participant_name(uint16_t seed)
+std::string random_participant_name(
+        uint16_t seed)
 {
     return std::string("PartName_") + std::to_string(seed);
 }
@@ -214,11 +217,12 @@ std::string random_participant_name(uint16_t seed)
  *
  * TODO: create really random configurations
  */
-RawConfiguration random_participant_configuration(uint16_t seed)
+RawConfiguration random_participant_configuration(
+        uint16_t seed)
 {
     RawConfiguration config;
 
-    for (int i=(seed); i>0; i--)
+    for (int i = (seed); i > 0; i--)
     {
         std::string tag("tag" + std::to_string(i));
 
@@ -228,7 +232,7 @@ RawConfiguration random_participant_configuration(uint16_t seed)
             config[tag].push_back("value1");
             config[tag].push_back("value2");
         }
-        else if(i % 2 == 0)
+        else if (i % 2 == 0)
         {
             // Each 4 tags add a map
             RawConfiguration sub_map;
@@ -267,8 +271,8 @@ TEST(DatabrokerConfigurationTest, constructor)
 }
 
 /****************************
- * PUBLIC METHODS STD CASES *
- ****************************/
+* PUBLIC METHODS STD CASES *
+****************************/
 
 /**
  * Test get participants configurations
@@ -321,14 +325,14 @@ TEST(DatabrokerConfigurationTest, participants_configurations)
 
     // Many Participant Configurations
     RawConfiguration yaml4;
-    for (int i=0; i<10; i++)
+    for (int i = 0; i < 10; i++)
     {
         yaml4[random_participant_name(i)] = random_participant_configuration(i);
     }
     DatabrokerConfiguration config4(yaml4);
     auto result4 = config4.participants_configurations();
 
-    for (int i=0; i<10; i++)
+    for (int i = 0; i < 10; i++)
     {
         ParticipantId id(random_participant_name(i));
         // WARNING: comparing two YAMLs is not correclty done in some occasions
@@ -403,8 +407,8 @@ TEST(DatabrokerConfigurationTest, real_topics)
 }
 
 /*********************************
- * PUBLIC METHODS SPECIFIC CASES *
- *********************************/
+* PUBLIC METHODS SPECIFIC CASES *
+*********************************/
 
 /**
  * Test get whitelist with wildcards from yaml
@@ -523,8 +527,8 @@ TEST(DatabrokerConfigurationTest, whitelist_and_blacklist)
 }
 
 /******************************
- * PUBLIC METHODS ERROR CASES *
- ******************************/
+* PUBLIC METHODS ERROR CASES *
+******************************/
 
 /**
  * Test DatabrokerConfiguration constructor to check it does not fail
