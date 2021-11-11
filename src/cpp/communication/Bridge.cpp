@@ -35,20 +35,28 @@ Bridge::Bridge(
 {
     std::vector<ParticipantId> ids = participants_->get_participant_ids();
 
+    // Generate readers and writers for each participant
+    for (ParticipantId id: ids)
+    {
+        std::shared_ptr<eprosima::databroker::IDatabrokerParticipant> participant = participants_->get_participant(id);
+        writers_[id] = participant->create_writer(topic);
+        readers_[id] = participant->create_reader(topic);
+    }
+
     // Generate tracks
     for (ParticipantId id: ids)
     {
         // List of all Participants
-        std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> targets = participants_->get_participant_map();
+        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_except_one =
+            writers_; // Create a copy of the map
 
         // Get this Track source participant before removing it from map
-        std::shared_ptr<IDatabrokerParticipant> source = targets[id];
-        targets.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+        writers_.erase(id); // TODO: check if this element is removed in erase or if source is still valid
 
         // This insert is required as there is no copy method for Track
         // Track are always created disable and then enable with Bridge enable() method
         tracks_[id] =
-            std::make_unique<Track>(topic_, source, std::move(targets), false);
+            std::make_unique<Track>(topic_, readers_[id], std::move(writers_), false);
     }
 
     if (enable)

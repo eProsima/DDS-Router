@@ -41,16 +41,23 @@ public:
             ParticipantId id,
             RawConfiguration,
             std::shared_ptr<PayloadPool>,
-            std::shared_ptr<DiscoveryDatabase>);
+            std::shared_ptr<DiscoveryDatabase>)
+        : id_(id)
+    {}
 
-    ParticipantId id() const;
+    ParticipantId id() const
+    {
+        return id_;
+    }
 
-    std::shared_ptr<IDatabrokerWriter> create_writer(
+    virtual std::shared_ptr<IDatabrokerWriter> create_writer(
             RealTopic);
 
-    std::shared_ptr<IDatabrokerReader> create_reader(
-            RealTopic,
-            std::function<void()> on_data_available_lambda); // lambda as listener
+    virtual std::shared_ptr<IDatabrokerReader> create_reader(
+            RealTopic); // lambda as listener
+
+protected:
+    ParticipantId id_;
 };
 
 } /* namespace databroker */

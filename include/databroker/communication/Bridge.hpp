@@ -105,6 +105,12 @@ protected:
      */
     std::map<ParticipantId, std::unique_ptr<Track>> tracks_;
 
+    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_;
+
+    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs
+    std::map<ParticipantId, std::shared_ptr<IDatabrokerReader>> readers_;
+
     //! Whether the Bridge is currently enable
     bool enabled_;
 

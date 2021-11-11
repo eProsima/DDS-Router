@@ -38,12 +38,13 @@ public:
 
     IDatabrokerReader(
             RealTopic,
-            std::shared_ptr<PayloadPool>,
-            std::function<void()> on_data_available_lambda);
+            std::shared_ptr<PayloadPool>);
 
     ReturnCode enable();
 
     ReturnCode disable();
+
+    ReturnCode set_on_data_available_callback();
 
     ReturnCode take(
             DataReceived&);         // This data read must be inside a PayloadPool

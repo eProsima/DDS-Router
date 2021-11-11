@@ -27,12 +27,12 @@ namespace databroker {
 
 Track::Track(
         const RealTopic& topic,
-        std::shared_ptr<IDatabrokerParticipant> source,
-        std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>>&& targets,
+        std::shared_ptr<IDatabrokerReader> reader,
+        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>>&& writers,
         bool enable /* = false */)
     : topic_(topic)
-    , source_participant_(source)
-    , target_participants_(targets)
+    , reader_(reader)
+    , writers_(writers)
 {
     // TODO
 }
