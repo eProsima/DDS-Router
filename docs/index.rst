@@ -55,24 +55,6 @@
    /rst/developer_manual/installation/configuration/cmake_options
 
 
-.. _index_ros:
-
-.. toctree::
-   :caption: ROS2
-   :maxdepth: 2
-   :numbered: 5
-   :hidden:
-
-
-.. _index_docker:
-
-.. toctree::
-   :caption: Docker Image
-   :maxdepth: 2
-   :numbered: 5
-   :hidden:
-
-
 .. _index_notes:
 
 .. toctree::
