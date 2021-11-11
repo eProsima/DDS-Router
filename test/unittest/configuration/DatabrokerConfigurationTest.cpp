@@ -260,7 +260,8 @@ RawConfiguration random_participant_configuration(
 TEST(DatabrokerConfigurationTest, constructor)
 {
     // Empty case
-    DatabrokerConfiguration config_empty(RawConfiguration());
+    RawConfiguration empty_yaml;
+    DatabrokerConfiguration config_empty(empty_yaml);
 
     // Random case
     RawConfiguration random_config;
