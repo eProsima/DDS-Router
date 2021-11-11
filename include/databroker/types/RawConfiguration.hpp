@@ -24,7 +24,13 @@
 namespace eprosima {
 namespace databroker {
 
-//! Configuration in dictionary format
+/**
+ * Configuration in dictionary format
+ *
+ * YAML spec: https://yaml.org/spec/1.2.2/
+ *
+ * @note: It is not legal to repeat keys in a YAML
+ */
 using RawConfiguration = YAML::Node;
 using RawConfigurationType = YAML::NodeType;
 
