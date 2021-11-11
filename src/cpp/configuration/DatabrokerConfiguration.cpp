@@ -70,6 +70,7 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
             }
 
             // Add new Participant with its configuration
+            // NOTE: There will not be repeated Participant Ids as in a yaml the keys are unique
             result[value_str] = participant_it->second;
         }
     }
