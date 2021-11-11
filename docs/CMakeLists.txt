@@ -29,7 +29,7 @@ set(PRODUCT_VERSION_STR ${PRODUCT_MAJOR_VERSION}.${PRODUCT_MINOR_VERSION}.${PROD
 ###############################################################################
 # Project
 ###############################################################################
-project(dds_router_docs)
+project(ddsrouter_docs)
 set(PROJECT_VERSION_MAJOR "${PRODUCT_MAJOR_VERSION}")
 set(PROJECT_VERSION_MINOR "${PRODUCT_MINOR_VERSION}")
 set(PROJECT_VERSION_PATCH "${PRODUCT_PATCH_VERSION}")

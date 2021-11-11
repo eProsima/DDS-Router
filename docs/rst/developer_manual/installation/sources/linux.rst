@@ -23,7 +23,7 @@ This section describes the instructions for installing *eProsima DDS Router* dep
 environment from sources.
 The following packages will be installed:
 
-- ``foonathan_memory_vendor``, an STL compatible C++ memory allocator library.
+- ``foonathan_memory_vendor``, an STL compatible C++ memory allocation library.
 - ``fastcdr``, a C++ library that serializes according to the standard CDR serialization mechanism.
 - ``fastrtps``, the core library of eProsima Fast DDS library.
 
@@ -158,8 +158,8 @@ Colcon installation
 
         mkdir -p ~/DDS-Router/src
         cd ~/DDS-Router
-        wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/dds_router.repos
-        vcs import src < dds_router.repos
+        wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+        vcs import src < ddsrouter.repos
 
     .. note::
 
@@ -275,13 +275,13 @@ Run an application
 ==================
 
 To run the *eProsima DDS Router* application, source the *Fast DDS* library
-and execute the executable file that has been installed in :code:`<install-path>/dds_router/bin/dds_router`:
+and execute the executable file that has been installed in :code:`<install-path>/ddsrouter/bin/ddsrouter`:
 
 .. code-block:: bash
 
     # If built has been done using colcon, all projects could be sourced as follows
     source install/setup.bash
-    ./<install-path>/dds_router/bin/dds_router
+    ./<install-path>/ddsrouter/bin/ddsrouter
 
 Be sure that this executable has execute permissions.
 
