@@ -85,11 +85,14 @@ std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_
 std::set<RealTopic> DatabrokerConfiguration::real_topics() const
 {
     std::set<RealTopic> result;
+    std::cout << "real_topic start" << std::endl;
 
     for (AbstractTopic* topic : common_topic_list_get_(WHITELIST_TAG))
     {
+        std::cout << "real_topic " << *topic << std::endl;
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
+            std::cout << "real_topic adding topic: " << *topic << std::endl;
             result.emplace(RealTopic(topic->topic_name(), topic->topic_type()));
         }
     }
@@ -129,7 +132,7 @@ std::list<AbstractTopic*> DatabrokerConfiguration::common_topic_list_get_(
                     new_topic_type = topic[TOPIC_TYPE_NAME_TAG].as<std::string>();
                 }
 
-                if (new_topic_type.empty() || new_topic_type != "")
+                if (new_topic_type.empty())
                 {
                     result.push_back(new WildcardTopic(new_topic_name));
                 }

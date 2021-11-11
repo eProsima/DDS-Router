@@ -30,6 +30,12 @@ bool RealTopic::is_real_topic(
         const std::string& topic_name,
         const std::string& type_name) noexcept
 {
+    // Real topics must have topic name and topic type
+    if (topic_name.empty() || type_name.empty())
+    {
+        return false;
+    }
+
     // TODO: extend with regex
     // It checks if topic name or type contain an invalid substring
     std::vector<std::string> invalid_substrings = {
