@@ -37,6 +37,9 @@ set(TEST_LIST
         non_minor_operator
     )
 
+set(TEST_EXTRA_LIBRARIES
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
