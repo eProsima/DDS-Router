@@ -43,7 +43,8 @@ public:
             std::shared_ptr<PayloadPool>,
             std::shared_ptr<DiscoveryDatabase>)
         : id_(id)
-    {}
+    {
+    }
 
     ParticipantId id() const
     {
@@ -57,6 +58,7 @@ public:
             RealTopic); // lambda as listener
 
 protected:
+
     ParticipantId id_;
 };
 

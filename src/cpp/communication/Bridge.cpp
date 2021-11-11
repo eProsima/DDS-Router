@@ -48,7 +48,7 @@ Bridge::Bridge(
     {
         // List of all Participants
         std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_except_one =
-            writers_; // Create a copy of the map
+                writers_; // Create a copy of the map
 
         // Get this Track source participant before removing it from map
         writers_.erase(id); // TODO: check if this element is removed in erase or if source is still valid
@@ -56,7 +56,7 @@ Bridge::Bridge(
         // This insert is required as there is no copy method for Track
         // Track are always created disable and then enable with Bridge enable() method
         tracks_[id] =
-            std::make_unique<Track>(topic_, readers_[id], std::move(writers_), false);
+                std::make_unique<Track>(topic_, readers_[id], std::move(writers_), false);
     }
 
     if (enable)

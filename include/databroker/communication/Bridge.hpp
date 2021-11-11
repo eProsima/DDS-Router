@@ -46,7 +46,7 @@ public:
      *
      * In Bridge construction, the inside \c Tracks are created
      *
-     * @param topic: Topic that this Bridge manage communication
+     * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
      * @param enable: Whether the Bridge should be initialized as enabled
      *
@@ -57,7 +57,7 @@ public:
             std::shared_ptr<ParticipantDatabase> participant_database,
             bool enable = false);
 
-    //! Destroyer
+    //! Destructor
     virtual ~Bridge();
 
     /**
@@ -65,7 +65,8 @@ public:
      *
      * Bridge create in constructor all the inside Tracks needed, and thus it should not be copied
      */
-    void operator=(const Track&) = delete;
+    void operator =(
+            const Track&) = delete;
 
     /**
      * Enable bridge in case it is not enabled
@@ -86,7 +87,7 @@ public:
 protected:
 
     /**
-     * Topic that this bridge manage communication
+     * Topic of which this Bridge manages communication
      *
      * @note: This variable is stored but not used
      */

@@ -38,7 +38,8 @@ struct DatabrokerTopic
             std::string topic_type) noexcept;
 
     //! Copy constructor
-    void operator=(const DatabrokerTopic& other);
+    void operator =(
+            const DatabrokerTopic& other);
 
     //! Destructor
     virtual ~DatabrokerTopic();

@@ -42,7 +42,8 @@ public:
     virtual ~Track();
 
     //! Copy method not allowed
-    void operator=(const Track&) = delete;
+    void operator =(
+            const Track&) = delete;
 
     void enable();
 
