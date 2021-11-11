@@ -78,14 +78,14 @@ if (CODE_COVERAGE)
     endif()
 
     if("${CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
-        message("Building with llvm Code Coverage Tools")
+        message(STATUS "Building with llvm Code Coverage Tools")
 
         # set Flags
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
 
     elseif(CMAKE_COMPILER_IS_GNUCXX)
-        message("Building with lcov Code Coverage Tools")
+        message(STATUS "Building with lcov Code Coverage Tools")
 
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -fprofile-arcs -ftest-coverage")
@@ -111,9 +111,6 @@ file(GLOB_RECURSE HEADERS_FILES
         "include/**/*.hpp"
         "include/**/*.hxx"
     )
-
-message(STATUS "Sources: ${SOURCES_FILES}")
-message(STATUS "Headers: ${HEADERS_FILES}")
 
 add_executable(${PROJECT_NAME}
         ${SOURCES_FILES}
