@@ -133,6 +133,18 @@ std::set<std::pair<std::string, std::string>> random_real_topic_names()
 }
 
 /*
+ * Random Non Valid topics
+ */
+std::set<std::pair<std::string, std::string>> random_non_valid_topic_names()
+{
+    return
+        {
+            {"", ""},
+            {"", "*"},
+        };
+}
+
+/*
  * Random Non Real topic names to test different configurations
  */
 std::set<std::pair<std::string, std::string>> random_abstract_topic_names()
@@ -165,6 +177,7 @@ std::set<std::pair<std::string, std::string>> random_abstract_topic_names()
 std::set<std::pair<std::string, std::string>> random_topic_names()
 {
     std::set<std::pair<std::string, std::string>> all_topics;
+
     std::set<std::pair<std::string, std::string>> real_topics = random_real_topic_names();
     std::set<std::pair<std::string, std::string>> abs_topics = random_abstract_topic_names();
     std::set_union(
@@ -172,7 +185,18 @@ std::set<std::pair<std::string, std::string>> random_topic_names()
         abs_topics.begin(), abs_topics.end(),
         std::inserter(all_topics, all_topics.begin()));
 
+    std::set<std::pair<std::string, std::string>> non_valid_topics = random_non_valid_topic_names();
+    all_topics.insert(non_valid_topics.begin(), non_valid_topics.end());
+
     return all_topics;
+}
+
+/*
+ * Number of valid topics in random_topic_names()
+ */
+size_t random_topic_names_number_valid_topics()
+{
+    return random_real_topic_names().size() + random_abstract_topic_names().size();
 }
 
 /*
@@ -422,7 +446,7 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard)
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_topic_names());
     DatabrokerConfiguration config4(yaml4);
-    EXPECT_EQ(config4.whitelist().size(), random_topic_names().size());
+    EXPECT_EQ(config4.whitelist().size(), random_topic_names_number_valid_topics());
 
     // Whitelist and blacklist with random topics
     RawConfiguration yaml5;
@@ -473,7 +497,7 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, BLACKLIST_TAG, random_topic_names());
     DatabrokerConfiguration config4(yaml4);
-    EXPECT_EQ(config4.blacklist().size(), random_topic_names().size());
+    EXPECT_EQ(config4.blacklist().size(), random_topic_names_number_valid_topics());
 
     // Blacklist and whitelist with random topics
     RawConfiguration yaml5;

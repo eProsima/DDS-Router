@@ -24,6 +24,17 @@ using pair_topic_type = std::pair<std::string, std::string>;
 // TODO: extend contains tests for regex topics
 
 /**
+ * Test WildcardTopic construct only with topic name
+ */
+TEST(WildcardTopicTest, topic_name_constructor)
+{
+    WildcardTopic topic1("topic1");
+    WildcardTopic topic2("topic1", "*");
+
+    ASSERT_EQ(topic1, topic2);
+}
+
+/**
  * Test WildcardTopic contains method for positive cases
  */
 TEST(WildcardTopicTest, contains_wildcard)
