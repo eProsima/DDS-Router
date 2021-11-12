@@ -25,11 +25,11 @@
 #include <fnmatch.h>
 #endif // if defined(_WIN32)
 
-#include <databroker/types/utils.hpp>
-#include <databroker/types/configuration_tags.hpp>
+#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 bool match_pattern(
         const std::string& pattern,
@@ -44,5 +44,5 @@ bool match_pattern(
 #endif // defined(_WIN32)
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

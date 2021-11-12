@@ -20,11 +20,11 @@
 #include <string>
 #include <vector>
 
-#include <databroker/types/topic/RealTopic.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 bool RealTopic::is_real_topic(
         const std::string& topic_name,
@@ -53,5 +53,5 @@ bool RealTopic::is_real_topic(
     return true;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -15,11 +15,11 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/types/endpoint/Endpoint.hpp>
-#include <databroker/types/endpoint/QoS.hpp>
-#include <databroker/types/endpoint/Guid.hpp>
+#include <ddsrouter/types/endpoint/Endpoint.hpp>
+#include <ddsrouter/types/endpoint/QoS.hpp>
+#include <ddsrouter/types/endpoint/Guid.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 // Get a random QoS configuration
 QoS random_qos(

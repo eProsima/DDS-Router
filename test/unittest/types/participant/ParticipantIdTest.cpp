@@ -17,10 +17,10 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/types/configuration_tags.hpp>
-#include <databroker/types/ParticipantId.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/ParticipantId.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 /*
  * List of valid names for participants
@@ -124,7 +124,7 @@ TEST(ParticipantIdTest, is_valid)
 
     // By actual invalid name
     {
-        ParticipantId pi("__invalid_databroker_participant__");
+        ParticipantId pi("__invalid_ddsrouter_participant__");
         ASSERT_FALSE(pi.is_valid());
     }
 }

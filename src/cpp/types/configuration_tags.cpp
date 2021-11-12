@@ -19,13 +19,13 @@
 
 #include <set>
 
-#include <databroker/types/utils.hpp>
-#include <databroker/types/configuration_tags.hpp>
+#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
-std::set<std::string> databroker_tags() noexcept
+std::set<std::string> ddsrouter_tags() noexcept
 {
     return
         {
@@ -36,5 +36,5 @@ std::set<std::string> databroker_tags() noexcept
         };
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

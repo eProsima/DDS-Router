@@ -17,11 +17,11 @@
  *
  */
 
-#include <databroker/dynamic/AllowedTopicList.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/dynamic/AllowedTopicList.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
@@ -126,5 +126,5 @@ std::set<std::shared_ptr<AbstractTopic>> AllowedTopicList::get_topic_list_withou
     return non_repeated_list;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

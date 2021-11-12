@@ -18,9 +18,9 @@
 #include <fastrtps/rtps/common/Guid.h>
 #include <fastdds/rtps/common/EntityId_t.hpp>
 
-#include <databroker/types/endpoint/Guid.hpp>
+#include <ddsrouter/types/endpoint/Guid.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 /**
  * Test \c Guid \c is_valid method

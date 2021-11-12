@@ -17,11 +17,11 @@
  *
  */
 
-#include <databroker/participant/ParticipantDatabase.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/participant/ParticipantDatabase.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 // TODO: Add logs
 
@@ -31,13 +31,13 @@ ParticipantDatabase::~ParticipantDatabase()
 
 void ParticipantDatabase::add_participant(
         ParticipantId id,
-        std::shared_ptr<IDatabrokerParticipant> participant)
+        std::shared_ptr<IDDSRouterParticipant> participant)
 {
     // TODO
     throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
 }
 
-std::shared_ptr<IDatabrokerParticipant> ParticipantDatabase::get_participant(
+std::shared_ptr<IDDSRouterParticipant> ParticipantDatabase::get_participant(
         const ParticipantId& id) const
 {
     // TODO
@@ -50,11 +50,11 @@ std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
 }
 
-std::map<ParticipantId, std::shared_ptr<IDatabrokerParticipant>> ParticipantDatabase::get_participant_map() const
+std::map<ParticipantId, std::shared_ptr<IDDSRouterParticipant>> ParticipantDatabase::get_participant_map() const
 {
     // TODO
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -17,11 +17,11 @@
  *
  */
 
-#include <databroker/types/topic/WildcardTopic.hpp>
-#include <databroker/types/utils.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 WildcardTopic::WildcardTopic(
         const std::string& topic_name)
@@ -52,5 +52,5 @@ bool WildcardTopic::matches(
     return false;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ###############################################################################
-# CMake build rules for DataBroker Prototype
+# CMake build rules for DDS Router
 ###############################################################################
 cmake_minimum_required(VERSION 3.5)
 
@@ -42,17 +42,17 @@ set(PRODUCT_VERSION_STR ${PRODUCT_MAJOR_VERSION}.${PRODUCT_MINOR_VERSION}.${PROD
 ###############################################################################
 # Project
 ###############################################################################
-project(databroker)
+project(ddsrouter)
 set(PROJECT_VERSION_MAJOR "${PRODUCT_MAJOR_VERSION}")
 set(PROJECT_VERSION_MINOR "${PRODUCT_MINOR_VERSION}")
 set(PROJECT_VERSION_PATCH "${PRODUCT_PATCH_VERSION}")
 set(PROJECT_VERSION "${PRODUCT_VERSION_STR}")
 
-set(PROJECT_NAME_STYLED "DataBroker")
-set(PROJECT_NAME_LARGE "Fast DataBroker")
+set(PROJECT_NAME_STYLED "DDS Router")
+set(PROJECT_NAME_LARGE "DDS Router")
 string(TOUPPER "${PROJECT_NAME}" PROJECT_NAME_UPPER)
-set(${PROJECT_NAME}_DESCRIPTION_SUMMARY "C++ library for use a WAN bridge using DDS protocol")
-set(${PROJECT_NAME}_DESCRIPTION "eProsima ${PROJECT_NAME_LARGE} library provides an easy configurable bridge to communicate an internal network with an external one efficiently and transparently.")
+set(${PROJECT_NAME}_DESCRIPTION_SUMMARY "C++ software application for use a WAN bridge using DDS protocol")
+set(${PROJECT_NAME}_DESCRIPTION "eProsima ${PROJECT_NAME_LARGE} provides an easy configurable software application to communicate DDS networks efficiently and transparently.")
 
 message(STATUS "Configuring ${PROJECT_NAME_LARGE}")
 message(STATUS "Version: ${PROJECT_VERSION}")
@@ -147,9 +147,9 @@ install(TARGETS ${PROJECT_NAME}
 ###############################################################################
 # Test
 ###############################################################################
-option(BUILD_TESTS "Build eProsima Databroker application and documentation tests" OFF)
-option(BUILD_APP_TESTS "Build eProsima Databroker application tests" OFF)
-option(BUILD_DOCUMENTATION_TESTS "Build eProsima Databroker documentation tests" OFF)
+option(BUILD_TESTS "Build eProsima DDS Router application and documentation tests" OFF)
+option(BUILD_APP_TESTS "Build eProsima DDS Router application tests" OFF)
+option(BUILD_DOCUMENTATION_TESTS "Build eProsima DDS Router documentation tests" OFF)
 
 if (BUILD_TESTS)
     set(BUILD_APP_TESTS ON)

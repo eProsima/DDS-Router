@@ -17,11 +17,11 @@
  *
  */
 
-#include <databroker/communication/PayloadPool.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 PayloadPool::~PayloadPool()
 {
@@ -52,5 +52,5 @@ bool PayloadPool::release_payload(
     throw UnsupportedException("PayloadPool::release_payload not supported yet");
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

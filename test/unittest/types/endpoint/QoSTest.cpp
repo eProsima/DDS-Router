@@ -15,9 +15,9 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/types/endpoint/QoS.hpp>
+#include <ddsrouter/types/endpoint/QoS.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 /*
  * Arbitrary value for reliability kind when real value is not important

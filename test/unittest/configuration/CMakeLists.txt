@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME DatabrokerConfigurationTest)
+set(TEST_NAME DDSRouterConfigurationTest)
 
 set(TEST_SOURCES
-        DatabrokerConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp
+        DDSRouterConfigurationTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DDSRouterException.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DDSRouterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DatabrokerConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
     )
 
 set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/configuration/DatabrokerConfiguration.hpp
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/configuration/DDSRouterConfiguration.hpp
     )
 
 set(TEST_LIST

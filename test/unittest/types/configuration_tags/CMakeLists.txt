@@ -22,7 +22,7 @@ set(TEST_HEADERS
     ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/configuration_tags.hpp)
 
 set(TEST_LIST
-    databroker_tags)
+    ddsrouter_tags)
 
 set(TEST_EXTRA_LIBRARIES
     )

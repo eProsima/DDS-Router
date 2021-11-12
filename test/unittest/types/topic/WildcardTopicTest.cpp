@@ -15,9 +15,9 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/types/topic/WildcardTopic.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 using pair_topic_type = std::pair<std::string, std::string>;
 

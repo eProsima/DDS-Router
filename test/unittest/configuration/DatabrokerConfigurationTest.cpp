@@ -18,13 +18,13 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/configuration/DatabrokerConfiguration.hpp>
-#include <databroker/exceptions/ConfigurationException.hpp>
-#include <databroker/types/configuration_tags.hpp>
-#include <databroker/types/RawConfiguration.hpp>
-#include <databroker/types/topic/WildcardTopic.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
 /***************
 * CONSTRUCTOR *
@@ -81,7 +81,7 @@ void add_empty_tag_to_yaml(
 }
 
 /*
- * Check if a topic is inside a list returned by whitelist or blacklist Databroker methods
+ * Check if a topic is inside a list returned by whitelist or blacklist DDSRouter methods
  */
 bool topic_in_list(
         std::list<std::shared_ptr<AbstractTopic>> list,
@@ -100,7 +100,7 @@ bool topic_in_list(
 }
 
 /*
- * Check if a topic is inside a list returned by real_topics Databroker methods
+ * Check if a topic is inside a list returned by real_topics DDSRouter methods
  */
 bool topic_in_real_list(
         std::set<RealTopic> list,
@@ -252,24 +252,24 @@ RawConfiguration random_participant_configuration(
 }
 
 /**
- * Test DatabrokerConfiguration constructor to check it does not fail
+ * Test DDSRouterConfiguration constructor to check it does not fail
  *
  * CASES:
  *  Empty configuration
  *  Random configuration
  */
-TEST(DatabrokerConfigurationTest, constructor)
+TEST(DDSRouterConfigurationTest, constructor)
 {
     // Empty case
     RawConfiguration empty_yaml;
-    DatabrokerConfiguration config_empty(empty_yaml);
+    DDSRouterConfiguration config_empty(empty_yaml);
 
     // Random case
     RawConfiguration random_config;
     random_config["RAND_TAG_1"] = "rand_val_1";
     random_config["RAND_TAG_2"] = "rand_val_2";
     random_config["RAND_TAG_3"].push_back(314);
-    DatabrokerConfiguration config_random(random_config);
+    DDSRouterConfiguration config_random(random_config);
 }
 
 /****************************
@@ -285,18 +285,18 @@ TEST(DatabrokerConfigurationTest, constructor)
  *  One Participant Configuration
  *  Many Participant Configurations
  */
-TEST(DatabrokerConfigurationTest, participants_configurations)
+TEST(DDSRouterConfigurationTest, participants_configurations)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    DatabrokerConfiguration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.participants_configurations().empty());
 
     // Other tags that are not participant valid ids
     RawConfiguration yaml2;
     add_topics_to_list_to_yaml(yaml2, WHITELIST_TAG, random_abstract_topic_names());
     add_topics_to_list_to_yaml(yaml2, BLACKLIST_TAG, random_real_topic_names());
-    DatabrokerConfiguration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.participants_configurations().empty());
 
     // One Participant Configuration
@@ -319,7 +319,7 @@ TEST(DatabrokerConfigurationTest, participants_configurations)
     RawConfiguration yaml3;
     yaml3[participant_name_str] = participant_config;
 
-    DatabrokerConfiguration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.participants_configurations();
     ASSERT_EQ(1, result3.size());
     EXPECT_TRUE(result3.find(participant_name) != result3.end());
@@ -331,7 +331,7 @@ TEST(DatabrokerConfigurationTest, participants_configurations)
     {
         yaml4[random_participant_name(i)] = random_participant_configuration(i);
     }
-    DatabrokerConfiguration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     auto result4 = config4.participants_configurations();
 
     for (int i = 0; i < 10; i++)
@@ -354,30 +354,30 @@ TEST(DatabrokerConfigurationTest, participants_configurations)
  *  Whitelist with only Real topics
  *  Whitelist with random topics
  */
-TEST(DatabrokerConfigurationTest, real_topics)
+TEST(DDSRouterConfigurationTest, real_topics)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    DatabrokerConfiguration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.real_topics().empty());
 
     // Empty whitelist
     RawConfiguration yaml2;
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic2", "type2");
-    DatabrokerConfiguration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.real_topics().empty());
 
     // Whitelist with only non Real topics
     RawConfiguration yaml3;
     add_topics_to_list_to_yaml(yaml3, WHITELIST_TAG, random_abstract_topic_names());
-    DatabrokerConfiguration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     EXPECT_TRUE(config3.real_topics().empty());
 
     // Whitelist with only non Real topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_real_topic_names());
-    DatabrokerConfiguration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     auto result4 = config4.real_topics();
     EXPECT_FALSE(result4.empty());
     for (auto topic_name : random_real_topic_names())
@@ -389,7 +389,7 @@ TEST(DatabrokerConfigurationTest, real_topics)
     // Whitelist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_topic_names());
-    DatabrokerConfiguration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     auto result5 = config5.real_topics();
     EXPECT_FALSE(result5.empty());
 
@@ -424,11 +424,11 @@ TEST(DatabrokerConfigurationTest, real_topics)
  *  Whitelist with random topics
  *  Whitelist and blacklist with random topics
  */
-TEST(DatabrokerConfigurationTest, whitelist_wildcard)
+TEST(DDSRouterConfigurationTest, whitelist_wildcard)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    DatabrokerConfiguration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.whitelist().empty());
 
     // Empty whitelist
@@ -436,14 +436,14 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard)
     add_empty_tag_to_yaml(yaml2, WHITELIST_TAG);
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLACKLIST_TAG, "topic2", "type2");
-    DatabrokerConfiguration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.whitelist().empty());
 
     // Empty whitelist
     RawConfiguration yaml3;
     add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic2*", "type2*");
-    DatabrokerConfiguration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.whitelist();
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
@@ -451,14 +451,14 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard)
     // Whitelist with random topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_topic_names());
-    DatabrokerConfiguration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     EXPECT_EQ(config4.whitelist().size(), random_topic_names_number_valid_topics());
 
     // Whitelist and blacklist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_abstract_topic_names());
     add_topics_to_list_to_yaml(yaml5, BLACKLIST_TAG, random_real_topic_names());
-    DatabrokerConfiguration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     EXPECT_EQ(config5.whitelist().size(), random_abstract_topic_names().size());
 }
 
@@ -474,11 +474,11 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard)
  *  Blacklist with random topics
  *  Blacklist and whitelist with random topics
  */
-TEST(DatabrokerConfigurationTest, blacklist_wildcard)
+TEST(DDSRouterConfigurationTest, blacklist_wildcard)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    DatabrokerConfiguration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.blacklist().empty());
 
     // Empty blacklist
@@ -487,14 +487,14 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
     std::cout << yaml2 << std::endl;
     add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic2", "type2");
-    DatabrokerConfiguration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.blacklist().empty());
 
     // Empty blacklist
     RawConfiguration yaml3;
     add_topic_to_list_to_yaml(yaml3, BLACKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml3, BLACKLIST_TAG, "topic2*", "type2*");
-    DatabrokerConfiguration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.blacklist();
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
@@ -502,14 +502,14 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
     // Blacklist with random topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, BLACKLIST_TAG, random_topic_names());
-    DatabrokerConfiguration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     EXPECT_EQ(config4.blacklist().size(), random_topic_names_number_valid_topics());
 
     // Blacklist and whitelist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, BLACKLIST_TAG, random_abstract_topic_names());
     add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_real_topic_names());
-    DatabrokerConfiguration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     EXPECT_EQ(config5.blacklist().size(), random_abstract_topic_names().size());
 }
 
@@ -518,12 +518,12 @@ TEST(DatabrokerConfigurationTest, blacklist_wildcard)
  *
  * TODO: when regex is implemented, create a common test case
  */
-TEST(DatabrokerConfigurationTest, whitelist_and_blacklist)
+TEST(DDSRouterConfigurationTest, whitelist_and_blacklist)
 {
     RawConfiguration yaml;
     add_topics_to_list_to_yaml(yaml, WHITELIST_TAG, random_real_topic_names());
     add_topics_to_list_to_yaml(yaml, BLACKLIST_TAG, random_abstract_topic_names());
-    DatabrokerConfiguration config(yaml);
+    DDSRouterConfiguration config(yaml);
     EXPECT_EQ(config.whitelist().size(), random_real_topic_names().size());
     EXPECT_EQ(config.blacklist().size(), random_abstract_topic_names().size());
 }
@@ -533,36 +533,36 @@ TEST(DatabrokerConfigurationTest, whitelist_and_blacklist)
 ******************************/
 
 /**
- * Test DatabrokerConfiguration constructor to check it does not fail
+ * Test DDSRouterConfiguration constructor to check it does not fail
  *
  * CASES:
  *  Array as base configuration
  *  Scalar as base configuration
  *  String as base configuration
  */
-TEST(DatabrokerConfigurationTest, constructor_fail)
+TEST(DDSRouterConfigurationTest, constructor_fail)
 {
     // Array case
     RawConfiguration array_config;
     array_config.push_back("rand_val_1");
     array_config.push_back("rand_val_2");
-    EXPECT_THROW(DatabrokerConfiguration dc(array_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(array_config), ConfigurationException);
 
     // Scalar case
     RawConfiguration scalar_config;
     scalar_config = 42;
-    EXPECT_THROW(DatabrokerConfiguration dc(scalar_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(scalar_config), ConfigurationException);
 
     // Scalar case
     RawConfiguration string_config;
     string_config = "non_valid_config";
-    EXPECT_THROW(DatabrokerConfiguration dc(string_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(string_config), ConfigurationException);
 }
 
 /**
  * Test get participants configurations negative cases
  */
-TEST(DatabrokerConfigurationTest, participants_configurations_fail)
+TEST(DDSRouterConfigurationTest, participants_configurations_fail)
 {
     // There is currently no way to induce an error when getting participant configurations
     ASSERT_TRUE(true);
@@ -574,14 +574,14 @@ TEST(DatabrokerConfigurationTest, participants_configurations_fail)
  * CASES:
  *  Map instead of array in topics
  */
-TEST(DatabrokerConfigurationTest, real_topics_fail)
+TEST(DDSRouterConfigurationTest, real_topics_fail)
 {
     // Map instead of array in whitelist
     RawConfiguration map_config;
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[WHITELIST_TAG] = map_config;
-    DatabrokerConfiguration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.real_topics(), ConfigurationException);
 }
 
@@ -593,14 +593,14 @@ TEST(DatabrokerConfigurationTest, real_topics_fail)
  * CASES:
  *  Map instead of array in topics
  */
-TEST(DatabrokerConfigurationTest, whitelist_wildcard_fail)
+TEST(DDSRouterConfigurationTest, whitelist_wildcard_fail)
 {
     // Map instead of array in whitelist
     RawConfiguration map_config;
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[WHITELIST_TAG] = map_config;
-    DatabrokerConfiguration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.whitelist(), ConfigurationException);
 }
 
@@ -612,14 +612,14 @@ TEST(DatabrokerConfigurationTest, whitelist_wildcard_fail)
  * CASES:
  *  Map instead of array in topics
  */
-TEST(DatabrokerConfigurationTest, blacklist_wildcard_fail)
+TEST(DDSRouterConfigurationTest, blacklist_wildcard_fail)
 {
     // Map instead of array in blacklist
     RawConfiguration map_config;
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[BLACKLIST_TAG] = map_config;
-    DatabrokerConfiguration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.blacklist(), ConfigurationException);
 }
 

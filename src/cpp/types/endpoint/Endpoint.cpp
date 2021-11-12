@@ -17,10 +17,10 @@
  *
  */
 
-#include <databroker/types/endpoint/Endpoint.hpp>
+#include <ddsrouter/types/endpoint/Endpoint.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 Endpoint::Endpoint(
         const EndpointKind& kind,
@@ -76,5 +76,5 @@ bool Endpoint::is_reader() const
     return kind() == EndpointKind::READER;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -17,11 +17,11 @@
  *
  */
 
-#include <databroker/communication/Bridge.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/communication/Bridge.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 // TODO: Add logs
 
@@ -38,7 +38,7 @@ Bridge::Bridge(
     // Generate readers and writers for each participant
     for (ParticipantId id: ids)
     {
-        std::shared_ptr<eprosima::databroker::IDatabrokerParticipant> participant = participants_->get_participant(id);
+        std::shared_ptr<eprosima::ddsrouter::IDDSRouterParticipant> participant = participants_->get_participant(id);
         writers_[id] = participant->create_writer(topic);
         readers_[id] = participant->create_reader(topic);
     }
@@ -47,7 +47,7 @@ Bridge::Bridge(
     for (ParticipantId id: ids)
     {
         // List of all Participants
-        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>> writers_except_one =
+        std::map<ParticipantId, std::shared_ptr<IDDSRouterWriter>> writers_except_one =
                 writers_; // Create a copy of the map
 
         // Get this Track source participant before removing it from map
@@ -107,5 +107,5 @@ void Bridge::disable()
     }
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */
