@@ -18,7 +18,7 @@ It is organized as follows:
 Dependencies installation
 =========================
 
-The *DDS Router* depends on *eProsima Fast DDS* library and certain Debian packages.
+*DDS Router* depends on *eProsima Fast DDS* library and certain Debian packages.
 This section describes the instructions for installing *eProsima DDS Router* dependencies and requirements in a Linux
 environment from sources.
 The following packages will be installed:
@@ -135,7 +135,7 @@ eProsima dependencies
 ^^^^^^^^^^^^^^^^^^^^^
 
 If it already exists in the system an installation of *Fast DDS* library with version greater than `2.4.0`, just source
-this library when building the *DDS Router* by using the command:
+this library when building the *DDS Router* application by using the command:
 
 .. code-block:: bash
 

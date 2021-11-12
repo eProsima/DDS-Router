@@ -11,29 +11,29 @@
   :alt: eProsima
   :target: http://www.eprosima.com/
 
-The *eProsima DDS Router* is a end-user software application that enables the connection of distributed DDS networks.
+*eProsima DDS Router* is a end-user software application that enables the connection of distributed DDS networks.
 That is, DDS entities such as publishers and subscribers deployed in one geographic location and using a dedicated
 local network will be able to communicate with other DDS entities deployed in different geographic areas on their own
-dedicated local networks as if they were all on the same network through the use of the *DDS Router*.
-This is done by deploying a *DDS Router* on an edge device of each local network to be connected so that the
+dedicated local networks as if they were all on the same network through the use of the *eProsima DDS Router*.
+This is achieved by deploying a *DDS Router* on an edge device of each local network so that the
 *DDS Router* routes DDS traffic from one network to the other through WAN communication.
 
 Furthermore, *DDS Router* is a software designed for various forms of distributed networks,
 such as mesh networks in which nodes are deployed in different private local networks that are auto-discovered
-without any centralized network node, or cloud-based networks in which there is a data processing cloud and
+without any centralized network node, or cloud-based networks where there is a data processing cloud and
 multiple geographically distributed edge devices.
 
-Some of the key features of the DDS Router are as follows:
+Following are some of the key features of *eProsima DDS Router*:
 
   1. **WAN communication over TCP**: it supports WAN over TCP communication to establish DDS communications over the
      Internet.
-  2. **Distributed nature**: the user may deploy intermediate DDS Router nodes to discover new entities that enter and
+  2. **Distributed nature**: the user may deploy intermediate *DDS Router* nodes to discover new entities that enter and
      leave the network dynamically.
-  3. **Efficient data routing**: the DDS Router avoids data introspection achieving a zero-copy system in data
+  3. **Efficient data routing**: *DDS Router* avoids data introspection achieving a zero-copy system in data
      forwarding.
   4. **Easy deployment**: it is based on an easily configurable modular system for users with no knowledge of computer
      networks.
-  5. **Topic whitelisting**: it is possible to configure the DDS Router to forward just the user data belonging to a
+  5. **Topic whitelisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
      topic specified by the user.
 
 .. _fig_entities_diagram:

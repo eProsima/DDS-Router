@@ -13,7 +13,7 @@ These options allow the developer to enable/disable certain *DDS Router* setting
 ``ON``/``OFF`` at the CMake execution, or set the required path to certain dependencies.
 
 .. warning::
-    These options are only for developers who installed the *DDS Router* following the compilation steps
+    These options are only for developers who installed *eProsima DDS Router* following the compilation steps
     described in :ref:`developer_manual_installation_sources_linux`.
 
 .. list-table::
