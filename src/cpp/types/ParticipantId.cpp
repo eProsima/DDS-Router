@@ -50,7 +50,7 @@ ParticipantId ParticipantId::invalid()
 bool ParticipantId::is_valid_id(
         const std::string& tag)
 {
-    return (tag != WHITELIST_TAG) && (tag != BLOCKLIST_TAG);
+    return (tag != ALLOWLIST_TAG) && (tag != BLOCKLIST_TAG);
 }
 
 bool ParticipantId::is_valid() const

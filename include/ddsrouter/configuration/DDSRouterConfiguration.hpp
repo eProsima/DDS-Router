@@ -38,13 +38,13 @@ public:
 
     virtual ~DDSRouterConfiguration();
 
-    std::list<std::shared_ptr<AbstractTopic>> whitelist() const;
+    std::list<std::shared_ptr<AbstractTopic>> allowlist() const;
 
     std::list<std::shared_ptr<AbstractTopic>> blocklist() const;
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
-    //! Ad hoc function to find real topics within the whitelist
+    //! Ad hoc function to find real topics within the allowlist
     // TODO: This method will dissapear once the dynamic module is implemented
     std::set<RealTopic> real_topics() const;
 

@@ -25,10 +25,10 @@ namespace ddsrouter {
 
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
-        const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
+        const std::list<std::shared_ptr<AbstractTopic>>& allowlist,
         const std::list<std::shared_ptr<AbstractTopic>>& blocklist)
 {
-    whitelist_ = AllowedTopicList::get_topic_list_without_repetition_(whitelist);
+    allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
 }
 
@@ -39,17 +39,17 @@ AllowedTopicList::~AllowedTopicList()
 void AllowedTopicList::clear()
 {
     blocklist_.clear();
-    whitelist_.clear();
+    allowlist_.clear();
 }
 
 bool AllowedTopicList::is_topic_allowed(
         const RealTopic& topic) const
 {
-    // It is accepted by default if whitelist is empty, if no is should pass the whitelist filter
-    bool accepted = whitelist_.empty();
+    // It is accepted by default if allowlist is empty, if no is should pass the allowlist filter
+    bool accepted = allowlist_.empty();
 
-    // Check if whitelist filter it (this will do anything if empty and accepted will be true)
-    for (std::shared_ptr<AbstractTopic> filter : whitelist_)
+    // Check if allowlist filter it (this will do anything if empty and accepted will be true)
+    for (std::shared_ptr<AbstractTopic> filter : allowlist_)
     {
         if (filter->matches(topic))
         {
@@ -58,13 +58,13 @@ bool AllowedTopicList::is_topic_allowed(
         }
     }
 
-    // Check if it has not passed the whitelist so blocklist is skipped
+    // Check if it has not passed the allowlist so blocklist is skipped
     if (!accepted)
     {
         return false;
     }
 
-    // Whitelist passed, check blocklist
+    // Allowlist passed, check blocklist
     for (std::shared_ptr<AbstractTopic> filter : blocklist_)
     {
         if (filter->matches(topic))
@@ -80,7 +80,7 @@ bool AllowedTopicList::is_topic_allowed(
 bool AllowedTopicList::operator ==(
         const AllowedTopicList& other) const
 {
-    return whitelist_ == other.whitelist_ && blocklist_ == other.blocklist_;
+    return allowlist_ == other.allowlist_ && blocklist_ == other.blocklist_;
 }
 
 std::set<std::shared_ptr<AbstractTopic>> AllowedTopicList::get_topic_list_without_repetition_(

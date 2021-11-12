@@ -41,9 +41,9 @@ DDSRouterConfiguration::~DDSRouterConfiguration()
 {
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::whitelist() const
+std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::allowlist() const
 {
-    return generic_get_topic_list_(WHITELIST_TAG);
+    return generic_get_topic_list_(ALLOWLIST_TAG);
 }
 
 std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::blocklist() const
@@ -87,7 +87,7 @@ std::set<RealTopic> DDSRouterConfiguration::real_topics() const
 {
     std::set<RealTopic> result;
 
-    for (const std::shared_ptr<AbstractTopic>& topic : generic_get_topic_list_(WHITELIST_TAG))
+    for (const std::shared_ptr<AbstractTopic>& topic : generic_get_topic_list_(ALLOWLIST_TAG))
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {

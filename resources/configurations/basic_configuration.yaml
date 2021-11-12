@@ -1,5 +1,5 @@
 
-whitelist:
+allowlist:
   [
     {name: "*", type: "*"}
   ]

@@ -33,13 +33,13 @@ set(TEST_LIST
         constructor
         participants_configurations
         real_topics
-        whitelist_wildcard
+        allowlist_wildcard
         blocklist_wildcard
-        whitelist_and_blocklist
+        allowlist_and_blocklist
         constructor_fail
         participants_configurations_fail
         real_topics_fail
-        whitelist_wildcard_fail
+        allowlist_wildcard_fail
         blocklist_wildcard_fail
     )
 

@@ -32,12 +32,12 @@ set(TEST_LIST
         is_topic_allowed__empty_list
         is_topic_allowed__simple_blocklist
         is_topic_allowed__complex_blocklist
-        is_topic_allowed__simple_whitelist
-        is_topic_allowed__complex_whitelist
-        is_topic_allowed__simple_whitelist_and_blocklist
-        is_topic_allowed__complex_whitelist_and_blocklist
-        is_topic_allowed__simple_whitelist_and_blocklist_entangled
-        is_topic_allowed__complex_whitelist_and_blocklist_entangled
+        is_topic_allowed__simple_allowlist
+        is_topic_allowed__complex_allowlist
+        is_topic_allowed__simple_allowlist_and_blocklist
+        is_topic_allowed__complex_allowlist_and_blocklist
+        is_topic_allowed__simple_allowlist_and_blocklist_entangled
+        is_topic_allowed__complex_allowlist_and_blocklist_entangled
     )
 
 set(TEST_EXTRA_LIBRARIES

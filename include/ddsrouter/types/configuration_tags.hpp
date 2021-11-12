@@ -28,7 +28,7 @@ namespace ddsrouter {
 std::set<std::string> ddsrouter_tags() noexcept;
 
 // Topics related tags
-constexpr const char* WHITELIST_TAG("whitelist");
+constexpr const char* ALLOWLIST_TAG("allowlist");
 constexpr const char* BLOCKLIST_TAG("blocklist");
 constexpr const char* TOPIC_NAME_TAG("name");
 constexpr const char* TOPIC_TYPE_NAME_TAG("type");

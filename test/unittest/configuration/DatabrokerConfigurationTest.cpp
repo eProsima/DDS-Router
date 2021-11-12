@@ -81,7 +81,7 @@ void add_empty_tag_to_yaml(
 }
 
 /*
- * Check if a topic is inside a list returned by whitelist or blocklist DDSRouter methods
+ * Check if a topic is inside a list returned by allowlist or blocklist DDSRouter methods
  */
 bool topic_in_list(
         std::list<std::shared_ptr<AbstractTopic>> list,
@@ -294,7 +294,7 @@ TEST(DDSRouterConfigurationTest, participants_configurations)
 
     // Other tags that are not participant valid ids
     RawConfiguration yaml2;
-    add_topics_to_list_to_yaml(yaml2, WHITELIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_abstract_topic_names());
     add_topics_to_list_to_yaml(yaml2, BLOCKLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.participants_configurations().empty());
@@ -345,14 +345,14 @@ TEST(DDSRouterConfigurationTest, participants_configurations)
 }
 
 /**
- * Test get real topics from whitelist
+ * Test get real topics from allowlist
  *
  * CASES:
  *  Empty configuration
- *  Empty whitelist
- *  Whitelist with only non Real topics
- *  Whitelist with only Real topics
- *  Whitelist with random topics
+ *  Empty allowlist
+ *  Allowlist with only non Real topics
+ *  Allowlist with only Real topics
+ *  Allowlist with random topics
  */
 TEST(DDSRouterConfigurationTest, real_topics)
 {
@@ -361,22 +361,22 @@ TEST(DDSRouterConfigurationTest, real_topics)
     DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.real_topics().empty());
 
-    // Empty whitelist
+    // Empty allowlist
     RawConfiguration yaml2;
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic2", "type2");
     DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.real_topics().empty());
 
-    // Whitelist with only non Real topics
+    // Allowlist with only non Real topics
     RawConfiguration yaml3;
-    add_topics_to_list_to_yaml(yaml3, WHITELIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml3, ALLOWLIST_TAG, random_abstract_topic_names());
     DDSRouterConfiguration config3(yaml3);
     EXPECT_TRUE(config3.real_topics().empty());
 
-    // Whitelist with only non Real topics
+    // Allowlist with only non Real topics
     RawConfiguration yaml4;
-    add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_real_topic_names());
+    add_topics_to_list_to_yaml(yaml4, ALLOWLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config4(yaml4);
     auto result4 = config4.real_topics();
     EXPECT_FALSE(result4.empty());
@@ -386,9 +386,9 @@ TEST(DDSRouterConfigurationTest, real_topics)
         EXPECT_TRUE(topic_in_real_list(result4, topic));
     }
 
-    // Whitelist with random topics
+    // Allowlist with random topics
     RawConfiguration yaml5;
-    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_topic_names());
+    add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_topic_names());
     DDSRouterConfiguration config5(yaml5);
     auto result5 = config5.real_topics();
     EXPECT_FALSE(result5.empty());
@@ -413,53 +413,53 @@ TEST(DDSRouterConfigurationTest, real_topics)
 *********************************/
 
 /**
- * Test get whitelist with wildcards from yaml
+ * Test get allowlist with wildcards from yaml
  *
  * TODO: when regex is implemented, create a common test case
  *
  * CASES:
  *  Empty configuration
- *  Empty whitelist
- *  Whitelist with some examples
- *  Whitelist with random topics
- *  Whitelist and blocklist with random topics
+ *  Empty allowlist
+ *  Allowlist with some examples
+ *  Allowlist with random topics
+ *  Allowlist and blocklist with random topics
  */
-TEST(DDSRouterConfigurationTest, whitelist_wildcard)
+TEST(DDSRouterConfigurationTest, allowlist_wildcard)
 {
     // Empty configuration
     RawConfiguration yaml1;
     DDSRouterConfiguration config1(yaml1);
-    EXPECT_TRUE(config1.whitelist().empty());
+    EXPECT_TRUE(config1.allowlist().empty());
 
-    // Empty whitelist
+    // Empty allowlist
     RawConfiguration yaml2;
-    add_empty_tag_to_yaml(yaml2, WHITELIST_TAG);
+    add_empty_tag_to_yaml(yaml2, ALLOWLIST_TAG);
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic2", "type2");
     DDSRouterConfiguration config2(yaml2);
-    EXPECT_TRUE(config2.whitelist().empty());
+    EXPECT_TRUE(config2.allowlist().empty());
 
-    // Empty whitelist
+    // Empty allowlist
     RawConfiguration yaml3;
-    add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic1", "type1");
-    add_topic_to_list_to_yaml(yaml3, WHITELIST_TAG, "topic2*", "type2*");
+    add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic2*", "type2*");
     DDSRouterConfiguration config3(yaml3);
-    auto result3 = config3.whitelist();
+    auto result3 = config3.allowlist();
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
 
-    // Whitelist with random topics
+    // Allowlist with random topics
     RawConfiguration yaml4;
-    add_topics_to_list_to_yaml(yaml4, WHITELIST_TAG, random_topic_names());
+    add_topics_to_list_to_yaml(yaml4, ALLOWLIST_TAG, random_topic_names());
     DDSRouterConfiguration config4(yaml4);
-    EXPECT_EQ(config4.whitelist().size(), random_topic_names_number_valid_topics());
+    EXPECT_EQ(config4.allowlist().size(), random_topic_names_number_valid_topics());
 
-    // Whitelist and blocklist with random topics
+    // Allowlist and blocklist with random topics
     RawConfiguration yaml5;
-    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_abstract_topic_names());
     add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config5(yaml5);
-    EXPECT_EQ(config5.whitelist().size(), random_abstract_topic_names().size());
+    EXPECT_EQ(config5.allowlist().size(), random_abstract_topic_names().size());
 }
 
 /**
@@ -472,7 +472,7 @@ TEST(DDSRouterConfigurationTest, whitelist_wildcard)
  *  Empty blocklist
  *  Blocklist with some examples
  *  Blocklist with random topics
- *  Blocklist and whitelist with random topics
+ *  Blocklist and allowlist with random topics
  */
 TEST(DDSRouterConfigurationTest, blocklist_wildcard)
 {
@@ -485,8 +485,8 @@ TEST(DDSRouterConfigurationTest, blocklist_wildcard)
     RawConfiguration yaml2;
     add_empty_tag_to_yaml(yaml2, BLOCKLIST_TAG);
     std::cout << yaml2 << std::endl;
-    add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic1", "type1");
-    add_topic_to_list_to_yaml(yaml2, WHITELIST_TAG, "topic2", "type2");
+    add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic1", "type1");
+    add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic2", "type2");
     DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.blocklist().empty());
 
@@ -505,10 +505,10 @@ TEST(DDSRouterConfigurationTest, blocklist_wildcard)
     DDSRouterConfiguration config4(yaml4);
     EXPECT_EQ(config4.blocklist().size(), random_topic_names_number_valid_topics());
 
-    // Blocklist and whitelist with random topics
+    // Blocklist and allowlist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_abstract_topic_names());
-    add_topics_to_list_to_yaml(yaml5, WHITELIST_TAG, random_real_topic_names());
+    add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config5(yaml5);
     EXPECT_EQ(config5.blocklist().size(), random_abstract_topic_names().size());
 }
@@ -518,13 +518,13 @@ TEST(DDSRouterConfigurationTest, blocklist_wildcard)
  *
  * TODO: when regex is implemented, create a common test case
  */
-TEST(DDSRouterConfigurationTest, whitelist_and_blocklist)
+TEST(DDSRouterConfigurationTest, allowlist_and_blocklist)
 {
     RawConfiguration yaml;
-    add_topics_to_list_to_yaml(yaml, WHITELIST_TAG, random_real_topic_names());
+    add_topics_to_list_to_yaml(yaml, ALLOWLIST_TAG, random_real_topic_names());
     add_topics_to_list_to_yaml(yaml, BLOCKLIST_TAG, random_abstract_topic_names());
     DDSRouterConfiguration config(yaml);
-    EXPECT_EQ(config.whitelist().size(), random_real_topic_names().size());
+    EXPECT_EQ(config.allowlist().size(), random_real_topic_names().size());
     EXPECT_EQ(config.blocklist().size(), random_abstract_topic_names().size());
 }
 
@@ -569,39 +569,39 @@ TEST(DDSRouterConfigurationTest, participants_configurations_fail)
 }
 
 /**
- * Test get real topics from whitelist negative cases
+ * Test get real topics from allowlist negative cases
  *
  * CASES:
  *  Map instead of array in topics
  */
 TEST(DDSRouterConfigurationTest, real_topics_fail)
 {
-    // Map instead of array in whitelist
+    // Map instead of array in allowlist
     RawConfiguration map_config;
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
-    yaml1[WHITELIST_TAG] = map_config;
+    yaml1[ALLOWLIST_TAG] = map_config;
     DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.real_topics(), ConfigurationException);
 }
 
 /**
- * Test get whitelist with wildcards from yaml negative cases
+ * Test get allowlist with wildcards from yaml negative cases
  *
  * TODO: when regex is implemented, create a common test case
  *
  * CASES:
  *  Map instead of array in topics
  */
-TEST(DDSRouterConfigurationTest, whitelist_wildcard_fail)
+TEST(DDSRouterConfigurationTest, allowlist_wildcard_fail)
 {
-    // Map instead of array in whitelist
+    // Map instead of array in allowlist
     RawConfiguration map_config;
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
-    yaml1[WHITELIST_TAG] = map_config;
+    yaml1[ALLOWLIST_TAG] = map_config;
     DDSRouterConfiguration dc(yaml1);
-    EXPECT_THROW(dc.whitelist(), ConfigurationException);
+    EXPECT_THROW(dc.allowlist(), ConfigurationException);
 }
 
 /**

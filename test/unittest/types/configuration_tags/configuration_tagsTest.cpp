@@ -27,7 +27,7 @@ TEST(configuration_tags, ddsrouter_tags)
 
     std::set<std::string> current_tags =
     {
-        WHITELIST_TAG,
+        ALLOWLIST_TAG,
         BLOCKLIST_TAG,
         TOPIC_NAME_TAG,
         TOPIC_TYPE_NAME_TAG

@@ -73,7 +73,7 @@ void DDSRouter::endpoint_discovered(
 void DDSRouter::init_allowed_topics_()
 {
     allowed_topics_ = AllowedTopicList(
-        configuration_.whitelist(),
+        configuration_.allowlist(),
         configuration_.blocklist());
 }
 
