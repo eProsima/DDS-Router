@@ -90,7 +90,7 @@ public:
 protected:
 
     static std::set<std::shared_ptr<AbstractTopic>> get_topic_list_without_repetition_(
-        const std::list<std::shared_ptr<AbstractTopic>>& list);
+            const std::list<std::shared_ptr<AbstractTopic>>& list);
 
     //! List of topics that are not allowed
     std::set<std::shared_ptr<AbstractTopic>> blacklist_;

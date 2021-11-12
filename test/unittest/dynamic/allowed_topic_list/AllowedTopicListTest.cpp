@@ -23,8 +23,8 @@ using namespace eprosima::databroker;
 using pair_topic_type = std::pair<std::string, std::string>;
 
 /******************
- * FILTER METHODS *
- ******************/
+* FILTER METHODS *
+******************/
 
 /*
  * Add a topic to a list
@@ -32,9 +32,9 @@ using pair_topic_type = std::pair<std::string, std::string>;
  * TODO: Add regex when implemented
  */
 void add_topic_to_list(
-    std::list<std::shared_ptr<AbstractTopic>>& list,
-    pair_topic_type topic_name,
-    bool wildcard = true)
+        std::list<std::shared_ptr<AbstractTopic>>& list,
+        pair_topic_type topic_name,
+        bool wildcard = true)
 {
     if (wildcard)
     {
@@ -49,9 +49,9 @@ void add_topic_to_list(
  * TODO: Add regex when implemented
  */
 void add_topics_to_list(
-    std::list<std::shared_ptr<AbstractTopic>>& list,
-    std::vector<pair_topic_type> topic_names,
-    bool wildcard = true)
+        std::list<std::shared_ptr<AbstractTopic>>& list,
+        std::vector<pair_topic_type> topic_names,
+        bool wildcard = true)
 {
     if (wildcard)
     {
