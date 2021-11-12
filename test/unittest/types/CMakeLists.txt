@@ -13,5 +13,6 @@
 # limitations under the License.
 
 add_subdirectory(configuration_tags)
+add_subdirectory(endpoint)
 add_subdirectory(participant)
 add_subdirectory(topic)

@@ -30,14 +30,40 @@ using DurabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t;
 //! Reliability kind enumeration
 using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 
-//! Collection of attributes of an Endpoint
-struct QoS
+/**
+ * Collection of attributes of an Endpoint
+ */
+class QoS
 {
+public:
+
+    /**
+     * Constructor of QoS class by its variables
+     *
+     * @param durability: durability kind
+     * @param reliability: reliability kind
+     */
+    QoS(
+            DurabilityKind durability,
+            ReliabilityKind reliability);
+
+    //! Whether this QoS is set with reliability
+    DurabilityKind durability() const;
+
+    //! Whether this QoS is set with durability
+    ReliabilityKind reliability() const;
+
+    // OPERATOR OVERLOAD
+    bool operator ==(
+            const QoS& other) const;
+
+protected:
+
     //! Durability kind
-    DurabilityKind durability;
+    DurabilityKind durability_;
 
     //! Reliability kind
-    ReliabilityKind reliability;
+    ReliabilityKind reliability_;
 };
 
 } /* namespace databroker */

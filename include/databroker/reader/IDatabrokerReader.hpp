@@ -53,7 +53,7 @@ public:
             std::function<void()> on_data_available_lambda);
 
     virtual ReturnCode take(
-            DataReceived&);         // This data read must be inside a PayloadPool
+            std::unique_ptr<DataReceived>&);         // This data read must be inside a PayloadPool
 };
 
 } /* namespace databroker */

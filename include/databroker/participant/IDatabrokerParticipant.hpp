@@ -22,7 +22,7 @@
 #include <databroker/communication/PayloadPool.hpp>
 #include <databroker/dynamic/DiscoveryDatabase.hpp>
 #include <databroker/reader/IDatabrokerReader.hpp>
-#include <databroker/types/Endpoint.hpp>
+#include <databroker/types/endpoint/Endpoint.hpp>
 #include <databroker/types/ParticipantId.hpp>
 #include <databroker/types/RawConfiguration.hpp>
 #include <databroker/writer/IDatabrokerWriter.hpp>

@@ -23,8 +23,8 @@
 #include <map>
 
 #include <databroker/types/topic/RealTopic.hpp>
-#include <databroker/types/Guid.hpp>
-#include <databroker/types/Endpoint.hpp>
+#include <databroker/types/endpoint/Guid.hpp>
+#include <databroker/types/endpoint/Endpoint.hpp>
 #include <databroker/types/ReturnCode.hpp>
 
 namespace eprosima {

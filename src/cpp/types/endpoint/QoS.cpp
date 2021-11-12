@@ -13,46 +13,38 @@
 // limitations under the License.
 
 /**
- * @file Endpoint.hpp
+ * @file QoS.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_ENDPOINT_HPP_
-#define _DATABROKER_TYPES_ENDPOINT_HPP_
-
-#include <databroker/types/Guid.hpp>
-#include <databroker/types/QoS.hpp>
-#include <databroker/types/topic/DatabrokerTopic.hpp>
+#include <databroker/types/endpoint/QoS.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-//! Possible kinds of the endpoint
-enum EndpointKind
+QoS::QoS(
+        DurabilityKind durability,
+        ReliabilityKind reliability)
+    : durability_(durability)
+    , reliability_(reliability)
 {
-    WRITER,
-    READER
-};
+}
 
-//! Data collection to describe an Endpoint
-struct Endpoint
+DurabilityKind QoS::durability() const
 {
-    //! Kind of the endpoint
-    EndpointKind kind;
+    return durability_;
+}
 
-    //! Unique id of the endpoint
-    Guid guid;
+ReliabilityKind QoS::reliability() const
+{
+    return reliability_;
+}
 
-    //! Attributes of the endpoint
-    QoS qos;
-
-    //! Topic that this endpoint belongs to
-    RealTopic topic;
-
-    //! Whether the endpoint is currently active
-    bool active;
-};
+bool QoS::operator ==(
+        const QoS& other) const
+{
+    return durability_ == other.durability_ && reliability_ == other.reliability_;
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_ENDPOINT_HPP_ */

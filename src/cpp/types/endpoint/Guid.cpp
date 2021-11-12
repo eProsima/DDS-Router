@@ -13,40 +13,20 @@
 // limitations under the License.
 
 /**
- * @file IDatabrokerWriter.hpp
+ * @file Guid.cpp
+ *
  */
 
-#ifndef _DATABROKER_WRITER_IDATABROKERWRITER_HPP_
-#define _DATABROKER_WRITER_IDATABROKERWRITER_HPP_
-
-#include <databroker/types/Data.hpp>
-#include <databroker/types/ReturnCode.hpp>
-#include <databroker/types/topic/RealTopic.hpp>
-#include <databroker/communication/PayloadPool.hpp>
+#include <databroker/types/endpoint/Guid.hpp>
 
 namespace eprosima {
 namespace databroker {
 
-/**
- * TODO
- */
-class IDatabrokerWriter
+bool Guid::is_valid() const
 {
-public:
-
-    IDatabrokerWriter(
-            RealTopic,
-            std::shared_ptr<PayloadPool>);
-
-    virtual void enable();
-
-    virtual void disable();
-
-    virtual ReturnCode write(
-            std::unique_ptr<DataReceived>&);
-};
+    return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
+           entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
+}
 
 } /* namespace databroker */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_WRITER_IDATABROKERWRITER_HPP_ */

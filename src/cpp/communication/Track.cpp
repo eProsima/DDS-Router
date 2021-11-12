@@ -149,7 +149,7 @@ void Track::transmit_()
     while (should_transmit_())
     {
         // Get data received
-        DataReceived data;
+        std::unique_ptr<DataReceived> data;
         ReturnCode take_result = reader_->take(data);
 
         if (take_result == ReturnCode::RETCODE_NO_DATA)
