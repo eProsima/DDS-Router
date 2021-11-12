@@ -38,11 +38,11 @@ public:
             RealTopic,
             std::shared_ptr<PayloadPool>);
 
-    ReturnCode enable();
+    virtual void enable();
 
-    ReturnCode disable();
+    virtual void disable();
 
-    ReturnCode write(
+    virtual ReturnCode write(
             DataReceived&);
 };
 
