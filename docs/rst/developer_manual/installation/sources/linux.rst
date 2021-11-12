@@ -134,9 +134,8 @@ For example, on Ubuntu use the command:
 eProsima dependencies
 ^^^^^^^^^^^^^^^^^^^^^
 
-If it already exists in the system an installation of *Fast DDS* library with version greater than `2.4.0` and
-an installation of *Fast DDS Statistics Backend*, just source these
-libraries when building the *DDS Router* by using the command:
+If it already exists in the system an installation of *Fast DDS* library with version greater than `2.4.0`, just source
+this library when building the *DDS Router* by using the command:
 
 .. code-block:: bash
 
