@@ -19,13 +19,29 @@
 
 using namespace eprosima::databroker;
 
+/*
+ * Arbitrary value for reliability kind when real value is not important
+ */
+ReliabilityKind default_reliability_kind()
+{
+    return ReliabilityKind::BEST_EFFORT;
+}
+
+/*
+ * Arbitrary value for durability kind when real value is not important
+ */
+DurabilityKind default_durability_kind()
+{
+    return DurabilityKind::VOLATILE;
+}
+
 /**
  * Test \c QoS constructor using Fast DDS QoS values
  */
 TEST(QoSTest, constructor)
 {
-    DurabilityKind durability;
-    ReliabilityKind reliability;
+    DurabilityKind durability = default_durability_kind();
+    ReliabilityKind reliability = default_reliability_kind();
 
     QoS qos(durability, reliability);
 
@@ -47,7 +63,7 @@ TEST(QoSTest, durability_getter)
     // Volatile
     {
         DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
-        ReliabilityKind reliability;
+        ReliabilityKind reliability = default_reliability_kind();
 
         QoS qos(durability, reliability);
 
@@ -57,7 +73,7 @@ TEST(QoSTest, durability_getter)
     // TransientLocal
     {
         DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-        ReliabilityKind reliability;
+        ReliabilityKind reliability = default_reliability_kind();
 
         QoS qos(durability, reliability);
 
@@ -67,7 +83,7 @@ TEST(QoSTest, durability_getter)
     // Transient
     {
         DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT;
-        ReliabilityKind reliability;
+        ReliabilityKind reliability = default_reliability_kind();
 
         QoS qos(durability, reliability);
 
@@ -77,7 +93,7 @@ TEST(QoSTest, durability_getter)
     // Persistent
     {
         DurabilityKind durability = eprosima::fastrtps::rtps::DurabilityKind_t::PERSISTENT;
-        ReliabilityKind reliability;
+        ReliabilityKind reliability = default_reliability_kind();
 
         QoS qos(durability, reliability);
 
@@ -96,7 +112,7 @@ TEST(QoSTest, reliability_getter)
 {
     // Best effort
     {
-        DurabilityKind durability;
+        DurabilityKind durability = default_durability_kind();
         ReliabilityKind reliability = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
 
         QoS qos(durability, reliability);
@@ -106,7 +122,7 @@ TEST(QoSTest, reliability_getter)
 
     // Reliable
     {
-        DurabilityKind durability;
+        DurabilityKind durability = default_durability_kind();
         ReliabilityKind reliability = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
 
         QoS qos(durability, reliability);

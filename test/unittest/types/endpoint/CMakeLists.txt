@@ -34,6 +34,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
         fastrtps
     )
 
@@ -65,6 +66,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
         fastrtps
     )
 
@@ -111,6 +113,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
         fastrtps
     )
 
