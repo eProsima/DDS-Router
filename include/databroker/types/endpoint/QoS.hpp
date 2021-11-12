@@ -44,8 +44,8 @@ public:
      * @param reliability: reliability kind
      */
     QoS(
-        DurabilityKind durability,
-        ReliabilityKind reliability);
+            DurabilityKind durability,
+            ReliabilityKind reliability);
 
     //! Whether this QoS is set with reliability
     DurabilityKind durability() const;
@@ -58,6 +58,7 @@ public:
             const QoS& other) const;
 
 protected:
+
     //! Durability kind
     DurabilityKind durability_;
 

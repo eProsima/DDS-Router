@@ -60,7 +60,8 @@ bool Endpoint::active() const
     return active_;
 }
 
-void Endpoint::active(bool status)
+void Endpoint::active(
+        bool status)
 {
     active_ = status;
 }

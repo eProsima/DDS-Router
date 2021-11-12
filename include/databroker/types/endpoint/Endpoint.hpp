@@ -46,10 +46,10 @@ public:
      * Constructor with Endpoint information
      */
     Endpoint(
-        const EndpointKind& kind,
-        const Guid& guid,
-        const QoS& qos,
-        const RealTopic& topic);
+            const EndpointKind& kind,
+            const Guid& guid,
+            const QoS& qos,
+            const RealTopic& topic);
 
     //! Endpoint kind getter
     EndpointKind kind() const;
@@ -67,11 +67,12 @@ public:
     bool active() const;
 
     //! Set active status of the Endpoint
-    void active(bool status);
+    void active(
+            bool status);
 
     /********************
-     * SPECIFIC GETTERS *
-     ********************/
+    * SPECIFIC GETTERS *
+    ********************/
 
     //! Whether the endpoint is a writer
     bool is_writer() const;
@@ -80,6 +81,7 @@ public:
     bool is_reader() const;
 
 protected:
+
     //! Kind of the endpoint
     EndpointKind kind_;
 

@@ -22,7 +22,8 @@
 using namespace eprosima::databroker;
 
 // Get a random QoS configuration
-QoS random_qos(uint seed = 0)
+QoS random_qos(
+        uint seed = 0)
 {
     DurabilityKind durability;
     ReliabilityKind reliability;
@@ -36,41 +37,43 @@ QoS random_qos(uint seed = 0)
         reliability = ReliabilityKind::RELIABLE;
     }
 
-    switch ((seed/2) % 4)
+    switch ((seed / 2) % 4)
     {
-    case 0:
-        durability = DurabilityKind::VOLATILE;
-        break;
+        case 0:
+            durability = DurabilityKind::VOLATILE;
+            break;
 
-    case 1:
-        durability = DurabilityKind::TRANSIENT_LOCAL;
-        break;
+        case 1:
+            durability = DurabilityKind::TRANSIENT_LOCAL;
+            break;
 
-    case 2:
-        durability = DurabilityKind::TRANSIENT;
-        break;
+        case 2:
+            durability = DurabilityKind::TRANSIENT;
+            break;
 
-    case 3:
-        durability = DurabilityKind::PERSISTENT;
-        break;
+        case 3:
+            durability = DurabilityKind::PERSISTENT;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return QoS(durability, reliability);
 }
 
 // Get a random topic name
-RealTopic random_topic(uint seed = 0)
+RealTopic random_topic(
+        uint seed = 0)
 {
     return RealTopic("TopicName_" + std::to_string(seed), "TopicType_" + std::to_string(seed));
 }
 
 // Get a random topic name
-EndpointKind random_endpoint_kind(uint seed = 0)
+EndpointKind random_endpoint_kind(
+        uint seed = 0)
 {
-    if(seed % 2)
+    if (seed % 2)
     {
         return EndpointKind::READER;
     }
@@ -81,7 +84,8 @@ EndpointKind random_endpoint_kind(uint seed = 0)
 }
 
 // Get a random guid
-Guid random_valid_guid(uint seed = 0)
+Guid random_valid_guid(
+        uint seed = 0)
 {
     eprosima::fastrtps::rtps::GuidPrefix_t guid_prefix;
     std::istringstream("44.53.00.5f.45.50.52.4f.53.49.4d." + std::to_string(seed)) >> guid_prefix;
@@ -156,7 +160,7 @@ TEST(EndpointTest, guid_getter)
 
     // Random guids
     {
-        for (uint i=0; i<10; i++)
+        for (uint i = 0; i < 10; i++)
         {
             Guid guid = random_valid_guid(i);
             Endpoint endpoint(kind, guid, qos, topic);
@@ -179,7 +183,7 @@ TEST(EndpointTest, qos_getter)
 
     // Random guids
     {
-        for (uint i=0; i<8; i++)
+        for (uint i = 0; i < 8; i++)
         {
             QoS qos = random_qos(i);
             Endpoint endpoint(kind, guid, qos, topic);
@@ -202,7 +206,7 @@ TEST(EndpointTest, topic_getter)
 
     // Random guids
     {
-        for (uint i=0; i<10; i++)
+        for (uint i = 0; i < 10; i++)
         {
             RealTopic topic = random_topic(i);
             Endpoint endpoint(kind, guid, qos, topic);
