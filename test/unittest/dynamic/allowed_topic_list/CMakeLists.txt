@@ -41,6 +41,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        yaml-cpp
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
