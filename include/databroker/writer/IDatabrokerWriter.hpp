@@ -43,7 +43,7 @@ public:
     virtual void disable();
 
     virtual ReturnCode write(
-            DataReceived&);
+            std::unique_ptr<DataReceived>&);
 };
 
 } /* namespace databroker */
