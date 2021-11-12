@@ -19,13 +19,15 @@
 #ifndef _DATABROKER_TYPES_DATA_HPP_
 #define _DATABROKER_TYPES_DATA_HPP_
 
-#include <databroker/types/endpoint/QoS.hpp>
+#include <fastdds/rtps/common/SerializedPayload.h>
+
+#include <databroker/types/endpoint/Guid.hpp>
 
 namespace eprosima {
 namespace databroker {
 
 //! Payload references the raw data received.
-using Payload = void*; // maybe SerializedPayload_t
+using Payload = fastrtps::rtps::SerializedPayload_t;
 
 //! Structure of the Data received from a Reader containing the data itself and the attributes of the suorce
 struct DataReceived
@@ -33,8 +35,8 @@ struct DataReceived
     //! Payload of the data received
     Payload data;
 
-    //! Attributes of the source entity that has transmit the data
-    QoS source_qos;
+    //! Guid of the source entity that has transmit the data
+    Guid source_guid;
 };
 
 } /* namespace databroker */

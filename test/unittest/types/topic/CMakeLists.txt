@@ -39,8 +39,6 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
     )
 
-set(TEST_EXTRA_LIBRARIES)
-
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
@@ -111,8 +109,6 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
-
-set(TEST_EXTRA_LIBRARIES)
 
 add_unittest_executable(
         "${TEST_NAME}"
