@@ -163,7 +163,7 @@ Colcon installation
 
     .. note::
 
-        In case there is an already *Fast DDS* installation in the system it is not required to download and build
+        In case there is already a *Fast DDS* installation in the system it is not required to download and build
         every dependency in the :code:`.repos` file.
         It is just needed to download and build the *DDS Router* project having sourced its dependencies.
         Refer to section :ref:`eprosima_dependencies` in order to check how to source *Fast DDS* library.

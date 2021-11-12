@@ -26,7 +26,8 @@ These options allow the developer to enable/disable certain *DDS Router* setting
     *   - :class:`BUILD_TESTS`
         - Build the *DDS Router* application and documentation |br|
           tests. Setting :class:`BUILD_TESTS` to ``ON`` sets |br|
-          :class:`BUILD_DOCUMENTATION_TESTS` to ``ON``.
+          :class:`BUILD_APP_TESTS` and :class:`BUILD_DOCUMENTATION_TESTS` |br|
+          to ``ON``.
         - ``OFF`` |br|
           ``ON``
         - ``OFF``

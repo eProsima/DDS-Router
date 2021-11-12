@@ -1,4 +1,4 @@
-.. eProsima Fast DDS Monitor documentation master file.
+.. eProsima DDS Router documentation master file.
 
 .. include:: rst/formalia/titlepage.rst
 
