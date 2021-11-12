@@ -50,7 +50,7 @@ public:
 
 protected:
 
-    std::list<std::shared_ptr<AbstractTopic>> common_topic_list_get_(
+    std::list<std::shared_ptr<AbstractTopic>> generic_get_topic_list_(
             const char* list_tag) const;
 
     const RawConfiguration raw_configuration_;

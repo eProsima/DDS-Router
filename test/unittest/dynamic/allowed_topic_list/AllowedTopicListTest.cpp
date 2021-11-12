@@ -455,7 +455,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_ent
     {
         {"topic1", "type*"},
         {"*HelloWorld", "HelloWorld"},
-        {"rt/chatter*", "std::std_msgs*"},
+        {"rt/chatter*", "std_type::std_msgs*"},
     };
 
     std::vector<pair_topic_type> real_topics_positive =
@@ -465,7 +465,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_ent
         {"HelloWorldTopic", "HelloWorld"},
         {"OtherTopic", "HelloWorld"},
         {"rt/pub", "std_type::std_msgs::string"},
-        {"rt/chatter", "std_type::string"},
+        {"rt/chatter", "std::string"},
     };
 
     std::vector<pair_topic_type> real_topics_negative =
@@ -476,7 +476,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_ent
         {"OtherHelloWorld", "HelloWorld"},
         {"rt/chatter", "std_type::std_msgs::string"},
         {"rt/chatter/pub", "std_type::std_msgs::string"},
-        {"rt/chatter", "std_type::std_msgs::int"},
+        {"chatter", "std::std_msgs::int"},
     };
 
     generic_test(

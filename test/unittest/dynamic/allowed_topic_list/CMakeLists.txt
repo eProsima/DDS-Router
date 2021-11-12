@@ -20,6 +20,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
 set(TEST_HEADERS
@@ -39,9 +40,14 @@ set(TEST_LIST
         is_topic_allowed__complex_whitelist_and_blacklist_entangled
     )
 
+set(TEST_EXTRA_LIBRARIES
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_HEADERS}"
         "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
     )

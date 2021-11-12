@@ -43,12 +43,12 @@ DatabrokerConfiguration::~DatabrokerConfiguration()
 
 std::list<std::shared_ptr<AbstractTopic>> DatabrokerConfiguration::whitelist() const
 {
-    return common_topic_list_get_(WHITELIST_TAG);
+    return generic_get_topic_list_(WHITELIST_TAG);
 }
 
 std::list<std::shared_ptr<AbstractTopic>> DatabrokerConfiguration::blacklist() const
 {
-    return common_topic_list_get_(BLACKLIST_TAG);
+    return generic_get_topic_list_(BLACKLIST_TAG);
 }
 
 std::map<ParticipantId, RawConfiguration> DatabrokerConfiguration::participants_configurations() const
@@ -87,7 +87,7 @@ std::set<RealTopic> DatabrokerConfiguration::real_topics() const
 {
     std::set<RealTopic> result;
 
-    for (const std::shared_ptr<AbstractTopic>& topic : common_topic_list_get_(WHITELIST_TAG))
+    for (const std::shared_ptr<AbstractTopic>& topic : generic_get_topic_list_(WHITELIST_TAG))
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
@@ -98,7 +98,7 @@ std::set<RealTopic> DatabrokerConfiguration::real_topics() const
     return result;
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DatabrokerConfiguration::common_topic_list_get_(
+std::list<std::shared_ptr<AbstractTopic>> DatabrokerConfiguration::generic_get_topic_list_(
         const char* list_tag) const
 {
     // TODO: support regex topic
