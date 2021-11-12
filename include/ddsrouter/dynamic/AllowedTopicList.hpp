@@ -24,7 +24,7 @@
 #include <string>
 
 #include <ddsrouter/types/topic/DDSRouterTopic.hpp>
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
@@ -48,8 +48,8 @@ public:
 
     //! Constructor by initialization lists
     AllowedTopicList(
-            const std::list<std::shared_ptr<AbstractTopic>>& allowlist,
-            const std::list<std::shared_ptr<AbstractTopic>>& blocklist);
+            const std::list<std::shared_ptr<FilterTopic>>& allowlist,
+            const std::list<std::shared_ptr<FilterTopic>>& blocklist);
 
     //! Destructor
     virtual ~AllowedTopicList();
@@ -78,7 +78,7 @@ public:
      * Two lists are the same if they have the same topics stored.
      *
      * @todo: Two lists are the same when they filter the same topics. Thus, method \c contains in
-     * \c AbstractTopic must be implemented completly.
+     * \c FilterTopic must be implemented completly.
      *
      * @param other: other \c AllowedTopicList object to compare with \c this
      *
@@ -89,14 +89,14 @@ public:
 
 protected:
 
-    static std::set<std::shared_ptr<AbstractTopic>> get_topic_list_without_repetition_(
-            const std::list<std::shared_ptr<AbstractTopic>>& list);
+    static std::set<std::shared_ptr<FilterTopic>> get_topic_list_without_repetition_(
+            const std::list<std::shared_ptr<FilterTopic>>& list);
 
     //! List of topics that are not allowed
-    std::set<std::shared_ptr<AbstractTopic>> blocklist_;
+    std::set<std::shared_ptr<FilterTopic>> blocklist_;
 
     //! List of topics that are allowed
-    std::set<std::shared_ptr<AbstractTopic>> allowlist_;
+    std::set<std::shared_ptr<FilterTopic>> allowlist_;
 };
 
 } /* namespace ddsrouter */

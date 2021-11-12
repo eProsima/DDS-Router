@@ -41,12 +41,12 @@ DDSRouterConfiguration::~DDSRouterConfiguration()
 {
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::allowlist() const
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::allowlist() const
 {
     return generic_get_topic_list_(ALLOWLIST_TAG);
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::blocklist() const
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::blocklist() const
 {
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
@@ -87,7 +87,7 @@ std::set<RealTopic> DDSRouterConfiguration::real_topics() const
 {
     std::set<RealTopic> result;
 
-    for (const std::shared_ptr<AbstractTopic>& topic : generic_get_topic_list_(ALLOWLIST_TAG))
+    for (const std::shared_ptr<FilterTopic>& topic : generic_get_topic_list_(ALLOWLIST_TAG))
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
@@ -98,12 +98,12 @@ std::set<RealTopic> DDSRouterConfiguration::real_topics() const
     return result;
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::generic_get_topic_list_(
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topic_list_(
         const char* list_tag) const
 {
     // TODO: support regex topic
 
-    std::list<std::shared_ptr<AbstractTopic>> result;
+    std::list<std::shared_ptr<FilterTopic>> result;
 
     try
     {

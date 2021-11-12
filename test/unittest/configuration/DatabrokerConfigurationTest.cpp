@@ -84,10 +84,10 @@ void add_empty_tag_to_yaml(
  * Check if a topic is inside a list returned by allowlist or blocklist DDSRouter methods
  */
 bool topic_in_list(
-        std::list<std::shared_ptr<AbstractTopic>> list,
+        std::list<std::shared_ptr<FilterTopic>> list,
         WildcardTopic compared_topic)
 {
-    for (std::shared_ptr<AbstractTopic> topic : list)
+    for (std::shared_ptr<FilterTopic> topic : list)
     {
         // Check class and internal variables
         if (typeid(*topic) == typeid(compared_topic) &&
@@ -150,7 +150,7 @@ std::set<std::pair<std::string, std::string>> random_non_valid_topic_names()
 /*
  * Random Non Real topic names to test different configurations
  */
-std::set<std::pair<std::string, std::string>> random_abstract_topic_names()
+std::set<std::pair<std::string, std::string>> random_filter_topic_names()
 {
     return
         {
@@ -182,7 +182,7 @@ std::set<std::pair<std::string, std::string>> random_topic_names()
     std::set<std::pair<std::string, std::string>> all_topics;
 
     std::set<std::pair<std::string, std::string>> real_topics = random_real_topic_names();
-    std::set<std::pair<std::string, std::string>> abs_topics = random_abstract_topic_names();
+    std::set<std::pair<std::string, std::string>> abs_topics = random_filter_topic_names();
     std::set_union(
         real_topics.begin(), real_topics.end(),
         abs_topics.begin(), abs_topics.end(),
@@ -199,7 +199,7 @@ std::set<std::pair<std::string, std::string>> random_topic_names()
  */
 size_t random_topic_names_number_valid_topics()
 {
-    return random_real_topic_names().size() + random_abstract_topic_names().size();
+    return random_real_topic_names().size() + random_filter_topic_names().size();
 }
 
 /*
@@ -294,7 +294,7 @@ TEST(DDSRouterConfigurationTest, participants_configurations)
 
     // Other tags that are not participant valid ids
     RawConfiguration yaml2;
-    add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_filter_topic_names());
     add_topics_to_list_to_yaml(yaml2, BLOCKLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.participants_configurations().empty());
@@ -370,7 +370,7 @@ TEST(DDSRouterConfigurationTest, real_topics)
 
     // Allowlist with only non Real topics
     RawConfiguration yaml3;
-    add_topics_to_list_to_yaml(yaml3, ALLOWLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml3, ALLOWLIST_TAG, random_filter_topic_names());
     DDSRouterConfiguration config3(yaml3);
     EXPECT_TRUE(config3.real_topics().empty());
 
@@ -456,10 +456,10 @@ TEST(DDSRouterConfigurationTest, allowlist_wildcard)
 
     // Allowlist and blocklist with random topics
     RawConfiguration yaml5;
-    add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_filter_topic_names());
     add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config5(yaml5);
-    EXPECT_EQ(config5.allowlist().size(), random_abstract_topic_names().size());
+    EXPECT_EQ(config5.allowlist().size(), random_filter_topic_names().size());
 }
 
 /**
@@ -507,10 +507,10 @@ TEST(DDSRouterConfigurationTest, blocklist_wildcard)
 
     // Blocklist and allowlist with random topics
     RawConfiguration yaml5;
-    add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_filter_topic_names());
     add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_real_topic_names());
     DDSRouterConfiguration config5(yaml5);
-    EXPECT_EQ(config5.blocklist().size(), random_abstract_topic_names().size());
+    EXPECT_EQ(config5.blocklist().size(), random_filter_topic_names().size());
 }
 
 /**
@@ -522,10 +522,10 @@ TEST(DDSRouterConfigurationTest, allowlist_and_blocklist)
 {
     RawConfiguration yaml;
     add_topics_to_list_to_yaml(yaml, ALLOWLIST_TAG, random_real_topic_names());
-    add_topics_to_list_to_yaml(yaml, BLOCKLIST_TAG, random_abstract_topic_names());
+    add_topics_to_list_to_yaml(yaml, BLOCKLIST_TAG, random_filter_topic_names());
     DDSRouterConfiguration config(yaml);
     EXPECT_EQ(config.allowlist().size(), random_real_topic_names().size());
-    EXPECT_EQ(config.blocklist().size(), random_abstract_topic_names().size());
+    EXPECT_EQ(config.blocklist().size(), random_filter_topic_names().size());
 }
 
 /******************************

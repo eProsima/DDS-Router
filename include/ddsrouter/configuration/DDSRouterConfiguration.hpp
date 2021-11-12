@@ -21,7 +21,7 @@
 
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -38,9 +38,9 @@ public:
 
     virtual ~DDSRouterConfiguration();
 
-    std::list<std::shared_ptr<AbstractTopic>> allowlist() const;
+    std::list<std::shared_ptr<FilterTopic>> allowlist() const;
 
-    std::list<std::shared_ptr<AbstractTopic>> blocklist() const;
+    std::list<std::shared_ptr<FilterTopic>> blocklist() const;
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
@@ -50,7 +50,7 @@ public:
 
 protected:
 
-    std::list<std::shared_ptr<AbstractTopic>> generic_get_topic_list_(
+    std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
             const char* list_tag) const;
 
     const RawConfiguration raw_configuration_;

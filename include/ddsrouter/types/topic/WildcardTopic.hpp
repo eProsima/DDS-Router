@@ -19,20 +19,20 @@
 #ifndef _DDS_ROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 #define _DDS_ROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Concrete class that represents an AbstractTopic that uses the special char "*" as any substring
+ * Concrete class that represents an FilterTopic that uses the special char "*" as any substring
  */
-class WildcardTopic : public AbstractTopic
+class WildcardTopic : public FilterTopic
 {
 public:
 
     //! Using parent constructos
-    using AbstractTopic::AbstractTopic;
+    using FilterTopic::FilterTopic;
 
     //! Constructor that allows any type
     WildcardTopic(
@@ -43,12 +43,12 @@ public:
 
     // TODO: extend test and documentation to admit ? and []
 
-    //! Override \c contains method from \c AbstractTopic
+    //! Override \c contains method from \c FilterTopic
     bool contains(
-            const AbstractTopic& other) const override;
+            const FilterTopic& other) const override;
 
     /**
-     * Override \c matches method from \c AbstractTopic
+     * Override \c matches method from \c FilterTopic
      *
      * It uses \c fnmatch function, so it also contamplates ? and [] apart from *
      */

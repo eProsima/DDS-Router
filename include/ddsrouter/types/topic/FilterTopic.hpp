@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file AbstractTopic.hpp
+ * @file FilterTopic.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_TOPIC_ABSTRACTTOPIC_HPP_
-#define _DDS_ROUTER_TYPES_TOPIC_ABSTRACTTOPIC_HPP_
+#ifndef _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
+#define _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
 
 #include <ddsrouter/types/topic/DDSRouterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
@@ -26,9 +26,9 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Abstract class that represents a Topic filter
+ * Class that represents a Topic filter
  */
-class AbstractTopic : public DDSRouterTopic
+class FilterTopic : public DDSRouterTopic
 {
 public:
 
@@ -36,25 +36,25 @@ public:
     using DDSRouterTopic::DDSRouterTopic;
 
     //! Destructor
-    virtual ~AbstractTopic()
+    virtual ~FilterTopic()
     {
     }
 
     /**
      * Whether this topic filters the same of the topic by argument.
      *
-     * This method is used to prevent duplications in Abstract topic lists.
+     * This method is used to prevent duplications in filter topic lists.
      * If the topic \c other filters a subset of the topics filteres by \c this, it returns true.
      *
-     * Example: {<*>:<*>} contains every AbstractTopic.
-     * Example: {<>:<>} is contained by every AbstractTopic.
+     * Example: {<*>:<*>} contains every FilterTopic.
+     * Example: {<>:<>} is contained by every FilterTopic.
      *
      * @param other: Other topic to check if it is contained
      *
      * @return: True if \c other topic filters a subset of \c this
      */
     virtual bool contains(
-            const AbstractTopic& other) const = 0;
+            const FilterTopic& other) const = 0;
 
     /**
      * Whether a Real Topic matches the filter of this topic.
@@ -72,12 +72,12 @@ public:
 /**
  * TODO
  */
-struct RegexTopic : public AbstractTopic
+struct RegexTopic : public FilterTopic
 {
-    using AbstractTopic::AbstractTopic;
+    using FilterTopic::FilterTopic;
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_TOPIC_ABSTRACTTOPIC_HPP_ */
+#endif /* _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_ */

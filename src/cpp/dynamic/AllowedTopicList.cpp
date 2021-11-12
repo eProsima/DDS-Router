@@ -25,8 +25,8 @@ namespace ddsrouter {
 
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
-        const std::list<std::shared_ptr<AbstractTopic>>& allowlist,
-        const std::list<std::shared_ptr<AbstractTopic>>& blocklist)
+        const std::list<std::shared_ptr<FilterTopic>>& allowlist,
+        const std::list<std::shared_ptr<FilterTopic>>& blocklist)
 {
     allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
@@ -49,7 +49,7 @@ bool AllowedTopicList::is_topic_allowed(
     bool accepted = allowlist_.empty();
 
     // Check if allowlist filter it (this will do anything if empty and accepted will be true)
-    for (std::shared_ptr<AbstractTopic> filter : allowlist_)
+    for (std::shared_ptr<FilterTopic> filter : allowlist_)
     {
         if (filter->matches(topic))
         {
@@ -65,7 +65,7 @@ bool AllowedTopicList::is_topic_allowed(
     }
 
     // Allowlist passed, check blocklist
-    for (std::shared_ptr<AbstractTopic> filter : blocklist_)
+    for (std::shared_ptr<FilterTopic> filter : blocklist_)
     {
         if (filter->matches(topic))
         {
@@ -83,19 +83,19 @@ bool AllowedTopicList::operator ==(
     return allowlist_ == other.allowlist_ && blocklist_ == other.blocklist_;
 }
 
-std::set<std::shared_ptr<AbstractTopic>> AllowedTopicList::get_topic_list_without_repetition_(
-        const std::list<std::shared_ptr<AbstractTopic>>& list)
+std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(
+        const std::list<std::shared_ptr<FilterTopic>>& list)
 {
-    std::set<std::shared_ptr<AbstractTopic>> non_repeated_list;
+    std::set<std::shared_ptr<FilterTopic>> non_repeated_list;
 
     // Store each topic without repetition
-    for (std::shared_ptr<AbstractTopic> new_topic : list)
+    for (std::shared_ptr<FilterTopic> new_topic : list)
     {
         bool add_it = true;
-        std::set<std::shared_ptr<AbstractTopic>> repeated;
+        std::set<std::shared_ptr<FilterTopic>> repeated;
 
         // Check if it is contained or contains any topic already in the list
-        for (std::shared_ptr<AbstractTopic> topic_stored : non_repeated_list)
+        for (std::shared_ptr<FilterTopic> topic_stored : non_repeated_list)
         {
             if (topic_stored->contains(*new_topic))
             {
@@ -111,7 +111,7 @@ std::set<std::shared_ptr<AbstractTopic>> AllowedTopicList::get_topic_list_withou
         }
 
         // Remove topics repeated
-        for (std::shared_ptr<AbstractTopic> topic_repeated : repeated)
+        for (std::shared_ptr<FilterTopic> topic_repeated : repeated)
         {
             non_repeated_list.erase(topic_repeated);
         }

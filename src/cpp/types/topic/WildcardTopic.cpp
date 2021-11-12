@@ -25,7 +25,7 @@ namespace ddsrouter {
 
 WildcardTopic::WildcardTopic(
         const std::string& topic_name)
-    : AbstractTopic(topic_name, "*")
+    : FilterTopic(topic_name, "*")
 {
 }
 
@@ -34,7 +34,7 @@ WildcardTopic::~WildcardTopic()
 }
 
 bool WildcardTopic::contains(
-        const AbstractTopic& other) const
+        const FilterTopic& other) const
 {
     // TODO: implement
     static_cast<void> (other);

@@ -32,8 +32,8 @@
 #include <ddsrouter/types/QoS.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/DDSRouterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 

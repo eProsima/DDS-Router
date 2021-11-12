@@ -22,7 +22,7 @@
 #include <ddsrouter/types/constants.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
-#include <ddsrouter/types/topic/AbstractTopic.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
