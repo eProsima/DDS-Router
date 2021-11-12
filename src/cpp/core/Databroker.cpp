@@ -72,7 +72,7 @@ void Databroker::endpoint_discovered(
 
 void Databroker::init_allowed_topics_()
 {
-    allowed_topics_.reload(
+    allowed_topics_ = AllowedTopicList(
         configuration_.whitelist(),
         configuration_.blacklist());
 }

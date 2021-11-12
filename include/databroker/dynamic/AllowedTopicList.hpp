@@ -26,51 +26,77 @@
 #include <databroker/types/topic/DatabrokerTopic.hpp>
 #include <databroker/types/topic/AbstractTopic.hpp>
 #include <databroker/types/topic/RealTopic.hpp>
-#include <databroker/types/ReturnCode.hpp>
 #include <databroker/types/RawConfiguration.hpp>
 
 namespace eprosima {
 namespace databroker {
 
 /**
- * TODO
+ * This object manage the filtering of the topics.
+ * It is constituted by a list of allowed topics and a list of blocked topics, and filter each topic
+ * by topic name and topic type to see if it is allowed by the lists.
+ *
+ * In case of an empty whitelist, every topic is allowed except those in blacklist.
+ * In case of both lists empty, every topic is allowed.
  */
 class AllowedTopicList
 {
 public:
 
-    // Allow all topics by default
+    //! Empty lists constructor
     AllowedTopicList() = default;
 
+    //! Constructor by initialization lists
+    AllowedTopicList(
+            const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
+            const std::list<std::shared_ptr<AbstractTopic>>& blacklist);
+
+    //! Destructor
     virtual ~AllowedTopicList();
 
+    //! Clear all topics in lists
     void clear();
 
-    void block_topic(
-            const AbstractTopic& new_topic);
-
-    void allow_topic(
-            const AbstractTopic& topic);
-
+    /**
+     * Whether topic \c topic is allowed by the lists that constitute this object
+     *
+     * For a topic to be allowes it must:
+     * 1a. Whitelist be empty
+     * 1b. Be contained in the whitelist
+     * 2. Do not be contained in the blacklist
+     *
+     * @param topic: topic to check if it is allowed
+     *
+     * @return True if the topic is allowed, false otherwise
+     */
     bool is_topic_allowed(
             const RealTopic& topic) const;
 
-    bool are_topics_allowed_by_default() const;
-
-    void allow_topics_by_default(
-            bool status);
-
-    void reload(
-            const std::list<AbstractTopic*>& whitelist,
-            const std::list<AbstractTopic*>& blacklist);
+    /**
+     * Equal operator.
+     *
+     * Two lists are the same if they have the same topics stored.
+     *
+     * @todo: Two lists are the same when they filter the same topics. Thus, method \c contains in
+     * \c AbstractTopic must be implemented completly.
+     *
+     * @param other: other \c AllowedTopicList object to compare with \c this
+     *
+     * @return True if they are constituted by same topics, false otherwise
+     */
+    bool operator ==(
+            const AllowedTopicList& other) const;
 
 protected:
 
-    std::list<AbstractTopic*> blacklist_;
+    static std::set<std::shared_ptr<AbstractTopic>> get_topic_list_without_repetition_(
+            const std::list<std::shared_ptr<AbstractTopic>>& list);
 
-    std::list<AbstractTopic*> whitelist_;
+    //! List of topics that are not allowed
+    std::set<std::shared_ptr<AbstractTopic>> blacklist_;
 
-    bool allow_topics_by_default_;
+    //! List of topics that are allowed
+    std::set<std::shared_ptr<AbstractTopic>> whitelist_;
 };
 
 } /* namespace databroker */

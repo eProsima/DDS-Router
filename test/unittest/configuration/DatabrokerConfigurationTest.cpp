@@ -84,10 +84,10 @@ void add_empty_tag_to_yaml(
  * Check if a topic is inside a list returned by whitelist or blacklist Databroker methods
  */
 bool topic_in_list(
-        std::list<AbstractTopic*> list,
+        std::list<std::shared_ptr<AbstractTopic>> list,
         WildcardTopic compared_topic)
 {
-    for (AbstractTopic* topic : list)
+    for (std::shared_ptr<AbstractTopic> topic : list)
     {
         // Check class and internal variables
         if (typeid(*topic) == typeid(compared_topic) &&
