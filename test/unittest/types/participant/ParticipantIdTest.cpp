@@ -43,7 +43,7 @@ std::vector<std::string> random_non_valid_ids()
     return
         {
             WHITELIST_TAG,
-            BLACKLIST_TAG
+            BLOCKLIST_TAG
         };
 }
 

@@ -64,24 +64,24 @@ void add_topics_to_list(
 }
 
 /*
- * Create an AllowedTopicList object with the whitelist and blacklist given by argument
+ * Create an AllowedTopicList object with the whitelist and blocklist given by argument
  * Check that all topics in real_topics_positive are allowed by the AllowedTopicList
  * Check that all topics in real_topics_negative are not allowed by the AllowedTopicList
  */
 void generic_test(
         const std::vector<pair_topic_type>& whitelist_topics,
-        const std::vector<pair_topic_type>& blacklist_topics,
+        const std::vector<pair_topic_type>& blocklist_topics,
         const std::vector<pair_topic_type>& real_topics_positive,
         const std::vector<pair_topic_type>& real_topics_negative)
 {
     // Create AllowedTopicList object
     std::list<std::shared_ptr<AbstractTopic>> whitelist;
-    std::list<std::shared_ptr<AbstractTopic>> blacklist;
+    std::list<std::shared_ptr<AbstractTopic>> blocklist;
 
     add_topics_to_list(whitelist, whitelist_topics);
-    add_topics_to_list(blacklist, blacklist_topics);
+    add_topics_to_list(blocklist, blocklist_topics);
 
-    AllowedTopicList atl(whitelist, blacklist);
+    AllowedTopicList atl(whitelist, blocklist);
 
     // Test positive cases
     for (pair_topic_type topic_name : real_topics_positive)
@@ -131,7 +131,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
 TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
 {
     std::vector<pair_topic_type> whitelist_topics;
-    std::vector<pair_topic_type> blacklist_topics;
+    std::vector<pair_topic_type> blocklist_topics;
     std::vector<pair_topic_type> real_topics_negative;
 
     std::vector<pair_topic_type> real_topics_positive =
@@ -144,7 +144,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -152,13 +152,13 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using simple blacklist: only with real topics
+ * Case using simple blocklist: only with real topics
  */
-TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
+TEST(AllowedTopicListTest, is_topic_allowed__simple_blocklist)
 {
     std::vector<pair_topic_type> whitelist_topics;
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
@@ -178,7 +178,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -186,13 +186,13 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blacklist)
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using complex blacklist: with wildcards that superpose
+ * Case using complex blocklist: with wildcards that superpose
  */
-TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
+TEST(AllowedTopicListTest, is_topic_allowed__complex_blocklist)
 {
     std::vector<pair_topic_type> whitelist_topics;
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic1", "*"},
         {"*", "HelloWorld"},
@@ -217,7 +217,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -229,7 +229,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_blacklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
 {
-    std::vector<pair_topic_type> blacklist_topics;
+    std::vector<pair_topic_type> blocklist_topics;
 
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -253,7 +253,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -265,7 +265,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
 {
-    std::vector<pair_topic_type> blacklist_topics;
+    std::vector<pair_topic_type> blocklist_topics;
 
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -295,7 +295,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -303,10 +303,10 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist)
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using simple whitelist and simple blacklist: only with real topics
+ * Case using simple whitelist and simple blocklist: only with real topics
  * Lists do not superpose to each other
  */
-TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
+TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blocklist)
 {
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -314,7 +314,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic2", "type2"},
         {"rt/chatter", "std::std_msgs::string"},
@@ -338,7 +338,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -346,10 +346,10 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist)
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using complex whitelist and complex blacklist: with wildcards that superpose
+ * Case using complex whitelist and complex blocklist: with wildcards that superpose
  * Lists do not superpose to each other
  */
-TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
+TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blocklist)
 {
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -358,7 +358,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
         {"rt/pub*", "std_type::*"},
     };
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic2", "*"},
         {"*", "HelloWorldType"},
@@ -387,7 +387,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -395,10 +395,10 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist)
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using simple whitelist and simple blacklist: only with real topics
- * Blacklist has topics that block the whitelist ones
+ * Case using simple whitelist and simple blocklist: only with real topics
+ * Blocklist has topics that block the whitelist ones
  */
-TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_entangled)
+TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blocklist_entangled)
 {
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -407,7 +407,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_enta
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic2", "type2"},
         {"rt/chatter", "std::std_msgs::string"},
@@ -431,7 +431,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_enta
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }
@@ -439,10 +439,10 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_whitelist_and_blacklist_enta
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
  *
- * Case using complex whitelist and complex blacklist: with wildcards that superpose
- * Blacklist has topics that block the whitelist ones
+ * Case using complex whitelist and complex blocklist: with wildcards that superpose
+ * Blocklist has topics that block the whitelist ones
  */
-TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_entangled)
+TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blocklist_entangled)
 {
     std::vector<pair_topic_type> whitelist_topics =
     {
@@ -451,7 +451,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_ent
         {"rt*", "std*"},
     };
 
-    std::vector<pair_topic_type> blacklist_topics =
+    std::vector<pair_topic_type> blocklist_topics =
     {
         {"topic1", "type*"},
         {"*HelloWorld", "HelloWorld"},
@@ -481,7 +481,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_whitelist_and_blacklist_ent
 
     generic_test(
         whitelist_topics,
-        blacklist_topics,
+        blocklist_topics,
         real_topics_positive,
         real_topics_negative);
 }

@@ -5,7 +5,7 @@ whitelist:
     {name: "HelloWorldTopic", type: "HelloWorld"}
   ]
 
-blacklist:
+blocklist:
   [
     {name: "*ros*"}
   ]
@@ -64,7 +64,7 @@ local_no_ros:
 ###########################################################
 
 type: local
-blacklist:
+blocklist:
   [
     {name: "*ros*"},
     {name: "*rt*"}

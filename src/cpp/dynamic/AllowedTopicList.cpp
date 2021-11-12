@@ -26,10 +26,10 @@ namespace ddsrouter {
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
         const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
-        const std::list<std::shared_ptr<AbstractTopic>>& blacklist)
+        const std::list<std::shared_ptr<AbstractTopic>>& blocklist)
 {
     whitelist_ = AllowedTopicList::get_topic_list_without_repetition_(whitelist);
-    blacklist_ = AllowedTopicList::get_topic_list_without_repetition_(blacklist);
+    blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
 }
 
 AllowedTopicList::~AllowedTopicList()
@@ -38,7 +38,7 @@ AllowedTopicList::~AllowedTopicList()
 
 void AllowedTopicList::clear()
 {
-    blacklist_.clear();
+    blocklist_.clear();
     whitelist_.clear();
 }
 
@@ -58,14 +58,14 @@ bool AllowedTopicList::is_topic_allowed(
         }
     }
 
-    // Check if it has not passed the whitelist so blacklist is skipped
+    // Check if it has not passed the whitelist so blocklist is skipped
     if (!accepted)
     {
         return false;
     }
 
-    // Whitelist passed, check blacklist
-    for (std::shared_ptr<AbstractTopic> filter : blacklist_)
+    // Whitelist passed, check blocklist
+    for (std::shared_ptr<AbstractTopic> filter : blocklist_)
     {
         if (filter->matches(topic))
         {
@@ -73,14 +73,14 @@ bool AllowedTopicList::is_topic_allowed(
         }
     }
 
-    // Blacklist passed, the topic is allowed
+    // Blocklist passed, the topic is allowed
     return true;
 }
 
 bool AllowedTopicList::operator ==(
         const AllowedTopicList& other) const
 {
-    return whitelist_ == other.whitelist_ && blacklist_ == other.blacklist_;
+    return whitelist_ == other.whitelist_ && blocklist_ == other.blocklist_;
 }
 
 std::set<std::shared_ptr<AbstractTopic>> AllowedTopicList::get_topic_list_without_repetition_(

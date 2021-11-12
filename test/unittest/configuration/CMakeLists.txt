@@ -34,13 +34,13 @@ set(TEST_LIST
         participants_configurations
         real_topics
         whitelist_wildcard
-        blacklist_wildcard
-        whitelist_and_blacklist
+        blocklist_wildcard
+        whitelist_and_blocklist
         constructor_fail
         participants_configurations_fail
         real_topics_fail
         whitelist_wildcard_fail
-        blacklist_wildcard_fail
+        blocklist_wildcard_fail
     )
 
 set(TEST_EXTRA_LIBRARIES

@@ -46,9 +46,9 @@ std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::whitelist() co
     return generic_get_topic_list_(WHITELIST_TAG);
 }
 
-std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::blacklist() const
+std::list<std::shared_ptr<AbstractTopic>> DDSRouterConfiguration::blocklist() const
 {
-    return generic_get_topic_list_(BLACKLIST_TAG);
+    return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
 std::map<ParticipantId, RawConfiguration> DDSRouterConfiguration::participants_configurations() const

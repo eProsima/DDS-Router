@@ -74,7 +74,7 @@ void DDSRouter::init_allowed_topics_()
 {
     allowed_topics_ = AllowedTopicList(
         configuration_.whitelist(),
-        configuration_.blacklist());
+        configuration_.blocklist());
 }
 
 void DDSRouter::init_participants_()

@@ -40,7 +40,7 @@ public:
 
     std::list<std::shared_ptr<AbstractTopic>> whitelist() const;
 
-    std::list<std::shared_ptr<AbstractTopic>> blacklist() const;
+    std::list<std::shared_ptr<AbstractTopic>> blocklist() const;
 
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 

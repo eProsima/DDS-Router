@@ -30,14 +30,14 @@ set(TEST_HEADERS
 set(TEST_LIST
         is_topic_allowed__default_constructor
         is_topic_allowed__empty_list
-        is_topic_allowed__simple_blacklist
-        is_topic_allowed__complex_blacklist
+        is_topic_allowed__simple_blocklist
+        is_topic_allowed__complex_blocklist
         is_topic_allowed__simple_whitelist
         is_topic_allowed__complex_whitelist
-        is_topic_allowed__simple_whitelist_and_blacklist
-        is_topic_allowed__complex_whitelist_and_blacklist
-        is_topic_allowed__simple_whitelist_and_blacklist_entangled
-        is_topic_allowed__complex_whitelist_and_blacklist_entangled
+        is_topic_allowed__simple_whitelist_and_blocklist
+        is_topic_allowed__complex_whitelist_and_blocklist
+        is_topic_allowed__simple_whitelist_and_blocklist_entangled
+        is_topic_allowed__complex_whitelist_and_blocklist_entangled
     )
 
 set(TEST_EXTRA_LIBRARIES

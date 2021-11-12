@@ -30,7 +30,7 @@ std::set<std::string> ddsrouter_tags() noexcept
     return
         {
             WHITELIST_TAG,
-            BLACKLIST_TAG,
+            BLOCKLIST_TAG,
             TOPIC_NAME_TAG,
             TOPIC_TYPE_NAME_TAG
         };

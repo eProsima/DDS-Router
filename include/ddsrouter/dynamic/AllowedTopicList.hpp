@@ -36,7 +36,7 @@ namespace ddsrouter {
  * It is constituted by a list of allowed topics and a list of blocked topics, and filter each topic
  * by topic name and topic type to see if it is allowed by the lists.
  *
- * In case of an empty whitelist, every topic is allowed except those in blacklist.
+ * In case of an empty whitelist, every topic is allowed except those in blocklist.
  * In case of both lists empty, every topic is allowed.
  */
 class AllowedTopicList
@@ -49,7 +49,7 @@ public:
     //! Constructor by initialization lists
     AllowedTopicList(
             const std::list<std::shared_ptr<AbstractTopic>>& whitelist,
-            const std::list<std::shared_ptr<AbstractTopic>>& blacklist);
+            const std::list<std::shared_ptr<AbstractTopic>>& blocklist);
 
     //! Destructor
     virtual ~AllowedTopicList();
@@ -63,7 +63,7 @@ public:
      * For a topic to be allowes it must:
      * 1a. Whitelist be empty
      * 1b. Be contained in the whitelist
-     * 2. Do not be contained in the blacklist
+     * 2. Do not be contained in the blocklist
      *
      * @param topic: topic to check if it is allowed
      *
@@ -93,7 +93,7 @@ protected:
             const std::list<std::shared_ptr<AbstractTopic>>& list);
 
     //! List of topics that are not allowed
-    std::set<std::shared_ptr<AbstractTopic>> blacklist_;
+    std::set<std::shared_ptr<AbstractTopic>> blocklist_;
 
     //! List of topics that are allowed
     std::set<std::shared_ptr<AbstractTopic>> whitelist_;
