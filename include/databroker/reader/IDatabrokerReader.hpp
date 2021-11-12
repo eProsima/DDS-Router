@@ -49,7 +49,8 @@ public:
      */
     virtual void disable();
 
-    virtual ReturnCode set_on_data_available_callback(std::function<void()> on_data_available_lambda);
+    virtual ReturnCode set_on_data_available_callback(
+            std::function<void()> on_data_available_lambda);
 
     virtual ReturnCode take(
             DataReceived&);         // This data read must be inside a PayloadPool
