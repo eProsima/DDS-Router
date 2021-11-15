@@ -35,6 +35,11 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(std::string t
         // Void type
         return ParticipantType::VOID;
     }
+    else if (type == ECHO_TYPE_NAME)
+    {
+        // Void type
+        return ParticipantType::ECHO;
+    }
     else
     {
         // The type is not associated with any ParticipantType
@@ -51,6 +56,10 @@ std::ostream& operator <<(
     {
     case ParticipantType::VOID:
         os << VOID_TYPE_NAME;
+        break;
+
+    case ParticipantType::ECHO:
+        os << ECHO_TYPE_NAME;
         break;
 
     default:

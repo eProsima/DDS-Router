@@ -75,5 +75,13 @@ bool ParticipantId::operator <(
     return id_ < other.id_;
 }
 
+std::ostream& operator <<(
+        std::ostream& os,
+        const ParticipantId& id)
+{
+    os << id.id_name();
+    return os;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

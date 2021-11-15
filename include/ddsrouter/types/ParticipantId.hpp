@@ -59,6 +59,11 @@ protected:
     std::string id_;
 };
 
+//! \c ParticipantId to stream serializator
+std::ostream& operator <<(
+        std::ostream& os,
+        const ParticipantId& id);
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

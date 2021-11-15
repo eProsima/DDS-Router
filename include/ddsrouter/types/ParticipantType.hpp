@@ -31,6 +31,7 @@ enum ParticipantType
 {
     INVALID,    //! Invalid Participant Type
     VOID,       //! Void Participant Type
+    ECHO,       //! Void Participant Type
 };
 
 /**
@@ -60,6 +61,7 @@ protected:
 };
 
 constexpr const char* VOID_TYPE_NAME("void");   //! Void participant type name
+constexpr const char* ECHO_TYPE_NAME("echo");   //! Echo participant type name
 
 constexpr const char* INVALID_TYPE_NAME_SERIALIZATION("InvalidParticipantType"); //! Serialization of invalid type
 
