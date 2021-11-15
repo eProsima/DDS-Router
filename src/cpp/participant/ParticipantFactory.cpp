@@ -17,9 +17,9 @@
  *
  */
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/utils.hpp>
 
@@ -38,7 +38,12 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     {
         case ParticipantType::VOID:
             // VoidParticipant
-            return std::make_shared<VoidParticipant>(participant_configuration.id());
+            return std::make_shared<VoidParticipant>(participant_configuration);
+            break;
+
+        case ParticipantType::ECHO:
+            // EchoParticipant
+            return std::make_shared<EchoParticipant>(participant_configuration, discovery_database);
             break;
 
         case ParticipantType::INVALID:
@@ -52,6 +57,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             assert(false);
             break;
     }
+    return nullptr; // Non recheable code
 }
 
 } /* namespace ddsrouter */
