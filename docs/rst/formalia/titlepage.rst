@@ -11,10 +11,10 @@
   :alt: eProsima
   :target: http://www.eprosima.com/
 
-*eProsima DDS Router* is a end-user software application that enables the connection of distributed DDS networks.
+*eProsima DDS Router* is an end-user software application that enables the connection of distributed DDS networks.
 That is, DDS entities such as publishers and subscribers deployed in one geographic location and using a dedicated
 local network will be able to communicate with other DDS entities deployed in different geographic areas on their own
-dedicated local networks as if they were all on the same network through the use of the *eProsima DDS Router*.
+dedicated local networks as if they were all on the same network through the use of *eProsima DDS Router*.
 This is achieved by deploying a *DDS Router* on an edge device of each local network so that the
 *DDS Router* routes DDS traffic from one network to the other through WAN communication.
 
