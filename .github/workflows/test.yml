@@ -183,18 +183,18 @@ jobs:
           root_dir: src/databroker
           fail_ci_if_error: true
 
-      # - name: Upload documentation
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: Documentation HTML
-      #     path: install/databroker/docs/fastdds_monitor_docs/sphinx/html/
+      - name: Upload documentation
+        uses: actions/upload-artifact@v1
+        with:
+          name: Documentation HTML
+          path: install/databroker/docs/ddsrouter_docs/sphinx/html/
 
-      # - name: Upload spelling errors
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: spelling_errors.txt
-      #     path: build/databroker/docs/test/spelling/output.txt
-      #   continue-on-error: true
+      - name: Upload spelling errors
+        uses: actions/upload-artifact@v1
+        with:
+          name: spelling_errors.txt
+          path: build/databroker/docs/test/spelling/output.txt
+        continue-on-error: true
 
       - name: Upload Logs
         uses: actions/upload-artifact@v1

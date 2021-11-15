@@ -32,9 +32,21 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 ###############################################################################
+# Version
+###############################################################################
+set(PRODUCT_MAJOR_VERSION 0)
+set(PRODUCT_MINOR_VERSION 0)
+set(PRODUCT_PATCH_VERSION 0)
+set(PRODUCT_VERSION_STR ${PRODUCT_MAJOR_VERSION}.${PRODUCT_MINOR_VERSION}.${PRODUCT_PATCH_VERSION})
+
+###############################################################################
 # Project
 ###############################################################################
 project(databroker)
+set(PROJECT_VERSION_MAJOR "${PRODUCT_MAJOR_VERSION}")
+set(PROJECT_VERSION_MINOR "${PRODUCT_MINOR_VERSION}")
+set(PROJECT_VERSION_PATCH "${PRODUCT_PATCH_VERSION}")
+set(PROJECT_VERSION "${PRODUCT_VERSION_STR}")
 
 set(PROJECT_NAME_STYLED "DataBroker")
 set(PROJECT_NAME_LARGE "Fast DataBroker")
@@ -43,8 +55,7 @@ set(${PROJECT_NAME}_DESCRIPTION_SUMMARY "C++ library for use a WAN bridge using 
 set(${PROJECT_NAME}_DESCRIPTION "eProsima ${PROJECT_NAME_LARGE} library provides an easy configurable bridge to communicate an internal network with an external one efficiently and transparently.")
 
 message(STATUS "Configuring ${PROJECT_NAME_LARGE}")
-# message(STATUS "Version: ${PROJECT_VERSION}")
-# message(STATUS "To change the version modify the file configure.ac")
+message(STATUS "Version: ${PROJECT_VERSION}")
 
 ###############################################################################
 # Installation paths
@@ -154,4 +165,13 @@ endif()
 
 if (BUILD_APP_TESTS)
     add_subdirectory(test)
+endif()
+
+###############################################################################
+# Documentation
+###############################################################################
+option(BUILD_DOCUMENTATION "Generate documentation" OFF)
+if(BUILD_DOCUMENTATION OR BUILD_DOCUMENTATION_TESTS)
+    set(BUILD_DOCUMENTATION ON)
+    add_subdirectory(docs)
 endif()
