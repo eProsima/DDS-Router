@@ -13,5 +13,5 @@ repositories:
         version: master
     ddsrouter:
         type: git
-        url: https://github.com/eProsima/ddsrouter.git
+        url: https://github.com/eProsima/databroker.git
         version: main
