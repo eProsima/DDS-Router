@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file DataBrokerConfiguration.cpp
+ * @file DDSRouterConfiguration.cpp
  *
  */
 
