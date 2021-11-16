@@ -50,7 +50,7 @@ public:
     ReturnCode write(
             std::unique_ptr<DataReceived>& data) override;
 
-    std::vector<DataStoraged>& data_received_ref();
+    std::vector<DataStoraged> data_received_ref();
 
 protected:
 
