@@ -18,40 +18,40 @@ jobs:
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
 
     steps:
-      - name: Sync eProsima/ddsrouter repository
+      - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
-          path: ddsrouter
+          path: DDS-Router
 
       - name: Install OpenSSL
-        uses: ./ddsrouter/.github/actions/install-openssl-windows
+        uses: ./DDS-Router/.github/actions/install-openssl-windows
 
       - name: Install GTest
-        uses: ./ddsrouter/.github/actions/install-gtest-windows
+        uses: ./DDS-Router/.github/actions/install-gtest-windows
 
       - name: Install yaml-cpp
-        uses: ./ddsrouter/.github/actions/install-yamlcpp-windows
+        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
 
       - name: Install foonatham memory
-        uses: ./ddsrouter/.github/actions/install-foonathan-memory-windows
+        uses: ./DDS-Router/.github/actions/install-foonathan-memory-windows
         with:
           cmake_build_type: "Release"
 
       - name: Install Fast CDR
-        uses: ./ddsrouter/.github/actions/install-fastcdr-windows
+        uses: ./DDS-Router/.github/actions/install-fastcdr-windows
         with:
           cmake_build_type: "Release"
 
       - name: Install Fast DDS
-        uses: ./ddsrouter/.github/actions/install-fastdds-windows
+        uses: ./DDS-Router/.github/actions/install-fastdds-windows
         with:
           cmake_build_type: "Release"
 
-      - name: Install ddsrouter
+      - name: Install DDS Router
         shell: pwsh
         run: >
           cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-            -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 ddsrouter;
+            -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
           cmake --build build\ddsrouter --config Release --target install
 
       - name: Run tests
@@ -65,44 +65,44 @@ jobs:
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
 
     steps:
-      - name: Sync eProsima/ddsrouter repository
+      - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
-          path: ddsrouter
+          path: DDS-Router
 
       - name: Install OpenSSL
-        uses: ./ddsrouter/.github/actions/install-openssl-windows
+        uses: ./DDS-Router/.github/actions/install-openssl-windows
 
       - name: Install GTest
-        uses: ./ddsrouter/.github/actions/install-gtest-windows
+        uses: ./DDS-Router/.github/actions/install-gtest-windows
         with:
           cmake_build_type: "Debug"
 
       - name: Install yaml-cpp
-        uses: ./ddsrouter/.github/actions/install-yamlcpp-windows
+        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
         with:
           cmake_build_type: "Debug"
 
       - name: Install foonatham memory
-        uses: ./ddsrouter/.github/actions/install-foonathan-memory-windows
+        uses: ./DDS-Router/.github/actions/install-foonathan-memory-windows
         with:
           cmake_build_type: "Debug"
 
       - name: Install Fast CDR
-        uses: ./ddsrouter/.github/actions/install-fastcdr-windows
+        uses: ./DDS-Router/.github/actions/install-fastcdr-windows
         with:
           cmake_build_type: "Debug"
 
       - name: Install Fast DDS
-        uses: ./ddsrouter/.github/actions/install-fastdds-windows
+        uses: ./DDS-Router/.github/actions/install-fastdds-windows
         with:
           cmake_build_type: "Debug"
 
-      - name: Install ddsrouter
+      - name: Install DDS Router
         shell: pwsh
         run: >
           cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-          -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 ddsrouter;
+          -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
           cmake --build build\ddsrouter --config Debug --target install
 
       - name: Run tests
@@ -115,22 +115,22 @@ jobs:
       name: codecov
 
     steps:
-      - name: Sync eProsima/ddsrouter repository
+      - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
-          path: src/ddsrouter
+          path: src/DDS-Router
 
       - name: Install apt packages
-        uses: ./src/ddsrouter/.github/actions/install-apt-packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
       - name: Install GTest
-        uses: ./src/ddsrouter/.github/actions/install-gtest-linux
+        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
 
       - name: Install Python packages
-        uses: ./src/ddsrouter/.github/actions/install-python-packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
 
       - name: Fetch Fast DDS repositories
-        uses: ./src/ddsrouter/.github/actions/fetch-fastdds-repos
+        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
 
       - name: Update colcon mixin
         run: |
@@ -141,10 +141,10 @@ jobs:
 
       - name: Build workspace
         run: |
-          cat src/ddsrouter/.github/workflows/test_colcon.meta
+          cat src/DDS-Router/.github/workflows/test_colcon.meta
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/ddsrouter/.github/workflows/test_colcon.meta \
+            --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
       - name: Run tests
@@ -157,10 +157,10 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          cp src/ddsrouter/codecov.yml .
+          cp src/DDS-Router/codecov.yml .
           mkdir coverage-report
           gcovr \
-          --root src/ddsrouter/ \
+          --root src/DDS-Router/ \
           --object-directory build/ddsrouter \
           --output coverage-report/coverage.xml \
           --xml-pretty \
@@ -180,7 +180,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage-report/coverage.xml
-          root_dir: src/ddsrouter
+          root_dir: src/DDS-Router
           fail_ci_if_error: true
 
       - name: Upload documentation
@@ -206,29 +206,29 @@ jobs:
   clang-tidy:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync eProsima/ddsrouter repository
+      - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
-          path: src/ddsrouter
+          path: src/DDS-Router
 
       - name: Install apt packages
-        uses: ./src/ddsrouter/.github/actions/install-apt-packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
       - name: Install GTest
-        uses: ./src/ddsrouter/.github/actions/install-gtest-linux
+        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
 
       - name: Install Python packages
-        uses: ./src/ddsrouter/.github/actions/install-python-packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
 
       - name: Fetch Fast DDS repositories
-        uses: ./src/ddsrouter/.github/actions/fetch-fastdds-repos
+        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
 
       - name: Build workspace
         run: |
-          cat src/ddsrouter/.github/workflows/clang_colcon.meta
+          cat src/DDS-Router/.github/workflows/clang_colcon.meta
           colcon build \
             --event-handlers=console_direct+ \
-            --metas src/ddsrouter/.github/workflows/clang_colcon.meta
+            --metas src/DDS-Router/.github/workflows/clang_colcon.meta
 
       - name: Run clang-tidy
         run: |
@@ -244,21 +244,21 @@ jobs:
   uncrustify:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync eProsima/ddsrouter repository
+      - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
-          path: src/ddsrouter
+          path: src/DDS-Router
 
       - name: Fetch all branches and tags
         run: |
-          cd src/ddsrouter
+          cd src/DDS-Router
           git fetch --prune --unshallow
 
       - name: Install apt packages
-        uses: ./src/ddsrouter/.github/actions/install-apt-packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
       - name: Install Python packages
-        uses: ./src/ddsrouter/.github/actions/install-python-packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
 
       - name: Install uncrustify
         run: |
@@ -287,12 +287,12 @@ jobs:
 
       - name: Get difference
         run: |
-          cd src/ddsrouter
+          cd src/DDS-Router
           echo "MODIFIED_FILES=$(git diff --name-only origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -e '\.h' -e '\.hpp' -e '\.cpp' -e '\.ipp' | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Check difference
         run: |
-          cd src/ddsrouter
+          cd src/DDS-Router
           if [[ -z "${MODIFIED_FILES}" ]]
           then
             touch empty.hpp
@@ -302,7 +302,7 @@ jobs:
       - name: Check style
         run: |
           source install/local_setup.bash
-          cd src/ddsrouter
+          cd src/DDS-Router
           ament_uncrustify \
             -c ../../uncrustify.cfg \
             --language CPP \
