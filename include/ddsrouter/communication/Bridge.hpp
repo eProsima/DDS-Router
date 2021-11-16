@@ -30,7 +30,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Bridge object manage the communication of a DDS Topic (or \c RealTopic ).
+ * Bridge object manages the communication of a DDS Topic (or \c RealTopic ).
  * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
  * could publish or subscribe in this specific Topic.
  *
@@ -50,7 +50,7 @@ public:
      * @param participant_database: Collection of Participants to manage communication
      * @param enable: Whether the Bridge should be initialized as enabled
      *
-     * In case any inside \c Track creation fails it wil throw a \c InitializationException
+     * In case any inside \c Track creation fails and will throw a \c InitializationException
      */
     Bridge(
             const RealTopic& topic,
@@ -63,7 +63,7 @@ public:
     /**
      * Copy method not allowed
      *
-     * Bridge create in constructor all the inside Tracks needed, and thus it should not be copied
+     * Bridge creates in constructor all the inside Tracks needed, and thus it should not be copied
      */
     void operator =(
             const Track&) = delete;
@@ -106,13 +106,13 @@ protected:
      */
     std::map<ParticipantId, std::unique_ptr<Track>> tracks_;
 
-    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs
+    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs to
     std::map<ParticipantId, std::shared_ptr<IWriter>> writers_;
 
-    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs
+    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
     std::map<ParticipantId, std::shared_ptr<IReader>> readers_;
 
-    //! Whether the Bridge is currently enable
+    //! Whether the Bridge is currently enabled
     bool enabled_;
 
     //! Mutex to prevent simultaneous calls to enable and/or disable

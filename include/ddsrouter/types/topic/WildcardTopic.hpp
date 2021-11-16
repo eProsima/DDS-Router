@@ -50,7 +50,7 @@ public:
     /**
      * Override \c matches method from \c FilterTopic
      *
-     * It uses \c fnmatch function, so it also contamplates ? and [] apart from *
+     * It uses \c fnmatch function, so it also contemplates ? and [] apart from *
      */
     bool matches(
             const RealTopic& other) const override;

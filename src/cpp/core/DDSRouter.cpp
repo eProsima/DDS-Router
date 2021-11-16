@@ -53,7 +53,7 @@ DDSRouter::DDSRouter(
 DDSRouter::~DDSRouter()
 {
     // TODO
-    // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
+    // There is no need to destroy shared ptrs as they will delete themselves when no longer referenced
 }
 
 void DDSRouter::reload_configuration(
@@ -115,11 +115,11 @@ void DDSRouter::discovered_topic_(
 {
     if (allowed_topics_.is_topic_allowed(topic))
     {
-        active_topic_(topic);
+        activate_topic_(topic);
     }
 }
 
-void DDSRouter::active_topic_(
+void DDSRouter::activate_topic_(
         const RealTopic& topic)
 {
     auto it_topic = current_topics_.find(topic);
@@ -149,7 +149,7 @@ void DDSRouter::create_new_bridge(
     bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, true);
 }
 
-void DDSRouter::deactive_topic_(
+void DDSRouter::deactivate_topic_(
         const RealTopic&)
 {
     // TODO

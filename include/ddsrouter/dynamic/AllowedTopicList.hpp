@@ -32,8 +32,8 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This object manage the filtering of the topics.
- * It is constituted by a list of allowed topics and a list of blocked topics, and filter each topic
+ * This object manages the filtering of the topics.
+ * It is constituted by a list of allowed topics and a list of blocked topics, and filters each topic
  * by topic name and topic type to see if it is allowed by the lists.
  *
  * In case of an empty allowlist, every topic is allowed except those in blocklist.
@@ -60,7 +60,7 @@ public:
     /**
      * Whether topic \c topic is allowed by the lists that constitute this object
      *
-     * For a topic to be allowes it must:
+     * For a topic to be allowed it must:
      * 1a. Allowlist be empty
      * 1b. Be contained in the allowlist
      * 2. Do not be contained in the blocklist
@@ -78,7 +78,7 @@ public:
      * Two lists are the same if they have the same topics stored.
      *
      * @todo: Two lists are the same when they filter the same topics. Thus, method \c contains in
-     * \c FilterTopic must be implemented completly.
+     * \c FilterTopic must be implemented completely.
      *
      * @param other: other \c AllowedTopicList object to compare with \c this
      *

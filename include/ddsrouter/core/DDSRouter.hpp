@@ -69,20 +69,20 @@ protected:
     //! Create bridges from topics
     void init_bridges_();
 
-    //! New Topic found, check if it shuld be activated
+    //! New Topic found, check if it should be activated
     void discovered_topic_(
             const RealTopic& topic);
 
-    //! Active a topic within the DDSRouter context
-    void active_topic_(
+    //! Activate a topic within the DDSRouter context
+    void activate_topic_(
             const RealTopic& topic);
 
     //! Create a new bridge for a topic recently discovererd
     void create_new_bridge(
             const RealTopic& topic);
 
-    //! Deactive a topic within the DDSRouter context
-    void deactive_topic_(
+    //! Deactivate a topic within the DDSRouter context
+    void deactivate_topic_(
             const RealTopic& topic);
 
     /////
