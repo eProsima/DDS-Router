@@ -17,10 +17,10 @@
  *
  */
 
-#include <databroker/types/endpoint/QoS.hpp>
+#include <ddsrouter/types/endpoint/QoS.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 QoS::QoS(
         DurabilityKind durability,
@@ -46,5 +46,5 @@ bool QoS::operator ==(
     return durability_ == other.durability_ && reliability_ == other.reliability_;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

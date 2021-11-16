@@ -17,10 +17,10 @@
  *
  */
 
-#include <databroker/types/endpoint/Guid.hpp>
+#include <ddsrouter/types/endpoint/Guid.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 bool Guid::is_valid() const
 {
@@ -28,5 +28,5 @@ bool Guid::is_valid() const
            entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

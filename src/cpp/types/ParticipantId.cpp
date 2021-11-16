@@ -19,13 +19,13 @@
 
 #include <set>
 
-#include <databroker/types/ParticipantId.hpp>
-#include <databroker/types/configuration_tags.hpp>
+#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
-const std::string ParticipantId::INVALID_ID = "__invalid_databroker_participant__";
+const std::string ParticipantId::INVALID_ID = "__invalid_ddsrouter_participant__";
 
 ParticipantId::ParticipantId(
         const std::string& id)
@@ -50,7 +50,7 @@ ParticipantId ParticipantId::invalid()
 bool ParticipantId::is_valid_id(
         const std::string& tag)
 {
-    return (tag != WHITELIST_TAG) && (tag != BLACKLIST_TAG);
+    return (tag != ALLOWLIST_TAG) && (tag != BLOCKLIST_TAG);
 }
 
 bool ParticipantId::is_valid() const
@@ -70,5 +70,5 @@ bool ParticipantId::operator <(
     return id_ < other.id_;
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

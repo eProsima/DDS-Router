@@ -12,35 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME DatabrokerConfigurationTest)
+set(TEST_NAME ConfigurationTest)
 
 set(TEST_SOURCES
-        DatabrokerConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DatabrokerException.cpp
+        ConfigurationTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DatabrokerTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DatabrokerConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/Configuration.cpp
     )
 
 set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/configuration/DatabrokerConfiguration.hpp
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/configuration/Configuration.hpp
     )
 
 set(TEST_LIST
         constructor
         participants_configurations
         real_topics
-        whitelist_wildcard
-        blacklist_wildcard
-        whitelist_and_blacklist
+        allowlist_wildcard
+        blocklist_wildcard
+        allowlist_and_blocklist
         constructor_fail
         participants_configurations_fail
         real_topics_fail
-        whitelist_wildcard_fail
-        blacklist_wildcard_fail
+        allowlist_wildcard_fail
+        blocklist_wildcard_fail
     )
 
 set(TEST_EXTRA_LIBRARIES

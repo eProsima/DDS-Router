@@ -17,18 +17,18 @@
  *
  */
 
-#include <databroker/communication/Track.hpp>
-#include <databroker/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/communication/Track.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
-namespace databroker {
+namespace ddsrouter {
 
 // TODO: Add logs
 
 Track::Track(
         const RealTopic& topic,
-        std::shared_ptr<IDatabrokerReader> reader,
-        std::map<ParticipantId, std::shared_ptr<IDatabrokerWriter>>&& writers,
+        std::shared_ptr<IReader> reader,
+        std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
         bool enable /* = false */)
     : topic_(topic)
     , reader_(reader)
@@ -179,5 +179,5 @@ void Track::transmit_()
     }
 }
 
-} /* namespace databroker */
+} /* namespace ddsrouter */
 } /* namespace eprosima */

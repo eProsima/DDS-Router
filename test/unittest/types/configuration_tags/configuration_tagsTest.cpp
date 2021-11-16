@@ -17,18 +17,18 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <databroker/types/configuration_tags.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
 
-using namespace eprosima::databroker;
+using namespace eprosima::ddsrouter;
 
-TEST(configuration_tags, databroker_tags)
+TEST(configuration_tags, ddsrouter_tags)
 {
-    std::set<std::string> retrieved_tags = databroker_tags();
+    std::set<std::string> retrieved_tags = ddsrouter_tags();
 
     std::set<std::string> current_tags =
     {
-        WHITELIST_TAG,
-        BLACKLIST_TAG,
+        ALLOWLIST_TAG,
+        BLOCKLIST_TAG,
         TOPIC_NAME_TAG,
         TOPIC_TYPE_NAME_TAG
     };

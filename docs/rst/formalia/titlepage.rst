@@ -33,7 +33,7 @@ Following are some of the key features of *eProsima DDS Router*:
      forwarding.
   4. **Easy deployment**: it is based on an easily configurable modular system for users with no knowledge of computer
      networks.
-  5. **Topic whitelisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
+  5. **Topic allowlisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
      topic specified by the user.
 
 .. _fig_entities_diagram:
