@@ -6,7 +6,7 @@
 [![Releases](https://img.shields.io/github/v/release/eProsima/DDS-Router?sort=semver)](https://github.com/eProsima/DDS-Router/releases)
 [![Issues](https://img.shields.io/github/issues/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/issues)
 [![Forks](https://img.shields.io/github/forks/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/network/members)
-[![Stars](https://img.shields.io/github/stars/eProsima/DDS-Router.svg)](https://github.com/eProsima/Fast-RTPS/stargazers)
+[![Stars](https://img.shields.io/github/stars/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/stargazers)
 [![test](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/eProsima/DDS-Router/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/DDS-Router)
 <!-- [![Documentation Status](https://readthedocs.org/projects/dds-router/badge/?version=latest)](https://dds-router.readthedocs.io/en/latest/) -->
