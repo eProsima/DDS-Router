@@ -13,19 +13,19 @@
 // limitations under the License.
 
 /**
- * @file IDDSRouterParticipant.hpp
+ * @file IParticipant.hpp
  */
 
-#ifndef _DDS_ROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
-#define _DDS_ROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
 
 #include <ddsrouter/communication/PayloadPool.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/reader/IDDSRouterReader.hpp>
+#include <ddsrouter/reader/IReader.hpp>
 #include <ddsrouter/types/endpoint/Endpoint.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
-#include <ddsrouter/writer/IDDSRouterWriter.hpp>
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -33,11 +33,11 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class IDDSRouterParticipant
+class IParticipant
 {
 public:
 
-    IDDSRouterParticipant(
+    IParticipant(
             ParticipantId id,
             RawConfiguration,
             std::shared_ptr<PayloadPool>,
@@ -51,10 +51,10 @@ public:
         return id_;
     }
 
-    virtual std::shared_ptr<IDDSRouterWriter> create_writer(
+    virtual std::shared_ptr<IWriter> create_writer(
             RealTopic);
 
-    virtual std::shared_ptr<IDDSRouterReader> create_reader(
+    virtual std::shared_ptr<IReader> create_reader(
             RealTopic);
 
 protected:
@@ -65,4 +65,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_ */

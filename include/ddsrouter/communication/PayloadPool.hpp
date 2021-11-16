@@ -16,8 +16,8 @@
  * @file PayloadPool.hpp
  */
 
-#ifndef _DDS_ROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
-#define _DDS_ROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
+#ifndef _DDSROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
+#define _DDSROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
 
 #include <fastdds/rtps/common/CacheChange.h>
 #include <fastdds/rtps/common/SerializedPayload.h>
@@ -53,4 +53,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_COMMUNICATION_PAYLOADPOOL_HPP_ */
+#endif /* _DDSROUTER_COMMUNICATION_PAYLOADPOOL_HPP_ */

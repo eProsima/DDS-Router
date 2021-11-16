@@ -16,8 +16,8 @@
  * @file IConfigurationFile.hpp
  */
 
-#ifndef _DDS_ROUTER_CONFIGURATION_ICONFIGURATION_HPP_
-#define _DDS_ROUTER_CONFIGURATION_ICONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_ICONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_ICONFIGURATION_HPP_
 
 #include <ddsrouter/types/constants.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
@@ -44,4 +44,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_CONFIGURATION_ICONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_ICONFIGURATION_HPP_ */

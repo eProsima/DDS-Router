@@ -13,27 +13,27 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterException.cpp
+ * @file Exception.cpp
  */
 
-#include <ddsrouter/exceptions/DDSRouterException.hpp>
+#include <ddsrouter/exceptions/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-DDSRouterException::DDSRouterException(
+Exception::Exception(
         const char* message) noexcept
     : message_(message)
 {
 }
 
-DDSRouterException::DDSRouterException(
+Exception::Exception(
         const std::string& message)
     : message_(message)
 {
 }
 
-const char* DDSRouterException::what() const noexcept
+const char* Exception::what() const noexcept
 {
     return message_.c_str();
 }

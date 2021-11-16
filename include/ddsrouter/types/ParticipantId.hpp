@@ -16,8 +16,8 @@
  * @file ParticipantId.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_PARTICIPANTID_HPP_
-#define _DDS_ROUTER_TYPES_PARTICIPANTID_HPP_
+#ifndef _DDSROUTER_TYPES_PARTICIPANTID_HPP_
+#define _DDSROUTER_TYPES_PARTICIPANTID_HPP_
 
 #include <string>
 
@@ -60,4 +60,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_PARTICIPANTID_HPP_ */
+#endif /* _DDSROUTER_TYPES_PARTICIPANTID_HPP_ */

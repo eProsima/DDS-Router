@@ -16,13 +16,13 @@
  * @file ParticipantDatabase.hpp
  */
 
-#ifndef _DDS_ROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
-#define _DDS_ROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
+#define _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
 
 #include <map>
 
 #include <ddsrouter/types/ParticipantId.hpp>
-#include <ddsrouter/participant/IDDSRouterParticipant.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -38,21 +38,21 @@ public:
     // WARNING only used by DDSRouter
     void add_participant(
             ParticipantId id,
-            std::shared_ptr<IDDSRouterParticipant> participant);
+            std::shared_ptr<IParticipant> participant);
 
-    std::shared_ptr<IDDSRouterParticipant> get_participant(
+    std::shared_ptr<IParticipant> get_participant(
             const ParticipantId& id) const;
 
     std::vector<ParticipantId> get_participant_ids() const;
 
-    std::map<ParticipantId, std::shared_ptr<IDDSRouterParticipant>> get_participant_map() const;
+    std::map<ParticipantId, std::shared_ptr<IParticipant>> get_participant_map() const;
 
 protected:
 
-    std::map<ParticipantId, std::shared_ptr<IDDSRouterParticipant>> participants_;
+    std::map<ParticipantId, std::shared_ptr<IParticipant>> participants_;
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_ */

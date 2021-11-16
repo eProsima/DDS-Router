@@ -16,8 +16,8 @@
  * @file Guid.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_GUID_HPP_
-#define _DDS_ROUTER_TYPES_GUID_HPP_
+#ifndef _DDSROUTER_TYPES_GUID_HPP_
+#define _DDSROUTER_TYPES_GUID_HPP_
 
 #include <fastrtps/rtps/common/Guid.h>
 
@@ -43,4 +43,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_GUID_HPP_ */
+#endif /* _DDSROUTER_TYPES_GUID_HPP_ */

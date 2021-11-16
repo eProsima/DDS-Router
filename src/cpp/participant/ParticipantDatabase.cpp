@@ -31,13 +31,13 @@ ParticipantDatabase::~ParticipantDatabase()
 
 void ParticipantDatabase::add_participant(
         ParticipantId id,
-        std::shared_ptr<IDDSRouterParticipant> participant)
+        std::shared_ptr<IParticipant> participant)
 {
     // TODO
     throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
 }
 
-std::shared_ptr<IDDSRouterParticipant> ParticipantDatabase::get_participant(
+std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
         const ParticipantId& id) const
 {
     // TODO
@@ -50,7 +50,7 @@ std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
 }
 
-std::map<ParticipantId, std::shared_ptr<IDDSRouterParticipant>> ParticipantDatabase::get_participant_map() const
+std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const
 {
     // TODO
     throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");

@@ -16,10 +16,10 @@
  * @file FilterTopic.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
-#define _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
+#ifndef _DDSROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
+#define _DDSROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_
 
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 
 namespace eprosima {
@@ -28,12 +28,12 @@ namespace ddsrouter {
 /**
  * Class that represents a Topic filter
  */
-class FilterTopic : public DDSRouterTopic
+class FilterTopic : public Topic
 {
 public:
 
     //! Using parent constructos
-    using DDSRouterTopic::DDSRouterTopic;
+    using Topic::Topic;
 
     //! Destructor
     virtual ~FilterTopic()
@@ -80,4 +80,4 @@ struct RegexTopic : public FilterTopic
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_ */
+#endif /* _DDSROUTER_TYPES_TOPIC_FILTERTOPIC_HPP_ */

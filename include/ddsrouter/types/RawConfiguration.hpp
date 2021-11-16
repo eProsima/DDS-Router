@@ -16,8 +16,8 @@
  * @file RawConfiguration.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_RAWCONFIGURATION_HPP_
-#define _DDS_ROUTER_TYPES_RAWCONFIGURATION_HPP_
+#ifndef _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_
+#define _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_
 
 #include <yaml-cpp/yaml.h>
 
@@ -37,4 +37,4 @@ using RawConfigurationType = YAML::NodeType;
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_RAWCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_ */

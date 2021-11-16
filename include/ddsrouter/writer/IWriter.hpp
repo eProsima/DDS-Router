@@ -13,35 +13,40 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterParticipantFactory.hpp
+ * @file IWriter.hpp
  */
 
-#ifndef _DDS_ROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
-#define _DDS_ROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
+#ifndef _DDSROUTER_WRITER_IDDS_ROUTERWRITER_HPP_
+#define _DDSROUTER_WRITER_IDDS_ROUTERWRITER_HPP_
 
-#include <ddsrouter/participant/IDDSRouterParticipant.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/types/Data.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/communication/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-class DDSRouterParticipantFactory
+/**
+ * TODO
+ */
+class IWriter
 {
 public:
 
-    DDSRouterParticipantFactory() = default;
+    IWriter(
+            RealTopic,
+            std::shared_ptr<PayloadPool>);
 
-    virtual ~DDSRouterParticipantFactory();
+    virtual void enable();
 
-    std::shared_ptr<IDDSRouterParticipant> create_participant(
-            ParticipantId id,
-            RawConfiguration participant_configuration,
-            std::shared_ptr<PayloadPool> payload,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
+    virtual void disable();
+
+    virtual ReturnCode write(
+            std::unique_ptr<DataReceived>&);
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_ */
+#endif /* _DDSROUTER_WRITER_IDDS_ROUTERWRITER_HPP_ */

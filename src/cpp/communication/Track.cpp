@@ -27,8 +27,8 @@ namespace ddsrouter {
 
 Track::Track(
         const RealTopic& topic,
-        std::shared_ptr<IDDSRouterReader> reader,
-        std::map<ParticipantId, std::shared_ptr<IDDSRouterWriter>>&& writers,
+        std::shared_ptr<IReader> reader,
+        std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
         bool enable /* = false */)
     : topic_(topic)
     , reader_(reader)

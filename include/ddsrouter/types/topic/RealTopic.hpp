@@ -16,10 +16,10 @@
  * @file RealTopic.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_TOPIC_REALTOPIC_HPP_
-#define _DDS_ROUTER_TYPES_TOPIC_REALTOPIC_HPP_
+#ifndef _DDSROUTER_TYPES_TOPIC_REALTOPIC_HPP_
+#define _DDSROUTER_TYPES_TOPIC_REALTOPIC_HPP_
 
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -27,10 +27,10 @@ namespace ddsrouter {
 /**
  * Class that represents a real topic working in a DDS network
  */
-struct RealTopic : public DDSRouterTopic
+struct RealTopic : public Topic
 {
     //! Inherit parent constructors
-    using DDSRouterTopic::DDSRouterTopic;
+    using Topic::Topic;
 
     /**
      * Whether a topic name and topic type name could be used as a valid real DDS topic
@@ -48,4 +48,4 @@ struct RealTopic : public DDSRouterTopic
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_TOPIC_REALTOPIC_HPP_ */
+#endif /* _DDSROUTER_TYPES_TOPIC_REALTOPIC_HPP_ */

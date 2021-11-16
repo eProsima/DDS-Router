@@ -16,10 +16,10 @@
  * @file UnsupportedException.hpp
  */
 
-#ifndef _DDS_ROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
-#define _DDS_ROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+#ifndef _DDSROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
 
-#include <ddsrouter/exceptions/DDSRouterException.hpp>
+#include <ddsrouter/exceptions/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,14 +28,14 @@ namespace ddsrouter {
  * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
  *
  */
-class UnsupportedException : public DDSRouterException
+class UnsupportedException : public Exception
 {
     // Use parent class constructors
-    using DDSRouterException::DDSRouterException;
+    using Exception::Exception;
 };
 
 } // namespace ddsrouter
 } // namespace eprosima
 
-#endif // _DDS_ROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
+#endif // _DDSROUTER_EXCEPTIONS_UNSOPPORTEDEXCEPTION_HPP_
 

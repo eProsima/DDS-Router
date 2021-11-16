@@ -16,14 +16,14 @@
  * @file AllowedTopicList.hpp
  */
 
-#ifndef _DDS_ROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
-#define _DDS_ROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
+#ifndef _DDSROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
+#define _DDSROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
 
 #include <list>
 #include <map>
 #include <string>
 
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
@@ -102,4 +102,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_ */
+#endif /* _DDSROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_ */

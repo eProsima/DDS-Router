@@ -16,8 +16,8 @@
  * @file ReturnCode.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_RETURNCODE_HPP_
-#define _DDS_ROUTER_TYPES_RETURNCODE_HPP_
+#ifndef _DDSROUTER_TYPES_RETURNCODE_HPP_
+#define _DDSROUTER_TYPES_RETURNCODE_HPP_
 
 #include <fastrtps/types/TypesBase.h>
 
@@ -41,4 +41,4 @@ class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_RETURNCODE_HPP_ */
+#endif /* _DDSROUTER_TYPES_RETURNCODE_HPP_ */

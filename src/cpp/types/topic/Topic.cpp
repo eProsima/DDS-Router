@@ -13,16 +13,16 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterTopic.cpp
+ * @file Topic.cpp
  *
  */
 
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-DDSRouterTopic::DDSRouterTopic(
+Topic::Topic(
         std::string topic_name,
         std::string topic_type) noexcept
     : topic_name_(topic_name)
@@ -30,29 +30,29 @@ DDSRouterTopic::DDSRouterTopic(
 {
 }
 
-DDSRouterTopic::~DDSRouterTopic()
+Topic::~Topic()
 {
 }
 
-const std::string& DDSRouterTopic::topic_name() const
+const std::string& Topic::topic_name() const
 {
     return topic_name_;
 }
 
-const std::string& DDSRouterTopic::topic_type() const
+const std::string& Topic::topic_type() const
 {
     return topic_type_;
 }
 
-bool DDSRouterTopic::operator ==(
-        const DDSRouterTopic& other) const
+bool Topic::operator ==(
+        const Topic& other) const
 {
 
     return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_;
 }
 
-bool DDSRouterTopic::operator <(
-        const DDSRouterTopic& other) const
+bool Topic::operator <(
+        const Topic& other) const
 {
     int name_comparison = topic_name_.compare(other.topic_name_);
     if (name_comparison < 0)
@@ -80,7 +80,7 @@ bool DDSRouterTopic::operator <(
 
 std::ostream& operator <<(
         std::ostream& os,
-        const DDSRouterTopic& a)
+        const Topic& a)
 {
     os << "{" << a.topic_name() << ", " << a.topic_type() << "}";
     return os;

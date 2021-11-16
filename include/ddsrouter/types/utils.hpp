@@ -18,8 +18,8 @@
  * This file contains constant values common for the whole project
  */
 
-#ifndef _DDS_ROUTER_TYPES_UTILS_HPP_
-#define _DDS_ROUTER_TYPES_UTILS_HPP_
+#ifndef _DDSROUTER_TYPES_UTILS_HPP_
+#define _DDSROUTER_TYPES_UTILS_HPP_
 
 #include <set>
 #include <string>
@@ -35,4 +35,4 @@ bool match_pattern(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_UTILS_HPP_ */
+#endif /* _DDSROUTER_TYPES_UTILS_HPP_ */

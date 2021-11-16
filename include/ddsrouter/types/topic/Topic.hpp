@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterTopic.hpp
+ * @file Topic.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
-#define _DDS_ROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
+#ifndef _DDSROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
+#define _DDSROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
 
 #include <iostream>
 #include <string>
@@ -28,21 +28,21 @@ namespace ddsrouter {
 /**
  * Generic class that contains all the data required by a DDSRouter Topic
  */
-struct DDSRouterTopic
+struct Topic
 {
     /**
      * Std constructor by topic name and topic type name
      */
-    DDSRouterTopic(
+    Topic(
             std::string topic_name,
             std::string topic_type) noexcept;
 
     //! Copy constructor
     void operator =(
-            const DDSRouterTopic& other);
+            const Topic& other);
 
     //! Destructor
-    virtual ~DDSRouterTopic();
+    virtual ~Topic();
 
     //! Topic name getter
     const std::string& topic_name() const;
@@ -57,7 +57,7 @@ struct DDSRouterTopic
      * It compares that the topic name and topic type are equal
      */
     bool operator ==(
-            const DDSRouterTopic& other) const;
+            const Topic& other) const;
 
     /**
      * Minor operator
@@ -65,7 +65,7 @@ struct DDSRouterTopic
      * It compares first the topic name, and if it is the same, it compares the topic type
      */
     bool operator <(
-            const DDSRouterTopic& other) const;
+            const Topic& other) const;
 
 protected:
 
@@ -84,9 +84,9 @@ protected:
  */
 std::ostream& operator <<(
         std::ostream& os,
-        const DDSRouterTopic& a);
+        const Topic& a);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_ */
+#endif /* _DDSROUTER_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_ */

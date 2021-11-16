@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterConfiguration.cpp
+ * @file Configuration.cpp
  *
  */
 
-#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/Configuration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
@@ -27,7 +27,7 @@ namespace ddsrouter {
 
 // TODO: Add logs
 
-DDSRouterConfiguration::DDSRouterConfiguration(
+Configuration::Configuration(
         const RawConfiguration& raw_configuration)
     : raw_configuration_(raw_configuration)
 {
@@ -37,21 +37,21 @@ DDSRouterConfiguration::DDSRouterConfiguration(
     }
 }
 
-DDSRouterConfiguration::~DDSRouterConfiguration()
+Configuration::~Configuration()
 {
 }
 
-std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::allowlist() const
+std::list<std::shared_ptr<FilterTopic>> Configuration::allowlist() const
 {
     return generic_get_topic_list_(ALLOWLIST_TAG);
 }
 
-std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::blocklist() const
+std::list<std::shared_ptr<FilterTopic>> Configuration::blocklist() const
 {
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
-std::map<ParticipantId, RawConfiguration> DDSRouterConfiguration::participants_configurations() const
+std::map<ParticipantId, RawConfiguration> Configuration::participants_configurations() const
 {
     std::map<ParticipantId, RawConfiguration> result;
 
@@ -83,7 +83,7 @@ std::map<ParticipantId, RawConfiguration> DDSRouterConfiguration::participants_c
     return result;
 }
 
-std::set<RealTopic> DDSRouterConfiguration::real_topics() const
+std::set<RealTopic> Configuration::real_topics() const
 {
     std::set<RealTopic> result;
 
@@ -98,7 +98,7 @@ std::set<RealTopic> DDSRouterConfiguration::real_topics() const
     return result;
 }
 
-std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topic_list_(
+std::list<std::shared_ptr<FilterTopic>> Configuration::generic_get_topic_list_(
         const char* list_tag) const
 {
     // TODO: support regex topic

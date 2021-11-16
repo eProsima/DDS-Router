@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterConfiguration.hpp
+ * @file Configuration.hpp
  */
 
-#ifndef _DDS_ROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
-#define _DDS_ROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
 
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
@@ -29,14 +29,14 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class DDSRouterConfiguration
+class Configuration
 {
 public:
 
-    DDSRouterConfiguration(
+    Configuration(
             const RawConfiguration& raw_configuration);
 
-    virtual ~DDSRouterConfiguration();
+    virtual ~Configuration();
 
     std::list<std::shared_ptr<FilterTopic>> allowlist() const;
 
@@ -59,4 +59,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_ */

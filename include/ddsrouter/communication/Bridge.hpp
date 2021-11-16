@@ -16,13 +16,13 @@
  * @file Bridge.hpp
  */
 
-#ifndef _DDS_ROUTER_COMMUNICATION_BRIDGE_HPP_
-#define _DDS_ROUTER_COMMUNICATION_BRIDGE_HPP_
+#ifndef _DDSROUTER_COMMUNICATION_BRIDGE_HPP_
+#define _DDSROUTER_COMMUNICATION_BRIDGE_HPP_
 
 #include <mutex>
 
 #include <ddsrouter/communication/Track.hpp>
-#include <ddsrouter/participant/IDDSRouterParticipant.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/participant/ParticipantDatabase.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
 
@@ -107,10 +107,10 @@ protected:
     std::map<ParticipantId, std::unique_ptr<Track>> tracks_;
 
     //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs
-    std::map<ParticipantId, std::shared_ptr<IDDSRouterWriter>> writers_;
+    std::map<ParticipantId, std::shared_ptr<IWriter>> writers_;
 
     //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs
-    std::map<ParticipantId, std::shared_ptr<IDDSRouterReader>> readers_;
+    std::map<ParticipantId, std::shared_ptr<IReader>> readers_;
 
     //! Whether the Bridge is currently enable
     bool enabled_;
@@ -122,4 +122,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_COMMUNICATION_BRIDGE_HPP_ */
+#endif /* _DDSROUTER_COMMUNICATION_BRIDGE_HPP_ */

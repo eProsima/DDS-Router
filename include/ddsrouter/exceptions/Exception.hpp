@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterException.hpp
+ * @file Exception.hpp
  */
 
-#ifndef _DDS_ROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
-#define _DDS_ROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
+#ifndef _DDSROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
 
 #include <exception>
 #include <string>
@@ -29,43 +29,43 @@ namespace ddsrouter {
  * @brief Base class for all exceptions thrown by the eProsima DDSRouter library.
  *
  */
-class DDSRouterException : public std::exception
+class Exception : public std::exception
 {
 
 public:
 
     /**
-     * @brief Construct a new statistics_backend::DDSRouterException object
+     * @brief Construct a new statistics_backend::Exception object
      *
      * @param message The message to be returned by what()
      */
-    DDSRouterException(
+    Exception(
             const char* message) noexcept;
 
     /**
-     * @brief Construct a new statistics_backend::DDSRouterException object
+     * @brief Construct a new statistics_backend::Exception object
      *
      * @param message The message to be returned by what()
      */
-    DDSRouterException(
+    Exception(
             const std::string& message);
 
     /**
-     * @brief Copies the statistics_backend::DDSRouterException object into a new one
+     * @brief Copies the statistics_backend::Exception object into a new one
      *
      * @param other The original exception object to copy
      */
-    DDSRouterException(
-            const DDSRouterException& other) = default;
+    Exception(
+            const Exception& other) = default;
 
     /**
-     * @brief Copies the statistics_backend::DDSRouterException object into the current one
+     * @brief Copies the statistics_backend::Exception object into the current one
      *
      * @param other The original exception object to copy
-     * @return the current statistics_backend::DDSRouterException object after the copy
+     * @return the current statistics_backend::Exception object after the copy
      */
-    DDSRouterException& operator =(
-            const DDSRouterException& other) = default;
+    Exception& operator =(
+            const Exception& other) = default;
 
     /**
      * @brief Returns the explanatory string of the exception
@@ -82,5 +82,5 @@ protected:
 } // namespace ddsrouter
 } // namespace eprosima
 
-#endif // _DDS_ROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
+#endif // _DDSROUTER_EXCEPTIONS_DDS_ROUTEREXCEPTION_HPP_
 

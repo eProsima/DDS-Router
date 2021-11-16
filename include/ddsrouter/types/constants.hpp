@@ -18,8 +18,8 @@
  * This file contains constant values common for the whole project
  */
 
-#ifndef _DDS_ROUTER_TYPES_CONSTANTS_HPP_
-#define _DDS_ROUTER_TYPES_CONSTANTS_HPP_
+#ifndef _DDSROUTER_TYPES_CONSTANTS_HPP_
+#define _DDSROUTER_TYPES_CONSTANTS_HPP_
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,4 +29,4 @@ constexpr char* DEFAULT_CONFIGURATION_FILE_NAME("DDS_ROUTER_CONFIGURATION.yaml")
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_CONSTANTS_HPP_ */
+#endif /* _DDSROUTER_TYPES_CONSTANTS_HPP_ */

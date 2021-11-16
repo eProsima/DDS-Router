@@ -18,8 +18,8 @@
  * This file includes every standard type of DDSRouter
  */
 
-#ifndef _DDS_ROUTER_TYPES_TYPES_HPP_
-#define _DDS_ROUTER_TYPES_TYPES_HPP_
+#ifndef _DDSROUTER_TYPES_TYPES_HPP_
+#define _DDSROUTER_TYPES_TYPES_HPP_
 
 // General types
 #include <ddsrouter/types/constants.hpp>
@@ -34,8 +34,8 @@
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 
 
-#endif /* _DDS_ROUTER_TYPES_TYPES_HPP_ */
+#endif /* _DDSROUTER_TYPES_TYPES_HPP_ */

@@ -16,8 +16,8 @@
  * @file Endpoint.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_ENDPOINT_HPP_
-#define _DDS_ROUTER_TYPES_ENDPOINT_HPP_
+#ifndef _DDSROUTER_TYPES_ENDPOINT_HPP_
+#define _DDSROUTER_TYPES_ENDPOINT_HPP_
 
 #include <ddsrouter/types/endpoint/Guid.hpp>
 #include <ddsrouter/types/endpoint/QoS.hpp>
@@ -101,4 +101,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_ENDPOINT_HPP_ */
+#endif /* _DDSROUTER_TYPES_ENDPOINT_HPP_ */

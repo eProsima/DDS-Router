@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/Configuration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
@@ -30,7 +30,7 @@ namespace ddsrouter {
 // TODO: Add logs
 
 DDSRouter::DDSRouter(
-        const DDSRouterConfiguration& configuration)
+        const Configuration& configuration)
     : payload_pool_(new PayloadPool())
     , participants_database_(new ParticipantDatabase())
     , discovery_database_(new DiscoveryDatabase())
@@ -57,7 +57,7 @@ DDSRouter::~DDSRouter()
 }
 
 void DDSRouter::reload_configuration(
-        const DDSRouterConfiguration&)
+        const Configuration&)
 {
     // TODO
     throw UnsupportedException("DDSRouter::reload_configuration not supported yet");
@@ -82,7 +82,7 @@ void DDSRouter::init_participants_()
     for (std::pair<const eprosima::ddsrouter::ParticipantId, eprosima::ddsrouter::RawConfiguration> participant_info :
             configuration_.participants_configurations())
     {
-        std::shared_ptr<IDDSRouterParticipant> new_participant;
+        std::shared_ptr<IParticipant> new_participant;
 
         // Create participant
         // This should not be in try catch case as if it fails the whole init must fail

@@ -16,8 +16,8 @@
  * @file WildcardTopic.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
-#define _DDS_ROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
+#ifndef _DDSROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
+#define _DDSROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 
 #include <ddsrouter/types/topic/FilterTopic.hpp>
 
@@ -59,4 +59,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_ */
+#endif /* _DDSROUTER_TYPES_TOPIC_WILDCARDTOPIC_HPP_ */

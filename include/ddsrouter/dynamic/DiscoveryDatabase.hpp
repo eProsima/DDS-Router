@@ -16,8 +16,8 @@
  * @file DiscoveryDatabase.hpp
  */
 
-#ifndef _DDS_ROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
-#define _DDS_ROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
+#ifndef _DDSROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
+#define _DDSROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
 
 #include <string>
 #include <map>
@@ -63,4 +63,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_ */
+#endif /* _DDSROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_ */

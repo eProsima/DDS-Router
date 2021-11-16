@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterParticipantFactory.cpp
+ * @file ParticipantFactory.cpp
  *
  */
 
-#include <ddsrouter/participant/DDSRouterParticipantFactory.hpp>
+#include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
@@ -25,18 +25,18 @@ namespace ddsrouter {
 
 // TODO: Add logs
 
-DDSRouterParticipantFactory::~DDSRouterParticipantFactory()
+ParticipantFactory::~ParticipantFactory()
 {
 }
 
-std::shared_ptr<IDDSRouterParticipant> DDSRouterParticipantFactory::create_participant(
+std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         ParticipantId,
         RawConfiguration,
         std::shared_ptr<PayloadPool>,
         std::shared_ptr<DiscoveryDatabase>)
 {
     // TODO
-    throw UnsupportedException("DDSRouterParticipantFactory::create_participant not supported yet");
+    throw UnsupportedException("ParticipantFactory::create_participant not supported yet");
 }
 
 } /* namespace ddsrouter */

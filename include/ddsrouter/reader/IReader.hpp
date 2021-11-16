@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file IDDSRouterReader.hpp
+ * @file IReader.hpp
  */
 
-#ifndef _DDS_ROUTER_READER_IDDS_ROUTERREADER_HPP_
-#define _DDS_ROUTER_READER_IDDS_ROUTERREADER_HPP_
+#ifndef _DDSROUTER_READER_IDDS_ROUTERREADER_HPP_
+#define _DDSROUTER_READER_IDDS_ROUTERREADER_HPP_
 
 #include <functional>
 
@@ -32,11 +32,11 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class IDDSRouterReader
+class IReader
 {
 public:
 
-    IDDSRouterReader(
+    IReader(
             RealTopic,
             std::shared_ptr<PayloadPool>);
 
@@ -59,4 +59,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_READER_IDDS_ROUTERREADER_HPP_ */
+#endif /* _DDSROUTER_READER_IDDS_ROUTERREADER_HPP_ */

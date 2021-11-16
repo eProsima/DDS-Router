@@ -16,10 +16,10 @@
  * @file ConfigurationException.hpp
  */
 
-#ifndef _DDS_ROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-#define _DDS_ROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#ifndef _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
 
-#include <ddsrouter/exceptions/DDSRouterException.hpp>
+#include <ddsrouter/exceptions/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -27,14 +27,14 @@ namespace ddsrouter {
 /**
  * @brief TODO
  */
-class ConfigurationException : public DDSRouterException
+class ConfigurationException : public Exception
 {
     // Use parent class constructors
-    using DDSRouterException::DDSRouterException;
+    using Exception::Exception;
 };
 
 } // namespace ddsrouter
 } // namespace eprosima
 
-#endif // _DDS_ROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#endif // _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
 

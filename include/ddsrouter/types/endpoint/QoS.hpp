@@ -16,8 +16,8 @@
  * @file QoS.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_QOS_HPP_
-#define _DDS_ROUTER_TYPES_QOS_HPP_
+#ifndef _DDSROUTER_TYPES_QOS_HPP_
+#define _DDSROUTER_TYPES_QOS_HPP_
 
 #include <fastdds/rtps/common/Types.h>
 
@@ -69,4 +69,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_QOS_HPP_ */
+#endif /* _DDSROUTER_TYPES_QOS_HPP_ */

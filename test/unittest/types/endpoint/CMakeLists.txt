@@ -90,8 +90,8 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/DDSRouterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/DDSRouterException.cpp # TODO: Remove when not needed
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp # TODO: Remove when not needed
     )
 
 set(TEST_HEADERS

@@ -16,24 +16,24 @@
  * @file Track.hpp
  */
 
-#ifndef _DDS_ROUTER_COMMUNICATION_TRACK_HPP_
-#define _DDS_ROUTER_COMMUNICATION_TRACK_HPP_
+#ifndef _DDSROUTER_COMMUNICATION_TRACK_HPP_
+#define _DDSROUTER_COMMUNICATION_TRACK_HPP_
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
 
-#include <ddsrouter/participant/IDDSRouterParticipant.hpp>
-#include <ddsrouter/reader/IDDSRouterReader.hpp>
-#include <ddsrouter/writer/IDDSRouterWriter.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
+#include <ddsrouter/reader/IReader.hpp>
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Track object manage the communication between one \c IDDSRouterReader as entry point of data and Nç
- * \c IDDSRouterWriter that will send forward the data received.
+ * Track object manage the communication between one \c IReader as entry point of data and Nç
+ * \c IWriter that will send forward the data received.
  */
 class Track
 {
@@ -42,8 +42,8 @@ public:
     /**
      * Track constructor by required values.
      *
-     * In Track construction, there are created a \c IDDSRouterReader for the participant \c source and one
-     * \c IDDSRouterWriter for each participant in \c targets .
+     * In Track construction, there are created a \c IReader for the participant \c source and one
+     * \c IWriter for each participant in \c targets .
      * It also creates a new thread that manage the transmission between the reader and the writers.
      *
      * @param topic:    Topic that this Track manage communication
@@ -55,8 +55,8 @@ public:
      */
     Track(
             const RealTopic& topic,
-            std::shared_ptr<IDDSRouterReader> reader,
-            std::map<ParticipantId, std::shared_ptr<IDDSRouterWriter>>&& writers,
+            std::shared_ptr<IReader> reader,
+            std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
             bool enable = false);
 
     virtual ~Track();
@@ -138,10 +138,10 @@ protected:
     RealTopic topic_;
 
     //! Reader that will read data
-    std::shared_ptr<IDDSRouterReader> reader_;
+    std::shared_ptr<IReader> reader_;
 
     //! Writers that will send data forward
-    std::map<ParticipantId, std::shared_ptr<IDDSRouterWriter>> writers_;
+    std::map<ParticipantId, std::shared_ptr<IWriter>> writers_;
 
     //! Whether the Track is currently enable
     std::atomic<bool> enabled_;
@@ -192,4 +192,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_COMMUNICATION_TRACK_HPP_ */
+#endif /* _DDSROUTER_COMMUNICATION_TRACK_HPP_ */

@@ -16,20 +16,20 @@
  * @file DDSRouter.hpp
  */
 
-#ifndef _DDS_ROUTER_CORE_DDS_ROUTER_HPP_
-#define _DDS_ROUTER_CORE_DDS_ROUTER_HPP_
+#ifndef _DDSROUTER_CORE_DDSROUTER_HPP_
+#define _DDSROUTER_CORE_DDSROUTER_HPP_
 
 #include <atomic>
 #include <map>
 #include <mutex>
 
 #include <ddsrouter/communication/Bridge.hpp>
-#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/Configuration.hpp>
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/participant/IDDSRouterParticipant.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/participant/ParticipantDatabase.hpp>
-#include <ddsrouter/participant/DDSRouterParticipantFactory.hpp>
+#include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
 
@@ -44,13 +44,13 @@ class DDSRouter
 public:
 
     DDSRouter(
-            const DDSRouterConfiguration& configuration);
+            const Configuration& configuration);
 
     virtual ~DDSRouter();
 
     // EVENTS
     void reload_configuration(
-            const DDSRouterConfiguration& configuration);
+            const Configuration& configuration);
 
     void endpoint_discovered(
             const Endpoint& endpoint);
@@ -98,11 +98,11 @@ protected:
 
     std::map<RealTopic, bool> current_topics_;
 
-    DDSRouterConfiguration configuration_;
+    Configuration configuration_;
 
     AllowedTopicList allowed_topics_;
 
-    DDSRouterParticipantFactory participant_factory_;
+    ParticipantFactory participant_factory_;
 
     /////
     // AUXILIAR VARIABLES
@@ -117,4 +117,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_CORE_DDS_ROUTER_HPP_ */
+#endif /* _DDSROUTER_CORE_DDSROUTER_HPP_ */

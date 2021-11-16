@@ -15,7 +15,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/types/topic/DDSRouterTopic.hpp>
+#include <ddsrouter/types/topic/Topic.hpp>
 
 using namespace eprosima::ddsrouter;
 
@@ -70,35 +70,35 @@ std::vector<pair_topic_type> well_sorted_topic_names()
 }
 
 /**
- * Test DDSRouterTopic constructor and std getter methods
+ * Test Topic constructor and std getter methods
  */
-TEST(DDSRouterTopicTest, constructor)
+TEST(TopicTest, constructor)
 {
     for (pair_topic_type topic : random_topic_names())
     {
-        DDSRouterTopic dt(topic.first, topic.second);
+        Topic dt(topic.first, topic.second);
         ASSERT_EQ(dt.topic_name(), topic.first);
         ASSERT_EQ(dt.topic_type(), topic.second);
     }
 }
 
 /**
- * Test DDSRouterTopic == operator in positive cases
+ * Test Topic == operator in positive cases
  */
-TEST(DDSRouterTopicTest, equal_operator)
+TEST(TopicTest, equal_operator)
 {
     for (pair_topic_type topic : random_topic_names())
     {
-        DDSRouterTopic dt1(topic.first, topic.second);
-        DDSRouterTopic dt2(topic.first, topic.second);
+        Topic dt1(topic.first, topic.second);
+        Topic dt2(topic.first, topic.second);
         ASSERT_TRUE(dt1 == dt2);
     }
 }
 
 /**
- * Test DDSRouterTopic < operator in positive cases
+ * Test Topic < operator in positive cases
  */
-TEST(DDSRouterTopicTest, minor_operator)
+TEST(TopicTest, minor_operator)
 {
     std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
 
@@ -107,19 +107,19 @@ TEST(DDSRouterTopicTest, minor_operator)
         // Skip same topic
         for (int j = (i + 1); j < well_sorted_names.size(); ++j)
         {
-            DDSRouterTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
-            DDSRouterTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
+            Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
+            Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
             ASSERT_TRUE(dt1 < dt2) << dt1 << " < " << dt2;
         }
     }
 }
 
 /**
- * Test DDSRouterTopic == operator in negative cases
+ * Test Topic == operator in negative cases
  *
  * Test that every name in random topics is different with the others
  */
-TEST(DDSRouterTopicTest, non_equal_operator)
+TEST(TopicTest, non_equal_operator)
 {
     std::vector<pair_topic_type> names = random_topic_names();
 
@@ -130,8 +130,8 @@ TEST(DDSRouterTopicTest, non_equal_operator)
             // Skip same topic
             if (i != j)
             {
-                DDSRouterTopic dt1(names[i].first, names[i].second);
-                DDSRouterTopic dt2(names[j].first, names[j].second);
+                Topic dt1(names[i].first, names[i].second);
+                Topic dt2(names[j].first, names[j].second);
                 ASSERT_FALSE(dt1 == dt2);
             }
         }
@@ -139,9 +139,9 @@ TEST(DDSRouterTopicTest, non_equal_operator)
 }
 
 /**
- * Test DDSRouterTopic < operator in negative cases
+ * Test Topic < operator in negative cases
  */
-TEST(DDSRouterTopicTest, non_minor_operator)
+TEST(TopicTest, non_minor_operator)
 {
     std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
 
@@ -149,20 +149,20 @@ TEST(DDSRouterTopicTest, non_minor_operator)
     {
         for (int j = i; j < well_sorted_names.size(); ++j)
         {
-            DDSRouterTopic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
-            DDSRouterTopic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
+            Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
+            Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
             ASSERT_FALSE(dt2 < dt1) << dt2 << " < " << dt1;
         }
     }
 }
 
 /**
- * Test the DDSRouterTopic << operator
+ * Test the Topic << operator
  */
-TEST(DDSRouterTopicTest, stdout_operator)
+TEST(TopicTest, stdout_operator)
 {
     std::vector<pair_topic_type> topics = {{"topic1", "type1"}, {"topic2", "type2"}};
-    DDSRouterTopic dt("topic1", "type1");
+    Topic dt("topic1", "type1");
 
     testing::internal::CaptureStdout();
     std::cout << dt;

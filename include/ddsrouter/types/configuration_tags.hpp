@@ -18,8 +18,8 @@
  * This file contains constant values common for the whole project
  */
 
-#ifndef _DDS_ROUTER_TYPES_CONFIGURATIONTAGS_HPP_
-#define _DDS_ROUTER_TYPES_CONFIGURATIONTAGS_HPP_
+#ifndef _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_
+#define _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_
 
 namespace eprosima {
 namespace ddsrouter {
@@ -36,4 +36,4 @@ constexpr const char* TOPIC_TYPE_NAME_TAG("type");
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_CONFIGURATIONTAGS_HPP_ */
+#endif /* _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_ */

@@ -16,8 +16,8 @@
  * @file Data.hpp
  */
 
-#ifndef _DDS_ROUTER_TYPES_DATA_HPP_
-#define _DDS_ROUTER_TYPES_DATA_HPP_
+#ifndef _DDSROUTER_TYPES_DATA_HPP_
+#define _DDSROUTER_TYPES_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
 
@@ -42,4 +42,4 @@ struct DataReceived
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDS_ROUTER_TYPES_DATA_HPP_ */
+#endif /* _DDSROUTER_TYPES_DATA_HPP_ */
