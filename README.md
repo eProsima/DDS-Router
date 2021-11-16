@@ -35,3 +35,5 @@ Following are some of the key features of *eProsima DDS Router*:
   networks.
 * **Topic allowlisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
   topic specified by the user.
+
+![eProsima DDS Router overall architecture](docs/rst/figures/ddsrouter_cloud_white_background.png)
