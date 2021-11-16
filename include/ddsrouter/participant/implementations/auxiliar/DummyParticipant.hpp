@@ -19,8 +19,10 @@
 #ifndef _DATABROKER_PARTICIPANT_IMPLEMENTATIONS_AUX_DUMMYPARTICIPANT_HPP_
 #define _DATABROKER_PARTICIPANT_IMPLEMENTATIONS_AUX_DUMMYPARTICIPANT_HPP_
 
-#include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,14 +41,28 @@ public:
     virtual ParticipantType type() const override;
 
     virtual std::shared_ptr<IWriter> create_writer(
-            RealTopic) override;
+            RealTopic topic) override;
 
     virtual std::shared_ptr<IReader> create_reader(
-            RealTopic) override;
+            RealTopic topic) override;
 
     virtual void add_discovered_endpoint(const Endpoint& new_endpoint);
 
     virtual Endpoint get_discovered_endpoint(const Guid& guid) const;
+
+    void add_message_to_send(RealTopic topic, DataToSend data);
+
+    std::vector<DataStoraged> data_received_ref(RealTopic topic);
+
+    static std::shared_ptr<DummyParticipant> get_participant(ParticipantId id);
+
+protected:
+
+    std::map<RealTopic, std::shared_ptr<DummyWriter>> writers_;
+
+    std::map<RealTopic, std::shared_ptr<DummyReader>> readers_;
+
+    static std::map<ParticipantId, std::shared_ptr<DummyParticipant>> participants_;
 };
 
 } /* namespace ddsrouter */

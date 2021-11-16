@@ -43,7 +43,7 @@ ReturnCode DummyWriter::write(std::unique_ptr<DataReceived>& data)
     return ReturnCode::RETCODE_OK;
 }
 
-std::vector<DataStoraged>& DummyWriter::data_received_ref()
+std::vector<DataStoraged> DummyWriter::data_received_ref()
 {
     std::lock_guard<std::mutex> lock(mutex_);
     return data_storaged;
