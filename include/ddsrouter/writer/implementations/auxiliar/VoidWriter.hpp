@@ -13,44 +13,37 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
- *
+ * @file VoidWriter.hpp
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/types/utils.hpp>
+#ifndef _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_
+#define _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_
+
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+/**
+ * TODO
+ */
+class VoidWriter : public IWriter
 {
-}
+public:
 
-WildcardTopic::~WildcardTopic()
-{
-}
+    VoidWriter() = default;
 
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
-{
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
-}
+    virtual ~VoidWriter();
 
-bool WildcardTopic::matches(
-        const RealTopic& other) const
-{
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
-    {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
-    }
-    return false;
-}
+    void enable() override;
+
+    void disable() override;
+
+    ReturnCode write(
+            std::unique_ptr<DataReceived>&) override;
+};
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_ */

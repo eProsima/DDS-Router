@@ -34,16 +34,12 @@ class IWriter
 {
 public:
 
-    IWriter(
-            RealTopic,
-            std::shared_ptr<PayloadPool>);
+    virtual void enable() = 0;
 
-    virtual void enable();
-
-    virtual void disable();
+    virtual void disable() = 0;
 
     virtual ReturnCode write(
-            std::unique_ptr<DataReceived>&);
+            std::unique_ptr<DataReceived>& data) = 0;
 };
 
 } /* namespace ddsrouter */

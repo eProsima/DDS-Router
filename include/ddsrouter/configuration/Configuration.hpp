@@ -22,6 +22,7 @@
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -42,7 +43,7 @@ public:
 
     std::list<std::shared_ptr<FilterTopic>> blocklist() const;
 
-    std::map<ParticipantId, RawConfiguration> participants_configurations() const;
+    std::list<ParticipantConfiguration> participants_configurations() const;
 
     //! Ad hoc function to find real topics within the allowlist
     // TODO: This method will dissapear once the dynamic module is implemented

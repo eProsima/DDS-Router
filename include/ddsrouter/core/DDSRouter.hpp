@@ -52,8 +52,7 @@ public:
     void reload_configuration(
             const Configuration& configuration);
 
-    void endpoint_discovered(
-            const Endpoint& endpoint);
+    void stop();
 
 protected:
 

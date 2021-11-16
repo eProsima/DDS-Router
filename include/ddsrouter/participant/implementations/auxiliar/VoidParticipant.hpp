@@ -13,44 +13,45 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
- *
+ * @file VoidParticipant.hpp
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/types/utils.hpp>
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_
+
+#include <ddsrouter/participant/IParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+/**
+ * TODO
+ */
+class VoidParticipant : public IParticipant
 {
-}
+public:
 
-WildcardTopic::~WildcardTopic()
-{
-}
+    VoidParticipant(
+        ParticipantId id);
 
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
-{
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
-}
+    virtual ~VoidParticipant();
 
-bool WildcardTopic::matches(
-        const RealTopic& other) const
-{
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
-    {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
-    }
-    return false;
-}
+    ParticipantId id() const override;
+
+    ParticipantType type() const override;
+
+    std::shared_ptr<IWriter> create_writer(
+            RealTopic) override;
+
+    std::shared_ptr<IReader> create_reader(
+            RealTopic) override;
+
+protected:
+
+    ParticipantId id_;
+};
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_ */

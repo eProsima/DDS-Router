@@ -58,6 +58,11 @@ bool ParticipantId::is_valid() const
     return id_ != INVALID_ID;
 }
 
+std::string ParticipantId::id_name() const
+{
+    return id_;
+}
+
 bool ParticipantId::operator ==(
         const ParticipantId& other) const
 {

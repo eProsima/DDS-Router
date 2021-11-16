@@ -55,7 +55,6 @@ set(TEST_NAME RealTopicTest)
 
 set(TEST_SOURCES
         RealTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp # TODO: Remove when not needed
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
     )
 
@@ -87,7 +86,6 @@ set(TEST_NAME WildcardTopicTest)
 
 set(TEST_SOURCES
         WildcardTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp # TODO: Remove when not needed
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp

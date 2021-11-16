@@ -13,43 +13,51 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
+ * @file ParticipantType.cpp
  *
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
+#include <set>
+
+#include <ddsrouter/types/ParticipantType.hpp>
 #include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+ParticipantType ParticipantTypeFactory::participant_type_from_name(std::string type)
 {
-}
+    // Pass type name to lowercase
+    utils::to_lowercase(type);
 
-WildcardTopic::~WildcardTopic()
-{
-}
-
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
-{
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
-}
-
-bool WildcardTopic::matches(
-        const RealTopic& other) const
-{
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
+    if (type == VOID_TYPE_NAME)
     {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
+        // Void type
+        return ParticipantType::VOID;
     }
-    return false;
+    else
+    {
+        // The type is not associated with any ParticipantType
+        // TODO: Add log warning
+        return ParticipantType::INVALID;
+    }
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const ParticipantType& a)
+{
+    switch (a)
+    {
+    case ParticipantType::VOID:
+        os << VOID_TYPE_NAME;
+        break;
+
+    default:
+        os << INVALID_TYPE_NAME_SERIALIZATION;
+        break;
+    }
+    return os;
 }
 
 } /* namespace ddsrouter */

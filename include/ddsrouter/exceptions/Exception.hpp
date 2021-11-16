@@ -22,6 +22,8 @@
 #include <exception>
 #include <string>
 
+#include <ddsrouter/types/utils.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -49,6 +51,17 @@ public:
      */
     Exception(
             const std::string& message);
+
+    /**
+     * @brief Construct a new statistics_backend::Exception object by concatenating streams in a \c Formatter
+     *
+     * This constructor allows to concatenate several streams in the same object in the same constructor call.
+     * For example: Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
+     *
+     * @param formatter The \c Formatter object where streams are concatenated
+     */
+    Exception(
+            const utils::Formatter& formatter);
 
     /**
      * @brief Copies the statistics_backend::Exception object into a new one
