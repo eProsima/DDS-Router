@@ -13,20 +13,15 @@
 // limitations under the License.
 
 /**
- * @file IParticipant.hpp
+ * @file ParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/communication/PayloadPool.hpp>
-#include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/reader/IReader.hpp>
-#include <ddsrouter/types/endpoint/Endpoint.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
-#include <ddsrouter/types/ParticipantType.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
-#include <ddsrouter/writer/IWriter.hpp>
+#include <ddsrouter/types/ParticipantType.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,22 +29,35 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class IParticipant
+class ParticipantConfiguration
 {
 public:
 
-    virtual ParticipantId id() const = 0;
+    ParticipantConfiguration(
+            ParticipantId id,
+            const RawConfiguration& raw_configuration);
 
-    virtual ParticipantType type() const = 0;
+    virtual ~ParticipantConfiguration();
 
-    virtual std::shared_ptr<IWriter> create_writer(
-            RealTopic topic) = 0;
+    ParticipantType type() const;
 
-    virtual std::shared_ptr<IReader> create_reader(
-            RealTopic topic) = 0;
+    ParticipantId id() const;
+
+    bool operator ==(
+            const ParticipantConfiguration& other) const;
+
+protected:
+
+    void set_type_();
+
+    const ParticipantId id_;
+
+    ParticipantType type_;
+
+    const RawConfiguration raw_configuration_;
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_ */

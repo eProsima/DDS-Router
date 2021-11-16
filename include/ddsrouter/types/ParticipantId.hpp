@@ -43,6 +43,8 @@ public:
 
     bool is_valid() const;
 
+    std::string id_name() const;
+
     // OPERATOR OVERLOAD
     bool operator ==(
             const ParticipantId& other) const;

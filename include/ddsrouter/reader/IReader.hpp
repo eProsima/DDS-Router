@@ -36,24 +36,21 @@ class IReader
 {
 public:
 
-    IReader(
-            RealTopic,
-            std::shared_ptr<PayloadPool>);
-
-    virtual void enable();
+    virtual void enable() = 0;
 
     /**
      *
      * ATTENTION: This method should stop calling the callback \c on_data_available_lambda if more data arrives while
      * disabled.
      */
-    virtual void disable();
+    virtual void disable() = 0;
 
-    virtual ReturnCode set_on_data_available_callback(
-            std::function<void()> on_data_available_lambda);
+    virtual void set_on_data_available_callback(
+            std::function<void()> on_data_available_lambda) = 0;
 
     virtual ReturnCode take(
-            std::unique_ptr<DataReceived>&);         // This data read must be inside a PayloadPool
+            std::unique_ptr<DataReceived>& data) = 0;         // This data read must be inside a PayloadPool
+
 };
 
 } /* namespace ddsrouter */

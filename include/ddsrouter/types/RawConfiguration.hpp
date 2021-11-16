@@ -34,6 +34,8 @@ namespace ddsrouter {
 using RawConfiguration = YAML::Node;
 using RawConfigurationType = YAML::NodeType;
 
+// TODO: add way to compare equality and not identity of yaml
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

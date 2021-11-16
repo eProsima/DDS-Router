@@ -248,6 +248,8 @@ RawConfiguration random_participant_configuration(
         }
     }
 
+    config[PARTICIPANT_TYPE_TAG] = VOID_TYPE_NAME;
+
     return config;
 }
 
@@ -287,60 +289,79 @@ TEST(ConfigurationTest, constructor)
  */
 TEST(ConfigurationTest, participants_configurations)
 {
-    // Empty configuration
-    RawConfiguration yaml1;
-    Configuration config1(yaml1);
-    EXPECT_TRUE(config1.participants_configurations().empty());
-
-    // Other tags that are not participant valid ids
-    RawConfiguration yaml2;
-    add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_filter_topic_names());
-    add_topics_to_list_to_yaml(yaml2, BLOCKLIST_TAG, random_real_topic_names());
-    Configuration config2(yaml2);
-    EXPECT_TRUE(config2.participants_configurations().empty());
-
-    // One Participant Configuration
-    RawConfiguration listening_addresses;
-    RawConfiguration address1;
-    RawConfiguration address2;
-    address1["ip"] = "127.0.0.1";
-    address1["port"] = "31415";
-    listening_addresses.push_back(address1);
-    address2["ip"] = "8.8.8.8";
-    address2["port"] = "6666";
-    listening_addresses.push_back(address2);
-
-    RawConfiguration participant_config;
-    participant_config["type"] = "wan";
-    participant_config["listening-addresses"] = listening_addresses;
-
-    std::string participant_name_str = "wanParticipant";
-    ParticipantId participant_name(participant_name_str);
-    RawConfiguration yaml3;
-    yaml3[participant_name_str] = participant_config;
-
-    Configuration config3(yaml3);
-    auto result3 = config3.participants_configurations();
-    ASSERT_EQ(1, result3.size());
-    EXPECT_TRUE(result3.find(participant_name) != result3.end());
-    EXPECT_EQ(participant_config, result3[participant_name]);
-
-    // Many Participant Configurations
-    RawConfiguration yaml4;
-    for (int i = 0; i < 10; i++)
     {
-        yaml4[random_participant_name(i)] = random_participant_configuration(i);
+        // Empty configuration
+        RawConfiguration yaml1;
+        Configuration config1(yaml1);
+        EXPECT_TRUE(config1.participants_configurations().empty());
     }
-    Configuration config4(yaml4);
-    auto result4 = config4.participants_configurations();
 
-    for (int i = 0; i < 10; i++)
     {
-        ParticipantId id(random_participant_name(i));
-        // WARNING: comparing two YAMLs is not correclty done in some occasions
-        // TODO: check that are actually the same yaml
-        ASSERT_EQ(result4[id].size(), random_participant_configuration(i).size());
-        // std::cout << result4[id].size() << std::endl; // -> this goes from 0 to 9
+        // Other tags that are not participant valid ids
+        RawConfiguration yaml2;
+        add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_filter_topic_names());
+        add_topics_to_list_to_yaml(yaml2, BLOCKLIST_TAG, random_real_topic_names());
+        Configuration config2(yaml2);
+        EXPECT_TRUE(config2.participants_configurations().empty());
+    }
+
+    {
+        // One Participant Configuration
+        RawConfiguration listening_addresses;
+        RawConfiguration address1;
+        RawConfiguration address2;
+        address1["ip"] = "127.0.0.1";
+        address1["port"] = "31415";
+        listening_addresses.push_back(address1);
+        address2["ip"] = "8.8.8.8";
+        address2["port"] = "6666";
+        listening_addresses.push_back(address2);
+
+        RawConfiguration participant_config;
+        participant_config["type"] = VOID_TYPE_NAME;
+        participant_config["listening-addresses"] = listening_addresses;
+
+        std::string participant_name_str = "wanParticipant";
+        ParticipantId participant_name(participant_name_str);
+        RawConfiguration yaml3;
+        yaml3[participant_name_str] = participant_config;
+
+        Configuration config3(yaml3);
+        auto result3 = config3.participants_configurations();
+        ASSERT_EQ(1, result3.size());
+        EXPECT_EQ(participant_name, result3.front().id());
+        EXPECT_EQ(ParticipantConfiguration(ParticipantId(participant_name_str), participant_config) , result3.front());
+    }
+
+    {
+        // Many Participant Configurations
+        uint16_t participants_num = 10;
+        RawConfiguration yaml4;
+        for (int i = 0; i < participants_num; i++)
+        {
+            yaml4[random_participant_name(i)] = random_participant_configuration(i);
+        }
+        Configuration config4(yaml4);
+        auto result4 = config4.participants_configurations();
+        ASSERT_EQ(result4.size(), participants_num);
+
+        // Check that every participant configuration in yaml id is actually an id of the result of participants congis
+        // TODO: check the configurations are actually the same, implement yaml compare
+        for (int i = 0; i < participants_num; i++)
+        {
+            ParticipantId expected_id(random_participant_name(i));
+            bool in_configurations = false;
+            for (auto part_config: result4)
+            {
+                // They may not be sorted, so it must be check that this is the actual participant config we are testing
+                if (part_config.id() == expected_id)
+                {
+                    in_configurations  =true;
+                    break;
+                }
+            }
+            ASSERT_TRUE(in_configurations);
+        }
     }
 }
 

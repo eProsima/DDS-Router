@@ -63,11 +63,10 @@ void DDSRouter::reload_configuration(
     throw UnsupportedException("DDSRouter::reload_configuration not supported yet");
 }
 
-void DDSRouter::endpoint_discovered(
-        const Endpoint&)
+void DDSRouter::stop()
 {
     // TODO
-    throw UnsupportedException("DDSRouter::endpoint_discovered not supported yet");
+    throw UnsupportedException("DDSRouter::stop not supported yet");
 }
 
 void DDSRouter::init_allowed_topics_()
@@ -79,7 +78,7 @@ void DDSRouter::init_allowed_topics_()
 
 void DDSRouter::init_participants_()
 {
-    for (std::pair<const eprosima::ddsrouter::ParticipantId, eprosima::ddsrouter::RawConfiguration> participant_info :
+    for (ParticipantConfiguration participant_config :
             configuration_.participants_configurations())
     {
         std::shared_ptr<IParticipant> new_participant;
@@ -88,8 +87,7 @@ void DDSRouter::init_participants_()
         // This should not be in try catch case as if it fails the whole init must fail
         new_participant =
                 participant_factory_.create_participant(
-            participant_info.first,
-            participant_info.second,
+            participant_config,
             payload_pool_,
             discovery_database_);
 
@@ -97,7 +95,7 @@ void DDSRouter::init_participants_()
         assert(nullptr != new_participant);
 
         participants_database_->add_participant(
-            participant_info.first,
+            new_participant->id(),
             new_participant);
     }
 }
