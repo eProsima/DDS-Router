@@ -76,6 +76,15 @@ ParticipantId ParticipantConfiguration::id() const
     return id_;
 }
 
+ParticipantConfiguration& ParticipantConfiguration::operator =(
+        const ParticipantConfiguration& other)
+{
+    this->id_ = other.id_;
+    this->type_ = other.type_;
+    this->raw_configuration_ = other.raw_configuration_;
+    return *this;
+}
+
 bool ParticipantConfiguration::operator ==(
         const ParticipantConfiguration& other) const
 {

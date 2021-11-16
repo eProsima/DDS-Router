@@ -43,6 +43,9 @@ public:
 
     ParticipantId id() const;
 
+    ParticipantConfiguration& operator =(
+            const ParticipantConfiguration& other);
+
     bool operator ==(
             const ParticipantConfiguration& other) const;
 
@@ -50,11 +53,11 @@ protected:
 
     void set_type_();
 
-    const ParticipantId id_;
+    ParticipantId id_;
 
     ParticipantType type_;
 
-    const RawConfiguration raw_configuration_;
+    RawConfiguration raw_configuration_;
 };
 
 } /* namespace ddsrouter */

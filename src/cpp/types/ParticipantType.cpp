@@ -45,6 +45,11 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(std::string t
         // Void type
         return ParticipantType::DUMMY;
     }
+    else if (type == SINGLETON_DUMMY_TYPE_NAME)
+    {
+        // Void type
+        return ParticipantType::SINGLETON_DUMMY;
+    }
     else
     {
         // The type is not associated with any ParticipantType
@@ -69,6 +74,10 @@ std::ostream& operator <<(
 
     case ParticipantType::DUMMY:
         os << DUMMY_TYPE_NAME;
+        break;
+
+    case ParticipantType::SINGLETON_DUMMY:
+        os << SINGLETON_DUMMY_TYPE_NAME;
         break;
 
     default:

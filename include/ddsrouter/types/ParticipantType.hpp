@@ -33,6 +33,7 @@ enum ParticipantType
     VOID,       //! Void Participant Type
     ECHO,       //! Echo Participant Type
     DUMMY,      //! Dummy Participant Type
+    SINGLETON_DUMMY,      //! Singleton Dummy Participant Type
 };
 
 /**
@@ -64,6 +65,7 @@ protected:
 constexpr const char* VOID_TYPE_NAME("void");   //! Void participant type name
 constexpr const char* ECHO_TYPE_NAME("echo");   //! Echo participant type name
 constexpr const char* DUMMY_TYPE_NAME("dummy"); //! Dummy participant type name
+constexpr const char* SINGLETON_DUMMY_TYPE_NAME("singleton_dummy"); //! Singleton Dummy participant type name
 
 constexpr const char* INVALID_TYPE_NAME_SERIALIZATION("InvalidParticipantType"); //! Serialization of invalid type
 
