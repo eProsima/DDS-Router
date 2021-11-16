@@ -20,6 +20,7 @@
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/utils.hpp>
@@ -45,6 +46,11 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     case ParticipantType::ECHO:
         // EchoParticipant
         return std::make_shared<EchoParticipant>(participant_configuration, discovery_database);
+        break;
+
+    case ParticipantType::DUMMY:
+        // DummyParticipant
+        return std::make_shared<DummyParticipant>(participant_configuration, discovery_database);
         break;
 
     case ParticipantType::INVALID:
