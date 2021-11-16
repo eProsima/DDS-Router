@@ -41,6 +41,11 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(
         // Echo type
         return ParticipantType::ECHO;
     }
+    else if (type == DUMMY_TYPE_NAME)
+    {
+        // Void type
+        return ParticipantType::DUMMY;
+    }
     else
     {
         // The type is not associated with any ParticipantType
@@ -61,6 +66,10 @@ std::ostream& operator <<(
 
         case ParticipantType::ECHO:
             os << ECHO_TYPE_NAME;
+            break;
+
+        case ParticipantType::DUMMY:
+            os << DUMMY_TYPE_NAME;
             break;
 
         default:
