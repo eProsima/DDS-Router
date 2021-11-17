@@ -19,8 +19,9 @@
 #ifndef _DDSROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
 #define _DDSROUTER_DYNAMIC_DISCOVERYDATABASE_HPP_
 
-#include <string>
 #include <map>
+#include <shared_mutex>
+#include <string>
 
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/endpoint/Guid.hpp>
@@ -61,6 +62,8 @@ public:
 protected:
 
     std::map<Guid, Endpoint> entities_;
+
+    mutable std::shared_timed_mutex mutex_;
 };
 
 } /* namespace ddsrouter */

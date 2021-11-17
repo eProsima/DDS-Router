@@ -37,6 +37,9 @@ class QoS
 {
 public:
 
+    //! Default QoS with reader less restrictive parameters
+    QoS();
+
     /**
      * Constructor of QoS class by its variables
      *

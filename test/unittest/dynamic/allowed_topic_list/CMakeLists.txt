@@ -19,6 +19,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/AllowedTopicList.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )

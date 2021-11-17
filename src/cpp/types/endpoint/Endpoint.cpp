@@ -22,6 +22,11 @@
 namespace eprosima {
 namespace ddsrouter {
 
+Endpoint::Endpoint()
+    : kind_(EndpointKind::ENDPOINT_KIND_INVALID)
+{
+}
+
 Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
@@ -66,6 +71,11 @@ void Endpoint::active(
     active_ = status;
 }
 
+bool Endpoint::is_valid() const
+{
+    return kind_ != EndpointKind::ENDPOINT_KIND_INVALID;
+}
+
 bool Endpoint::is_writer() const
 {
     return kind() == EndpointKind::WRITER;
@@ -74,6 +84,16 @@ bool Endpoint::is_writer() const
 bool Endpoint::is_reader() const
 {
     return kind() == EndpointKind::READER;
+}
+
+Endpoint& Endpoint::operator =(
+        const Endpoint& other)
+{
+    this->guid_ = other.guid_;
+    this->active_ = other.active_;
+    this->kind_ = other.kind_;
+    this->qos_ = other.qos_;
+    return *this;
 }
 
 } /* namespace ddsrouter */

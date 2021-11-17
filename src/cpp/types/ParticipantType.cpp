@@ -50,7 +50,7 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(
     {
         // The type is not associated with any ParticipantType
         // TODO: Add log warning
-        return ParticipantType::INVALID;
+        return ParticipantType::PARTICIPANT_TYPE_INVALID;
     }
 }
 

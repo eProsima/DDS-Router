@@ -29,6 +29,7 @@ namespace ddsrouter {
 //! Possible kinds of the endpoint
 enum EndpointKind
 {
+    ENDPOINT_KIND_INVALID,
     WRITER,
     READER
 };
@@ -41,6 +42,9 @@ enum EndpointKind
 class Endpoint
 {
 public:
+
+    //! Default Endpoint that returns an invalid one
+    Endpoint();
 
     /**
      * Constructor with Endpoint information
@@ -70,6 +74,8 @@ public:
     void active(
             bool status);
 
+    bool is_valid() const;
+
     /********************
     * SPECIFIC GETTERS *
     ********************/
@@ -79,6 +85,10 @@ public:
 
     //! Whether the endpoint is a reader
     bool is_reader() const;
+
+    //! Copy operator
+    Endpoint& operator =(
+            const Endpoint& other);
 
 protected:
 

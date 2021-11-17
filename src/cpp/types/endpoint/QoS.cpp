@@ -22,6 +22,12 @@
 namespace eprosima {
 namespace ddsrouter {
 
+QoS::QoS()
+    : durability_(DurabilityKind::VOLATILE)
+    , reliability_(ReliabilityKind::BEST_EFFORT)
+{
+}
+
 QoS::QoS(
         DurabilityKind durability,
         ReliabilityKind reliability)
