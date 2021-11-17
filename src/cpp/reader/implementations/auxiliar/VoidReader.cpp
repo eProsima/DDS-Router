@@ -34,7 +34,8 @@ void VoidReader::set_on_data_available_callback(
 {
 }
 
-ReturnCode VoidReader::take(std::unique_ptr<DataReceived>&)
+ReturnCode VoidReader::take(
+        std::unique_ptr<DataReceived>&)
 {
     return ReturnCode::RETCODE_NO_DATA;
 }

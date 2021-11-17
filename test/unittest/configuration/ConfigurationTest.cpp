@@ -330,7 +330,7 @@ TEST(ConfigurationTest, participants_configurations)
         auto result3 = config3.participants_configurations();
         ASSERT_EQ(1, result3.size());
         EXPECT_EQ(participant_name, result3.front().id());
-        EXPECT_EQ(ParticipantConfiguration(ParticipantId(participant_name_str), participant_config) , result3.front());
+        EXPECT_EQ(ParticipantConfiguration(ParticipantId(participant_name_str), participant_config), result3.front());
     }
 
     {
@@ -357,7 +357,7 @@ TEST(ConfigurationTest, participants_configurations)
                 // it is being tested
                 if (part_config.id() == expected_id)
                 {
-                    in_configurations  =true;
+                    in_configurations  = true;
                     break;
                 }
             }

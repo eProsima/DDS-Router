@@ -41,7 +41,8 @@ bool match_pattern(
  *
  * @param [in,out] st : string to modify
  */
-void to_lowercase(std::string& st);
+void to_lowercase(
+        std::string& st);
 
 /**
  * @brief Auxiliar function to concatenate inplace every kind of object << stream
@@ -56,16 +57,18 @@ class Formatter
 public:
 
     //! Concatenate stream values to this formatter
-    template<class Val> Formatter& operator<<(const Val& val)
+    template<class Val> Formatter& operator <<(
+            const Val& val)
     {
         ss_ << val;
-        return * this;
+        return *this;
     }
 
     //! Return a string with the concatenation of this object
-    std::string to_string() const ;
+    std::string to_string() const;
 
 protected:
+
     //! Concatenated stream where the stremas are added at the end
     std::stringstream ss_;
 };

@@ -29,8 +29,8 @@ namespace ddsrouter {
 // TODO: Add logs
 
 ParticipantConfiguration::ParticipantConfiguration(
-            ParticipantId id,
-            const RawConfiguration& raw_configuration)
+        ParticipantId id,
+        const RawConfiguration& raw_configuration)
     : id_(id)
     , raw_configuration_(raw_configuration)
 {
@@ -64,7 +64,6 @@ void ParticipantConfiguration::set_type_()
         type_ = ParticipantTypeFactory::participant_type_from_name(id_.id_name());
     }
 }
-
 
 ParticipantType ParticipantConfiguration::type() const
 {

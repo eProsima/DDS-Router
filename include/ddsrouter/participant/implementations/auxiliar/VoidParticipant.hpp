@@ -32,7 +32,7 @@ class VoidParticipant : public IParticipant
 public:
 
     VoidParticipant(
-        ParticipantId id);
+            ParticipantId id);
 
     virtual ~VoidParticipant();
 

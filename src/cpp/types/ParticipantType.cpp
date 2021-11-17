@@ -25,7 +25,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
-ParticipantType ParticipantTypeFactory::participant_type_from_name(std::string type)
+ParticipantType ParticipantTypeFactory::participant_type_from_name(
+        std::string type)
 {
     // Pass type name to lowercase
     utils::to_lowercase(type);
@@ -49,13 +50,13 @@ std::ostream& operator <<(
 {
     switch (a)
     {
-    case ParticipantType::VOID:
-        os << VOID_TYPE_NAME;
-        break;
+        case ParticipantType::VOID:
+            os << VOID_TYPE_NAME;
+            break;
 
-    default:
-        os << INVALID_TYPE_NAME_SERIALIZATION;
-        break;
+        default:
+            os << INVALID_TYPE_NAME_SERIALIZATION;
+            break;
     }
     return os;
 }

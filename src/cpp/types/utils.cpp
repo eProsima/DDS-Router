@@ -46,10 +46,14 @@ bool match_pattern(
 #endif // defined(_WIN32)
 }
 
-void to_lowercase(std::string& st)
+void to_lowercase(
+        std::string& st)
 {
     std::transform(st.begin(), st.end(), st.begin(),
-        [](unsigned char c){ return std::tolower(c); });
+            [](unsigned char c)
+            {
+                return std::tolower(c);
+            });
 }
 
 std::string Formatter::to_string() const

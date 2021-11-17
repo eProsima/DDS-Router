@@ -30,27 +30,27 @@ namespace ddsrouter {
 
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         ParticipantConfiguration participant_configuration,
-            std::shared_ptr<PayloadPool> payload,
-            std::shared_ptr<DiscoveryDatabase> discovery_database)
+        std::shared_ptr<PayloadPool> payload,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantType specified by the configuration
     switch (participant_configuration.type())
     {
-    case ParticipantType::VOID:
-        // VoidParticipant
-        return std::make_shared<VoidParticipant>(participant_configuration.id());
-        break;
+        case ParticipantType::VOID:
+            // VoidParticipant
+            return std::make_shared<VoidParticipant>(participant_configuration.id());
+            break;
 
-    case ParticipantType::INVALID:
-        // TODO: Add warning log
-        throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
-            << " is not a valid" << " participant type name.");
-        break;
+        case ParticipantType::INVALID:
+            // TODO: Add warning log
+            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
+                                                            << " is not a valid" << " participant type name.");
+            break;
 
-    default:
-        // This should not happen as every type must be in the switch
-        assert(false);
-        break;
+        default:
+            // This should not happen as every type must be in the switch
+            assert(false);
+            break;
     }
 }
 

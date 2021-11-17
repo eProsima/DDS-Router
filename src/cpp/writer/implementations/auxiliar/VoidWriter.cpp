@@ -33,7 +33,8 @@ void VoidWriter::disable()
 {
 }
 
-ReturnCode VoidWriter::write(std::unique_ptr<DataReceived>&)
+ReturnCode VoidWriter::write(
+        std::unique_ptr<DataReceived>&)
 {
     return ReturnCode::RETCODE_OK;
 }

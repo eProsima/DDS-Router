@@ -52,7 +52,8 @@ public:
      * @param [out] type : string with the name of the type to build
      * @return ParticipantType value, \c INVALID if \c type does not refer to any existing type
      */
-    static ParticipantType participant_type_from_name(std::string type);
+    static ParticipantType participant_type_from_name(
+            std::string type);
 };
 
 constexpr const char* VOID_TYPE_NAME("void");   //! Void participant type name
