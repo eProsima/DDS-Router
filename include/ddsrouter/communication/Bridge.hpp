@@ -50,7 +50,7 @@ public:
      * @param participant_database: Collection of Participants to manage communication
      * @param enable: Whether the Bridge should be initialized as enabled
      *
-     * In case any inside \c Track creation fails and will throw a \c InitializationException
+     * @throw \c InitializationException in case any inside \c Track creation fails.
      */
     Bridge(
             const RealTopic& topic,

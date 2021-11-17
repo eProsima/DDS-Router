@@ -51,7 +51,7 @@ public:
      * @param targets:  Map of Participants that will send the data received by \c source indexed by Participant id
      * @param enable:   Whether the \c Track should be initialized as enabled. False by default
      *
-     * In case any inside endpoint creation fails it will throw a \c InitializationException
+     * @throw \c InitializationException in case creation fails.
      */
     Track(
             const RealTopic& topic,
