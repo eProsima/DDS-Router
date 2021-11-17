@@ -32,6 +32,7 @@ void ParticipantDatabase::add_participant(
         ParticipantId id,
         std::shared_ptr<IParticipant> participant)
 {
+    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
     // TODO: this find is only to check if it exists, decide if needed
     auto it = participants_.find(id);
 
@@ -46,6 +47,7 @@ void ParticipantDatabase::add_participant(
 std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
         const ParticipantId& id) const
 {
+    std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     auto it = participants_.find(id);
 
     if (it != participants_.end())
@@ -58,6 +60,7 @@ std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
 
 std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
 {
+    std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     std::vector<ParticipantId> result(participants_.size());
     int i = 0;
     for (auto it : participants_)
@@ -70,6 +73,7 @@ std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
 
 std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const
 {
+    std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return participants_;
 }
 
