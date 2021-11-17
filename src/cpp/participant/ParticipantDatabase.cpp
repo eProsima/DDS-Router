@@ -18,7 +18,6 @@
  */
 
 #include <ddsrouter/participant/ParticipantDatabase.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -33,27 +32,45 @@ void ParticipantDatabase::add_participant(
         ParticipantId id,
         std::shared_ptr<IParticipant> participant)
 {
-    // TODO
-    throw UnsupportedException("ParticipantDatabase::add_participant not supported yet");
+    // TODO: this find is only to check if it exists, decide if needed
+    auto it = participants_.find(id);
+
+    if (it != participants_.end())
+    {
+        // TODO: add warning
+    }
+
+    participants_[id] = participant;
 }
 
 std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
         const ParticipantId& id) const
 {
-    // TODO
-    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+    auto it = participants_.find(id);
+
+    if (it != participants_.end())
+    {
+        return nullptr;
+    }
+
+    return it->second;
 }
 
 std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
 {
-    // TODO
-    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+    std::vector<ParticipantId> result(participants_.size());
+    int i = 0;
+    for (auto it : participants_)
+    {
+        // There is already space for all of them, so its added appending
+        result[i++] = it.first;
+    }
+    return result;
 }
 
 std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const
 {
-    // TODO
-    throw UnsupportedException("ParticipantDatabase::get_participant not supported yet");
+    return participants_;
 }
 
 } /* namespace ddsrouter */
