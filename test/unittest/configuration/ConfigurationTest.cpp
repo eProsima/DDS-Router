@@ -345,7 +345,7 @@ TEST(ConfigurationTest, participants_configurations)
         auto result4 = config4.participants_configurations();
         ASSERT_EQ(result4.size(), participants_num);
 
-        // Check that every participant configuration in yaml id is actually an id of the result of participants congis
+        // For every participant in participants_configurations, check that the id is inside the actual ids stored
         // TODO: check the configurations are actually the same, implement yaml compare
         for (int i = 0; i < participants_num; i++)
         {
@@ -353,7 +353,8 @@ TEST(ConfigurationTest, participants_configurations)
             bool in_configurations = false;
             for (auto part_config: result4)
             {
-                // They may not be sorted, so it must be check that this is the actual participant config we are testing
+                // They may not be sorted, so it must be checked that this is the actual participant config
+                // it is being tested
                 if (part_config.id() == expected_id)
                 {
                     in_configurations  =true;

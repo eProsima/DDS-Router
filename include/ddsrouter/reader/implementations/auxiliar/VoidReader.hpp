@@ -31,14 +31,12 @@ class VoidReader : public IReader
 {
 public:
 
-    VoidReader() = default;
+    void enable() override;
 
-    void enable();
-
-    void disable();
+    void disable() override;
 
     void set_on_data_available_callback(
-            std::function<void()>);
+            std::function<void()>) override;
 
     ReturnCode take(
             std::unique_ptr<DataReceived>&) override;

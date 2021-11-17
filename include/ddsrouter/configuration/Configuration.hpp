@@ -19,10 +19,10 @@
 #ifndef _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
 
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

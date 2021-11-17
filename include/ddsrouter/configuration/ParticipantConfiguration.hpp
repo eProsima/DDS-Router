@@ -20,8 +20,8 @@
 #define _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/types/ParticipantId.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

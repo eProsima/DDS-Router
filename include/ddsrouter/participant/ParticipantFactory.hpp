@@ -19,8 +19,8 @@
 #ifndef _DDSROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 #define _DDSROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 
-#include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,9 +35,9 @@ public:
      * @throw ConfigurationException : in case the configuration or participant type is incorrect
      *
      * @param [in] participant_configuration : Participant Configuration that will retrieve the id and type of the
-     *      participant that will be created, and the Configuration of it.
+     *      participant that will be created, and its Configuration.
      * @param [in] payload : Common Payload pool to create the Participant
-     * @param [in] discovery_database : Common Discovery Databaseto create the Participant
+     * @param [in] discovery_database : Common Discovery Database to create the Participant
      * @return new Participant
      */
     std::shared_ptr<IParticipant> create_participant(

@@ -53,10 +53,6 @@ public:
      * @return ParticipantType value, \c INVALID if \c type does not refer to any existing type
      */
     static ParticipantType participant_type_from_name(std::string type);
-
-protected:
-
-    //! String on how the Invalid Partiticipant Type will be serialized
 };
 
 constexpr const char* VOID_TYPE_NAME("void");   //! Void participant type name

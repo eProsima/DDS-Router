@@ -17,10 +17,10 @@
  *
  */
 
-#include <ddsrouter/participant/ParticipantFactory.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {

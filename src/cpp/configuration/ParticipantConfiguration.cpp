@@ -18,10 +18,10 @@
  */
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

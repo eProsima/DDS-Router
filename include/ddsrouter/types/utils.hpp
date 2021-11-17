@@ -44,7 +44,7 @@ bool match_pattern(
 void to_lowercase(std::string& st);
 
 /**
- * @brief Auxiliar function to concatenate inplace every kind of object << strem
+ * @brief Auxiliar function to concatenate inplace every kind of object << stream
  *
  * The main case to use this class is in Exception creation. In order to generate an Exception message
  * using the << operator for the objects in the block, add them to Formatter() object and they will be
