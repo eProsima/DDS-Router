@@ -51,12 +51,12 @@ Bridge::Bridge(
                 writers_; // Create a copy of the map
 
         // Get this Track source participant before removing it from map
-        writers_.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+        writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
 
         // This insert is required as there is no copy method for Track
-        // Track are always created disable and then enable with Bridge enable() method
+        // Track are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
-                std::make_unique<Track>(topic_, readers_[id], std::move(writers_), false);
+                std::make_unique<Track>(topic_, readers_[id], std::move(writers_except_one), false);
     }
 
     if (enable)
@@ -69,10 +69,10 @@ Bridge::~Bridge()
 {
     // Get mutex to prevent other thread to enable it
     std::lock_guard<std::recursive_mutex> lock(mutex_);
-    // Disable every Track before destroy
+    // Disable every Track before destruction
     disable();
 
-    // Tracks will be deleted by their own as they are stored as unique ptrs in map
+    // Tracks will be deleted on their own as they are stored as unique ptrs in map
 }
 
 void Bridge::enable()
@@ -100,7 +100,7 @@ void Bridge::disable()
         // ATTENTION: reference needed or it would copy Track
         for (auto& track_it : tracks_)
         {
-            track_it.second->enable();
+            track_it.second->disable();
         }
 
         enabled_ = false;

@@ -32,7 +32,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Track object manage the communication between one \c IReader as entry point of data and Nç
+ * Track object manages the communication between one \c IReader as entry point of data and N
  * \c IWriter that will send forward the data received.
  */
 class Track
@@ -44,14 +44,14 @@ public:
      *
      * In Track construction, there are created a \c IReader for the participant \c source and one
      * \c IWriter for each participant in \c targets .
-     * It also creates a new thread that manage the transmission between the reader and the writers.
+     * It also creates a new thread that manages the transmission between the reader and the writers.
      *
-     * @param topic:    Topic that this Track manage communication
+     * @param topic:    Topic that this Track manages communication
      * @param source:   Participant that will receive the data
      * @param targets:  Map of Participants that will send the data received by \c source indexed by Participant id
-     * @param enable:   Wether the \c Track should be initialized as enabled. False by default
+     * @param enable:   Whether the \c Track should be initialized as enabled. False by default
      *
-     * In case any inside endpoint creation fails it will throw a \c InitializationException
+     * @throw \c InitializationException in case creation fails.
      */
     Track(
             const RealTopic& topic,
@@ -64,7 +64,7 @@ public:
     /**
      * Copy method not allowed
      *
-     * Track creates in constructor all the inside Endponts needed, and thus it should not be copied
+     * Track creates in constructor all the inside Endpoints needed, and thus it should not be copied
      */
     void operator =(
             const Track&) = delete;
@@ -78,11 +78,11 @@ public:
     void enable();
 
     /**
-     * Disable Track in case it is not enabled. This will cause that data will not be transmitted from
+     * Disable Track in case it is enabled. This will cause that data will not be transmitted from
      * source to targets.
      * Does nothing if it is disabled
      *
-     * This method does not manage if the data is still arriving from the reader.
+     * This method does not manage if the data is still arriving to the reader.
      *
      * Thread safe
      */
@@ -91,14 +91,14 @@ public:
 protected:
 
     /**
-     * Callback that will be called by the reader in case there are available data to read.
+     * Callback that will be called by the reader in case there is available data to be forwarded.
      *
-     * This method is sent to the Reader so it could call it when there are new data.
+     * This method is sent to the Reader so it could call it when there is new data.
      */
     void data_available();
 
     /**
-     * Callback that will be called when there are no more data available to read.
+     * Callback that will be called when there is no more data available to be forwarded.
      */
     void no_more_data_available_();
 
@@ -112,7 +112,7 @@ protected:
     /**
      * Main function of Track.
      * It waits for data to be available
-     * Once there are data avaialble, call \c transmit_ till there is no data to read, and turn back to read
+     * Once there is data available, call \c transmit_ till there is no data to be forwarded, and turn back to read
      *
      * Transmission is not executed in case track must be terminated or is not enabled.
      */
@@ -123,7 +123,7 @@ protected:
      *
      * When no more data is available, call \c no_more_data_available_ and exits.
      *
-     * It could exit without being finished transmitting all the data if track should terminate or track becomes
+     * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.
      */
     void transmit_();
@@ -131,7 +131,7 @@ protected:
 protected:
 
     /**
-     * Topic that this bridge manage communication
+     * Topic that this bridge manages communication
      *
      * @note: This variable is stored but not used
      */
@@ -143,12 +143,12 @@ protected:
     //! Writers that will send data forward
     std::map<ParticipantId, std::shared_ptr<IWriter>> writers_;
 
-    //! Whether the Track is currently enable
+    //! Whether the Track is currently enabled
     std::atomic<bool> enabled_;
 
     /**
      * Mutex to prevent simultaneous calls to \c enable and/or \c disable .
-     * It manage acces to variable \c enabled_ .
+     * It manages access to variable \c enabled_ .
      */
     std::recursive_mutex track_mutex_;
 
@@ -158,19 +158,19 @@ protected:
     /**
      * Whether the Track must terminate
      *
-     * This variable is only set in destruction. It forces \c transmit_thread_ to stop evevn if it is
+     * This variable is only set in destruction. It forces \c transmit_thread_ to stop even if it is
      * transmitting data.
      *
-     * As it is only set from destructor, it is not protected by any mutex
+     * As it is only set in destruction, it is not protected by any mutex
      */
     std::atomic<bool> exit_;
 
     /**
-     * Whether there are currently data available to take from the reader.
+     * Whether there is currently data available to take from the reader.
      *
      * This variable is protected by \c available_data_mutex_
      */
-    std::atomic<bool> are_data_available_;
+    std::atomic<bool> is_data_available_;
 
     /**
      * Thread that will manage the transmision of the data
@@ -183,8 +183,8 @@ protected:
     std::condition_variable available_data_condition_variable_;
 
     /**
-     * Mutex to handle acces to condition variable \c available_data_condition_variable_ .
-     * Mutex to manage acces to variable \c are_data_available_ .
+     * Mutex to handle access to condition variable \c available_data_condition_variable_ .
+     * Mutex to manage access to variable \c is_data_available_ .
      */
     std::mutex available_data_mutex_;
 };

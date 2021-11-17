@@ -374,15 +374,15 @@ TEST(ConfigurationTest, real_topics)
     Configuration config3(yaml3);
     EXPECT_TRUE(config3.real_topics().empty());
 
-    // Allowlist with only non Real topics
+    // Allowlist with only Real topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, ALLOWLIST_TAG, random_real_topic_names());
     Configuration config4(yaml4);
     auto result4 = config4.real_topics();
     EXPECT_FALSE(result4.empty());
-    for (auto topic_name : random_real_topic_names())
+    for (auto random_topic : random_real_topic_names())
     {
-        RealTopic topic(topic_name.first, topic_name.second);
+        RealTopic topic(random_topic.first, random_topic.second);
         EXPECT_TRUE(topic_in_real_list(result4, topic));
     }
 
@@ -394,14 +394,14 @@ TEST(ConfigurationTest, real_topics)
     EXPECT_FALSE(result5.empty());
 
     uint16_t real_topics = 0;
-    for (auto topic_name : random_topic_names())
+    for (auto random_topic : random_topic_names())
     {
-        bool real_topic = RealTopic::is_real_topic(topic_name.first, topic_name.second);
+        bool real_topic = RealTopic::is_real_topic(random_topic.first, random_topic.second);
 
         if (real_topic)
         {
             ++real_topics;
-            RealTopic topic(topic_name.first, topic_name.second);
+            RealTopic topic(random_topic.first, random_topic.second);
             EXPECT_TRUE(topic_in_real_list(result5, topic)) << topic;
         }
     }

@@ -99,13 +99,13 @@ std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_
         {
             if (topic_stored->contains(*new_topic))
             {
-                // It is repeted, so it must not be added
-                add_it = true;
+                // It is repeated, so it must not be added
+                add_it = false;
                 break;
             }
             else if (new_topic->contains(*topic_stored))
             {
-                // There is a repeated topic stored, pop it and add this instead
+                // There is a repeated topic stored, pop it and add this one instead
                 repeated.insert(topic_stored);
             }
         }

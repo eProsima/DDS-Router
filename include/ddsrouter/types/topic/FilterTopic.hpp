@@ -44,7 +44,7 @@ public:
      * Whether this topic filters the same of the topic by argument.
      *
      * This method is used to prevent duplications in filter topic lists.
-     * If the topic \c other filters a subset of the topics filteres by \c this, it returns true.
+     * If the topic \c other filters a subset of the topics filtered by \c this, it returns true.
      *
      * Example: {<*>:<*>} contains every FilterTopic.
      * Example: {<>:<>} is contained by every FilterTopic.

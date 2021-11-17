@@ -45,7 +45,7 @@ public:
     std::map<ParticipantId, RawConfiguration> participants_configurations() const;
 
     //! Ad hoc function to find real topics within the allowlist
-    // TODO: This method will dissapear once the dynamic module is implemented
+    // TODO: This method will disappear once the dynamic module is implemented
     std::set<RealTopic> real_topics() const;
 
 protected:

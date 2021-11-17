@@ -35,7 +35,7 @@ class Exception : public std::exception
 public:
 
     /**
-     * @brief Construct a new statistics_backend::Exception object
+     * @brief Construct a new ddsrouter::Exception object
      *
      * @param message The message to be returned by what()
      */
@@ -43,7 +43,7 @@ public:
             const char* message) noexcept;
 
     /**
-     * @brief Construct a new statistics_backend::Exception object
+     * @brief Construct a new ddsrouter::Exception object
      *
      * @param message The message to be returned by what()
      */
@@ -51,7 +51,7 @@ public:
             const std::string& message);
 
     /**
-     * @brief Copies the statistics_backend::Exception object into a new one
+     * @brief Copies the ddsrouter::Exception object into a new one
      *
      * @param other The original exception object to copy
      */
@@ -59,10 +59,10 @@ public:
             const Exception& other) = default;
 
     /**
-     * @brief Copies the statistics_backend::Exception object into the current one
+     * @brief Copies the ddsrouter::Exception object into the current one
      *
      * @param other The original exception object to copy
-     * @return the current statistics_backend::Exception object after the copy
+     * @return the current ddsrouter::Exception object after the copy
      */
     Exception& operator =(
             const Exception& other) = default;
