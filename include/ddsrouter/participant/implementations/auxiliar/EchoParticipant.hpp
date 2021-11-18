@@ -19,8 +19,8 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
 
-#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -38,7 +38,7 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(
     }
     else if (type == ECHO_TYPE_NAME)
     {
-        // Void type
+        // Echo type
         return ParticipantType::ECHO;
     }
     else

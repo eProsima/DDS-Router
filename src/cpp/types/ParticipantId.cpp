@@ -18,6 +18,7 @@
  */
 
 #include <set>
+#include <sstream>
 
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>

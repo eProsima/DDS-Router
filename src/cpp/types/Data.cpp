@@ -28,7 +28,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const eprosima::fastrtps::rtps::octet& octet)
 {
-    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint8_t>(octet) << std::dec;
+    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
     return os;
 }
 
@@ -38,7 +38,7 @@ std::ostream& operator <<(
 {
     os << "[";
 
-    for (int i=0; i<(payload.length-1); ++i)
+    for (int i = 0; i < (payload.length - 1); ++i)
     {
         os << payload.data[i] << " ";
     }
@@ -46,7 +46,7 @@ std::ostream& operator <<(
     // Avoid printing extra space after last byte
     if (payload.length > 0)
     {
-        os << payload.data[payload.length-1];
+        os << payload.data[payload.length - 1];
     }
 
     os << "]";

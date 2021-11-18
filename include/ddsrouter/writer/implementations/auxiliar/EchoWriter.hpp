@@ -21,8 +21,8 @@
 
 #include <atomic>
 
-#include <ddsrouter/writer/IWriter.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,8 +35,8 @@ class EchoWriter : public IWriter
 public:
 
     EchoWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic);
+            const ParticipantId& participant_id,
+            const RealTopic& topic);
 
     void enable() override;
 

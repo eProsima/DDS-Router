@@ -31,7 +31,7 @@ enum ParticipantType
 {
     INVALID,    //! Invalid Participant Type
     VOID,       //! Void Participant Type
-    ECHO,       //! Void Participant Type
+    ECHO,       //! Echo Participant Type
 };
 
 /**
