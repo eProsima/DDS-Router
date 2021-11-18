@@ -34,6 +34,14 @@ namespace ddsrouter {
 using RawConfiguration = YAML::Node;
 using RawConfigurationType = YAML::NodeType;
 
+/**
+ * @brief Load a \c RawConfiguration object form a .yaml file
+ *
+ * @param [in] file_path : path of file to load
+ * @return yaml in RawConfiguration format contained in file_path
+ */
+RawConfiguration load_configuration_from_file(const std::string& file_path);
+
 // TODO: add way to compare equality and not identity of yaml
 
 } /* namespace ddsrouter */

@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME configuration_tags)
+set(TEST_NAME configuration_tagsTest)
 
 set(TEST_SOURCES
     configuration_tagsTest.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/types/configuration_tags.cpp)
-
-set(TEST_HEADERS
-    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/configuration_tags.hpp)
 
 set(TEST_LIST
     ddsrouter_tags)
@@ -30,6 +27,5 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
-    "${TEST_HEADERS}"
     "${TEST_LIST}"
     "${TEST_EXTRA_LIBRARIES}")

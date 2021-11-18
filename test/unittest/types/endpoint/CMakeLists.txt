@@ -23,10 +23,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/QoS.hpp
-    )
-
 set(TEST_LIST
         constructor
         durability_getter
@@ -41,7 +37,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
@@ -57,10 +52,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/Guid.hpp
-    )
-
 set(TEST_LIST
         is_valid
     )
@@ -73,7 +64,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
@@ -91,12 +81,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-    )
-
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/QoS.hpp
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/Guid.hpp
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/endpoint/Endpoint.hpp
     )
 
 set(TEST_LIST
@@ -119,7 +103,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )

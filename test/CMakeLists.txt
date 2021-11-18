@@ -71,4 +71,49 @@ else(WIN32)
     endfunction(get_win32_path_dependencies)
 endif(WIN32)
 
+# Create an executable for a test
+# Arguments:
+# TEST_EXECUTABLE_NAME -> name of the test executable
+# TEST_SOURCES -> sources for the test
+# TEST_NAME -> test name (name of the class of the test in Test .cpp)
+# TEST_LIST -> test cases implemented in the Test .cpp
+# TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
+# Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
+function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LIST TEST_EXTRA_LIBRARIES)
+
+    message(STATUS "Adding executable test: " ${TEST_EXECUTABLE_NAME})
+
+    add_executable(${TEST_EXECUTABLE_NAME}
+        ${TEST_SOURCES}
+    )
+
+    if(MSVC)
+        target_compile_definitions(${TEST_EXECUTABLE_NAME} PRIVATE _CRT_DECLARE_NONSTDC_NAMES=0)
+    endif(MSVC)
+
+    target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE
+        ${GTEST_INCLUDE_DIRS}
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
+        ${PROJECT_BINARY_DIR}/include
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
+    )
+
+    target_link_libraries(${TEST_EXECUTABLE_NAME} PUBLIC ${GTEST_LIBRARIES} ${TEST_EXTRA_LIBRARIES})
+
+    get_win32_path_dependencies(${TEST_EXECUTABLE_NAME} TEST_FRIENDLY_PATH)
+
+    foreach(test_name ${TEST_LIST})
+        add_test(NAME ${TEST_NAME}.${test_name}
+                COMMAND ${TEST_EXECUTABLE_NAME}
+                --gtest_filter=${TEST_NAME}.${test_name}:**/${TEST_NAME}.${test_name}/**)
+
+        if(TEST_FRIENDLY_PATH)
+            set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
+        endif(TEST_FRIENDLY_PATH)
+    endforeach()
+
+endfunction(add_test_executable)
+
+add_subdirectory(blackbox)
 add_subdirectory(unittest)

@@ -21,7 +21,7 @@
 
 using namespace eprosima::ddsrouter;
 
-TEST(configuration_tags, ddsrouter_tags)
+TEST(configuration_tagsTest, ddsrouter_tags)
 {
     std::set<std::string> retrieved_tags = ddsrouter_tags();
 
