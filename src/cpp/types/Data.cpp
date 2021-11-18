@@ -13,43 +13,46 @@
 // limitations under the License.
 
 /**
- * @file Data.hpp
+ * @file Data.cpp
+ *
  */
 
-#ifndef _DDSROUTER_TYPES_DATA_HPP_
-#define _DDSROUTER_TYPES_DATA_HPP_
+#include <sstream>
 
-#include <fastdds/rtps/common/SerializedPayload.h>
-
-#include <ddsrouter/types/endpoint/Guid.hpp>
+#include <ddsrouter/types/Data.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-//! Payload references the raw data received.
-using Payload = fastrtps::rtps::SerializedPayload_t;
-
-//! Structure of the Data received from a Reader containing the data itself and the attributes of the suorce
-struct DataReceived
+std::ostream& operator <<(
+        std::ostream& os,
+        const eprosima::fastrtps::rtps::octet& octet)
 {
-    //! Payload of the data received
-    Payload data;
+    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
+    return os;
+}
 
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
-};
-
-//! \c octet to stream serializator
 std::ostream& operator <<(
         std::ostream& os,
-        const eprosima::fastrtps::rtps::octet& octet);
+        const Payload& payload)
+{
+    os << "[";
 
-//! \c SerializedPayload_t to stream serializator
-std::ostream& operator <<(
-        std::ostream& os,
-        const Payload& payload);
+    for (int i = 0; i < (payload.length - 1); ++i)
+    {
+        os << payload.data[i] << " ";
+    }
+
+    // Avoid printing extra space after last byte
+    if (payload.length > 0)
+    {
+        os << payload.data[payload.length - 1];
+    }
+
+    os << "]";
+
+    return os;
+}
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_TYPES_DATA_HPP_ */

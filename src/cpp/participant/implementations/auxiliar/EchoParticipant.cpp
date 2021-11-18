@@ -13,47 +13,34 @@
 // limitations under the License.
 
 /**
- * @file VoidParticipant.cpp
+ * @file EchoParticipant.cpp
  */
 
-#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
 #include <ddsrouter/types/ParticipantType.hpp>
-#include <ddsrouter/writer/implementations/auxiliar/VoidWriter.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-VoidParticipant::VoidParticipant(
-        ParticipantConfiguration participant_configuration)
-    : configuration_(participant_configuration)
+EchoParticipant::EchoParticipant(
+        ParticipantConfiguration participant_configuration,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
+    : VoidParticipant(participant_configuration)
+    , discovery_database_(discovery_database)
 {
 }
 
-VoidParticipant::~VoidParticipant()
+ParticipantType EchoParticipant::type() const
 {
+    return ParticipantType::ECHO;
 }
 
-ParticipantId VoidParticipant::id() const
-{
-    return configuration_.id();
-}
-
-ParticipantType VoidParticipant::type() const
-{
-    return ParticipantType::VOID;
-}
-
-std::shared_ptr<IWriter> VoidParticipant::create_writer(
+std::shared_ptr<IWriter> EchoParticipant::create_writer(
         RealTopic topic)
 {
-    return std::make_shared<VoidWriter>();
-}
-
-std::shared_ptr<IReader> VoidParticipant::create_reader(
-        RealTopic topic)
-{
-    return std::make_shared<VoidReader>();
+    return std::make_shared<EchoWriter>(id(), topic);
 }
 
 } /* namespace ddsrouter */

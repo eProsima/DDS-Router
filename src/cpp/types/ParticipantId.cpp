@@ -18,6 +18,7 @@
  */
 
 #include <set>
+#include <sstream>
 
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
@@ -73,6 +74,14 @@ bool ParticipantId::operator <(
         const ParticipantId& other) const
 {
     return id_ < other.id_;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const ParticipantId& id)
+{
+    os << id.id_name();
+    return os;
 }
 
 } /* namespace ddsrouter */

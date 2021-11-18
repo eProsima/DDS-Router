@@ -13,14 +13,14 @@
 // limitations under the License.
 
 /**
- * @file VoidParticipant.hpp
+ * @file EchoParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/participant/IParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,31 +28,27 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class VoidParticipant : public IParticipant
+class EchoParticipant : public VoidParticipant
 {
 public:
 
-    VoidParticipant(
-            ParticipantConfiguration participant_configuration);
-
-    virtual ~VoidParticipant();
-
-    ParticipantId id() const override;
+    EchoParticipant(
+            ParticipantConfiguration participant_configuration,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     virtual ParticipantType type() const override;
 
     virtual std::shared_ptr<IWriter> create_writer(
             RealTopic) override;
 
-    virtual std::shared_ptr<IReader> create_reader(
-            RealTopic) override;
+    // TODO: when Discovery callback in database are implemented add echo msg for discovery
 
 protected:
 
-    ParticipantConfiguration configuration_;
+    std::shared_ptr<DiscoveryDatabase> discovery_database_;
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_VOIDPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_ */
