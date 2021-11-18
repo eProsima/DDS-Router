@@ -17,26 +17,41 @@
  *
  */
 
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 // TODO: Add logs
 
-ParticipantFactory::~ParticipantFactory()
-{
-}
-
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
-        ParticipantId,
-        RawConfiguration,
-        std::shared_ptr<PayloadPool>,
-        std::shared_ptr<DiscoveryDatabase>)
+        ParticipantConfiguration participant_configuration,
+        std::shared_ptr<PayloadPool> payload,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
-    // TODO
-    throw UnsupportedException("ParticipantFactory::create_participant not supported yet");
+    // Create a new Participant depending on the ParticipantType specified by the configuration
+    switch (participant_configuration.type())
+    {
+        case ParticipantType::VOID:
+            // VoidParticipant
+            return std::make_shared<VoidParticipant>(participant_configuration.id());
+            break;
+
+        case ParticipantType::INVALID:
+            // TODO: Add warning log
+            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
+                                                            << " is not a valid" << " participant type name.");
+            break;
+
+        default:
+            // This should not happen as every type must be in the switch
+            assert(false);
+            break;
+    }
 }
 
 } /* namespace ddsrouter */

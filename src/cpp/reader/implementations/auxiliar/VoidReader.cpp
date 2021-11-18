@@ -13,43 +13,31 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
- *
+ * @file VoidReader.cpp
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+void VoidReader::enable()
 {
 }
 
-WildcardTopic::~WildcardTopic()
+void VoidReader::disable()
 {
 }
 
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
+void VoidReader::set_on_data_available_callback(
+        std::function<void()>)
 {
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
 }
 
-bool WildcardTopic::matches(
-        const RealTopic& other) const
+ReturnCode VoidReader::take(
+        std::unique_ptr<DataReceived>&)
 {
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
-    {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
-    }
-    return false;
+    return ReturnCode::RETCODE_NO_DATA;
 }
 
 } /* namespace ddsrouter */

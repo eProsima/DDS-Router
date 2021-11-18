@@ -13,43 +13,30 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
- *
+ * @file VoidWriter.cpp
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/VoidWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+VoidWriter::~VoidWriter()
 {
 }
 
-WildcardTopic::~WildcardTopic()
+void VoidWriter::enable()
 {
 }
 
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
+void VoidWriter::disable()
 {
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
 }
 
-bool WildcardTopic::matches(
-        const RealTopic& other) const
+ReturnCode VoidWriter::write(
+        std::unique_ptr<DataReceived>&)
 {
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
-    {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
-    }
-    return false;
+    return ReturnCode::RETCODE_OK;
 }
 
 } /* namespace ddsrouter */

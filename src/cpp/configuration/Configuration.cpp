@@ -51,9 +51,9 @@ std::list<std::shared_ptr<FilterTopic>> Configuration::blocklist() const
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
-std::map<ParticipantId, RawConfiguration> Configuration::participants_configurations() const
+std::list<ParticipantConfiguration> Configuration::participants_configurations() const
 {
-    std::map<ParticipantId, RawConfiguration> result;
+    std::list<ParticipantConfiguration> result;
 
     try
     {
@@ -71,8 +71,12 @@ std::map<ParticipantId, RawConfiguration> Configuration::participants_configurat
 
             // Add new Participant with its configuration
             // NOTE: There will not be repeated Participant Ids as in a yaml the keys are unique
-            result[value_str] = participant_it->second;
+            result.push_back(ParticipantConfiguration(ParticipantId(value_str), participant_it->second));
         }
+    }
+    catch (const ConfigurationException& e)
+    {
+        throw e;
     }
     catch (const std::exception& e)
     {

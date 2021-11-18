@@ -18,11 +18,13 @@ set(TEST_SOURCES
         ConfigurationTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantType.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/Configuration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
     )
 
 set(TEST_HEADERS

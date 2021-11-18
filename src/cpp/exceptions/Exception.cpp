@@ -33,6 +33,12 @@ Exception::Exception(
 {
 }
 
+Exception::Exception(
+        const utils::Formatter& formatter)
+    : message_(formatter.to_string())
+{
+}
+
 const char* Exception::what() const noexcept
 {
     return message_.c_str();

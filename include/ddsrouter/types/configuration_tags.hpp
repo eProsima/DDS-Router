@@ -33,6 +33,8 @@ constexpr const char* BLOCKLIST_TAG("blocklist");
 constexpr const char* TOPIC_NAME_TAG("name");
 constexpr const char* TOPIC_TYPE_NAME_TAG("type");
 
+constexpr const char* PARTICIPANT_TYPE_TAG("type");
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

@@ -13,10 +13,11 @@
 // limitations under the License.
 
 /**
- * @file configuration_tags.cpp
+ * @file utils.cpp
  *
  */
 
+#include <algorithm>
 #include <set>
 
 #if defined(_WIN32)
@@ -30,6 +31,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
+namespace utils {
 
 bool match_pattern(
         const std::string& pattern,
@@ -44,5 +46,21 @@ bool match_pattern(
 #endif // defined(_WIN32)
 }
 
+void to_lowercase(
+        std::string& st)
+{
+    std::transform(st.begin(), st.end(), st.begin(),
+            [](unsigned char c)
+            {
+                return std::tolower(c);
+            });
+}
+
+std::string Formatter::to_string() const
+{
+    return ss_.str().c_str();
+}
+
+} /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

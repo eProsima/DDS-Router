@@ -52,5 +52,8 @@ log/
 ### Visual Studio ###
 .vs
 
+### Visual Studio Code ###
+.vscode
+
 ### Documentation ###
 docs/rst/_static/css/online_eprosima_rtd_theme.css
