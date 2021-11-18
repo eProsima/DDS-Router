@@ -72,7 +72,10 @@ Bridge::~Bridge()
     // Disable every Track before destruction
     disable();
 
-    // Tracks will be deleted on their own as they are stored as unique ptrs in map
+    // Force deleting tracks before deleting Bridge
+    tracks_.clear();
+
+    // Participants must not be removed as they belong to the Participant Database
 }
 
 void Bridge::enable()

@@ -38,6 +38,8 @@ public:
             ParticipantConfiguration participant_configuration,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
+    ~DummyParticipant();
+
     virtual ParticipantType type() const override;
 
     virtual std::shared_ptr<IWriter> create_writer(
@@ -59,8 +61,7 @@ public:
     std::vector<DataStored> data_received_ref(
             RealTopic topic);
 
-    static std::shared_ptr<DummyParticipant> get_participant(
-            ParticipantId id);
+    static DummyParticipant* get_participant(ParticipantId id);
 
 protected:
 
@@ -68,7 +69,9 @@ protected:
 
     std::map<RealTopic, std::shared_ptr<DummyReader>> readers_;
 
-    static std::map<ParticipantId, std::shared_ptr<DummyParticipant>> participants_;
+    static std::mutex static_mutex_;
+
+    static std::map<ParticipantId, DummyParticipant*> participants_;
 };
 
 } /* namespace ddsrouter */

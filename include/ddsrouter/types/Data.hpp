@@ -33,7 +33,7 @@ using Payload = fastrtps::rtps::SerializedPayload_t;
 struct DataReceived
 {
     //! Payload of the data received
-    Payload data;
+    Payload payload;
 
     //! Guid of the source entity that has transmit the data
     Guid source_guid;

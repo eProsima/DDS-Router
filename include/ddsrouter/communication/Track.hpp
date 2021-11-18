@@ -105,9 +105,9 @@ protected:
     /**
      * Whether this Track is enabled
      *
-     * Thread safe
+     * Not Thread safe, call
      */
-    bool should_transmit_();
+    bool should_transmit_nts_();
 
     /**
      * Main function of Track.
@@ -126,7 +126,7 @@ protected:
      * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.
      */
-    void transmit_();
+    void transmit_nts_();
 
 protected:
 

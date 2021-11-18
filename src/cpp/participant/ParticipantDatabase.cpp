@@ -26,6 +26,7 @@ namespace ddsrouter {
 
 ParticipantDatabase::~ParticipantDatabase()
 {
+    participants_.clear();
 }
 
 void ParticipantDatabase::add_participant(

@@ -506,7 +506,6 @@ TEST(ConfigurationTest, blocklist_wildcard)
     // Empty blocklist
     RawConfiguration yaml2;
     add_empty_tag_to_yaml(yaml2, BLOCKLIST_TAG);
-    std::cout << yaml2 << std::endl;
     add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic2", "type2");
     Configuration config2(yaml2);

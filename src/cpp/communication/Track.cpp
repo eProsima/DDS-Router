@@ -108,9 +108,8 @@ void Track::no_more_data_available_()
     is_data_available_.store(false);
 }
 
-bool Track::should_transmit_()
+bool Track::should_transmit_nts_()
 {
-    std::lock_guard<std::recursive_mutex> lock(track_mutex_);
     return !exit_ && enabled_;
 }
 
@@ -135,21 +134,21 @@ void Track::transmit_thread_function_()
                 return this->is_data_available_ || this->exit_;
             });
 
-        // Avoid start transmitting if it was awakened to terminate
-        if (should_transmit_())
+        // Avoid start transmitting if it was awake to terminate
+        if (should_transmit_nts_())
         {
-            // If it was awakened because new data arrived, transmit it
-            transmit_();
+            // If it was awake because new data arrived, transmit it
+            transmit_nts_();
         }
     }
 }
 
-void Track::transmit_()
+void Track::transmit_nts_()
 {
-    while (should_transmit_())
+    while (should_transmit_nts_())
     {
         // Get data received
-        std::unique_ptr<DataReceived> data;
+        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         ReturnCode ret = reader_->take(data);
 
         if (ret == ReturnCode::RETCODE_NO_DATA)

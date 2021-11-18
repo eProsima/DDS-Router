@@ -1,0 +1,11 @@
+
+# This .yaml contains the configuration for the trivial test.
+# It is composed by two void participants.
+
+allowlist:
+
+participant_1:
+  type: "void"
+
+participant_2:
+  type: "void"

@@ -23,11 +23,17 @@ set(TEST_SOURCES
     TrivialTest.cpp)
 
 set(TEST_LIST
-    trivial_initialization
-    trivial_communication)
+    trivial_void_initialization
+    trivial_dummy_initialization)
 
 set(TEST_NEEDED_SOURCES
-    resources/trivial_test_configuration.yaml)
+    resources/trivial_test_dummy_configuration.yaml
+    resources/trivial_test_void_configuration.yaml)
+
+
+# file(GLOB TEST_NEEDED_SOURCES
+# "./resources/**"
+# )
 
 add_blackbox_executable(
     "${TEST_NAME}"

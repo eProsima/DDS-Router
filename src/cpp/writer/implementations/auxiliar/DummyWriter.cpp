@@ -37,7 +37,11 @@ ReturnCode DummyWriter::write(
     DataStored new_data_to_store;
     new_data_to_store.timestamp = now();
     new_data_to_store.guid_src = data->source_guid;
-    new_data_to_store.payload = data->data;
+
+    // Storing data
+    new_data_to_store.payload.length = data->payload.length;
+    new_data_to_store.payload.reserve(new_data_to_store.payload.length);
+    std::memcpy(new_data_to_store.payload.data, data->payload.data, new_data_to_store.payload.length);
 
     data_stored.push_back(new_data_to_store);
 
