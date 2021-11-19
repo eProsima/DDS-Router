@@ -54,7 +54,7 @@ public:
      */
     Bridge(
             const RealTopic& topic,
-            std::shared_ptr<ParticipantDatabase> participant_database,
+            std::shared_ptr<ParticipantDatabase> participants_database,
             bool enable = false);
 
     //! Destructor

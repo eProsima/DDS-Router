@@ -27,10 +27,10 @@ namespace ddsrouter {
 
 Bridge::Bridge(
         const RealTopic& topic,
-        std::shared_ptr<ParticipantDatabase> participant_database,
+        std::shared_ptr<ParticipantDatabase> participants_database,
         bool enable /* = false */)
     : topic_(topic)
-    , participants_(participant_database)
+    , participants_(participants_database)
     , enabled_(false)
 {
     std::vector<ParticipantId> ids = participants_->get_participant_ids();

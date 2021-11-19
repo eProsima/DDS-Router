@@ -20,6 +20,7 @@
 #define _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
 
 #include <map>
+#include <shared_mutex>
 
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
@@ -50,6 +51,8 @@ public:
 protected:
 
     std::map<ParticipantId, std::shared_ptr<IParticipant>> participants_;
+
+    mutable std::shared_timed_mutex mutex_;
 };
 
 } /* namespace ddsrouter */
