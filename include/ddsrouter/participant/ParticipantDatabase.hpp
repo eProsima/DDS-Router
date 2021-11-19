@@ -20,7 +20,6 @@
 #define _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
 
 #include <map>
-#include <mutex>
 #include <shared_mutex>
 
 #include <ddsrouter/types/ParticipantId.hpp>
