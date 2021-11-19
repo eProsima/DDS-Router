@@ -28,32 +28,77 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * This class joins every DDSRouter Configuration characteristic and give methods to interact with this configuration.
  */
 class Configuration
 {
 public:
 
+    /**
+     * @brief Construct a new Configuration object from a yaml object
+     *
+     * @param raw_configuration represents the yaml to this object to get the configuration data. This yaml must be a
+     *  map or an empty yaml, it cannot be otherwise.
+     *
+     * @throw \c ConfigurationException in case the yaml is not well formed or is not a map or empty
+     */
     Configuration(
             const RawConfiguration& raw_configuration);
 
-    virtual ~Configuration();
-
+    /**
+     * @brief Return a list with topics in allowedlist in the configuration
+     *
+     * @return List of filters to get allowed topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     */
     std::list<std::shared_ptr<FilterTopic>> allowlist() const;
 
+    /**
+     * @brief Return a list with topics in blocklist in the configuration
+     *
+     * @return List of filters to get blocked topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside blocklist is bad formed
+     */
     std::list<std::shared_ptr<FilterTopic>> blocklist() const;
 
-    std::list<ParticipantConfiguration> participants_configurations() const;
+    /**
+     * @brief Return a list with topics in blocklist in the configuration
+     *
+     * @return List of filters to get blocked topics
+     */
+    std::list<ParticipantConfiguration> participants_configurations() const noexcept;
 
-    //! Ad hoc function to find real topics within the allowlist
-    // TODO: This method will disappear once the dynamic module is implemented
+
+    /**
+     * @brief Return a list with real topics in allowedlist in the configuration
+     *
+     * This method get the allowedlist in configuration and get only those topics that can actually
+     * be created as Real topics.
+     *
+     * @todo: This method will dissapear once the dynamic module is implemented
+     *
+     * @return List of real topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     */
     std::set<RealTopic> real_topics() const;
 
 protected:
 
+    /**
+     * @brief Generic method to get a list of topics from a list
+     *
+     * This method collects the same functionality that share \c allowlist and \c blacklist
+     *
+     * @param [in] list_tag: name of the tag to look the list in the configuration
+     * @return List of filter topics
+     */
     std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
             const char* list_tag) const;
 
+    //! Yaml object with the configuration info
     const RawConfiguration raw_configuration_;
 };
 

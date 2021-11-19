@@ -19,6 +19,7 @@
 
 #include <ddsrouter/configuration/Configuration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 
@@ -37,10 +38,6 @@ Configuration::Configuration(
     }
 }
 
-Configuration::~Configuration()
-{
-}
-
 std::list<std::shared_ptr<FilterTopic>> Configuration::allowlist() const
 {
     return generic_get_topic_list_(ALLOWLIST_TAG);
@@ -51,37 +48,35 @@ std::list<std::shared_ptr<FilterTopic>> Configuration::blocklist() const
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
-std::list<ParticipantConfiguration> Configuration::participants_configurations() const
+std::list<ParticipantConfiguration> Configuration::participants_configurations() const noexcept
 {
     std::list<ParticipantConfiguration> result;
 
-    try
+    for (YAML::const_iterator participant_it = raw_configuration_.begin();
+            participant_it != raw_configuration_.end();
+            ++participant_it)
     {
-        for (YAML::const_iterator participant_it = raw_configuration_.begin();
-                participant_it != raw_configuration_.end();
-                ++participant_it)
+        std::string id_str = participant_it->first.as<std::string>();
+
+        // Check if it is a valid name for a participant
+        if (!ParticipantId::is_valid_id(id_str))
         {
-            std::string value_str = participant_it->first.as<std::string>();
+            continue;
+        }
 
-            // Check if it is a valid name for a participant
-            if (!ParticipantId::is_valid_id(value_str))
-            {
-                continue;
-            }
-
+        try
+        {
             // Add new Participant with its configuration
             // NOTE: There will not be repeated Participant Ids as in a yaml the keys are unique
-            result.push_back(ParticipantConfiguration(ParticipantId(value_str), participant_it->second));
+            result.push_back(ParticipantConfiguration(ParticipantId(id_str), participant_it->second));
         }
-    }
-    catch (const ConfigurationException& e)
-    {
-        throw e;
-    }
-    catch (const std::exception& e)
-    {
-        // TODO: Add Warning with e what
-        throw ConfigurationException("Error while getting participant configurations in DDSRouter configuration.");
+        catch (const std::exception& e)
+        {
+            // Add invalid ParticipantConfiguration
+            result.push_back(ParticipantConfiguration(ParticipantId(id_str)));
+            logWarning(DDSROUTER_CONFIGURATION, "Fail to create participant configuration " << id_str
+                << " with error: " << e.what());
+        }
     }
 
     return result;

@@ -27,33 +27,75 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
+ * Each Participant that require specific configuration must inherite from this class.
  */
 class ParticipantConfiguration
 {
 public:
 
+    /**
+     * @brief Construct an invald configuration
+     *
+     * The type of this configuration will be invalid and the yaml empty
+     *
+     * @param [in] id of the participant that will be created with this configuration
+     */
+    ParticipantConfiguration(
+            ParticipantId id) noexcept;
+
+    /**
+     * @brief Construct a new configuration
+     *
+     * Yaml configuration must be a map or empty.
+     * The type is get in construction. If the type is not valid, it will cause an exception.
+     * The type of a participant could be set in the yaml configuration, or it could be the name of its id.
+     *
+     * @param [in] id of the participant that will be created with this configuration
+     * @param [in] raw_configuration yaml to get the configuration
+     *
+     * @throw \c ConfigurationException in case the type could not be correctly set by yaml or id or yaml is bad formed
+     */
     ParticipantConfiguration(
             ParticipantId id,
             const RawConfiguration& raw_configuration);
 
-    virtual ~ParticipantConfiguration();
+    //! Participant Type associated with this configuration
+    ParticipantType type() const noexcept;
 
-    ParticipantType type() const;
+    //! Participant Id associated with this configuration
+    ParticipantId id() const noexcept;
 
-    ParticipantId id() const;
-
+    /**
+     * @brief Equal comparator
+     *
+     * This comparator should check if the id is equal to the other Configuration and check the yaml equality.
+     *
+     * @todo: check equality yaml and not identity yaml.
+     *
+     * @param [in] other: ParticipantConfiguration to compare.
+     * @return True if both configurations are the same, False otherwise.
+     */
     bool operator ==(
-            const ParticipantConfiguration& other) const;
+            const ParticipantConfiguration& other) const noexcept;
 
 protected:
 
-    void set_type_();
+    /**
+     * @brief Set type
+     *
+     * Type is set by checking type tag in yaml, and if it does not exist, check if the participant name is
+     * already a type.
+     */
+    void set_type_() noexcept;
 
+    //! Participant Id associated with this configuration
     const ParticipantId id_;
 
+    //! Participant Type associated with this configuration
     ParticipantType type_;
 
+    //! Yaml object with the configuration info
     const RawConfiguration raw_configuration_;
 };
 
