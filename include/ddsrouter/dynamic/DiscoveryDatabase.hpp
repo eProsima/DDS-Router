@@ -38,10 +38,10 @@ class DiscoveryDatabase
 public:
 
     bool topic_exists(
-            const RealTopic& topic);
+            const RealTopic& topic) const;
 
     bool endpoint_exists(
-            const Guid& guid);
+            const Guid& guid) const;
 
     ReturnCode add_or_modify_endpoint(
             const Endpoint& new_endpoint);
@@ -51,6 +51,9 @@ public:
 
     ReturnCode erase_endpoint(
             const Endpoint& endpoint_to_erase);
+
+    Endpoint get_endpoint(
+            const Guid& endpoint_guid) const;
 
     // TODO
     // some way of allowing participants to subscribe to a callback when new information arrives

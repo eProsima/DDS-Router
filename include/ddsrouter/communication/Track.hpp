@@ -121,7 +121,7 @@ protected:
     /**
      * Take data from the Reader \c source and send this data through every writer in \c targets .
      *
-     * When no more data is available, call \c no_more_data_available_ and exits.
+     * When no more data is available, call \c no_more_data_available_ and exit.
      *
      * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.

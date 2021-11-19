@@ -17,9 +17,11 @@
  *
  */
 
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/utils.hpp>
 
@@ -46,6 +48,10 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return std::make_shared<EchoParticipant>(participant_configuration, discovery_database);
             break;
 
+        case ParticipantType::DUMMY:
+            // DummyParticipant
+            return std::make_shared<DummyParticipant>(participant_configuration, discovery_database);
+            break;
         case ParticipantType::INVALID:
             // TODO: Add warning log
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
