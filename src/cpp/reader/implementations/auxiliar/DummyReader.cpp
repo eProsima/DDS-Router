@@ -17,6 +17,7 @@
  */
 
 #include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -52,8 +53,12 @@ void DummyReader::set_on_data_available_callback(
     on_data_available_callback_ = new_callback;
 }
 
-ReturnCode DummyReader::take(
-        std::unique_ptr<DataReceived>& data_received)
+void DummyReader::unset_on_data_available_callback()
+{
+    on_data_available_callback_ = [](){logWarning(DDSROUTER_DUMMY_READER, "Calling unset callback.");};
+}
+
+ReturnCode DummyReader::take(std::unique_ptr<DataReceived>& data_received)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 

@@ -26,17 +26,27 @@ namespace ddsrouter {
 
 class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
+public:
 
     //! Inherit Parent class constructors
     using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
 
     //! Specify the operator so OK code could be translated to True.
-    bool operator ()() const
-    {
-        return RETCODE_OK == *this;
-    }
+    bool operator ()() const;
 
+    bool operator <(const ReturnCode& other) const;
+
+protected:
+
+    static const std::map<ReturnCode, std::string> to_string_conversion_;
+
+    friend std::ostream & operator<<(std::ostream &os, const ReturnCode& code);
 };
+
+//! \c ReturnCode to stream serializator
+std::ostream& operator <<(
+        std::ostream& os,
+        const ReturnCode& payload);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

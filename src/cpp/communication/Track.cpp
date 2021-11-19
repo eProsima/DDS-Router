@@ -19,6 +19,7 @@
 
 #include <ddsrouter/communication/Track.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -27,10 +28,12 @@ namespace ddsrouter {
 
 Track::Track(
         const RealTopic& topic,
+        ParticipantId reader_participant_id,
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
-        bool enable /* = false */)
-    : topic_(topic)
+        bool enable /* = false */) noexcept
+    : reader_participant_id_(reader_participant_id)
+    , topic_(topic)
     , reader_(reader)
     , writers_(writers)
     , enabled_(false)
@@ -58,18 +61,23 @@ Track::~Track()
     // Disable reader
     disable();
 
-    // Set exit status and call transmit thread to terminate
-    exit_.store(true);
-    available_data_condition_variable_.notify_all();
+    // Unset callback on the Reader (this is needed as Reader will live longer than Track)
+    reader_->unset_on_data_available_callback();
+
+    // Set exit status and call transmit thread to awake and terminate. Then wait for it.
+    exit_.store(true); // This is not needed to be guarded as it is atomic
+    transmit_condition_variable_.notify_all();
     transmit_thread_.join();
 }
 
-void Track::enable()
+void Track::enable() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(track_mutex_);
 
     if (!enabled_)
     {
+        logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+
         // Enable writers
         for (auto& writer_it : writers_)
         {
@@ -83,12 +91,14 @@ void Track::enable()
     }
 }
 
-void Track::disable()
+void Track::disable() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(track_mutex_);
 
     if (enabled_)
     {
+        logInfo(DDSROUTER_TRACK, "Disabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+
         // Disabling Writer
         for (auto& writer_it : writers_)
         {
@@ -102,37 +112,43 @@ void Track::disable()
     }
 }
 
-void Track::no_more_data_available_()
+void Track::no_more_data_available_() noexcept
 {
-    std::unique_lock<std::mutex> lock(available_data_mutex_);
     is_data_available_.store(false);
 }
 
-bool Track::should_transmit_nts_()
+bool Track::should_transmit_nts_() noexcept
 {
-    return !exit_ && enabled_;
+    return !exit_ && enabled_ && this->is_data_available_;
 }
 
-void Track::data_available()
+void Track::data_available() noexcept
 {
+    // Only hear callback if it is enabled
+    if (enabled_)
     {
-        std::unique_lock<std::mutex> lock(available_data_mutex_);
+        logInfo(DDSROUTER_TRACK, "Track " << reader_participant_id_ << " for topic " << topic_ << " has data available to transmit.");
+
+        // Set data available to true and notify transmit thread
         is_data_available_.store(true);
+        transmit_condition_variable_.notify_one();
     }
-    available_data_condition_variable_.notify_one();
 }
 
-void Track::transmit_thread_function_()
+void Track::transmit_thread_function_() noexcept
 {
     while (!exit_)
     {
-        std::unique_lock<std::mutex> lock(available_data_mutex_);
-        available_data_condition_variable_.wait(
+        // Wait in Condition Variable till there is data to send or it must exit
+        std::unique_lock<std::mutex> lock(transmit_mutex_);
+        transmit_condition_variable_.wait(
             lock,
             [this]
             {
                 return this->is_data_available_ || this->exit_;
             });
+
+        // Once thread awakes, it has the mutex locked for next nts methods
 
         // Avoid start transmitting if it was awake to terminate
         if (should_transmit_nts_())
@@ -143,7 +159,7 @@ void Track::transmit_thread_function_()
     }
 }
 
-void Track::transmit_nts_()
+void Track::transmit_nts_() noexcept
 {
     while (should_transmit_nts_())
     {
@@ -151,16 +167,20 @@ void Track::transmit_nts_()
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         ReturnCode ret = reader_->take(data);
 
+        logInfo(DDSROUTER_TRACK, "Track " << reader_participant_id_ << " for topic " << topic_ << " transmitting data from remote endpoint "
+            << data->source_guid << ".");
+
         if (ret == ReturnCode::RETCODE_NO_DATA)
         {
-            // There is no more data, so finish loop and wait for data
+            // There is no more data, so finish loop and wait again for new data
             no_more_data_available_();
             break;
         }
         else if (!ret)
         {
             // Error reading data
-            // TODO: Add Log
+            logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
+                << ". Skipping data and continue.");
             continue;
         }
 
@@ -171,7 +191,8 @@ void Track::transmit_nts_()
 
             if (!ret)
             {
-                // TODO: Add Log
+                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code " << ret
+                    << ". Skipping data for this writer and continue.");
                 continue;
             }
         }

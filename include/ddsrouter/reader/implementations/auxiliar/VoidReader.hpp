@@ -38,6 +38,8 @@ public:
     void set_on_data_available_callback(
             std::function<void()>) override;
 
+    void unset_on_data_available_callback() override;
+
     ReturnCode take(
             std::unique_ptr<DataReceived>&) override;
 };

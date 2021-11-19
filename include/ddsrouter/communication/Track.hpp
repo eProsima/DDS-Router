@@ -42,23 +42,27 @@ public:
     /**
      * Track constructor by required values.
      *
-     * In Track construction, there are created a \c IReader for the participant \c source and one
-     * \c IWriter for each participant in \c targets .
-     * It also creates a new thread that manages the transmission between the reader and the writers.
+     * Track construction creates a new thread that manage the transmission between the reader and the writers.
      *
-     * @param topic:    Topic that this Track manages communication
-     * @param source:   Participant that will receive the data
-     * @param targets:  Map of Participants that will send the data received by \c source indexed by Participant id
-     * @param enable:   Whether the \c Track should be initialized as enabled. False by default
-     *
-     * @throw \c InitializationException in case creation fails.
+     * @param topic:    Topic that this Track manage communication
+     * @param reader:   Reader that will receive the remote data
+     * @param writers:  Map of Writers that will send the data received by \c source indexed by Participant id
+     * @param enable:   Wether the \c Track should be initialized as enabled. False by default
      */
     Track(
             const RealTopic& topic,
+            ParticipantId reader_participant_id,
             std::shared_ptr<IReader> reader,
             std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
-            bool enable = false);
+            bool enable = false) noexcept;
 
+    /**
+     * @brief Destructor
+     *
+     * It unset the callback from Reader.
+     * It should stop and wait for the transmission thread.
+     * It must not destroy any entity as it does not creat them.
+     */
     virtual ~Track();
 
     /**
@@ -75,7 +79,7 @@ public:
      *
      * Thread safe
      */
-    void enable();
+    void enable() noexcept;
 
     /**
      * Disable Track in case it is enabled. This will cause that data will not be transmitted from
@@ -86,28 +90,31 @@ public:
      *
      * Thread safe
      */
-    void disable();
+    void disable() noexcept;
 
 protected:
 
     /**
      * Callback that will be called by the reader in case there is available data to be forwarded.
      *
-     * This method is sent to the Reader so it could call it when there is new data.
+     * This method is sent to the Reader so it could call it when there are new data.
+     *
+     * This method will set the variable \c are_data_available_ to true and awake the transmit thread.
+     * If Track is disabled, the callback will be lost.
      */
-    void data_available();
+    void data_available() noexcept;
 
     /**
      * Callback that will be called when there is no more data available to be forwarded.
      */
-    void no_more_data_available_();
+    void no_more_data_available_() noexcept;
 
     /**
      * Whether this Track is enabled
      *
-     * Not Thread safe, call with \c available_data_mutex_ guarded
+     * Not Thread safe, call with \c transmit_mutex_ locked
      */
-    bool should_transmit_nts_();
+    bool should_transmit_nts_() noexcept;
 
     /**
      * Main function of Track.
@@ -116,7 +123,7 @@ protected:
      *
      * Transmission is not executed in case track must be terminated or is not enabled.
      */
-    void transmit_thread_function_();
+    void transmit_thread_function_() noexcept;
 
     /**
      * Take data from the Reader \c source and send this data through every writer in \c targets .
@@ -125,15 +132,24 @@ protected:
      *
      * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.
+     *
+     * Not Thread safe, call with \c transmit_mutex_ locked
      */
-    void transmit_nts_();
+    void transmit_nts_() noexcept;
 
 protected:
 
     /**
-     * Topic that this bridge manages communication
+     * @brief Id of the Participant of the Reader
      *
-     * @note: This variable is stored but not used
+     * This id and topic identifies unequivocally a Track
+     */
+    ParticipantId reader_participant_id_;
+
+    /**
+     * Topic that this bridge manage communication
+     *
+     * @note: This variable is only used for log
      */
     RealTopic topic_;
 
@@ -180,13 +196,13 @@ protected:
     /**
      * Condition variable to wait for new data available or track termination.
      */
-    std::condition_variable available_data_condition_variable_;
+    std::condition_variable transmit_condition_variable_;
 
     /**
-     * Mutex to handle access to condition variable \c available_data_condition_variable_ .
-     * Mutex to manage access to variable \c is_data_available_ .
+     * Mutex to handle acces to condition variable \c transmit_condition_variable_ .
+     * Mutex to manage acces to variable \c are_data_available_ .
      */
-    std::mutex available_data_mutex_;
+    std::mutex transmit_mutex_;
 };
 
 } /* namespace ddsrouter */

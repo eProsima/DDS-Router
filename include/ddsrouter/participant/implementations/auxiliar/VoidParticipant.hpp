@@ -47,6 +47,12 @@ public:
     virtual std::shared_ptr<IReader> create_reader(
             RealTopic) override;
 
+    virtual void delete_writer(
+            std::shared_ptr<IWriter> writer) override;
+
+    virtual void delete_reader(
+            std::shared_ptr<IReader> reader) override;
+
 protected:
 
     ParticipantConfiguration configuration_;
