@@ -44,6 +44,8 @@ public:
             ParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
+
+    void remove_participant(std::shared_ptr<IParticipant> participant);
 };
 
 } /* namespace ddsrouter */

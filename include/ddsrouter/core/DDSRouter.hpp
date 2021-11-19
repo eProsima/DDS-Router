@@ -43,73 +43,206 @@ class DDSRouter
 {
 public:
 
+    /**
+     * @brief Construct a new DDSRouter object
+     *
+     * This method initialize a whole DDSRouter:
+     * - Create the AllowedTopicList
+     * - Create Participants and add them to \c ParticipantDatabase
+     * - Create the Bridges for RealTopics as disable (TODO: remove when discovery is ready)
+     *
+     * @param [in] configuration : Configuration for the new DDS Router
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
+     */
     DDSRouter(
             const Configuration& configuration);
 
+    /**
+     * @brief Destroy the DDSRouter object
+     *
+     * Stop the DDSRouter
+     * Destroy all Bridges
+     * Destroy all Participants
+     */
     virtual ~DDSRouter();
 
     // EVENTS
-    void reload_configuration(
+    /**
+     * @brief Reload the allowed topic configuration
+     *
+     * @warning Unsupported
+     * @todo Add noexcept when method ready
+     *
+     * @param [in] configuration : new configuration
+     *
+     * @return \c RETCODE_OK if configurations has been updated correctly
+     * @return \c RETCODE_NO_DATA if new configuration has not changed
+     * @return \c RETCODE_BAD_PARAMETER if configurations is bad formed
+     * @return \c RETCODE_ERROR if any other erro has ocurred
+     */
+    ReturnCode reload_configuration(
             const Configuration& configuration);
 
-    void stop();
+    /**
+     * @brief Start communication in DDS Router
+     *
+     * Enable every topic Bridge.
+     *
+     * @note this method returns a ReturnCode for future possible errors
+     *
+     * @return \c RETCODE_OK always
+     */
+    ReturnCode start() noexcept;
+
+    /**
+     * @brief Stop communication in DDS Router
+     *
+     * Disable every topic Bridge.
+     *
+     * @note this method returns a ReturnCode for future possible errors
+     *
+     * @return \c RETCODE_OK always
+     */
+    ReturnCode stop() noexcept;
 
 protected:
 
     /////
-    // INTERNAL METHODS
+    // INTERNAL INITIALIZATION METHODS
 
-    //! Load allowed topics from configuration
+    /**
+     * @brief Load allowed topics from configuration
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     */
     void init_allowed_topics_();
 
-    //! Create participants and add it to the participants database
+    /**
+     * @brief  Create participants and add it to the participants database
+     *
+     * @throw \c InitializationException in case \c IParticipants creation fails.
+     */
     void init_participants_();
 
-    //! Create bridges from topics
+    /**
+     * @brief  Create disabled bridges for every real topic
+     *
+     * @throw \c InitializationException in case \c IWriters or \c IReaders creation fails.
+     */
     void init_bridges_();
 
-    //! New Topic found, check if it should be activated
+    /////
+    // INTERNAL AUXILIAR METHODS
+
+    /**
+     * @brief Method called every time a new discovery endpoint has been discovered/updated
+     *
+     * This method is called with the topic of a new/updated \c Endpoint discovered.
+     * If the DDSRouter is enabled, the new Bridge is created and enabled.
+     *
+     * @note This is the only method that adds topics to \c current_topics_
+     *
+     * @param [in] topic : topic discovered
+     */
     void discovered_topic_(
-            const RealTopic& topic);
+            const RealTopic& topic) noexcept;
 
-    //! Activate a topic within the DDSRouter context
-    void activate_topic_(
-            const RealTopic& topic);
-
-    //! Create a new bridge for a topic recently discovererd
+    /**
+     * @brief Create a new \c Bridge object
+     *
+     * It is created enabled if the DDSRouter is enabled.
+     *
+     * @param [in] topic : new topic
+     */
     void create_new_bridge(
-            const RealTopic& topic);
+            const RealTopic& topic,
+            bool enabled = false) noexcept;
 
-    //! Deactivate a topic within the DDSRouter context
-    void deactivate_topic_(
-            const RealTopic& topic);
+    /**
+     * @brief Enable a specific topic
+     *
+     * If the topic did not exist before, the Bridge is created.
+     *
+     * @param [in] topic : Topic to be enabled
+     */
+    void active_topic_(
+            const RealTopic& topic) noexcept;
+
+    /**
+     * @brief Disable a specific topic.
+     *
+     * If the Bridge of the topic does not exist, do nothing.
+     *
+     * @param [in] topic : Topic to be enabled
+     */
+    void deactive_topic_(
+            const RealTopic& topic) noexcept;
+
+    /**
+     * @brief Activate all Topics that are allowed by the allowed list
+     */
+    void active_all_topics_() noexcept;
+
+    /**
+     * @brief Disable all Bridges
+     */
+    void deactive_all_topics_() noexcept;
 
     /////
     // DATA STORAGE
 
+    /**
+     * @brief  Common payload pool where every payload will be stored
+     *
+     * This payload will be shared by every endpoint.
+     * Every reader will store its data in the pool, the track will pass this
+     * data to the writers, that will release it after used.
+     */
     std::shared_ptr<PayloadPool> payload_pool_;
 
+    /**
+     * @brief Object that stores every Participant running in the DDSRouter
+     */
     std::shared_ptr<ParticipantDatabase> participants_database_;
 
+    /**
+     * @brief Common discovery database
+     *
+     * This object is shared by every Participant.
+     * Every time an endpoint is discovered by any Participant, it should be
+     * added to the database.
+     */
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
+    //! Map of bridges indexed by the topic of each one
     std::map<RealTopic, std::unique_ptr<Bridge>> bridges_;
 
+    /**
+     * @brief List of topics discovered
+     *
+     * Every topic discovered would be added to this map.
+     * If the value is true, it means this topic is currently activated.
+     */
     std::map<RealTopic, bool> current_topics_;
 
+    //! DDSRouter configuration
     Configuration configuration_;
 
+    //! List of allowed and blocked topics
     AllowedTopicList allowed_topics_;
 
+    //! Participant factory instance
     ParticipantFactory participant_factory_;
 
     /////
     // AUXILIAR VARIABLES
 
-    //! Whether the DDSRouter has been initialized or stopped
+    //! Whether the DDSRouter is currently communicating data or not
     std::atomic<bool> enabled_;
 
-    //! Internal mutex while initializing or closing
+    //! Internal mutex for concurrent calls
     std::recursive_mutex mutex_;
 };
 

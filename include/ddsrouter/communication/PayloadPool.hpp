@@ -23,6 +23,8 @@
 #include <fastdds/rtps/common/SerializedPayload.h>
 #include <fastdds/rtps/history/IPayloadPool.h>
 
+#include <ddsrouter/types/Data.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -37,6 +39,9 @@ public:
 
     virtual ~PayloadPool();
 
+    /////
+    // FAST DDS PART
+
     bool get_payload(
             uint32_t size,
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
@@ -48,6 +53,36 @@ public:
 
     bool release_payload(
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+
+    /////
+    // DDSROUTER PART
+
+    virtual bool get_payload(
+            uint32_t size,
+            Payload& payload);
+
+    virtual bool get_payload(
+            uint32_t size,
+            const Payload& src_payload,
+            Payload& target_payload);
+
+    virtual bool release_payload(
+            Payload& payload);
+};
+
+class CopyPayloadPool : public PayloadPool
+{
+    bool get_payload(
+            uint32_t size,
+            Payload& payload) override;
+
+    bool get_payload(
+            uint32_t size,
+            const Payload& src_payload,
+            Payload& target_payload) override;
+
+    bool release_payload(
+            Payload& payload) override;
 };
 
 } /* namespace ddsrouter */

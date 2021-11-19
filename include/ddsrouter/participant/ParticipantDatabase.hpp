@@ -28,31 +28,93 @@
 namespace eprosima {
 namespace ddsrouter {
 
+/**
+ * @brief Database to store collectively all the Participants of the Router
+ *
+ * This class will be shared between all Bridges so they have access to the Participants.
+ */
 class ParticipantDatabase
 {
 public:
 
+    //! Default constructor for an empty database
     ParticipantDatabase() = default;
 
+    /**
+     * Destructor
+     *
+     * @warning it should not be called if it is not empty
+     */
     virtual ~ParticipantDatabase();
 
-    // WARNING only used by DDSRouter
-    void add_participant(
-            ParticipantId id,
-            std::shared_ptr<IParticipant> participant);
-
+    /**
+     * @brief Get the participant pointer
+     *
+     * @param id: id of the participant
+     * @return pointer to the participant
+     */
     std::shared_ptr<IParticipant> get_participant(
-            const ParticipantId& id) const;
+            const ParticipantId& id) const noexcept;
 
-    std::vector<ParticipantId> get_participant_ids() const;
+    /**
+     * @brief Get all the ids of the participants stored
+     *
+     * @return list of ids
+     */
+    std::vector<ParticipantId> get_participant_ids() const noexcept;
 
-    std::map<ParticipantId, std::shared_ptr<IParticipant>> get_participant_map() const;
+    /**
+     * @brief Get all the participants stored
+     *
+     * @return list of pointers to participants indexed by ids
+     */
+    std::map<ParticipantId, std::shared_ptr<IParticipant>> get_participant_map() const noexcept;
+
+    //! Whether the database is empty
+    bool empty() const noexcept;
 
 protected:
 
+    /**
+     * @brief Remove the Participant from the database with this id
+     *
+     * @warning this method should only be called from the DDSRouter
+     *
+     * @param [in] id: id of the participant to remove
+     * @return Pointer to Participant removed
+     */
+    std::shared_ptr<IParticipant> pop_(const ParticipantId& id) noexcept;
+
+    /**
+     * @brief Remove a Participant from the database
+     *
+     * This method calls \c pop_ with a random id inside the database
+     *
+     * @param [in] id: id of the participant to remove
+     * @return Pointer to Participant removed
+     */
+    std::shared_ptr<IParticipant> pop_() noexcept;
+
+    /**
+     * @brief Add a new participant
+     *
+     * @warning this method should only be called from the DDSRouter
+     *
+     * @param [in] id: Id of the new Participant
+     * @param [in] participant: Pointer to the new Participant
+     */
+    void add_participant_(
+            ParticipantId id,
+            std::shared_ptr<IParticipant> participant) noexcept;
+
+    //! Database variable to store participants pointers indexed by their ids
     std::map<ParticipantId, std::shared_ptr<IParticipant>> participants_;
 
+    //! Mutex to guard access to database
     mutable std::shared_timed_mutex mutex_;
+
+    // DDSRouter should be friend class so it can call add_participant_
+    friend class DDSRouter;
 };
 
 } /* namespace ddsrouter */
