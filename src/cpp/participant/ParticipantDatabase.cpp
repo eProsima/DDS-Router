@@ -50,7 +50,7 @@ std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     auto it = participants_.find(id);
 
-    if (it != participants_.end())
+    if (it == participants_.end())
     {
         return nullptr;
     }
