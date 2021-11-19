@@ -35,8 +35,8 @@ class DummyParticipant : public EchoParticipant
 public:
 
     DummyParticipant(
-        ParticipantConfiguration participant_configuration,
-        std::shared_ptr<DiscoveryDatabase> discovery_database);
+            ParticipantConfiguration participant_configuration,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     virtual ParticipantType type() const override;
 
@@ -46,15 +46,21 @@ public:
     virtual std::shared_ptr<IReader> create_reader(
             RealTopic topic) override;
 
-    virtual void add_discovered_endpoint(const Endpoint& new_endpoint);
+    virtual void add_discovered_endpoint(
+            const Endpoint& new_endpoint);
 
-    virtual Endpoint get_discovered_endpoint(const Guid& guid) const;
+    virtual Endpoint get_discovered_endpoint(
+            const Guid& guid) const;
 
-    void add_message_to_send(RealTopic topic, DataToSend data);
+    void add_message_to_send(
+            RealTopic topic,
+            DataToSend data);
 
-    std::vector<DataStored> data_received_ref(RealTopic topic);
+    std::vector<DataStored> data_received_ref(
+            RealTopic topic);
 
-    static std::shared_ptr<DummyParticipant> get_participant(ParticipantId id);
+    static std::shared_ptr<DummyParticipant> get_participant(
+            ParticipantId id);
 
 protected:
 

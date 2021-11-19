@@ -59,17 +59,21 @@ std::shared_ptr<IReader> DummyParticipant::create_reader(
     return reader;
 }
 
-void DummyParticipant::add_discovered_endpoint(const Endpoint& new_endpoint)
+void DummyParticipant::add_discovered_endpoint(
+        const Endpoint& new_endpoint)
 {
     discovery_database_->add_or_modify_endpoint(new_endpoint);
 }
 
-Endpoint DummyParticipant::get_discovered_endpoint(const Guid& guid) const
+Endpoint DummyParticipant::get_discovered_endpoint(
+        const Guid& guid) const
 {
     return discovery_database_->get_endpoint(guid);
 }
 
-void DummyParticipant::add_message_to_send(RealTopic topic, DataToSend data)
+void DummyParticipant::add_message_to_send(
+        RealTopic topic,
+        DataToSend data)
 {
     auto it = readers_.find(topic);
     if (it != readers_.end())
@@ -78,7 +82,8 @@ void DummyParticipant::add_message_to_send(RealTopic topic, DataToSend data)
     }
 }
 
-std::vector<DataStored> DummyParticipant::data_received_ref(RealTopic topic)
+std::vector<DataStored> DummyParticipant::data_received_ref(
+        RealTopic topic)
 {
     auto it = writers_.find(topic);
     if (it != writers_.end())
@@ -91,7 +96,8 @@ std::vector<DataStored> DummyParticipant::data_received_ref(RealTopic topic)
     }
 }
 
-std::shared_ptr<DummyParticipant> DummyParticipant::get_participant(ParticipantId id)
+std::shared_ptr<DummyParticipant> DummyParticipant::get_participant(
+        ParticipantId id)
 {
     auto it = participants_.find(id);
 

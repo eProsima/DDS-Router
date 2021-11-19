@@ -44,8 +44,8 @@ class DummyWriter : public EchoWriter
 public:
 
     DummyWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic);
+            const ParticipantId& participant_id,
+            const RealTopic& topic);
 
     ReturnCode write(
             std::unique_ptr<DataReceived>& data) override;

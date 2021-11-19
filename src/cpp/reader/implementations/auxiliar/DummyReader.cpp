@@ -52,7 +52,8 @@ void DummyReader::set_on_data_available_callback(
     on_data_available_callback_ = new_callback;
 }
 
-ReturnCode DummyReader::take(std::unique_ptr<DataReceived>& data_received)
+ReturnCode DummyReader::take(
+        std::unique_ptr<DataReceived>& data_received)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -79,7 +80,8 @@ ReturnCode DummyReader::take(std::unique_ptr<DataReceived>& data_received)
     return ReturnCode::RETCODE_OK;
 }
 
-void DummyReader::add_message_to_send(DataToSend data)
+void DummyReader::add_message_to_send(
+        DataToSend data)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 

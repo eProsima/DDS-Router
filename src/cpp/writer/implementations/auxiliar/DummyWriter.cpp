@@ -28,7 +28,8 @@ DummyWriter::DummyWriter(
 {
 }
 
-ReturnCode DummyWriter::write(std::unique_ptr<DataReceived>& data)
+ReturnCode DummyWriter::write(
+        std::unique_ptr<DataReceived>& data)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -48,7 +49,6 @@ std::vector<DataStored> DummyWriter::data_received_ref()
     std::lock_guard<std::mutex> lock(mutex_);
     return data_stored;
 }
-
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

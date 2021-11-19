@@ -43,8 +43,8 @@ class DummyReader : public IReader
 public:
 
     DummyReader(
-        const ParticipantId& participant_id,
-        const RealTopic& topic);
+            const ParticipantId& participant_id,
+            const RealTopic& topic);
 
     void enable() override;
 
@@ -56,7 +56,8 @@ public:
     ReturnCode take(
             std::unique_ptr<DataReceived>& data_received) override;
 
-    void add_message_to_send(DataToSend data);
+    void add_message_to_send(
+            DataToSend data);
 
 protected:
 
