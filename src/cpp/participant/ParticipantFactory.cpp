@@ -24,6 +24,7 @@
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -36,7 +37,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantType specified by the configuration
-    switch (participant_configuration.type())
+    switch (participant_configuration.type()())
     {
         case ParticipantType::VOID:
             // VoidParticipant

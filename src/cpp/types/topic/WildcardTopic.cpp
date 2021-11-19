@@ -29,10 +29,6 @@ WildcardTopic::WildcardTopic(
 {
 }
 
-WildcardTopic::~WildcardTopic()
-{
-}
-
 bool WildcardTopic::contains(
         const FilterTopic& other) const
 {

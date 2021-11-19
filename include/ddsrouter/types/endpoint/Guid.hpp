@@ -35,9 +35,9 @@ public:
     /**
      * Whether the guid is a valid one
      *
-     * To be valid, the GuidPrefix and the EntityId must be set
+     * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
      */
-    bool is_valid() const;
+    bool is_valid() const noexcept;
 };
 
 } /* namespace ddsrouter */

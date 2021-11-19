@@ -24,7 +24,7 @@
 #include <queue>
 
 #include <ddsrouter/reader/IReader.hpp>
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

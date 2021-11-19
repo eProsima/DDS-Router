@@ -29,10 +29,10 @@ namespace ddsrouter {
 //! Payload references the raw data received.
 using Payload = fastrtps::rtps::SerializedPayload_t;
 
-//! Structure of the Data received from a Reader containing the data itself and the attributes of the suorce
+//! Structure of the Data received from a Reader containing the data itself and the attributes of the source
 struct DataReceived
 {
-    //! Payload of the data received
+    //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
 
     //! Guid of the source entity that has transmit the data

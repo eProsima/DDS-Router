@@ -28,12 +28,12 @@ namespace ddsrouter {
 std::set<std::string> ddsrouter_tags() noexcept;
 
 // Topics related tags
-constexpr const char* ALLOWLIST_TAG("allowlist");
-constexpr const char* BLOCKLIST_TAG("blocklist");
-constexpr const char* TOPIC_NAME_TAG("name");
-constexpr const char* TOPIC_TYPE_NAME_TAG("type");
+constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
+constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics
+constexpr const char* TOPIC_NAME_TAG("name");       //! Name of a topic
+constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Name of type of a topic
 
-constexpr const char* PARTICIPANT_TYPE_TAG("type");
+constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Type of participant
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

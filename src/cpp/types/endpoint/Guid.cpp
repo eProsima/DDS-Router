@@ -22,7 +22,7 @@
 namespace eprosima {
 namespace ddsrouter {
 
-bool Guid::is_valid() const
+bool Guid::is_valid() const noexcept
 {
     return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
            entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();

@@ -23,8 +23,8 @@
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/reader/IReader.hpp>
 #include <ddsrouter/types/endpoint/Endpoint.hpp>
-#include <ddsrouter/types/ParticipantId.hpp>
-#include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 

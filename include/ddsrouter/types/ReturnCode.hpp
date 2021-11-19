@@ -24,6 +24,11 @@
 namespace eprosima {
 namespace ddsrouter {
 
+/**
+ * @brief Return Code enumeration for different method return statements
+ *
+ * It uses the fastdds ReturnCode_t
+ */
 class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
 public:
@@ -32,24 +37,24 @@ public:
     using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
 
     //! Specify the operator so OK code could be translated to True.
-    bool operator ()() const;
+    bool operator ()() const noexcept;
 
-    bool operator <(
-            const ReturnCode& other) const;
+    //! Minor operator
+    bool operator <(const ReturnCode& other) const noexcept;
 
 protected:
 
+    //! Link every ReturnCode available with a string to deserialize
     static const std::map<ReturnCode, std::string> to_string_conversion_;
 
-    friend std::ostream& operator <<(
-            std::ostream& os,
-            const ReturnCode& code);
+    // operator << needs access to the object
+    friend std::ostream & operator<<(std::ostream &os, const ReturnCode& code);
 };
 
 //! \c ReturnCode to stream serializator
 std::ostream& operator <<(
         std::ostream& os,
-        const ReturnCode& payload);
+        const ReturnCode& code);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -38,9 +38,6 @@ public:
     WildcardTopic(
             const std::string& topic_name);
 
-    //! Destructor
-    virtual ~WildcardTopic();
-
     // TODO: extend test and documentation to admit ? and []
 
     //! Override \c contains method from \c FilterTopic

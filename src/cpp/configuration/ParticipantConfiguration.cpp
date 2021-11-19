@@ -20,7 +20,7 @@
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
@@ -40,7 +40,7 @@ ParticipantConfiguration::ParticipantConfiguration(
     }
 
     set_type_();
-    if (type_ == ParticipantType::PARTICIPANT_TYPE_INVALID)
+    if (!type_.is_valid())
     {
         throw ConfigurationException("DDSRouter Participant expects a valid ParticipantType");
     }
@@ -55,13 +55,13 @@ void ParticipantConfiguration::set_type_()
     if (raw_configuration_[PARTICIPANT_TYPE_TAG])
     {
         // Get configuration type from type tag
-        type_ = ParticipantTypeFactory::participant_type_from_name(
+        type_ = ParticipantType::participant_type_from_name(
             raw_configuration_[PARTICIPANT_TYPE_TAG].as<std::string>());
     }
     else
     {
         // Get configuration type from Id name
-        type_ = ParticipantTypeFactory::participant_type_from_name(id_.id_name());
+        type_ = ParticipantType::participant_type_from_name(id_.id_name());
     }
 }
 

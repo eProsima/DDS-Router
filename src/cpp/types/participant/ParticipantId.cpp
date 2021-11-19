@@ -20,58 +20,63 @@
 #include <set>
 #include <sstream>
 
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
+//! INVALID_ID key
 const std::string ParticipantId::INVALID_ID = "__invalid_ddsrouter_participant__";
 
 ParticipantId::ParticipantId(
-        const std::string& id)
+        const std::string& id) noexcept
     : id_(id)
 {
+    // If the ID cannot be used as a ParticipantId, it must store the INVALID string
+    if (!ParticipantId::is_valid_id(id))
+    {
+        id_ = INVALID_ID;
+    }
 }
 
-ParticipantId::ParticipantId()
+ParticipantId::ParticipantId() noexcept
     : id_(INVALID_ID)
 {
 }
 
-ParticipantId::~ParticipantId()
-{
-}
-
-ParticipantId ParticipantId::invalid()
+ParticipantId ParticipantId::invalid() noexcept
 {
     return ParticipantId();
 }
 
 bool ParticipantId::is_valid_id(
-        const std::string& tag)
+        const std::string& tag) noexcept
 {
-    return (tag != ALLOWLIST_TAG) && (tag != BLOCKLIST_TAG);
+    return
+        (tag != ALLOWLIST_TAG) &&
+        (tag != BLOCKLIST_TAG) &&
+        (tag != INVALID_ID);
 }
 
-bool ParticipantId::is_valid() const
+bool ParticipantId::is_valid() const noexcept
 {
     return id_ != INVALID_ID;
 }
 
-std::string ParticipantId::id_name() const
+std::string ParticipantId::id_name() const noexcept
 {
     return id_;
 }
 
 bool ParticipantId::operator ==(
-        const ParticipantId& other) const
+        const ParticipantId& other) const noexcept
 {
     return id_ == other.id_;
 }
 
 bool ParticipantId::operator <(
-        const ParticipantId& other) const
+        const ParticipantId& other) const noexcept
 {
     return id_ < other.id_;
 }

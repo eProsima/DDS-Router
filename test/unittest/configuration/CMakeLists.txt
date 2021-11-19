@@ -17,8 +17,8 @@ set(TEST_NAME ConfigurationTest)
 set(TEST_SOURCES
         ConfigurationTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantType.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantType.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
@@ -42,6 +42,8 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
         yaml-cpp
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )

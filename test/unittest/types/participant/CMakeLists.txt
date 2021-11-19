@@ -16,7 +16,7 @@ set(TEST_NAME ParticipantIdTest)
 
 set(TEST_SOURCES
         ParticipantIdTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
     )
 
 set(TEST_LIST

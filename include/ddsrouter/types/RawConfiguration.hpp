@@ -25,7 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Configuration in dictionary format
+ * Configuration is in dictionary format
  *
  * YAML spec: https://yaml.org/spec/1.2.2/
  *
@@ -39,6 +39,8 @@ using RawConfigurationType = YAML::NodeType;
  *
  * @param [in] file_path : path of file to load
  * @return yaml in RawConfiguration format contained in file_path
+ *
+ * @throw \c ConfigurationException in case the file does not exist or it is not a correct yaml
  */
 RawConfiguration load_configuration_from_file(
         const std::string& file_path);
