@@ -18,35 +18,21 @@
  */
 
 #include <ddsrouter/participant/ParticipantDatabase.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-// TODO: Add logs
-
 ParticipantDatabase::~ParticipantDatabase()
 {
-    participants_.clear();
-}
-
-void ParticipantDatabase::add_participant(
-        ParticipantId id,
-        std::shared_ptr<IParticipant> participant)
-{
-    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
-    // TODO: this find is only to check if it exists, decide if needed
-    auto it = participants_.find(id);
-
-    if (it != participants_.end())
+    if (!participants_.empty())
     {
-        // TODO: add warning
+        logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Erasing Participant Database with still Participants in it");
     }
-
-    participants_[id] = participant;
 }
 
 std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
-        const ParticipantId& id) const
+        const ParticipantId& id) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     auto it = participants_.find(id);
@@ -59,23 +45,72 @@ std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
     return it->second;
 }
 
-std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const
+std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     std::vector<ParticipantId> result(participants_.size());
     int i = 0;
     for (auto it : participants_)
     {
-        // There is already space for all of them, so its added appending
+        // There is already space for all of them, so its added without appending
         result[i++] = it.first;
     }
     return result;
 }
 
-std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const
+std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return participants_;
+}
+
+bool ParticipantDatabase::empty() const noexcept
+{
+    return participants_.empty();
+}
+
+void ParticipantDatabase::add_participant_(
+        ParticipantId id,
+        std::shared_ptr<IParticipant> participant) noexcept
+{
+    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+    // TODO: this find is only to check if it exists, decide if needed
+    auto it = participants_.find(id);
+
+    if (it != participants_.end())
+    {
+        logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a duplicated Participant " << id);
+    }
+
+    participants_[id] = participant;
+}
+
+std::shared_ptr<IParticipant> ParticipantDatabase::pop_(const ParticipantId& id) noexcept
+{
+    auto it = participants_.find(id);
+
+    if (it == participants_.end())
+    {
+        // No this participant stored
+        return nullptr;
+    }
+
+    std::shared_ptr<IParticipant> participant_to_erase = it->second;
+    participants_.erase(it);
+
+    return participant_to_erase;
+}
+
+std::shared_ptr<IParticipant> ParticipantDatabase::pop_() noexcept
+{
+    if (participants_.empty())
+    {
+        return nullptr;
+    }
+    else
+    {
+        return pop_(participants_.begin()->first);
+    }
 }
 
 } /* namespace ddsrouter */

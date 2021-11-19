@@ -26,25 +26,42 @@ namespace ddsrouter {
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
         const std::list<std::shared_ptr<FilterTopic>>& allowlist,
-        const std::list<std::shared_ptr<FilterTopic>>& blocklist)
+        const std::list<std::shared_ptr<FilterTopic>>& blocklist) noexcept
 {
     allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
 }
 
-AllowedTopicList::~AllowedTopicList()
+AllowedTopicList& AllowedTopicList::operator =(
+            const AllowedTopicList& other)
 {
+    this->allowlist_ = allowlist_;
+    this->blocklist_ = blocklist_;
+
+    return *this;
 }
 
-void AllowedTopicList::clear()
+AllowedTopicList::~AllowedTopicList()
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    // Eliminate all topics
+    clear();
+}
+
+void AllowedTopicList::clear() noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     blocklist_.clear();
     allowlist_.clear();
 }
 
 bool AllowedTopicList::is_topic_allowed(
-        const RealTopic& topic) const
+        const RealTopic& topic) const noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     // It is accepted by default if allowlist is empty, if no is should pass the allowlist filter
     bool accepted = allowlist_.empty();
 
@@ -78,13 +95,13 @@ bool AllowedTopicList::is_topic_allowed(
 }
 
 bool AllowedTopicList::operator ==(
-        const AllowedTopicList& other) const
+        const AllowedTopicList& other) const noexcept
 {
     return allowlist_ == other.allowlist_ && blocklist_ == other.blocklist_;
 }
 
 std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(
-        const std::list<std::shared_ptr<FilterTopic>>& list)
+        const std::list<std::shared_ptr<FilterTopic>>& list) noexcept
 {
     std::set<std::shared_ptr<FilterTopic>> non_repeated_list;
 

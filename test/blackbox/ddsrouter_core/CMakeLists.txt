@@ -20,13 +20,13 @@ set(TEST_NAME
     TrivialTest)
 
 set(TEST_SOURCES
+    TrivialTest.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
-    TrivialTest.cpp)
+    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp)
 
 set(TEST_LIST
     trivial_void_initialization
@@ -35,11 +35,6 @@ set(TEST_LIST
 set(TEST_NEEDED_SOURCES
     resources/trivial_test_dummy_configuration.yaml
     resources/trivial_test_void_configuration.yaml)
-
-
-# file(GLOB TEST_NEEDED_SOURCES
-# "./resources/**"
-# )
 
 add_blackbox_executable(
     "${TEST_NAME}"

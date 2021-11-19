@@ -25,7 +25,8 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief TODO
+ * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
+ *  bad formed yaml and when a configuration creation has failed.
  */
 class ConfigurationException : public Exception
 {

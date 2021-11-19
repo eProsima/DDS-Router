@@ -24,7 +24,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 bool DiscoveryDatabase::topic_exists(
-        const RealTopic& topic) const
+        const RealTopic& topic) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -41,14 +41,14 @@ bool DiscoveryDatabase::topic_exists(
 }
 
 bool DiscoveryDatabase::endpoint_exists(
-        const Guid& guid) const
+        const Guid& guid) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return entities_.find(guid) != entities_.end();
 }
 
-ReturnCode DiscoveryDatabase::add_or_modify_endpoint(
-        const Endpoint& new_endpoint)
+bool DiscoveryDatabase::add_or_modify_endpoint(
+        const Endpoint& new_endpoint) noexcept
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -57,18 +57,18 @@ ReturnCode DiscoveryDatabase::add_or_modify_endpoint(
     {
         // Already exists, modify it
         it->second = new_endpoint;
-        return ReturnCode::RETCODE_OK;
+        return true;
     }
     else
     {
         // Add it to the dictionary
         entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
-        return ReturnCode::RETCODE_OK;
+        return false;
     }
 }
 
 ReturnCode DiscoveryDatabase::erase_endpoint(
-        const Guid& guid_of_endpoint_to_erase)
+        const Guid& guid_of_endpoint_to_erase) noexcept
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -84,15 +84,8 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
     }
 }
 
-ReturnCode DiscoveryDatabase::erase_endpoint(
-        const Endpoint& endpoint_to_erase)
-{
-    // Mutex is taken by erase_endpoint with guid, so it is not needed here
-    return erase_endpoint(endpoint_to_erase.guid());
-}
-
 Endpoint DiscoveryDatabase::get_endpoint(
-        const Guid& endpoint_guid) const
+        const Guid& endpoint_guid) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
 
