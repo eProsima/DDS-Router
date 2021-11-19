@@ -44,7 +44,7 @@ class Endpoint
 public:
 
     //! Default Endpoint that returns an invalid one
-    Endpoint();
+    Endpoint() noexcept;
 
     /**
      * Constructor with Endpoint information
@@ -53,42 +53,42 @@ public:
             const EndpointKind& kind,
             const Guid& guid,
             const QoS& qos,
-            const RealTopic& topic);
+            const RealTopic& topic) noexcept;
 
     //! Endpoint kind getter
-    EndpointKind kind() const;
+    EndpointKind kind() const noexcept;
 
     //! Guid getter
-    Guid guid() const;
+    Guid guid() const noexcept;
 
     //! QoS getter
-    QoS qos() const;
+    QoS qos() const noexcept;
 
     //! Topic getter
-    RealTopic topic() const;
+    RealTopic topic() const noexcept;
 
     //! Whether the endpoint referenced is currently active
-    bool active() const;
+    bool active() const noexcept;
 
     //! Set active status of the Endpoint
     void active(
-            bool status);
+            bool status) noexcept;
 
-    bool is_valid() const;
+    bool is_valid() const noexcept;
 
     /********************
     * SPECIFIC GETTERS *
     ********************/
 
     //! Whether the endpoint is a writer
-    bool is_writer() const;
+    bool is_writer() const noexcept;
 
     //! Whether the endpoint is a reader
-    bool is_reader() const;
+    bool is_reader() const noexcept;
 
     //! Copy operator
     Endpoint& operator =(
-            const Endpoint& other);
+            const Endpoint& other) noexcept;
 
 protected:
 

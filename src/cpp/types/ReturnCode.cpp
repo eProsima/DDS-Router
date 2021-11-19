@@ -41,13 +41,13 @@ const std::map<ReturnCode, std::string> ReturnCode::to_string_conversion_ =
     {ReturnCode::RETCODE_NOT_ALLOWED_BY_SECURITY, "NotAllowedBySecurity"},
 };
 
-bool ReturnCode::operator ()() const
+bool ReturnCode::operator ()() const noexcept
 {
     return RETCODE_OK == *this;
 }
 
 bool ReturnCode::operator <(
-        const ReturnCode& other) const
+        const ReturnCode& other) const noexcept
 {
     return (*this)() < other();
 }

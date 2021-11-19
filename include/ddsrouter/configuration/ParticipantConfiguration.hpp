@@ -19,8 +19,8 @@
 #ifndef _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/types/ParticipantId.hpp>
-#include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {

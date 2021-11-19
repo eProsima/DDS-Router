@@ -21,7 +21,7 @@
 
 #include <atomic>
 
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {

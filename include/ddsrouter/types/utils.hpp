@@ -32,7 +32,7 @@ namespace utils {
 //! Perform the wildcard matching using file comparison method
 bool match_pattern(
         const std::string& pattern,
-        const std::string& str);
+        const std::string& str) noexcept;
 
 /**
  * @brief Convert every alphabetic char in string to lower case
@@ -42,7 +42,7 @@ bool match_pattern(
  * @param [in,out] st : string to modify
  */
 void to_lowercase(
-        std::string& st);
+        std::string& st) noexcept;
 
 /**
  * @brief Auxiliar function to concatenate inplace every kind of object << stream
@@ -65,7 +65,7 @@ public:
     }
 
     //! Return a string with the concatenation of this object
-    std::string to_string() const;
+    std::string to_string() const noexcept;
 
 protected:
 

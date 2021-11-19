@@ -22,7 +22,7 @@
 #include <map>
 #include <shared_mutex>
 
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 
 namespace eprosima {

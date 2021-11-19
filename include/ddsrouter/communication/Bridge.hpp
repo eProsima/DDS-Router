@@ -24,7 +24,7 @@
 #include <ddsrouter/communication/Track.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/participant/ParticipantDatabase.hpp>
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

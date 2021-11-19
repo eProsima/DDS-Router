@@ -41,9 +41,6 @@ struct Topic
     void operator =(
             const Topic& other);
 
-    //! Destructor
-    virtual ~Topic();
-
     //! Topic name getter
     const std::string& topic_name() const;
 

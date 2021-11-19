@@ -35,11 +35,6 @@ public:
     //! Using parent constructos
     using Topic::Topic;
 
-    //! Destructor
-    virtual ~FilterTopic()
-    {
-    }
-
     /**
      * Whether this topic filters the same of the topic by argument.
      *
