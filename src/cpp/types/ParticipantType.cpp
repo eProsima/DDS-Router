@@ -43,7 +43,7 @@ ParticipantType ParticipantTypeFactory::participant_type_from_name(
     }
     else if (type == DUMMY_TYPE_NAME)
     {
-        // Void type
+        // Dummy type
         return ParticipantType::DUMMY;
     }
     else

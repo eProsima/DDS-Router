@@ -33,20 +33,20 @@ ReturnCode DummyWriter::write(std::unique_ptr<DataReceived>& data)
     std::lock_guard<std::mutex> lock(mutex_);
 
     // Fill the data to store
-    DataStoraged new_data_to_store;
+    DataStored new_data_to_store;
     new_data_to_store.timestamp = now();
     new_data_to_store.guid_src = data->source_guid;
     new_data_to_store.payload = data->data;
 
-    data_storaged.push_back(new_data_to_store);
+    data_stored.push_back(new_data_to_store);
 
     return ReturnCode::RETCODE_OK;
 }
 
-std::vector<DataStoraged> DummyWriter::data_received_ref()
+std::vector<DataStored> DummyWriter::data_received_ref()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    return data_storaged;
+    return data_stored;
 }
 
 

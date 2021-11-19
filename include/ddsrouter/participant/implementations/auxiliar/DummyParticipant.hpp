@@ -52,7 +52,7 @@ public:
 
     void add_message_to_send(RealTopic topic, DataToSend data);
 
-    std::vector<DataStoraged> data_received_ref(RealTopic topic);
+    std::vector<DataStored> data_received_ref(RealTopic topic);
 
     static std::shared_ptr<DummyParticipant> get_participant(ParticipantId id);
 

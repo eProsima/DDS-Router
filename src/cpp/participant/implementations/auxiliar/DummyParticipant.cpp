@@ -18,8 +18,8 @@
 
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
-#include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
 #include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -72,22 +72,22 @@ Endpoint DummyParticipant::get_discovered_endpoint(const Guid& guid) const
 void DummyParticipant::add_message_to_send(RealTopic topic, DataToSend data)
 {
     auto it = readers_.find(topic);
-    if (it == readers_.end())
+    if (it != readers_.end())
     {
         it->second->add_message_to_send(data);
     }
 }
 
-std::vector<DataStoraged> DummyParticipant::data_received_ref(RealTopic topic)
+std::vector<DataStored> DummyParticipant::data_received_ref(RealTopic topic)
 {
     auto it = writers_.find(topic);
-    if (it == writers_.end())
+    if (it != writers_.end())
     {
         return it->second->data_received_ref();
     }
     else
     {
-        return std::vector<DataStoraged>();
+        return std::vector<DataStored>();
     }
 }
 

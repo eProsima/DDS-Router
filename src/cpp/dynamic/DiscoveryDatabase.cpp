@@ -59,7 +59,7 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
-    const Guid& guid_of_endpoint_to_erase) const
+    const Guid& endpoint_guid) const
 {
     // TODO
     throw UnsupportedException("DiscoveryDatabase::get_endpoint is not implemented yet");

@@ -34,7 +34,7 @@ void DummyReader::enable()
     std::lock_guard<std::mutex> lock(mutex_);
     enabled_.store(true);
 
-    // If there are data pending to be sent, call on data available callback
+    // If there is data pending to be sent, call on data available callback
     if (!data_to_send_.empty())
     {
         on_data_available_callback_();
@@ -62,7 +62,7 @@ ReturnCode DummyReader::take(std::unique_ptr<DataReceived>& data_received)
         return ReturnCode::RETCODE_NOT_ENABLED;
     }
 
-    // There are no data pending sent
+    // There is no data pending sent
     if (data_to_send_.empty())
     {
         return ReturnCode::RETCODE_NO_DATA;
@@ -83,7 +83,7 @@ void DummyReader::add_message_to_send(DataToSend data)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    // Even in disabled, the data will be stored
+    // Even if disabled, the data will be stored
     data_to_send_.push(data);
 
     // Call on data available callback

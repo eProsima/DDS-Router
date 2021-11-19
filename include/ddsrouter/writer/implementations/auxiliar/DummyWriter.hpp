@@ -21,15 +21,15 @@
 
 #include <mutex>
 
-#include <ddsrouter/writer/IWriter.hpp>
-#include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
 #include <ddsrouter/types/ParticipantId.hpp>
 #include <ddsrouter/types/Timestamp.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-struct DataStoraged
+struct DataStored
 {
     Timestamp timestamp;
     Guid guid_src;
@@ -50,11 +50,11 @@ public:
     ReturnCode write(
             std::unique_ptr<DataReceived>& data) override;
 
-    std::vector<DataStoraged> data_received_ref();
+    std::vector<DataStored> data_received_ref();
 
 protected:
 
-    std::vector<DataStoraged> data_storaged;
+    std::vector<DataStored> data_stored;
 
     std::mutex mutex_;
 };
