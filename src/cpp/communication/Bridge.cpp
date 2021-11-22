@@ -24,8 +24,6 @@
 namespace eprosima {
 namespace ddsrouter {
 
-// TODO: Add logs
-
 Bridge::Bridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantDatabase> participants_database,
@@ -34,6 +32,8 @@ Bridge::Bridge(
     , participants_(participants_database)
     , enabled_(false)
 {
+    logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
+
     std::vector<ParticipantId> ids = participants_->get_participant_ids();
 
     // Generate readers and writers for each participant
@@ -68,6 +68,8 @@ Bridge::Bridge(
 
 Bridge::~Bridge()
 {
+    logInfo(DDSROUTER_BRIDGE, "Destroying Bridge for topic " << topic_ << ".");
+
     // Disable every Track before destruction
     disable();
 
