@@ -40,7 +40,7 @@ ParticipantConfiguration::ParticipantConfiguration(
     }
 
     set_type_();
-    if (type_ == ParticipantType::INVALID)
+    if (type_ == ParticipantType::PARTICIPANT_TYPE_INVALID)
     {
         throw ConfigurationException("DDSRouter Participant expects a valid ParticipantType");
     }

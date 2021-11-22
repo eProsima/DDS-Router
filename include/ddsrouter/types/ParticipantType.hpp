@@ -29,7 +29,7 @@ namespace ddsrouter {
 //! Participant types available
 enum ParticipantType
 {
-    INVALID,    //! Invalid Participant Type
+    PARTICIPANT_TYPE_INVALID,    //! Invalid Participant Type
     VOID,       //! Void Participant Type
     ECHO,       //! Echo Participant Type
     DUMMY,      //! Dummy Participant Type

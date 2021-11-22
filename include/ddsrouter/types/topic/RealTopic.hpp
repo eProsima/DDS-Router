@@ -32,6 +32,9 @@ struct RealTopic : public Topic
     //! Inherit parent constructors
     using Topic::Topic;
 
+    //! Default non valid topic
+    RealTopic();
+
     /**
      * Whether a topic name and topic type name could be used as a valid real DDS topic
      *
@@ -43,6 +46,13 @@ struct RealTopic : public Topic
     static bool is_real_topic(
             const std::string& topic_name,
             const std::string& type_name) noexcept;
+
+    bool is_valid();
+
+protected:
+
+    static const char* INVALID_TOPIC_NAME;  // __invalid_topic_name__
+    static const char* INVALID_TOPIC_TYPE;  // __invalid_topic_type_name__
 };
 
 } /* namespace ddsrouter */

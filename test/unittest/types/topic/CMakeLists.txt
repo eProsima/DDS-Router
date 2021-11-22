@@ -56,6 +56,7 @@ set(TEST_NAME RealTopicTest)
 set(TEST_SOURCES
         RealTopicTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )
 
 set(TEST_HEADERS
@@ -86,6 +87,7 @@ set(TEST_NAME WildcardTopicTest)
 
 set(TEST_SOURCES
         WildcardTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp

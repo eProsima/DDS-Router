@@ -26,6 +26,14 @@
 namespace eprosima {
 namespace ddsrouter {
 
+const char* RealTopic::INVALID_TOPIC_NAME = "__invalid_topic_name__";
+const char* RealTopic::INVALID_TOPIC_TYPE = "__invalid_topic_type_name__";
+
+RealTopic::RealTopic()
+    : Topic(INVALID_TOPIC_NAME, INVALID_TOPIC_TYPE)
+{
+}
+
 bool RealTopic::is_real_topic(
         const std::string& topic_name,
         const std::string& type_name) noexcept
@@ -51,6 +59,12 @@ bool RealTopic::is_real_topic(
         }
     }
     return true;
+}
+
+bool RealTopic::is_valid()
+{
+    // Only with one of them invalid, the topic is invalid
+    return topic_name_ != INVALID_TOPIC_NAME && topic_type_ != INVALID_TOPIC_TYPE;
 }
 
 } /* namespace ddsrouter */
