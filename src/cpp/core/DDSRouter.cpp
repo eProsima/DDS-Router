@@ -103,9 +103,9 @@ void DDSRouter::init_participants_()
         if (!new_participant || !new_participant->id().is_valid() ||
             new_participant->type() == ParticipantType::PARTICIPANT_TYPE_INVALID)
         {
-            // Fail creating participant
+            // Failed to create participant
             throw InitializationException(utils::Formatter()
-                << "Fail creating Participant " << participant_config.id());
+                << "Failed to create Participant " << participant_config.id());
         }
 
         participants_database_->add_participant(

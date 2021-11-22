@@ -105,7 +105,7 @@ protected:
     /**
      * Whether this Track is enabled
      *
-     * Not Thread safe, call
+     * Not Thread safe, call with \c available_data_mutex_ guarded
      */
     bool should_transmit_nts_();
 

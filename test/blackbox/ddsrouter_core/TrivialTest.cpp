@@ -19,9 +19,9 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 
 using namespace eprosima::ddsrouter;
 
@@ -30,7 +30,7 @@ Guid random_guid(uint16_t seed=0)
     Guid guid;
     guid.entityId.value[3] = seed;
     guid.guidPrefix.value[0] = 0x01;
-    guid.guidPrefix.value[0] = 0x0f;
+    guid.guidPrefix.value[1] = 0x0f;
     return guid;
 }
 
@@ -39,7 +39,6 @@ Payload random_payload(uint16_t seed=0)
     Payload payload;
     payload.length = sizeof(uint16_t);
     payload.reserve(payload.length);
-    //  = static_cast<eprosima::fastrtps::rtps::octet*>(new uint16_t(seed));
     *(payload.data) = seed;
     return payload;
 }

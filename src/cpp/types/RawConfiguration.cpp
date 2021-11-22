@@ -17,9 +17,9 @@
  *
  */
 
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

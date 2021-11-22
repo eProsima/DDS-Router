@@ -42,7 +42,6 @@ DummyParticipant::~DummyParticipant()
     writers_.clear();
     readers_.clear();
 
-    // participants_[id()] = nullptr;
     participants_.erase(id());
 }
 
