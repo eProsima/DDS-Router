@@ -19,11 +19,10 @@
 
 #include <ddsrouter/communication/Bridge.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-
-// TODO: Add logs
 
 Bridge::Bridge(
         const RealTopic& topic,
@@ -33,12 +32,14 @@ Bridge::Bridge(
     , participants_(participants_database)
     , enabled_(false)
 {
+    logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
+
     std::vector<ParticipantId> ids = participants_->get_participant_ids();
 
     // Generate readers and writers for each participant
     for (ParticipantId id: ids)
     {
-        std::shared_ptr<eprosima::ddsrouter::IParticipant> participant = participants_->get_participant(id);
+        std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
         writers_[id] = participant->create_writer(topic);
         readers_[id] = participant->create_reader(topic);
     }
@@ -54,9 +55,9 @@ Bridge::Bridge(
         writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
 
         // This insert is required as there is no copy method for Track
-        // Track are always created disabled and then enabled with Bridge enable() method
+        // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
-                std::make_unique<Track>(topic_, readers_[id], std::move(writers_except_one), false);
+                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), false);
     }
 
     if (enable)
@@ -67,23 +68,40 @@ Bridge::Bridge(
 
 Bridge::~Bridge()
 {
-    // Get mutex to prevent other thread to enable it
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    logInfo(DDSROUTER_BRIDGE, "Destroying Bridge for topic " << topic_ << ".");
+
     // Disable every Track before destruction
     disable();
 
     // Force deleting tracks before deleting Bridge
     tracks_.clear();
 
+    // Remove all Writers and Readers that were created in construction
+    for (ParticipantId id: participants_->get_participant_ids())
+    {
+        std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
+        auto writer = writers_.find(id);
+        auto reader = readers_.find(id);
+
+        // Writer and Reader must exist in this Bridge Map for each participant
+        assert(writer != writers_.end());
+        assert(reader != readers_.end());
+
+        participant->delete_writer(writer->second);
+        participant->delete_reader(reader->second);
+    }
+
     // Participants must not be removed as they belong to the Participant Database
 }
 
-void Bridge::enable()
+void Bridge::enable() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (!enabled_)
     {
+        logInfo(DDSROUTER_BRIDGE, "Enabling Bridge for topic " << topic_ << ".");
+
         // ATTENTION: reference needed or it would copy Track
         for (auto& track_it : tracks_)
         {
@@ -94,12 +112,14 @@ void Bridge::enable()
     }
 }
 
-void Bridge::disable()
+void Bridge::disable() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_)
     {
+        logInfo(DDSROUTER_BRIDGE, "Disabling Bridge for topic " << topic_ << ".");
+
         // ATTENTION: reference needed or it would copy Track
         for (auto& track_it : tracks_)
         {

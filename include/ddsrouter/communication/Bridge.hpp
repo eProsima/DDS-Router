@@ -44,20 +44,26 @@ public:
     /**
      * Bridge constructor by required values
      *
-     * In Bridge construction, the inside \c Tracks are created
+     * In Bridge construction, the inside \c Tracks are created.
+     * In Bridge construction, a Writer and a Reader are created for each Participant.
      *
      * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
      * @param enable: Whether the Bridge should be initialized as enabled
      *
-     * @throw \c InitializationException in case any inside \c Track creation fails.
+     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
     Bridge(
             const RealTopic& topic,
             std::shared_ptr<ParticipantDatabase> participants_database,
             bool enable = false);
 
-    //! Destructor
+    /**
+     * @brief Destructor
+     *
+     * Before deleting, it calls \c disable.
+     * It deletes all the tracks created and all Writers and Readers.
+     */
     virtual ~Bridge();
 
     /**
@@ -74,7 +80,7 @@ public:
      *
      * Thread safe
      */
-    void enable();
+    void enable() noexcept;
 
     /**
      * Disable bridge in case it is not enabled
@@ -82,21 +88,21 @@ public:
      *
      * Thread safe
      */
-    void disable();
+    void disable() noexcept;
 
 protected:
 
     /**
      * Topic of which this Bridge manages communication
      *
-     * @note: This variable is stored but not used
+     * @note: This variable is only used for log
      */
     const RealTopic topic_;
 
     /**
      * Collection of Participants to manage communication between
      *
-     * @note: This variable is stored but not used
+     * @note: This variable is only used at destruction time
      */
     const std::shared_ptr<ParticipantDatabase> participants_;
 

@@ -48,6 +48,8 @@ public:
     virtual void set_on_data_available_callback(
             std::function<void()> on_data_available_lambda) = 0;
 
+    virtual void unset_on_data_available_callback() = 0;
+
     virtual ReturnCode take(
             std::unique_ptr<DataReceived>& data) = 0;         // This data read must be inside a PayloadPool
 

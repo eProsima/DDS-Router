@@ -47,6 +47,12 @@ public:
 
     virtual std::shared_ptr<IReader> create_reader(
             RealTopic topic) = 0;
+
+    virtual void delete_writer(
+            std::shared_ptr<IWriter> writer) = 0;
+
+    virtual void delete_reader(
+            std::shared_ptr<IReader> reader) = 0;
 };
 
 } /* namespace ddsrouter */

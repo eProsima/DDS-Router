@@ -56,5 +56,15 @@ std::shared_ptr<IReader> VoidParticipant::create_reader(
     return std::make_shared<VoidReader>();
 }
 
+void VoidParticipant::delete_writer(
+        std::shared_ptr<IWriter> writer)
+{
+}
+
+void VoidParticipant::delete_reader(
+        std::shared_ptr<IReader> reader)
+{
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

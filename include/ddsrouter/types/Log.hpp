@@ -13,36 +13,18 @@
 // limitations under the License.
 
 /**
- * @file VoidReader.cpp
+ * @file Log.hpp
  */
 
-#include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
+#ifndef _DDSROUTER_TYPES_LOG_HPP_
+#define _DDSROUTER_TYPES_LOG_HPP_
+
+#include <fastdds/dds/log/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-void VoidReader::enable()
-{
-}
-
-void VoidReader::disable()
-{
-}
-
-void VoidReader::set_on_data_available_callback(
-        std::function<void()>)
-{
-}
-
-void VoidReader::unset_on_data_available_callback()
-{
-}
-
-ReturnCode VoidReader::take(
-        std::unique_ptr<DataReceived>&)
-{
-    return ReturnCode::RETCODE_NO_DATA;
-}
-
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_TYPES_LOG_HPP_ */

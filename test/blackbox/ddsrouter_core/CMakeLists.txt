@@ -20,6 +20,12 @@ set(TEST_NAME
     TrivialTest)
 
 set(TEST_SOURCES
+    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
     TrivialTest.cpp)
 
 set(TEST_LIST
