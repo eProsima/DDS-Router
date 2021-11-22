@@ -26,8 +26,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
-const char * RealTopic::INVALID_TOPIC_NAME = "__invalid_topic_name__";
-const char * RealTopic::INVALID_TOPIC_TYPE = "__invalid_topic_type_name__";
+const char* RealTopic::INVALID_TOPIC_NAME = "__invalid_topic_name__";
+const char* RealTopic::INVALID_TOPIC_TYPE = "__invalid_topic_type_name__";
 
 RealTopic::RealTopic()
     : Topic(INVALID_TOPIC_NAME, INVALID_TOPIC_TYPE)

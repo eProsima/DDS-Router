@@ -51,8 +51,8 @@ struct RealTopic : public Topic
 
 protected:
 
-    static const char * INVALID_TOPIC_NAME; // __invalid_topic_name__
-    static const char * INVALID_TOPIC_TYPE; // __invalid_topic_type_name__
+    static const char* INVALID_TOPIC_NAME;  // __invalid_topic_name__
+    static const char* INVALID_TOPIC_TYPE;  // __invalid_topic_type_name__
 };
 
 } /* namespace ddsrouter */
