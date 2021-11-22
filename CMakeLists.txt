@@ -175,3 +175,21 @@ if(BUILD_DOCUMENTATION OR BUILD_DOCUMENTATION_TESTS)
     set(BUILD_DOCUMENTATION ON)
     add_subdirectory(docs)
 endif()
+
+###############################################################################
+# Logging.
+###############################################################################
+# In Debug, log set to ON
+if ("Debug" STREQUAL ${CMAKE_BUILD_TYPE})
+    option(LOG_INFO "Compile logInfo messages" ON)
+else()
+    option(LOG_INFO "Compile logInfo messages" OFF)
+endif()
+
+if (LOG_INFO)
+    message(STATUS "Compiling logInfo messages for Databroker")
+    target_compile_definitions(${PROJECT_NAME}
+        PRIVATE FASTDDS_ENFORCE_LOG_INFO
+        PRIVATE HAVE_LOG_NO_INFO=0
+        )
+endif()

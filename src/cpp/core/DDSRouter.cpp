@@ -190,7 +190,7 @@ void DDSRouter::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, enabled);
+        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, enabled);
     }
     catch (const InitializationException& e)
     {

@@ -21,20 +21,16 @@
 namespace eprosima {
 namespace ddsrouter {
 
-VoidWriter::~VoidWriter()
+void VoidWriter::enable() noexcept
 {
 }
 
-void VoidWriter::enable()
-{
-}
-
-void VoidWriter::disable()
+void VoidWriter::disable() noexcept
 {
 }
 
 ReturnCode VoidWriter::write(
-        std::unique_ptr<DataReceived>&)
+        std::unique_ptr<DataReceived>&) noexcept
 {
     return ReturnCode::RETCODE_OK;
 }
