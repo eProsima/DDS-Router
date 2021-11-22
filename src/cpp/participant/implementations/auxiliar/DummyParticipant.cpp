@@ -107,7 +107,8 @@ std::vector<DataStored> DummyParticipant::data_received_ref(
     }
 }
 
-DummyParticipant* DummyParticipant::get_participant(ParticipantId id)
+DummyParticipant* DummyParticipant::get_participant(
+        ParticipantId id)
 {
     auto it = participants_.find(id);
 

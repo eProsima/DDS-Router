@@ -25,7 +25,8 @@
 
 using namespace eprosima::ddsrouter;
 
-Guid random_guid(uint16_t seed=0)
+Guid random_guid(
+        uint16_t seed = 0)
 {
     Guid guid;
     guid.entityId.value[3] = seed;
@@ -34,7 +35,8 @@ Guid random_guid(uint16_t seed=0)
     return guid;
 }
 
-Payload random_payload(uint16_t seed=0)
+Payload random_payload(
+        uint16_t seed = 0)
 {
     Payload payload;
     payload.length = sizeof(uint16_t);
@@ -50,7 +52,7 @@ TEST(TrivialTest, trivial_void_initialization)
 {
     // Load configuration
     RawConfiguration router_configuration =
-        load_configuration_from_file("resources/trivial_test_void_configuration.yaml");
+            load_configuration_from_file("resources/trivial_test_void_configuration.yaml");
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
@@ -65,7 +67,7 @@ TEST(TrivialTest, trivial_dummy_initialization)
 {
     // Load configuration
     RawConfiguration router_configuration =
-        load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
+            load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);

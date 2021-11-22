@@ -40,7 +40,8 @@ using RawConfigurationType = YAML::NodeType;
  * @param [in] file_path : path of file to load
  * @return yaml in RawConfiguration format contained in file_path
  */
-RawConfiguration load_configuration_from_file(const std::string& file_path);
+RawConfiguration load_configuration_from_file(
+        const std::string& file_path);
 
 // TODO: add way to compare equality and not identity of yaml
 

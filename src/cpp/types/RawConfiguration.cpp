@@ -24,7 +24,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
-RawConfiguration load_configuration_from_file(const std::string& file_path)
+RawConfiguration load_configuration_from_file(
+        const std::string& file_path)
 {
     try
     {
@@ -33,7 +34,7 @@ RawConfiguration load_configuration_from_file(const std::string& file_path)
     catch (const std::exception& e)
     {
         throw ConfigurationException(utils::Formatter() << "Error occured while loading configuration from file: "
-            << file_path << " : " << e.what());
+                                                        << file_path << " : " << e.what());
     }
 }
 

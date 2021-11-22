@@ -61,7 +61,8 @@ public:
     std::vector<DataStored> data_received_ref(
             RealTopic topic);
 
-    static DummyParticipant* get_participant(ParticipantId id);
+    static DummyParticipant* get_participant(
+            ParticipantId id);
 
 protected:
 
