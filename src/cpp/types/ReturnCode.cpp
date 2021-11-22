@@ -46,7 +46,8 @@ bool ReturnCode::operator ()() const
     return RETCODE_OK == *this;
 }
 
-bool ReturnCode::operator <(const ReturnCode& other) const
+bool ReturnCode::operator <(
+        const ReturnCode& other) const
 {
     return (*this)() < other();
 }

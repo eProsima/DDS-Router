@@ -124,7 +124,8 @@ void Track::data_available() noexcept
     // Only hear callback if it is enabled
     if (enabled_)
     {
-        logInfo(DDSROUTER_TRACK, "Track " << reader_participant_id_ << " for topic " << topic_ << " has data available to transmit.");
+        logInfo(DDSROUTER_TRACK,
+                "Track " << reader_participant_id_ << " for topic " << topic_ << " has data available to transmit.");
 
         // Set data available to true and notify transmit thread
         is_data_available_.store(true);
@@ -165,7 +166,7 @@ void Track::transmit_nts_() noexcept
         ReturnCode ret = reader_->take(data);
 
         logInfo(DDSROUTER_TRACK, "Track " << reader_participant_id_ << " for topic " << topic_ << " transmitting data from remote endpoint "
-            << data->source_guid << ".");
+                                          << data->source_guid << ".");
 
         if (ret == ReturnCode::RETCODE_NO_DATA)
         {
@@ -177,7 +178,7 @@ void Track::transmit_nts_() noexcept
         {
             // Error reading data
             logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
-                << ". Skipping data and continue.");
+                                                                      << ". Skipping data and continue.");
             continue;
         }
 
@@ -189,7 +190,7 @@ void Track::transmit_nts_() noexcept
             if (!ret)
             {
                 logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code " << ret
-                    << ". Skipping data for this writer and continue.");
+                                                                            << ". Skipping data for this writer and continue.");
                 continue;
             }
         }

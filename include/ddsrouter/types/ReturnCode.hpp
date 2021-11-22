@@ -34,13 +34,16 @@ public:
     //! Specify the operator so OK code could be translated to True.
     bool operator ()() const;
 
-    bool operator <(const ReturnCode& other) const;
+    bool operator <(
+            const ReturnCode& other) const;
 
 protected:
 
     static const std::map<ReturnCode, std::string> to_string_conversion_;
 
-    friend std::ostream & operator<<(std::ostream &os, const ReturnCode& code);
+    friend std::ostream& operator <<(
+            std::ostream& os,
+            const ReturnCode& code);
 };
 
 //! \c ReturnCode to stream serializator

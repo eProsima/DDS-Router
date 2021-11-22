@@ -33,6 +33,7 @@ void VoidReader::set_on_data_available_callback(
         std::function<void()>)
 {
 }
+
 void VoidReader::unset_on_data_available_callback()
 {
 }

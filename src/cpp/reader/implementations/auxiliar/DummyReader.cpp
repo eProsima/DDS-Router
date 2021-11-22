@@ -55,10 +55,14 @@ void DummyReader::set_on_data_available_callback(
 
 void DummyReader::unset_on_data_available_callback()
 {
-    on_data_available_callback_ = [](){logWarning(DDSROUTER_DUMMY_READER, "Calling unset callback.");};
+    on_data_available_callback_ = []()
+            {
+                logWarning(DDSROUTER_DUMMY_READER, "Calling unset callback.");
+            };
 }
 
-ReturnCode DummyReader::take(std::unique_ptr<DataReceived>& data_received)
+ReturnCode DummyReader::take(
+        std::unique_ptr<DataReceived>& data_received)
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
