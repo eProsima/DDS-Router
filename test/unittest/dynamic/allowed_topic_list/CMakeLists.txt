@@ -24,10 +24,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/dynamic/AllowedTopicList.hpp
-    )
-
 set(TEST_LIST
         is_topic_allowed__default_constructor
         is_topic_allowed__empty_list
@@ -49,7 +45,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )

@@ -75,7 +75,11 @@ ReturnCode DummyReader::take(
 
     // Write (copy) values in data
     data_received->source_guid = next_data_to_send.guid_src;
-    data_received->data = next_data_to_send.payload;
+
+    // Create space for the data
+    data_received->payload.length = next_data_to_send.payload.length;
+    data_received->payload.reserve(data_received->payload.length);
+    std::memcpy(data_received->payload.data, next_data_to_send.payload.data, data_received->payload.length);
 
     return ReturnCode::RETCODE_OK;
 }

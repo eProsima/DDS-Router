@@ -14,46 +14,20 @@
 
 # Create an executable for a unittest
 # Arguments:
-# TEST_NAME -> test name (it will add "_Test" after name)
+# TEST_NAME -> test name (name of the class of the test in Test .cpp)
 # TEST_SOURCES -> sources for the test
-# TEST_HEADERS -> headers for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
+# TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
-function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_HEADERS TEST_LIST TEST_EXTRA_LIBRARIES)
+function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIBRARIES)
 
-    message(STATUS "Adding executable test: " ${TEST_NAME})
-
-    set(EXECUTABLE_TEST_NAME ${TEST_NAME}_Test)
-
-    add_executable(${EXECUTABLE_TEST_NAME}
-        ${TEST_SOURCES}
-        ${TEST_HEADERS})
-
-    if(MSVC)
-    target_compile_definitions(${EXECUTABLE_TEST_NAME} PRIVATE _CRT_DECLARE_NONSTDC_NAMES=0)
-    endif(MSVC)
-
-    target_include_directories(${EXECUTABLE_TEST_NAME} PRIVATE
-    ${GTEST_INCLUDE_DIRS}
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
-    ${PROJECT_BINARY_DIR}/include
-    ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
-    ${PROJECT_SOURCE_DIR}/src/cpp)
-
-    target_link_libraries(${EXECUTABLE_TEST_NAME} PUBLIC ${GTEST_LIBRARIES} ${TEST_EXTRA_LIBRARIES})
-
-    get_win32_path_dependencies(${EXECUTABLE_TEST_NAME} TEST_FRIENDLY_PATH)
-
-    foreach(test_name ${TEST_LIST})
-    add_test(NAME ${TEST_NAME}.${test_name}
-            COMMAND ${EXECUTABLE_TEST_NAME}
-            --gtest_filter=${TEST_NAME}.${test_name}:**/${TEST_NAME}.${test_name}/**)
-
-    if(TEST_FRIENDLY_PATH)
-        set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
-    endif(TEST_FRIENDLY_PATH)
-    endforeach()
+    add_test_executable(
+        "unittest_${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_NAME}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
 
 endfunction(add_unittest_executable)
 

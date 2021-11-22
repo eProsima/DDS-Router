@@ -168,7 +168,6 @@ TEST(TopicTest, stdout_operator)
     std::cout << dt;
     std::string dt_string = testing::internal::GetCapturedStdout();
     ASSERT_EQ(dt_string, "{topic1, type1}");
-
 }
 
 int main(

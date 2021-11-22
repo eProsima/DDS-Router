@@ -23,10 +23,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/topic/Topic.hpp
-    )
-
 set(TEST_LIST
         constructor
         equal_operator
@@ -42,7 +38,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
@@ -59,10 +54,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/topic/RealTopic.hpp
-    )
-
 set(TEST_LIST
         is_real_topic
         is_non_real_topic
@@ -74,7 +65,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
@@ -93,10 +83,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/types/topic/WildcardTopic.hpp
-    )
-
 set(TEST_LIST
         matches
         non_matches
@@ -113,7 +99,6 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
-        "${TEST_HEADERS}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )

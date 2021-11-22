@@ -46,7 +46,7 @@ ReturnCode EchoWriter::write(
     if (enabled_.load())
     {
         std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
-                  << " in topic: " << topic_ << " the following payload: " << data->data << std::endl;
+                  << " in topic: " << topic_ << " the following payload: " << data->payload << std::endl;
 
         return ReturnCode::RETCODE_OK;
     }

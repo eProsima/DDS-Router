@@ -13,39 +13,30 @@
 // limitations under the License.
 
 /**
- * @file RawConfiguration.hpp
+ * @file RawConfiguration.cpp
+ *
  */
 
-#ifndef _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_
-#define _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_
-
-#include <yaml-cpp/yaml.h>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-/**
- * Configuration in dictionary format
- *
- * YAML spec: https://yaml.org/spec/1.2.2/
- *
- * @note: It is not legal to repeat keys in a YAML
- */
-using RawConfiguration = YAML::Node;
-using RawConfigurationType = YAML::NodeType;
-
-/**
- * @brief Load a \c RawConfiguration object form a .yaml file
- *
- * @param [in] file_path : path of file to load
- * @return yaml in RawConfiguration format contained in file_path
- */
 RawConfiguration load_configuration_from_file(
-        const std::string& file_path);
-
-// TODO: add way to compare equality and not identity of yaml
+        const std::string& file_path)
+{
+    try
+    {
+        return YAML::LoadFile(file_path);
+    }
+    catch (const std::exception& e)
+    {
+        throw ConfigurationException(utils::Formatter() << "Error occured while loading configuration from file: "
+                                                        << file_path << " : " << e.what());
+    }
+}
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_TYPES_RAWCONFIGURATION_HPP_ */

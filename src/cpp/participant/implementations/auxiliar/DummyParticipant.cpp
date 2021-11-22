@@ -24,14 +24,25 @@
 namespace eprosima {
 namespace ddsrouter {
 
-std::map<ParticipantId, std::shared_ptr<DummyParticipant>> DummyParticipant::participants_;
+std::mutex DummyParticipant::static_mutex_;
+std::map<ParticipantId, DummyParticipant*> DummyParticipant::participants_;
 
 DummyParticipant::DummyParticipant(
         ParticipantConfiguration participant_configuration,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : EchoParticipant(participant_configuration, discovery_database)
 {
-    participants_[id()] = std::shared_ptr<DummyParticipant>(this);
+    participants_[id()] = this;
+}
+
+DummyParticipant::~DummyParticipant()
+{
+    std::unique_lock<std::mutex> lock(static_mutex_);
+
+    writers_.clear();
+    readers_.clear();
+
+    participants_.erase(id());
 }
 
 ParticipantType DummyParticipant::type() const
@@ -96,7 +107,7 @@ std::vector<DataStored> DummyParticipant::data_received_ref(
     }
 }
 
-std::shared_ptr<DummyParticipant> DummyParticipant::get_participant(
+DummyParticipant* DummyParticipant::get_participant(
         ParticipantId id)
 {
     auto it = participants_.find(id);

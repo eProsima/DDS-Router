@@ -12,32 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME ParticipantIdTest)
+################
+# Trivial Test #
+################
+
+set(TEST_NAME
+    TrivialTest)
 
 set(TEST_SOURCES
-        ParticipantIdTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/ParticipantId.cpp
-    )
+    TrivialTest.cpp)
 
 set(TEST_LIST
-        default_constructor
-        constructor
-        invalid
-        is_valid_id
-        is_valid
-        equal_operator
-        minor_operator
-        is_non_valid_id
-        is_non_valid
-        non_equal_operator
-        non_minor_operator
-    )
+    trivial_void_initialization
+    trivial_dummy_initialization)
 
-set(TEST_EXTRA_LIBRARIES)
+set(TEST_NEEDED_SOURCES
+    resources/trivial_test_dummy_configuration.yaml
+    resources/trivial_test_void_configuration.yaml)
 
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
+
+# file(GLOB TEST_NEEDED_SOURCES
+# "./resources/**"
+# )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}")

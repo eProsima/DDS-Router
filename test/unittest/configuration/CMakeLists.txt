@@ -27,10 +27,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
     )
 
-set(TEST_HEADERS
-        ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/configuration/Configuration.hpp
-    )
-
 set(TEST_LIST
         constructor
         participants_configurations
@@ -53,6 +49,5 @@ set(TEST_EXTRA_LIBRARIES
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
-    "${TEST_HEADERS}"
     "${TEST_LIST}"
     "${TEST_EXTRA_LIBRARIES}")

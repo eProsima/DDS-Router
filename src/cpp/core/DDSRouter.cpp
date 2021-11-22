@@ -52,6 +52,14 @@ DDSRouter::DDSRouter(
 
 DDSRouter::~DDSRouter()
 {
+    // Stop all communications
+    // stop();
+
+    // Destroy Bridges, so Writers and Readers are destroyed before the Databases
+    bridges_.clear();
+
+    // Destroy Participants
+
     // TODO
     // There is no need to destroy shared ptrs as they will delete themselves when no longer referenced
 }
@@ -92,7 +100,13 @@ void DDSRouter::init_participants_()
             discovery_database_);
 
         // create_participant should throw an exception in fail, never return nullptr
-        assert(nullptr != new_participant);
+        if (!new_participant || !new_participant->id().is_valid() ||
+                new_participant->type() == ParticipantType::PARTICIPANT_TYPE_INVALID)
+        {
+            // Failed to create participant
+            throw InitializationException(utils::Formatter()
+                          << "Failed to create Participant " << participant_config.id());
+        }
 
         participants_database_->add_participant(
             new_participant->id(),
