@@ -29,9 +29,13 @@ std::map<ParticipantId, DummyParticipant*> DummyParticipant::participants_;
 
 DummyParticipant::DummyParticipant(
         ParticipantConfiguration participant_configuration,
+        std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : EchoParticipant(participant_configuration, discovery_database)
+    : BaseParticipant(participant_configuration, payload_pool, discovery_database)
 {
+    std::unique_lock<std::mutex> lock(static_mutex_);
+
+    // Add this participant to the static list of all participants
     participants_[id()] = this;
 }
 
@@ -39,38 +43,23 @@ DummyParticipant::~DummyParticipant()
 {
     std::unique_lock<std::mutex> lock(static_mutex_);
 
-    writers_.clear();
-    readers_.clear();
-
+    // Remove this participant from the static list of all participants
     participants_.erase(id());
 }
 
-ParticipantType DummyParticipant::type() const
-{
-    return ParticipantType::DUMMY;
-}
-
-std::shared_ptr<IWriter> DummyParticipant::create_writer(
+std::shared_ptr<IWriter> DummyParticipant::create_writer_(
         RealTopic topic)
 {
-    std::shared_ptr<DummyWriter> writer = std::make_shared<DummyWriter>(id(), topic);
-
-    writers_[topic] = writer;
-
-    return writer;
+    return std::make_shared<DummyWriter>(id(), topic, payload_pool_);
 }
 
-std::shared_ptr<IReader> DummyParticipant::create_reader(
+std::shared_ptr<IReader> DummyParticipant::create_reader_(
         RealTopic topic)
 {
-    std::shared_ptr<DummyReader> reader = std::make_shared<DummyReader>(id(), topic);
-
-    readers_[topic] = reader;
-
-    return reader;
+    return std::make_shared<DummyReader>(id(), topic, payload_pool_);
 }
 
-void DummyParticipant::add_discovered_endpoint(
+void DummyParticipant::simulate_discovered_endpoint(
         const Endpoint& new_endpoint)
 {
     discovery_database_->add_or_modify_endpoint(new_endpoint);
@@ -82,28 +71,30 @@ Endpoint DummyParticipant::get_discovered_endpoint(
     return discovery_database_->get_endpoint(guid);
 }
 
-void DummyParticipant::add_message_to_send(
+void DummyParticipant::simulate_data_reception(
         RealTopic topic,
-        DataToSend data)
+        DummyDataReceived data)
 {
     auto it = readers_.find(topic);
     if (it != readers_.end())
     {
-        it->second->add_message_to_send(data);
+        std::shared_ptr<DummyReader> reader = std::dynamic_pointer_cast<DummyReader>(it->second);
+        reader->simulate_data_reception(data);
     }
 }
 
-std::vector<DataStored> DummyParticipant::data_received_ref(
+std::vector<DummyDataStored> DummyParticipant::get_data_that_should_have_been_sent(
         RealTopic topic)
 {
     auto it = writers_.find(topic);
     if (it != writers_.end())
     {
-        return it->second->data_received_ref();
+        std::shared_ptr<DummyWriter> writer = std::dynamic_pointer_cast<DummyWriter>(it->second);
+        return writer->get_data_that_should_have_been_sent();
     }
     else
     {
-        return std::vector<DataStored>();
+        return std::vector<DummyDataStored>();
     }
 }
 

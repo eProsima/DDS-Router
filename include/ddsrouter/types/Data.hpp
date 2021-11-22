@@ -26,6 +26,9 @@
 namespace eprosima {
 namespace ddsrouter {
 
+//! Kind of every unit that creates a Payload
+using PayloadUnit = eprosima::fastrtps::rtps::octet;
+
 //! Payload references the raw data received.
 using Payload = fastrtps::rtps::SerializedPayload_t;
 

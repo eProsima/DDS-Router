@@ -34,7 +34,7 @@ namespace ddsrouter {
 
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         ParticipantConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload,
+        std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantType specified by the configuration
@@ -42,17 +42,17 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     {
         case ParticipantType::VOID:
             // VoidParticipant
-            return std::make_shared<VoidParticipant>(participant_configuration);
+            return std::make_shared<VoidParticipant>(participant_configuration.id());
             break;
 
         case ParticipantType::ECHO:
             // EchoParticipant
-            return std::make_shared<EchoParticipant>(participant_configuration, discovery_database);
+            return std::make_shared<EchoParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
         case ParticipantType::DUMMY:
             // DummyParticipant
-            return std::make_shared<DummyParticipant>(participant_configuration, discovery_database);
+            return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
         case ParticipantType::PARTICIPANT_TYPE_INVALID:
@@ -73,8 +73,13 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
 void ParticipantFactory::remove_participant(std::shared_ptr<IParticipant> participant)
 {
-    // TODO
-    throw UnsupportedException("ParticipantFactory::remove_participant not supported yet");
+    switch (participant->type()())
+    {
+        default:
+
+            // Rest of participants do not require specific destructor
+            break;
+    }
 }
 
 } /* namespace ddsrouter */

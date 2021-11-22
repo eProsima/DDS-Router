@@ -19,33 +19,32 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_ECHOPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Concrete Participant that prints in stdout each message that arrives.
  */
-class EchoParticipant : public VoidParticipant
+class EchoParticipant : public BaseParticipant
 {
 public:
 
-    EchoParticipant(
-            ParticipantConfiguration participant_configuration,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
-
-    virtual ParticipantType type() const override;
-
-    virtual std::shared_ptr<IWriter> create_writer(
-            RealTopic) override;
-
-    // TODO: when Discovery callback in database are implemented add echo msg for discovery
+    //! Using parent class constructors
+    using BaseParticipant::BaseParticipant;
 
 protected:
 
-    std::shared_ptr<DiscoveryDatabase> discovery_database_;
+    //! Override create_writer_() BaseParticipant method
+    std::shared_ptr<IWriter> create_writer_(
+            RealTopic topic) override;
+
+    //! Override create_reader_() BaseParticipant method
+    std::shared_ptr<IReader> create_reader_(
+            RealTopic topic) override;
+
+    // Deleters do not need to be implemented
 };
 
 } /* namespace ddsrouter */

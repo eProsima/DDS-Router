@@ -25,23 +25,30 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Reader that has an empty implementation.
+ * It does not receive anything.
+ * It does not have messages to take.
  */
 class VoidReader : public IReader
 {
 public:
 
-    void enable() override;
+    //! Override enable() IReader method
+    void enable() noexcept override;
 
-    void disable() override;
+    //! Override disable() IReader method
+    void disable() noexcept override;
 
+    //! Override set_on_data_available_callback() IReader method
     void set_on_data_available_callback(
-            std::function<void()>) override;
+            std::function<void()> on_data_available_lambda) noexcept override;
 
-    void unset_on_data_available_callback() override;
+    //! Override unset_on_data_available_callback() IReader method
+    void unset_on_data_available_callback() noexcept override;
 
+    //! Override take() IReader method
     ReturnCode take(
-            std::unique_ptr<DataReceived>&) override;
+            std::unique_ptr<DataReceived>& data) noexcept override;
 };
 
 } /* namespace ddsrouter */

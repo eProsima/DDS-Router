@@ -25,22 +25,22 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Writer that has an empty implementation.
+ * It does not send anything.
  */
 class VoidWriter : public IWriter
 {
 public:
 
-    VoidWriter() = default;
+    //! Override enable() IWriter method
+    void enable() noexcept override;
 
-    virtual ~VoidWriter();
+    //! Override disable() IWriter method
+    void disable() noexcept override;
 
-    void enable() override;
-
-    void disable() override;
-
+    //! Override write() IWriter method
     ReturnCode write(
-            std::unique_ptr<DataReceived>&) override;
+            std::unique_ptr<DataReceived>& data) noexcept override;
 };
 
 } /* namespace ddsrouter */

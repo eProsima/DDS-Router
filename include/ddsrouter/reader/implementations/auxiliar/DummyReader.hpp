@@ -23,57 +23,59 @@
 #include <mutex>
 #include <queue>
 
-#include <ddsrouter/reader/IReader.hpp>
+#include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-struct DataToSend
+//! Data that has been sent to a Dummy Reader in order to simulate data reception
+struct DummyDataReceived
 {
-    Guid guid_src;
-    Payload payload;
+    //! Payload in a format of vector of bytes
+    std::vector<PayloadUnit> payload;
+
+    //! Guid of the source entity that has transmit the data
+    Guid source_guid;
 };
 
 /**
- * TODO
+ * Reader implementation that allows to simulate data reception
  */
-class DummyReader : public IReader
+class DummyReader : public BaseReader
 {
 public:
 
-    DummyReader(
-            const ParticipantId& participant_id,
-            const RealTopic& topic);
+    //! Use parent constructors
+    using BaseReader::BaseReader;
 
-    void enable() override;
-
-    void disable() override;
-
-    void set_on_data_available_callback(
-            std::function<void()> new_callback) override;
-
-    void unset_on_data_available_callback() override;
-
-    ReturnCode take(
-            std::unique_ptr<DataReceived>& data_received) override;
-
-    void add_message_to_send(
-            DataToSend data);
+    /**
+     * @brief Make the Reader to simulate data reception
+     *
+     * @param data : The data received (simulately)
+     */
+    void simulate_data_reception(
+            DummyDataReceived data) noexcept;
 
 protected:
 
-    ParticipantId participant_id_;
+    /**
+     * @brief Take specific method
+     *
+     * After take method, the data will be removed from \c data_to_send_ .
+     *
+     * @param data : oldest data to take
+     * @return RETCODE_OK if data has been correctly taken
+     * @return RETCODE_NO_DATA if \c data_to_send_ is empty
+     */
+    ReturnCode take_(
+            std::unique_ptr<DataReceived>& data) noexcept override;
 
-    RealTopic topic_;
+    //! Stores the data that must be retrieved with \c take() method
+    std::queue<DummyDataReceived> data_to_send_;
 
-    std::function<void()> on_data_available_callback_;
-
-    std::atomic<bool> enabled_;
-
-    std::queue<DataToSend> data_to_send_;
-
-    std::mutex mutex_;
+    //! Guard access to \c data_to_send_
+    mutable std::recursive_mutex dummy_mutex_;
 };
 
 } /* namespace ddsrouter */

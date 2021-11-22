@@ -23,40 +23,62 @@
 
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/Timestamp.hpp>
-#include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-struct DataStored
+//! Data that a Dummy Writer should have been sent
+
+struct DummyDataStored
 {
+    //! Payload in a format of vector of bytes
+    std::vector<PayloadUnit> payload;
+
+    //! Guid of the source entity that has transmit the data
+    Guid source_guid;
+
+    //! Timestamp of the theoric publication time
     Timestamp timestamp;
-    Guid guid_src;
-    Payload payload;
 };
 
 /**
- * TODO
+ * Writer implementation that allows to simulate data publication
  */
-class DummyWriter : public EchoWriter
+class DummyWriter : public BaseWriter
 {
 public:
 
-    DummyWriter(
-            const ParticipantId& participant_id,
-            const RealTopic& topic);
+    //! Use parent constructors
+    using BaseWriter::BaseWriter;
 
-    ReturnCode write(
-            std::unique_ptr<DataReceived>& data) override;
-
-    std::vector<DataStored> data_received_ref();
+    /**
+     * @brief Get the data that should have been sent by this writer
+     *
+     * @return vector of data
+     */
+    std::vector<DummyDataStored> get_data_that_should_have_been_sent() const noexcept;
 
 protected:
 
-    std::vector<DataStored> data_stored;
+    /**
+     * @brief Write specific method
+     *
+     * This method stores the data received in \c data_stored as if it
+     * has had published.
+     *
+     * @param data : data to simulate publication
+     * @return RETCODE_OK always
+     */
+    ReturnCode write_(
+            std::unique_ptr<DataReceived>& data) noexcept override;
 
-    std::mutex mutex_;
+    //! Stores the data that should have been published
+    std::vector<DummyDataStored> data_stored;
+
+    //! Guard access to \c data_stored
+    mutable std::recursive_mutex dummy_mutex_;
 };
 
 } /* namespace ddsrouter */

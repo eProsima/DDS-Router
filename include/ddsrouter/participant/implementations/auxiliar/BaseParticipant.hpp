@@ -1,0 +1,189 @@
+// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+ * @file BaseParticipant.hpp
+ */
+
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_
+
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/participant/IParticipant.hpp>
+#include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
+
+namespace eprosima {
+namespace ddsrouter {
+
+/**
+ * Abstract Participant that implement generic methods for every Participant.
+ *
+ * In order to inherit this class, create the protected methods create_writer_ and create_reader_
+ *
+ * This class stores every Endpoint created by this Participant.
+ */
+class BaseParticipant : public IParticipant
+{
+public:
+
+    /**
+     * @brief Generic constructor for a Participant
+     *
+     * Id and type are got from the configuration.
+     *
+     * @param participant_configuration Configuration for the Participant. Type is got from here.
+     * @param payload_pool DDS Router shared PayloadPool
+     * @param discovery_database DDS Router shared Discovery Database
+     */
+    BaseParticipant(
+            const ParticipantConfiguration& participant_configuration,
+            std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
+
+    /**
+     * @brief Destroy the Base Participant object
+     *
+     * If any writer or reader still exists, removes it and shows a warning
+     */
+    ~BaseParticipant();
+
+    /**
+     * @brief Override id() IParticipant method
+     *
+     * It gets the id from the configuration.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    ParticipantId id() const noexcept override;
+
+
+    /**
+     * @brief Override create_writer() IParticipant method
+     *
+     * It gets the type from the configuration.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    ParticipantType type() const noexcept override;
+
+    /**
+     * @brief Override create_writer() IParticipant method
+     *
+     * This method calls the protected method \c create_writer_ in order to create the actual Writer.
+     * The Writer created is stored in a map.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    std::shared_ptr<IWriter> create_writer(
+            RealTopic topic) override;
+
+    /**
+     * @brief Override create_reader() IParticipant method
+     *
+     * This method calls the protected method \c create_reader_ in order to create the actual Reader.
+     * The Reader created is stored in a map.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    std::shared_ptr<IReader> create_reader(
+            RealTopic topic) override;
+
+    /**
+     * @brief Override delete_writer() IParticipant method
+     *
+     * This method calls the protected method \c delete_writer_ in order to delete the Writer.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    void delete_writer(
+            std::shared_ptr<IWriter> writer) noexcept override;
+
+    /**
+     * @brief Override delete_reader() IParticipant method
+     *
+     * This method calls the protected method \c delete_reader_ in order to delete the Reader.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    void delete_reader(
+            std::shared_ptr<IReader> reader) noexcept override;
+
+protected:
+
+    /**
+     * @brief Create a writer object
+     *
+     * @note Implement this method in every Participant in order to create a class specific Writer
+     *
+     * @param [in] topic : Topic that this Writer refers to.
+     * @return Writer
+     */
+    virtual std::shared_ptr<IWriter> create_writer_(
+            RealTopic topic) = 0;
+
+    /**
+     * @brief Create a reader object
+     *
+     * @note Implement this method in every Participant in order to create a class specific Reader
+     *
+     * @param [in] topic : Topic that this Reader refers to.
+     * @return Reader
+     */
+    virtual std::shared_ptr<IReader> create_reader_(
+            RealTopic topic) = 0;
+
+    /**
+     * @brief Do nothing
+     *
+     * @note Implement this method in order to delete a class specific Writer
+     *
+     * @param [in] writer : Writer to delete
+     */
+    virtual void delete_writer_(
+            std::shared_ptr<IWriter> writer) noexcept;
+
+    /**
+     * @brief Do nothing
+     *
+     * @note Implement this method in order to delete a class specific Reader
+     *
+     * @param [in] writer : Reader to delete
+     */
+    virtual void delete_reader_(
+            std::shared_ptr<IReader> reader) noexcept;
+
+    //! Participant configuration
+    ParticipantConfiguration configuration_;
+
+    //! DDS Router shared Payload Pool
+    std::shared_ptr<PayloadPool> payload_pool_;
+
+    //! DDS Router shared Discovery Database
+    std::shared_ptr<DiscoveryDatabase> discovery_database_;
+
+    //! Writers created by this Participant indexed by topic
+    std::map<RealTopic, std::shared_ptr<IWriter>> writers_;
+
+    //! Readers created by this Participant indexed by topic
+    std::map<RealTopic, std::shared_ptr<IReader>> readers_;
+
+    //! Mutex that guards every access to the Participant
+    mutable std::recursive_mutex mutex_;
+};
+
+} /* namespace ddsrouter */
+} /* namespace eprosima */
+
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_ */

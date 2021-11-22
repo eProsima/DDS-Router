@@ -25,21 +25,17 @@ namespace eprosima {
 namespace ddsrouter {
 
 VoidParticipant::VoidParticipant(
-        ParticipantConfiguration participant_configuration)
-    : configuration_(participant_configuration)
+        const ParticipantId& id)
+    : id_(id)
 {
 }
 
-VoidParticipant::~VoidParticipant()
+ParticipantId VoidParticipant::id() const noexcept
 {
+    return id_;
 }
 
-ParticipantId VoidParticipant::id() const
-{
-    return configuration_.id();
-}
-
-ParticipantType VoidParticipant::type() const
+ParticipantType VoidParticipant::type() const noexcept
 {
     return ParticipantType::VOID;
 }
@@ -57,12 +53,12 @@ std::shared_ptr<IReader> VoidParticipant::create_reader(
 }
 
 void VoidParticipant::delete_writer(
-        std::shared_ptr<IWriter> writer)
+        std::shared_ptr<IWriter> writer) noexcept
 {
 }
 
 void VoidParticipant::delete_reader(
-        std::shared_ptr<IReader> reader)
+        std::shared_ptr<IReader> reader) noexcept
 {
 }
 

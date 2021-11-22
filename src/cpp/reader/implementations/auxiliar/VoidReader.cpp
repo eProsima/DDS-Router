@@ -21,25 +21,25 @@
 namespace eprosima {
 namespace ddsrouter {
 
-void VoidReader::enable()
+void VoidReader::enable() noexcept
 {
 }
 
-void VoidReader::disable()
+void VoidReader::disable() noexcept
 {
 }
 
 void VoidReader::set_on_data_available_callback(
-        std::function<void()>)
+        std::function<void()>) noexcept
 {
 }
 
-void VoidReader::unset_on_data_available_callback()
+void VoidReader::unset_on_data_available_callback() noexcept
 {
 }
 
 ReturnCode VoidReader::take(
-        std::unique_ptr<DataReceived>&)
+        std::unique_ptr<DataReceived>&) noexcept
 {
     return ReturnCode::RETCODE_NO_DATA;
 }

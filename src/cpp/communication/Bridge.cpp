@@ -27,9 +27,11 @@ namespace ddsrouter {
 Bridge::Bridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantDatabase> participants_database,
+        std::shared_ptr<PayloadPool> payload_pool,
         bool enable /* = false */)
     : topic_(topic)
     , participants_(participants_database)
+    , payload_pool_(payload_pool)
     , enabled_(false)
 {
     logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
@@ -57,7 +59,7 @@ Bridge::Bridge(
         // This insert is required as there is no copy method for Track
         // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
-                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), false);
+                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), payload_pool_, false);
     }
 
     if (enable)

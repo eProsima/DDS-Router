@@ -20,7 +20,7 @@
 #define _DATABROKER_PARTICIPANT_IMPLEMENTATIONS_AUX_DUMMYPARTICIPANT_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
 
@@ -28,50 +28,106 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Concrete Participant that allows to simulate a real remote network.
+ *
+ * This Participant retrieves methods that allow to simulate the reception of a message
+ * and other to get the messages that should have been sent.
+ * For this, a static map is created so it can store all the DummyParticipants created and have access to their methods.
+ *
+ * This Participant is used for Testing, as it could mock a DDS real network.
  */
-class DummyParticipant : public EchoParticipant
+class DummyParticipant : public BaseParticipant
 {
 public:
 
+    /**
+     * @brief Construct a new Dummy Participant object
+     *
+     * It uses the \c BaseParticipant constructor.
+     * Apart from BaseParticipant, it adds this new object to a static variable so it could be rechead from outside
+     * the DDSRouter.
+     */
     DummyParticipant(
             ParticipantConfiguration participant_configuration,
+            std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
-    ~DummyParticipant();
+    /**
+     * @brief Destroy the Dummy Participant object
+     *
+     * Remove its reference from the static map
+     */
+    virtual ~DummyParticipant();
 
-    virtual ParticipantType type() const override;
-
-    virtual std::shared_ptr<IWriter> create_writer(
-            RealTopic topic) override;
-
-    virtual std::shared_ptr<IReader> create_reader(
-            RealTopic topic) override;
-
-    virtual void add_discovered_endpoint(
+    /**
+     * @brief Simulate that this Participant has discovered a new endpoint
+     *
+     * @param new_endpoint : Endpoint discovered
+     */
+    void simulate_discovered_endpoint(
             const Endpoint& new_endpoint);
 
-    virtual Endpoint get_discovered_endpoint(
+    /**
+     * @brief Get the discovered endpoint object refering to \c guid
+     *
+     * Search this guid in the endpoints in the Discovery Database
+     *
+     * @param guid : \c Guid of the Endpoint to look for
+     * @return Endpoint with this guid
+     */
+    Endpoint get_discovered_endpoint(
             const Guid& guid) const;
 
-    void add_message_to_send(
+    /**
+     * @brief Simulate that the reader of the topic has received a message
+     *
+     * @param topic : Topic that refers to the Reader that should have sent this data.
+     * @param data : data received
+     */
+    void simulate_data_reception(
             RealTopic topic,
-            DataToSend data);
+            DummyDataReceived data);
 
-    std::vector<DataStored> data_received_ref(
+    /**
+     * @brief Get the data that has arrive to this Writer in order to send it.
+     *
+     * @param topic : Topic that refers to the Writer that should have sent this data.
+     * @return Vector of all the data that the Writer should have sent.
+     */
+    std::vector<DummyDataStored> get_data_that_should_have_been_sent(
             RealTopic topic);
 
+    /**
+     * @brief Get a DummyParticipant by ID
+     *
+     * By this reference, the internal writers and readers of the Participant could be accessed in order to simulate
+     * the reception of data, and to get the data that must be sent.
+     * Use methods \c simulate_data_reception and \c get_data_that_should_have_been_sent for this purpose.
+     *
+     * @param id : Id of the participant
+     *
+     * @return raw pointer to the participant
+     * @warning Do not remove this ptr
+     */
     static DummyParticipant* get_participant(
             ParticipantId id);
 
 protected:
 
-    std::map<RealTopic, std::shared_ptr<DummyWriter>> writers_;
+    //! Override create_writer_() BaseParticipant method
+    std::shared_ptr<IWriter> create_writer_(
+            RealTopic topic) override;
 
-    std::map<RealTopic, std::shared_ptr<DummyReader>> readers_;
+    //! Override create_writer_() BaseParticipant method
+    std::shared_ptr<IReader> create_reader_(
+            RealTopic topic) override;
 
+    // Specific enable/disable do not need to be implemented
+
+    //! Mutex to guard the static map \c participants_
     static std::mutex static_mutex_;
 
+    //! Static map that stores every DummyParticipant running
     static std::map<ParticipantId, DummyParticipant*> participants_;
 };
 
