@@ -9,7 +9,7 @@
 [![Stars](https://img.shields.io/github/stars/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/stargazers)
 [![test](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/eProsima/DDS-Router/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/DDS-Router)
-<!-- [![Documentation Status](https://readthedocs.org/projects/dds-router/badge/?version=latest)](https://dds-router.readthedocs.io/en/latest/) -->
+[![Documentation Status](https://readthedocs.org/projects/eprosima-dds-router/badge/?version=latest)](https://eprosima-dds-router.readthedocs.io/en/latest/)
 
 *eProsima DDS Router* is an end-user software application that enables the connection of distributed DDS networks.
 That is, DDS entities such as publishers and subscribers deployed in one geographic location and using a dedicated
