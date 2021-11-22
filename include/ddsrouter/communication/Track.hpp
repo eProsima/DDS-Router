@@ -42,12 +42,12 @@ public:
     /**
      * Track constructor by required values.
      *
-     * Track construction creates a new thread that manage the transmission between the reader and the writers.
+     * Track construction creates a new thread that manages the transmission between the reader and the writers.
      *
-     * @param topic:    Topic that this Track manage communication
+     * @param topic:    Topic that this Track manages communication
      * @param reader:   Reader that will receive the remote data
      * @param writers:  Map of Writers that will send the data received by \c source indexed by Participant id
-     * @param enable:   Wether the \c Track should be initialized as enabled. False by default
+     * @param enable:   Whether the \c Track should be initialized as enabled. False by default
      */
     Track(
             const RealTopic& topic,
@@ -59,9 +59,9 @@ public:
     /**
      * @brief Destructor
      *
-     * It unset the callback from Reader.
+     * It unsets the callback from Reader.
      * It should stop and wait for the transmission thread.
-     * It must not destroy any entity as it does not creat them.
+     * It must not destroy any entity as it does not create them.
      */
     virtual ~Track();
 
@@ -97,9 +97,9 @@ protected:
     /**
      * Callback that will be called by the reader in case there is available data to be forwarded.
      *
-     * This method is sent to the Reader so it could call it when there are new data.
+     * This method is sent to the Reader so it could call it when there is new data.
      *
-     * This method will set the variable \c are_data_available_ to true and awake the transmit thread.
+     * This method will set the variable \c is_data_available_ to true and awake the transmit thread.
      * If Track is disabled, the callback will be lost.
      */
     void data_available() noexcept;
@@ -147,7 +147,7 @@ protected:
     ParticipantId reader_participant_id_;
 
     /**
-     * Topic that this bridge manage communication
+     * Topic that this bridge manages communication
      *
      * @note: This variable is only used for log
      */
@@ -199,8 +199,8 @@ protected:
     std::condition_variable transmit_condition_variable_;
 
     /**
-     * Mutex to handle acces to condition variable \c transmit_condition_variable_ .
-     * Mutex to manage acces to variable \c are_data_available_ .
+     * Mutex to handle access to condition variable \c transmit_condition_variable_ .
+     * Mutex to manage access to variable \c is_data_available_ .
      */
     std::mutex transmit_mutex_;
 };

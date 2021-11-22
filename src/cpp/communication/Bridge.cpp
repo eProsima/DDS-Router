@@ -55,7 +55,7 @@ Bridge::Bridge(
         writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
 
         // This insert is required as there is no copy method for Track
-        // Track are always created disabled and then enabled with Bridge enable() method
+        // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
                 std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), false);
     }
@@ -68,10 +68,7 @@ Bridge::Bridge(
 
 Bridge::~Bridge()
 {
-    // Get mutex to prevent other thread to enable it while destroying
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
-    // Disable every Track before destroy
+    // Disable every Track before destruction
     disable();
 
     // Force deleting tracks before deleting Bridge

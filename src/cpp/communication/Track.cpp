@@ -55,9 +55,6 @@ Track::Track(
 
 Track::~Track()
 {
-    // Take mutex to avoid calling enable / disable while in destruction
-    std::lock_guard<std::recursive_mutex> lock(track_mutex_);
-
     // Disable reader
     disable();
 

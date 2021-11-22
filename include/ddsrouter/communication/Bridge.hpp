@@ -45,7 +45,7 @@ public:
      * Bridge constructor by required values
      *
      * In Bridge construction, the inside \c Tracks are created.
-     * In Bridge construction, a Writer and a Reader is created for each Participant.
+     * In Bridge construction, a Writer and a Reader are created for each Participant.
      *
      * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
@@ -61,8 +61,8 @@ public:
     /**
      * @brief Destructor
      *
-     * Before deleting, it does a disable.
-     * It delete all the tracks created and all Writers and Readers.
+     * Before deleting, it calls \c disable.
+     * It deletes all the tracks created and all Writers and Readers.
      */
     virtual ~Bridge();
 
@@ -102,7 +102,7 @@ protected:
     /**
      * Collection of Participants to manage communication between
      *
-     * @note: This variable is stored for destruction purpose
+     * @note: This variable is only used at destruction time
      */
     const std::shared_ptr<ParticipantDatabase> participants_;
 
