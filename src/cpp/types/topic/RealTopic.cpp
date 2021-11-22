@@ -34,10 +34,6 @@ RealTopic::RealTopic()
 {
 }
 
-RealTopic::~RealTopic()
-{
-}
-
 bool RealTopic::is_real_topic(
         const std::string& topic_name,
         const std::string& type_name) noexcept

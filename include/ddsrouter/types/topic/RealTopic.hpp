@@ -35,9 +35,6 @@ struct RealTopic : public Topic
     //! Default non valid topic
     RealTopic();
 
-    // Destructor
-    virtual ~RealTopic();
-
     /**
      * Whether a topic name and topic type name could be used as a valid real DDS topic
      *
