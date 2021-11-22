@@ -57,16 +57,16 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             // TODO: Add warning log
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
                 << " is not a valid" << " participant type name.");
-            return nullptr; // Unrecheable code
+            return nullptr; // Unreacheable code
             break;
 
         default:
             // This should not happen as every type must be in the switch
             assert(false);
-            return nullptr; // Unrecheable code
+            return nullptr; // Unreacheable code
             break;
     }
-    return nullptr; // Non recheable code
+    return nullptr; // Unreacheable code
 }
 
 } /* namespace ddsrouter */
