@@ -33,7 +33,9 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         writer
         types
         types/endpoint
-        types/topic)
+        types/topic
+        types/participant
+        )
 
     # Get all sources of the library except implementations and main
     foreach(SOURCE_DIRECTORY ${LIBRARY_DIRECTORIES})
