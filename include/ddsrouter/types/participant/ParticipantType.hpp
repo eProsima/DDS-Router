@@ -60,8 +60,10 @@ public:
      */
     bool is_valid() const noexcept;
 
+    //! Convert this ParticipantType to string using the << operator
     std::string to_string() const noexcept;
 
+    //! Return the enum value of this object
     ParticipantTypeValue operator ()() const noexcept;
 
     /**

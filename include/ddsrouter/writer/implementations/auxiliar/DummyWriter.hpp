@@ -24,8 +24,6 @@
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/Timestamp.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
-#include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
-#include <ddsrouter/writer/IWriter.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {

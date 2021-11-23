@@ -23,8 +23,8 @@
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
-#include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

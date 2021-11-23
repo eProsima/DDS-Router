@@ -20,8 +20,8 @@
 #include <set>
 #include <sstream>
 
-#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

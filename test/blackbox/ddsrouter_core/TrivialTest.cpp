@@ -20,9 +20,9 @@
 
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
+#include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/types/Log.hpp>
 
 using namespace eprosima::ddsrouter;
 

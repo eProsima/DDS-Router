@@ -40,7 +40,7 @@ using RawConfigurationType = YAML::NodeType;
  * @param [in] file_path : path of file to load
  * @return yaml in RawConfiguration format contained in file_path
  *
- * @throw \c ConfigurationException in case the file does not exist or it is not a correct yaml
+ * @throw \c ConfigurationException in case the file does not exist or it is not a valid yaml
  */
 RawConfiguration load_configuration_from_file(
         const std::string& file_path);

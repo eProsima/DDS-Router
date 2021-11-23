@@ -31,9 +31,9 @@ std::set<std::string> ddsrouter_tags() noexcept;
 constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
 constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics
 constexpr const char* TOPIC_NAME_TAG("name");       //! Name of a topic
-constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Name of type of a topic
+constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
 
-constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Type of participant
+constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
