@@ -191,9 +191,8 @@ void Track::transmit_nts_() noexcept
 
             if (!ret)
             {
-                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
-                                                                            << ret <<
-                        ". Skipping data for this writer and continue.");
+                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code " << ret
+                                                                            << ". Skipping data for this writer and continue.");
                 continue;
             }
         }
