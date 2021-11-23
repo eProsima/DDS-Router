@@ -21,6 +21,14 @@
 
 #include <atomic>
 
+#include <fastdds/rtps/rtps_fwd.h>
+#include <fastrtps/rtps/attributes/HistoryAttributes.h>
+#include <fastrtps/attributes/TopicAttributes.h>
+#include <fastrtps/qos/WriterQos.h>
+#include <fastrtps/rtps/history/WriterHistory.h>
+#include <fastrtps/rtps/attributes/WriterAttributes.h>
+#include <fastrtps/rtps/writer/RTPSWriter.h>
+
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
@@ -37,7 +45,10 @@ public:
     RTPSRouterWriter(
         const ParticipantId& participant_id,
         const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool);
+        std::shared_ptr<PayloadPool> payload_pool,
+        fastrtps::rtps::RTPSParticipant* rtps_participant);
+
+    virtual ~RTPSRouterWriter();
 
 protected:
 
@@ -45,6 +56,20 @@ protected:
 
     virtual ReturnCode write_(
             std::unique_ptr<DataReceived>& data) noexcept override;
+
+    /////
+    // RTPS specific methods
+
+    fastrtps::rtps::HistoryAttributes history_attributes_() const noexcept;
+    fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    fastrtps::TopicAttributes topic_attributes_() const noexcept;
+    fastrtps::WriterQos writer_qos_() const noexcept;
+
+    /////
+    // VARIABLES
+
+    fastrtps::rtps::RTPSWriter* rtps_writer_;
+    fastrtps::rtps::WriterHistory* rtps_history_;
 };
 
 } /* namespace ddsrouter */

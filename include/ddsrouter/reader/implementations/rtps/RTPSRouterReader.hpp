@@ -19,9 +19,14 @@
 #ifndef _DATABROKER_READER_IMPLEMENTATIONS_AUX_RTPSREADER_HPP_
 #define _DATABROKER_READER_IMPLEMENTATIONS_AUX_RTPSREADER_HPP_
 
-#include <atomic>
-#include <mutex>
-#include <queue>
+#include <fastdds/rtps/rtps_fwd.h>
+#include <fastrtps/rtps/attributes/HistoryAttributes.h>
+#include <fastrtps/attributes/TopicAttributes.h>
+#include <fastrtps/qos/ReaderQos.h>
+#include <fastrtps/rtps/history/ReaderHistory.h>
+#include <fastrtps/rtps/attributes/ReaderAttributes.h>
+#include <fastrtps/rtps/reader/RTPSReader.h>
+#include <fastrtps/rtps/reader/ReaderListener.h>
 
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
@@ -39,19 +44,31 @@ public:
     RTPSRouterReader(
         const ParticipantId& participant_id,
         const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool);
+        std::shared_ptr<PayloadPool> payload_pool,
+        fastrtps::rtps::RTPSParticipant* rtps_participant);
 
+    virtual ~RTPSRouterReader();
 
 protected:
 
-    // Specific disable do not need to be implemented
-
-    void enable_() noexcept override;
+    // Specific enable/disable do not need to be implemented
 
     ReturnCode take_(
             std::unique_ptr<DataReceived>& data) noexcept override;
 
-    mutable std::recursive_mutex rtps_mutex_;
+    /////
+    // RTPS specific methods
+
+    fastrtps::rtps::HistoryAttributes history_attributes_() const noexcept;
+    fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    fastrtps::TopicAttributes topic_attributes_() const noexcept;
+    fastrtps::ReaderQos reader_qos_() const noexcept;
+
+    /////
+    // VARIABLES
+
+    fastrtps::rtps::RTPSReader* rtps_reader_;
+    fastrtps::rtps::ReaderHistory* rtps_history_;
 };
 
 } /* namespace ddsrouter */

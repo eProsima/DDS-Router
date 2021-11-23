@@ -19,6 +19,9 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
 
+#include <fastdds/rtps/rtps_fwd.h>
+#include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
+
 #include <ddsrouter/configuration/SimpleRTPSParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <ddsrouter/reader/implementations/rtps/RTPSRouterReader.hpp>
@@ -39,6 +42,8 @@ public:
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
+    virtual ~SimpleRTPSRouterParticipant();
+
 protected:
 
     std::shared_ptr<IWriter> create_writer_(
@@ -47,11 +52,14 @@ protected:
     std::shared_ptr<IReader> create_reader_(
             RealTopic topic) override;
 
-    void delete_writer_(
-            std::shared_ptr<IWriter> writer) noexcept override;
+    /////
+    // RTPS specific methods
 
-    void delete_reader_(
-            std::shared_ptr<IReader> reader) noexcept override;
+    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes() const noexcept;
+
+    /////
+    // VARIABLES
+    fastrtps::rtps::RTPSParticipant* rtps_participant_;
 
     //! Mutex that guards every access to the RTPS Participant
     mutable std::recursive_mutex rtps_mutex_;
