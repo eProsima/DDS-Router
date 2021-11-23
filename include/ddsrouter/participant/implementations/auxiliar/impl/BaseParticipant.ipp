@@ -13,10 +13,14 @@
 // limitations under the License.
 
 /**
- * @file BaseParticipant.cpp
+ * @file BaseParticipant.ipp
  */
 
-#include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_IMPL_IPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_IMPL_IPP_
+
+#include <memory>
+
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/participant/ParticipantType.hpp>
@@ -26,8 +30,9 @@
 namespace eprosima {
 namespace ddsrouter {
 
-BaseParticipant::BaseParticipant(
-        const ParticipantConfiguration& participant_configuration,
+template <class ConfigurationType>
+BaseParticipant<ConfigurationType>::BaseParticipant(
+        const ConfigurationType& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : configuration_(participant_configuration)
@@ -36,7 +41,8 @@ BaseParticipant::BaseParticipant(
 {
 }
 
-BaseParticipant::~BaseParticipant()
+template <class ConfigurationType>
+BaseParticipant<ConfigurationType>::~BaseParticipant()
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -53,21 +59,24 @@ BaseParticipant::~BaseParticipant()
     }
 }
 
-ParticipantId BaseParticipant::id() const noexcept
+template <class ConfigurationType>
+ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     return configuration_.id();
 }
 
-ParticipantType BaseParticipant::type() const noexcept
+template <class ConfigurationType>
+ParticipantType BaseParticipant<ConfigurationType>::type() const noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     return configuration_.type();
 }
 
-std::shared_ptr<IWriter> BaseParticipant::create_writer(
+template <class ConfigurationType>
+std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
         RealTopic topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -88,7 +97,8 @@ std::shared_ptr<IWriter> BaseParticipant::create_writer(
     return new_writer;
 }
 
-std::shared_ptr<IReader> BaseParticipant::create_reader(
+template <class ConfigurationType>
+std::shared_ptr<IReader> BaseParticipant<ConfigurationType>::create_reader(
         RealTopic topic)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -109,7 +119,8 @@ std::shared_ptr<IReader> BaseParticipant::create_reader(
     return new_reader;
 }
 
-void BaseParticipant::delete_writer(
+template <class ConfigurationType>
+void BaseParticipant<ConfigurationType>::delete_writer(
         std::shared_ptr<IWriter> writer) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -125,7 +136,8 @@ void BaseParticipant::delete_writer(
     }
 }
 
-void BaseParticipant::delete_reader(
+template <class ConfigurationType>
+void BaseParticipant<ConfigurationType>::delete_reader(
         std::shared_ptr<IReader> reader) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -141,13 +153,15 @@ void BaseParticipant::delete_reader(
     }
 }
 
-void BaseParticipant::delete_writer_(
+template <class ConfigurationType>
+void BaseParticipant<ConfigurationType>::delete_writer_(
         std::shared_ptr<IWriter>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
-void BaseParticipant::delete_reader_(
+template <class ConfigurationType>
+void BaseParticipant<ConfigurationType>::delete_reader_(
         std::shared_ptr<IReader>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
@@ -155,3 +169,5 @@ void BaseParticipant::delete_reader_(
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_IMPL_IPP_ */

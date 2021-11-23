@@ -22,6 +22,7 @@
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
+#include <ddsrouter/types/macros.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
@@ -34,8 +35,13 @@ namespace ddsrouter {
  *
  * This class stores every Endpoint created by this Participant.
  */
+template <class ConfigurationType>
 class BaseParticipant : public IParticipant
 {
+
+// Force ConfigurationType to be subclass of ParticipantConfiguration
+FORCE_TEMPLATE_SUBCLASS(ParticipantConfiguration, ConfigurationType);
+
 public:
 
     /**
@@ -43,12 +49,12 @@ public:
      *
      * Id and type are got from the configuration.
      *
-     * @param participant_configuration Configuration for the Participant. Type is got from here.
+     * @param participant_configuration Configuration for the Participant. Participant Type is got from here.
      * @param payload_pool DDS Router shared PayloadPool
      * @param discovery_database DDS Router shared Discovery Database
      */
     BaseParticipant(
-            const ParticipantConfiguration& participant_configuration,
+            const ConfigurationType& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
@@ -165,7 +171,7 @@ protected:
             std::shared_ptr<IReader> reader) noexcept;
 
     //! Participant configuration
-    ParticipantConfiguration configuration_;
+    ConfigurationType configuration_;
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;
@@ -185,5 +191,8 @@ protected:
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+// Include implementation template file
+#include <ddsrouter/participant/implementations/auxiliar/impl/BaseParticipant.ipp>
 
 #endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_ */
