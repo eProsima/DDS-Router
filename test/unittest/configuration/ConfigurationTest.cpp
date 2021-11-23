@@ -214,6 +214,19 @@ std::string random_participant_name(
 }
 
 /*
+ * Random participant type
+ *
+ * WARNING: the max_types_available must be updated with each new type added
+ */
+ParticipantType random_participant_type(
+        uint16_t seed = 0)
+{
+    uint16_t max_types_available = 4;
+    // Avoid Invalid type
+    return ParticipantType((seed % (max_types_available - 1)) + 1);
+}
+
+/*
  * Random participant configuration
  *
  * TODO: create really random configurations
@@ -248,7 +261,7 @@ RawConfiguration random_participant_configuration(
         }
     }
 
-    config[PARTICIPANT_TYPE_TAG] = VOID_TYPE_NAME;
+    config[PARTICIPANT_TYPE_TAG] = random_participant_type().to_string();
 
     return config;
 }
@@ -318,7 +331,7 @@ TEST(ConfigurationTest, participants_configurations)
         listening_addresses.push_back(address2);
 
         RawConfiguration participant_config;
-        participant_config["type"] = VOID_TYPE_NAME;
+        participant_config["type"] = random_participant_type().to_string();
         participant_config["listening-addresses"] = listening_addresses;
 
         std::string participant_name_str = "wanParticipant";

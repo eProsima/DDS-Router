@@ -20,6 +20,7 @@
 
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
+#include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/utils.hpp>
 
@@ -114,6 +115,10 @@ int main(
         int argc,
         char** argv)
 {
+    // Activate log
+    Log::SetVerbosity(Log::Kind::Info);
+    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

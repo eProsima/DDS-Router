@@ -19,10 +19,13 @@
 #ifndef _DDSROUTER_TYPES_LOG_HPP_
 #define _DDSROUTER_TYPES_LOG_HPP_
 
+// Use FastDDS log
 #include <fastdds/dds/log/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+
+using Log = eprosima::fastdds::dds::Log;
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

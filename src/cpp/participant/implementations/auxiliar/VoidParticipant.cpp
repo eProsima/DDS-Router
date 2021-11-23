@@ -18,7 +18,7 @@
 
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
-#include <ddsrouter/types/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/VoidWriter.hpp>
 
 namespace eprosima {

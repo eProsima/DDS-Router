@@ -38,7 +38,7 @@ class QoS
 public:
 
     //! Default QoS with reader less restrictive parameters
-    QoS();
+    QoS() noexcept;
 
     /**
      * Constructor of QoS class by its variables
@@ -48,17 +48,17 @@ public:
      */
     QoS(
             DurabilityKind durability,
-            ReliabilityKind reliability);
+            ReliabilityKind reliability) noexcept;
 
     //! Whether this QoS is set with reliability
-    DurabilityKind durability() const;
+    DurabilityKind durability() const noexcept;
 
     //! Whether this QoS is set with durability
-    ReliabilityKind reliability() const;
+    ReliabilityKind reliability() const noexcept;
 
     // OPERATOR OVERLOAD
     bool operator ==(
-            const QoS& other) const;
+            const QoS& other) const noexcept;
 
 protected:
 

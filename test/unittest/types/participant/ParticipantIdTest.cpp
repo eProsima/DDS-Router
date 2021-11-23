@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 
 using namespace eprosima::ddsrouter;
 

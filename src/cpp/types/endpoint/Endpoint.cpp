@@ -22,7 +22,7 @@
 namespace eprosima {
 namespace ddsrouter {
 
-Endpoint::Endpoint()
+Endpoint::Endpoint() noexcept
     : kind_(EndpointKind::ENDPOINT_KIND_INVALID)
 {
 }
@@ -31,7 +31,7 @@ Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
         const QoS& qos,
-        const RealTopic& topic)
+        const RealTopic& topic) noexcept
     : kind_(kind)
     , guid_(guid)
     , qos_(qos)
@@ -40,54 +40,54 @@ Endpoint::Endpoint(
 {
 }
 
-EndpointKind Endpoint::kind() const
+EndpointKind Endpoint::kind() const noexcept
 {
     return kind_;
 }
 
-Guid Endpoint::guid() const
+Guid Endpoint::guid() const noexcept
 {
     return guid_;
 }
 
-QoS Endpoint::qos() const
+QoS Endpoint::qos() const noexcept
 {
     return qos_;
 }
 
-RealTopic Endpoint::topic() const
+RealTopic Endpoint::topic() const noexcept
 {
     return topic_;
 }
 
-bool Endpoint::active() const
+bool Endpoint::active() const noexcept
 {
     return active_;
 }
 
 void Endpoint::active(
-        bool status)
+        bool status) noexcept
 {
     active_ = status;
 }
 
-bool Endpoint::is_valid() const
+bool Endpoint::is_valid() const noexcept
 {
     return kind_ != EndpointKind::ENDPOINT_KIND_INVALID;
 }
 
-bool Endpoint::is_writer() const
+bool Endpoint::is_writer() const noexcept
 {
     return kind() == EndpointKind::WRITER;
 }
 
-bool Endpoint::is_reader() const
+bool Endpoint::is_reader() const noexcept
 {
     return kind() == EndpointKind::READER;
 }
 
 Endpoint& Endpoint::operator =(
-        const Endpoint& other)
+        const Endpoint& other) noexcept
 {
     this->guid_ = other.guid_;
     this->active_ = other.active_;

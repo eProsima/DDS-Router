@@ -30,10 +30,6 @@ Topic::Topic(
 {
 }
 
-Topic::~Topic()
-{
-}
-
 const std::string& Topic::topic_name() const
 {
     return topic_name_;

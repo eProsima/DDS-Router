@@ -22,7 +22,7 @@
 namespace eprosima {
 namespace ddsrouter {
 
-QoS::QoS()
+QoS::QoS() noexcept
     : durability_(DurabilityKind::VOLATILE)
     , reliability_(ReliabilityKind::BEST_EFFORT)
 {
@@ -30,24 +30,24 @@ QoS::QoS()
 
 QoS::QoS(
         DurabilityKind durability,
-        ReliabilityKind reliability)
+        ReliabilityKind reliability) noexcept
     : durability_(durability)
     , reliability_(reliability)
 {
 }
 
-DurabilityKind QoS::durability() const
+DurabilityKind QoS::durability() const noexcept
 {
     return durability_;
 }
 
-ReliabilityKind QoS::reliability() const
+ReliabilityKind QoS::reliability() const noexcept
 {
     return reliability_;
 }
 
 bool QoS::operator ==(
-        const QoS& other) const
+        const QoS& other) const noexcept
 {
     return durability_ == other.durability_ && reliability_ == other.reliability_;
 }

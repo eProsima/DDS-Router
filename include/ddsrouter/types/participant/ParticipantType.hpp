@@ -26,21 +26,46 @@
 namespace eprosima {
 namespace ddsrouter {
 
-//! Participant types available
-enum ParticipantType
-{
-    PARTICIPANT_TYPE_INVALID,    //! Invalid Participant Type
-    VOID,       //! Void Participant Type
-    ECHO,       //! Echo Participant Type
-    DUMMY,      //! Dummy Participant Type
-};
-
+using ParticipantTypeValue = uint16_t;
 /**
  * @brief Object that handles the creation of ParticipantTypes from a string
  */
-class ParticipantTypeFactory
+class ParticipantType
 {
 public:
+
+    /**
+     * @brief Participant types available
+     *
+     * This list must be extended for each new Participant that is implemented
+     */
+    enum
+    {
+        PARTICIPANT_TYPE_INVALID,    //! Invalid Participant Type
+        VOID,       //! Void Participant Type
+        ECHO,       //! Echo Participant Type
+        DUMMY,      //! Dummy Participant Type
+    };
+
+    //! Default constructor that returns an Invalid Participant Type
+    ParticipantType() noexcept;
+
+    //! Constructor by value of the ParticipantType enum
+    ParticipantType(
+            ParticipantTypeValue value) noexcept;
+
+    /**
+     * @brief Whether this ParticipantType is valid
+     *
+     * @return true if valid. False otherwise
+     */
+    bool is_valid() const noexcept;
+
+    //! Convert this ParticipantType to string using the << operator
+    std::string to_string() const noexcept;
+
+    //! Return the enum value of this object
+    ParticipantTypeValue operator ()() const noexcept;
 
     /**
      * @brief Create a Participant Type regarding the string argument in lower case
@@ -51,18 +76,25 @@ public:
      * matches any of them, return the ParticipantType associated with that name.
      * It will return \c INVALID in case no existing ParticipantType name matches the argument.
      *
-     * @param [out] type : string with the name of the type to build
+     * @param [in] type : string with the name of the type to build
      * @return ParticipantType value, \c INVALID if \c type does not refer to any existing type
      */
     static ParticipantType participant_type_from_name(
-            std::string type);
+            std::string type) noexcept;
+
+protected:
+
+    //! Value that links with the enumeration ParticipantType of this object
+    ParticipantTypeValue value_;
+
+    //! Map that link a \c ParticipantType with its name to be created or deserialized
+    static const std::map<ParticipantTypeValue, std::string> participant_type_with_name_;
+
+    // Allow operator << to use \c participant_type_with_name_
+    friend std::ostream& operator <<(
+            std::ostream& os,
+            const ParticipantType& type);
 };
-
-constexpr const char* VOID_TYPE_NAME("void");   //! Void participant type name
-constexpr const char* ECHO_TYPE_NAME("echo");   //! Echo participant type name
-constexpr const char* DUMMY_TYPE_NAME("dummy"); //! Dummy participant type name
-
-constexpr const char* INVALID_TYPE_NAME_SERIALIZATION("InvalidParticipantType"); //! Serialization of invalid type
 
 //! \c ParticipantType to stream serializator
 std::ostream& operator <<(

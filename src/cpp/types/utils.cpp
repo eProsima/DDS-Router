@@ -35,7 +35,7 @@ namespace utils {
 
 bool match_pattern(
         const std::string& pattern,
-        const std::string& str)
+        const std::string& str) noexcept
 {
 #if defined(_WIN32)
     // Windows implementation
@@ -47,7 +47,7 @@ bool match_pattern(
 }
 
 void to_lowercase(
-        std::string& st)
+        std::string& st) noexcept
 {
     std::transform(st.begin(), st.end(), st.begin(),
             [](unsigned char c)
@@ -56,7 +56,7 @@ void to_lowercase(
             });
 }
 
-std::string Formatter::to_string() const
+std::string Formatter::to_string() const noexcept
 {
     return ss_.str().c_str();
 }

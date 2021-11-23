@@ -29,7 +29,12 @@ namespace ddsrouter {
  */
 using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
 
-inline Timestamp now()
+/**
+ * @brief Now time
+ *
+ * @return Timestamp refering to the moment it is called
+ */
+inline Timestamp now() noexcept
 {
     return std::chrono::system_clock::now();
 }
