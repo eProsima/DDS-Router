@@ -35,6 +35,10 @@ constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
 
 constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
 
+// RTPS related tags
+// Simple RTPS related tags
+constexpr const char* DOMAIN_ID_TAG("domain"); //! Domain Id of the participant
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
