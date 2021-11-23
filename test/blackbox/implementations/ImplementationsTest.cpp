@@ -146,6 +146,10 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
  */
 TEST(ImplementationsTest, all_implementations)
 {
+    // Activate log
+    Log::SetVerbosity(Log::Kind::Info);
+    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+
     {
         // Generate configuration
         RawConfiguration configuration;

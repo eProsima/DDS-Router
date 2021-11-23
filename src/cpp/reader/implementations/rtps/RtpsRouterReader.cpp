@@ -31,7 +31,7 @@ RTPSRouterReader::RTPSRouterReader(
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant)
-    : BaseReader(participant_id_, topic_, payload_pool_)
+    : BaseReader(participant_id, topic, payload_pool)
 {
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
@@ -39,7 +39,11 @@ RTPSRouterReader::RTPSRouterReader(
 
     // Create Reader
     fastrtps::rtps::ReaderAttributes reader_att = reader_attributes_();
-    rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(rtps_participant, reader_att, rtps_history_, nullptr);
+    rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
+        rtps_participant,
+        reader_att,
+        rtps_history_,
+        this);
 
     if (!rtps_reader_)
     {
@@ -59,7 +63,7 @@ RTPSRouterReader::RTPSRouterReader(
             " for Simple RTPSReader in Participant " << participant_id);
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "New Reader created in Participant " << participant_id_ << " for topic " <<
+    logInfo(DDSROUTER_RTPS_READER, "New Reader created in Participant " << participant_id_ << " for topic " <<
         topic << " with guid " << rtps_reader_->getGuid());
 }
 
@@ -80,15 +84,40 @@ RTPSRouterReader::~RTPSRouterReader()
         delete rtps_history_;
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "Deleting Reader created in Participant " <<
+    logInfo(DDSROUTER_RTPS_READER, "Deleting Reader created in Participant " <<
         participant_id_ << " for topic " << topic_);
 }
 
 ReturnCode RTPSRouterReader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    // TODO
-    return ReturnCode::RETCODE_NO_DATA;
+    // Check if there is data available
+    if (!(rtps_reader_->get_unread_count() > 0))
+    {
+        return ReturnCode::RETCODE_NO_DATA;
+    }
+
+    fastrtps::rtps::CacheChange_t* received_change = nullptr;
+    fastrtps::rtps::WriterProxy* wp = nullptr;
+
+    // Read first change of the history
+    if (!rtps_reader_->nextUntakenCache(&received_change, &wp))
+    {
+        // Error reading.
+        return ReturnCode::RETCODE_ERROR;
+    }
+
+    // Store the new data that has arrived in the Track data
+    // Get the writer guid
+    data->source_guid = received_change->writerGUID;
+
+    // Store it in DDSRouter PayloadPool
+    payload_pool_->get_payload(received_change->serializedPayload, data->payload);
+
+    // Release the change in the reader
+    rtps_reader_->releaseCache(received_change);
+
+    return ReturnCode::RETCODE_OK;
 }
 
 fastrtps::rtps::HistoryAttributes RTPSRouterReader::history_attributes_() const noexcept
@@ -100,15 +129,15 @@ fastrtps::rtps::HistoryAttributes RTPSRouterReader::history_attributes_() const 
 fastrtps::rtps::ReaderAttributes RTPSRouterReader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+    att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
+    att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
     return att;
 }
 
 fastrtps::TopicAttributes RTPSRouterReader::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    att.topicKind = eprosima::fastrtps::rtps::TopicKind_t::NO_KEY;
+    att.topicKind = fastrtps::rtps::TopicKind_t::NO_KEY;
     att.topicName = topic_.topic_name();
     att.topicDataType = topic_.topic_type();
     return att;
@@ -117,9 +146,25 @@ fastrtps::TopicAttributes RTPSRouterReader::topic_attributes_() const noexcept
 fastrtps::ReaderQos RTPSRouterReader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+    qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+    qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
     return qos;
+}
+
+void RTPSRouterReader::onNewCacheChangeAdded(
+        fastrtps::rtps::RTPSReader* reader,
+        const fastrtps::rtps::CacheChange_t* const change)
+{
+    // Call Track callback (by calling BaseReader callback method)
+    on_data_available_();
+}
+
+void RTPSRouterReader::onReaderMatched(
+        fastrtps::rtps::RTPSReader*,
+        fastrtps::rtps::MatchingInfo& info)
+{
+    logInfo(DDSROUTER_RTPS_READER_LISTENER, "Reader of Participant " << participant_id_ << " in topic " << topic_ <<
+        " matche with a new Writer with guid " << info.remoteEndpointGuid);
 }
 
 } /* namespace ddsrouter */

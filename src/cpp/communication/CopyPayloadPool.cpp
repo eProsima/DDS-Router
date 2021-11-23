@@ -23,6 +23,16 @@
 namespace eprosima {
 namespace ddsrouter {
 
+bool CopyPayloadPool::release_payload(
+        fastrtps::rtps::CacheChange_t& cache_change)
+{
+    if (cache_change.payload_owner() == this)
+    {
+        return release_payload(cache_change.serializedPayload);
+    }
+    return false;
+}
+
 bool CopyPayloadPool::get_payload(
         uint32_t size,
         Payload& payload)
@@ -34,12 +44,11 @@ bool CopyPayloadPool::get_payload(
 }
 
 bool CopyPayloadPool::get_payload(
-        uint32_t size,
         const Payload& src_payload,
         Payload& target_payload)
 {
-    get_payload(size, target_payload);
-    std::memcpy(src_payload.data, target_payload.data, size);
+    get_payload(src_payload.length, target_payload);
+    std::memcpy(src_payload.data, target_payload.data, src_payload.length);
 
     return true;
 }
@@ -48,7 +57,18 @@ bool CopyPayloadPool::release_payload(
         Payload& payload)
 {
     get_payload(0, payload);
+    return true;
+}
 
+bool CopyPayloadPool::get_payload(
+        fastrtps::rtps::SerializedPayload_t& src_payload,
+        eprosima::fastrtps::rtps::CacheChange_t& target_cache_change)
+{
+    if (!get_payload(src_payload, target_cache_change.serializedPayload))
+    {
+        return false;
+    }
+    target_cache_change.payload_owner(this);
     return true;
 }
 
