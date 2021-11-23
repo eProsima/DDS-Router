@@ -32,7 +32,7 @@ Bridge::Bridge(
     , participants_(participants_database)
     , enabled_(false)
 {
-    logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
+    // logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
 
     std::vector<ParticipantId> ids = participants_->get_participant_ids();
 
