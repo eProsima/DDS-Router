@@ -32,6 +32,7 @@ const std::map<ParticipantTypeValue, std::string> ParticipantType::participant_t
     {VOID, "void"},
     {ECHO, "echo"},
     {DUMMY, "dummy"},
+    {SIMPLE_RTPS, "local"},
 };
 
 

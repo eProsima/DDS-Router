@@ -22,6 +22,7 @@
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
 
+#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/SimpleRTPSParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <ddsrouter/reader/implementations/rtps/RTPSRouterReader.hpp>
@@ -38,7 +39,7 @@ class SimpleRTPSRouterParticipant : public BaseParticipant<SimpleRTPSParticipant
 public:
 
     SimpleRTPSRouterParticipant(
-            const SimpleRTPSParticipantConfiguration& participant_configuration,
+            const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 

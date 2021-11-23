@@ -61,11 +61,17 @@ public:
             ParticipantId id,
             const RawConfiguration& raw_configuration);
 
+    ParticipantConfiguration(
+            const ParticipantConfiguration& configuration);
+
     //! Participant Type associated with this configuration
     ParticipantType type() const noexcept;
 
     //! Participant Id associated with this configuration
     ParticipantId id() const noexcept;
+
+    //! Yaml Raw Configuration of this configuration object
+    RawConfiguration raw_configuration() const noexcept;
 
     /**
      * @brief Equal comparator
