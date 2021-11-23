@@ -40,7 +40,8 @@ public:
     bool operator ()() const noexcept;
 
     //! Minor operator
-    bool operator <(const ReturnCode& other) const noexcept;
+    bool operator <(
+            const ReturnCode& other) const noexcept;
 
 protected:
 
@@ -48,7 +49,9 @@ protected:
     static const std::map<ReturnCode, std::string> to_string_conversion_;
 
     // operator << needs access to the object
-    friend std::ostream & operator<<(std::ostream &os, const ReturnCode& code);
+    friend std::ostream& operator <<(
+            std::ostream& os,
+            const ReturnCode& code);
 };
 
 //! \c ReturnCode to stream serializator

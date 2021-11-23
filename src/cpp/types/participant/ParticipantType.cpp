@@ -35,7 +35,8 @@ const std::map<ParticipantTypeValue, std::string> ParticipantType::participant_t
 };
 
 
-ParticipantType::ParticipantType(ParticipantTypeValue value) noexcept
+ParticipantType::ParticipantType(
+        ParticipantTypeValue value) noexcept
     : value_(value)
 {
 }
@@ -62,7 +63,8 @@ ParticipantTypeValue ParticipantType::operator ()() const noexcept
     return value_;
 }
 
-ParticipantType ParticipantType::participant_type_from_name(std::string type) noexcept
+ParticipantType ParticipantType::participant_type_from_name(
+        std::string type) noexcept
 {
     // Pass type name to lowercase
     utils::to_lowercase(type);

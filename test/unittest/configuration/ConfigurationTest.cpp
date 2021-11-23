@@ -219,7 +219,7 @@ std::string random_participant_name(
  * WARNING: the max_types_available must be updated with each new type added
  */
 ParticipantType random_participant_type(
-    uint16_t seed = 0)
+        uint16_t seed = 0)
 {
     uint16_t max_types_available = 4;
     // Avoid Invalid type

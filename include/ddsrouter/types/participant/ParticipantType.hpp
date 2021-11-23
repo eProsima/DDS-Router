@@ -51,7 +51,8 @@ public:
     ParticipantType() noexcept;
 
     //! Constructor by value of the ParticipantType enum
-    ParticipantType(ParticipantTypeValue value) noexcept;
+    ParticipantType(
+            ParticipantTypeValue value) noexcept;
 
     /**
      * @brief Whether this ParticipantType is valid
@@ -78,7 +79,8 @@ public:
      * @param [in] type : string with the name of the type to build
      * @return ParticipantType value, \c INVALID if \c type does not refer to any existing type
      */
-    static ParticipantType participant_type_from_name(std::string type) noexcept;
+    static ParticipantType participant_type_from_name(
+            std::string type) noexcept;
 
 protected:
 
@@ -89,7 +91,9 @@ protected:
     static const std::map<ParticipantTypeValue, std::string> participant_type_with_name_;
 
     // Allow operator << to use \c participant_type_with_name_
-    friend std::ostream& operator <<(std::ostream& os, const ParticipantType& type);
+    friend std::ostream& operator <<(
+            std::ostream& os,
+            const ParticipantType& type);
 };
 
 //! \c ParticipantType to stream serializator
