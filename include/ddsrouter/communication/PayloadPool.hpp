@@ -31,7 +31,7 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class PayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
+class PayloadPool : public fastrtps::rtps::IPayloadPool
 {
 public:
 
@@ -44,15 +44,15 @@ public:
 
     bool get_payload(
             uint32_t size,
-            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+            fastrtps::rtps::CacheChange_t& cache_change) override;
 
     bool get_payload(
             fastrtps::rtps::SerializedPayload_t& data,
             IPayloadPool*& data_owner,
-            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+            fastrtps::rtps::CacheChange_t& cache_change) override;
 
     bool release_payload(
-            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override;
+            fastrtps::rtps::CacheChange_t& cache_change) override;
 
     /////
     // DDSROUTER PART
@@ -62,27 +62,36 @@ public:
             Payload& payload);
 
     virtual bool get_payload(
-            uint32_t size,
             const Payload& src_payload,
             Payload& target_payload);
 
     virtual bool release_payload(
             Payload& payload);
+
+    virtual bool get_payload(
+            fastrtps::rtps::SerializedPayload_t& data,
+            fastrtps::rtps::CacheChange_t& cache_change);
 };
 
 class CopyPayloadPool : public PayloadPool
 {
+    bool release_payload(
+            fastrtps::rtps::CacheChange_t& cache_change) override;
+
     bool get_payload(
             uint32_t size,
             Payload& payload) override;
 
     bool get_payload(
-            uint32_t size,
             const Payload& src_payload,
             Payload& target_payload) override;
 
     bool release_payload(
             Payload& payload) override;
+
+    bool get_payload(
+            fastrtps::rtps::SerializedPayload_t& data,
+            fastrtps::rtps::CacheChange_t& cache_change) override;
 };
 
 } /* namespace ddsrouter */

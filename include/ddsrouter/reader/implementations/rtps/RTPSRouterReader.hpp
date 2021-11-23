@@ -37,7 +37,7 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class RTPSRouterReader : public BaseReader
+class RTPSRouterReader : public BaseReader , public fastrtps::rtps::ReaderListener
 {
 public:
 
@@ -48,6 +48,17 @@ public:
         fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     virtual ~RTPSRouterReader();
+
+    /////
+    // LISTENER METHODS
+
+    void onNewCacheChangeAdded(
+            fastrtps::rtps::RTPSReader* reader,
+            const fastrtps::rtps::CacheChange_t* const change) override;
+
+    void onReaderMatched(
+            fastrtps::rtps::RTPSReader*,
+            fastrtps::rtps::MatchingInfo& info) override;
 
 protected:
 
@@ -69,6 +80,10 @@ protected:
 
     fastrtps::rtps::RTPSReader* rtps_reader_;
     fastrtps::rtps::ReaderHistory* rtps_history_;
+
+    std::queue<std::unique_ptr<DataReceived>> data_received_;
+
+    mutable std::recursive_mutex rtps_mutex_;
 };
 
 } /* namespace ddsrouter */

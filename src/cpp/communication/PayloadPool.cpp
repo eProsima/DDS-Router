@@ -61,7 +61,6 @@ bool PayloadPool::get_payload(
 }
 
 bool PayloadPool::get_payload(
-        uint32_t size,
         const Payload& src_payload,
         Payload& target_payload)
 {
@@ -74,6 +73,14 @@ bool PayloadPool::release_payload(
 {
     // TODO
     throw UnsupportedException("PayloadPool::release_payload not supported yet");
+}
+
+bool PayloadPool::get_payload(
+        fastrtps::rtps::SerializedPayload_t& data,
+        fastrtps::rtps::CacheChange_t& cache_change)
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::get_payload not supported yet");
 }
 
 } /* namespace ddsrouter */

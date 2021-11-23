@@ -18,6 +18,7 @@
 
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
+#include <fastrtps/rtps/common/CacheChange.h>
 
 #include <ddsrouter/writer/implementations/rtps/RTPSRouterWriter.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
@@ -33,6 +34,8 @@ RTPSRouterWriter::RTPSRouterWriter(
         fastrtps::rtps::RTPSParticipant* rtps_participant)
     : BaseWriter(participant_id, topic, payload_pool)
 {
+    // TODO Use payload pool for this writer, so change does not need to be copied
+
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
@@ -71,6 +74,7 @@ RTPSRouterWriter::~RTPSRouterWriter()
     // Delete writer
     if (rtps_writer_)
     {
+        // Delete the Writer the History is cleaned
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
 
@@ -88,7 +92,39 @@ RTPSRouterWriter::~RTPSRouterWriter()
 ReturnCode RTPSRouterWriter::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    // TODO
+    uint32_t data_size = data->payload.length;
+
+    // Take new Change from history
+    fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change([data_size]() -> uint32_t
+        {
+            return data_size;
+        }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+
+    // TODO : Set method to remove old changes in order to get a new one
+    // In case it fails, remove old changes from history and try again
+    // if (!new_change)
+    // {
+    //     rtps_writer_->remove_older_changes(1);
+    //     new_change = rtps_writer_->new_change([data_size]() -> uint32_t
+    //     {
+    //         return data_size;
+    //     }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+    // }
+
+    // If still is not able to get a change, return an error code
+    if (!new_change)
+    {
+        return ReturnCode::RETCODE_ERROR;
+    }
+
+    // Get the Payload (copying it)
+    payload_pool_->get_payload(data->payload, new_change->serializedPayload);
+
+    // Send data by adding it to Writer History
+    rtps_history_->add_change(new_change);
+
+    // TODO: Data is never removed
+
     return ReturnCode::RETCODE_OK;
 }
 

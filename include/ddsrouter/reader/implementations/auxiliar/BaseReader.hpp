@@ -38,6 +38,8 @@ class BaseReader : public IReader
 {
 public:
 
+    // TODO Implement a way that if messages arrive when not enabled, when enable again call on_data_available
+
     /**
      * @brief Construct a new Base Reader object
      *
