@@ -33,6 +33,11 @@ class SimpleRTPSParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
+    using ParticipantConfiguration::ParticipantConfiguration;
+
+    SimpleRTPSParticipantConfiguration(
+            const ParticipantConfiguration& configuration);
+
     DomainId domain() const noexcept;
 };
 

@@ -29,12 +29,12 @@ namespace eprosima {
 namespace ddsrouter {
 
 SimpleRTPSRouterParticipant::SimpleRTPSRouterParticipant(
-        const SimpleRTPSParticipantConfiguration& participant_configuration,
+        const ParticipantConfiguration& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
 {
-    DomainId domain = participant_configuration.domain();
+    DomainId domain = configuration_.domain();
     fastrtps::rtps::RTPSParticipantAttributes params = SimpleRTPSRouterParticipant::participant_attributes();
 
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain, params);

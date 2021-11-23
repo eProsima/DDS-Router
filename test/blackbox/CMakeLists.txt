@@ -74,3 +74,4 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
 endfunction(add_blackbox_executable)
 
 add_subdirectory(ddsrouter_core)
+add_subdirectory(implementations)
