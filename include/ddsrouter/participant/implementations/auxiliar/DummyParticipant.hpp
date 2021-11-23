@@ -36,7 +36,7 @@ namespace ddsrouter {
  *
  * This Participant is used for Testing, as it could mock a DDS real network.
  */
-class DummyParticipant : public BaseParticipant
+class DummyParticipant : public BaseParticipant<ParticipantConfiguration>
 {
 public:
 
