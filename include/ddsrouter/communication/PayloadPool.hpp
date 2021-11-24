@@ -44,6 +44,9 @@ class PayloadPool : public fastrtps::rtps::IPayloadPool
 {
 public:
 
+    //! Construct an empty PayloadPool
+    PayloadPool();
+
     //! Delete PayloadPool and erase every Payload still without release
     virtual ~PayloadPool();
 
@@ -152,6 +155,14 @@ public:
     virtual bool get_payload(
             Payload& srd_data,
             fastrtps::rtps::CacheChange_t& target_cache_change);
+
+protected:
+
+    void add_reserved_payload_();
+    void add_release_payload_();
+
+    uint64_t reserve_count_;
+    uint64_t release_count_;
 };
 
 /**
@@ -161,6 +172,9 @@ public:
  */
 class CopyPayloadPool : public PayloadPool
 {
+
+    using PayloadPool::PayloadPool;
+
     bool release_payload(
             fastrtps::rtps::CacheChange_t& cache_change) override;
 

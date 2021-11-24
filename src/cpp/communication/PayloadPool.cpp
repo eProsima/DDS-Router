@@ -19,13 +19,33 @@
 
 #include <ddsrouter/communication/PayloadPool.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
+PayloadPool::PayloadPool()
+    : reserve_count_(0)
+    , release_count_(0)
+{
+}
+
 PayloadPool::~PayloadPool()
 {
-    // TODO
+    if (reserve_count_ < release_count_)
+    {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Removing non Consistent PayloadPool.");
+    }
+    else if (reserve_count_ != release_count_)
+    {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Removing PayloadPool with messages " <<
+        (reserve_count_ - release_count_) << " without released.");
+    }
+    else
+    {
+        logDebug(DDSROUTER_PAYLOADPOOL,
+            "Removing PayloadPool correctly after reserve: " << reserve_count_ << " payloads.");
+    }
 }
 
 bool PayloadPool::get_payload(
@@ -82,6 +102,22 @@ bool PayloadPool::get_payload(
     // TODO
     throw UnsupportedException("PayloadPool::get_payload not supported yet");
 }
+
+void PayloadPool::add_reserved_payload_()
+{
+    ++reserve_count_;
+}
+
+void PayloadPool::add_release_payload_()
+{
+    ++release_count_;
+    if (release_count_ > reserve_count_)
+    {
+        logWarning(DDSROUTER_PAYLOADPOOL,
+            "Inconsistent PayloadPool, releasing more payloads than reserved.");
+    }
+}
+
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
