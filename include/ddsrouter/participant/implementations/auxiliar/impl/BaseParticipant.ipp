@@ -39,11 +39,14 @@ BaseParticipant <ConfigurationType> ::BaseParticipant(
     , payload_pool_(payload_pool)
     , discovery_database_(discovery_database)
 {
+    logDebug(DDSROUTER_TRACK, "Creating Participant " << *this << ".");
 }
 
 template <class ConfigurationType>
 BaseParticipant <ConfigurationType> ::~BaseParticipant()
 {
+    logDebug(DDSROUTER_TRACK, "Destroying Participant " << *this << ".");
+
     if (!writers_.empty())
     {
         logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive writers");
@@ -55,6 +58,8 @@ BaseParticipant <ConfigurationType> ::~BaseParticipant()
         logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive readers");
         readers_.clear();
     }
+
+    logDebug(DDSROUTER_TRACK, "Participant " << *this << " destroyed.");
 }
 
 template <class ConfigurationType>
@@ -167,6 +172,15 @@ void BaseParticipant <ConfigurationType> ::delete_reader_(
         std::shared_ptr <IReader>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
+}
+
+template <class ConfigurationType>
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseParticipant<ConfigurationType>& participant)
+{
+    os << "{" << participant.id() << ";" << participant.configuration_.type() << "}";
+    return os;
 }
 
 } /* namespace ddsrouter */

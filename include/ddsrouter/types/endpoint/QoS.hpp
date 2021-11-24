@@ -67,7 +67,17 @@ protected:
 
     //! Reliability kind
     ReliabilityKind reliability_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(std::ostream&, const QoS&);
 };
+
+/**
+ * @brief \c QoS to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const QoS& qos);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
