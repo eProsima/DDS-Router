@@ -83,7 +83,8 @@ protected:
      * @param [in] id: id of the participant to remove
      * @return Pointer to Participant removed
      */
-    std::shared_ptr<IParticipant> pop_(const ParticipantId& id) noexcept;
+    std::shared_ptr<IParticipant> pop_(
+            const ParticipantId& id) noexcept;
 
     /**
      * @brief Remove a Participant from the database

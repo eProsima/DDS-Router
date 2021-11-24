@@ -85,7 +85,8 @@ void ParticipantsDatabase::add_participant_(
     participants_[id] = participant;
 }
 
-std::shared_ptr<IParticipant> ParticipantsDatabase::pop_(const ParticipantId& id) noexcept
+std::shared_ptr<IParticipant> ParticipantsDatabase::pop_(
+        const ParticipantId& id) noexcept
 {
     auto it = participants_.find(id);
 

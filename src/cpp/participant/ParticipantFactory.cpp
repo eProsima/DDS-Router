@@ -71,7 +71,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     return nullptr; // Unreacheable code
 }
 
-void ParticipantFactory::remove_participant(std::shared_ptr<IParticipant> participant)
+void ParticipantFactory::remove_participant(
+        std::shared_ptr<IParticipant> participant)
 {
     // TODO
     throw UnsupportedException("ParticipantFactory::remove_participant not supported yet");
