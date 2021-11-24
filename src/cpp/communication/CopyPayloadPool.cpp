@@ -48,7 +48,7 @@ bool CopyPayloadPool::get_payload(
         Payload& target_payload)
 {
     get_payload(src_payload.length, target_payload);
-    std::memcpy(src_payload.data, target_payload.data, src_payload.length);
+    std::memcpy(target_payload.data, src_payload.data, src_payload.length);
 
     return true;
 }

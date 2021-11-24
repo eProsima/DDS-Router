@@ -67,6 +67,9 @@ protected:
     ReturnCode take_(
             std::unique_ptr<DataReceived>& data) noexcept override;
 
+    bool come_from_this_participant_(const fastrtps::rtps::CacheChange_t* change) const noexcept;
+    bool come_from_this_participant_(const fastrtps::rtps::GUID_t guid) const noexcept;
+
     /////
     // RTPS specific methods
 

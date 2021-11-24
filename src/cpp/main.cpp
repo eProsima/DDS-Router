@@ -17,6 +17,15 @@
  *
  */
 
+#include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/constants.hpp>
+
+using namespace eprosima::ddsrouter;
+
 int main(
         int argc,
         char** argv)
@@ -25,6 +34,25 @@ int main(
 
     static_cast<void>(argc);
     static_cast<void>(argv);
+
+    // Activate log
+    Log::SetVerbosity(Log::Kind::Info);
+    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+
+    // Generate configuration
+    std::string file_name = DEFAULT_CONFIGURATION_FILE_NAME;
+    RawConfiguration configuration = load_configuration_from_file(file_name);
+
+    // Create DDSRouter entity
+    DDSRouter router(configuration);
+
+    // Start DDSRouter
+    router.start();
+
+    std::this_thread::sleep_for(std::chrono::seconds(60));
+
+    // Stop DDS Router
+    router.stop();
 
     return 0;
 }
