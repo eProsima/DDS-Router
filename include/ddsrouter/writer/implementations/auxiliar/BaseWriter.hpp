@@ -121,7 +121,20 @@ protected:
 
     //! Mutex that guards every access to the Reader
     mutable std::recursive_mutex mutex_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(std::ostream&, const BaseWriter&);
 };
+
+/**
+ * @brief \c BaseWriter to stream serialization
+ *
+ * This method is merely a to_string of a BaseWriter definition.
+ * It serialize the ParticipantId and topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseWriter& writer);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

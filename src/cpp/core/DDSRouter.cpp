@@ -41,7 +41,7 @@ DDSRouter::DDSRouter(
     , participant_factory_()
     , enabled_(false)
 {
-    logInfo(DDSROUTER, "Initializing DDSRouter");
+    logDebug(DDSROUTER, "Creating DDSRouter.");
 
     // Init topic allowed
     init_allowed_topics_();
@@ -49,16 +49,16 @@ DDSRouter::DDSRouter(
     init_participants_();
     // Create Bridges
     init_bridges_();
+
+    logDebug(DDSROUTER, "DDSRouter created.");
 }
 
 DDSRouter::~DDSRouter()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
-    logInfo(DDSROUTER, "Destroying DDSRouter");
+    logDebug(DDSROUTER, "Destroying DDSRouter.");
 
     // Stop all communications
-    stop();
+    stop_();
 
     // Destroy Bridges, so Writers and Readers are destroyed before the Databases
     bridges_.clear();
@@ -79,6 +79,8 @@ DDSRouter::~DDSRouter()
     }
 
     // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
+
+    logDebug(DDSROUTER, "DDSRouter destroyed.");
 }
 
 ReturnCode DDSRouter::reload_configuration(
@@ -90,22 +92,72 @@ ReturnCode DDSRouter::reload_configuration(
 
 ReturnCode DDSRouter::start() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    ReturnCode ret = start_();
+    if (ret == ReturnCode::RETCODE_OK)
+    {
+        logUser(DDSROUTER, "Starting DDSRouter");
+    }
+    else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
+    {
+        logUser(DDSROUTER, "Trying to start DDSRouter that is not disabled");
+    }
 
-    logInfo(DDSROUTER, "Starting DDSRouter");
-
-    active_all_topics_();
-    return ReturnCode::RETCODE_OK;
+    return ret;
 }
 
 ReturnCode DDSRouter::stop() noexcept
 {
+    ReturnCode ret = stop_();
+    if (ret == ReturnCode::RETCODE_OK)
+    {
+        logUser(DDSROUTER, "Stopping DDSRouter");
+    }
+    else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
+    {
+        logUser(DDSROUTER, "Trying to stop DDSRouter that is not enabled");
+    }
+
+    return ret;
+}
+
+ReturnCode DDSRouter::start_() noexcept
+{
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    logInfo(DDSROUTER, "Stopping DDSRouter");
+    if (!enabled_.load())
+    {
+        enabled_.store(true);
 
-    deactive_all_topics_();
-    return ReturnCode::RETCODE_OK;
+        logInfo(DDSROUTER, "Starting DDSRouter");
+
+        active_all_topics_();
+        return ReturnCode::RETCODE_OK;
+    }
+    else
+    {
+        logInfo(DDSROUTER, "Trying to start DDSRouter that is not disabled");
+        return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
+    }
+}
+
+ReturnCode DDSRouter::stop_() noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (enabled_.load())
+    {
+        enabled_.store(false);
+
+        logInfo(DDSROUTER, "Stopping DDSRouter");
+
+        deactive_all_topics_();
+        return ReturnCode::RETCODE_OK;
+    }
+    else
+    {
+        logInfo(DDSROUTER, "Trying to stop DDSRouter that is not enabled");
+        return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
+    }
 }
 
 void DDSRouter::init_allowed_topics_()

@@ -34,7 +34,7 @@ Bridge::Bridge(
     , payload_pool_(payload_pool)
     , enabled_(false)
 {
-    logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
+    logDebug(DDSROUTER_BRIDGE, "Creating Bridge " << *this << ".");
 
     std::vector<ParticipantId> ids = participants_->get_participant_ids();
 
@@ -66,11 +66,13 @@ Bridge::Bridge(
     {
         this->enable();
     }
+
+    logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " created.");
 }
 
 Bridge::~Bridge()
 {
-    logInfo(DDSROUTER_BRIDGE, "Destroying Bridge for topic " << topic_ << ".");
+    logDebug(DDSROUTER_BRIDGE, "Destroying Bridge " << *this << ".");
 
     // Disable every Track before destruction
     disable();
@@ -94,6 +96,8 @@ Bridge::~Bridge()
     }
 
     // Participants must not be removed as they belong to the Participant Database
+
+    logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " destroyed.");
 }
 
 void Bridge::enable() noexcept
@@ -130,6 +134,14 @@ void Bridge::disable() noexcept
 
         enabled_ = false;
     }
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const Bridge& bridge)
+{
+    os << "{" << bridge.topic_ << "}";
+    return os;
 }
 
 } /* namespace ddsrouter */

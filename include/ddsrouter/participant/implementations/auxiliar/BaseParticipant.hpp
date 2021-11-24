@@ -187,7 +187,22 @@ protected:
 
     //! Mutex that guards every access to the Participant
     mutable std::recursive_mutex mutex_;
+
+    // Allow operator << to use private variables
+    template <class C>
+    friend std::ostream& operator <<(std::ostream&, const BaseParticipant<C>&);
 };
+
+/**
+ * @brief \c BaseParticipant to stream serialization
+ *
+ * This method is merely a to_string of a BaseParticipant definition.
+ * It serialize the Id and type
+ */
+template <class ConfigurationType>
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseParticipant<ConfigurationType>& track);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

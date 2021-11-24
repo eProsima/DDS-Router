@@ -109,6 +109,30 @@ public:
 
 protected:
 
+    /**
+     * @brief Internal Start method
+     *
+     * Enable every topic Bridge.
+     *
+     * @note this method returns a ReturnCode for future possible errors
+     *
+     * @return \c RETCODE_OK if ok
+     * @return \c RETCODE_PRECONDITION_NOT_MET if Router was not disabled
+     */
+    ReturnCode start_() noexcept;
+
+    /**
+     * @brief Internal Stop method
+     *
+     * Disable every topic Bridge.
+     *
+     * @note this method returns a ReturnCode for future possible errors
+     *
+     * @return \c RETCODE_OK if ok
+     * @return \c RETCODE_PRECONDITION_NOT_MET if Router was not enabled
+     */
+    ReturnCode stop_() noexcept;
+
     /////
     // INTERNAL INITIALIZATION METHODS
 

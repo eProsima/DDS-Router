@@ -31,7 +31,7 @@ BaseWriter::BaseWriter(
     , topic_(topic)
     , payload_pool_(payload_pool)
 {
-
+    logDebug(DDSROUTER_BASEWRITER, "Creating Reader " << *this << ".");
 }
 
 void BaseWriter::enable() noexcept
@@ -73,7 +73,7 @@ ReturnCode BaseWriter::write(
     }
     else
     {
-        logWarning(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in topic " <<
+        logWarning(DDSROUTER_BASEWRITER, "Attempt to take data from disabled Reader in topic " <<
             topic_ << " in Participant " << participant_id_);
         return ReturnCode::RETCODE_NOT_ENABLED;
     }
@@ -88,5 +88,14 @@ void BaseWriter::disable_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseWriter& writer)
+{
+    os << "{" << writer.participant_id_ << ";" << writer.topic_ << "}";
+    return os;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

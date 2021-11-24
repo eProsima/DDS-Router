@@ -165,7 +165,20 @@ protected:
 
     //! Default callback. It shows a warning that callback is not set
     static const std::function<void()> DEFAULT_ON_DATA_AVAILABLE_CALLBACK;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(std::ostream&, const BaseReader&);
 };
+
+/**
+ * @brief \c BaseReader to stream serialization
+ *
+ * This method is merely a to_string of a BaseReader definition.
+ * It serialize the ParticipantId and topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseReader& reader);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

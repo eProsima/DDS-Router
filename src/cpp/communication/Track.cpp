@@ -40,7 +40,7 @@ Track::Track(
     , exit_(false)
     , is_data_available_(false)
 {
-    logInfo(DDSROUTER_TRACK, "Creating Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+    logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
     // Set this track to on_data_available lambda call
     reader_->set_on_data_available_callback(std::bind(&Track::data_available, this));
@@ -53,11 +53,12 @@ Track::Track(
         // Activate Track
         this->enable();
     }
+    logDebug(DDSROUTER_TRACK, "Track " << *this << " created.");
 }
 
 Track::~Track()
 {
-    logInfo(DDSROUTER_TRACK, "Destroying Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+    logDebug(DDSROUTER_TRACK, "Destroying Track " << *this << ".");
 
     // Disable reader
     disable();
@@ -69,6 +70,8 @@ Track::~Track()
     exit_.store(true); // This is not needed to be guarded as it is atomic
     transmit_condition_variable_.notify_all();
     transmit_thread_.join();
+
+    logDebug(DDSROUTER_TRACK, "Track " << *this << " destroyed.");
 }
 
 void Track::enable() noexcept
@@ -115,6 +118,7 @@ void Track::disable() noexcept
 
 void Track::no_more_data_available_() noexcept
 {
+    logInfo(DDSROUTER_TRACK, "Track " << *this << " has no more data to sent.");
     is_data_available_.store(false);
 }
 
@@ -128,8 +132,7 @@ void Track::data_available() noexcept
     // Only hear callback if it is enabled
     if (enabled_)
     {
-        logInfo(DDSROUTER_TRACK,
-                "Track " << reader_participant_id_ << " for topic " << topic_ << " has data available to transmit.");
+        logInfo(DDSROUTER_TRACK, "Track " << *this << " has data available to transmit.");
 
         // Set data available to true and notify transmit thread
         is_data_available_.store(true);
@@ -169,7 +172,7 @@ void Track::transmit_nts_() noexcept
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         ReturnCode ret = reader_->take(data);
 
-        logInfo(DDSROUTER_TRACK,
+        logDebug(DDSROUTER_TRACK,
             "Track " << reader_participant_id_ << " for topic " << topic_ <<
             " transmitting data from remote endpoint " << data->source_guid << ".");
 
@@ -203,6 +206,14 @@ void Track::transmit_nts_() noexcept
 
         payload_pool_->release_payload(data->payload);
     }
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const Track& track)
+{
+    os << "{" << track.topic_ << ";" << track.reader_participant_id_ << "}";
+    return os;
 }
 
 } /* namespace ddsrouter */

@@ -52,5 +52,13 @@ bool QoS::operator ==(
     return durability_ == other.durability_ && reliability_ == other.reliability_;
 }
 
+std::ostream& operator <<(
+        std::ostream& os,
+        const QoS& qos)
+{
+    os << "{" << qos.durability_ << ";" << qos.reliability_ << "}";
+    return os;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

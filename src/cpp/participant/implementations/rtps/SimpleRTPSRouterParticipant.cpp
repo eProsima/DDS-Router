@@ -18,6 +18,7 @@
 
 #include <memory>
 
+#include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/RTPSDomain.h>
 
 #include <ddsrouter/participant/implementations/rtps/SimpleRTPSRouterParticipant.hpp>
@@ -42,6 +43,9 @@ SimpleRTPSRouterParticipant::SimpleRTPSRouterParticipant(
     {
         throw InitializationException(utils::Formatter() << "Error creating Simple RTPS Participant " << id());
     }
+
+    logInfo(DDSROUTER_RTPS_READER, "New Participant created with id " << id() << " in domain " <<
+        domain << " with guid " << rtps_participant_->getGuid());
 }
 
 SimpleRTPSRouterParticipant::~SimpleRTPSRouterParticipant()

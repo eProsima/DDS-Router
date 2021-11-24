@@ -114,7 +114,11 @@ ReturnCode RTPSRouterReader::take_(
     // Store it in DDSRouter PayloadPool
     payload_pool_->get_payload(received_change->serializedPayload, data->payload);
 
-    // Release the change in the reader
+    logDebug(DDSROUTER_RTPS_READER_LISTENER,
+        "Data transmiting to track from Reader " << *this << " with payload " <<
+        received_change->serializedPayload << " from remote writer " << received_change->writerGUID);
+
+    // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
     rtps_reader_->releaseCache(received_change);
 
@@ -169,6 +173,8 @@ void RTPSRouterReader::onNewCacheChangeAdded(
     if (!come_from_this_participant_(change))
     {
         // Call Track callback (by calling BaseReader callback method)
+        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+            "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " << change->writerGUID);
         on_data_available_();
     }
     else
@@ -188,12 +194,12 @@ void RTPSRouterReader::onReaderMatched(
         if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                "Reader matched with a new Writer with guid " << info.remoteEndpointGuid);
+                "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
         }
         else
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                "Reader unmatched with Writer " << info.remoteEndpointGuid);
+                "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
         }
     }
 }

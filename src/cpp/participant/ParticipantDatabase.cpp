@@ -81,6 +81,10 @@ void ParticipantDatabase::add_participant_(
     {
         logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a duplicated Participant " << id);
     }
+    else
+    {
+        logInfo(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a new Participant " << id);
+    }
 
     participants_[id] = participant;
 }
@@ -97,6 +101,8 @@ std::shared_ptr<IParticipant> ParticipantDatabase::pop_(const ParticipantId& id)
 
     std::shared_ptr<IParticipant> participant_to_erase = it->second;
     participants_.erase(it);
+
+    logInfo(DDSROUTER_PARTICIPANT_DATABASE, "Poping Participant " << participant_to_erase->id());
 
     return participant_to_erase;
 }
