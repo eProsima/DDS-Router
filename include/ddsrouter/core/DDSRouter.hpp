@@ -28,7 +28,7 @@
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
-#include <ddsrouter/participant/ParticipantDatabase.hpp>
+#include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
@@ -46,14 +46,14 @@ public:
     /**
      * @brief Construct a new DDSRouter object
      *
-     * This method initialize a whole DDSRouter:
-     * - Create the AllowedTopicList
-     * - Create Participants and add them to \c ParticipantDatabase
-     * - Create the Bridges for RealTopics as disable (TODO: remove when discovery is ready)
+     * Initialize a whole DDSRouter:
+     * - Create its associated AllowedTopicList
+     * - Create Participants and add them to \c ParticipantsDatabase
+     * - Create the Bridges for RealTopics as disabled (TODO: remove when discovery is ready)
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSRouter(
@@ -77,10 +77,10 @@ public:
      *
      * @param [in] configuration : new configuration
      *
-     * @return \c RETCODE_OK if configurations has been updated correctly
+     * @return \c RETCODE_OK if configuration has been updated correctly
      * @return \c RETCODE_NO_DATA if new configuration has not changed
-     * @return \c RETCODE_BAD_PARAMETER if configurations is bad formed
-     * @return \c RETCODE_ERROR if any other erro has ocurred
+     * @return \c RETCODE_BAD_PARAMETER if configuration is not well-formed
+     * @return \c RETCODE_ERROR if any other error has occurred
      */
     ReturnCode reload_configuration(
             const Configuration& configuration);
@@ -115,19 +115,19 @@ protected:
     /**
      * @brief Load allowed topics from configuration
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      */
     void init_allowed_topics_();
 
     /**
-     * @brief  Create participants and add it to the participants database
+     * @brief  Create participants and add them to the participants database
      *
      * @throw \c InitializationException in case \c IParticipants creation fails.
      */
     void init_participants_();
 
     /**
-     * @brief  Create disabled bridges for every real topic
+     * @brief  Create a disabled bridge for every real topic
      *
      * @throw \c InitializationException in case \c IWriters or \c IReaders creation fails.
      */
@@ -175,20 +175,20 @@ protected:
      *
      * If the Bridge of the topic does not exist, do nothing.
      *
-     * @param [in] topic : Topic to be enabled
+     * @param [in] topic : Topic to be disabled
      */
     void deactive_topic_(
             const RealTopic& topic) noexcept;
 
     /**
-     * @brief Activate all Topics that are allowed by the allowed list
+     * @brief Activate all Topics that are allowed by the allowed topics list
      */
-    void active_all_topics_() noexcept;
+    void activate_all_topics_() noexcept;
 
     /**
      * @brief Disable all Bridges
      */
-    void deactive_all_topics_() noexcept;
+    void deactivate_all_topics_() noexcept;
 
     /////
     // DATA STORAGE
@@ -205,7 +205,7 @@ protected:
     /**
      * @brief Object that stores every Participant running in the DDSRouter
      */
-    std::shared_ptr<ParticipantDatabase> participants_database_;
+    std::shared_ptr<ParticipantsDatabase> participants_database_;
 
     /**
      * @brief Common discovery database
@@ -216,7 +216,7 @@ protected:
      */
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
-    //! Map of bridges indexed by the topic of each one
+    //! Map of bridges indexed by their topic
     std::map<RealTopic, std::unique_ptr<Bridge>> bridges_;
 
     /**

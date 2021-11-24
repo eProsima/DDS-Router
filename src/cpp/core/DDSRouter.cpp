@@ -33,7 +33,7 @@ namespace ddsrouter {
 DDSRouter::DDSRouter(
         const Configuration& configuration)
     : payload_pool_(new CopyPayloadPool())
-    , participants_database_(new ParticipantDatabase())
+    , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
     , allowed_topics_()
     , bridges_()
@@ -53,8 +53,6 @@ DDSRouter::DDSRouter(
 
 DDSRouter::~DDSRouter()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
     logInfo(DDSROUTER, "Destroying DDSRouter");
 
     // Stop all communications
@@ -64,7 +62,7 @@ DDSRouter::~DDSRouter()
     bridges_.clear();
 
     // Destroy Participants
-    while(!participants_database_->empty())
+    while (!participants_database_->empty())
     {
         auto participant = participants_database_->pop_();
 
@@ -78,7 +76,7 @@ DDSRouter::~DDSRouter()
         }
     }
 
-    // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
+    // There is no need to destroy shared ptrs as they will delete themselves when no longer referenced
 }
 
 ReturnCode DDSRouter::reload_configuration(
@@ -94,7 +92,7 @@ ReturnCode DDSRouter::start() noexcept
 
     logInfo(DDSROUTER, "Starting DDSRouter");
 
-    active_all_topics_();
+    activate_all_topics_();
     return ReturnCode::RETCODE_OK;
 }
 
@@ -104,7 +102,7 @@ ReturnCode DDSRouter::stop() noexcept
 
     logInfo(DDSROUTER, "Stopping DDSRouter");
 
-    deactive_all_topics_();
+    deactivate_all_topics_();
     return ReturnCode::RETCODE_OK;
 }
 
@@ -130,17 +128,17 @@ void DDSRouter::init_participants_()
             payload_pool_,
             discovery_database_);
 
-        // Create_participant should throw an exception in fail, never return nullptr
+        // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||
                 !new_participant->type().is_valid())
         {
-            // Fail creating participant
+            // Failed to create participant
             throw InitializationException(utils::Formatter()
-                << "Fail creating Participant " << participant_config.id());
+                          << "Failed to create creating Participant " << participant_config.id());
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-             << " and type " << new_participant->type() << ".");
+                                                           << " and type " << new_participant->type() << ".");
 
         // Add this participant to the database
         participants_database_->add_participant_(
@@ -194,10 +192,10 @@ void DDSRouter::create_new_bridge(
     {
         bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, enabled);
     }
-    catch(const InitializationException& e)
+    catch (const InitializationException& e)
     {
         logError(DDSROUTER, "Error creating Bridge for topic " << topic
-            << ". Error code:" << e.what());
+                                                               << ". Error code:" << e.what());
     }
 }
 
@@ -221,7 +219,7 @@ void DDSRouter::active_topic_(
     }
     else
     {
-        // The Bridge already exist
+        // The Bridge already exists
         it_bridge->second->enable();
     }
 }
@@ -231,7 +229,7 @@ void DDSRouter::deactive_topic_(
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    logInfo(DDSROUTER, "Deativating topic: " << topic << ".");
+    logInfo(DDSROUTER, "Deactivating topic: " << topic << ".");
 
     // Modify current_topics_ and set this topic as non active
     current_topics_[topic] = false;
@@ -241,13 +239,13 @@ void DDSRouter::deactive_topic_(
 
     if (it_bridge != bridges_.end())
     {
-        // The Bridge already exist
+        // The Bridge already exists
         it_bridge->second->disable();
     }
     // If the Bridge does not exist, is not need to create it
 }
 
-void DDSRouter::active_all_topics_() noexcept
+void DDSRouter::activate_all_topics_() noexcept
 {
     for (auto it : current_topics_)
     {
@@ -259,11 +257,11 @@ void DDSRouter::active_all_topics_() noexcept
     }
 }
 
-void DDSRouter::deactive_all_topics_() noexcept
+void DDSRouter::deactivate_all_topics_() noexcept
 {
     for (auto it : current_topics_)
     {
-        // Dectivate all topics
+        // Deactivate all topics
         deactive_topic_(it.first);
     }
 }

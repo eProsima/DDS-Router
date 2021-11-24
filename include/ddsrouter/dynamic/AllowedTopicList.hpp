@@ -95,10 +95,10 @@ public:
 protected:
 
     /**
-     * @brief Get a list of filtered topics and return a list that filters same topics eliminating redundancy
+     * @brief Get a list of filtered topics and return a list that filters repeated topics eliminating redundancy
      *
      * @param [in] list: list of topics with redundancy
-     * @return List of topics without redundancy
+     * @return Set of topics without redundancy
      */
     static std::set<std::shared_ptr<FilterTopic>> get_topic_list_without_repetition_(
             const std::list<std::shared_ptr<FilterTopic>>& list) noexcept;

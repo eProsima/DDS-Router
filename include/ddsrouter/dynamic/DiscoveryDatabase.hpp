@@ -32,14 +32,14 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Class that store a collection of remote (that does not belong to this DDSRouter) Endpoints discovered.
+ * Class that stores a collection of discovered remote (not belonging to this DDSRouter) Endpoints.
  */
 class DiscoveryDatabase
 {
 public:
 
     /**
-     * @brief Whether a topic exist in any Endpoint in the database
+     * @brief Whether a topic exists in any Endpoint in the database
      *
      * @param [in] topic: topic to check if it exists
      * @return true if any endpoint has this topic, false otherwise
@@ -55,7 +55,7 @@ public:
      * @brief Add a new endpoint or modify it inside the database in case it already exists.
      *
      * @param [in] new_endpoint: new endpoint to store
-     * @return True if the endpoint has been addded, false if it has been updated
+     * @return true if the endpoint has been updated, false if it has been added
      */
     bool add_or_modify_endpoint(
             const Endpoint& new_endpoint) noexcept;
@@ -64,25 +64,27 @@ public:
      * @brief Erase an endpoint inside the database
      *
      * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
-     * @return RETCODE_OK if correctly erased, RETCODE_NO_DATA if the endpoints was not in the databsase
+     * @return \c RETCODE_OK if correctly erased
+     * @return \c RETCODE_NO_DATA if the endpoint was not in the database
      */
     ReturnCode erase_endpoint(
             const Guid& guid_of_endpoint_to_erase) noexcept;
 
     /**
-     * @brief Get the endpoint object refering the¡is guid
+     * @brief Get the endpoint object with this guid
      *
      * @param [in] guid: guid to query
-     * @return Endpoint refering to this guid. In case the endpoint does not exist, return an invalid endpoint.
+     * @return Endpoint referring to this guid. In case the endpoint does not exist, return an invalid endpoint.
      */
-    Endpoint get_endpoint(const Guid& endpoint_guid) const noexcept;
+    Endpoint get_endpoint(
+            const Guid& endpoint_guid) const noexcept;
 
     // TODO
     // some way of allowing participants to subscribe to a callback when new information arrives
 
 protected:
 
-    //! Database data indexed by guid
+    //! Database of endpoints indexed by guid
     std::map<Guid, Endpoint> entities_;
 
     //! Mutex to guard queries to the database

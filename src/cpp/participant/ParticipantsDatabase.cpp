@@ -13,17 +13,17 @@
 // limitations under the License.
 
 /**
- * @file ParticipantDatabase.cpp
+ * @file ParticipantsDatabase.cpp
  *
  */
 
-#include <ddsrouter/participant/ParticipantDatabase.hpp>
+#include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-ParticipantDatabase::~ParticipantDatabase()
+ParticipantsDatabase::~ParticipantsDatabase()
 {
     if (!participants_.empty())
     {
@@ -31,7 +31,7 @@ ParticipantDatabase::~ParticipantDatabase()
     }
 }
 
-std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
+std::shared_ptr<IParticipant> ParticipantsDatabase::get_participant(
         const ParticipantId& id) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
@@ -45,7 +45,7 @@ std::shared_ptr<IParticipant> ParticipantDatabase::get_participant(
     return it->second;
 }
 
-std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const noexcept
+std::vector<ParticipantId> ParticipantsDatabase::get_participant_ids() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     std::vector<ParticipantId> result(participants_.size());
@@ -58,18 +58,18 @@ std::vector<ParticipantId> ParticipantDatabase::get_participant_ids() const noex
     return result;
 }
 
-std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantDatabase::get_participant_map() const noexcept
+std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantsDatabase::get_participant_map() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return participants_;
 }
 
-bool ParticipantDatabase::empty() const noexcept
+bool ParticipantsDatabase::empty() const noexcept
 {
     return participants_.empty();
 }
 
-void ParticipantDatabase::add_participant_(
+void ParticipantsDatabase::add_participant_(
         ParticipantId id,
         std::shared_ptr<IParticipant> participant) noexcept
 {
@@ -85,7 +85,7 @@ void ParticipantDatabase::add_participant_(
     participants_[id] = participant;
 }
 
-std::shared_ptr<IParticipant> ParticipantDatabase::pop_(const ParticipantId& id) noexcept
+std::shared_ptr<IParticipant> ParticipantsDatabase::pop_(const ParticipantId& id) noexcept
 {
     auto it = participants_.find(id);
 
@@ -101,7 +101,7 @@ std::shared_ptr<IParticipant> ParticipantDatabase::pop_(const ParticipantId& id)
     return participant_to_erase;
 }
 
-std::shared_ptr<IParticipant> ParticipantDatabase::pop_() noexcept
+std::shared_ptr<IParticipant> ParticipantsDatabase::pop_() noexcept
 {
     if (participants_.empty())
     {

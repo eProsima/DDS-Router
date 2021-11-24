@@ -33,7 +33,7 @@ AllowedTopicList::AllowedTopicList(
 }
 
 AllowedTopicList& AllowedTopicList::operator =(
-            const AllowedTopicList& other)
+        const AllowedTopicList& other)
 {
     this->allowlist_ = allowlist_;
     this->blocklist_ = blocklist_;
@@ -43,8 +43,6 @@ AllowedTopicList& AllowedTopicList::operator =(
 
 AllowedTopicList::~AllowedTopicList()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
     // Eliminate all topics
     clear();
 }
@@ -62,7 +60,7 @@ bool AllowedTopicList::is_topic_allowed(
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    // It is accepted by default if allowlist is empty, if no is should pass the allowlist filter
+    // It is accepted by default if allowlist is empty, if not it should pass the allowlist filter
     bool accepted = allowlist_.empty();
 
     // Check if allowlist filter it (this will do anything if empty and accepted will be true)
