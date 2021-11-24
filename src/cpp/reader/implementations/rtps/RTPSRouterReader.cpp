@@ -115,9 +115,20 @@ ReturnCode RTPSRouterReader::take_(
     payload_pool_->get_payload(received_change->serializedPayload, data->payload);
 
     // Release the change in the reader
+    rtps_reader_->getHistory()->remove_change(received_change);
     rtps_reader_->releaseCache(received_change);
 
     return ReturnCode::RETCODE_OK;
+}
+
+bool RTPSRouterReader::come_from_this_participant_(const fastrtps::rtps::CacheChange_t* change) const noexcept
+{
+    return come_from_this_participant_(change->writerGUID);
+}
+
+bool RTPSRouterReader::come_from_this_participant_(const fastrtps::rtps::GUID_t guid) const noexcept
+{
+    return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
 }
 
 fastrtps::rtps::HistoryAttributes RTPSRouterReader::history_attributes_() const noexcept
@@ -155,16 +166,36 @@ void RTPSRouterReader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader* reader,
         const fastrtps::rtps::CacheChange_t* const change)
 {
-    // Call Track callback (by calling BaseReader callback method)
-    on_data_available_();
+    if (!come_from_this_participant_(change))
+    {
+        // Call Track callback (by calling BaseReader callback method)
+        on_data_available_();
+    }
+    else
+    {
+        // If it is a message from this Participant, do not send it forward and remove it
+        // TODO: do this more elegant
+        rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+    }
 }
 
 void RTPSRouterReader::onReaderMatched(
         fastrtps::rtps::RTPSReader*,
         fastrtps::rtps::MatchingInfo& info)
 {
-    logInfo(DDSROUTER_RTPS_READER_LISTENER, "Reader of Participant " << participant_id_ << " in topic " << topic_ <<
-        " matche with a new Writer with guid " << info.remoteEndpointGuid);
+    if (!come_from_this_participant_(info.remoteEndpointGuid))
+    {
+        if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
+        {
+            logInfo(DDSROUTER_RTPS_READER_LISTENER,
+                "Reader matched with a new Writer with guid " << info.remoteEndpointGuid);
+        }
+        else
+        {
+            logInfo(DDSROUTER_RTPS_READER_LISTENER,
+                "Reader unmatched with Writer " << info.remoteEndpointGuid);
+        }
+    }
 }
 
 } /* namespace ddsrouter */
