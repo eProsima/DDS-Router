@@ -98,6 +98,14 @@ public:
             RealTopic topic);
 
     /**
+     * @brief Make the thread wait until message N has arrived to Writer in topic \c topic
+     *
+     * @param topic : Topic that refers to the Writer that should have sent this data.
+     * @param [in] n : wait till data n has arrived and simulated to be sent
+     */
+    void wait_until_n_data_sent(RealTopic topic, uint16_t n) const noexcept;
+
+    /**
      * @brief Get a DummyParticipant by ID
      *
      * By this reference, the internal writers and readers of the Participant could be accessed in order to simulate

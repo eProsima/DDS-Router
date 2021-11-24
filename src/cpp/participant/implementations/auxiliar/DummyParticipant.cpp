@@ -98,6 +98,16 @@ std::vector<DummyDataStored> DummyParticipant::get_data_that_should_have_been_se
     }
 }
 
+void DummyParticipant::wait_until_n_data_sent(RealTopic topic, uint16_t n) const noexcept
+{
+    auto it = writers_.find(topic);
+    if (it != writers_.end())
+    {
+        std::shared_ptr<DummyWriter> writer = std::dynamic_pointer_cast<DummyWriter>(it->second);
+        writer->wait_until_n_data_sent(n);
+    }
+}
+
 DummyParticipant* DummyParticipant::get_participant(
         ParticipantId id)
 {

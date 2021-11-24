@@ -106,8 +106,8 @@ TEST(TrivialTest, trivial_communication)
 
     participant_1->simulate_data_reception(topic, data);
 
-    // It must sleep so it gives time for Router to redirect msg
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    // Sleep until first data arrive to the writer
+    participant_2->wait_until_n_data_sent(topic, 1);
 
     std::vector<DummyDataStored> data_received = participant_2->get_data_that_should_have_been_sent(topic);
 

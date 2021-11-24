@@ -19,6 +19,7 @@
 #ifndef _DATABROKER_WRITER_IMPLEMENTATIONS_AUX_DUMMYWRITER_HPP_
 #define _DATABROKER_WRITER_IMPLEMENTATIONS_AUX_DUMMYWRITER_HPP_
 
+#include <condition_variable>
 #include <mutex>
 
 #include <ddsrouter/types/participant/ParticipantId.hpp>
@@ -60,6 +61,14 @@ public:
      */
     std::vector<DummyDataStored> get_data_that_should_have_been_sent() const noexcept;
 
+
+    /**
+     * @brief Make the thread wait until message N has been received
+     *
+     * @param [in] n : wait till data n has arrived and simulated to be sent
+     */
+    void wait_until_n_data_sent(uint16_t n) const noexcept;
+
 protected:
 
     /**
@@ -75,10 +84,15 @@ protected:
             std::unique_ptr<DataReceived>& data) noexcept override;
 
     //! Stores the data that should have been published
-    std::vector<DummyDataStored> data_stored;
+    std::vector<DummyDataStored> data_stored_;
+
+    /**
+     * Condition variable to wait for new data available or track termination.
+     */
+    mutable std::condition_variable wait_condition_variable_;
 
     //! Guard access to \c data_stored
-    mutable std::recursive_mutex dummy_mutex_;
+    mutable std::mutex dummy_mutex_;
 };
 
 } /* namespace ddsrouter */
