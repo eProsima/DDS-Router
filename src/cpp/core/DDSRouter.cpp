@@ -283,7 +283,7 @@ void DDSRouter::deactive_topic_(
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    logInfo(DDSROUTER, "Deativating topic: " << topic << ".");
+    logInfo(DDSROUTER, "Deactivating topic: " << topic << ".");
 
     // Modify current_topics_ and set this topic as non active
     current_topics_[topic] = false;

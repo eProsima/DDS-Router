@@ -173,7 +173,7 @@ void RTPSRouterReader::onNewCacheChangeAdded(
     if (!come_from_this_participant_(change))
     {
         // Call Track callback (by calling BaseReader callback method)
-        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+        logDebug(DDSROUTER_RTPS_READER_LISTENER,
             "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " << change->writerGUID);
         on_data_available_();
     }

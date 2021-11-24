@@ -35,7 +35,7 @@ class PayloadPool : public fastrtps::rtps::IPayloadPool
 {
 public:
 
-    PayloadPool() = default;
+    PayloadPool();
 
     virtual ~PayloadPool();
 
@@ -71,10 +71,21 @@ public:
     virtual bool get_payload(
             fastrtps::rtps::SerializedPayload_t& data,
             fastrtps::rtps::CacheChange_t& cache_change);
+
+protected:
+
+    void add_reserved_payload_();
+    void add_release_payload_();
+
+    uint64_t reserve_count_;
+    uint64_t release_count_;
 };
 
 class CopyPayloadPool : public PayloadPool
 {
+
+    using PayloadPool::PayloadPool;
+
     bool release_payload(
             fastrtps::rtps::CacheChange_t& cache_change) override;
 
