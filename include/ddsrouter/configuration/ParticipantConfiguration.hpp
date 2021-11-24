@@ -27,7 +27,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
+ * This class joins every DDSRouter Participant Configuration characteristic and includes methods to interact with it.
  * Each Participant that requires specific configuration must inherit from this class.
  */
 class ParticipantConfiguration

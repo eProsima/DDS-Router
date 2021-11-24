@@ -74,9 +74,8 @@ std::list<ParticipantConfiguration> Configuration::participants_configurations()
         {
             // Add invalid ParticipantConfiguration
             result.push_back(ParticipantConfiguration(ParticipantId(id_str)));
-            logWarning(DDSROUTER_CONFIGURATION, "Failed to create participant configuration " << id_str
-                                                                                              << " with error: " <<
-                            e.what());
+            logWarning(DDSROUTER_CONFIGURATION,
+                    "Failed to create participant configuration " << id_str << " with error: " << e.what());
         }
     }
 

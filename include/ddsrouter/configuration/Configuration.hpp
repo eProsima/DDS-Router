@@ -69,7 +69,7 @@ public:
      *
      * Every tag inside the yaml that is not a key word for the Configuration could be a Participant.
      * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
-     * is created and added to the return list.
+     * is created and added to the list to be returned.
      * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
      * invalid \c ParticipantType ) will be added to the list.
      *
@@ -99,7 +99,7 @@ protected:
      *
      * This method collects the same functionality that share \c allowlist and \c blocklist
      *
-     * @param [in] list_tag: tag name of the lust to look for in the configuration
+     * @param [in] list_tag: tag name of the list to look for in the configuration
      * @return List of filter topics
      */
     std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
