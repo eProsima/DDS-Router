@@ -26,7 +26,7 @@ namespace ddsrouter {
 
 /**
  * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
- *  bad formed yaml and when a configuration creation has failed.
+ *  not well-formed yaml, and when a configuration creation has failed.
  */
 class ConfigurationException : public Exception
 {

@@ -16,8 +16,8 @@
  * @file ParticipantsDatabase.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
-#define _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_PARTICIPANTSDATABASE_HPP_
+#define _DDSROUTER_PARTICIPANT_PARTICIPANTSDATABASE_HPP_
 
 #include <map>
 #include <shared_mutex>
@@ -89,7 +89,7 @@ protected:
     /**
      * @brief Remove a Participant from the database
      *
-     * This method calls \c pop_ with a random id (contained in the database)
+     * This method calls \c pop_ with an arbitrary id (contained in the database)
      *
      * @param [in] id: id of the participant to remove
      * @return Pointer to Participant removed
@@ -121,4 +121,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_PARTICIPANTDATABASE_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_PARTICIPANTSDATABASE_HPP_ */

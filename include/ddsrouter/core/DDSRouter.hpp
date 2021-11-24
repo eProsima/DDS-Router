@@ -128,8 +128,6 @@ protected:
 
     /**
      * @brief  Create a disabled bridge for every real topic
-     *
-     * @throw \c InitializationException in case \c IWriters or \c IReaders creation fails.
      */
     void init_bridges_();
 
@@ -167,7 +165,7 @@ protected:
      *
      * @param [in] topic : Topic to be enabled
      */
-    void active_topic_(
+    void activate_topic_(
             const RealTopic& topic) noexcept;
 
     /**
@@ -177,7 +175,7 @@ protected:
      *
      * @param [in] topic : Topic to be disabled
      */
-    void deactive_topic_(
+    void deactivate_topic_(
             const RealTopic& topic) noexcept;
 
     /**

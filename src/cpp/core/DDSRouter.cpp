@@ -176,7 +176,7 @@ void DDSRouter::discovered_topic_(
     // If Router is enabled and topic allowed, activate it
     if (enabled_.load() && allowed_topics_.is_topic_allowed(topic))
     {
-        active_topic_(topic);
+        activate_topic_(topic);
     }
 }
 
@@ -199,7 +199,7 @@ void DDSRouter::create_new_bridge(
     }
 }
 
-void DDSRouter::active_topic_(
+void DDSRouter::activate_topic_(
         const RealTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -224,7 +224,7 @@ void DDSRouter::active_topic_(
     }
 }
 
-void DDSRouter::deactive_topic_(
+void DDSRouter::deactivate_topic_(
         const RealTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -252,7 +252,7 @@ void DDSRouter::activate_all_topics_() noexcept
         // Activate all topics allowed
         if (allowed_topics_.is_topic_allowed(it.first))
         {
-            active_topic_(it.first);
+            activate_topic_(it.first);
         }
     }
 }
@@ -262,7 +262,7 @@ void DDSRouter::deactivate_all_topics_() noexcept
     for (auto it : current_topics_)
     {
         // Deactivate all topics
-        deactive_topic_(it.first);
+        deactivate_topic_(it.first);
     }
 }
 
