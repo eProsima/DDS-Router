@@ -14,7 +14,6 @@
 
 /**
  * @file ParticipantConfiguration.cpp
- *
  */
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
@@ -26,7 +25,13 @@
 namespace eprosima {
 namespace ddsrouter {
 
-// TODO: Add logs
+ParticipantConfiguration::ParticipantConfiguration(
+        ParticipantId id) noexcept
+    : id_(id)
+    , type_(ParticipantType::PARTICIPANT_TYPE_INVALID)
+    , raw_configuration_(RawConfiguration())
+{
+}
 
 ParticipantConfiguration::ParticipantConfiguration(
         ParticipantId id,
@@ -46,11 +51,7 @@ ParticipantConfiguration::ParticipantConfiguration(
     }
 }
 
-ParticipantConfiguration::~ParticipantConfiguration()
-{
-}
-
-void ParticipantConfiguration::set_type_()
+void ParticipantConfiguration::set_type_() noexcept
 {
     if (raw_configuration_[PARTICIPANT_TYPE_TAG])
     {
@@ -65,18 +66,18 @@ void ParticipantConfiguration::set_type_()
     }
 }
 
-ParticipantType ParticipantConfiguration::type() const
+ParticipantType ParticipantConfiguration::type() const noexcept
 {
     return type_;
 }
 
-ParticipantId ParticipantConfiguration::id() const
+ParticipantId ParticipantConfiguration::id() const noexcept
 {
     return id_;
 }
 
 bool ParticipantConfiguration::operator ==(
-        const ParticipantConfiguration& other) const
+        const ParticipantConfiguration& other) const noexcept
 {
     return this->id_ == other.id_ && this->raw_configuration_ == other.raw_configuration_;
 }

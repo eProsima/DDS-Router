@@ -28,32 +28,84 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * This class joins every DDSRouter Configuration characteristic and includes methods
+ * to interact with this configuration.
  */
 class Configuration
 {
 public:
 
+    /**
+     * @brief Construct a new Configuration object from a yaml object
+     *
+     * @param raw_configuration represents the yaml to this object to get the configuration data. This yaml must be a
+     *  map or an empty yaml, and nothing else
+     *
+     * @throw \c ConfigurationException in case the yaml is not well formed or is not a map nor empty
+     */
     Configuration(
             const RawConfiguration& raw_configuration);
 
-    virtual ~Configuration();
-
+    /**
+     * @brief Return a list with the topics allowed in the configuration
+     *
+     * @return List of filters to get allowed topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
+     */
     std::list<std::shared_ptr<FilterTopic>> allowlist() const;
 
+    /**
+     * @brief Return a list with the topics blocked in the configuration
+     *
+     * @return List of filters to get blocked topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside blocklist is not well-formed
+     */
     std::list<std::shared_ptr<FilterTopic>> blocklist() const;
 
-    std::list<ParticipantConfiguration> participants_configurations() const;
+    /**
+     * @brief Return a list with the different \c ParticipantConfigurations in the yaml
+     *
+     * Every tag inside the yaml that is not a key word for the Configuration could be a Participant.
+     * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
+     * is created and added to the list to be returned.
+     * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
+     * invalid \c ParticipantType ) will be added to the list.
+     *
+     * @return List of \c ParticipantConfigurations
+     */
+    std::list<ParticipantConfiguration> participants_configurations() const noexcept;
 
-    //! Ad hoc function to find real topics within the allowlist
-    // TODO: This method will disappear once the dynamic module is implemented
+
+    /**
+     * @brief Return a set with the real topics included in allowedlist
+     *
+     * This method gets the allowedlist in configuration and returns only those topics that can actually
+     * be created as Real topics.
+     *
+     * @todo: This method will disappear once the dynamic module is implemented
+     *
+     * @return Set of real topics
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
+     */
     std::set<RealTopic> real_topics() const;
 
 protected:
 
+    /**
+     * @brief Generic method to get a list of topics from a list
+     *
+     * This method collects the same functionality that share \c allowlist and \c blocklist
+     *
+     * @param [in] list_tag: tag name of the list to look for in the configuration
+     * @return List of filter topics
+     */
     std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
             const char* list_tag) const;
 
+    //! Yaml object with the configuration info
     const RawConfiguration raw_configuration_;
 };
 
