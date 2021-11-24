@@ -32,6 +32,8 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::GUID_t::GUID_t;
 
+    Guid (const std::string& str_guid);
+
     Guid& operator = (const fastrtps::rtps::GUID_t& other) noexcept;
 
     /**
@@ -40,6 +42,17 @@ public:
      * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
      */
     bool is_valid() const noexcept;
+
+    static bool is_valid_str_guid(const std::string& str_guid) noexcept;
+
+    static Guid get_guid_from_seed(uint32_t seed) noexcept;
+
+    static Guid ros_discovery_server_guid() noexcept;
+
+protected:
+
+    static const char* SERVER_DEFAULT_GUID_; // 01.0f.ff.00.00.00.00.00.00.00.00.ff
+    static const char* ROS_DISCOVERY_SERVER_GUID_; // 44.53.00.5f.45.50.52.4f.53.49.4d.41
 };
 
 } /* namespace ddsrouter */

@@ -13,14 +13,17 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSParticipantConfiguration.hpp
+ * @file DiscoveryServerRTPSParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_SIMPLERTPSPARTICIPANTCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_SIMPLERTPSPARTICIPANTCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/configuration/configuration_utils.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/types/dds_types.hpp>
+#include <ddsrouter/types/address/Address.hpp>
+#include <ddsrouter/types/address/DiscoveryServerAddress.hpp>
+#include <ddsrouter/configuration/configuration_utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,21 +32,25 @@ namespace ddsrouter {
  * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
  * Each Participant that require specific configuration must inherit from this class.
  */
-class SimpleRTPSParticipantConfiguration : public ParticipantConfiguration
+class DiscoveryServerRTPSParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
     // Using parent constructors
     using ParticipantConfiguration::ParticipantConfiguration;
 
-    SimpleRTPSParticipantConfiguration(
+    DiscoveryServerRTPSParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
-    DomainId domain() const noexcept;
+    std::vector<Address> listening_addresses() const noexcept;
+
+    std::vector<DiscoveryServerAddress> connection_addresses() const noexcept;
+
+    Guid discovery_server_guid() const noexcept;
 
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_SIMPLERTPSPARTICIPANTCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_ */

@@ -61,6 +61,28 @@ std::string Formatter::to_string() const noexcept
     return ss_.str().c_str();
 }
 
+uint32_t split_string(
+        std::string input,
+        std::vector<std::string>& output,
+        const std::string& separator /* = ";" */)
+{
+    while (input.size())
+    {
+        int index = input.find(separator);
+        if (index != std::string::npos)
+        {
+            output.push_back(input.substr(0, index));
+            input = input.substr(index + separator.size());
+        }
+        else
+        {
+            output.push_back(input);
+            break;
+        }
+    }
+    return output.size();
+}
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

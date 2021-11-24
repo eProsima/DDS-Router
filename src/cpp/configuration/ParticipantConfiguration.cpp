@@ -27,17 +27,17 @@ namespace ddsrouter {
 
 ParticipantConfiguration::ParticipantConfiguration(
         ParticipantId id) noexcept
-    : id_(id)
+    : BaseConfiguration(RawConfiguration())
+    , id_(id)
     , type_(ParticipantType::PARTICIPANT_TYPE_INVALID)
-    , raw_configuration_(RawConfiguration())
 {
 }
 
 ParticipantConfiguration::ParticipantConfiguration(
         ParticipantId id,
         const RawConfiguration& raw_configuration)
-    : id_(id)
-    , raw_configuration_(raw_configuration)
+    : BaseConfiguration(raw_configuration)
+    , id_(id)
 {
     if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
     {

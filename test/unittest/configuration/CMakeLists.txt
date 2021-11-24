@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME ConfigurationTest)
+set(TEST_NAME DDSRouterConfigurationTest)
 
 set(TEST_SOURCES
-        ConfigurationTest.cpp
+        DDSRouterConfigurationTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantType.cpp
@@ -23,7 +23,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/Configuration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
     )
 

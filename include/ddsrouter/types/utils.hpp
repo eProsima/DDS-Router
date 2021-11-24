@@ -24,6 +24,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -72,6 +73,11 @@ protected:
     //! Concatenated stream where the stremas are added at the end
     std::stringstream ss_;
 };
+
+uint32_t split_string(
+        std::string input,
+        std::vector<std::string>& output,
+        const std::string& separator = ";");
 
 } /* namespace utils */
 } /* namespace ddsrouter */

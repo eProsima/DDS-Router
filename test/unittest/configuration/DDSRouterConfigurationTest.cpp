@@ -18,7 +18,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/configuration/Configuration.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
@@ -277,14 +277,14 @@ TEST(ConfigurationTest, constructor)
 {
     // Empty case
     RawConfiguration empty_yaml;
-    Configuration config_empty(empty_yaml);
+    DDSRouterConfiguration config_empty(empty_yaml);
 
     // Random case
     RawConfiguration random_config;
     random_config["RAND_TAG_1"] = "rand_val_1";
     random_config["RAND_TAG_2"] = "rand_val_2";
     random_config["RAND_TAG_3"].push_back(314);
-    Configuration config_random(random_config);
+    DDSRouterConfiguration config_random(random_config);
 }
 
 /****************************
@@ -305,7 +305,7 @@ TEST(ConfigurationTest, participants_configurations)
     {
         // Empty configuration
         RawConfiguration yaml1;
-        Configuration config1(yaml1);
+        DDSRouterConfiguration config1(yaml1);
         EXPECT_TRUE(config1.participants_configurations().empty());
     }
 
@@ -314,7 +314,7 @@ TEST(ConfigurationTest, participants_configurations)
         RawConfiguration yaml2;
         add_topics_to_list_to_yaml(yaml2, ALLOWLIST_TAG, random_filter_topic_names());
         add_topics_to_list_to_yaml(yaml2, BLOCKLIST_TAG, random_real_topic_names());
-        Configuration config2(yaml2);
+        DDSRouterConfiguration config2(yaml2);
         EXPECT_TRUE(config2.participants_configurations().empty());
     }
 
@@ -339,7 +339,7 @@ TEST(ConfigurationTest, participants_configurations)
         RawConfiguration yaml3;
         yaml3[participant_name_str] = participant_config;
 
-        Configuration config3(yaml3);
+        DDSRouterConfiguration config3(yaml3);
         auto result3 = config3.participants_configurations();
         ASSERT_EQ(1, result3.size());
         EXPECT_EQ(participant_name, result3.front().id());
@@ -354,7 +354,7 @@ TEST(ConfigurationTest, participants_configurations)
         {
             yaml4[random_participant_name(i)] = random_participant_configuration(i);
         }
-        Configuration config4(yaml4);
+        DDSRouterConfiguration config4(yaml4);
         auto result4 = config4.participants_configurations();
         ASSERT_EQ(result4.size(), participants_num);
 
@@ -393,26 +393,26 @@ TEST(ConfigurationTest, real_topics)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    Configuration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.real_topics().empty());
 
     // Empty allowlist
     RawConfiguration yaml2;
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic2", "type2");
-    Configuration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.real_topics().empty());
 
     // Allowlist with only non Real topics
     RawConfiguration yaml3;
     add_topics_to_list_to_yaml(yaml3, ALLOWLIST_TAG, random_filter_topic_names());
-    Configuration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     EXPECT_TRUE(config3.real_topics().empty());
 
     // Allowlist with only Real topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, ALLOWLIST_TAG, random_real_topic_names());
-    Configuration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     auto result4 = config4.real_topics();
     EXPECT_FALSE(result4.empty());
     for (auto random_topic : random_real_topic_names())
@@ -424,7 +424,7 @@ TEST(ConfigurationTest, real_topics)
     // Allowlist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_topic_names());
-    Configuration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     auto result5 = config5.real_topics();
     EXPECT_FALSE(result5.empty());
 
@@ -463,7 +463,7 @@ TEST(ConfigurationTest, allowlist_wildcard)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    Configuration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.allowlist().empty());
 
     // Empty allowlist
@@ -471,14 +471,14 @@ TEST(ConfigurationTest, allowlist_wildcard)
     add_empty_tag_to_yaml(yaml2, ALLOWLIST_TAG);
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, BLOCKLIST_TAG, "topic2", "type2");
-    Configuration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.allowlist().empty());
 
     // Empty allowlist
     RawConfiguration yaml3;
     add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic2*", "type2*");
-    Configuration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.allowlist();
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
@@ -486,14 +486,14 @@ TEST(ConfigurationTest, allowlist_wildcard)
     // Allowlist with random topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, ALLOWLIST_TAG, random_topic_names());
-    Configuration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     EXPECT_EQ(config4.allowlist().size(), random_topic_names_number_valid_topics());
 
     // Allowlist and blocklist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_filter_topic_names());
     add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_real_topic_names());
-    Configuration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     EXPECT_EQ(config5.allowlist().size(), random_filter_topic_names().size());
 }
 
@@ -513,7 +513,7 @@ TEST(ConfigurationTest, blocklist_wildcard)
 {
     // Empty configuration
     RawConfiguration yaml1;
-    Configuration config1(yaml1);
+    DDSRouterConfiguration config1(yaml1);
     EXPECT_TRUE(config1.blocklist().empty());
 
     // Empty blocklist
@@ -521,14 +521,14 @@ TEST(ConfigurationTest, blocklist_wildcard)
     add_empty_tag_to_yaml(yaml2, BLOCKLIST_TAG);
     add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml2, ALLOWLIST_TAG, "topic2", "type2");
-    Configuration config2(yaml2);
+    DDSRouterConfiguration config2(yaml2);
     EXPECT_TRUE(config2.blocklist().empty());
 
     // Empty blocklist
     RawConfiguration yaml3;
     add_topic_to_list_to_yaml(yaml3, BLOCKLIST_TAG, "topic1", "type1");
     add_topic_to_list_to_yaml(yaml3, BLOCKLIST_TAG, "topic2*", "type2*");
-    Configuration config3(yaml3);
+    DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.blocklist();
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1")));
     EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*")));
@@ -536,14 +536,14 @@ TEST(ConfigurationTest, blocklist_wildcard)
     // Blocklist with random topics
     RawConfiguration yaml4;
     add_topics_to_list_to_yaml(yaml4, BLOCKLIST_TAG, random_topic_names());
-    Configuration config4(yaml4);
+    DDSRouterConfiguration config4(yaml4);
     EXPECT_EQ(config4.blocklist().size(), random_topic_names_number_valid_topics());
 
     // Blocklist and allowlist with random topics
     RawConfiguration yaml5;
     add_topics_to_list_to_yaml(yaml5, BLOCKLIST_TAG, random_filter_topic_names());
     add_topics_to_list_to_yaml(yaml5, ALLOWLIST_TAG, random_real_topic_names());
-    Configuration config5(yaml5);
+    DDSRouterConfiguration config5(yaml5);
     EXPECT_EQ(config5.blocklist().size(), random_filter_topic_names().size());
 }
 
@@ -557,7 +557,7 @@ TEST(ConfigurationTest, allowlist_and_blocklist)
     RawConfiguration yaml;
     add_topics_to_list_to_yaml(yaml, ALLOWLIST_TAG, random_real_topic_names());
     add_topics_to_list_to_yaml(yaml, BLOCKLIST_TAG, random_filter_topic_names());
-    Configuration config(yaml);
+    DDSRouterConfiguration config(yaml);
     EXPECT_EQ(config.allowlist().size(), random_real_topic_names().size());
     EXPECT_EQ(config.blocklist().size(), random_filter_topic_names().size());
 }
@@ -580,17 +580,17 @@ TEST(ConfigurationTest, constructor_fail)
     RawConfiguration array_config;
     array_config.push_back("rand_val_1");
     array_config.push_back("rand_val_2");
-    EXPECT_THROW(Configuration dc(array_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(array_config), ConfigurationException);
 
     // Scalar case
     RawConfiguration scalar_config;
     scalar_config = 42;
-    EXPECT_THROW(Configuration dc(scalar_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(scalar_config), ConfigurationException);
 
     // Scalar case
     RawConfiguration string_config;
     string_config = "non_valid_config";
-    EXPECT_THROW(Configuration dc(string_config), ConfigurationException);
+    EXPECT_THROW(DDSRouterConfiguration dc(string_config), ConfigurationException);
 }
 
 /**
@@ -615,7 +615,7 @@ TEST(ConfigurationTest, real_topics_fail)
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[ALLOWLIST_TAG] = map_config;
-    Configuration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.real_topics(), ConfigurationException);
 }
 
@@ -634,7 +634,7 @@ TEST(ConfigurationTest, allowlist_wildcard_fail)
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[ALLOWLIST_TAG] = map_config;
-    Configuration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.allowlist(), ConfigurationException);
 }
 
@@ -653,7 +653,7 @@ TEST(ConfigurationTest, blocklist_wildcard_fail)
     map_config["key1"] = "value1";
     RawConfiguration yaml1;
     yaml1[BLOCKLIST_TAG] = map_config;
-    Configuration dc(yaml1);
+    DDSRouterConfiguration dc(yaml1);
     EXPECT_THROW(dc.blocklist(), ConfigurationException);
 }
 
