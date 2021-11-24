@@ -28,14 +28,14 @@ namespace ddsrouter {
 
 /**
  * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
- * Each Participant that require specific configuration must inherite from this class.
+ * Each Participant that requires specific configuration must inherit from this class.
  */
 class ParticipantConfiguration
 {
 public:
 
     /**
-     * @brief Construct an invald configuration
+     * @brief Construct an invalid configuration
      *
      * The type of this configuration will be invalid and the yaml empty
      *
@@ -48,13 +48,14 @@ public:
      * @brief Construct a new configuration
      *
      * Yaml configuration must be a map or empty.
-     * The type is get in construction. If the type is not valid, it will cause an exception.
+     * The type is set in construction. If the type is not valid, it will cause an exception.
      * The type of a participant could be set in the yaml configuration, or it could be the name of its id.
      *
      * @param [in] id of the participant that will be created with this configuration
      * @param [in] raw_configuration yaml to get the configuration
      *
-     * @throw \c ConfigurationException in case the type could not be correctly set by yaml or id or yaml is bad formed
+     * @throw \c ConfigurationException in case the type could not be correctly set by yaml or id,
+     * or if yaml is not well-formed
      */
     ParticipantConfiguration(
             ParticipantId id,

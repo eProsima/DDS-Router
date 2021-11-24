@@ -28,7 +28,8 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter Configuration characteristic and give methods to interact with this configuration.
+ * This class joins every DDSRouter Configuration characteristic and includes methods
+ * to interact with this configuration.
  */
 class Configuration
 {
@@ -38,50 +39,56 @@ public:
      * @brief Construct a new Configuration object from a yaml object
      *
      * @param raw_configuration represents the yaml to this object to get the configuration data. This yaml must be a
-     *  map or an empty yaml, it cannot be otherwise.
+     *  map or an empty yaml, and nothing else
      *
-     * @throw \c ConfigurationException in case the yaml is not well formed or is not a map or empty
+     * @throw \c ConfigurationException in case the yaml is not well formed or is not a map nor empty
      */
     Configuration(
             const RawConfiguration& raw_configuration);
 
     /**
-     * @brief Return a list with topics in allowedlist in the configuration
+     * @brief Return a list with the topics allowed in the configuration
      *
      * @return List of filters to get allowed topics
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      */
     std::list<std::shared_ptr<FilterTopic>> allowlist() const;
 
     /**
-     * @brief Return a list with topics in blocklist in the configuration
+     * @brief Return a list with the topics blocked in the configuration
      *
      * @return List of filters to get blocked topics
      *
-     * @throw \c ConfigurationException in case the yaml inside blocklist is bad formed
+     * @throw \c ConfigurationException in case the yaml inside blocklist is not well-formed
      */
     std::list<std::shared_ptr<FilterTopic>> blocklist() const;
 
     /**
-     * @brief Return a list with topics in blocklist in the configuration
+     * @brief Return a list with the different \c ParticipantConfigurations in the yaml
      *
-     * @return List of filters to get blocked topics
+     * Every tag inside the yaml that is not a key word for the Configuration could be a Participant.
+     * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
+     * is created and added to the return list.
+     * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
+     * invalid \c ParticipantType ) will be added to the list.
+     *
+     * @return List of \c ParticipantConfigurations
      */
     std::list<ParticipantConfiguration> participants_configurations() const noexcept;
 
 
     /**
-     * @brief Return a list with real topics in allowedlist in the configuration
+     * @brief Return a set with the real topics included in allowedlist
      *
-     * This method get the allowedlist in configuration and get only those topics that can actually
+     * This method gets the allowedlist in configuration and returns only those topics that can actually
      * be created as Real topics.
      *
-     * @todo: This method will dissapear once the dynamic module is implemented
+     * @todo: This method will disappear once the dynamic module is implemented
      *
-     * @return List of real topics
+     * @return Set of real topics
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is bad formed
+     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      */
     std::set<RealTopic> real_topics() const;
 
@@ -90,9 +97,9 @@ protected:
     /**
      * @brief Generic method to get a list of topics from a list
      *
-     * This method collects the same functionality that share \c allowlist and \c blacklist
+     * This method collects the same functionality that share \c allowlist and \c blocklist
      *
-     * @param [in] list_tag: name of the tag to look the list in the configuration
+     * @param [in] list_tag: tag name of the lust to look for in the configuration
      * @return List of filter topics
      */
     std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
