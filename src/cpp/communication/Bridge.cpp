@@ -27,14 +27,16 @@ namespace ddsrouter {
 Bridge::Bridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
+        std::shared_ptr<PayloadPool> payload_pool,
         bool enable /* = false */)
     : topic_(topic)
     , participants_(participants_database)
+    , payload_pool_(payload_pool)
     , enabled_(false)
 {
     logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
 
-    std::vector<ParticipantId> ids = participants_->get_participant_ids();
+    std::vector<ParticipantId> ids = participants_->get_participants_ids();
 
     // Generate readers and writers for each participant
     for (ParticipantId id: ids)
@@ -57,7 +59,7 @@ Bridge::Bridge(
         // This insert is required as there is no copy method for Track
         // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
-                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), false);
+                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), payload_pool_, false);
     }
 
     if (enable)
@@ -77,7 +79,7 @@ Bridge::~Bridge()
     tracks_.clear();
 
     // Remove all Writers and Readers that were created in construction
-    for (ParticipantId id: participants_->get_participant_ids())
+    for (ParticipantId id: participants_->get_participants_ids())
     {
         std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
         auto writer = writers_.find(id);
@@ -89,6 +91,9 @@ Bridge::~Bridge()
 
         participant->delete_writer(writer->second);
         participant->delete_reader(reader->second);
+
+        writers_.erase(writer);
+        readers_.erase(reader);
     }
 
     // Participants must not be removed as they belong to the Participant Database

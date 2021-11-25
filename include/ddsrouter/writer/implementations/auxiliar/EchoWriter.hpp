@@ -22,36 +22,33 @@
 #include <atomic>
 
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/writer/IWriter.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Writer Implementation that prints in stdout every message that is required to write.
  */
-class EchoWriter : public IWriter
+class EchoWriter : public BaseWriter
 {
 public:
 
-    EchoWriter(
-            const ParticipantId& participant_id,
-            const RealTopic& topic);
-
-    void enable() override;
-
-    void disable() override;
-
-    ReturnCode write(
-            std::unique_ptr<DataReceived>& data) override;
+    //! Using parent class constructors
+    using BaseWriter::BaseWriter;
 
 protected:
 
-    ParticipantId participant_id_;
+    /**
+     * @brief Print data in a human friendly way.
+     *
+     * @param data : data to print
+     * @return RETCODE_OK always
+     */
+    virtual ReturnCode write_(
+            std::unique_ptr<DataReceived>& data) noexcept override;
 
-    RealTopic topic_;
-
-    std::atomic<bool> enabled_;
+    // Specific enable/disable do not need to be implemented
 };
 
 } /* namespace ddsrouter */

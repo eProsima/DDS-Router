@@ -54,6 +54,7 @@ public:
             ParticipantId reader_participant_id,
             std::shared_ptr<IReader> reader,
             std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
+            std::shared_ptr<PayloadPool> payload_pool,
             bool enable = false) noexcept;
 
     /**
@@ -158,6 +159,9 @@ protected:
 
     //! Writers that will send data forward
     std::map<ParticipantId, std::shared_ptr<IWriter>> writers_;
+
+    //! Common shared payload pool
+    std::shared_ptr<PayloadPool> payload_pool_;
 
     //! Whether the Track is currently enabled
     std::atomic<bool> enabled_;

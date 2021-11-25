@@ -32,27 +32,89 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Interface that represents a generic Participant as part of a DDSRouter.
+ *
+ * This class manages the discovery of new remote entities (that do not belong to the router).
+ * It also works as a factory for Writers and Readers.
+ *
+ * Every Participant is associated to a \c ParticipantId that uniquely identifies it.
+ * Every Participant is associated with a \c ParticipantType depending on its implementation.
+ *
+ * @note In order to implement new Participants, create a subclass of this Interface and implement every method.
+ * @note Also it is needed to add the creation of the Participant in the \c ParticipantFactory and a new type of
+ * @note \c ParticipantType .
  */
 class IParticipant
 {
 public:
 
-    virtual ParticipantId id() const = 0;
+    /**
+     * @brief Return the unique identifier of this Participant.
+     *
+     * @return This Participant id
+     */
+    virtual ParticipantId id() const noexcept = 0;
 
-    virtual ParticipantType type() const = 0;
+    /**
+     * @brief Return the Participant type
+     *
+     * @return This Participant type
+     */
+    virtual ParticipantType type() const noexcept = 0;
 
+    /**
+     * @brief Return a new Writer
+     *
+     * Each writer is associated with a \c Bridge with the topic \c topic .
+     * This writer will forward messages in this topic.
+     *
+     * @param [in] topic : Topic that this Writer will work with.
+     *
+     * @return Writer in this Participant referring this topic
+     *
+     * @throw \c InitializationException in case the writer creation fails.
+     */
     virtual std::shared_ptr<IWriter> create_writer(
             RealTopic topic) = 0;
 
+    /**
+     * @brief Return a new Reader
+     *
+     * Each reader is associated with a \c Bridge with the topic \c topic .
+     * This reader will receive messages in this topic.
+     *
+     * @param [in] topic : Topic that this Reader will work with.
+     *
+     * @return Reader in this Participant referring this topic
+     *
+     * @throw \c InitializationException in case the reader creation fails.
+     */
     virtual std::shared_ptr<IReader> create_reader(
             RealTopic topic) = 0;
 
+    /**
+     * @brief Delete Writer
+     *
+     * This method deletes a Writer that has been created by this Participant.
+     *
+     * @note This method should be able to destroy the Writer as it should not have any other reference.
+     *
+     * @param [in] writer : Writer to delete
+     */
     virtual void delete_writer(
-            std::shared_ptr<IWriter> writer) = 0;
+            std::shared_ptr<IWriter> writer) noexcept = 0;
 
+    /**
+     * @brief Delete Reader
+     *
+     * This method deletes a Reader that has been created by this Participant.
+     *
+     * @note This method should be able to destroy the Reader as it should not have any other reference.
+     *
+     * @param [in] writer : Reader to delete
+     */
     virtual void delete_reader(
-            std::shared_ptr<IReader> reader) = 0;
+            std::shared_ptr<IReader> reader) noexcept = 0;
 };
 
 } /* namespace ddsrouter */

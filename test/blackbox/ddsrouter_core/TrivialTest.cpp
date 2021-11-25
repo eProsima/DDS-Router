@@ -27,7 +27,7 @@
 using namespace eprosima::ddsrouter;
 
 Guid random_guid(
-        uint16_t seed = 0)
+        uint16_t seed = 1)
 {
     Guid guid;
     guid.entityId.value[3] = seed;
@@ -36,81 +36,87 @@ Guid random_guid(
     return guid;
 }
 
-Payload random_payload(
-        uint16_t seed = 0)
+std::vector<PayloadUnit> random_payload(
+        uint16_t seed = 1)
 {
-    Payload payload;
-    payload.length = sizeof(uint16_t);
-    payload.reserve(payload.length);
-    *(payload.data) = seed;
+    std::vector<PayloadUnit> payload;
+
+    for (int i = 0; i < seed; i++)
+    {
+        payload.push_back(i);
+    }
+
     return payload;
 }
 
-// TODO add them when every feature supported
-// /**
-//  * Test Whole DDSRouter initialization by initializing two VoidParticipants
-//  */
-// TEST(TrivialTest, trivial_void_initialization)
-// {
-//     // Load configuration
-//     RawConfiguration router_configuration =
-//         load_configuration_from_file("resources/trivial_test_void_configuration.yaml");
+/**
+ * Test Whole DDSRouter initialization by initializing two VoidParticipants
+ */
+TEST(TrivialTest, trivial_void_initialization)
+{
+    // Load configuration
+    RawConfiguration router_configuration =
+            load_configuration_from_file("resources/trivial_test_void_configuration.yaml");
 
-//     // Create DDSRouter entity
-//     DDSRouter router(router_configuration);
+    // Create DDSRouter entity
+    DDSRouter router(router_configuration);
 
-//     // Let test finish without failing
-// }
+    // Let test finish without failing
+}
 
-// /**
-//  * Test Whole DDSRouter initialization by initializing two DummyParticipants and a RealTopic
-//  */
-// TEST(TrivialTest, trivial_dummy_initialization)
-// {
-//     // Load configuration
-//     RawConfiguration router_configuration =
-//         load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
+/**
+ * Test Whole DDSRouter initialization by initializing two DummyParticipants and a RealTopic
+ */
+TEST(TrivialTest, trivial_dummy_initialization)
+{
+    // Load configuration
+    RawConfiguration router_configuration =
+            load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
 
-//     // Create DDSRouter entity
-//     DDSRouter router(router_configuration);
+    // Create DDSRouter entity
+    DDSRouter router(router_configuration);
 
-//     // Let test finish without failing
-// }
+    // Let test finish without failing
+}
 
 /**
  * Test Whole DDSRouter interfaces by using two DummyParticipants and send one message from one to the other
  *
  * TODO
  */
-// TEST(TrivialTest, trivial_communication)
-// {
-//     // Load configuration
-//     RawConfiguration router_configuration =
-//         load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
+TEST(TrivialTest, trivial_communication)
+{
+    // Load configuration
+    RawConfiguration router_configuration =
+            load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
 
-//     // Create DDSRouter entity
-//     DDSRouter router(router_configuration);
+    // Create DDSRouter entity
+    DDSRouter router(router_configuration);
+    router.start();
 
-//     DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("participant_1"));
-//     DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("participant_2"));
-//     RealTopic topic("trivial_topic", "trivial_type");
-//     Guid guid = random_guid();
-//     Payload payload = random_payload();
+    DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("participant_1"));
+    DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("participant_2"));
+    RealTopic topic("trivial_topic", "trivial_type");
+    Guid guid = random_guid();
+    std::vector<PayloadUnit> payload = random_payload(3);
 
-//     DataToSend data;
-//     data.guid_src = guid;
-//     data.payload = payload;
+    DummyDataReceived data;
+    data.source_guid = guid;
+    data.payload = payload;
 
-//     participant_1->add_message_to_send(topic, data);
+    participant_1->simulate_data_reception(topic, data);
 
-//     std::this_thread::sleep_for(std::chrono::seconds(2));
+    // Sleep until first data arrives to the writer
+    participant_2->wait_until_n_data_sent(topic, 1);
 
-//     std::vector<DataStoraged> data_received = participant_2->data_received_ref(topic);
+    std::vector<DummyDataStored> data_received = participant_2->get_data_that_should_have_been_sent(topic);
 
-//     ASSERT_EQ(1, data_received.size());
-//     ASSERT_EQ(data_received[0].guid_src, guid);
-//     ASSERT_EQ(data_received[0].payload, payload);
-// }
+    ASSERT_EQ(1, data_received.size());
+    ASSERT_EQ(data_received[0].source_guid, guid);
+    ASSERT_EQ(data_received[0].payload, payload);
+
+    router.stop();
+}
 
 int main(
         int argc,

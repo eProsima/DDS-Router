@@ -30,7 +30,8 @@ set(TEST_SOURCES
 
 set(TEST_LIST
     trivial_void_initialization
-    trivial_dummy_initialization)
+    trivial_dummy_initialization
+    trivial_communication)
 
 set(TEST_NEEDED_SOURCES
     resources/trivial_test_dummy_configuration.yaml

@@ -29,11 +29,13 @@ Track::Track(
         ParticipantId reader_participant_id,
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
+        std::shared_ptr<PayloadPool> payload_pool,
         bool enable /* = false */) noexcept
     : reader_participant_id_(reader_participant_id)
     , topic_(topic)
     , reader_(reader)
     , writers_(writers)
+    , payload_pool_(payload_pool)
     , enabled_(false)
     , exit_(false)
     , is_data_available_(false)
@@ -197,6 +199,8 @@ void Track::transmit_nts_() noexcept
                 continue;
             }
         }
+
+        payload_pool_->release_payload(data->payload);
     }
 }
 

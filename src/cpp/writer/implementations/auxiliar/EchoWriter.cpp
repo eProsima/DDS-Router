@@ -21,39 +21,13 @@
 namespace eprosima {
 namespace ddsrouter {
 
-EchoWriter::EchoWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic)
-    : participant_id_(participant_id)
-    , topic_(topic)
-    , enabled_(false)
+ReturnCode EchoWriter::write_(
+        std::unique_ptr<DataReceived>& data) noexcept
 {
-}
+    std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
+              << " in topic: " << topic_ << " the following payload: <" << data->payload << ">" << std::endl;
 
-void EchoWriter::enable()
-{
-    enabled_.store(true);
-}
-
-void EchoWriter::disable()
-{
-    enabled_.store(false);
-}
-
-ReturnCode EchoWriter::write(
-        std::unique_ptr<DataReceived>& data)
-{
-    if (enabled_.load())
-    {
-        std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
-                  << " in topic: " << topic_ << " the following payload: " << data->payload << std::endl;
-
-        return ReturnCode::RETCODE_OK;
-    }
-    else
-    {
-        return ReturnCode::RETCODE_NOT_ENABLED;
-    }
+    return ReturnCode::RETCODE_OK;
 }
 
 } /* namespace ddsrouter */

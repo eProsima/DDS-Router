@@ -13,37 +13,25 @@
 // limitations under the License.
 
 /**
- * @file VoidWriter.hpp
+ * @file macros.hpp
+ *
+ * This file contains constant values common for the whole project
  */
 
-#ifndef _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_
-#define _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_
+#ifndef _DDSROUTER_TYPES_MACROS_HPP_
+#define _DDSROUTER_TYPES_MACROS_HPP_
 
-#include <ddsrouter/writer/IWriter.hpp>
+#include <type_traits>
 
 namespace eprosima {
 namespace ddsrouter {
 
-/**
- * Writer that has an empty implementation.
- * It does not send anything.
- */
-class VoidWriter : public IWriter
-{
-public:
+#define STRINGIFY(x) #x
 
-    //! Override enable() IWriter method
-    void enable() noexcept override;
-
-    //! Override disable() IWriter method
-    void disable() noexcept override;
-
-    //! Override write() IWriter method
-    ReturnCode write(
-            std::unique_ptr<DataReceived>& data) noexcept override;
-};
+#define FORCE_TEMPLATE_SUBCLASS(base, derived) \
+    static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_VOIDWRITER_HPP_ */
+#endif /* _DDSROUTER_TYPES_MACROS_HPP_ */

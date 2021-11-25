@@ -45,7 +45,7 @@ std::shared_ptr<IParticipant> ParticipantsDatabase::get_participant(
     return it->second;
 }
 
-std::vector<ParticipantId> ParticipantsDatabase::get_participant_ids() const noexcept
+std::vector<ParticipantId> ParticipantsDatabase::get_participants_ids() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     std::vector<ParticipantId> result(participants_.size());
@@ -58,7 +58,7 @@ std::vector<ParticipantId> ParticipantsDatabase::get_participant_ids() const noe
     return result;
 }
 
-std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantsDatabase::get_participant_map() const noexcept
+std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantsDatabase::get_participants_map() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return participants_;

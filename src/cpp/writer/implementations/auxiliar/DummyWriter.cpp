@@ -21,37 +21,48 @@
 namespace eprosima {
 namespace ddsrouter {
 
-DummyWriter::DummyWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic)
-    : EchoWriter(participant_id, topic)
+ReturnCode DummyWriter::write_(
+        std::unique_ptr<DataReceived>& data) noexcept
 {
-}
+    {
+        std::lock_guard<std::mutex> lock(dummy_mutex_);
 
-ReturnCode DummyWriter::write(
-        std::unique_ptr<DataReceived>& data)
-{
-    std::lock_guard<std::mutex> lock(mutex_);
+        // Fill the data to store
+        DummyDataStored new_data_to_store;
+        new_data_to_store.timestamp = now();
+        new_data_to_store.source_guid = data->source_guid;
 
-    // Fill the data to store
-    DataStored new_data_to_store;
-    new_data_to_store.timestamp = now();
-    new_data_to_store.guid_src = data->source_guid;
+        // Copying data as it should not be stored in PayloadPool
+        for (int i = 0; i < data->payload.length; i++)
+        {
+            new_data_to_store.payload.push_back(data->payload.data[i]);
+        }
 
-    // Storing data
-    new_data_to_store.payload.length = data->payload.length;
-    new_data_to_store.payload.reserve(new_data_to_store.payload.length);
-    std::memcpy(new_data_to_store.payload.data, data->payload.data, new_data_to_store.payload.length);
+        data_stored_.push_back(new_data_to_store);
+    }
 
-    data_stored.push_back(new_data_to_store);
+    // Notify that a new message has been sent
+    wait_condition_variable_.notify_all();
 
     return ReturnCode::RETCODE_OK;
 }
 
-std::vector<DataStored> DummyWriter::data_received_ref()
+void DummyWriter::wait_until_n_data_sent(
+        uint16_t n) const noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
-    return data_stored;
+    std::unique_lock<std::mutex> lock(dummy_mutex_);
+    wait_condition_variable_.wait(
+        lock,
+        [n, this]
+        {
+            return data_stored_.size() >= n;
+        });
+}
+
+std::vector<DummyDataStored> DummyWriter::get_data_that_should_have_been_sent() const noexcept
+{
+    std::lock_guard<std::mutex> lock(dummy_mutex_);
+    return data_stored_;
 }
 
 } /* namespace ddsrouter */

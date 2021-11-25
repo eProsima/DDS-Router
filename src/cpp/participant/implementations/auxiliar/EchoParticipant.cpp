@@ -24,23 +24,16 @@
 namespace eprosima {
 namespace ddsrouter {
 
-EchoParticipant::EchoParticipant(
-        ParticipantConfiguration participant_configuration,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : VoidParticipant(participant_configuration)
-    , discovery_database_(discovery_database)
-{
-}
-
-ParticipantType EchoParticipant::type() const
-{
-    return ParticipantType::ECHO;
-}
-
-std::shared_ptr<IWriter> EchoParticipant::create_writer(
+std::shared_ptr<IWriter> EchoParticipant::create_writer_(
         RealTopic topic)
 {
-    return std::make_shared<EchoWriter>(id(), topic);
+    return std::make_shared<EchoWriter>(id(), topic, payload_pool_);
+}
+
+std::shared_ptr<IReader> EchoParticipant::create_reader_(
+        RealTopic)
+{
+    return std::make_shared<VoidReader>();
 }
 
 } /* namespace ddsrouter */

@@ -56,6 +56,7 @@ public:
     Bridge(
             const RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
+            std::shared_ptr<PayloadPool> payload_pool,
             bool enable = false);
 
     /**
@@ -105,6 +106,9 @@ protected:
      * @note: This variable is only used at destruction time
      */
     const std::shared_ptr<ParticipantsDatabase> participants_;
+
+    //! Common shared payload pool
+    std::shared_ptr<PayloadPool> payload_pool_;
 
     /**
      * Inside \c Tracks

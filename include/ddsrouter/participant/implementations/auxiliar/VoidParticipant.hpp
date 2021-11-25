@@ -26,36 +26,46 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Participant that has an empty implementation.
+ * It does not discover anything.
+ *
+ * Writer: VoidWriter
+ * Reader: VoidReader
  */
 class VoidParticipant : public IParticipant
 {
 public:
 
+    //! Constructor with Id of this participant
     VoidParticipant(
-            ParticipantConfiguration participant_configuration);
+            const ParticipantId& id_);
 
-    virtual ~VoidParticipant();
+    //! Override id() IParticipant method
+    ParticipantId id() const noexcept override;
 
-    ParticipantId id() const override;
+    //! Override type() IParticipant method
+    ParticipantType type() const noexcept override;
 
-    virtual ParticipantType type() const override;
+    //! Override create_writer() IParticipant method
+    std::shared_ptr<IWriter> create_writer(
+            RealTopic topic) override;
 
-    virtual std::shared_ptr<IWriter> create_writer(
-            RealTopic) override;
+    //! Override create_reader() IParticipant method
+    std::shared_ptr<IReader> create_reader(
+            RealTopic topic) override;
 
-    virtual std::shared_ptr<IReader> create_reader(
-            RealTopic) override;
+    //! Override delete_writer() IParticipant method
+    void delete_writer(
+            std::shared_ptr<IWriter> writer) noexcept override;
 
-    virtual void delete_writer(
-            std::shared_ptr<IWriter> writer) override;
-
-    virtual void delete_reader(
-            std::shared_ptr<IReader> reader) override;
+    //! Override delete_reader() IParticipant method
+    void delete_reader(
+            std::shared_ptr<IReader> reader) noexcept override;
 
 protected:
 
-    ParticipantConfiguration configuration_;
+    //! Participant Id
+    ParticipantId id_;
 };
 
 } /* namespace ddsrouter */

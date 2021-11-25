@@ -61,14 +61,14 @@ public:
      *
      * @return list of ids
      */
-    std::vector<ParticipantId> get_participant_ids() const noexcept;
+    std::vector<ParticipantId> get_participants_ids() const noexcept;
 
     /**
      * @brief Get all the participants stored
      *
      * @return map of pointers to participants indexed by ids
      */
-    std::map<ParticipantId, std::shared_ptr<IParticipant>> get_participant_map() const noexcept;
+    std::map<ParticipantId, std::shared_ptr<IParticipant>> get_participants_map() const noexcept;
 
     //! Whether the database is empty
     bool empty() const noexcept;
