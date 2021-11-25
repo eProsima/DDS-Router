@@ -41,7 +41,7 @@ ReturnCode DummyWriter::write_(
         data_stored_.push_back(new_data_to_store);
     }
 
-    // Notify that a new message has been simulately sent
+    // Notify that a new message has been sent
     wait_condition_variable_.notify_all();
 
     return ReturnCode::RETCODE_OK;

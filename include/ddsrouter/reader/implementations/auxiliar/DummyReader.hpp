@@ -35,7 +35,7 @@ struct DummyDataReceived
     //! Payload in a format of vector of bytes
     std::vector<PayloadUnit> payload;
 
-    //! Guid of the source entity that has transmit the data
+    //! Guid of the source entity that has transmitted the data
     Guid source_guid;
 };
 
@@ -50,9 +50,9 @@ public:
     using BaseReader::BaseReader;
 
     /**
-     * @brief Make the Reader to simulate data reception
+     * @brief Simulate data reception on Reader
      *
-     * @param data : The data received (simulately)
+     * @param data : The data received (by simulation)
      */
     void simulate_data_reception(
             DummyDataReceived data) noexcept;
@@ -62,7 +62,7 @@ protected:
     /**
      * @brief Take specific method
      *
-     * After take method, the data will be removed from \c data_to_send_ .
+     * After \c take method, the data will be removed from \c data_to_send_ .
      *
      * @param data : oldest data to take
      * @return RETCODE_OK if data has been correctly taken

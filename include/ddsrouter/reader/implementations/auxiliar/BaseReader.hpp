@@ -32,6 +32,7 @@ namespace ddsrouter {
  * Abstract Reader that implement generic methods for every Reader.
  *
  * In order to inherit this class, create the protected method take_ .
+ * Implement methods enabled_ and disabled_ in order to give specific functionality to these methods.
  */
 class BaseReader : public IReader
 {

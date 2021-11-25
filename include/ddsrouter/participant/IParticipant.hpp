@@ -37,7 +37,7 @@ namespace ddsrouter {
  * This class manages the discovery of new remote entities (that do not belong to the router).
  * It also works as a factory for Writers and Readers.
  *
- * Every Participant is associated to an \c ParticipantId that uniquely identifies it.
+ * Every Participant is associated to a \c ParticipantId that uniquely identifies it.
  * Every Participant is associated with a \c ParticipantType depending on its implementation.
  *
  * @note In order to implement new Participants, create a subclass of this Interface and implement every method.
@@ -66,11 +66,11 @@ public:
      * @brief Return a new Writer
      *
      * Each writer is associated with a \c Bridge with the topic \c topic .
-     * This writer will forward message in this topic.
+     * This writer will forward messages in this topic.
      *
      * @param [in] topic : Topic that this Writer will work with.
      *
-     * @return Writer in this Participant refering this topic
+     * @return Writer in this Participant referring this topic
      *
      * @throw \c InitializationException in case the writer creation fails.
      */
@@ -81,13 +81,13 @@ public:
      * @brief Return a new Reader
      *
      * Each reader is associated with a \c Bridge with the topic \c topic .
-     * This reader will receive message in this topic.
+     * This reader will receive messages in this topic.
      *
      * @param [in] topic : Topic that this Reader will work with.
      *
-     * @return Reader in this Participant refering this topic
+     * @return Reader in this Participant referring this topic
      *
-     * @throw \c InitializationException in case the writer creation fails.
+     * @throw \c InitializationException in case the reader creation fails.
      */
     virtual std::shared_ptr<IReader> create_reader(
             RealTopic topic) = 0;
@@ -95,7 +95,7 @@ public:
     /**
      * @brief Delete Writer
      *
-     * This method delete a Writer that has been created by this Participant.
+     * This method deletes a Writer that has been created by this Participant.
      *
      * @note This method should be able to destroy the Writer as it should not have any other reference.
      *
@@ -107,7 +107,7 @@ public:
     /**
      * @brief Delete Reader
      *
-     * This method delete a Writer that has been created by this Participant.
+     * This method deletes a Reader that has been created by this Participant.
      *
      * @note This method should be able to destroy the Reader as it should not have any other reference.
      *

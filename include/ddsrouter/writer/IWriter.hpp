@@ -46,33 +46,33 @@ public:
      *
      * A Writer enabled can send messages.
      *
-     * By default the Writer is disable. Call this method to activate it.
+     * By default the Writer is disabled. Call this method to activate it.
      */
     virtual void enable() noexcept = 0;
 
     /**
      * @brief Disable Writer
      *
-     * A Writer disabled do not send data.
-     * @note Method \c write from a disabled writer should never be called
+     * A Writer disabled does not send data.
+     * @note Method \c write should never be called from a disabled writer
      */
     virtual void disable() noexcept = 0;
 
     /**
-     * @brief Writer a message for remote endpoints asynchronusly
+     * @brief Asynchronously write a message for remote endpoints
      *
-     * This method will take a data received by another Participants Reader and it should send it forward.
+     * This method will take the data received by another Participant's Reader and should send it forward.
      * In the variable \c data there is the \c Guid of the Endpoint that originally sent the data.
-     * In \c data there is also the payload of the data. This payload should be copied/moved from the DDSRouter's to
-     * the Writer's PayloadPool (in case it is the same Pool, the data will not be copied).
-     * The writer should write asynchronusly. It should take the data and exit the function,
+     * In \c data there is also the payload of the data. This payload should be copied/moved from the DDSRouter's
+     * PayloadPool to the Writer's PayloadPool (in case it is the same Pool, the data will not be copied).
+     * The writer should write asynchronously. It should take the data and exit the function,
      * and internally send the data.
      *
      * Once the data has been sent, the Writer should release the payload.
      *
-     * @param [in] data : object from where to get the payload to send
+     * @param [in] data : object containing the payload to be sent
      *
-     * @return \c RETCODE_OK if the data has been taken correctly
+     * @return \c RETCODE_OK if the data has been written correctly
      * @return \c RETCODE_ERROR if there has been any error while writing the sample
      * @return \c RETCODE_NOT_ENABLED if the writer is not enabled (this should not happen)
      */

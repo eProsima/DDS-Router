@@ -30,8 +30,8 @@ namespace ddsrouter {
 /**
  * Concrete Participant that allows to simulate a real remote network.
  *
- * This Participant retrieves methods that allow to simulate the reception of a message
- * and other to get the messages that should have been sent.
+ * This Participant includes methods that allow to simulate the reception of a message
+ * and to get the messages that should have been sent.
  * For this, a static map is created so it can store all the DummyParticipants created and have access to their methods.
  *
  * This Participant is used for Testing, as it could mock a DDS real network.
@@ -44,7 +44,7 @@ public:
      * @brief Construct a new Dummy Participant object
      *
      * It uses the \c BaseParticipant constructor.
-     * Apart from BaseParticipant, it adds this new object to a static variable so it could be rechead from outside
+     * Apart from BaseParticipant, it adds this new object to a static variable so it could be reached from outside
      * the DDSRouter.
      */
     DummyParticipant(
@@ -68,7 +68,7 @@ public:
             const Endpoint& new_endpoint);
 
     /**
-     * @brief Get the discovered endpoint object refering to \c guid
+     * @brief Get the discovered endpoint object referring to \c guid
      *
      * Search this guid in the endpoints in the Discovery Database
      *
@@ -81,7 +81,7 @@ public:
     /**
      * @brief Simulate that the reader of the topic has received a message
      *
-     * @param topic : Topic that refers to the Reader that should have sent this data.
+     * @param topic : Topic that refers to the Reader that should forward this data.
      * @param data : data received
      */
     void simulate_data_reception(
@@ -89,7 +89,7 @@ public:
             DummyDataReceived data);
 
     /**
-     * @brief Get the data that has arrive to this Writer in order to send it.
+     * @brief Get the data that has arrived to this Writer in order to send it.
      *
      * @param topic : Topic that refers to the Writer that should have sent this data.
      * @return Vector of all the data that the Writer should have sent.
@@ -98,10 +98,10 @@ public:
             RealTopic topic);
 
     /**
-     * @brief Make the thread wait until message N has arrived to Writer in topic \c topic
+     * @brief Make the thread wait until message \c n has arrived to Writer in topic \c topic
      *
      * @param topic : Topic that refers to the Writer that should have sent this data.
-     * @param [in] n : wait till data n has arrived and simulated to be sent
+     * @param [in] n : wait until data \c n has arrived and simulated to be sent
      */
     void wait_until_n_data_sent(RealTopic topic, uint16_t n) const noexcept;
 

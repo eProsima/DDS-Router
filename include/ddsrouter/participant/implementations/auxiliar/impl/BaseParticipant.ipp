@@ -21,11 +21,11 @@
 
 #include <memory>
 
+#include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -44,17 +44,15 @@ BaseParticipant<ConfigurationType>::BaseParticipant(
 template <class ConfigurationType>
 BaseParticipant<ConfigurationType>::~BaseParticipant()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
     if (!writers_.empty())
     {
-        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with writers");
+        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive writers");
         writers_.clear();
     }
 
     if (!readers_.empty())
     {
-        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with readers");
+        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive readers");
         readers_.clear();
     }
 }

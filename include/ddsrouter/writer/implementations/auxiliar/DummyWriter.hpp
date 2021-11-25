@@ -30,17 +30,17 @@
 namespace eprosima {
 namespace ddsrouter {
 
-//! Data that a Dummy Writer should have been sent
+//! Data kind that a Dummy Writer should have sent
 
 struct DummyDataStored
 {
     //! Payload in a format of vector of bytes
     std::vector<PayloadUnit> payload;
 
-    //! Guid of the source entity that has transmit the data
+    //! Guid of the source entity that has transmitted the data
     Guid source_guid;
 
-    //! Timestamp of the theoric publication time
+    //! Timestamp of the theoretic publication time
     Timestamp timestamp;
 };
 
@@ -63,9 +63,9 @@ public:
 
 
     /**
-     * @brief Make the thread wait until message N has been received
+     * @brief Make the thread wait until message \c n has been received
      *
-     * @param [in] n : wait till data n has arrived and simulated to be sent
+     * @param [in] n : wait until data number \c n has arrived and simulated to be sent
      */
     void wait_until_n_data_sent(uint16_t n) const noexcept;
 
@@ -75,7 +75,7 @@ protected:
      * @brief Write specific method
      *
      * This method stores the data received in \c data_stored as if it
-     * has had published.
+     * had published.
      *
      * @param data : data to simulate publication
      * @return RETCODE_OK always
@@ -91,7 +91,7 @@ protected:
      */
     mutable std::condition_variable wait_condition_variable_;
 
-    //! Guard access to \c data_stored
+    //! Guard access to \c data_stored_
     mutable std::mutex dummy_mutex_;
 };
 

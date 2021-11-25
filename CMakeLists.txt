@@ -187,7 +187,7 @@ else()
 endif()
 
 if (LOG_INFO)
-    message(STATUS "Compiling logInfo messages for Databroker")
+    message(STATUS "Compiling logInfo messages for DDSRouter")
     target_compile_definitions(${PROJECT_NAME}
         PRIVATE FASTDDS_ENFORCE_LOG_INFO
         PRIVATE HAVE_LOG_NO_INFO=0

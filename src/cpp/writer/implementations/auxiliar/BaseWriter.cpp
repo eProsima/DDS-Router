@@ -16,9 +16,9 @@
  * @file BaseWriter.cpp
  */
 
-#include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
-#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,8 +30,8 @@ BaseWriter::BaseWriter(
     : participant_id_(participant_id)
     , topic_(topic)
     , payload_pool_(payload_pool)
+    , enabled_(false)
 {
-
 }
 
 void BaseWriter::enable() noexcept
@@ -57,7 +57,7 @@ void BaseWriter::disable() noexcept
     {
         enabled_.store(false);
 
-        // Call specific enable
+        // Call specific disable
         disable_();
     }
 }
@@ -73,7 +73,7 @@ ReturnCode BaseWriter::write(
     }
     else
     {
-        logWarning(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in topic " <<
+        logWarning(DDSROUTER_BASEREADER, "Attempt to write data from disabled Writer in topic " <<
             topic_ << " in Participant " << participant_id_);
         return ReturnCode::RETCODE_NOT_ENABLED;
     }

@@ -29,9 +29,9 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Abstract Participant that implement generic methods for every Participant.
+ * Abstract Participant that implements generic methods for every Participant.
  *
- * In order to inherit this class, create the protected methods create_writer_ and create_reader_
+ * In order to inherit from this class, create the protected methods create_writer_ and create_reader_
  *
  * This class stores every Endpoint created by this Participant.
  */
@@ -47,9 +47,9 @@ public:
     /**
      * @brief Generic constructor for a Participant
      *
-     * Id and type are got from the configuration.
+     * Id and type are taken from the configuration.
      *
-     * @param participant_configuration Configuration for the Participant. Participant Type is got from here.
+     * @param participant_configuration Configuration for the Participant. Participant Type is taken from here.
      * @param payload_pool DDS Router shared PayloadPool
      * @param discovery_database DDS Router shared Discovery Database
      */
@@ -76,7 +76,7 @@ public:
 
 
     /**
-     * @brief Override create_writer() IParticipant method
+     * @brief Override type() IParticipant method
      *
      * It gets the type from the configuration.
      *
@@ -165,7 +165,7 @@ protected:
      *
      * @note Implement this method in order to delete a class specific Reader
      *
-     * @param [in] writer : Reader to delete
+     * @param [in] reader : Reader to delete
      */
     virtual void delete_reader_(
             std::shared_ptr<IReader> reader) noexcept;

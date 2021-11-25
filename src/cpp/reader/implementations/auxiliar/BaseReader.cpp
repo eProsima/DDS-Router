@@ -13,12 +13,12 @@
 // limitations under the License.
 
 /**
- * @file VoidReader.cpp
+ * @file BaseReader.cpp
  */
 
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
-#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -62,7 +62,7 @@ void BaseReader::disable() noexcept
     {
         enabled_.store(false);
 
-        // Call specific enable
+        // Call specific disable
         disable_();
     }
 }

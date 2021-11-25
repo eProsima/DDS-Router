@@ -32,7 +32,7 @@ namespace ddsrouter {
 /**
  * Interface that represents a generic Reader as part of a DDSRouter.
  *
- * This class manages the receiving of new remote data in a specific topic.
+ * This class manages the reception of new remote data in a specific topic.
  * It also calls the \c Track on_data_available callback whenever new data is received.
  *
  * @note In order to implement new Readers, create a subclass of this Interface and implement every method.
@@ -49,14 +49,14 @@ public:
      *
      * A Reader enabled will call on_data_available callback whenever new data is received.
      *
-     * By default the Reader is disable. Call this method to activate it.
+     * By default the Reader is disabled. Call this method to activate it.
      */
     virtual void enable() noexcept = 0;
 
     /**
      * @brief Disable Reader
      *
-     * A Reader disabled do not call on_data_available callback whenever new data is received.
+     * A disabled Reader does not call on_data_available callback whenever new data is received.
      * @note Disabling a Reader does not mean that messages should not arrive, that depends on the implementation.
      *
      * @warning: This method should stop calling the callback \c on_data_available_lambda if more data arrives while
@@ -68,7 +68,7 @@ public:
      * @brief Set the callback that should be called whenever a new message arrives
      *
      * Each Reader is associated with one \c Track . This Track has a callback that should be called whenever the
-     * Reader receives new data. This function set this callback for the Reader.
+     * Reader receives new data. This function sets this callback for the Reader.
      *
      * @param [in] on_data_available_lambda : \c Track callback
      */
@@ -87,7 +87,7 @@ public:
      *
      * This method will take the oldest sample received by the Reader and will set it to the argument \c data
      * in a way that the payload in \c data must be inside the DDS Router PayloadPool.
-     * In \c data must be specified the Guid of the Endpoint that originally send this data.
+     * In \c data,  the Guid of the Endpoint that originally sent this data must be specified.
      *
      * @param [out] data : object where the payload received should be copied (referenced)
      *

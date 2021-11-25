@@ -22,15 +22,17 @@
 #include <atomic>
 #include <mutex>
 
-#include <ddsrouter/writer/IWriter.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Writer that has an empty implementation.
- * It does not send anything.
+ * Abstract Writer that implement generic methods for every Writer.
+ *
+ * In order to inherit this class, create the protected method write_ .
+ * Implement methods enabled_ and disabled_ in order to give specific functionality to these methods.
  */
 class BaseWriter : public IWriter
 {
@@ -39,7 +41,7 @@ public:
     /**
      * @brief Construct a new Base Writer object
      *
-     * @param participant_id parent participant id
+     * @param participant_id id of participant
      * @param topic topic that this Writer will refer to
      * @param payload_pool DDS Router shared PayloadPool
      */
@@ -110,16 +112,16 @@ protected:
     //! Participant parent ID
     ParticipantId participant_id_;
 
-    //! Topic that this Reader refers to
+    //! Topic that this Writer refers to
     RealTopic topic_;
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;
 
-    //! Whether the Reader is currently enabled
+    //! Whether the Writer is currently enabled
     std::atomic<bool> enabled_;
 
-    //! Mutex that guards every access to the Reader
+    //! Mutex that guards every access to the Writer
     mutable std::recursive_mutex mutex_;
 };
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file constants.hpp
+ * @file macros.hpp
  *
  * This file contains constant values common for the whole project
  */
