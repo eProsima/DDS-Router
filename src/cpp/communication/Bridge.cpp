@@ -36,7 +36,7 @@ Bridge::Bridge(
 {
     logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
 
-    std::vector<ParticipantId> ids = participants_->get_participant_ids();
+    std::vector<ParticipantId> ids = participants_->get_participants_ids();
 
     // Generate readers and writers for each participant
     for (ParticipantId id: ids)
@@ -79,7 +79,7 @@ Bridge::~Bridge()
     tracks_.clear();
 
     // Remove all Writers and Readers that were created in construction
-    for (ParticipantId id: participants_->get_participant_ids())
+    for (ParticipantId id: participants_->get_participants_ids())
     {
         std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
         auto writer = writers_.find(id);
@@ -91,6 +91,9 @@ Bridge::~Bridge()
 
         participant->delete_writer(writer->second);
         participant->delete_reader(reader->second);
+
+        writers_.erase(writer);
+        readers_.erase(reader);
     }
 
     // Participants must not be removed as they belong to the Participant Database

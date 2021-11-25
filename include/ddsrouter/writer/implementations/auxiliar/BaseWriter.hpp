@@ -29,9 +29,9 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Abstract Writer that implement generic methods for every Writer.
+ * Abstract Writer that implements generic methods for every Writer.
  *
- * In order to inherit this class, create the protected method write_ .
+ * In order to inherit from this class, create the protected method write_ .
  * Implement methods enabled_ and disabled_ in order to give specific functionality to these methods.
  */
 class BaseWriter : public IWriter
