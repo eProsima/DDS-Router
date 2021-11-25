@@ -53,5 +53,27 @@ GuidPrefix DiscoveryServerAddress::discovery_server_guid() const noexcept
     return discovery_server_guid_;
 }
 
+std::ostream& operator <<(
+        std::ostream& output,
+        const DiscoveryServerAddress& address)
+{
+    output << "{" << address.ip() << ";" << address.port() << ";";
+
+    if (address.is_ipv4())
+    {
+        output << "udp;";
+    }
+    else
+    {
+        output << "tcp;";
+    }
+
+    output << address.discovery_server_guid();
+
+    output << "}";
+
+    return output;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

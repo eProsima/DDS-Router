@@ -83,6 +83,44 @@ bool Address::is_tcp() const noexcept
     return transport_protocol_ == TCP;
 }
 
+bool Address::is_ipv4() const noexcept
+{
+    return ip_version_ == IPv4;
+}
+
+bool Address::is_ipv6() const noexcept
+{
+    return ip_version_ == IPv6;
+}
+
+LocatorType Address::get_locator_kind() noexcept
+{
+    if (ip_version_ == IPv4)
+    {
+        if (transport_protocol_ == UDP)
+        {
+            return LOCATOR_KIND_UDPv4;
+        }
+        else if (transport_protocol_ == TCP)
+        {
+            return LOCATOR_KIND_TCPv4;
+        }
+    }
+    else if (ip_version_ == IPv6)
+    {
+        if (transport_protocol_ == UDP)
+        {
+            return LOCATOR_KIND_UDPv6;
+        }
+        else if (transport_protocol_ == TCP)
+        {
+            return LOCATOR_KIND_TCPv6;
+        }
+    }
+
+    return LOCATOR_KIND_INVALID;
+}
+
 bool Address::is_valid() const noexcept
 {
     // TODO check port and maybe UDP/TCP specific rules
@@ -130,6 +168,24 @@ IpVersion Address::default_ip_version() noexcept
 TransportProtocol Address::default_transport_protocol() noexcept
 {
     return DEFAULT_TRANSPORT_PROTOCOL;
+}
+
+std::ostream& operator <<(
+        std::ostream& output,
+        const Address& address)
+{
+    output << "{" << address.ip() << ";" << address.port() << ";";
+
+    if (address.is_ipv4())
+    {
+        output << "udp}";
+    }
+    else
+    {
+        output << "tcp}";
+    }
+
+    return output;
 }
 
 } /* namespace ddsrouter */

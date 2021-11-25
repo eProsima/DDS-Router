@@ -46,8 +46,13 @@ public:
 
     std::vector<DiscoveryServerAddress> connection_addresses() const noexcept;
 
-    Guid discovery_server_guid() const noexcept;
+    GuidPrefix discovery_server_guid() const noexcept;
 
+    DomainId domain() const noexcept;
+
+protected:
+
+    static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
 
 } /* namespace ddsrouter */

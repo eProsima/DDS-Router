@@ -70,6 +70,10 @@ public:
     //! Return the enum value of this object
     ParticipantTypeValue operator ()() const noexcept;
 
+    //! Minor operator
+    bool operator <(
+            const ParticipantType& other) const noexcept;
+
     /**
      * @brief Create a Participant Type regarding the string argument in lower case
      *
@@ -84,6 +88,8 @@ public:
      */
     static ParticipantType participant_type_from_name(
             std::string type) noexcept;
+
+    static std::vector<ParticipantType> all_valid_participant_types() noexcept;
 
 protected:
 

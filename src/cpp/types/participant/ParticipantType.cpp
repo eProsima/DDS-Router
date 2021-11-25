@@ -36,7 +36,6 @@ const std::map<ParticipantTypeValue, std::vector<std::string>> ParticipantType::
     {DISCOVERY_SERVER_RTPS, {"discovery-server", "ds", "local-ds"}}
 };
 
-
 ParticipantType::ParticipantType(
         ParticipantTypeValue value) noexcept
     : value_(value)
@@ -65,6 +64,12 @@ ParticipantTypeValue ParticipantType::operator ()() const noexcept
     return value_;
 }
 
+bool ParticipantType::operator <(
+        const ParticipantType& other) const noexcept
+{
+    return this->value_ < other.value_;
+}
+
 ParticipantType ParticipantType::participant_type_from_name(
         std::string type) noexcept
 {
@@ -84,6 +89,17 @@ ParticipantType ParticipantType::participant_type_from_name(
         }
     }
     return PARTICIPANT_TYPE_INVALID;
+}
+
+std::vector<ParticipantType> ParticipantType::all_valid_participant_types() noexcept
+{
+    return {
+        VOID,
+        ECHO,
+        DUMMY,
+        SIMPLE_RTPS,
+        DISCOVERY_SERVER_RTPS,
+    };
 }
 
 std::ostream& operator <<(

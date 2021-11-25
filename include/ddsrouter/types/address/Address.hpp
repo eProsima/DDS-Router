@@ -22,9 +22,12 @@
 
 #include <string>
 
+#include <fastdds/rtps/common/Locator.h>
+
 namespace eprosima {
 namespace ddsrouter {
 
+using LocatorType = uint32_t;
 using IpType = std::string;
 using PortType = uint16_t;
 using DiscoveryServerIdType = uint32_t;
@@ -66,6 +69,8 @@ public:
 
     bool is_ipv4() const noexcept;
     bool is_ipv6() const noexcept;
+
+    LocatorType get_locator_kind() noexcept;
 
     virtual bool is_valid() const noexcept;
 

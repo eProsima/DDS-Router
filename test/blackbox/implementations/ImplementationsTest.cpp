@@ -63,12 +63,7 @@ RawConfiguration participant_configuration(
 
 std::vector<ParticipantType> participant_types()
 {
-    return {
-        ParticipantType::VOID,
-        ParticipantType::ECHO,
-        ParticipantType::DUMMY,
-        ParticipantType::SIMPLE_RTPS,
-    };
+    return ParticipantType::all_valid_participant_types();
 }
 
 /**

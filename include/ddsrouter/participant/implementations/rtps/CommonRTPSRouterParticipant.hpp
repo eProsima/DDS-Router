@@ -16,11 +16,12 @@
  * @file CommonRTPSRouterParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_IMPL_IPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_IMPL_IPP_
 
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
+#include <fastrtps/rtps/RTPSDomain.h>
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/SimpleRTPSParticipantConfiguration.hpp>
@@ -35,7 +36,7 @@ namespace ddsrouter {
  * TODO
  */
 template <class ConfigurationType>
-class CommonRTPSRouterParticipant : public BaseParticipant<SimpleRTPSParticipantConfiguration>
+class CommonRTPSRouterParticipant : public BaseParticipant<ConfigurationType>
 {
 public:
 
@@ -43,6 +44,21 @@ public:
             const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
+        // : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, discovery_database);
+    // {
+    //     DomainId domain = BaseParticipant<ConfigurationType>::configuration_.domain();
+    //     fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes();
+
+    //     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain, params);
+    //     if (!rtps_participant_)
+    //     {
+    //         throw InitializationException(utils::Formatter() << "Error creating RTPS Participant " << id());
+    //     }
+
+    //     logInfo(DDSROUTER_RTPS_READER,
+    //         "New Participant " << configuration_.type() << " created with id " << BaseParticipant<ConfigurationType>::id() <<
+    //         " in domain " << domain << " with guid " << rtps_participant_->getGuid());
+    // }
 
     virtual ~CommonRTPSRouterParticipant();
 
@@ -73,4 +89,4 @@ protected:
 // Include implementation template file
 #include <ddsrouter/participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp>
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_COMMONRTPSROUTERPARTICIPANT_IMPL_IPP_ */
