@@ -31,21 +31,41 @@ namespace ddsrouter {
 
 class DiscoveryServerAddress : public Address
 {
-    DiscoveryServerAddress(
-        const IpType& ip,
-        const PortType& port,
-        const Guid& server_guid);
+public:
 
     DiscoveryServerAddress(
         const IpType& ip,
         const PortType& port,
+        const IpVersion& ip_version,
+        const TransportProtocol& transport_protocol,
+        const GuidPrefix& server_guid);
+
+    DiscoveryServerAddress(
+        const IpType& ip,
+        const PortType& port,
+        const IpVersion& ip_version,
+        const TransportProtocol& transport_protocol,
         const uint32_t server_guid_seed);
 
-    Guid discovery_server_guid() const noexcept;
+    DiscoveryServerAddress(
+        const IpType& ip,
+        const PortType& port,
+        const TransportProtocol& transport_protocol,
+        const GuidPrefix& server_guid);
+
+    DiscoveryServerAddress(
+        const IpType& ip,
+        const PortType& port,
+        const TransportProtocol& transport_protocol,
+        const uint32_t server_guid_seed);
+
+    GuidPrefix discovery_server_guid() const noexcept;
+
+    virtual bool is_valid() const noexcept;
 
 protected:
 
-    Guid discovery_server_guid_;
+    GuidPrefix discovery_server_guid_;
 };
 
 std::ostream& operator <<(

@@ -17,10 +17,27 @@
  *
  */
 
+#include <limits.h>
+
 #include <ddsrouter/types/endpoint/Guid.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+
+const char* Guid::SERVER_DEFAULT_GUID_("01.0f.ff.00.00.00.00.00.00.00.00.ff");
+const char* Guid::ROS_DISCOVERY_SERVER_GUID_("44.53.00.5f.45.50.52.4f.53.49.4d.41");
+
+Guid::Guid (const std::string& str_guid)
+{
+    std::stringstream ss(str_guid);
+    ss >> *this;
+}
+
+Guid::Guid (uint32_t seed)
+{
+    // TODO : extend it to the entity id
+    guidPrefix = get_guid_prefix_from_seed(seed);
+}
 
 Guid& Guid::operator = (const fastrtps::rtps::GUID_t& other) noexcept
 {
@@ -33,6 +50,27 @@ bool Guid::is_valid() const noexcept
 {
     return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
            entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
+}
+
+GuidPrefix Guid::get_guid_prefix_from_seed(const std::string& str_guid_prefix) noexcept
+{
+    GuidPrefix prefix;
+    std::stringstream ss(str_guid_prefix);
+    ss >> prefix;
+    return prefix;
+}
+
+GuidPrefix Guid::get_guid_prefix_from_seed(uint32_t seed) noexcept
+{
+    // TODO : extend it to the whole guid, so seed is not truncated to octet
+    GuidPrefix prefix = get_guid_prefix_from_seed(ROS_DISCOVERY_SERVER_GUID_);
+    prefix.value[10] = static_cast<fastrtps::rtps::octet>(seed);
+    return prefix;
+}
+
+GuidPrefix Guid::ros_discovery_server_guid_prefix() noexcept
+{
+    return get_guid_prefix_from_seed(ROS_DISCOVERY_SERVER_GUID_);
 }
 
 } /* namespace ddsrouter */

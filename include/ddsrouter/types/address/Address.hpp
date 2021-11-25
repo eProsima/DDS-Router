@@ -43,21 +43,37 @@ enum TransportProtocol
 
 class Address
 {
+public:
+
     Address(
         const IpType& ip,
         const PortType& port,
-        const TransportProtocol& transport_protocol);
+        const IpVersion& ip_version,
+        const TransportProtocol& transport_protocol) noexcept;
+
+    Address(
+        const IpType& ip,
+        const PortType& port,
+        const TransportProtocol& transport_protocol) noexcept;
 
     PortType port() const noexcept;
     IpType ip() const noexcept;
     IpVersion ip_version() const noexcept;
     TransportProtocol transport_protocol() const noexcept;
 
+    bool is_udp() const noexcept;
+    bool is_tcp() const noexcept;
+
+    bool is_ipv4() const noexcept;
+    bool is_ipv6() const noexcept;
+
+    virtual bool is_valid() const noexcept;
+
     static bool is_ipv4_correct(
-            const IpType& ip);
+            const IpType& ip) noexcept;
 
     static bool is_ipv6_correct(
-            const IpType& ip);
+            const IpType& ip) noexcept;
 
     static PortType default_port() noexcept;
     static IpType default_ip() noexcept;

@@ -24,6 +24,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
+using GuidPrefix = fastrtps::rtps::GuidPrefix_t;
+
 //! Unique Id of every Endpoint
 class Guid : public fastrtps::rtps::GUID_t
 {
@@ -34,6 +36,8 @@ public:
 
     Guid (const std::string& str_guid);
 
+    Guid (uint32_t seed);
+
     Guid& operator = (const fastrtps::rtps::GUID_t& other) noexcept;
 
     /**
@@ -43,11 +47,11 @@ public:
      */
     bool is_valid() const noexcept;
 
-    static bool is_valid_str_guid(const std::string& str_guid) noexcept;
+    static GuidPrefix get_guid_prefix_from_seed(const std::string& str_guid_prefix) noexcept;
 
-    static Guid get_guid_from_seed(uint32_t seed) noexcept;
+    static GuidPrefix get_guid_prefix_from_seed(uint32_t seed) noexcept;
 
-    static Guid ros_discovery_server_guid() noexcept;
+    static GuidPrefix ros_discovery_server_guid_prefix() noexcept;
 
 protected:
 
