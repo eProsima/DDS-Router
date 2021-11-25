@@ -52,7 +52,6 @@ CommonRTPSRouterParticipant<ConfigurationType>::CommonRTPSRouterParticipant(
 template <class ConfigurationType>
 CommonRTPSRouterParticipant<ConfigurationType>::~CommonRTPSRouterParticipant()
 {
-
     if (rtps_participant_)
     {
         fastrtps::rtps::RTPSDomain::removeRTPSParticipant(rtps_participant_);

@@ -13,28 +13,20 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSRouterParticipant.hpp
+ * @file VoidParticipant.cpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSROUTERPARTICIPANT_HPP_
-
-#include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-/**
- * TODO
- */
-class SimpleRTPSRouterParticipant : public CommonRTPSRouterParticipant<SimpleRTPSParticipantConfiguration>
+fastrtps::rtps::RTPSParticipantAttributes DiscoveryServerRTPSRouterParticipant::participant_attributes() const noexcept
 {
-public:
-
-    using CommonRTPSRouterParticipant::CommonRTPSRouterParticipant;
-};
+    // TODO
+    fastrtps::rtps::RTPSParticipantAttributes params;
+    return params;
+}
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSROUTERPARTICIPANT_HPP_ */

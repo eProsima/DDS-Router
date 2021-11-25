@@ -22,6 +22,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -41,11 +42,12 @@ public:
      */
     enum
     {
-        PARTICIPANT_TYPE_INVALID,    //! Invalid Participant Type
-        VOID,       //! Void Participant Type
-        ECHO,       //! Echo Participant Type
-        DUMMY,      //! Dummy Participant Type
-        SIMPLE_RTPS,      //! Simple RTPS Participant Type
+        PARTICIPANT_TYPE_INVALID,   //! Invalid Participant Type
+        VOID,                       //! Void Participant Type
+        ECHO,                       //! Echo Participant Type
+        DUMMY,                      //! Dummy Participant Type
+        SIMPLE_RTPS,                //! Simple RTPS Participant Type
+        DISCOVERY_SERVER_RTPS,      //! Discovery Server RTPS Participant Type
     };
 
     //! Default constructor that returns an Invalid Participant Type
@@ -89,9 +91,9 @@ protected:
     ParticipantTypeValue value_;
 
     //! Map that link a \c ParticipantType with its name to be created or deserialized
-    static const std::map<ParticipantTypeValue, std::string> participant_type_with_name_;
+    static const std::map<ParticipantTypeValue, std::vector<std::string>> participant_type_with_aliases_;
 
-    // Allow operator << to use \c participant_type_with_name_
+    // Allow operator << to use \c participant_type_with_aliases_
     friend std::ostream& operator <<(
             std::ostream& os,
             const ParticipantType& type);

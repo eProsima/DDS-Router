@@ -26,13 +26,14 @@
 namespace eprosima {
 namespace ddsrouter {
 
-const std::map<ParticipantTypeValue, std::string> ParticipantType::participant_type_with_name_ =
+const std::map<ParticipantTypeValue, std::vector<std::string>> ParticipantType::participant_type_with_aliases_ =
 {
-    {PARTICIPANT_TYPE_INVALID, "invalid_participant_type"},
-    {VOID, "void"},
-    {ECHO, "echo"},
-    {DUMMY, "dummy"},
-    {SIMPLE_RTPS, "local"},
+    {PARTICIPANT_TYPE_INVALID, {"invalid_participant_type"}},
+    {VOID, {"void"}},
+    {ECHO, {"echo"}},
+    {DUMMY, {"dummy"}},
+    {SIMPLE_RTPS, {"local", "simple"}},
+    {DISCOVERY_SERVER_RTPS, {"discovery-server", "ds", "local-ds"}}
 };
 
 
@@ -71,11 +72,15 @@ ParticipantType ParticipantType::participant_type_from_name(
     utils::to_lowercase(type);
 
     // Look for string in names map and return the type it matches
-    for (auto types : ParticipantType::participant_type_with_name_)
+    for (auto types : ParticipantType::participant_type_with_aliases_)
     {
-        if (type == types.second)
+        // Check if it fix with any of the aliases
+        for (std::string alias : types.second)
         {
-            return types.first;
+            if (type == alias)
+            {
+                return types.first;
+            }
         }
     }
     return PARTICIPANT_TYPE_INVALID;
@@ -85,12 +90,12 @@ std::ostream& operator <<(
         std::ostream& os,
         const ParticipantType& type)
 {
-    auto it = ParticipantType::participant_type_with_name_.find(type.value_);
+    auto it = ParticipantType::participant_type_with_aliases_.find(type.value_);
 
     // Value must be in map
-    assert(it != ParticipantType::participant_type_with_name_.end());
+    assert(it != ParticipantType::participant_type_with_aliases_.end());
 
-    os << it->second;
+    os << it->second[0];
     return os;
 }
 

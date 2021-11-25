@@ -35,15 +35,23 @@ enum IpVersion
     IPv6
 };
 
+enum TransportProtocol
+{
+    UDP,
+    TCP
+};
+
 class Address
 {
     Address(
         const IpType& ip,
-        const PortType& port);
+        const PortType& port,
+        const TransportProtocol& transport_protocol);
 
     PortType port() const noexcept;
     IpType ip() const noexcept;
     IpVersion ip_version() const noexcept;
+    TransportProtocol transport_protocol() const noexcept;
 
     static bool is_ipv4_correct(
             const IpType& ip);
@@ -51,11 +59,22 @@ class Address
     static bool is_ipv6_correct(
             const IpType& ip);
 
+    static PortType default_port() noexcept;
+    static IpType default_ip() noexcept;
+    static IpVersion default_ip_version() noexcept;
+    static TransportProtocol default_transport_protocol() noexcept;
+
 protected:
 
     IpType ip_;
     PortType port_;
     IpVersion ip_version_;
+    TransportProtocol transport_protocol_;
+
+    static const PortType DEFAULT_PORT_TYPE;
+    static const IpType DEFAULT_IP_TYPE;
+    static const IpVersion DEFAULT_IP_VERSION;
+    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL;
 };
 
 std::ostream& operator <<(

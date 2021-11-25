@@ -16,9 +16,10 @@
  * @file DiscoveryServerRTPSRouterParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
 
+#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
 
 namespace eprosima {
@@ -27,15 +28,17 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class DiscoveryServerRTPSRouterParticipant : public CommonRTPSRouterParticipant<SimpleRTPSParticipantConfiguration>
+class DiscoveryServerRTPSRouterParticipant
+    : public CommonRTPSRouterParticipant<DiscoveryServerRTPSParticipantConfiguration>
 {
 public:
 
     using CommonRTPSRouterParticipant::CommonRTPSRouterParticipant;
 
+    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes() const noexcept override;
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_ */

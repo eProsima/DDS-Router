@@ -24,6 +24,7 @@
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/implementations/rtps/SimpleRTPSRouterParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/utils.hpp>
@@ -59,6 +60,14 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         case ParticipantType::SIMPLE_RTPS:
             // Simple RTPS Participant
             return std::make_shared<SimpleRTPSRouterParticipant> (
+                participant_configuration,
+                payload_pool,
+                discovery_database);
+            break;
+
+        case ParticipantType::DISCOVERY_SERVER_RTPS:
+            // Discovery Server RTPS Participant
+            return std::make_shared<DiscoveryServerRTPSRouterParticipant> (
                 participant_configuration,
                 payload_pool,
                 discovery_database);
