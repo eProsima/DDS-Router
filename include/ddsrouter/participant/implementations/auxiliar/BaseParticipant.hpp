@@ -39,8 +39,8 @@ template <class ConfigurationType>
 class BaseParticipant : public IParticipant
 {
 
-// Force ConfigurationType to be subclass of ParticipantConfiguration
-FORCE_TEMPLATE_SUBCLASS(ParticipantConfiguration, ConfigurationType);
+    // Force ConfigurationType to be subclass of ParticipantConfiguration
+    FORCE_TEMPLATE_SUBCLASS(ParticipantConfiguration, ConfigurationType);
 
 public:
 

@@ -46,9 +46,9 @@ public:
      * @param payload_pool DDS Router shared PayloadPool
      */
     BaseWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool);
+            const ParticipantId& participant_id,
+            const RealTopic& topic,
+            std::shared_ptr<PayloadPool> payload_pool);
 
     /**
      * @brief Set this Writer as enabled

@@ -33,7 +33,7 @@ ReturnCode DummyWriter::write_(
         new_data_to_store.source_guid = data->source_guid;
 
         // Copying data as it should not be stored in PayloadPool
-        for (int i = 0; i < data->payload.length ; i++)
+        for (int i = 0; i < data->payload.length; i++)
         {
             new_data_to_store.payload.push_back(data->payload.data[i]);
         }
@@ -47,7 +47,8 @@ ReturnCode DummyWriter::write_(
     return ReturnCode::RETCODE_OK;
 }
 
-void DummyWriter::wait_until_n_data_sent(uint16_t n) const noexcept
+void DummyWriter::wait_until_n_data_sent(
+        uint16_t n) const noexcept
 {
     std::unique_lock<std::mutex> lock(dummy_mutex_);
     wait_condition_variable_.wait(

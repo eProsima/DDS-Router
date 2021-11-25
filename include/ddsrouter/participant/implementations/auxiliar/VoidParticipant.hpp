@@ -38,7 +38,7 @@ public:
 
     //! Constructor with Id of this participant
     VoidParticipant(
-        const ParticipantId& id_);
+            const ParticipantId& id_);
 
     //! Override id() IParticipant method
     ParticipantId id() const noexcept override;

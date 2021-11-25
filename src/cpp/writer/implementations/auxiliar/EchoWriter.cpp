@@ -25,7 +25,7 @@ ReturnCode EchoWriter::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
-                << " in topic: " << topic_ << " the following payload: <" << data->payload << ">" << std::endl;
+              << " in topic: " << topic_ << " the following payload: <" << data->payload << ">" << std::endl;
 
     return ReturnCode::RETCODE_OK;
 }

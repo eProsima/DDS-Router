@@ -74,7 +74,7 @@ ReturnCode BaseWriter::write(
     else
     {
         logWarning(DDSROUTER_BASEREADER, "Attempt to write data from disabled Writer in topic " <<
-            topic_ << " in Participant " << participant_id_);
+                topic_ << " in Participant " << participant_id_);
         return ReturnCode::RETCODE_NOT_ENABLED;
     }
 }
@@ -88,5 +88,6 @@ void BaseWriter::disable_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

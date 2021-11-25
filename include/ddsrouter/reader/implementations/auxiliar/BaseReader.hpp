@@ -46,9 +46,9 @@ public:
      * @param payload_pool DDS Router shared PayloadPool
      */
     BaseReader(
-        const ParticipantId& participant_id,
-        const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool);
+            const ParticipantId& participant_id,
+            const RealTopic& topic,
+            std::shared_ptr<PayloadPool> payload_pool);
 
     /**
      * @brief Set this Reader as enabled

@@ -103,7 +103,9 @@ public:
      * @param topic : Topic that refers to the Writer that should have sent this data.
      * @param [in] n : wait until data \c n has arrived and simulated to be sent
      */
-    void wait_until_n_data_sent(RealTopic topic, uint16_t n) const noexcept;
+    void wait_until_n_data_sent(
+            RealTopic topic,
+            uint16_t n) const noexcept;
 
     /**
      * @brief Get a DummyParticipant by ID

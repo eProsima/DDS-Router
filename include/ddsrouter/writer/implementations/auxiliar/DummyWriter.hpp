@@ -67,7 +67,8 @@ public:
      *
      * @param [in] n : wait until data number \c n has arrived and simulated to be sent
      */
-    void wait_until_n_data_sent(uint16_t n) const noexcept;
+    void wait_until_n_data_sent(
+            uint16_t n) const noexcept;
 
 protected:
 

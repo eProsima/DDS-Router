@@ -34,7 +34,8 @@ void DummyReader::simulate_data_reception(
     on_data_available_();
 }
 
-ReturnCode DummyReader::take_(std::unique_ptr<DataReceived>& data) noexcept
+ReturnCode DummyReader::take_(
+        std::unique_ptr<DataReceived>& data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(dummy_mutex_);
 
@@ -59,7 +60,7 @@ ReturnCode DummyReader::take_(std::unique_ptr<DataReceived>& data) noexcept
         data->payload);
 
     // Set values in Payload as the data was not in the DDSRouter Payload Pool
-    for (int i = 0; i < next_data_to_send.payload.size() ; i++)
+    for (int i = 0; i < next_data_to_send.payload.size(); i++)
     {
         data->payload.data[i] = next_data_to_send.payload[i];
     }
