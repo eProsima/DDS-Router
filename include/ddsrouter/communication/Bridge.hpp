@@ -23,7 +23,7 @@
 
 #include <ddsrouter/communication/Track.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
-#include <ddsrouter/participant/ParticipantDatabase.hpp>
+#include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -55,7 +55,7 @@ public:
      */
     Bridge(
             const RealTopic& topic,
-            std::shared_ptr<ParticipantDatabase> participants_database,
+            std::shared_ptr<ParticipantsDatabase> participants_database,
             bool enable = false);
 
     /**
@@ -104,7 +104,7 @@ protected:
      *
      * @note: This variable is only used at destruction time
      */
-    const std::shared_ptr<ParticipantDatabase> participants_;
+    const std::shared_ptr<ParticipantsDatabase> participants_;
 
     /**
      * Inside \c Tracks

@@ -25,7 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief TODO
+ * @brief Exception thrown when there has been an error initializing any Entity or subentity.
  */
 class InitializationException : public Exception
 {

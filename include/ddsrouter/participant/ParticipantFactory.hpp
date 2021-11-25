@@ -44,6 +44,17 @@ public:
             ParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
+
+    /**
+     * @brief Delete correctly a Participant
+     *
+     * When calling this method, the participant shared ptr must only be referenced here,
+     * so this method should be able to destroy completely the Participant
+     *
+     * @param participant : participant to be deleted
+     */
+    void remove_participant(
+            std::shared_ptr<IParticipant> participant);
 };
 
 } /* namespace ddsrouter */

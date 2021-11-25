@@ -19,6 +19,7 @@
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
@@ -68,6 +69,13 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             break;
     }
     return nullptr; // Unreacheable code
+}
+
+void ParticipantFactory::remove_participant(
+        std::shared_ptr<IParticipant> participant)
+{
+    // TODO
+    throw UnsupportedException("ParticipantFactory::remove_participant not supported yet");
 }
 
 } /* namespace ddsrouter */

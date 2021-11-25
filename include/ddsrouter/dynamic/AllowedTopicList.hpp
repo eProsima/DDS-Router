@@ -21,6 +21,7 @@
 
 #include <list>
 #include <map>
+#include <mutex>
 #include <string>
 
 #include <ddsrouter/types/topic/Topic.hpp>
@@ -43,19 +44,23 @@ class AllowedTopicList
 {
 public:
 
-    //! Empty lists constructor
+    //! Default constructor with empty lists
     AllowedTopicList() = default;
 
     //! Constructor by initialization lists
     AllowedTopicList(
             const std::list<std::shared_ptr<FilterTopic>>& allowlist,
-            const std::list<std::shared_ptr<FilterTopic>>& blocklist);
+            const std::list<std::shared_ptr<FilterTopic>>& blocklist) noexcept;
+
+    //! Copy constructor. It copies internal lists.
+    AllowedTopicList& operator =(
+            const AllowedTopicList& other);
 
     //! Destructor
     virtual ~AllowedTopicList();
 
     //! Clear all topics in lists
-    void clear();
+    void clear() noexcept;
 
     /**
      * Whether topic \c topic is allowed by the lists that constitute this object
@@ -70,7 +75,7 @@ public:
      * @return True if the topic is allowed, false otherwise
      */
     bool is_topic_allowed(
-            const RealTopic& topic) const;
+            const RealTopic& topic) const noexcept;
 
     /**
      * Equal operator.
@@ -85,18 +90,27 @@ public:
      * @return True if they are constituted by same topics, false otherwise
      */
     bool operator ==(
-            const AllowedTopicList& other) const;
+            const AllowedTopicList& other) const noexcept;
 
 protected:
 
+    /**
+     * @brief Get a list of filtered topics and return a list that filters repeated topics eliminating redundancy
+     *
+     * @param [in] list: list of topics with redundancy
+     * @return Set of topics without redundancy
+     */
     static std::set<std::shared_ptr<FilterTopic>> get_topic_list_without_repetition_(
-            const std::list<std::shared_ptr<FilterTopic>>& list);
+            const std::list<std::shared_ptr<FilterTopic>>& list) noexcept;
 
     //! List of topics that are not allowed
     std::set<std::shared_ptr<FilterTopic>> blocklist_;
 
     //! List of topics that are allowed
     std::set<std::shared_ptr<FilterTopic>> allowlist_;
+
+    //! Mutex to restrict access to the class
+    mutable std::recursive_mutex mutex_;
 };
 
 } /* namespace ddsrouter */

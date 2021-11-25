@@ -52,5 +52,29 @@ bool PayloadPool::release_payload(
     throw UnsupportedException("PayloadPool::release_payload not supported yet");
 }
 
+bool PayloadPool::get_payload(
+        uint32_t size,
+        Payload& payload)
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+}
+
+bool PayloadPool::get_payload(
+        uint32_t size,
+        const Payload& src_payload,
+        Payload& target_payload)
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+}
+
+bool PayloadPool::release_payload(
+        Payload& payload)
+{
+    // TODO
+    throw UnsupportedException("PayloadPool::release_payload not supported yet");
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
