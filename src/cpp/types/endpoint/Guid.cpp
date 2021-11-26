@@ -32,8 +32,13 @@ Guid& Guid::operator = (
 
 bool Guid::is_valid() const noexcept
 {
-    return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
+    return guid_prefix().is_valid() &&
            entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
+}
+
+GuidPrefix Guid::guid_prefix() const noexcept
+{
+    return GuidPrefix(guidPrefix);
 }
 
 } /* namespace ddsrouter */
