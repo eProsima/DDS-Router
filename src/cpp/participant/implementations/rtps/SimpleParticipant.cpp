@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file EchoParticipant.cpp
+ * @file VoidParticipant.cpp
  */
 
 #include <memory>
@@ -22,9 +22,6 @@
 #include <fastrtps/rtps/RTPSDomain.h>
 
 #include <ddsrouter/participant/implementations/rtps/SimpleParticipant.hpp>
-#include <ddsrouter/reader/implementations/rtps/Reader.hpp>
-#include <ddsrouter/writer/implementations/rtps/Writer.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,45 +31,16 @@ SimpleParticipant::SimpleParticipant(
         const ParticipantConfiguration& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : BaseParticipant(participant_configuration, payload_pool, discovery_database)
+    : CommonRTPSRouterParticipant<SimpleParticipantConfiguration>
+        (participant_configuration, payload_pool, discovery_database)
 {
-    DomainId domain = configuration_.domain();
-    fastrtps::rtps::RTPSParticipantAttributes params = SimpleParticipant::participant_attributes();
-
-    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params);
-    if (!rtps_participant_)
-    {
-        throw InitializationException(utils::Formatter() << "Error creating Simple RTPS Participant " << id());
-    }
-
-    logInfo(DDSROUTER_RTPS_READER, "New Participant created with id " << id() << " in domain " <<
-            domain << " with guid " << rtps_participant_->getGuid());
-}
-
-SimpleParticipant::~SimpleParticipant()
-{
-    if (rtps_participant_)
-    {
-        fastrtps::rtps::RTPSDomain::removeRTPSParticipant(rtps_participant_);
-    }
-}
-
-std::shared_ptr<IWriter> SimpleParticipant::create_writer_(
-        RealTopic topic)
-{
-    return std::make_shared<Writer>(id(), topic, payload_pool_, rtps_participant_);
-}
-
-std::shared_ptr<IReader> SimpleParticipant::create_reader_(
-        RealTopic topic)
-{
-    return std::make_shared<Reader>(id(), topic, payload_pool_, rtps_participant_);
+    init_();
 }
 
 fastrtps::rtps::RTPSParticipantAttributes SimpleParticipant::participant_attributes() const noexcept
 {
-    fastrtps::rtps::RTPSParticipantAttributes params;
-    return params;
+    logInfo(DDSROUTER_DEBUG, "Simple RTPS part attr");
+    return fastrtps::rtps::RTPSParticipantAttributes();
 }
 
 } /* namespace rtps */

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file Configuration.cpp
+ * @file DDSRouterConfiguration.cpp
  *
  */
 
-#include <ddsrouter/configuration/Configuration.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
@@ -28,9 +28,9 @@ namespace ddsrouter {
 
 // TODO: Add logs
 
-Configuration::Configuration(
+DDSRouterConfiguration::DDSRouterConfiguration(
         const RawConfiguration& raw_configuration)
-    : raw_configuration_(raw_configuration)
+    : BaseConfiguration(raw_configuration)
 {
     if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
     {
@@ -38,17 +38,17 @@ Configuration::Configuration(
     }
 }
 
-std::list<std::shared_ptr<FilterTopic>> Configuration::allowlist() const
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::allowlist() const
 {
     return generic_get_topic_list_(ALLOWLIST_TAG);
 }
 
-std::list<std::shared_ptr<FilterTopic>> Configuration::blocklist() const
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::blocklist() const
 {
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
-std::list<ParticipantConfiguration> Configuration::participants_configurations() const noexcept
+std::list<ParticipantConfiguration> DDSRouterConfiguration::participants_configurations() const noexcept
 {
     std::list<ParticipantConfiguration> result;
 
@@ -82,7 +82,7 @@ std::list<ParticipantConfiguration> Configuration::participants_configurations()
     return result;
 }
 
-std::set<RealTopic> Configuration::real_topics() const
+std::set<RealTopic> DDSRouterConfiguration::real_topics() const
 {
     std::set<RealTopic> result;
 
@@ -97,7 +97,7 @@ std::set<RealTopic> Configuration::real_topics() const
     return result;
 }
 
-std::list<std::shared_ptr<FilterTopic>> Configuration::generic_get_topic_list_(
+std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topic_list_(
         const char* list_tag) const
 {
     // TODO: support regex topic

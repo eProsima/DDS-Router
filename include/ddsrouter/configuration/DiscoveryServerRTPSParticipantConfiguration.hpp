@@ -13,46 +13,49 @@
 // limitations under the License.
 
 /**
- * @file SimpleParticipantConfiguration.hpp
+ * @file DiscoveryServerRTPSParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/types/address/Address.hpp>
+#include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace rtps {
 
 /**
  * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
  * Each Participant that require specific configuration must inherit from this class.
  */
-class SimpleParticipantConfiguration : public ParticipantConfiguration
+class DiscoveryServerRTPSParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
-    //! Using parent constructors
+    // Using parent constructors
     using ParticipantConfiguration::ParticipantConfiguration;
 
-    //! Copy constructor from superclass. Needed by \c ParticipantFactory .
-    SimpleParticipantConfiguration(
+    DiscoveryServerRTPSParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
-    /**
-     * @brief Return domain set in the configuration
-     *
-     * In case domain is not set in Configuration, it returns the default DomainID = 0
-     *
-     * @return DomainId
-     */
+    std::vector<Address> listening_addresses() const;
+
+    std::vector<DiscoveryServerConnectionAddress> connection_addresses() const;
+
+    GuidPrefix discovery_server_guid() const;
+
     DomainId domain() const;
+
+protected:
+
+    static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
 
-} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_ */

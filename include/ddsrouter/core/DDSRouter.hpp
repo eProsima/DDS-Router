@@ -24,7 +24,7 @@
 #include <mutex>
 
 #include <ddsrouter/communication/Bridge.hpp>
-#include <ddsrouter/configuration/Configuration.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
@@ -57,7 +57,7 @@ public:
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSRouter(
-            const Configuration& configuration);
+            const DDSRouterConfiguration& configuration);
 
     /**
      * @brief Destroy the DDSRouter object
@@ -81,7 +81,7 @@ public:
      * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
     ReturnCode reload_configuration(
-            const Configuration& configuration);
+            const DDSRouterConfiguration& configuration);
 
     /**
      * @brief Start communication in DDS Router
@@ -248,7 +248,7 @@ protected:
     std::map<RealTopic, bool> current_topics_;
 
     //! DDSRouter configuration
-    Configuration configuration_;
+    DDSRouterConfiguration configuration_;
 
     //! List of allowed and blocked topics
     AllowedTopicList allowed_topics_;
