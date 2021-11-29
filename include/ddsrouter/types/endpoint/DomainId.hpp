@@ -29,32 +29,45 @@ namespace ddsrouter {
 // Use FastDDS Domain Id type
 using DomainIdType = eprosima::fastdds::dds::DomainId_t;
 
+/**
+ * @brief RTPS Domain ID.
+ */
 class DomainId
 {
 public:
 
+    /**
+     * @brief Domain ID by default for DDS Routers
+     *
+     * In case of Discovery Server, default domain is 66
+     * In case of Simple Discovery, default domain is 0
+     *
+     * @param discovery_server
+     */
     DomainId (bool discovery_server = false) noexcept;
 
+    //! Standar constructor by number
     DomainId (const DomainIdType& domain) noexcept;
 
+    //! Return Fast DDS value for Domain ID
     DomainIdType operator ()() const noexcept;
 
+    //! Return Fast DDS value for Domain ID
     DomainIdType domain_id() const noexcept;
-
-    /////
-    // YAML methods
-    DomainId (const RawConfiguration& configuration);
-
-    RawConfiguration dump() const; // TODO: Once implemented add noexcept
 
 protected:
 
+    //! Value of Fast DDS Domain ID
     DomainIdType domain_id_;
 
-    static const DomainIdType DEFAULT_DOMAIN_ID_;
-    static const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_;
+    //! Default value for Simple Discovery
+    static const DomainIdType DEFAULT_DOMAIN_ID_;                   // 0
+
+    //! Default value for Discovery Server
+    static const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_;  // 66
 };
 
+//! \c DomainId serializator
 std::ostream& operator <<(
         std::ostream& output,
         const DomainId& domain);
