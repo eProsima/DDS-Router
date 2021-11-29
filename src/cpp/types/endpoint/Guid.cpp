@@ -22,7 +22,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
-Guid& Guid::operator = (const fastrtps::rtps::GUID_t& other) noexcept
+Guid& Guid::operator = (
+        const fastrtps::rtps::GUID_t& other) noexcept
 {
     this->guidPrefix = other.guidPrefix;
     this->entityId = other.entityId;

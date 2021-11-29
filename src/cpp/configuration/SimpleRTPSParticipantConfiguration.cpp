@@ -54,9 +54,9 @@ DomainId SimpleRTPSParticipantConfiguration::domain() const noexcept
         {
             // Using default domain
             logWarning(SIMPLE_RTPS_PARTICIPANT_CONFIGURATION,
-                "Incorrect Domain Configuration " << raw_configuration_[DOMAIN_ID_TAG] << " " <<
-                "while reading configuration for Participant: " << id() << ". " <<
-                "Domain must be an unsigned integer. Using default DomainId 0.");
+                    "Incorrect Domain Configuration " << raw_configuration_[DOMAIN_ID_TAG] << " " <<
+                    "while reading configuration for Participant: " << id() << ". " <<
+                    "Domain must be an unsigned integer. Using default DomainId 0.");
 
         }
     }
@@ -64,7 +64,7 @@ DomainId SimpleRTPSParticipantConfiguration::domain() const noexcept
     {
         // If it is not specified use domain 0
         logInfo(SIMPLE_RTPS_PARTICIPANT_CONFIGURATION,
-            "Participant " << id() << " has not domain specified. Using default DomainId 0.");
+                "Participant " << id() << " has not domain specified. Using default DomainId 0.");
     }
 
     return domain;

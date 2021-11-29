@@ -180,8 +180,8 @@ void Track::transmit_nts_() noexcept
         ReturnCode ret = reader_->take(data);
 
         logInfo(DDSROUTER_TRACK,
-            "Track " << reader_participant_id_ << " for topic " << topic_ <<
-            " transmitting data from remote endpoint " << data->source_guid << ".");
+                "Track " << reader_participant_id_ << " for topic " << topic_ <<
+                " transmitting data from remote endpoint " << data->source_guid << ".");
 
         if (ret == ReturnCode::RETCODE_NO_DATA)
         {

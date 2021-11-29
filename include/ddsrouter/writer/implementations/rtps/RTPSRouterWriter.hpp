@@ -53,10 +53,10 @@ public:
      * @throw \c InitializationException in case any creation has failed
      */
     RTPSRouterWriter(
-        const ParticipantId& participant_id,
-        const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant);
+            const ParticipantId& participant_id,
+            const RealTopic& topic,
+            std::shared_ptr<PayloadPool> payload_pool,
+            fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
      * @brief Destroy the RTPSRouterWriter object

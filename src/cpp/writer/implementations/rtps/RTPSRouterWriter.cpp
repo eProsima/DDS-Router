@@ -47,7 +47,7 @@ RTPSRouterWriter::RTPSRouterWriter(
     if (!rtps_writer_)
     {
         throw InitializationException(utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
-            participant_id << " in topic " << topic << ".");
+                      participant_id << " in topic " << topic << ".");
     }
 
     // Register writer with topic
@@ -59,11 +59,11 @@ RTPSRouterWriter::RTPSRouterWriter(
         // In case it fails, remove writer and throw exception
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
         throw InitializationException(utils::Formatter() << "Error registering topic " << topic <<
-            " for Simple RTPSWriter in Participant " << participant_id);
+                      " for Simple RTPSWriter in Participant " << participant_id);
     }
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
-        topic << " with guid " << rtps_writer_->getGuid());
+            topic << " with guid " << rtps_writer_->getGuid());
 }
 
 RTPSRouterWriter::~RTPSRouterWriter()
@@ -85,7 +85,7 @@ RTPSRouterWriter::~RTPSRouterWriter()
     }
 
     logInfo(DDSROUTER_RTPS_WRITER, "Deleting Writer created in Participant " <<
-        participant_id_ << " for topic " << topic_);
+            participant_id_ << " for topic " << topic_);
 }
 
 // Specific enable/disable do not need to be implemented
@@ -96,9 +96,9 @@ ReturnCode RTPSRouterWriter::write_(
 
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change([data_size]() -> uint32_t
-        {
-            return data_size;
-        }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+                    {
+                        return data_size;
+                    }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
     // TODO : Set method to remove old changes in order to get a new one
     // In case it fails, remove old changes from history and try again

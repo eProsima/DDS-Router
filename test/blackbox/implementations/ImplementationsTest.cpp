@@ -27,9 +27,9 @@
 using namespace eprosima::ddsrouter;
 
 void set_allowed_topic(
-    RawConfiguration& configuration,
-    std::string topic_name = "__test_topic_ddsrouter__",
-    std::string topic_type = "__test_topic_type_ddsrouter__")
+        RawConfiguration& configuration,
+        std::string topic_name = "__test_topic_ddsrouter__",
+        std::string topic_type = "__test_topic_type_ddsrouter__")
 {
     RawConfiguration topic;
     topic[TOPIC_NAME_TAG] = topic_name;

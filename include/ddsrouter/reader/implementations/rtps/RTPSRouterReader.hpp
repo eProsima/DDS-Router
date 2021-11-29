@@ -39,7 +39,7 @@ namespace ddsrouter {
  *
  * It implements the ReaderListener for itself with \c onNewCacheChangeAdded and \c onReaderMatched callbacks.
  */
-class RTPSRouterReader : public BaseReader , public fastrtps::rtps::ReaderListener
+class RTPSRouterReader : public BaseReader, public fastrtps::rtps::ReaderListener
 {
 public:
 
@@ -56,10 +56,10 @@ public:
      * @throw \c InitializationException in case any creation has failed
      */
     RTPSRouterReader(
-        const ParticipantId& participant_id,
-        const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant);
+            const ParticipantId& participant_id,
+            const RealTopic& topic,
+            std::shared_ptr<PayloadPool> payload_pool,
+            fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
      * @brief Destroy the RTPSRouterReader object
@@ -149,10 +149,12 @@ protected:
     // Reader specific methods
 
     //! Whether a change received is from this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(const fastrtps::rtps::CacheChange_t* change) const noexcept;
+    bool come_from_this_participant_(
+            const fastrtps::rtps::CacheChange_t* change) const noexcept;
 
     //! Whether a guid references this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(const fastrtps::rtps::GUID_t guid) const noexcept;
+    bool come_from_this_participant_(
+            const fastrtps::rtps::GUID_t guid) const noexcept;
 
     /////
     // VARIABLES

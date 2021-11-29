@@ -14,10 +14,6 @@
 
 /**
  * @file BaseParticipant.ipp
- *
- * This file includes the implementation of the template class BaseParticipant.
- * As it is a template, it needs to be implemented in an include file, otherwise it would require to know
- * in compilation time every class that would be templatized to.
  */
 
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_IMPL_IPP_

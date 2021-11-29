@@ -48,7 +48,7 @@ RTPSRouterReader::RTPSRouterReader(
     if (!rtps_reader_)
     {
         throw InitializationException(utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
-            participant_id << " in topic " << topic << ".");
+                      participant_id << " in topic " << topic << ".");
     }
 
     // Register reader with topic
@@ -60,11 +60,11 @@ RTPSRouterReader::RTPSRouterReader(
         // In case it fails, remove reader and throw exception
         fastrtps::rtps::RTPSDomain::removeRTPSReader(rtps_reader_);
         throw InitializationException(utils::Formatter() << "Error registering topic " << topic <<
-            " for Simple RTPSReader in Participant " << participant_id);
+                      " for Simple RTPSReader in Participant " << participant_id);
     }
 
     logInfo(DDSROUTER_RTPS_READER, "New Reader created in Participant " << participant_id_ << " for topic " <<
-        topic << " with guid " << rtps_reader_->getGuid());
+            topic << " with guid " << rtps_reader_->getGuid());
 }
 
 RTPSRouterReader::~RTPSRouterReader()
@@ -85,7 +85,7 @@ RTPSRouterReader::~RTPSRouterReader()
     }
 
     logInfo(DDSROUTER_RTPS_READER, "Deleting Reader created in Participant " <<
-        participant_id_ << " for topic " << topic_);
+            participant_id_ << " for topic " << topic_);
 }
 
 ReturnCode RTPSRouterReader::take_(
@@ -123,12 +123,14 @@ ReturnCode RTPSRouterReader::take_(
     return ReturnCode::RETCODE_OK;
 }
 
-bool RTPSRouterReader::come_from_this_participant_(const fastrtps::rtps::CacheChange_t* change) const noexcept
+bool RTPSRouterReader::come_from_this_participant_(
+        const fastrtps::rtps::CacheChange_t* change) const noexcept
 {
     return come_from_this_participant_(change->writerGUID);
 }
 
-bool RTPSRouterReader::come_from_this_participant_(const fastrtps::rtps::GUID_t guid) const noexcept
+bool RTPSRouterReader::come_from_this_participant_(
+        const fastrtps::rtps::GUID_t guid) const noexcept
 {
     return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
 }
@@ -190,12 +192,12 @@ void RTPSRouterReader::onReaderMatched(
         if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                "Reader matched with a new Writer with guid " << info.remoteEndpointGuid);
+                    "Reader matched with a new Writer with guid " << info.remoteEndpointGuid);
         }
         else
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                "Reader unmatched with Writer " << info.remoteEndpointGuid);
+                    "Reader unmatched with Writer " << info.remoteEndpointGuid);
         }
     }
 }
