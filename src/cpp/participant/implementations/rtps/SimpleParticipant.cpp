@@ -39,7 +39,7 @@ SimpleParticipant::SimpleParticipant(
     DomainId domain = configuration_.domain();
     fastrtps::rtps::RTPSParticipantAttributes params = SimpleParticipant::participant_attributes();
 
-    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain, params);
+    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params);
     if (!rtps_participant_)
     {
         throw InitializationException(utils::Formatter() << "Error creating Simple RTPS Participant " << id());

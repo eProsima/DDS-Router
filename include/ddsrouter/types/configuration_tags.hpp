@@ -39,6 +39,28 @@ constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
 // Simple RTPS related tags
 constexpr const char* DOMAIN_ID_TAG("domain"); //! Domain Id of the participant
 
+// Discovery Server related tags
+constexpr const char* LISTENING_ADDRESSES_TAG("listening-addresses"); //! TODO
+constexpr const char* CONNECTION_ADDRESSES_TAG("connection-addresses"); //! TODO
+constexpr const char* COLLECTION_ADDRESSES_TAG("addresses"); //! TODO
+
+// Address related tags
+constexpr const char* ADDRESS_IP_TAG("ip"); //! TODO
+constexpr const char* ADDRESS_PORT_TAG("port"); //! TODO
+
+constexpr const char* ADDRESS_IP_VERSION_TAG("ip-version"); //! TODO
+constexpr const char* ADDRESS_IP_VERSION_V4_TAG("v4"); //! TODO
+constexpr const char* ADDRESS_IP_VERSION_V6_TAG("v6"); //! TODO
+
+constexpr const char* ADDRESS_TRANSPORT_TAG("transport"); //! TODO
+constexpr const char* ADDRESS_TRANSPORT_UDP_TAG("udp"); //! TODO
+constexpr const char* ADDRESS_TRANSPORT_TCP_TAG("tcp"); //! TODO
+
+// Discovery Server Guid related tags
+constexpr const char* DISCOVERY_SERVER_GUID_TAG("guid"); //! TODO
+constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO
+constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

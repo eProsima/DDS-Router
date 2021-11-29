@@ -145,6 +145,50 @@ bool Address::is_valid() const noexcept
     }
 }
 
+bool Address::operator <(
+        const Address& other) const noexcept
+{
+    // Compare IPs
+    int ip_comparison = this->ip_.compare(other.ip_);
+    if (ip_comparison < 0)
+    {
+        return true;
+    }
+    else if (ip_comparison > 0)
+    {
+        return false;
+    }
+    else
+    {
+        // Compare Ports
+        if (this->port_ < other.port_)
+        {
+            return true;
+        }
+        else if(this->port_ > other.port_)
+        {
+            return false;
+        }
+        else
+        {
+            // Compare Protocol
+            if (this->transport_protocol_ < other.transport_protocol_)
+            {
+                return true;
+            }
+            else if (this->transport_protocol_ > other.transport_protocol_)
+            {
+                return false;
+            }
+            else
+            {
+                // Compare Ip Version
+                return this->ip_version_ < other.ip_version_;
+            }
+        }
+    }
+}
+
 bool Address::is_ipv4_correct(
         const IpType& ip) noexcept
 {

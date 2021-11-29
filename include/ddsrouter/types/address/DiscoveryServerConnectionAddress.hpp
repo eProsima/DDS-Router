@@ -63,6 +63,13 @@ public:
      */
     virtual bool is_valid() const noexcept;
 
+    /////
+    // YAML methods
+    DiscoveryServerConnectionAddress(
+        const RawConfiguration& configuration,
+        TransportProtocol default_transport = Address::default_transport_protocol());
+    RawConfiguration dump() const; // TODO: Once implemented add noexcept
+
 protected:
 
     //! Internal Discovery Server Guid Prefix object
