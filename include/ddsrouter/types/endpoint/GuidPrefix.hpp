@@ -24,7 +24,12 @@
 namespace eprosima {
 namespace ddsrouter {
 
-//! TODO: comment
+/**
+ * @brief GuidPrefix specific class for DDSRouter
+ *
+ * This class references the GuidPrefix_t class in FastDDS, which is a RTPS Participant Unique Id.
+ * This class does not belong to class Guid due to a monumental error in OOP (parallel hierarchy is the future).
+ */
 class GuidPrefix : public fastrtps::rtps::GuidPrefix_t
 {
 public:
@@ -32,12 +37,41 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::GuidPrefix_t::GuidPrefix_t;
 
+    //! Constructor from Parent class
     GuidPrefix (const GuidPrefix_t& guid_prefix) noexcept;
 
+    /**
+     * @brief Construct a new Guid Prefix object from a string
+     *
+     * Format required: "xx.x...xx" with 12 values.
+     * Non set zeros is allowed.
+     * Lower case and Capital case are allowed for hexadecimal alphabetic numbers.
+     *
+     * @param guid_prefix string with the Guid Prefix
+     */
     GuidPrefix (const std::string& str_prefix);
 
+    /**
+     * @brief Construct a new Guid Prefix object by seed
+     *
+     * Use \c id as seed to create an arbitrary GuidPrefix.
+     * It could be used as default Guid the ROS2 Discovery Server Guid [44.53.00.5f.45.50.52.4f.53.49.4d.41]
+     * or the DDSRouter Discovery Server Guid [01.0f.00.00.00.00.00.00.00.00.ca.fe].
+     *
+     * The value in 3rd position ([2]) is the one set by seed.
+     *
+     * @todo use the seed of \c id to modify the whole guid and not only one of the 12 values.
+     *
+     * @param ros : whether use the Discovery Server ROS2 specific guid [Default: false]
+     * @param id : number to seed for the final Guid Prefix [Default: 0]
+     */
     GuidPrefix (bool ros = false, uint32_t id = 0) noexcept;
 
+    /**
+     * @brief Uses Router default Guid without using ROS Discovery Server
+     *
+     * @param id number to seed for the final GUID [Default: 0]
+     */
     GuidPrefix (uint32_t id = 0) noexcept;
 
     GuidPrefix& operator = (const fastrtps::rtps::GuidPrefix_t& other) noexcept;
@@ -51,7 +85,10 @@ public:
 
 protected:
 
-    static const char* SERVER_DEFAULT_GUID_PREFIX_STR_; // 01.0f.ff.00.00.00.00.00.00.00.00.ff
+    //! Default DDSRouter Discovery Server Guid Prefix
+    static const char* SERVER_DEFAULT_GUID_PREFIX_STR_; // 01.0f.00.00.00.00.00.00.00.00.ca.fe
+
+    //! Default ROS2 Discovery Server Guid Prefix
     static const char* ROS_DISCOVERY_SERVER_GUID_PREFIX_STR_; // 44.53.00.5f.45.50.52.4f.53.49.4d.41
 };
 

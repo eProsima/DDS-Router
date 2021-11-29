@@ -45,6 +45,7 @@ public:
      */
     bool is_valid() const noexcept;
 
+    //! Return GuidPrefix from this Guid
     GuidPrefix guid_prefix() const noexcept;
 };
 
