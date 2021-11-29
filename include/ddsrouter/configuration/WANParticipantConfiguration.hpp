@@ -13,12 +13,13 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerRTPSParticipantConfiguration.hpp
+ * @file WANParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
 
+#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
@@ -32,34 +33,24 @@ namespace ddsrouter {
  * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
  * Each Participant that require specific configuration must inherit from this class.
  */
-class DiscoveryServerRTPSParticipantConfiguration : public ParticipantConfiguration
+class WANParticipantConfiguration : public DiscoveryServerRTPSParticipantConfiguration
 {
 public:
 
     // Using parent constructors
-    using ParticipantConfiguration::ParticipantConfiguration;
+    using DiscoveryServerRTPSParticipantConfiguration::DiscoveryServerRTPSParticipantConfiguration;
 
-    DiscoveryServerRTPSParticipantConfiguration(
+    WANParticipantConfiguration(
             const ParticipantConfiguration& configuration);
-
-    std::vector<Address> listening_addresses() const;
-
-    std::vector<DiscoveryServerConnectionAddress> connection_addresses() const;
-
-    GuidPrefix discovery_server_guid() const;
-
-    DomainId domain() const;
 
 protected:
 
-    virtual TransportProtocol default_transport_protocol_() const noexcept;
+    TransportProtocol default_transport_protocol_() const noexcept override;
 
     static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // TCP
-
-    static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_ */

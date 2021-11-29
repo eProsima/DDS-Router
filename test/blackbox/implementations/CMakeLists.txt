@@ -23,8 +23,9 @@ set(TEST_SOURCES
     ImplementationsTest.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/LocalDiscoveryServerRouterParticipant.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/WANRouterParticipant.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
     ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp

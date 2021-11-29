@@ -13,14 +13,14 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerRTPSRouterParticipant.hpp
+ * @file LocalDiscoveryServerRouterParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_
 
 #include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
-#include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,28 +29,19 @@ namespace rtps {
 /**
  * TODO
  */
-template <class ConfigurationType>
-class DiscoveryServerRTPSRouterParticipant
-    : public CommonRTPSRouterParticipant<ConfigurationType>
+class LocalDiscoveryServerRouterParticipant
+    : public DiscoveryServerRTPSRouterParticipant<DiscoveryServerRTPSParticipantConfiguration>
 {
 public:
 
-// Force ConfigurationType to be subclass of DiscoveryServerRTPSParticipantConfiguration
-FORCE_TEMPLATE_SUBCLASS(DiscoveryServerRTPSParticipantConfiguration, ConfigurationType);
-
-    DiscoveryServerRTPSRouterParticipant(
+    LocalDiscoveryServerRouterParticipant(
             const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
-
-    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes() const noexcept override;
 };
 
-} /* namespace rpts */
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-// Include implementation template file
-#include <ddsrouter/participant/implementations/rtps/impl/DiscoveryServerRTPSRouterParticipant.ipp>
-
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_ */

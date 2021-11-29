@@ -47,7 +47,8 @@ public:
         ECHO,                       //! Echo Participant Type
         DUMMY,                      //! Dummy Participant Type
         SIMPLE_RTPS,                //! Simple RTPS Participant Type
-        LOCAL_DISCOVERY_SERVER,     //! Discovery Server RTPS Participant Type
+        LOCAL_DISCOVERY_SERVER,     //! Discovery Server RTPS UDP Participant Type
+        WAN,                        //! Discovery Server RTPS TCP Participant Type
     };
 
     //! Default constructor that returns an Invalid Participant Type

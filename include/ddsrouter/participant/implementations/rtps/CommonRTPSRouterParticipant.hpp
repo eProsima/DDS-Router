@@ -68,7 +68,7 @@ public:
 
 protected:
 
-    void init_();
+    void create_participant_();
 
     std::shared_ptr<IWriter> create_writer_(
             RealTopic topic) override;

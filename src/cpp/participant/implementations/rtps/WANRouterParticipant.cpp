@@ -13,33 +13,23 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSRouterParticipant.cpp
+ * @file WANRouterParticipant.cpp
  */
 
-#include <memory>
-
-#include <fastrtps/rtps/participant/RTPSParticipant.h>
-#include <fastrtps/rtps/RTPSDomain.h>
-
-#include <ddsrouter/participant/implementations/rtps/SimpleParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/WANRouterParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace rtps {
 
-SimpleParticipant::SimpleParticipant(
+WANRouterParticipant::WANRouterParticipant(
         const ParticipantConfiguration& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<SimpleParticipantConfiguration>
+    : DiscoveryServerRTPSRouterParticipant<WANParticipantConfiguration>
         (participant_configuration, payload_pool, discovery_database)
 {
     create_participant_();
-}
-
-fastrtps::rtps::RTPSParticipantAttributes SimpleParticipant::participant_attributes() const noexcept
-{
-    return fastrtps::rtps::RTPSParticipantAttributes();
 }
 
 } /* namespace rtps */
