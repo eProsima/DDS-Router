@@ -54,12 +54,21 @@ RawConfiguration participant_configuration(
 {
     RawConfiguration participant_configuration;
 
-    participant_configuration[PARTICIPANT_TYPE_TAG] = ParticipantType(type).to_string();
+    RawConfiguration address;
+    address[ADDRESS_IP_TAG] = "127.0.0.1";
+    address[ADDRESS_PORT_TAG] = 11666;
+
+    participant_configuration[PARTICIPANT_TYPE_TAG] = type.to_string();
 
     switch (type())
     {
         case ParticipantType::SIMPLE_RTPS:
             set_domain(participant_configuration);
+            break;
+
+        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
+            break;
 
         // Add cases where Participants need specific arguments
         default:
@@ -71,16 +80,6 @@ RawConfiguration participant_configuration(
     return participant_configuration;
 }
 
-std::vector<ParticipantType> participant_types()
-{
-    return {
-        ParticipantType::VOID,
-        ParticipantType::ECHO,
-        ParticipantType::DUMMY,
-        ParticipantType::SIMPLE_RTPS,
-    };
-}
-
 /**
  * Test that creates a DDSRouter with a Pair of Participants of same type.
  * It creates a DDSRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
@@ -90,7 +89,7 @@ std::vector<ParticipantType> participant_types()
 TEST(ImplementationsTest, pair_implementation)
 {
     // For each Participant Type
-    for (ParticipantType type : participant_types())
+    for (ParticipantType type : ParticipantType::all_valid_participant_types())
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -122,7 +121,7 @@ TEST(ImplementationsTest, pair_implementation)
 TEST(ImplementationsTest, pair_implementation_with_topic)
 {
     // For each Participant Type
-    for (ParticipantType type : participant_types())
+    for (ParticipantType type : ParticipantType::all_valid_participant_types())
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -163,13 +162,11 @@ TEST(ImplementationsTest, all_implementations)
         uint16_t participant_number = 1;
 
         // For each Participant Type set it in configuration
-        for (ParticipantType type : participant_types())
+        for (ParticipantType type : ParticipantType::all_valid_participant_types())
         {
             // Add participant
-            std::string participant_name = "participant_" + std::to_string(participant_number);
-            configuration[participant_name] = participant_configuration(participant_number);
-
-            ++participant_number;
+            std::string participant_name = "participant_" + type.to_string();
+            configuration[participant_name] = participant_configuration(type, ++participant_number);
         }
 
         // Set topic to active

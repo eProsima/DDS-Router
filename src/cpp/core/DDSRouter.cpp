@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include <ddsrouter/configuration/Configuration.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
@@ -31,7 +31,7 @@ namespace ddsrouter {
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouter::DDSRouter(
-        const Configuration& configuration)
+        const DDSRouterConfiguration& configuration)
     : payload_pool_(new CopyPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
@@ -84,7 +84,7 @@ DDSRouter::~DDSRouter()
 }
 
 ReturnCode DDSRouter::reload_configuration(
-        const Configuration& new_configuration)
+        const DDSRouterConfiguration& new_configuration)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 

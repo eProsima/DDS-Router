@@ -35,7 +35,7 @@ Address::Address(
     {
         try
         {
-            ip_ = configuration.as<IpType>();
+            ip_ = configuration[ADDRESS_IP_TAG].as<IpType>();
         }
         catch (const std::exception& e)
         {
@@ -53,7 +53,7 @@ Address::Address(
     {
         try
         {
-            port_ = configuration.as<PortType>();
+            port_ = configuration[ADDRESS_PORT_TAG].as<PortType>();
         }
         catch (const std::exception& e)
         {
@@ -71,7 +71,7 @@ Address::Address(
     {
         try
         {
-            std::string tag = configuration.as<std::string>();
+            std::string tag = configuration[ADDRESS_TRANSPORT_TAG].as<std::string>();
 
             if (tag == ADDRESS_TRANSPORT_UDP_TAG)
             {
