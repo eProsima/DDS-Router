@@ -128,7 +128,7 @@ protected:
     std::shared_ptr<IWriter> create_writer_(
             RealTopic topic) override;
 
-    //! Override create_writer_() BaseParticipant method
+    //! Override create_reader_() BaseParticipant method
     std::shared_ptr<IReader> create_reader_(
             RealTopic topic) override;
 

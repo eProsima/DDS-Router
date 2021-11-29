@@ -32,6 +32,7 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::GUID_t::GUID_t;
 
+    //! Equal operator (inherited from GUID_t)
     Guid& operator = (const fastrtps::rtps::GUID_t& other) noexcept;
 
     /**

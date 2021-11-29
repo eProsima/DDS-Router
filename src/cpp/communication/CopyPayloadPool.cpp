@@ -61,7 +61,7 @@ bool CopyPayloadPool::release_payload(
 }
 
 bool CopyPayloadPool::get_payload(
-        fastrtps::rtps::SerializedPayload_t& src_payload,
+        Payload& src_payload,
         eprosima::fastrtps::rtps::CacheChange_t& target_cache_change)
 {
     if (!get_payload(src_payload, target_cache_change.serializedPayload))

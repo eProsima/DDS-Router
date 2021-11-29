@@ -91,6 +91,8 @@ RTPSRouterReader::~RTPSRouterReader()
 ReturnCode RTPSRouterReader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
+
     // Check if there is data available
     if (!(rtps_reader_->get_unread_count() > 0))
     {
@@ -163,8 +165,8 @@ fastrtps::ReaderQos RTPSRouterReader::reader_qos_() const noexcept
 }
 
 void RTPSRouterReader::onNewCacheChangeAdded(
-        fastrtps::rtps::RTPSReader* reader,
-        const fastrtps::rtps::CacheChange_t* const change)
+        fastrtps::rtps::RTPSReader*,
+        const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
     if (!come_from_this_participant_(change))
     {
@@ -181,7 +183,7 @@ void RTPSRouterReader::onNewCacheChangeAdded(
 
 void RTPSRouterReader::onReaderMatched(
         fastrtps::rtps::RTPSReader*,
-        fastrtps::rtps::MatchingInfo& info)
+        fastrtps::rtps::MatchingInfo& info) noexcept
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {

@@ -123,7 +123,7 @@ ReturnCode RTPSRouterWriter::write_(
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
-    // TODO: Data is never removed
+    // TODO: Data is never removed till destruction
 
     return ReturnCode::RETCODE_OK;
 }
@@ -139,6 +139,7 @@ fastrtps::rtps::WriterAttributes RTPSRouterWriter::writer_attributes_() const no
     fastrtps::rtps::WriterAttributes att;
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
     return att;
 }
 

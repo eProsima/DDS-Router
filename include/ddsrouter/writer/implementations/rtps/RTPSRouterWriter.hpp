@@ -19,8 +19,6 @@
 #ifndef _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_ECHOWRITER_HPP_
 #define _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_ECHOWRITER_HPP_
 
-#include <atomic>
-
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
 #include <fastrtps/attributes/TopicAttributes.h>
@@ -36,39 +34,98 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * TODO
+ * Standard RTPS Writer with less restrictive Attributes.
  */
 class RTPSRouterWriter : public BaseWriter
 {
 public:
 
+    /**
+     * @brief Construct a new RTPSRouterWriter object
+     *
+     * Get the Attributes and QoS and create the Writer History and the RTPS Writer.
+     *
+     * @param participant_id    Router Id of the Participant that has created this Writer.
+     * @param topic             Topic that this Writer subscribes to.
+     * @param payload_pool      Shared Payload Pool to received data and take it.
+     * @param rtps_participant  RTPS Participant pointer (this is not stored).
+     *
+     * @throw \c InitializationException in case any creation has failed
+     */
     RTPSRouterWriter(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant);
 
+    /**
+     * @brief Destroy the RTPSRouterWriter object
+     *
+     * Remove Writer RTPS
+     * Remove History
+     *
+     * @todo Remove every change and release it in PayloadPool
+     */
     virtual ~RTPSRouterWriter();
 
 protected:
 
     // Specific enable/disable do not need to be implemented
 
+    /**
+     * @brief Write specific method
+     *
+     * Store new data as message to send (asynchronously) (it could use PayloadPool to not copy payload).
+     * Take next Untaken Change.
+     * Set \c data with the message taken (data payload must be stored from PayloadPool).
+     * Remove this change from Reader History and release.
+     *
+     * It does not require mutex, it will be guarded by RTPS Writer mutex in internal methods.
+     *
+     * @param data : oldest data to take
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     */
     virtual ReturnCode write_(
             std::unique_ptr<DataReceived>& data) noexcept override;
 
     /////
     // RTPS specific methods
 
+    /**
+     * @brief Default History Attributes to create Writer History
+     *
+     * @return Default HistoryAttributes
+     */
     fastrtps::rtps::HistoryAttributes history_attributes_() const noexcept;
+
+    /**
+     * @brief Default Writer Attributes to create Writer
+     *
+     * It returns the less restrictive Attributes for a Writer, so it maches every Reader
+     * durability: TRANSIENT_LOCAL
+     * reliability: RELIABLE
+     *
+     * @warning less restrictive would be PERSISTENCE, but those are not supported yet.
+     *
+     * @return Default ReaderAttributes
+     */
     fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+
+    //! Default Topic Attributes to create Writer
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
+
+    //! Default QoS Writer (must be the same as the attributes)
     fastrtps::WriterQos writer_qos_() const noexcept;
 
     /////
     // VARIABLES
 
+    //! RTPS Writer pointer
     fastrtps::rtps::RTPSWriter* rtps_writer_;
+
+    //! RTPS Writer History associated to \c rtps_reader_
     fastrtps::rtps::WriterHistory* rtps_history_;
 };
 

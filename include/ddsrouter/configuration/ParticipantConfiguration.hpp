@@ -61,6 +61,7 @@ public:
             ParticipantId id,
             const RawConfiguration& raw_configuration);
 
+    //! Copy constructor
     ParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 

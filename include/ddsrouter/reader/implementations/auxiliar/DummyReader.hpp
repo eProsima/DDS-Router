@@ -65,8 +65,8 @@ protected:
      * After \c take method, the data will be removed from \c data_to_send_ .
      *
      * @param data : oldest data to take
-     * @return RETCODE_OK if data has been correctly taken
-     * @return RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     ReturnCode take_(
             std::unique_ptr<DataReceived>& data) noexcept override;

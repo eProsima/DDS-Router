@@ -26,18 +26,26 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
- * Each Participant that require specific configuration must inherite from this class.
+ * This Configuration give methods for a \c SimpleRTPSRouterParticipant to be configured.
  */
 class SimpleRTPSParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
+    //! Using parent constructors
     using ParticipantConfiguration::ParticipantConfiguration;
 
+    //! Copy constructor from superclass. Needed by \c ParticipantFactory .
     SimpleRTPSParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
+    /**
+     * @brief Return domain set in the configuration
+     *
+     * In case domain is not set in Configuration, it returns the default DomainID = 0
+     *
+     * @return DomainId
+     */
     DomainId domain() const noexcept;
 };
 
