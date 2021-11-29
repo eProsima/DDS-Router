@@ -24,6 +24,9 @@
 namespace eprosima {
 namespace ddsrouter {
 
+const TransportProtocol DiscoveryServerRTPSParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
+    TransportProtocol::UDP;
+
 const DomainId DiscoveryServerRTPSParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66u);
 
 DiscoveryServerRTPSParticipantConfiguration::DiscoveryServerRTPSParticipantConfiguration(
@@ -46,7 +49,7 @@ std::vector<Address> DiscoveryServerRTPSParticipantConfiguration::listening_addr
         for (auto address : raw_configuration_[LISTENING_ADDRESSES_TAG])
         {
             // In case some of it fails, throw exception forward
-            result.push_back(Address(address, UDP));
+            result.push_back(Address(address, default_transport_protocol_()));
         }
     }
 
@@ -67,7 +70,7 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerRTPSParticipantConf
         for (auto address : raw_configuration_[CONNECTION_ADDRESSES_TAG])
         {
             // In case some of it fails, throw exception forward
-            result.push_back(DiscoveryServerConnectionAddress(address, UDP));
+            result.push_back(DiscoveryServerConnectionAddress(address, default_transport_protocol_()));
         }
     }
 
@@ -84,6 +87,11 @@ DomainId DiscoveryServerRTPSParticipantConfiguration::domain() const
     // This method always return the same domain for the Discovery Server in order
     // to avoid problems with the LogicalPort
     return DEFAULT_DS_DOMAIN_ID_;
+}
+
+TransportProtocol DiscoveryServerRTPSParticipantConfiguration::default_transport_protocol_() const noexcept
+{
+    return DEFAULT_TRANSPORT_PROTOCOL_;
 }
 
 } /* namespace ddsrouter */

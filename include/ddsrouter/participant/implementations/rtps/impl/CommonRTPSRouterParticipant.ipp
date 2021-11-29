@@ -86,7 +86,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 }
 
 template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::init_()
+void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
 {
     DomainId domain = this->configuration_.domain();
     fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes();

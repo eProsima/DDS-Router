@@ -70,6 +70,10 @@ RawConfiguration participant_configuration(
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
+        case ParticipantType::WAN:
+            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
+            break;
+
         // Add cases where Participants need specific arguments
         default:
             break;
