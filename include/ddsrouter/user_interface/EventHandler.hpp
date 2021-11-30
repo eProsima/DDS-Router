@@ -33,19 +33,41 @@ class EventHandler
 {
 public:
 
+    EventHandler();
+
+    EventHandler(std::function<void(T)> callback);
+
     void set_callback(
-            std::function<void(T)> callback_) noexcept;
+            std::function<void(T)> callback) noexcept;
 
     void unset_callback() noexcept;
+
+    void wait_for_event(uint32_t n = 1) const noexcept;
+
+    void force_callback(T arg) noexcept;
 
 protected:
 
     void call_callback_(T arg) noexcept;
 
+    virtual void callback_set_() noexcept;
+
+    virtual void callback_unset_() noexcept;
+
     std::function<void(T)> callback_;
 
     //! Default callback. It shows a warning that callback is not set
     static const std::function<void(T)> DEFAULT_CALLBACK_;
+
+    std::atomic<uint32_t> number_of_events_registered_;
+
+    std::atomic<bool> is_callback_set_;
+
+    //! Condition variable to wait until the event
+    mutable std::condition_variable wait_condition_variable_;
+
+    //! Guard access to \c wait_condition_variable_
+    mutable std::mutex wait_mutex_;
 };
 
 } /* namespace interface */

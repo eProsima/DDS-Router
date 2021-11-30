@@ -19,6 +19,7 @@
 #ifndef _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_
 #define _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_
 
+#include <csignal>
 #include <string>
 #include <functional>
 
@@ -28,21 +29,51 @@ namespace eprosima {
 namespace ddsrouter {
 namespace interface {
 
+enum Signals
+{
+    SIGNAL_SIGINT = SIGINT,
+};
+
 /**
  * TODO
  */
-class SignalHandler : EventHandler<int>
+template <int SigNum>
+class SignalHandler : public EventHandler<int>
 {
 public:
 
-    SignalHandler();
+    SignalHandler() noexcept;
+
+    SignalHandler(std::function<void(int)> callback) noexcept;
 
     ~SignalHandler();
 
+protected:
+
+    void callback_set_() noexcept override;
+
+    void callback_unset_() noexcept override;
+
+    void add_to_active_handlers_() noexcept;
+
+    void erase_from_active_handlers_() noexcept;
+
+    static void signal_handler_routine_(int signum) noexcept;
+
+    static void set_signal_handler_() noexcept;
+
+    static void unset_signal_handler_() noexcept;
+
+    static std::vector<SignalHandler*> active_handlers_;
+
+    static std::mutex active_handlers_mutex_;
 };
 
 } /* namespace interface */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+// Include implementation template file
+#include <ddsrouter/user_interface/impl/SignalHandler.ipp>
 
 #endif /* _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_ */

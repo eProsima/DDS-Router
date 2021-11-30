@@ -21,6 +21,7 @@
 
 #include <functional>
 #include <string>
+#include <thread>
 
 #include <FileWatch.hpp>
 
@@ -34,17 +35,32 @@ namespace interface {
 /**
  * TODO
  */
-class FileWatcherHandler : EventHandler<std::string>
+class FileWatcherHandler : public EventHandler<std::string>
 {
 public:
 
     FileWatcherHandler(
-        std::string file_path_,
-        Duration_ms reload_time = 0) noexcept;
+        std::string file_path,
+        Duration_ms reload_time = 0);
+
+    FileWatcherHandler(
+        std::function<void(std::string)> callback,
+        std::string file_path,
+        Duration_ms reload_time = 0);
 
     ~FileWatcherHandler();
 
 protected:
+
+    void start_filewatcher_();
+
+    void stop_filewatcher_();
+
+    void reload_thread_routine_();
+
+    void start_reload_thread_();
+
+    void stop_reload_thread_();
 
     std::string file_path_;
 
@@ -52,6 +68,11 @@ protected:
 
     std::unique_ptr<filewatch::FileWatch<std::string>> file_watch_handler_;
 
+    std::atomic<bool> filewatcher_set_;
+
+    std::atomic<bool> reload_set_;
+
+    std::thread reload_thread_;
 };
 
 } /* namespace interface */
