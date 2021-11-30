@@ -38,9 +38,6 @@ class ParticipantsDatabase
 {
 public:
 
-    //! Default constructor for an empty database
-    ParticipantsDatabase() = default;
-
     /**
      * Destructor
      *

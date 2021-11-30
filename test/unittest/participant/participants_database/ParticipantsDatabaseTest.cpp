@@ -35,11 +35,13 @@ class ParticipantsDatabase : public eprosima::ddsrouter::ParticipantsDatabase
 {
 public:
 
-    using eprosima::ddsrouter::ParticipantsDatabase::ParticipantsDatabase;
+    ParticipantsDatabase()
+    {
+    }
 
     ParticipantsDatabase(
             std::map<ParticipantId, std::shared_ptr<IParticipant>> participants)
-        : eprosima::ddsrouter::ParticipantsDatabase()
+        : ParticipantsDatabase()
     {
         participants_ = participants;
     }
@@ -93,7 +95,8 @@ TEST(ParticipantsDatabaseTest, add_participant)
     // Reinsert to assure there is no error when inserting duplicates, only a warning is printed
     participants_database->add_participant(participant->id(), participant);
 
-    auto it = participants_database->get_participants_map().find(id);
+    auto participants = participants_database->get_participants_map();
+    auto it = participants.find(id);
     ASSERT_EQ(it->second, participant);
 }
 
