@@ -19,18 +19,20 @@
 
 #include <assert.h>
 
+#include <fastrtps/utils/IPLocator.h>
+
 #include <ddsrouter/types/address/Address.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-const PortType Address::DEFAULT_PORT = 11666;
-const IpType Address::DEFAULT_IP = "127.0.0.1";
-const IpVersion Address::DEFAULT_IP_VERSION = IPv4;
-const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL = UDP;
+const PortType Address::DEFAULT_PORT_ = 11666;
+const IpType Address::DEFAULT_IP_ = "127.0.0.1";
+const IpVersion Address::DEFAULT_IP_VERSION_ = IPv4;
+const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = UDP;
 
 Address::Address()
-    : Address(DEFAULT_IP, DEFAULT_PORT, DEFAULT_IP_VERSION, DEFAULT_TRANSPORT_PROTOCOL)
+    : Address(DEFAULT_IP_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
 {
 }
 
@@ -145,34 +147,32 @@ bool Address::is_valid() const noexcept
 
 bool Address::is_ipv4_correct(const IpType& ip) noexcept
 {
-    // TODO
-    return true;
+    return eprosima::fastrtps::rtps::IPLocator::isIPv4(ip);
 }
 
 bool Address::is_ipv6_correct(const IpType& ip) noexcept
 {
-    // TODO
-    return false;
+    return eprosima::fastrtps::rtps::IPLocator::isIPv6(ip);
 }
 
 PortType Address::default_port() noexcept
 {
-    return DEFAULT_PORT;
+    return DEFAULT_PORT_;
 }
 
 IpType Address::default_ip() noexcept
 {
-    return DEFAULT_IP;
+    return DEFAULT_IP_;
 }
 
 IpVersion Address::default_ip_version() noexcept
 {
-    return DEFAULT_IP_VERSION;
+    return DEFAULT_IP_VERSION_;
 }
 
 TransportProtocol Address::default_transport_protocol() noexcept
 {
-    return DEFAULT_TRANSPORT_PROTOCOL;
+    return DEFAULT_TRANSPORT_PROTOCOL_;
 }
 
 std::ostream& operator <<(
