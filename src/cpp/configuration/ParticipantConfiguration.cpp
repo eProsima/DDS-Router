@@ -28,9 +28,10 @@ namespace ddsrouter {
 ParticipantConfiguration::ParticipantConfiguration(
         ParticipantId id) noexcept
     : id_(id)
-    , type_(ParticipantType::PARTICIPANT_TYPE_INVALID)
     , raw_configuration_(RawConfiguration())
 {
+    // Set type from id
+    set_type_();
 }
 
 ParticipantConfiguration::ParticipantConfiguration(
