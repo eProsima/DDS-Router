@@ -13,30 +13,31 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSRouterParticipant.hpp
+ * @file SimpleParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
 
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/RTPSParticipantAttributes.h>
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/SimpleRTPSParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <ddsrouter/reader/implementations/rtps/RTPSRouterReader.hpp>
-#include <ddsrouter/writer/implementations/rtps/RTPSRouterWriter.hpp>
+#include <ddsrouter/reader/implementations/rtps/Reader.hpp>
+#include <ddsrouter/writer/implementations/rtps/Writer.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
 /**
  * Participant with Simple Discovery Protocol.
  *
  * Standard RTPS Participant with Simple Discovery and default attributes.
  */
-class SimpleRTPSRouterParticipant : public BaseParticipant<SimpleRTPSParticipantConfiguration>
+class SimpleParticipant : public BaseParticipant<SimpleParticipantConfiguration>
 {
 public:
 
@@ -50,7 +51,7 @@ public:
      * @throw \c InitializationException in case any internal error has ocurred while creating RTPSParticipant
      * @throw \c IConfigurationException in case configuration was incorrectly set
      */
-    SimpleRTPSRouterParticipant(
+    SimpleParticipant(
             const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
@@ -60,7 +61,7 @@ public:
      *
      * delete RTPSParticipant if set.
      */
-    virtual ~SimpleRTPSRouterParticipant();
+    virtual ~SimpleParticipant();
 
 protected:
 
@@ -92,7 +93,8 @@ protected:
     mutable std::recursive_mutex rtps_mutex_;
 };
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_SIMPLERTPSPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_ */

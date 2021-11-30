@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file RTPSRouterWriter.hpp
+ * @file Writer.hpp
  */
 
-#ifndef _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_ECHOWRITER_HPP_
-#define _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_ECHOWRITER_HPP_
+#ifndef _DDSROUTER_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_
+#define _DDSROUTER_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_
 
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
@@ -32,16 +32,17 @@
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
 /**
  * Standard RTPS Writer with less restrictive Attributes.
  */
-class RTPSRouterWriter : public BaseWriter
+class Writer : public BaseWriter
 {
 public:
 
     /**
-     * @brief Construct a new RTPSRouterWriter object
+     * @brief Construct a new Writer object
      *
      * Get the Attributes and QoS and create the Writer History and the RTPS Writer.
      *
@@ -52,21 +53,21 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    RTPSRouterWriter(
+    Writer(
             const ParticipantId& participant_id,
             const RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
-     * @brief Destroy the RTPSRouterWriter object
+     * @brief Destroy the Writer object
      *
      * Remove Writer RTPS
      * Remove History
      *
      * @todo Remove every change and release it in PayloadPool
      */
-    virtual ~RTPSRouterWriter();
+    virtual ~Writer();
 
 protected:
 
@@ -129,7 +130,8 @@ protected:
     fastrtps::rtps::WriterHistory* rtps_history_;
 };
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_WRITER_IMPLEMENTATIONS_AUX_ECHOWRITER_HPP_ */
+#endif /* _DDSROUTER_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_ */

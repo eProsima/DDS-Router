@@ -20,22 +20,23 @@
 
 #include <fastrtps/rtps/RTPSDomain.h>
 
-#include <ddsrouter/participant/implementations/rtps/SimpleRTPSRouterParticipant.hpp>
-#include <ddsrouter/reader/implementations/rtps/RTPSRouterReader.hpp>
-#include <ddsrouter/writer/implementations/rtps/RTPSRouterWriter.hpp>
+#include <ddsrouter/participant/implementations/rtps/SimpleParticipant.hpp>
+#include <ddsrouter/reader/implementations/rtps/Reader.hpp>
+#include <ddsrouter/writer/implementations/rtps/Writer.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-SimpleRTPSRouterParticipant::SimpleRTPSRouterParticipant(
+SimpleParticipant::SimpleParticipant(
         const ParticipantConfiguration& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
 {
     DomainId domain = configuration_.domain();
-    fastrtps::rtps::RTPSParticipantAttributes params = SimpleRTPSRouterParticipant::participant_attributes();
+    fastrtps::rtps::RTPSParticipantAttributes params = SimpleParticipant::participant_attributes();
 
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain, params);
     if (!rtps_participant_)
@@ -44,7 +45,7 @@ SimpleRTPSRouterParticipant::SimpleRTPSRouterParticipant(
     }
 }
 
-SimpleRTPSRouterParticipant::~SimpleRTPSRouterParticipant()
+SimpleParticipant::~SimpleParticipant()
 {
     if (rtps_participant_)
     {
@@ -52,23 +53,24 @@ SimpleRTPSRouterParticipant::~SimpleRTPSRouterParticipant()
     }
 }
 
-std::shared_ptr<IWriter> SimpleRTPSRouterParticipant::create_writer_(
+std::shared_ptr<IWriter> SimpleParticipant::create_writer_(
         RealTopic topic)
 {
-    return std::make_shared<RTPSRouterWriter>(id(), topic, payload_pool_, rtps_participant_);
+    return std::make_shared<Writer>(id(), topic, payload_pool_, rtps_participant_);
 }
 
-std::shared_ptr<IReader> SimpleRTPSRouterParticipant::create_reader_(
+std::shared_ptr<IReader> SimpleParticipant::create_reader_(
         RealTopic topic)
 {
-    return std::make_shared<RTPSRouterReader>(id(), topic, payload_pool_, rtps_participant_);
+    return std::make_shared<Reader>(id(), topic, payload_pool_, rtps_participant_);
 }
 
-fastrtps::rtps::RTPSParticipantAttributes SimpleRTPSRouterParticipant::participant_attributes() const noexcept
+fastrtps::rtps::RTPSParticipantAttributes SimpleParticipant::participant_attributes() const noexcept
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
     return params;
 }
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

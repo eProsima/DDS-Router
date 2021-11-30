@@ -13,20 +13,21 @@
 // limitations under the License.
 
 /**
- * @file RTPSRouterReader.cpp
+ * @file Reader.cpp
  */
 
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 
-#include <ddsrouter/reader/implementations/rtps/RTPSRouterReader.hpp>
+#include <ddsrouter/reader/implementations/rtps/Reader.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-RTPSRouterReader::RTPSRouterReader(
+Reader::Reader(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
@@ -67,7 +68,7 @@ RTPSRouterReader::RTPSRouterReader(
             topic << " with guid " << rtps_reader_->getGuid());
 }
 
-RTPSRouterReader::~RTPSRouterReader()
+Reader::~Reader()
 {
     // This variables should be set, otherwise the creation should have fail
     // Anyway, the if case is used for safety reasons
@@ -88,7 +89,7 @@ RTPSRouterReader::~RTPSRouterReader()
             participant_id_ << " for topic " << topic_);
 }
 
-ReturnCode RTPSRouterReader::take_(
+ReturnCode Reader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
@@ -123,25 +124,25 @@ ReturnCode RTPSRouterReader::take_(
     return ReturnCode::RETCODE_OK;
 }
 
-bool RTPSRouterReader::come_from_this_participant_(
+bool Reader::come_from_this_participant_(
         const fastrtps::rtps::CacheChange_t* change) const noexcept
 {
     return come_from_this_participant_(change->writerGUID);
 }
 
-bool RTPSRouterReader::come_from_this_participant_(
+bool Reader::come_from_this_participant_(
         const fastrtps::rtps::GUID_t guid) const noexcept
 {
     return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
 }
 
-fastrtps::rtps::HistoryAttributes RTPSRouterReader::history_attributes_() const noexcept
+fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
     return att;
 }
 
-fastrtps::rtps::ReaderAttributes RTPSRouterReader::reader_attributes_() const noexcept
+fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
     att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
@@ -149,7 +150,7 @@ fastrtps::rtps::ReaderAttributes RTPSRouterReader::reader_attributes_() const no
     return att;
 }
 
-fastrtps::TopicAttributes RTPSRouterReader::topic_attributes_() const noexcept
+fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
     att.topicKind = fastrtps::rtps::TopicKind_t::NO_KEY;
@@ -158,7 +159,7 @@ fastrtps::TopicAttributes RTPSRouterReader::topic_attributes_() const noexcept
     return att;
 }
 
-fastrtps::ReaderQos RTPSRouterReader::reader_qos_() const noexcept
+fastrtps::ReaderQos Reader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
     qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
@@ -166,7 +167,7 @@ fastrtps::ReaderQos RTPSRouterReader::reader_qos_() const noexcept
     return qos;
 }
 
-void RTPSRouterReader::onNewCacheChangeAdded(
+void Reader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader*,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
@@ -183,7 +184,7 @@ void RTPSRouterReader::onNewCacheChangeAdded(
     }
 }
 
-void RTPSRouterReader::onReaderMatched(
+void Reader::onReaderMatched(
         fastrtps::rtps::RTPSReader*,
         fastrtps::rtps::MatchingInfo& info) noexcept
 {
@@ -202,5 +203,6 @@ void RTPSRouterReader::onReaderMatched(
     }
 }
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

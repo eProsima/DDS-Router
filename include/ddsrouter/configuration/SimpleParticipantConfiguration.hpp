@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSParticipantConfiguration.hpp
+ * @file SimpleParticipantConfiguration.hpp
  */
 
 #ifndef _DDSROUTER_CONFIGURATION_SIMPLERTPSPARTICIPANTCONFIGURATION_HPP_
@@ -24,11 +24,12 @@
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
 /**
- * This Configuration give methods for a \c SimpleRTPSRouterParticipant to be configured.
+ * This Configuration give methods for a \c SimpleParticipant to be configured.
  */
-class SimpleRTPSParticipantConfiguration : public ParticipantConfiguration
+class SimpleParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
@@ -36,7 +37,7 @@ public:
     using ParticipantConfiguration::ParticipantConfiguration;
 
     //! Copy constructor from superclass. Needed by \c ParticipantFactory .
-    SimpleRTPSParticipantConfiguration(
+    SimpleParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
     /**
@@ -49,6 +50,7 @@ public:
     DomainId domain() const noexcept;
 };
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

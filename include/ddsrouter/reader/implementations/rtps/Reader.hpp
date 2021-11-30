@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file RTPSRouterReader.hpp
+ * @file Reader.hpp
  */
 
-#ifndef _DATABROKER_READER_IMPLEMENTATIONS_AUX_RTPSREADER_HPP_
-#define _DATABROKER_READER_IMPLEMENTATIONS_AUX_RTPSREADER_HPP_
+#ifndef _DATABROKER_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
+#define _DATABROKER_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
 
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
@@ -33,18 +33,19 @@
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
 /**
  * Standard RTPS Reader with less restrictive Attributes.
  *
  * It implements the ReaderListener for itself with \c onNewCacheChangeAdded and \c onReaderMatched callbacks.
  */
-class RTPSRouterReader : public BaseReader, public fastrtps::rtps::ReaderListener
+class Reader : public BaseReader, public fastrtps::rtps::ReaderListener
 {
 public:
 
     /**
-     * @brief Construct a new RTPSRouterReader object
+     * @brief Construct a new Reader object
      *
      * Get the Attributes and QoS and create the Reader History and the RTPS Reader.
      *
@@ -55,18 +56,18 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    RTPSRouterReader(
+    Reader(
             const ParticipantId& participant_id,
             const RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
-     * @brief Destroy the RTPSRouterReader object
+     * @brief Destroy the Reader object
      *
      * Delete the RTPS Reader and Reader History in case they are set.
      */
-    virtual ~RTPSRouterReader();
+    virtual ~Reader();
 
     /////
     // LISTENER METHODS
@@ -169,7 +170,8 @@ protected:
     mutable std::recursive_mutex rtps_mutex_;
 };
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DATABROKER_READER_IMPLEMENTATIONS_AUX_RTPSREADER_HPP_ */
+#endif /* _DATABROKER_READER_IMPLEMENTATIONS_RTPS_READER_HPP_ */

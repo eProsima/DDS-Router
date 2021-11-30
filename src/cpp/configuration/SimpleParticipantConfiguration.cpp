@@ -13,24 +13,25 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSParticipantConfiguration.cpp
+ * @file SimpleParticipantConfiguration.cpp
  */
 
-#include <ddsrouter/configuration/SimpleRTPSParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-SimpleRTPSParticipantConfiguration::SimpleRTPSParticipantConfiguration(
+SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantConfiguration& configuration)
     : ParticipantConfiguration(configuration.id(), configuration.raw_configuration())
 {
 }
 
-DomainId SimpleRTPSParticipantConfiguration::domain() const noexcept
+DomainId SimpleParticipantConfiguration::domain() const noexcept
 {
     DomainId domain = 0; // Default 0
 
@@ -61,5 +62,6 @@ DomainId SimpleRTPSParticipantConfiguration::domain() const noexcept
     return domain;
 }
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

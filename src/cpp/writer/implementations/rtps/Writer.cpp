@@ -13,21 +13,22 @@
 // limitations under the License.
 
 /**
- * @file RTPSRouterWriter.cpp
+ * @file Writer.cpp
  */
 
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
-#include <ddsrouter/writer/implementations/rtps/RTPSRouterWriter.hpp>
+#include <ddsrouter/writer/implementations/rtps/Writer.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-RTPSRouterWriter::RTPSRouterWriter(
+Writer::Writer(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
@@ -66,7 +67,7 @@ RTPSRouterWriter::RTPSRouterWriter(
             topic << " with guid " << rtps_writer_->getGuid());
 }
 
-RTPSRouterWriter::~RTPSRouterWriter()
+Writer::~Writer()
 {
     // This variables should be set, otherwise the creation should have fail
     // Anyway, the if case is used for safety reasons
@@ -89,7 +90,7 @@ RTPSRouterWriter::~RTPSRouterWriter()
 }
 
 // Specific enable/disable do not need to be implemented
-ReturnCode RTPSRouterWriter::write_(
+ReturnCode Writer::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     uint32_t data_size = data->payload.length;
@@ -128,13 +129,13 @@ ReturnCode RTPSRouterWriter::write_(
     return ReturnCode::RETCODE_OK;
 }
 
-fastrtps::rtps::HistoryAttributes RTPSRouterWriter::history_attributes_() const noexcept
+fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
     return att;
 }
 
-fastrtps::rtps::WriterAttributes RTPSRouterWriter::writer_attributes_() const noexcept
+fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
@@ -143,7 +144,7 @@ fastrtps::rtps::WriterAttributes RTPSRouterWriter::writer_attributes_() const no
     return att;
 }
 
-fastrtps::TopicAttributes RTPSRouterWriter::topic_attributes_() const noexcept
+fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
     att.topicKind = eprosima::fastrtps::rtps::TopicKind_t::NO_KEY;
@@ -152,7 +153,7 @@ fastrtps::TopicAttributes RTPSRouterWriter::topic_attributes_() const noexcept
     return att;
 }
 
-fastrtps::WriterQos RTPSRouterWriter::writer_qos_() const noexcept
+fastrtps::WriterQos Writer::writer_qos_() const noexcept
 {
     fastrtps::WriterQos qos;
     qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
@@ -160,5 +161,6 @@ fastrtps::WriterQos RTPSRouterWriter::writer_qos_() const noexcept
     return qos;
 }
 
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
