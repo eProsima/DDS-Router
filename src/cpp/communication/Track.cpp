@@ -65,8 +65,13 @@ Track::~Track()
     // Unset callback on the Reader (this is needed as Reader will live longer than Track)
     reader_->unset_on_data_available_callback();
 
-    // Set exit status and call transmit thread to awake and terminate. Then wait for it.
-    exit_.store(true); // This is not needed to be guarded as it is atomic
+    // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
+    {
+        // Set exit status and call transmit thread to awake and terminate. Then wait for it.
+        std::lock_guard<std::mutex> lock(transmit_mutex_);
+        exit_.store(true); // This is not needed to be guarded as it is atomic
+    }
+
     transmit_condition_variable_.notify_all();
     transmit_thread_.join();
 }
@@ -131,8 +136,13 @@ void Track::data_available() noexcept
         logInfo(DDSROUTER_TRACK,
                 "Track " << reader_participant_id_ << " for topic " << topic_ << " has data available to transmit.");
 
-        // Set data available to true and notify transmit thread
-        is_data_available_.store(true);
+        // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
+        {
+            // Set data available to true and notify transmit thread
+            std::lock_guard<std::mutex> lock(transmit_mutex_);
+            is_data_available_.store(true);
+        }
+
         transmit_condition_variable_.notify_one();
     }
 }
