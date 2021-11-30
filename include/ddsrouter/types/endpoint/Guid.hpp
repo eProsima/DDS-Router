@@ -25,12 +25,16 @@ namespace eprosima {
 namespace ddsrouter {
 
 //! Unique Id of every Endpoint
-class Guid : public eprosima::fastrtps::rtps::GUID_t
+class Guid : public fastrtps::rtps::GUID_t
 {
 public:
 
     //! Using parent constructors
-    using eprosima::fastrtps::rtps::GUID_t::GUID_t;
+    using fastrtps::rtps::GUID_t::GUID_t;
+
+    //! Equal operator (inherited from GUID_t)
+    Guid& operator = (
+            const fastrtps::rtps::GUID_t& other) noexcept;
 
     /**
      * Whether the guid is a valid one

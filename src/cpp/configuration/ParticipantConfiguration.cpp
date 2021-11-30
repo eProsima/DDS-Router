@@ -51,6 +51,12 @@ ParticipantConfiguration::ParticipantConfiguration(
     }
 }
 
+ParticipantConfiguration::ParticipantConfiguration(
+        const ParticipantConfiguration& configuration)
+    : ParticipantConfiguration(configuration.id_, configuration.raw_configuration_)
+{
+}
+
 void ParticipantConfiguration::set_type_() noexcept
 {
     if (raw_configuration_[PARTICIPANT_TYPE_TAG])
@@ -74,6 +80,11 @@ ParticipantType ParticipantConfiguration::type() const noexcept
 ParticipantId ParticipantConfiguration::id() const noexcept
 {
     return id_;
+}
+
+RawConfiguration ParticipantConfiguration::raw_configuration() const noexcept
+{
+    return raw_configuration_;
 }
 
 bool ParticipantConfiguration::operator ==(

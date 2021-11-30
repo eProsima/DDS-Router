@@ -13,28 +13,21 @@
 // limitations under the License.
 
 /**
- * @file Guid.cpp
- *
+ * @file dds_types.hpp
  */
 
-#include <ddsrouter/types/endpoint/Guid.hpp>
+#ifndef _DDSROUTER_TYPES_DDSTYPES_HPP_
+#define _DDSROUTER_TYPES_DDSTYPES_HPP_
+
+#include <fastrtps/types/TypesBase.h>
 
 namespace eprosima {
 namespace ddsrouter {
 
-Guid& Guid::operator = (
-        const fastrtps::rtps::GUID_t& other) noexcept
-{
-    this->guidPrefix = other.guidPrefix;
-    this->entityId = other.entityId;
-    return *this;
-}
-
-bool Guid::is_valid() const noexcept
-{
-    return guidPrefix != eprosima::fastrtps::rtps::GuidPrefix_t::unknown() &&
-           entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
-}
+// Use FastDDS Domain Id type
+using DomainId = eprosima::fastdds::dds::DomainId_t;
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_TYPES_DDSTYPES_HPP_ */

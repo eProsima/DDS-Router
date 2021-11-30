@@ -45,6 +45,7 @@ public:
         VOID,       //! Void Participant Type
         ECHO,       //! Echo Participant Type
         DUMMY,      //! Dummy Participant Type
+        SIMPLE_RTPS,      //! Simple RTPS Participant Type
     };
 
     //! Default constructor that returns an Invalid Participant Type

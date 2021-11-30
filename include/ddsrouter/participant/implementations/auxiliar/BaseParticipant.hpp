@@ -54,7 +54,7 @@ public:
      * @param discovery_database DDS Router shared Discovery Database
      */
     BaseParticipant(
-            const ConfigurationType& participant_configuration,
+            const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
