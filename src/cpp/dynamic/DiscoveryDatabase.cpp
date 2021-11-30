@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -48,20 +48,31 @@ bool DiscoveryDatabase::endpoint_exists(
     return entities_.find(guid) != entities_.end();
 }
 
-bool DiscoveryDatabase::add_or_modify_endpoint(
-        const Endpoint& new_endpoint) noexcept
+bool DiscoveryDatabase::add_endpoint(
+        const Endpoint& new_endpoint)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
     auto it = entities_.find(new_endpoint.guid());
     if (it != entities_.end())
     {
-        // Already exists, modify it
-        it->second = new_endpoint;
+        // Already exists
+        if (it->second.active())
+        {
+            throw InconsistencyException(
+                      utils::Formatter() <<
+                          "Error adding Endpoint to database. Endpoint already exists." << new_endpoint);
+        }
+        else
+        {
+            // If exists but inactive, modify entry
+            it->second = new_endpoint;
 
-        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
+            logInfo(DDSROUTER_DISCOVERY_DATABASE,
+                    "Modifying an already discovered (inactive) Endpoint " << new_endpoint << ".");
 
-        return false;
+            return true;
+        }
     }
     else
     {
@@ -69,6 +80,30 @@ bool DiscoveryDatabase::add_or_modify_endpoint(
         entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
 
         logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
+
+        return true;
+    }
+}
+
+bool DiscoveryDatabase::update_endpoint(
+        const Endpoint& new_endpoint)
+{
+    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+
+    auto it = entities_.find(new_endpoint.guid());
+    if (it == entities_.end())
+    {
+        // Entry not found
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error updating Endpoint in database. Endpoint entry not found." << new_endpoint);
+    }
+    else
+    {
+        // Modify entry
+        it->second = new_endpoint;
+
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
 
         return true;
     }

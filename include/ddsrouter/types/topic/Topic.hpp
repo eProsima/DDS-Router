@@ -38,7 +38,7 @@ struct Topic
             std::string topic_type) noexcept;
 
     //! Copy constructor
-    void operator =(
+    Topic& operator =(
             const Topic& other);
 
     //! Topic name getter

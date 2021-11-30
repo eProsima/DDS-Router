@@ -93,7 +93,14 @@ Endpoint& Endpoint::operator =(
     this->active_ = other.active_;
     this->kind_ = other.kind_;
     this->qos_ = other.qos_;
+    this->topic_ = other.topic_;
     return *this;
+}
+
+bool Endpoint::operator ==(
+        const Endpoint& other) const noexcept
+{
+    return guid_ == other.guid() && kind_ == other.kind() && qos_ == other.qos() && topic_ == other.topic();
 }
 
 std::ostream& operator <<(

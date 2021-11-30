@@ -52,13 +52,24 @@ public:
             const Guid& guid) const noexcept;
 
     /**
-     * @brief Add a new endpoint or modify it inside the database in case it already exists.
+     * @brief Add a new endpoint to the database.
      *
      * @param [in] new_endpoint: new endpoint to store
-     * @return true if the endpoint has been updated, false if it has been added
+     * @return true if the endpoint has been added
+     * @throw \c InconsistencyException in case an endpoint with the same guid already exists and is active.
      */
-    bool add_or_modify_endpoint(
-            const Endpoint& new_endpoint) noexcept;
+    bool add_endpoint(
+            const Endpoint& new_endpoint);
+
+    /**
+     * @brief Update an entry of the database by replacing the stored endpoint by a new one.
+     *
+     * @param [in] new_endpoint: new endpoint to store
+     * @return true if the endpoint has been updated
+     * @throw \c InconsistencyException in case there is no entry associated to this endpoint.
+     */
+    bool update_endpoint(
+            const Endpoint& new_endpoint);
 
     /**
      * @brief Erase an endpoint inside the database

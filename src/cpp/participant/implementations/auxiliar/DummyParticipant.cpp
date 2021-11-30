@@ -62,7 +62,7 @@ std::shared_ptr<IReader> DummyParticipant::create_reader_(
 void DummyParticipant::simulate_discovered_endpoint(
         const Endpoint& new_endpoint)
 {
-    discovery_database_->add_or_modify_endpoint(new_endpoint);
+    discovery_database_->add_endpoint(new_endpoint);
 }
 
 Endpoint DummyParticipant::get_discovered_endpoint(

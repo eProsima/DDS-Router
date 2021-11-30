@@ -13,3 +13,4 @@
 # limitations under the License.
 
 add_subdirectory(allowed_topic_list)
+add_subdirectory(discovery_database)

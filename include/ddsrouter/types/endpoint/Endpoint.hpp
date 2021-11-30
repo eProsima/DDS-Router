@@ -90,6 +90,10 @@ public:
     Endpoint& operator =(
             const Endpoint& other) noexcept;
 
+    //! Equality operator
+    bool operator ==(
+            const Endpoint& other) const noexcept;
+
 protected:
 
     //! Kind of the endpoint
