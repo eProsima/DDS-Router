@@ -24,15 +24,6 @@
 namespace eprosima {
 namespace ddsrouter {
 
-// SimpleRTPSParticipantConfiguration& SimpleRTPSParticipantConfiguration::operator =(
-//         const ParticipantConfiguration& other) noexcept
-// {
-//     this->id_ = other.id_;
-//     this->type_ = other.type_;
-//     this->raw_configuration_ = other.raw_configuration_;
-//     return *this;
-// }
-
 SimpleRTPSParticipantConfiguration::SimpleRTPSParticipantConfiguration(
         const ParticipantConfiguration& configuration)
     : ParticipantConfiguration(configuration.id(), configuration.raw_configuration())

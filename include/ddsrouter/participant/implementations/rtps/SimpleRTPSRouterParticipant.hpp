@@ -32,7 +32,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * Concrete Participant with Simple Discovery Protocol.
+ * Participant with Simple Discovery Protocol.
  *
  * Standard RTPS Participant with Simple Discovery and default attributes.
  */

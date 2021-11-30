@@ -75,7 +75,7 @@ std::vector<ParticipantType> participant_types()
  * Test that creates a DDSRouter with a Pair of Participants of same type.
  * It creates a DDSRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
  *
- * This test will fail if it brokes.
+ * This test will fail if it crashes.
  */
 TEST(ImplementationsTest, pair_implementation)
 {
@@ -107,7 +107,7 @@ TEST(ImplementationsTest, pair_implementation)
  * It creates a DDSRouter with two Participants of same kind, starts it with an active topic,
  * then stops it and finally destroys it.
  *
- * This test will fail if it brokes.
+ * This test will fail if it crashes.
  */
 TEST(ImplementationsTest, pair_implementation_with_topic)
 {
@@ -142,14 +142,10 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
  * It creates a DDSRouter with a Participant of each kind,
  * starts it with an active topic, then stops it and finally destroys it.
  *
- * This test will fail if it brokes.
+ * This test will fail if it crashes.
  */
 TEST(ImplementationsTest, all_implementations)
 {
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -186,10 +182,6 @@ int main(
         int argc,
         char** argv)
 {
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

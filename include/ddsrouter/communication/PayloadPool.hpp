@@ -69,7 +69,7 @@ public:
      * @brief Store in \c cache_change the \c data payload.
      *
      * @note This method reserves new memory in case \c data_owner is a different PayloadPool than the one for
-     * \c data . Otherwise, it just increase the refe
+     * \c data . Otherwise, it just increase the reference
      *
      * @param [in,out] data          Serialized payload received
      * @param [in,out] data_owner    Payload pool owning incoming data

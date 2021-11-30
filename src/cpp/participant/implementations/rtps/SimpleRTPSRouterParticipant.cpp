@@ -46,7 +46,6 @@ SimpleRTPSRouterParticipant::SimpleRTPSRouterParticipant(
 
 SimpleRTPSRouterParticipant::~SimpleRTPSRouterParticipant()
 {
-
     if (rtps_participant_)
     {
         fastrtps::rtps::RTPSDomain::removeRTPSParticipant(rtps_participant_);
