@@ -23,7 +23,7 @@
 #include <mutex>
 
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/Timestamp.hpp>
+#include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 

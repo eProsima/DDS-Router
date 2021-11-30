@@ -17,42 +17,50 @@
  *
  */
 
-#include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/types/constants.hpp>
+#include <ddsrouter/user_interface/UserInterfaceManager.hpp>
+#include <ddsrouter/types/ReturnCode.hpp>
+#include <ddsrouter/types/Time.hpp>
+#include <ddsrouter/user_interface/FileWatcherHandler.hpp>
+#include <ddsrouter/user_interface/SignalHandler.hpp>
 
-using namespace eprosima::ddsrouter;
+using namespace eprosima::ddsrouter::interface;
 
 int main(
         int argc,
         char** argv)
 {
-    // TODO: main
+    // Configuration File path
+    std::string file_path;
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+    // Reload time
+    bool is_reload_set = false;
+    eprosima::ddsrouter::Duration_ms reload_time;
 
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+    // TODO parse arguments
 
-    // Generate configuration
-    std::string file_name = DEFAULT_CONFIGURATION_FILE_NAME;
-    RawConfiguration configuration = load_configuration_from_file(file_name);
+    // File Watcher Handler
+    std::unique_ptr<FileWatcherHandler> file_watcher_handler;
+    if(is_reload_set)
+    {
+        file_watcher_handler = std::make_unique<FileWatcherHandler>(file_path, reload_time);
+    }
+    else
+    {
+        file_watcher_handler = std::make_unique<FileWatcherHandler>(file_path);
+    }
 
-    // Create DDSRouter entity
-    DDSRouter router(configuration);
+    // Signal handler
+    std::unique_ptr<SignalHandler> signal_handler;
+    signal_handler = std::make_unique<SignalHandler>();
 
-    // Start DDSRouter
-    router.start();
+    // User Interface Handler
+    UserInterfaceManager user_interface(
+        std::move(file_watcher_handler),
+        std::move(signal_handler));
 
-    std::this_thread::sleep_for(std::chrono::seconds(60));
+    // Return value
+    eprosima::ddsrouter::ReturnCode return_state = user_interface.main_routine();
 
-    // Stop DDS Router
-    router.stop();
-
-    return 0;
+    // TODO parse return
+    return return_state();
 }

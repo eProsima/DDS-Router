@@ -13,33 +13,27 @@
 // limitations under the License.
 
 /**
- * @file Timestamp.hpp
+ * @file SignalHandler.cpp
+ *
  */
 
-#ifndef _DATABROKER_TYPES_TIMESTAMP_HPP_
-#define _DATABROKER_TYPES_TIMESTAMP_HPP_
-
-#include <chrono>
+#include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/user_interface/SignalHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace interface {
 
-/**
- * Type used to represent time points
- */
-using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
-
-/**
- * @brief Now time
- *
- * @return Timestamp refering to the moment it is called
- */
-inline Timestamp now() noexcept
+SignalHandler::SignalHandler()
 {
-    return std::chrono::system_clock::now();
+    // TODO
 }
 
+SignalHandler::~SignalHandler()
+{
+    // TODO
+}
+
+} /* namespace interface */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DATABROKER_TYPES_TIMESTAMP_HPP_ */
