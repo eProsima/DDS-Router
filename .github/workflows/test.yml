@@ -272,6 +272,7 @@ jobs:
           cd ../..
           sudo rm -rf uncrustify
 
+      # (TODO) Change to main branch when PR is merged
       - name: Clone ament_lint
         run: |
           git clone --branch feature/fix-language-set https://github.com/jparisu/ament_lint.git src/ament_lint

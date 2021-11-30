@@ -169,7 +169,7 @@ void BaseParticipant <ConfigurationType> ::delete_reader_(
     // It does nothing. Override this method so it has functionality.
 }
 
-}     /* namespace ddsrouter */
+} /* namespace ddsrouter */
 } /* namespace eprosima */
 
 #endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_IMPL_IPP_ */
