@@ -21,13 +21,14 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <string>
+#include <set>
 
 #include <ddsrouter/types/topic/Topic.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
