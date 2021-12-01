@@ -85,7 +85,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const ParticipantId& id)
 {
-    os << id.id_name();
+    os << "ParticipantId{" << id.id_name() << "}";
     return os;
 }
 

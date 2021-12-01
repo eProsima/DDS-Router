@@ -56,7 +56,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const QoS& qos)
 {
-    os << "{" << qos.durability_ << ";" << qos.reliability_ << "}";
+    os << "QoS{" << qos.durability_ << ";" << qos.reliability_ << "}";
     return os;
 }
 

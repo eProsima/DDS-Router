@@ -143,7 +143,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Bridge& bridge)
 {
-    os << "{" << bridge.topic_ << "}";
+    os << "Bridge{" << bridge.topic_ << "}";
     return os;
 }
 

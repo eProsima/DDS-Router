@@ -222,7 +222,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Track& track)
 {
-    os << "{" << track.topic_ << ";" << track.reader_participant_id_ << "}";
+    os << "Track{" << track.topic_ << ";" << track.reader_participant_id_ << "}";
     return os;
 }
 

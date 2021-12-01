@@ -58,7 +58,7 @@ std::ostream& operator <<(
 {
     auto it = ReturnCode::to_string_conversion_.find(code);
     assert(it != ReturnCode::to_string_conversion_.end());
-    os << it->second;
+    os << "{" << it->second << "}";
     return os;
 }
 

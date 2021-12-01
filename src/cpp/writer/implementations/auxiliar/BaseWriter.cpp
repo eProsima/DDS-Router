@@ -94,7 +94,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const BaseWriter& writer)
 {
-    os << "{" << writer.participant_id_ << ";" << writer.topic_ << "}";
+    os << "Writer{" << writer.participant_id_ << ";" << writer.topic_ << "}";
     return os;
 }
 

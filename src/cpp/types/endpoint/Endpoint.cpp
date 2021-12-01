@@ -100,8 +100,8 @@ std::ostream& operator <<(
         std::ostream& os,
         const Endpoint& endpoint)
 {
-    os << "{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.qos_ << ";" << endpoint.kind_ << ";"
-       << endpoint.active_ << "}";
+    os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.qos_ << ";" <<
+        endpoint.kind_ << ";" << endpoint.active_ << "}";
     return os;
 }
 
