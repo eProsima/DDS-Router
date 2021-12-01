@@ -45,15 +45,13 @@ std::shared_ptr<IParticipant> ParticipantsDatabase::get_participant(
     return it->second;
 }
 
-std::vector<ParticipantId> ParticipantsDatabase::get_participants_ids() const noexcept
+std::set<ParticipantId> ParticipantsDatabase::get_participants_ids() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
-    std::vector<ParticipantId> result(participants_.size());
-    int i = 0;
+    std::set<ParticipantId> result;
     for (auto it : participants_)
     {
-        // There is already space for all of them, so its added without appending
-        result[i++] = it.first;
+        result.insert(it.first);
     }
     return result;
 }

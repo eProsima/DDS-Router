@@ -36,7 +36,7 @@ Bridge::Bridge(
 {
     logInfo(DDSROUTER_BRIDGE, "Creating Bridge for topic " << topic_ << ".");
 
-    std::vector<ParticipantId> ids = participants_->get_participants_ids();
+    std::set<ParticipantId> ids = participants_->get_participants_ids();
 
     // Generate readers and writers for each participant
     for (ParticipantId id: ids)

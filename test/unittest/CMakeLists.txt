@@ -32,6 +32,6 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIB
 endfunction(add_unittest_executable)
 
 add_subdirectory(configuration)
-add_subdirectory(types)
 add_subdirectory(dynamic)
-
+add_subdirectory(participant)
+add_subdirectory(types)

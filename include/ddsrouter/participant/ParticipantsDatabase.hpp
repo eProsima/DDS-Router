@@ -20,6 +20,7 @@
 #define _DDSROUTER_PARTICIPANT_PARTICIPANTSDATABASE_HPP_
 
 #include <map>
+#include <set>
 #include <shared_mutex>
 
 #include <ddsrouter/types/participant/ParticipantId.hpp>
@@ -36,9 +37,6 @@ namespace ddsrouter {
 class ParticipantsDatabase
 {
 public:
-
-    //! Default constructor for an empty database
-    ParticipantsDatabase() = default;
 
     /**
      * Destructor
@@ -59,9 +57,9 @@ public:
     /**
      * @brief Get all the ids of the participants stored
      *
-     * @return list of ids
+     * @return set of ids
      */
-    std::vector<ParticipantId> get_participants_ids() const noexcept;
+    std::set<ParticipantId> get_participants_ids() const noexcept;
 
     /**
      * @brief Get all the participants stored
