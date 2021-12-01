@@ -78,7 +78,7 @@ public:
      * @param id : number to seed for the final Guid Prefix [Default: 0]
      */
     GuidPrefix (
-            uint32_t id = 0) noexcept;
+            uint32_t id) noexcept;
 
     GuidPrefix& operator = (
             const fastrtps::rtps::GuidPrefix_t& other) noexcept;
@@ -92,9 +92,13 @@ public:
 
     /////
     // YAML methods
+
+    //! Constructor from yaml
     GuidPrefix(
         const RawConfiguration& configuration);
-    RawConfiguration dump() const; // TODO: Once implemented add noexcept
+
+    //! Dump this object in \c configuration variable (at this same level).
+    RawConfiguration dump(RawConfiguration& configuration) const; // TODO: Once implemented add noexcept
 
 protected:
 

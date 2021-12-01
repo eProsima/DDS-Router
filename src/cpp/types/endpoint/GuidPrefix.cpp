@@ -63,7 +63,7 @@ GuidPrefix::GuidPrefix (
 }
 
 GuidPrefix::GuidPrefix (
-    uint32_t id /*= 0*/) noexcept
+    uint32_t id) noexcept
     : GuidPrefix(false, id)
 {
 }

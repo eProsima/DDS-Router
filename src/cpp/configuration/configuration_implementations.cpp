@@ -104,7 +104,7 @@ Address::Address(
     // TODO do ip version
 }
 
-RawConfiguration Address::dump() const
+RawConfiguration Address::dump(RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("Address::dump is not supported yet.");
@@ -133,7 +133,7 @@ DomainId::DomainId(
     }
 }
 
-RawConfiguration DomainId::dump() const
+RawConfiguration DomainId::dump(RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("DomainId::dump is not supported yet.");
@@ -202,15 +202,15 @@ GuidPrefix::GuidPrefix(
     }
 }
 
-RawConfiguration GuidPrefix::dump() const
+RawConfiguration GuidPrefix::dump(RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("GuidPrefix::dump is not supported yet.");
 }
 
 DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
-    const RawConfiguration& configuration,
-    TransportProtocol default_transport /*= Address::default_transport_protocol()*/)
+        const RawConfiguration& configuration,
+        TransportProtocol default_transport /*= Address::default_transport_protocol()*/)
 {
     // Get DS guid. If it fails, throw exception forward
     discovery_server_guid_ = GuidPrefix(configuration);
@@ -236,7 +236,7 @@ DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
     }
 }
 
-RawConfiguration DiscoveryServerConnectionAddress::dump() const
+RawConfiguration DiscoveryServerConnectionAddress::dump(RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("DiscoveryServerConnectionAddress::dump is not supported yet.");

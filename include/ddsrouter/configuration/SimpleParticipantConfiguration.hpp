@@ -20,7 +20,7 @@
 #define _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/types/dds_types.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -47,7 +47,7 @@ public:
      *
      * @return DomainId
      */
-    DomainId domain() const noexcept;
+    DomainId domain() const;
 };
 
 } /* namespace rtps */

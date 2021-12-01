@@ -143,10 +143,19 @@ public:
 
     /////
     // YAML methods
+
+    /**
+     * @brief Construct a new Address from yaml object
+     *
+     * @param configuration : configuration where this address must be set (tags will be looked up in this same level)
+     * @param default_transport : default transport protocol in case it is not set in yaml
+     */
     Address(
         const RawConfiguration& configuration,
         TransportProtocol default_transport = Address::default_transport_protocol());
-    RawConfiguration dump() const; // TODO: Once implemented add noexcept
+
+    //! Dump this object in \c configuration variable (at this same level).
+    RawConfiguration dump(RawConfiguration& configuration) const; // TODO: Once implemented add noexcept
 
 protected:
 
