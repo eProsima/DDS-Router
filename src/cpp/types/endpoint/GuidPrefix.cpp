@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Guid.cpp
+ * @file GuidPrefix.cpp
  *
  */
 
@@ -23,7 +23,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 const char* GuidPrefix::SERVER_DEFAULT_GUID_PREFIX_STR_("01.0f.00.00.00.00.00.00.00.00.ca.fe");
-const char* GuidPrefix::ROS_DISCOVERY_SERVER_GUID_PREFIX_STR_("44.53.00.5f.45.50.52.4f.53.49.4d.41");
+const char* GuidPrefix::ROS_DISCOVERY_SERVER_GUID_PREFIX_STR_(fastdds::rtps::DEFAULT_ROS2_SERVER_GUIDPREFIX);
 
 GuidPrefix::GuidPrefix (const GuidPrefix_t& guid_prefix) noexcept
     : GuidPrefix_t(guid_prefix)
@@ -47,12 +47,12 @@ GuidPrefix::GuidPrefix (bool ros /*= false*/, uint32_t id /*= 0*/) noexcept
     }
     else
     {
-        std::stringstream ss(ROS_DISCOVERY_SERVER_GUID_PREFIX_STR_);
+        std::stringstream ss(SERVER_DEFAULT_GUID_PREFIX_STR_);
         ss >> *this;
     }
 
-    // Modify depending the seed
-    // TODO : make available to modify for the whole guid prefix, so is not truncted to 255
+    // Modify depending on the seed
+    // TODO : make available to modify for the whole guid prefix, so it is not truncated to 255
     value[2] = static_cast<fastrtps::rtps::octet>(id);
 }
 
@@ -70,11 +70,6 @@ GuidPrefix& GuidPrefix::operator = (const fastrtps::rtps::GuidPrefix_t& other) n
     return *this;
 }
 
-/**
- * Whether the guid is a valid one
- *
- * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
- */
 bool GuidPrefix::is_valid() const noexcept
 {
     return *this != eprosima::fastrtps::rtps::GuidPrefix_t::unknown();

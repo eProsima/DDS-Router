@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file GuidPrefix.hpp
  */
 
 #ifndef _DDSROUTER_TYPES_GUIDPREFIX_HPP_
@@ -27,8 +27,8 @@ namespace ddsrouter {
 /**
  * @brief GuidPrefix specific class for DDSRouter
  *
- * This class references the GuidPrefix_t class in FastDDS, which is a RTPS Participant Unique Id.
- * This class does not belong to class Guid due to a monumental error in OOP (parallel hierarchy is the future).
+ * This class extends the \c GuidPrefix_t class in FastDDS, which is a RTPS Participant Unique Id.
+ * This class does not belong to class \c Guid due to a design flaw in OOP (parallel hierarchy is the future).
  */
 class GuidPrefix : public fastrtps::rtps::GuidPrefix_t
 {
@@ -54,7 +54,7 @@ public:
     /**
      * @brief Construct a new Guid Prefix object by seed
      *
-     * Use \c id as seed to create an arbitrary GuidPrefix.
+     * Use \c id as seed to create an arbitrary \c GuidPrefix.
      * It could be used as default Guid the ROS2 Discovery Server Guid [44.53.00.5f.45.50.52.4f.53.49.4d.41]
      * or the DDSRouter Discovery Server Guid [01.0f.00.00.00.00.00.00.00.00.ca.fe].
      *
@@ -62,7 +62,7 @@ public:
      *
      * @todo use the seed of \c id to modify the whole guid and not only one of the 12 values.
      *
-     * @param ros : whether use the Discovery Server ROS2 specific guid [Default: false]
+     * @param ros : whether to use the Discovery Server ROS2 specific guid [Default: false]
      * @param id : number to seed for the final Guid Prefix [Default: 0]
      */
     GuidPrefix (bool ros = false, uint32_t id = 0) noexcept;
@@ -70,7 +70,7 @@ public:
     /**
      * @brief Uses Router default Guid without using ROS Discovery Server
      *
-     * @param id number to seed for the final GUID [Default: 0]
+     * @param id : number to seed for the final Guid Prefix [Default: 0]
      */
     GuidPrefix (uint32_t id = 0) noexcept;
 
