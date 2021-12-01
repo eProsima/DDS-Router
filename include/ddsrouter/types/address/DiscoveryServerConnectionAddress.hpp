@@ -29,28 +29,50 @@
 namespace eprosima {
 namespace ddsrouter {
 
-// TODO: add comments
-class DiscoveryServerConnectionAddress
+/**
+ * @brief Collection of Addresses to connect with a remote Disovery Server.
+ *
+ * An address will remain in an IP and a Port, IP version and Transport Protocol.
+ * This class has several address associated with one \c GuidPrefix in order to connect with
+ * a remote Discovery Server.
+ */class DiscoveryServerConnectionAddress
 {
 public:
 
+    /**
+     * @brief Construct a new \c DiscoveryServerConnectionAddress object with all the parameters
+     *
+     * @param discovery_server_guid_ : Guid Prefix of the remote Discovery Server
+     * @param addresses_ collection of addresses
+     */
     DiscoveryServerConnectionAddress(
         GuidPrefix discovery_server_guid_,
         std::set<Address> addresses_);
 
+    //! Discovery Server \c GuidPrefix Port getter
     GuidPrefix discovery_server_guid() const noexcept;
 
+    //! Addresses getter
     std::set<Address> addresses() const noexcept;
 
+    /**
+     * @brief Whether the address is correct
+     *
+     * Checks if GuidPrefix is correct.
+     * Checks if it has at least one correct address.
+     */
     virtual bool is_valid() const noexcept;
 
 protected:
 
+    //! Internal Discovery Server Guid Prefix object
     GuidPrefix discovery_server_guid_;
 
+    //! Internal Addresses object
     std::set<Address> addresses_;
 };
 
+//! \c DiscoveryServerConnectionAddress to stream serializator
 std::ostream& operator <<(
         std::ostream& output,
         const DiscoveryServerConnectionAddress& address);

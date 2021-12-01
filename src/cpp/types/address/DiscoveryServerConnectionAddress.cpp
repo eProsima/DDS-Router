@@ -44,7 +44,20 @@ std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
 
 bool DiscoveryServerConnectionAddress::is_valid() const noexcept
 {
-    return discovery_server_guid_.is_valid();
+    if(!discovery_server_guid_.is_valid())
+    {
+        return false;
+    }
+
+    for (auto address : addresses_)
+    {
+        if (address.is_valid())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 } /* namespace ddsrouter */
