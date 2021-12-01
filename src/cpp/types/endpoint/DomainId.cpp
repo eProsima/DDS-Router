@@ -25,7 +25,8 @@ namespace ddsrouter {
 const DomainIdType DomainId::DEFAULT_DOMAIN_ID_ = 0;
 const DomainIdType DomainId::DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_ = 66;
 
-DomainId::DomainId (bool discovery_server /*= false*/) noexcept
+DomainId::DomainId (
+        bool discovery_server /*= false*/) noexcept
     : domain_id_(DEFAULT_DOMAIN_ID_)
 {
     // Discovery Server case has a different default value
@@ -35,7 +36,8 @@ DomainId::DomainId (bool discovery_server /*= false*/) noexcept
     }
 }
 
-DomainId::DomainId (const DomainIdType& domain) noexcept
+DomainId::DomainId (
+        const DomainIdType& domain) noexcept
     : domain_id_(domain)
 {
 }

@@ -44,10 +44,12 @@ public:
      *
      * @param discovery_server
      */
-    DomainId (bool discovery_server = false) noexcept;
+    DomainId (
+            bool discovery_server = false) noexcept;
 
     //! Standar constructor by number
-    DomainId (const DomainIdType& domain) noexcept;
+    DomainId (
+            const DomainIdType& domain) noexcept;
 
     //! Return Fast DDS value for Domain ID
     DomainIdType operator ()() const noexcept;
