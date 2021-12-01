@@ -21,6 +21,8 @@
 
 #include <fastrtps/rtps/common/Guid.h>
 
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -42,6 +44,9 @@ public:
      * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
      */
     bool is_valid() const noexcept;
+
+    //! Return GuidPrefix from this Guid
+    GuidPrefix guid_prefix() const noexcept;
 };
 
 } /* namespace ddsrouter */

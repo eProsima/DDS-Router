@@ -50,6 +50,7 @@ set(TEST_NAME GuidTest)
 set(TEST_SOURCES
         GuidTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
     )
 
 set(TEST_LIST
@@ -76,9 +77,10 @@ set(TEST_NAME EndpointTest)
 
 set(TEST_SOURCES
         EndpointTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )
