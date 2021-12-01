@@ -25,6 +25,7 @@
 #include <ddsrouter/user_interface/arguments_configuration.hpp>
 #include <ddsrouter/event/FileWatcherHandler.hpp>
 #include <ddsrouter/event/SignalHandler.hpp>
+#include <ddsrouter/event/PeriodicEventHandler.hpp>
 #include <ddsrouter/user_interface/ProcessReturnCode.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -68,13 +69,18 @@ int main(
 
     // Encapsulating execution in block to erase all memory correctly before closing process
     {
+        /////
+        // DDS Router Initialization
+
         // Load DDS Router Configuration
         RawConfiguration router_configuration = load_configuration_from_file(file_path);
 
         // Create DDS Router
         DDSRouter router(router_configuration);
 
+        /////
         // File Watcher Handler
+
         // Callback will reload configuration and pass it to DDSRouter
         std::function<void(std::string)> filewatcher_callback =
             [&router]
@@ -95,6 +101,36 @@ int main(
 
         // Creating FileWatcher event handler
         event::FileWatcherHandler file_watcher_handler(filewatcher_callback, file_path);
+
+        /////
+        // Periodic Handler for reload configuration in periodic time
+
+        // It must be a ptr because could not be created
+        std::unique_ptr<event::PeriodicEventHandler> periodic_handler;
+
+        // If reload time is higher than 0, create a periodic event to reload configuration
+        if (reload_time > 0)
+        {
+            // Callback will reload configuration and pass it to DDSRouter
+            std::function<void()> periodic_callback =
+                [&router, file_path]
+                ()
+                {
+                    logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
+                    try
+                    {
+                        RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                        router.reload_configuration(router_configuration);
+                    }
+                    catch(const std::exception& e)
+                    {
+                        logWarning(DDSROUTER_EXECUTION,
+                            "Error reloading configuration file " << file_path << " with error: " << e.what());
+                    }
+                };
+
+            periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
+        }
 
         // Signal handler
         event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
