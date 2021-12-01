@@ -53,7 +53,7 @@ enum TransportProtocol
  *
  * An address will remain in an IP and a Port, that will uniquely define a network address for connection
  * or listening.
- * There are extra fields in the class as IP version and Transport Protocol that are settable by constructor-
+ * There are extra fields in the class such as IP version and Transport Protocol that are settable by the constructor.
  */
 class Address
 {

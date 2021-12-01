@@ -181,12 +181,13 @@ std::ostream& operator <<(
 {
     output << "{" << address.ip() << ";" << address.port() << ";";
 
-    if (address.is_ipv4())
+    if (address.is_udp())
     {
         output << "udp}";
     }
     else
     {
+        // TODO change for else if cause it may be more transports
         output << "tcp}";
     }
 
