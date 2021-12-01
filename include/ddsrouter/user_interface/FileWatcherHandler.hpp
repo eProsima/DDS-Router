@@ -30,7 +30,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace interface {
+namespace ui {
 
 /**
  * TODO
@@ -75,7 +75,7 @@ protected:
     std::thread reload_thread_;
 };
 
-} /* namespace interface */
+} /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

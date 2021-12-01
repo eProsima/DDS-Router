@@ -28,7 +28,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace interface {
+namespace ui {
 
 template <int SigNum>
 std::vector<SignalHandler<SigNum>*> SignalHandler<SigNum>::active_handlers_;
@@ -146,7 +146,7 @@ void SignalHandler<SigNum>::unset_signal_handler_() noexcept
     signal(SigNum, SIG_DFL);
 }
 
-} /* namespace interface */
+} /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

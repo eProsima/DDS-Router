@@ -25,7 +25,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace interface {
+namespace ui {
 
 template <class T>
 const std::function<void(T)> EventHandler<T>::DEFAULT_CALLBACK_ =
@@ -123,7 +123,7 @@ void EventHandler<T>::callback_unset_() noexcept
     // Do nothing. Implement it in child classes if needed.
 }
 
-} /* namespace interface */
+} /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

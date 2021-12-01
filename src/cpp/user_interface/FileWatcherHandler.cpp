@@ -23,7 +23,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace interface {
+namespace ui {
 
 FileWatcherHandler::FileWatcherHandler(
         std::string file_path,
@@ -122,6 +122,6 @@ void FileWatcherHandler::stop_reload_thread_()
     }
 }
 
-} /* namespace interface */
+} /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

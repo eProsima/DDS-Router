@@ -27,7 +27,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace interface {
+namespace ui {
 
 enum Signals
 {
@@ -69,7 +69,7 @@ protected:
     static std::mutex active_handlers_mutex_;
 };
 
-} /* namespace interface */
+} /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
