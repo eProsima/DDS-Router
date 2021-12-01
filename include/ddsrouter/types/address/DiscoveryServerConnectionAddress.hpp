@@ -46,8 +46,8 @@ public:
      * @param addresses_ collection of addresses
      */
     DiscoveryServerConnectionAddress(
-        GuidPrefix discovery_server_guid_,
-        std::set<Address> addresses_);
+            GuidPrefix discovery_server_guid_,
+            std::set<Address> addresses_);
 
     //! Discovery Server \c GuidPrefix Port getter
     GuidPrefix discovery_server_guid() const noexcept;

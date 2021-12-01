@@ -133,24 +133,26 @@ bool Address::is_valid() const noexcept
     // TODO check port and maybe UDP/TCP specific rules
     switch (ip_version_)
     {
-    case IPv4:
-        return is_ipv4_correct(ip_);
+        case IPv4:
+            return is_ipv4_correct(ip_);
 
-    case IPv6:
-        return is_ipv6_correct(ip_);
+        case IPv6:
+            return is_ipv6_correct(ip_);
 
-    default:
-        assert(false);
-        return false; // Unreachable code
+        default:
+            assert(false);
+            return false; // Unreachable code
     }
 }
 
-bool Address::is_ipv4_correct(const IpType& ip) noexcept
+bool Address::is_ipv4_correct(
+        const IpType& ip) noexcept
 {
     return eprosima::fastrtps::rtps::IPLocator::isIPv4(ip);
 }
 
-bool Address::is_ipv6_correct(const IpType& ip) noexcept
+bool Address::is_ipv6_correct(
+        const IpType& ip) noexcept
 {
     return eprosima::fastrtps::rtps::IPLocator::isIPv6(ip);
 }

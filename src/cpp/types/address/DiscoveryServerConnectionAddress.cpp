@@ -44,7 +44,7 @@ std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
 
 bool DiscoveryServerConnectionAddress::is_valid() const noexcept
 {
-    if(!discovery_server_guid_.is_valid())
+    if (!discovery_server_guid_.is_valid())
     {
         return false;
     }

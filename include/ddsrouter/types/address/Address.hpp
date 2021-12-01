@@ -68,10 +68,10 @@ public:
      * @param transport_protocol transport protocol (UDP or TCP)
      */
     Address(
-        const IpType& ip,
-        const PortType& port,
-        const IpVersion& ip_version,
-        const TransportProtocol& transport_protocol) noexcept;
+            const IpType& ip,
+            const PortType& port,
+            const IpVersion& ip_version,
+            const TransportProtocol& transport_protocol) noexcept;
 
     /**
      * @brief Construct Address and get IP version from IP format
@@ -81,9 +81,9 @@ public:
      * If the IP has an incorrect formant, version will be set to IPv4 and address will be invalid.
      */
     Address(
-        const IpType& ip,
-        const PortType& port,
-        const TransportProtocol& transport_protocol) noexcept;
+            const IpType& ip,
+            const PortType& port,
+            const TransportProtocol& transport_protocol) noexcept;
 
     //! Construct a default IP by default values (set in this class)
     Address();
