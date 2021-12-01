@@ -101,7 +101,7 @@ void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
     std::remove(
         active_handlers_.begin(),
         active_handlers_.end(),
-        this),
+        this);
 
     // Last handler erased, unset signal handler
     if (active_handlers_.size() == 0)
