@@ -28,7 +28,7 @@
 namespace eprosima {
 namespace ddsrouter {
 
-// TODO: Add logs
+// TODO: Use initial topics to start execution and start bridges
 
 DDSRouter::DDSRouter(
         const Configuration& configuration)
@@ -84,10 +84,51 @@ DDSRouter::~DDSRouter()
 }
 
 ReturnCode DDSRouter::reload_configuration(
-        const Configuration&)
+        const Configuration& new_configuration)
 {
-    // TODO
-    throw UnsupportedException("DDSRouter::reload_configuration not supported yet");
+    logDebug(DDSROUTER, "Start Reloading DDS Router configuration.");
+
+    // Load new configuration and check it is okey
+    AllowedTopicList new_allowed_topic_list(
+        new_configuration.allowlist(),
+        new_configuration.blocklist());
+
+    // Check if it should change or is the same configuration
+    if (new_allowed_topic_list == allowed_topics_)
+    {
+        logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
+        return ReturnCode::RETCODE_NO_DATA;
+    }
+
+    // Set new Allowed list
+    allowed_topics_ = new_allowed_topic_list;
+
+    // TODO refactor with discovery functionality
+    // TODO add bridge creation when initial topics configuration added
+
+    // It must change the configuration. Check every topic discovered and active if needed.
+    for (auto& topic_it : current_topics_)
+    {
+        // If topic is active and it is blocked, deactivate it
+        if (topic_it.second)
+        {
+            if (!allowed_topics_.is_topic_allowed(topic_it.first))
+            {
+                deactivate_topic_(topic_it.first);
+            }
+        }
+
+        // If topic is not active and it is allowed, activate it
+        if (!topic_it.second)
+        {
+            if (allowed_topics_.is_topic_allowed(topic_it.first))
+            {
+                activate_topic_(topic_it.first);
+            }
+        }
+    }
+
+    return ReturnCode::RETCODE_OK;
 }
 
 ReturnCode DDSRouter::start() noexcept
