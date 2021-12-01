@@ -21,11 +21,9 @@
 
 #include <functional>
 #include <string>
-#include <thread>
 
 #include <FileWatch.hpp>
 
-#include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/user_interface/EventHandler.hpp>
 
 namespace eprosima {
@@ -33,46 +31,66 @@ namespace ddsrouter {
 namespace ui {
 
 /**
- * TODO
+ * It implements the functionality to watch over a specific file and raise a callback
+ * every time the file has changed.
+ *
+ * @warning Because of the FileWatcher implementation, each callback is called twice.
  */
 class FileWatcherHandler : public EventHandler<std::string>
 {
 public:
 
+    /**
+     * @brief Construct a new File Watcher for file \c file_path
+     *
+     * If callback is not set, FileWatcher will not warn of updates in document.
+     *
+     * @param file_path : path for the file to watch
+     */
     FileWatcherHandler(
-        std::string file_path,
-        Duration_ms reload_time = 0);
+        std::string file_path);
 
+
+    /**
+     * @brief Construct an FileWatcherHandler with a specific callback.
+     *
+     * @param file_path : path for the file to watch
+     * @param callback : function that will be called when the event raises.
+     */
     FileWatcherHandler(
         std::function<void(std::string)> callback,
-        std::string file_path,
-        Duration_ms reload_time = 0);
+        std::string file_path);
 
+    /**
+     * @brief Destroy the File Watcher Handler object
+     *
+     * Stop file watching
+     */
     ~FileWatcherHandler();
 
 protected:
 
+    /**
+     * @brief Start watching file
+     *
+     * It uses external library \c filewatch to create a File Watcher
+     *
+     * @note Method called only from constructor
+     */
     void start_filewatcher_();
 
+    /**
+     * @brief Stop watching file
+     *
+     * @note Method called only from destructor
+     */
     void stop_filewatcher_();
 
-    void reload_thread_routine_();
-
-    void start_reload_thread_();
-
-    void stop_reload_thread_();
-
+    //! Path of file to watch
     std::string file_path_;
 
-    Duration_ms reload_time_;
-
+    //! File Watcher object
     std::unique_ptr<filewatch::FileWatch<std::string>> file_watch_handler_;
-
-    std::atomic<bool> filewatcher_set_;
-
-    std::atomic<bool> reload_set_;
-
-    std::thread reload_thread_;
 };
 
 } /* namespace ui */

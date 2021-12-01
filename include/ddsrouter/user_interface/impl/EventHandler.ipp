@@ -27,48 +27,48 @@ namespace eprosima {
 namespace ddsrouter {
 namespace ui {
 
-template <class T>
-const std::function<void(T)> EventHandler<T>::DEFAULT_CALLBACK_ =
-        [](T t)
+template <typename... Args>
+const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
+        [](Args...)
         {
             logError(DDSROUTER_HANDLER, "This callback should not be called.");
         };
 
-template <class T>
-EventHandler<T>::EventHandler()
+template <typename... Args>
+EventHandler<Args...>::EventHandler()
     : callback_(DEFAULT_CALLBACK_)
     , is_callback_set_(false)
     , number_of_events_registered_(0)
 {
 }
 
-template <class T>
-EventHandler<T>::EventHandler(std::function<void(T)> callback)
+template <typename... Args>
+EventHandler<Args...>::EventHandler(std::function<void(Args...)> callback)
     : callback_(callback)
     , is_callback_set_(true)
     , number_of_events_registered_(0)
 {
 }
 
-template <class T>
-void EventHandler<T>::set_callback(
-        std::function<void(T)> callback) noexcept
+template <typename... Args>
+void EventHandler<Args...>::set_callback(
+        std::function<void(Args...)> callback) noexcept
 {
     is_callback_set_.store(true);
     callback_ = callback;
     callback_set_();
 }
 
-template <class T>
-void EventHandler<T>::unset_callback() noexcept
+template <typename... Args>
+void EventHandler<Args...>::unset_callback() noexcept
 {
     is_callback_set_.store(false);
     callback_ = DEFAULT_CALLBACK_;
     callback_unset_();
 }
 
-template <class T>
-void EventHandler<T>::wait_for_event(uint32_t n /*= 1*/) const noexcept
+template <typename... Args>
+void EventHandler<Args...>::wait_for_event(uint32_t n /*= 1*/) const noexcept
 {
     std::unique_lock<std::mutex> lock(wait_mutex_);
     wait_condition_variable_.wait(
@@ -80,14 +80,14 @@ void EventHandler<T>::wait_for_event(uint32_t n /*= 1*/) const noexcept
         });
 }
 
-template <class T>
-void EventHandler<T>::force_callback(T arg) noexcept
+template <typename... Args>
+void EventHandler<Args...>::force_callback(Args... args) noexcept
 {
-    call_callback_(arg);
+    event_occurred_(args...);
 }
 
-template <class T>
-void EventHandler<T>::call_callback_(T arg) noexcept
+template <typename... Args>
+void EventHandler<Args...>::event_occurred_(Args... args) noexcept
 {
     {
         // Lock to avoid changing values while wait is processing condition
@@ -96,11 +96,11 @@ void EventHandler<T>::call_callback_(T arg) noexcept
         // Call callback
         if (is_callback_set_.load())
         {
-            callback_(arg);
+            callback_(args...);
         }
         else
         {
-            logWarning(DDSROUTER_HANDLER, "Calling unset callback with arg: " << arg << ".");
+            logWarning(DDSROUTER_HANDLER, "Calling unset callback.");
         }
 
         // Increase number of callbacks
@@ -111,14 +111,14 @@ void EventHandler<T>::call_callback_(T arg) noexcept
     wait_condition_variable_.notify_all();
 }
 
-template <class T>
-void EventHandler<T>::callback_set_() noexcept
+template <typename... Args>
+void EventHandler<Args...>::callback_set_() noexcept
 {
     // Do nothing. Implement it in child classes if needed.
 }
 
-template <class T>
-void EventHandler<T>::callback_unset_() noexcept
+template <typename... Args>
+void EventHandler<Args...>::callback_unset_() noexcept
 {
     // Do nothing. Implement it in child classes if needed.
 }

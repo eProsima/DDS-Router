@@ -26,30 +26,24 @@ namespace ddsrouter {
 namespace ui {
 
 FileWatcherHandler::FileWatcherHandler(
-        std::string file_path,
-        Duration_ms reload_time /*= 0*/)
+        std::string file_path)
     : EventHandler<std::string>()
     , file_path_(file_path)
-    , reload_time_(reload_time)
 {
     start_filewatcher_();
-    start_reload_thread_();
 }
 
 FileWatcherHandler::FileWatcherHandler(
         std::function<void(std::string)> callback,
-        std::string file_path,
-        Duration_ms reload_time /*= 0*/)
+        std::string file_path)
     : EventHandler<std::string>(callback)
     , file_path_(file_path)
 {
     start_filewatcher_();
-    start_reload_thread_();
 }
 
 FileWatcherHandler::~FileWatcherHandler()
 {
-    stop_reload_thread_();
     stop_filewatcher_();
 }
 
@@ -67,7 +61,7 @@ void FileWatcherHandler::start_filewatcher_()
                 {
                     case filewatch::Event::modified:
                         logInfo(DDSROUTER_FILEWATCHER, "File: " << path << " modified. Reloading.");
-                        call_callback_(path);
+                        event_occurred_(path);
                         break;
                     default:
                         // No-op
@@ -82,44 +76,11 @@ void FileWatcherHandler::start_filewatcher_()
     }
 
     logInfo(DDSROUTER_FILEWATCHER, "Watching file: " << file_path_);
-    filewatcher_set_.store(true);
 }
 
 void FileWatcherHandler::stop_filewatcher_()
 {
-    filewatcher_set_.store(false);
     file_watch_handler_.reset();
-}
-
-void FileWatcherHandler::reload_thread_routine_()
-{
-    while (true)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(reload_time_ * 1000));
-        std::set<std::string> new_topics;
-        std::set<std::string> old_topics;
-
-        call_callback_(file_path_);
-    }
-}
-
-void FileWatcherHandler::start_reload_thread_()
-{
-    if (reload_time_ > 0)
-    {
-        reload_thread_ = std::thread(
-                    &FileWatcherHandler::reload_thread_routine_, this);
-        reload_set_.store(true);
-    }
-}
-
-void FileWatcherHandler::stop_reload_thread_()
-{
-    reload_set_.store(false);
-    if (reload_thread_.joinable())
-    {
-        reload_thread_.detach();
-    }
 }
 
 } /* namespace ui */
