@@ -59,9 +59,14 @@ public:
 
     void add_participant(
             ParticipantId id,
-            std::shared_ptr<IParticipant> participant) noexcept
+            std::shared_ptr<IParticipant> participant,
+            std::size_t expected_size) noexcept
     {
         add_participant_(id, participant);
+        // Verify correct insertion
+        auto it = participants_.find(id);
+        ASSERT_EQ(it->second, participant);
+        ASSERT_EQ(participants_.size(), expected_size);
     }
 
 };
@@ -91,13 +96,11 @@ TEST(ParticipantsDatabaseTest, add_participant)
     ParticipantId id("void_part");
     std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
     // Insert participant
-    participants_database->add_participant(participant->id(), participant);
+    participants_database->add_participant(participant->id(), participant, 1);
     // Reinsert to assure there is no error when inserting duplicates, only a warning is printed
-    participants_database->add_participant(participant->id(), participant);
+    participants_database->add_participant(participant->id(), participant, 1);
 
-    auto participants = participants_database->get_participants_map();
-    auto it = participants.find(id);
-    ASSERT_EQ(it->second, participant);
+    // Verifications already included in \c add_participant
 }
 
 /**
@@ -113,21 +116,29 @@ TEST(ParticipantsDatabaseTest, add_participant)
 TEST(ParticipantsDatabaseTest, pop)
 {
     std::shared_ptr<test::ParticipantsDatabase> participants_database = std::make_shared<test::ParticipantsDatabase>();
+    ASSERT_TRUE(participants_database->empty());
     // Empty database, no participant should be popped
     ASSERT_TRUE(participants_database->pop() == nullptr);
 
-    ParticipantId id("void_part");
-    std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
+    ParticipantId id1("void_p1");
+    std::shared_ptr<VoidParticipant> participant1 = std::make_shared<VoidParticipant>(id1);
+    ParticipantId id2("void_p2");
+    std::shared_ptr<VoidParticipant> participant2 = std::make_shared<VoidParticipant>(id2);
     // Pop not yet stored participant
-    ASSERT_TRUE(participants_database->pop(id) == nullptr);
+    ASSERT_TRUE(participants_database->pop(id1) == nullptr);
+    ASSERT_TRUE(participants_database->pop(id2) == nullptr);
 
-    // Insert participant into database
-    participants_database->add_participant(participant->id(), participant);
+    // Insert participants into database
+    participants_database->add_participant(participant1->id(), participant1, 1);
+    participants_database->add_participant(participant2->id(), participant2, 2);
 
-    ASSERT_EQ(participants_database->get_participant(id), participant);
-    ASSERT_EQ(participants_database->pop(id), participant);
-    // Participant should have been removed
-    ASSERT_TRUE(participants_database->get_participant(id) == nullptr);
+    // Pop stored participants
+    ASSERT_EQ(participants_database->pop(id1), participant1);
+    ASSERT_EQ(participants_database->pop(), participant2);
+    // Participants should have been removed
+    ASSERT_TRUE(participants_database->get_participant(id1) == nullptr);
+    ASSERT_TRUE(participants_database->get_participant(id2) == nullptr);
+    ASSERT_TRUE(participants_database->empty());
 }
 
 /*********************
@@ -150,7 +161,7 @@ TEST(ParticipantsDatabaseTest, empty)
     // Non-empty database
     ParticipantId id("void_part");
     std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
-    participants_database->add_participant(participant->id(), participant);
+    participants_database->add_participant(participant->id(), participant, 1);
     ASSERT_FALSE(participants_database->empty());
 }
 
@@ -167,7 +178,7 @@ TEST(ParticipantsDatabaseTest, get_participant)
 
     ParticipantId id("void_part");
     std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
-    participants_database->add_participant(participant->id(), participant);
+    participants_database->add_participant(participant->id(), participant, 1);
 
     ASSERT_EQ(participants_database->get_participant(id), participant);
 }
@@ -181,11 +192,11 @@ TEST(ParticipantsDatabaseTest, get_participants_ids)
 
     ParticipantId id1("void_p1");
     std::shared_ptr<VoidParticipant> participant1 = std::make_shared<VoidParticipant>(id1);
-    participants_database->add_participant(participant1->id(), participant1);
+    participants_database->add_participant(participant1->id(), participant1, 1);
 
     ParticipantId id2("void_p2");
     std::shared_ptr<VoidParticipant> participant2 = std::make_shared<VoidParticipant>(id2);
-    participants_database->add_participant(participant2->id(), participant2);
+    participants_database->add_participant(participant2->id(), participant2, 2);
 
     std::set<ParticipantId> ids {id2, id1};
     ASSERT_EQ(ids, participants_database->get_participants_ids());
