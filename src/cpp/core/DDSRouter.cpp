@@ -41,7 +41,7 @@ DDSRouter::DDSRouter(
     , participant_factory_()
     , enabled_(false)
 {
-    logDebug(DDSROUTER, "Creating DDSRouter.");
+    logDebug(DDSROUTER, "Creating DDS Router.");
 
     // Init topic allowed
     init_allowed_topics_();
@@ -50,12 +50,12 @@ DDSRouter::DDSRouter(
     // Create Bridges
     init_bridges_();
 
-    logDebug(DDSROUTER, "DDSRouter created.");
+    logDebug(DDSROUTER, "DDS Router created.");
 }
 
 DDSRouter::~DDSRouter()
 {
-    logDebug(DDSROUTER, "Destroying DDSRouter.");
+    logDebug(DDSROUTER, "Destroying DDS Router.");
 
     // Stop all communications
     stop_();
@@ -80,7 +80,7 @@ DDSRouter::~DDSRouter()
 
     // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
 
-    logDebug(DDSROUTER, "DDSRouter destroyed.");
+    logDebug(DDSROUTER, "DDS Router destroyed.");
 }
 
 ReturnCode DDSRouter::reload_configuration(
@@ -95,11 +95,11 @@ ReturnCode DDSRouter::start() noexcept
     ReturnCode ret = start_();
     if (ret == ReturnCode::RETCODE_OK)
     {
-        logUser(DDSROUTER, "Starting DDSRouter");
+        logUser(DDSROUTER, "Starting DDS Router.");
     }
     else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
-        logUser(DDSROUTER, "Trying to start DDSRouter that is not disabled");
+        logUser(DDSROUTER, "Trying to start a disabled DDS Router.");
     }
 
     return ret;
@@ -110,11 +110,11 @@ ReturnCode DDSRouter::stop() noexcept
     ReturnCode ret = stop_();
     if (ret == ReturnCode::RETCODE_OK)
     {
-        logUser(DDSROUTER, "Stopping DDSRouter");
+        logUser(DDSROUTER, "Stopping DDS Router.");
     }
     else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
-        logUser(DDSROUTER, "Trying to stop DDSRouter that is not enabled");
+        logUser(DDSROUTER, "Trying to stop a not enabled DDS Router.");
     }
 
     return ret;
@@ -128,14 +128,14 @@ ReturnCode DDSRouter::start_() noexcept
     {
         enabled_.store(true);
 
-        logInfo(DDSROUTER, "Starting DDSRouter");
+        logInfo(DDSROUTER, "Starting DDS Router.");
 
         activate_all_topics_();
         return ReturnCode::RETCODE_OK;
     }
     else
     {
-        logInfo(DDSROUTER, "Trying to start DDSRouter that is not disabled");
+        logInfo(DDSROUTER, "Trying to stop a not enabled DDS Router.");
         return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }
@@ -148,14 +148,14 @@ ReturnCode DDSRouter::stop_() noexcept
     {
         enabled_.store(false);
 
-        logInfo(DDSROUTER, "Stopping DDSRouter");
+        logInfo(DDSROUTER, "Stopping DDS Router.");
 
         deactivate_all_topics_();
         return ReturnCode::RETCODE_OK;
     }
     else
     {
-        logInfo(DDSROUTER, "Trying to stop DDSRouter that is not enabled");
+        logInfo(DDSROUTER, "Trying to start a disabled DDS Router.");
         return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }
@@ -248,8 +248,9 @@ void DDSRouter::create_new_bridge(
     }
     catch (const InitializationException& e)
     {
-        logError(DDSROUTER, "Error creating Bridge for topic " << topic
-                                                               << ". Error code:" << e.what());
+        logError(DDSROUTER,
+            "Error creating Bridge for topic " << topic <<
+            ". Error code:" << e.what() << ".");
     }
 }
 

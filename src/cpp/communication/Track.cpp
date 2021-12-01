@@ -123,7 +123,7 @@ void Track::disable() noexcept
 
 void Track::no_more_data_available_() noexcept
 {
-    logInfo(DDSROUTER_TRACK, "Track " << *this << " has no more data to sent.");
+    logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to sent.");
     is_data_available_.store(false);
 }
 
@@ -137,7 +137,7 @@ void Track::data_available() noexcept
     // Only hear callback if it is enabled
     if (enabled_)
     {
-        logInfo(DDSROUTER_TRACK, "Track " << *this << " has data available to transmit.");
+        logDebug(DDSROUTER_TRACK, "Track " << *this << " has data ready to be sent.");
 
         // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
         {
