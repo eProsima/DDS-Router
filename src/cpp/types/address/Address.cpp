@@ -189,7 +189,7 @@ std::ostream& operator <<(
     }
     else
     {
-        // TODO change for else if cause it may be more transports
+        // TODO change for else if cause there may be more transports
         output << "tcp}";
     }
 
