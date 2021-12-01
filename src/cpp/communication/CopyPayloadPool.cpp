@@ -40,6 +40,17 @@ bool CopyPayloadPool::get_payload(
     payload.reserve(size);
     payload.length = size;
 
+    if (size > 0)
+    {
+        // Set that a payload has been reserved
+        add_reserved_payload_();
+    }
+    else
+    {
+        // Set that a payload has been released
+        add_release_payload_();
+    }
+
     return true;
 }
 

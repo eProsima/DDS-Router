@@ -40,6 +40,7 @@ BaseReader::BaseReader(
     , on_data_available_lambda_set_(false)
     , enabled_(false)
 {
+    logDebug(DDSROUTER_BASEREADER, "Creating Reader " << *this << ".");
 }
 
 void BaseReader::enable() noexcept
@@ -137,6 +138,14 @@ void BaseReader::enable_() noexcept
 void BaseReader::disable_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseReader& reader)
+{
+    os << "Reader{" << reader.participant_id_ << ";" << reader.topic_ << "}";
+    return os;
 }
 
 } /* namespace ddsrouter */

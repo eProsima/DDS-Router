@@ -54,9 +54,12 @@ bool ParticipantType::is_valid() const noexcept
 
 std::string ParticipantType::to_string() const noexcept
 {
-    std::stringstream ss;
-    ss << *this;
-    return ss.str();
+    auto it = ParticipantType::participant_type_with_name_.find(value_);
+
+    // Value must be in map
+    assert(it != ParticipantType::participant_type_with_name_.end());
+
+    return it->second;
 }
 
 ParticipantTypeValue ParticipantType::operator ()() const noexcept
@@ -90,7 +93,7 @@ std::ostream& operator <<(
     // Value must be in map
     assert(it != ParticipantType::participant_type_with_name_.end());
 
-    os << it->second;
+    os << "ParticipantType{" << it->second << "}";
     return os;
 }
 

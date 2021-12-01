@@ -96,5 +96,14 @@ Endpoint& Endpoint::operator =(
     return *this;
 }
 
+std::ostream& operator <<(
+        std::ostream& os,
+        const Endpoint& endpoint)
+{
+    os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.qos_ << ";" <<
+        endpoint.kind_ << ";" << endpoint.active_ << "}";
+    return os;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

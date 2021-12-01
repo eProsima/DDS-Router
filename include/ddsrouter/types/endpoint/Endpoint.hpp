@@ -106,7 +106,19 @@ protected:
 
     //! Whether the endpoint is currently active
     bool active_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Endpoint&);
 };
+
+/**
+ * @brief \c Endpoint to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const Endpoint& endpoint);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

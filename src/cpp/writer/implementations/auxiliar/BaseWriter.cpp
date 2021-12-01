@@ -32,6 +32,7 @@ BaseWriter::BaseWriter(
     , payload_pool_(payload_pool)
     , enabled_(false)
 {
+    logDebug(DDSROUTER_BASEWRITER, "Creating Reader " << *this << ".");
 }
 
 void BaseWriter::enable() noexcept
@@ -87,6 +88,14 @@ void BaseWriter::enable_() noexcept
 void BaseWriter::disable_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const BaseWriter& writer)
+{
+    os << "Writer{" << writer.participant_id_ << ";" << writer.topic_ << "}";
+    return os;
 }
 
 } /* namespace ddsrouter */

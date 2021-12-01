@@ -19,6 +19,7 @@
 
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -57,13 +58,19 @@ bool DiscoveryDatabase::add_or_modify_endpoint(
     {
         // Already exists, modify it
         it->second = new_endpoint;
-        return true;
+
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
+
+        return false;
     }
     else
     {
         // Add it to the dictionary
         entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
-        return false;
+
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
+
+        return true;
     }
 }
 

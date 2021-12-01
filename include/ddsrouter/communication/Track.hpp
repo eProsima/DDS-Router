@@ -207,7 +207,22 @@ protected:
      * Mutex to manage access to variable \c is_data_available_ .
      */
     std::mutex transmit_mutex_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Track&);
 };
+
+/**
+ * @brief \c Track to stream serialization
+ *
+ * This method is merely a to_string of a Track definition.
+ * It serialize the topic and Participant source Id
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const Track& track);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

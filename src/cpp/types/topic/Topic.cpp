@@ -78,7 +78,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Topic& a)
 {
-    os << "{" << a.topic_name() << ", " << a.topic_type() << "}";
+    os << "Topic{" << a.topic_name() << ", " << a.topic_type() << "}";
     return os;
 }
 

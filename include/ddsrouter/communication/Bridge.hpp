@@ -127,7 +127,22 @@ protected:
 
     //! Mutex to prevent simultaneous calls to enable and/or disable
     std::recursive_mutex mutex_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Bridge&);
 };
+
+/**
+ * @brief \c Bridge to stream serialization
+ *
+ * This method is merely a to_string of a Bridge definition.
+ * It serialize the topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const Bridge& bridge);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

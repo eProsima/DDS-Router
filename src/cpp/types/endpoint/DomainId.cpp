@@ -56,7 +56,7 @@ std::ostream& operator <<(
         std::ostream& output,
         const DomainId& domain)
 {
-    output << "{" << domain.domain_id() << "}";
+    output << "DomainId{" << domain.domain_id() << "}";
     return output;
 }
 
