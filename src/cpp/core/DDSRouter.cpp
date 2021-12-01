@@ -86,7 +86,7 @@ DDSRouter::~DDSRouter()
 ReturnCode DDSRouter::reload_configuration(
         const Configuration& new_configuration)
 {
-    logDebug(DDSROUTER, "Start Reloading DDS Router configuration.");
+    logDebug(DDSROUTER, "Reloading DDS Router configuration...");
 
     // Load new configuration and check it is okey
     AllowedTopicList new_allowed_topic_list(
@@ -117,10 +117,9 @@ ReturnCode DDSRouter::reload_configuration(
                 deactivate_topic_(topic_it.first);
             }
         }
-
-        // If topic is not active and it is allowed, activate it
-        if (!topic_it.second)
+        else
         {
+            // If topic is not active and it is allowed, activate it
             if (allowed_topics_.is_topic_allowed(topic_it.first))
             {
                 activate_topic_(topic_it.first);
