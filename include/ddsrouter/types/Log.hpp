@@ -63,7 +63,7 @@ using Log = eprosima::fastdds::dds::Log;
         auto fastdds_log_lambda_tmp__ = [&]()               \
                 {                                           \
                     std::stringstream fastdds_log_ss_tmp__; \
-                    fastdds_log_ss_tmp__ << "DEBUG: " << msg;\
+                    fastdds_log_ss_tmp__ << "DEBUG: " << msg; \
                 };                                          \
         (void)fastdds_log_lambda_tmp__;                     \
     }
@@ -93,7 +93,7 @@ using Log = eprosima::fastdds::dds::Log;
         auto fastdds_log_lambda_tmp__ = [&]()               \
                 {                                           \
                     std::stringstream fastdds_log_ss_tmp__; \
-                    fastdds_log_ss_tmp__ << "USER: " << msg;\
+                    fastdds_log_ss_tmp__ << "USER: " << msg; \
                 };                                          \
         (void)fastdds_log_lambda_tmp__;                     \
     }

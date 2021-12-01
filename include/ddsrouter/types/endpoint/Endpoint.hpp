@@ -108,7 +108,9 @@ protected:
     bool active_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const Endpoint&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Endpoint&);
 };
 
 /**

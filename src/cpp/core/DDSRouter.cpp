@@ -249,8 +249,8 @@ void DDSRouter::create_new_bridge(
     catch (const InitializationException& e)
     {
         logError(DDSROUTER,
-            "Error creating Bridge for topic " << topic <<
-            ". Error code:" << e.what() << ".");
+                "Error creating Bridge for topic " << topic <<
+                ". Error code:" << e.what() << ".");
     }
 }
 

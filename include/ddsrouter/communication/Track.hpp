@@ -209,7 +209,9 @@ protected:
     std::mutex transmit_mutex_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const Track&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Track&);
 };
 
 /**

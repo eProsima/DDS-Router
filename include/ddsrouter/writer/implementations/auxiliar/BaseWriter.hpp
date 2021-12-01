@@ -125,7 +125,9 @@ protected:
     mutable std::recursive_mutex mutex_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const BaseWriter&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const BaseWriter&);
 };
 
 /**

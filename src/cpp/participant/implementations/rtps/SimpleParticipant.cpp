@@ -46,7 +46,7 @@ SimpleParticipant::SimpleParticipant(
     }
 
     logInfo(DDSROUTER_RTPS_READER, "New Participant created with id " << id() << " in domain " <<
-        domain << " with guid " << rtps_participant_->getGuid());
+            domain << " with guid " << rtps_participant_->getGuid());
 }
 
 SimpleParticipant::~SimpleParticipant()

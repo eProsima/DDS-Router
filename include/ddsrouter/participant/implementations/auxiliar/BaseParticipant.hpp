@@ -190,7 +190,9 @@ protected:
 
     // Allow operator << to use private variables
     template <class C>
-    friend std::ostream& operator <<(std::ostream&, const BaseParticipant<C>&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const BaseParticipant<C>&);
 };
 
 /**

@@ -168,7 +168,9 @@ protected:
     static const std::function<void()> DEFAULT_ON_DATA_AVAILABLE_CALLBACK;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const BaseReader&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const BaseReader&);
 };
 
 /**

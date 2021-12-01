@@ -129,7 +129,9 @@ protected:
     std::recursive_mutex mutex_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const Bridge&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const Bridge&);
 };
 
 /**

@@ -39,12 +39,12 @@ PayloadPool::~PayloadPool()
     else if (reserve_count_ != release_count_)
     {
         logWarning(DDSROUTER_PAYLOADPOOL, "Removing PayloadPool with messages " <<
-        (reserve_count_ - release_count_) << " without released.");
+                (reserve_count_ - release_count_) << " without released.");
     }
     else
     {
         logDebug(DDSROUTER_PAYLOADPOOL,
-            "Removing PayloadPool correctly after reserve: " << reserve_count_ << " payloads.");
+                "Removing PayloadPool correctly after reserve: " << reserve_count_ << " payloads.");
     }
 }
 
@@ -114,10 +114,9 @@ void PayloadPool::add_release_payload_()
     if (release_count_ > reserve_count_)
     {
         logWarning(DDSROUTER_PAYLOADPOOL,
-            "Inconsistent PayloadPool, releasing more payloads than reserved.");
+                "Inconsistent PayloadPool, releasing more payloads than reserved.");
     }
 }
-
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

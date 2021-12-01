@@ -69,7 +69,9 @@ protected:
     ReliabilityKind reliability_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(std::ostream&, const QoS&);
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const QoS&);
 };
 
 /**

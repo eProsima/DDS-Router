@@ -122,7 +122,8 @@ ReturnCode Writer::write_(
     payload_pool_->get_payload(data->payload, new_change->serializedPayload);
 
     logDebug(DDSROUTER_RTPS_WRITER,
-        "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " << data->source_guid);
+            "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
+                        data->source_guid);
 
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
