@@ -38,7 +38,8 @@ public:
     using fastrtps::rtps::GuidPrefix_t::GuidPrefix_t;
 
     //! Constructor from Parent class
-    GuidPrefix (const GuidPrefix_t& guid_prefix) noexcept;
+    GuidPrefix (
+            const GuidPrefix_t& guid_prefix) noexcept;
 
     /**
      * @brief Construct a new Guid Prefix object from a string
@@ -49,7 +50,8 @@ public:
      *
      * @param guid_prefix string with the Guid Prefix
      */
-    GuidPrefix (const std::string& str_prefix);
+    GuidPrefix (
+            const std::string& str_prefix);
 
     /**
      * @brief Construct a new Guid Prefix object by seed
@@ -65,16 +67,20 @@ public:
      * @param ros : whether to use the Discovery Server ROS2 specific guid [Default: false]
      * @param id : number to seed for the final Guid Prefix [Default: 0]
      */
-    GuidPrefix (bool ros = false, uint32_t id = 0) noexcept;
+    GuidPrefix (
+            bool ros = false,
+            uint32_t id = 0) noexcept;
 
     /**
      * @brief Uses Router default Guid without using ROS Discovery Server
      *
      * @param id : number to seed for the final Guid Prefix [Default: 0]
      */
-    GuidPrefix (uint32_t id = 0) noexcept;
+    GuidPrefix (
+            uint32_t id = 0) noexcept;
 
-    GuidPrefix& operator = (const fastrtps::rtps::GuidPrefix_t& other) noexcept;
+    GuidPrefix& operator = (
+            const fastrtps::rtps::GuidPrefix_t& other) noexcept;
 
     /**
      * Whether the guid prefix is a valid one

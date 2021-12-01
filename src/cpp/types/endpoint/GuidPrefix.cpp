@@ -17,6 +17,8 @@
  *
  */
 
+#include <fastdds/rtps/attributes/ServerAttributes.h>
+
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 
 namespace eprosima {
@@ -25,12 +27,14 @@ namespace ddsrouter {
 const char* GuidPrefix::SERVER_DEFAULT_GUID_PREFIX_STR_("01.0f.00.00.00.00.00.00.00.00.ca.fe");
 const char* GuidPrefix::ROS_DISCOVERY_SERVER_GUID_PREFIX_STR_(fastdds::rtps::DEFAULT_ROS2_SERVER_GUIDPREFIX);
 
-GuidPrefix::GuidPrefix (const GuidPrefix_t& guid_prefix) noexcept
+GuidPrefix::GuidPrefix (
+        const GuidPrefix_t& guid_prefix) noexcept
     : GuidPrefix_t(guid_prefix)
 {
 }
 
-GuidPrefix::GuidPrefix (const std::string& str_prefix)
+GuidPrefix::GuidPrefix (
+        const std::string& str_prefix)
 {
     std::stringstream ss(str_prefix);
     ss >> *this;
@@ -38,7 +42,9 @@ GuidPrefix::GuidPrefix (const std::string& str_prefix)
     // TODO launch exception
 }
 
-GuidPrefix::GuidPrefix (bool ros /*= false*/, uint32_t id /*= 0*/) noexcept
+GuidPrefix::GuidPrefix (
+        bool ros /*= false*/,
+        uint32_t id /*= 0*/) noexcept
 {
     if (ros)
     {
@@ -56,14 +62,16 @@ GuidPrefix::GuidPrefix (bool ros /*= false*/, uint32_t id /*= 0*/) noexcept
     value[2] = static_cast<fastrtps::rtps::octet>(id);
 }
 
-GuidPrefix::GuidPrefix (uint32_t id /*= 0*/) noexcept
+GuidPrefix::GuidPrefix (
+        uint32_t id /*= 0*/) noexcept
     : GuidPrefix(false, id)
 {
 }
 
-GuidPrefix& GuidPrefix::operator = (const fastrtps::rtps::GuidPrefix_t& other) noexcept
+GuidPrefix& GuidPrefix::operator = (
+        const fastrtps::rtps::GuidPrefix_t& other) noexcept
 {
-    for (int i; i<this->size; ++i)
+    for (int i = 0; i < this->size; ++i)
     {
         this->value[i] = other.value[i];
     }
