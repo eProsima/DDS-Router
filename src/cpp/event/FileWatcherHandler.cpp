@@ -19,11 +19,11 @@
 
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/user_interface/FileWatcherHandler.hpp>
+#include <ddsrouter/event/FileWatcherHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 FileWatcherHandler::FileWatcherHandler(
         std::string file_path)
@@ -83,6 +83,6 @@ void FileWatcherHandler::stop_filewatcher_()
     file_watch_handler_.reset();
 }
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

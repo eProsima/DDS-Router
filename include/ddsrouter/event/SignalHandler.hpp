@@ -16,18 +16,18 @@
  * @file SignalHandler.hpp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_
-#define _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_
+#ifndef _DDSROUTER_EVENT_SIGNALHANDLER_HPP_
+#define _DDSROUTER_EVENT_SIGNALHANDLER_HPP_
 
 #include <csignal>
 #include <functional>
 #include <string>
 
-#include <ddsrouter/user_interface/EventHandler.hpp>
+#include <ddsrouter/event/EventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 //! Available data types for SignalHandler class
 enum Signals
@@ -127,11 +127,11 @@ protected:
     static std::mutex active_handlers_mutex_;
 };
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter/user_interface/impl/SignalHandler.ipp>
+#include <ddsrouter/event/impl/SignalHandler.ipp>
 
-#endif /* _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_ */
+#endif /* _DDSROUTER_EVENT_SIGNALHANDLER_HPP_ */

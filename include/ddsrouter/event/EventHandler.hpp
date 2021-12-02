@@ -16,14 +16,14 @@
  * @file EventHandler.hpp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_EVENTHANDLER_HPP_
-#define _DDSROUTER_USERINTERFACE_EVENTHANDLER_HPP_
+#ifndef _DDSROUTER_EVENT_EVENTHANDLER_HPP_
+#define _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 
 #include <functional>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 /**
  * This class is an interface for any class that implements a handler of any kind of event.
@@ -149,11 +149,11 @@ protected:
     mutable std::mutex wait_mutex_;
 };
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter/user_interface/impl/EventHandler.ipp>
+#include <ddsrouter/event/impl/EventHandler.ipp>
 
-#endif /* _DDSROUTER_USERINTERFACE_EVENTHANDLER_HPP_ */
+#endif /* _DDSROUTER_EVENT_EVENTHANDLER_HPP_ */

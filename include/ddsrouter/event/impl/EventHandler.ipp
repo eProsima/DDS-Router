@@ -16,8 +16,8 @@
  * @file EventHandler.ipp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_
-#define _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_
+#ifndef _DDSROUTER_EVENT_IMPL_EVENTHANDLER_IPP_
+#define _DDSROUTER_EVENT_IMPL_EVENTHANDLER_IPP_
 
 #include <functional>
 
@@ -25,7 +25,7 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 template <typename ... Args>
 const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
@@ -127,8 +127,8 @@ void EventHandler<Args...>::callback_unset_() noexcept
     // Do nothing. Implement it in child classes if needed.
 }
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_ */
+#endif /* _DDSROUTER_EVENT_IMPL_EVENTHANDLER_IPP_ */

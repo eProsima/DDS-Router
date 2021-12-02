@@ -16,18 +16,18 @@
  * @file PeriodicEventHandler.hpp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_PERIODICEVENTHANDLER_HPP_
-#define _DDSROUTER_USERINTERFACE_PERIODICEVENTHANDLER_HPP_
+#ifndef _DDSROUTER_EVENT_PERIODICEVENTHANDLER_HPP_
+#define _DDSROUTER_EVENT_PERIODICEVENTHANDLER_HPP_
 
 #include <functional>
 #include <thread>
 
 #include <ddsrouter/types/Time.hpp>
-#include <ddsrouter/user_interface/EventHandler.hpp>
+#include <ddsrouter/event/EventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 /**
  * It implements the functionality to raise callback periodically with
@@ -90,8 +90,8 @@ protected:
     std::thread period_thread_;
 };
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_USERINTERFACE_PERIODICEVENTHANDLER_HPP_ */
+#endif /* _DDSROUTER_EVENT_PERIODICEVENTHANDLER_HPP_ */

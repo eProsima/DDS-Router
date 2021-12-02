@@ -17,18 +17,18 @@
  *
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_IMPL_SIGNALHANDLER_IPP_
-#define _DDSROUTER_USERINTERFACE_IMPL_SIGNALHANDLER_IPP_
+#ifndef _DDSROUTER_EVENT_IMPL_SIGNALHANDLER_IPP_
+#define _DDSROUTER_EVENT_IMPL_SIGNALHANDLER_IPP_
 
 #include <algorithm>
 #include <csignal>
 
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/user_interface/SignalHandler.hpp>
+#include <ddsrouter/event/SignalHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 template <int SigNum>
 std::vector<SignalHandler<SigNum>*> SignalHandler<SigNum>::active_handlers_;
@@ -149,8 +149,8 @@ void SignalHandler<SigNum>::unset_signal_handler_() noexcept
     signal(SigNum, SIG_DFL);
 }
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_USERINTERFACE_IMPL_SIGNALHANDLER_IPP_ */
+#endif /* _DDSROUTER_EVENT_IMPL_SIGNALHANDLER_IPP_ */

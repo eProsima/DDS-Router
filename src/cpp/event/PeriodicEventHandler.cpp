@@ -18,12 +18,12 @@
  */
 
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/user_interface/PeriodicEventHandler.hpp>
+#include <ddsrouter/event/PeriodicEventHandler.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 PeriodicEventHandler::PeriodicEventHandler(
         Duration_ms period_time)
@@ -83,6 +83,6 @@ void PeriodicEventHandler::stop_period_thread_() noexcept
     }
 }
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

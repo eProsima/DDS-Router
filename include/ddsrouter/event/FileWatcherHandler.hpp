@@ -16,19 +16,19 @@
  * @file FileWatcherHandler.hpp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_FILEWATCHERHANDLER_HPP_
-#define _DDSROUTER_USERINTERFACE_FILEWATCHERHANDLER_HPP_
+#ifndef _DDSROUTER_EVENT_FILEWATCHERHANDLER_HPP_
+#define _DDSROUTER_EVENT_FILEWATCHERHANDLER_HPP_
 
 #include <functional>
 #include <string>
 
 #include <FileWatch.hpp>
 
-#include <ddsrouter/user_interface/EventHandler.hpp>
+#include <ddsrouter/event/EventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace ui {
+namespace event {
 
 /**
  * It implements the functionality to watch over a specific file and raise a callback
@@ -93,8 +93,8 @@ protected:
     std::unique_ptr<filewatch::FileWatch<std::string>> file_watch_handler_;
 };
 
-} /* namespace ui */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_USERINTERFACE_FILEWATCHERHANDLER_HPP_ */
+#endif /* _DDSROUTER_EVENT_FILEWATCHERHANDLER_HPP_ */
