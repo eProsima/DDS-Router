@@ -50,3 +50,11 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - ``OFF`` |br|
           ``ON``
         - ``OFF``
+    *   - :class:`LOG_INFO`
+        - Active *DDS Router* execution logs. It is |br|
+          set to ``ON`` if :class:`BUILD_TESTS_DOCUMENTATION` is set |br|
+          to ``ON``.
+        - ``OFF`` |br|
+          ``ON``
+        - ``ON`` if ``Debug`` |br|
+          ``OFF`` otherwise
