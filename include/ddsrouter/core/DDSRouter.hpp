@@ -72,15 +72,13 @@ public:
     /**
      * @brief Reload the allowed topic configuration
      *
-     * @warning Unsupported
-     * @todo Add noexcept when method ready
-     *
      * @param [in] configuration : new configuration
      *
      * @return \c RETCODE_OK if configuration has been updated correctly
      * @return \c RETCODE_NO_DATA if new configuration has not changed
-     * @return \c RETCODE_BAD_PARAMETER if configuration is not well-formed
      * @return \c RETCODE_ERROR if any other error has occurred
+     *
+     * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
     ReturnCode reload_configuration(
             const Configuration& configuration);
