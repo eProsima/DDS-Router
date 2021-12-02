@@ -42,7 +42,9 @@ public:
     /**
      * @brief Construct a new Periodic Event Handler
      *
-     * @param period_time : period time in milliseconds for Event to occur.
+     * @param period_time : period time in milliseconds for Event to occur. Must be greater than 0.
+     *
+     * @throw \c InitializationException in case \c period_time is lower than minimum time period (1ms).
      */
     PeriodicEventHandler(
             Duration_ms period_time);
@@ -51,7 +53,9 @@ public:
      * @brief Construct a new Periodic Event Handler with specific callback
      *
      * @param callback : callback to call when period time comes
-     * @param period_time : period time in milliseconds for Event to occur.
+     * @param period_time : period time in milliseconds for Event to occur. Must be greater than 0.
+     *
+     * @throw \c InitializationException in case \c period_time is lower than minimum time period (1ms).
      */
     PeriodicEventHandler(
             std::function<void()> callback,
