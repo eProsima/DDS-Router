@@ -72,6 +72,7 @@ find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 
 # include thirdparty header-only projects
+include_directories(thirdparty/filewatch)
 include_directories(thirdparty/optionparser)
 
 # include external required packages

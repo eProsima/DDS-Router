@@ -13,41 +13,36 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationHandlerFile.hpp
+ * @file Timestamp.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
-#define _DDSROUTER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_
+#ifndef _DATABROKER_TYPES_TIMESTAMP_HPP_
+#define _DATABROKER_TYPES_TIMESTAMP_HPP_
 
-#include <string>
-
-#include <ddsrouter/configuration/handler/IConfigurationHandler.hpp>
+#include <chrono>
 
 namespace eprosima {
 namespace ddsrouter {
 
+//! Type of Duration in milliseconds
+using Duration_ms = uint32_t;
+
 /**
- * TODO
+ * Type used to represent time points
  */
-class ConfigurationHandlerFile : IConfigurationHandler
+using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
+
+/**
+ * @brief Now time
+ *
+ * @return Timestamp refering to the moment it is called
+ */
+inline Timestamp now() noexcept
 {
-public:
-
-    ConfigurationHandlerFile(
-            std::string file_name);
-
-    ReturnCode load() override;
-
-    const RawConfiguration& get_raw() const override;
-
-    ReturnCode reload() override;
-
-protected:
-
-    std::string file_name_;
-};
+    return std::chrono::system_clock::now();
+}
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_CONFIGURATIONHANDLERFILE_HPP_ */
+#endif /* _DATABROKER_TYPES_TIMESTAMP_HPP_ */
