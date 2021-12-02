@@ -42,13 +42,14 @@ SignalHandler<SigNum>::SignalHandler() noexcept
         [](int signum)
         {
             logInfo(DDSROUTER_SIGNALHANDLER,
-                "Received signal " << signum << " in specific handler .");
+            "Received signal " << signum << " in specific handler .");
         })
 {
 }
 
 template <int SigNum>
-SignalHandler<SigNum>::SignalHandler(std::function<void(int)> callback) noexcept
+SignalHandler<SigNum>::SignalHandler(
+        std::function<void(int)> callback) noexcept
     : EventHandler<int>(callback)
 {
     add_to_active_handlers_();
@@ -78,7 +79,7 @@ void SignalHandler<SigNum>::add_to_active_handlers_() noexcept
     std::lock_guard<std::mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
-        "Add signal handler to signal " << SigNum << ".");
+            "Add signal handler to signal " << SigNum << ".");
 
     active_handlers_.push_back(this);
 
@@ -95,7 +96,7 @@ void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
     std::lock_guard<std::mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
-        "Erase signal handler from signal " << SigNum << ".");
+            "Erase signal handler from signal " << SigNum << ".");
 
     std::remove(
         active_handlers_.begin(),
@@ -110,12 +111,13 @@ void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::signal_handler_routine_(int signum) noexcept
+void SignalHandler<SigNum>::signal_handler_routine_(
+        int signum) noexcept
 {
     std::lock_guard<std::mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
-        "Received signal " << signum << ".");
+            "Received signal " << signum << ".");
 
     if (signum != SigNum)
     {
@@ -135,7 +137,7 @@ template <int SigNum>
 void SignalHandler<SigNum>::set_signal_handler_() noexcept
 {
     logInfo(DDSROUTER_SIGNALHANDLER,
-        "Set signal handler for signal " << SigNum << ".");
+            "Set signal handler for signal " << SigNum << ".");
     signal(SigNum, signal_handler_routine_);
 }
 
@@ -143,7 +145,7 @@ template <int SigNum>
 void SignalHandler<SigNum>::unset_signal_handler_() noexcept
 {
     logInfo(DDSROUTER_SIGNALHANDLER,
-        "Unset signal handler for signal " << SigNum << ".");
+            "Unset signal handler for signal " << SigNum << ".");
     signal(SigNum, SIG_DFL);
 }
 

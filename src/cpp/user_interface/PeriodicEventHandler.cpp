@@ -72,7 +72,7 @@ void PeriodicEventHandler::period_thread_routine_() noexcept
 void PeriodicEventHandler::start_period_thread_() noexcept
 {
     period_thread_ = std::thread(
-            &PeriodicEventHandler::period_thread_routine_, this);
+        &PeriodicEventHandler::period_thread_routine_, this);
 }
 
 void PeriodicEventHandler::stop_period_thread_() noexcept

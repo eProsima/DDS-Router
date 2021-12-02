@@ -40,7 +40,7 @@ namespace ui {
  *
  * It is a template regarding the arguments that the Event Handler needs in its callback.
  */
-template <typename... Args>
+template <typename ... Args>
 class EventHandler
 {
 public:
@@ -57,7 +57,8 @@ public:
      *
      * @param callback : function that will be called when the event raises.
      */
-    EventHandler(std::function<void(Args...)> callback);
+    EventHandler(
+            std::function<void(Args...)> callback);
 
     /**
      * @brief Set the callback
@@ -89,10 +90,12 @@ public:
      *
      * @param n : number of events at which this thread will awake
      */
-    void wait_for_event(uint32_t n = 1) const noexcept;
+    void wait_for_event(
+            uint32_t n = 1) const noexcept;
 
     //! Simulate as if the event had occurred
-    void simulate_event_occurred(Args... args) noexcept;
+    void simulate_event_occurred(
+            Args... args) noexcept;
 
 protected:
 
@@ -103,7 +106,8 @@ protected:
      *
      * @param arg : argument of the callback to call
      */
-    void event_occurred_(Args... args) noexcept;
+    void event_occurred_(
+            Args... args) noexcept;
 
     /**
      * Protected method to overwrite in child classes if specific functionality is required

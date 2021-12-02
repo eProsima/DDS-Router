@@ -74,7 +74,8 @@ public:
      * @note Adds \c this to a static list of active \c SignalHandlers .
      * If it is the first one, set the static signal handler function.
      */
-    SignalHandler(std::function<void(int)> callback) noexcept;
+    SignalHandler(
+            std::function<void(int)> callback) noexcept;
 
     /**
      * @brief Destroy Signal Handler object
@@ -105,7 +106,8 @@ protected:
      *
      * @param signum : signal value (it must be equal to \c SigNum )
      */
-    static void signal_handler_routine_(int signum) noexcept;
+    static void signal_handler_routine_(
+            int signum) noexcept;
 
     //! Set for while process the signal handler routine.
     static void set_signal_handler_() noexcept;

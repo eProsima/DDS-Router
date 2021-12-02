@@ -48,7 +48,7 @@ public:
      * @param file_path : path for the file to watch
      */
     FileWatcherHandler(
-        std::string file_path);
+            std::string file_path);
 
 
     /**
@@ -58,8 +58,8 @@ public:
      * @param callback : function that will be called when the event raises.
      */
     FileWatcherHandler(
-        std::function<void(std::string)> callback,
-        std::string file_path);
+            std::function<void(std::string)> callback,
+            std::string file_path);
 
     /**
      * @brief Destroy the File Watcher Handler object

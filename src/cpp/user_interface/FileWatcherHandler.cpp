@@ -72,7 +72,7 @@ void FileWatcherHandler::start_filewatcher_()
     catch (const std::exception& e)
     {
         InitializationException(utils::Formatter() <<
-            "Error creating file watcher: " << e.what());
+                "Error creating file watcher: " << e.what());
     }
 
     logInfo(DDSROUTER_FILEWATCHER, "Watching file: " << file_path_);

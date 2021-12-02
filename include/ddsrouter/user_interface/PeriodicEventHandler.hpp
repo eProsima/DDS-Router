@@ -45,7 +45,7 @@ public:
      * @param period_time : period time in milliseconds for Event to occur.
      */
     PeriodicEventHandler(
-        Duration_ms period_time);
+            Duration_ms period_time);
 
     /**
      * @brief Construct a new Periodic Event Handler with specific callback
@@ -54,8 +54,8 @@ public:
      * @param period_time : period time in milliseconds for Event to occur.
      */
     PeriodicEventHandler(
-        std::function<void()> callback,
-        Duration_ms period_time);
+            std::function<void()> callback,
+            Duration_ms period_time);
 
     ~PeriodicEventHandler();
 
