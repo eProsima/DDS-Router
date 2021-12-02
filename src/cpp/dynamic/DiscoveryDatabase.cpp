@@ -120,7 +120,8 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
     {
         throw InconsistencyException(
                   utils::Formatter() <<
-                      "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase << " from database. Endpoint entry not found.");
+                      "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase <<
+                      " from database. Endpoint entry not found.");
     }
     else
     {
@@ -138,7 +139,8 @@ Endpoint DiscoveryDatabase::get_endpoint(
     {
         throw InconsistencyException(
                   utils::Formatter() <<
-                      "Error retrieving Endpoint with GUID " << endpoint_guid << " from database. Endpoint entry not found.");
+                      "Error retrieving Endpoint with GUID " << endpoint_guid <<
+                      " from database. Endpoint entry not found.");
     }
 
     return it->second;

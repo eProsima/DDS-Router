@@ -33,7 +33,8 @@ namespace test {
  * @todo Make truly random using \c seed as such
  *
  */
-Guid random_guid(uint16_t seed = 1);
+Guid random_guid(
+        uint16_t seed = 1);
 
 } /* namespace test */
 } /* namespace ddsrouter */
