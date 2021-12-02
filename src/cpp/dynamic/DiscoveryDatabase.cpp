@@ -110,7 +110,7 @@ bool DiscoveryDatabase::update_endpoint(
 }
 
 ReturnCode DiscoveryDatabase::erase_endpoint(
-        const Guid& guid_of_endpoint_to_erase) noexcept
+        const Guid& guid_of_endpoint_to_erase)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -118,7 +118,9 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
 
     if (erased == 0)
     {
-        return ReturnCode::RETCODE_NO_DATA;
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase << " from database. Endpoint entry not found.");
     }
     else
     {
@@ -127,15 +129,16 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
-        const Guid& endpoint_guid) const noexcept
+        const Guid& endpoint_guid) const
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
 
     auto it = entities_.find(endpoint_guid);
     if (it == entities_.end())
     {
-        // TODO: Add log warning
-        return Endpoint();
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error retrieving Endpoint with GUID " << endpoint_guid << " from database. Endpoint entry not found.");
     }
 
     return it->second;

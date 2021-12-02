@@ -25,7 +25,13 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief Exception thrown when there is an attempt to modify a data structure that would result in undefined behaviour
+ * @brief Exception thrown when data inconsistency is detected.
+ * Some examples would be:
+ * 1. Add an element to a database that already contains this (active) element.
+ * 2. Update an element in a database that does not contain this element.
+ * 3. Delete an element from a database that does not contain this element.
+ * 4. Delete an element whose subelements have not been correctly deleted.
+ * etc.
  */
 class InconsistencyException : public Exception
 {

@@ -28,15 +28,16 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
     )
 
 set(TEST_LIST
-    add_endpoint
+    topic_exists
     endpoint_exists
+    add_endpoint
+    update_endpoint
     erase_endpoint
     get_endpoint
-    topic_exists
-    update_endpoint
     )
 
 set(TEST_EXTRA_LIBRARIES
