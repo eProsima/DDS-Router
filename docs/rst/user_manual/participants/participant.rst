@@ -20,18 +20,17 @@ the core of the router.
 Participant
 ===========
 
-:term:`Participant` is an abstraction over the :term:`DomainParticipant`.
-This entity manages the discovery over a specific network or interface.
-Each :term:`Participant` is uniquely identified by a :term:`Participant Id` inside |ddsrouter| execution.
-Each :term:`Participant` has a specific :term:`Participant Type` that specifies the internal general functionality of
-the :term:`Participant`.
+A :term:`Participant` is an abstraction over the DDS :term:`DomainParticipant`.
+This entity manages the dynamic discovery of DDS entities on a specific network or interface.
+Each :term:`Participant` is uniquely identified by a :term:`Participant Id` in a |ddsrouter| execution and has a
+predefined :term:`Participant Type` that specifies the internal general functionality of the :term:`Participant`.
 
 .. _user_manual_participant_participant_id:
 
 Participant Id
 --------------
 
-It is an alphanumeric string that uniquely identifies a :term:`Participant` inside a |ddsrouter| execution.
+It is an alphanumeric string that uniquely identifies a :term:`Participant` in a |ddsrouter| execution.
 
 .. _user_manual_participant_participant_type:
 
@@ -39,13 +38,13 @@ Participant Type
 ----------------
 
 It specifies the kind of the :term:`Participant`.
-There exist several classes implemented for different :term:`Participant`, that will specify in general
-terms how the :term:`Participant` behaves.
+There are several Participant types already defined, which will specify in general terms how the
+:term:`Participant` behaves.
 
 Participant creation
 ====================
 
-Each :term:`Participant` has a unique :term:`Participant Id` that could not be repeated in a |ddsrouter| execution.
+Each :term:`Participant` has a unique :term:`Participant Id` that can not be repeated in a |ddsrouter| execution.
 This id is the name of the tag that contains the :term:`Participant` configuration.
 
 .. note:
@@ -53,15 +52,15 @@ This id is the name of the tag that contains the :term:`Participant` configurati
     If the id is repeated, the yaml will be bad formed and the |ddsrouter| execution will fail when configured.
 
 Each :term:`Participant Type` is associated with one or several names or aliases that represent it.
-In order to create a :term:`Participant` of a specific type, use `type` tag in yaml, or set the :term:`Participant Id`
-as the alias of the type.
+In order to use a :term:`Participant` of a specific type, use `type` tag in the yaml configuration file, or set the
+:term:`Participant Id` as the alias of the type.
 If the type is not any of the valid aliases, the :term:`Participant` will not be created and the
 execution will fail.
 
-There could be as many :term:`Participants<Participant>` as required, and types could be repeated,
+There could be as many :term:`Participants<Participant>` as required, and their types could be repeated,
 but all ids must be unique.
 
-These are examples of :term:`Participant` configurations:
+Below are some examples of how to configure a :term:`Participant`:
 
 .. code-block:: yaml
 
@@ -77,7 +76,7 @@ These are examples of :term:`Participant` configurations:
 Participant types
 =================
 
-These are the different :term:`Participant Types<Participant Type>` available.
+Below is the list with all the available Participant Types.
 
 .. list-table::
     :header-rows: 1
@@ -89,7 +88,7 @@ These are the different :term:`Participant Types<Participant Type>` available.
     *   - :ref:`user_manual_participants_echo`
         - ``echo``
         -
-        - Print in `stdout` every data received
+        - Print in `stdout` every data received.
 
 ..
     This toctree is needed so participants files are linked from somewhere. It is hidden so it is not be visible.

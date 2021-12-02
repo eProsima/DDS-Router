@@ -2,12 +2,12 @@
 
 .. _user_manual_participants_echo:
 
-###########################
-DDS Router Echo Participant
-###########################
+################
+Echo Participant
+################
 
 This :term:`Participant` prints in ``stdout`` every data that is received by the |ddsrouter|.
-The result logs contain the echo :term:`Participant Id`, the source *Endpoint Guid* that has originally generated
+The resulted logs contain the echo :term:`Participant Id`, the source *Endpoint Guid* that has originally generated
 the message, the *Topic* where this message has been received, and the :term:`Payload` (in hexadecimal format) received.
 Notice that this :term:`Payload` is the same that a standard *DDS DataReader* will receive if it is connected to one
 of the Participants of the |ddsrouter|.
@@ -16,8 +16,8 @@ of the Participants of the |ddsrouter|.
 
     Echo Participant: <participant_id> has received from Endpoint: <endpoint_guid> in topic: <endpoint_topic> the following payload: <payload>
 
-This is an example of message received by |ddsrouter| in a Participant connected to a ROS2 ``talker``
-and write by an **Echo Participant**:
+This is an example of a message received by a |ddsrouter| in a Participant connected to a ROS2 ``talker``
+and written by an **Echo Participant**:
 
 .. code-block:: bash
 
