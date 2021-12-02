@@ -25,7 +25,6 @@
 #include <ddsrouter/types/topic/RealTopic.hpp>
 
 using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::test;
 
 /**
  * Test \c DiscoveryDatabase \c topic_exists method
@@ -37,8 +36,8 @@ using namespace eprosima::ddsrouter::test;
 TEST(DiscoveryDatabaseTest, topic_exists)
 {
     DiscoveryDatabase discovery_database;
-    Guid guid_1 = random_guid(1);
-    Guid guid_2 = random_guid(2);
+    Guid guid_1 = test::random_guid(1);
+    Guid guid_2 = test::random_guid(2);
     QoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint_1(EndpointKind::READER, guid_1, qos, topic);
@@ -91,10 +90,10 @@ TEST(DiscoveryDatabaseTest, add_endpoint)
     QoS qos;
     RealTopic topic("original", "original");
     // Create active endpoint
-    Guid active_guid = random_guid(1);
+    Guid active_guid = test::random_guid(1);
     Endpoint active_endpoint(EndpointKind::READER, active_guid, qos, topic);
     // Create inactive endpoint
-    Guid inactive_guid = random_guid(2);
+    Guid inactive_guid = test::random_guid(2);
     Endpoint inactive_endpoint(EndpointKind::READER, inactive_guid, qos, topic);
     inactive_endpoint.active(false);
 
@@ -127,7 +126,7 @@ TEST(DiscoveryDatabaseTest, add_endpoint)
 TEST(DiscoveryDatabaseTest, update_endpoint)
 {
     DiscoveryDatabase discovery_database;
-    Guid guid = random_guid(1);
+    Guid guid = test::random_guid(1);
     QoS qos;
     RealTopic topic("original", "original");
     Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
@@ -159,7 +158,7 @@ TEST(DiscoveryDatabaseTest, update_endpoint)
 TEST(DiscoveryDatabaseTest, erase_endpoint)
 {
     DiscoveryDatabase discovery_database;
-    Guid guid = random_guid(1);
+    Guid guid = test::random_guid(1);
     QoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
@@ -186,7 +185,7 @@ TEST(DiscoveryDatabaseTest, erase_endpoint)
 TEST(DiscoveryDatabaseTest, get_endpoint)
 {
     DiscoveryDatabase discovery_database;
-    Guid guid = random_guid(1);
+    Guid guid = test::random_guid(1);
     QoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint(EndpointKind::READER, guid, qos, topic);

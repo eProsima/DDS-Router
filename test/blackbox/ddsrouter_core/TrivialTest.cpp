@@ -26,7 +26,6 @@
 #include <ddsrouter/types/utils.hpp>
 
 using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::test;
 
 std::vector<PayloadUnit> random_payload(
         uint16_t seed = 1)
@@ -89,7 +88,7 @@ TEST(TrivialTest, trivial_communication)
     DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("participant_1"));
     DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("participant_2"));
     RealTopic topic("trivial_topic", "trivial_type");
-    Guid guid = random_guid();
+    Guid guid = test::random_guid();
     std::vector<PayloadUnit> payload = random_payload(3);
 
     DummyDataReceived data;
