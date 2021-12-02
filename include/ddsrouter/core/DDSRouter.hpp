@@ -72,9 +72,6 @@ public:
     /**
      * @brief Reload the allowed topic configuration
      *
-     * @warning Unsupported
-     * @todo Add noexcept when method ready
-     *
      * @param [in] configuration : new configuration
      *
      * @return \c RETCODE_OK if configuration has been updated correctly

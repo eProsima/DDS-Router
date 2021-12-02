@@ -86,6 +86,8 @@ DDSRouter::~DDSRouter()
 ReturnCode DDSRouter::reload_configuration(
         const Configuration& new_configuration)
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     logDebug(DDSROUTER, "Reloading DDS Router configuration...");
 
     // Load new configuration and check it is okey
