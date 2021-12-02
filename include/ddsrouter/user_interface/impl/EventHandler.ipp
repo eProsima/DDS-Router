@@ -16,8 +16,8 @@
  * @file EventHandler.ipp
  */
 
-#ifndef _DDSROUTER_USERINTERFACE_IMPL_HANDLER_IPP_
-#define _DDSROUTER_USERINTERFACE_IMPL_HANDLER_IPP_
+#ifndef _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_
+#define _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_
 
 #include <functional>
 
@@ -81,7 +81,7 @@ void EventHandler<Args...>::wait_for_event(uint32_t n /*= 1*/) const noexcept
 }
 
 template <typename... Args>
-void EventHandler<Args...>::force_callback(Args... args) noexcept
+void EventHandler<Args...>::simulate_event_occurred(Args... args) noexcept
 {
     event_occurred_(args...);
 }
@@ -127,4 +127,4 @@ void EventHandler<Args...>::callback_unset_() noexcept
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_USERINTERFACE_IMPL_HANDLER_IPP_ */
+#endif /* _DDSROUTER_USERINTERFACE_IMPL_EVENTHANDLER_IPP_ */

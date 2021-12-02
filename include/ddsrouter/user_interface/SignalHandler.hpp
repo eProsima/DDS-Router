@@ -20,8 +20,8 @@
 #define _DDSROUTER_USERINTERFACE_SIGNALHANDLER_HPP_
 
 #include <csignal>
-#include <string>
 #include <functional>
+#include <string>
 
 #include <ddsrouter/user_interface/EventHandler.hpp>
 
@@ -39,9 +39,9 @@ enum Signals
  * It raises a callback each time the signal specified by \c SigNum is received.
  *
  * This class is special because signals must be handled statically. Thus it stores every object
- * created in a static array, and every signal it arrives it call the callback for each object
+ * created in a static array, and for every signal that arrives it calls the callback of each object
  * in this array.
- * It could be several Handlers for the same signal, and all the callbacks will be called when
+ * There could be several Handlers for the same signal, and all the callbacks will be called when
  * the signal arrives.
  *
  * The template \c SigNum references the signal that the object will handle following the
@@ -57,9 +57,10 @@ public:
     /**
      * @brief Default constructor
      *
-     * It is initialized with a callback that only add a Log that the signals has arrived.
+     * It is initialized with a callback that only prints a Log message when the signal has arrived.
      *
-     * This event will be used mostly for wait, so the default callback is already set.
+     * In this class, handled events will be used mostly for wait interruption, so a default callback is set.
+     * This default callback only logs that a signal has been received.
      *
      * @note Adds \c this to a static list of active \c SignalHandlers .
      */

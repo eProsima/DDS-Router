@@ -40,22 +40,22 @@ class PeriodicEventHandler : public EventHandler<>
 public:
 
     /**
-     * @brief Construct a new Event Handler
+     * @brief Construct a new Periodic Event Handler
      *
-     * @param period_time : period time in miliseconds for Event to occur.
+     * @param period_time : period time in milliseconds for Event to occur.
      */
     PeriodicEventHandler(
-        Duration_ms period_time) noexcept;
+        Duration_ms period_time);
 
     /**
-     * @brief Construct a new Event Handler with specific callback
+     * @brief Construct a new Periodic Event Handler with specific callback
      *
      * @param callback : callback to call when period time comes
-     * @param period_time : period time in miliseconds for Event to occur.
+     * @param period_time : period time in milliseconds for Event to occur.
      */
     PeriodicEventHandler(
         std::function<void()> callback,
-        Duration_ms period_time) noexcept;
+        Duration_ms period_time);
 
     ~PeriodicEventHandler();
 
@@ -77,13 +77,13 @@ protected:
     void start_period_thread_() noexcept;
 
     /**
-     * @brief Stop period time and detached thread
+     * @brief Stop period time and detach thread
      *
-     * Only called from constructor
+     * Only called from destructor
      */
     void stop_period_thread_() noexcept;
 
-    //! Period time in miliseconds
+    //! Period time in milliseconds
     Duration_ms period_time_;
 
     //! Period thread

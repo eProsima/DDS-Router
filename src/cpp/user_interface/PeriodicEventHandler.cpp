@@ -26,19 +26,31 @@ namespace ddsrouter {
 namespace ui {
 
 PeriodicEventHandler::PeriodicEventHandler(
-        Duration_ms period_time) noexcept
+        Duration_ms period_time)
     : EventHandler<>()
     , period_time_(period_time)
 {
+    // In case period time is set to 0, the object is not created
+    if (period_time <= 0)
+    {
+        throw InitializationException("Periodic Event Handler could no be created with period time 0");
+    }
+
     start_period_thread_();
 }
 
 PeriodicEventHandler::PeriodicEventHandler(
         std::function<void()> callback,
-        Duration_ms period_time /*= 0*/) noexcept
+        Duration_ms period_time)
     : EventHandler<>(callback)
     , period_time_(period_time)
 {
+    // In case period time is set to 0, the object is not created
+    if (period_time <= 0)
+    {
+        throw InitializationException("Periodic Event Handler could no be created with period time 0");
+    }
+
     start_period_thread_();
 }
 
@@ -59,11 +71,8 @@ void PeriodicEventHandler::period_thread_routine_() noexcept
 
 void PeriodicEventHandler::start_period_thread_() noexcept
 {
-    if (period_time_ > 0)
-    {
-        period_thread_ = std::thread(
-                    &PeriodicEventHandler::period_thread_routine_, this);
-    }
+    period_thread_ = std::thread(
+            &PeriodicEventHandler::period_thread_routine_, this);
 }
 
 void PeriodicEventHandler::stop_period_thread_() noexcept

@@ -97,12 +97,10 @@ void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
     logInfo(DDSROUTER_SIGNALHANDLER,
         "Erase signal handler from signal " << SigNum << ".");
 
-    active_handlers_.erase(
-        std::remove(
-            active_handlers_.begin(),
-            active_handlers_.end(),
-            this),
-        active_handlers_.end());
+    std::remove(
+        active_handlers_.begin(),
+        active_handlers_.end(),
+        this),
 
     // Last handler erased, unset signal handler
     if (active_handlers_.size() == 0)
@@ -122,11 +120,14 @@ void SignalHandler<SigNum>::signal_handler_routine_(int signum) noexcept
     if (signum != SigNum)
     {
         logError(DDSROUTER_SIGNALHANDLER, "Signal handler associated to incorrect signal,");
+        // Does not raise an exception as it is from signal thread and we dont know how that works.
+        // TODO: decide if process should end when ThisShouldNotHappen happens.
+        return;
     }
 
     for (auto it : active_handlers_)
     {
-        it->call_callback_(signum);
+        it->event_occurred_(signum);
     }
 }
 

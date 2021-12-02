@@ -17,9 +17,9 @@
  *
  */
 
+#include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/user_interface/FileWatcherHandler.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -60,7 +60,7 @@ void FileWatcherHandler::start_filewatcher_()
                 switch (change_type)
                 {
                     case filewatch::Event::modified:
-                        logInfo(DDSROUTER_FILEWATCHER, "File: " << path << " modified. Reloading.");
+                        logInfo(DDSROUTER_FILEWATCHER, "File: " << path << " modified.");
                         event_occurred_(path);
                         break;
                     default:

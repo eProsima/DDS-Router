@@ -31,7 +31,7 @@ namespace ui {
  * Consider an event every signal that a process can receive externally.
  * For example: signals, file updates, periodic alarms, etc.
  *
- * Consider a Handler a class that listen for one of these events, and at the moment of the event it raises a
+ * Consider a Handler a class that listens for one of these events, and at the moment of the event it raises a
  * previously set callback.
  *
  * This class implements the main methods for every Event Handler.
@@ -48,7 +48,7 @@ public:
     /**
      * @brief Default constructor
      *
-     * It is initiallized as if it wouold not have a callback
+     * It is initialized as if it would have no callback
      */
     EventHandler();
 
@@ -62,11 +62,11 @@ public:
     /**
      * @brief Set the callback
      *
-     * If callback is already set, it overwriter it.
+     * If callback is already set, it overwrites it.
      * If callback is not set yet, it uses this callback in advance.
      *
      * It calls the internal method \c callback_set_ once the callback is set so
-     * inerit classes can add functionality when a callback is set.
+     * child classes can add functionality when a callback is set.
      *
      * @param callback : new callback for this Event
      */
@@ -74,10 +74,10 @@ public:
             std::function<void(Args...)> callback) noexcept;
 
     /**
-     * @brief Unset the callback and set this object as if it has no callback
+     * @brief Unset the callback and set this object as if it had no callback
      *
-     * It calls the internal method \c callback_unset_ once the callback is set so
-     * inerit classes can add functionality when a callback is unset.
+     * It calls the internal method \c callback_unset_ once the callback is unset so
+     * child classes can add functionality when a callback is unset.
      */
     void unset_callback() noexcept;
 
@@ -91,8 +91,8 @@ public:
      */
     void wait_for_event(uint32_t n = 1) const noexcept;
 
-    //!Simulate as the event has occurred and call \c event_occurred_
-    void force_callback(Args... args) noexcept;
+    //! Simulate as if the event had occurred
+    void simulate_event_occurred(Args... args) noexcept;
 
 protected:
 
@@ -106,18 +106,18 @@ protected:
     void event_occurred_(Args... args) noexcept;
 
     /**
-     * Protected method to overwrite in inherit classes if specific functionality is required
+     * Protected method to overwrite in child classes if specific functionality is required
      * when a new callback is set.
      *
-     * If it is not overwrite, it does nothing.
+     * If it is not overwritten, it does nothing.
      */
     virtual void callback_set_() noexcept;
 
     /**
-     * Protected method to overwrite in inherit classes if specific functionality is required
+     * Protected method to overwrite in child classes if specific functionality is required
      * when a new callback is unset.
      *
-     * If it is not overwrite, it does nothing.
+     * If it is not overwritten, it does nothing.
      */
     virtual void callback_unset_() noexcept;
 
@@ -134,7 +134,7 @@ protected:
      * @brief Default callback. It shows a warning that callback is not set
      *
      * @note This callback should never be called as the callback is not called
-     * unless \c is_callback_set_ is true. However, is useful for unset callback.
+     * unless \c is_callback_set_ is true. However, it is useful for unset callback.
      */
     static const std::function<void(Args...)> DEFAULT_CALLBACK_;
 
