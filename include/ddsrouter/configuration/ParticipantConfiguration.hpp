@@ -35,9 +35,9 @@ class ParticipantConfiguration
 public:
 
     /**
-     * @brief Construct an invalid configuration
+     * @brief Construct a new configuration
      *
-     * The type of this configuration will be invalid and the yaml empty
+     * An empty configuration is created, and the type will be set according to \c id
      *
      * @param [in] id of the participant that will be created with this configuration
      */
@@ -45,7 +45,7 @@ public:
             ParticipantId id) noexcept;
 
     /**
-     * @brief Construct a new configuration
+     * @brief Construct a new configuration from a \c RawConfiguration
      *
      * Yaml configuration must be a map or empty.
      * The type is set in construction. If the type is not valid, it will cause an exception.

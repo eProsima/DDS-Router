@@ -17,7 +17,6 @@
 
 #include <ddsrouter/communication/PayloadPool.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
@@ -26,12 +25,15 @@
 #include <ddsrouter/types/participant/ParticipantType.hpp>
 
 using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::rtps;
 
 namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
+/*
+ * Generate all required objects for participant creation,
+ * and then create a participant from an id string
+ */
 std::shared_ptr<IParticipant> create_participant(
         std::string id_str)
 {
@@ -39,18 +41,9 @@ std::shared_ptr<IParticipant> create_participant(
     std::shared_ptr<PayloadPool> payload_pool = std::make_shared<PayloadPool>();
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
     ParticipantId id(id_str);
-    ParticipantConfiguration* participant_configuration;
-    if (id_str == "local")
-    {
-        ParticipantConfiguration parent_participant_configuration(id);
-        participant_configuration = new SimpleParticipantConfiguration(parent_participant_configuration);
-    }
-    else
-    {
-        participant_configuration = new ParticipantConfiguration(id);
-    }
+    ParticipantConfiguration participant_configuration = ParticipantConfiguration(id);
 
-    return participant_factory.create_participant(*participant_configuration, payload_pool, discovery_database);
+    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database);
 }
 
 } /* namespace test */
@@ -118,6 +111,8 @@ TEST(ParticipantFactoryTest, create_invalid_participant)
 
 /**
  * Test \c ParticipantFactory \c remove_participant method
+ * TODO: Test that actions performed in participant creation
+ * are correctly undone by \c remove_participant
  */
 TEST(ParticipantFactoryTest, remove_participant)
 {
