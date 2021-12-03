@@ -7,9 +7,10 @@ Echo Participant
 ################
 
 This :term:`Participant` prints in ``stdout`` every data that is received by the |ddsrouter|.
-The resulted logs contain the echo :term:`Participant Id`, the source *Endpoint Guid* that has originally generated
-the message, the *Topic* where this message has been received, and the :term:`Payload` (in hexadecimal format) received.
-Notice that this :term:`Payload` is the same that a standard *DDS DataReader* will receive if it is connected to one
+The resulted logs contain the echo :term:`Participant Id`, the source :term:`Endpoint` :term:`Guid` that has
+originally generated the message, the :term:`Topic` where this message has been received,
+and the :term:`Payload` (in hexadecimal format) received.
+Notice that this Payload is the same that a standard DDS :term:`DataReader` will receive if it is connected to one
 of the Participants of the |ddsrouter|.
 
 .. code-block:: bash
