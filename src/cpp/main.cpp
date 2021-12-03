@@ -44,11 +44,11 @@ int main(
     eprosima::ddsrouter::Duration_ms reload_time = 0;
 
     // Debug option active
-    bool active_debug = false;
+    bool activate_debug = false;
 
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-        ui::parse_arguments(argc, argv, file_path, reload_time, active_debug);
+        ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
     if (arg_parse_result == ui::ProcessReturnCode::HELP_ARGUMENT)
     {
@@ -59,8 +59,8 @@ int main(
         return arg_parse_result;
     }
 
-    // Active Debug
-    if (active_debug)
+    // Activate Debug
+    if (activate_debug)
     {
         // Activate log
         Log::SetVerbosity(Log::Kind::Info);

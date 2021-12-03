@@ -20,13 +20,14 @@
 #include <vector>
 
 #if defined(_WIN32)
-#include <stdlib.h>
+// #include <stdlib.h>
+#define access _access
 #else
 #include <unistd.h>
 #endif // if defined(_WIN32)
 
-#include <ddsrouter/user_interface/arguments_configuration.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/user_interface/arguments_configuration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -74,7 +75,7 @@ const option::Descriptor usage[] = {
         Arg::Numeric,
         "  -r \t--reload-time\t  \t" \
         "Time period in milliseconds to reload configuration file. " \
-        "This is needed when FileWatcher functionality is not available (i.e. config file is a symbolic link). " \
+        "This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). " \
         "Value 0 does not reload file. [Default: 0]."
     },
 
@@ -85,7 +86,7 @@ const option::Descriptor usage[] = {
         "debug",
         Arg::None,
         "  -d \t--debug\t  \t" \
-        "Activate debug Logs. (Be aware that some logs may require to have compiled with specific CMAKE " \
+        "Activate debug Logs. (Be aware that some logs may require specific CMAKE compilation options." \
         "compilation options)"
     },
 
@@ -270,13 +271,8 @@ option::ArgStatus Arg::Readable_File(
 {
     if (option.arg != 0)
     {
-// Windows has not unistd library, so to check if file is readable use a different method
-#if defined(_WIN32)
-        if (_access( option.arg, 04 /*read only*/ )) != -1 )
-#else
+        // Windows has not unistd library, so to check if file is readable use a _access method (definition on top)
         if (access( option.arg, R_OK ) != -1)
-#endif // if defined(_WIN32)
-
         {
             return option::ARG_OK;
         }
