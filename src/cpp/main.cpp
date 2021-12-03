@@ -18,41 +18,134 @@
  */
 
 #include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/event/FileWatcherHandler.hpp>
+#include <ddsrouter/event/PeriodicEventHandler.hpp>
+#include <ddsrouter/event/SignalHandler.hpp>
 #include <ddsrouter/types/constants.hpp>
+#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/types/ReturnCode.hpp>
+#include <ddsrouter/types/Time.hpp>
+#include <ddsrouter/user_interface/arguments_configuration.hpp>
+#include <ddsrouter/user_interface/ProcessReturnCode.hpp>
 
 using namespace eprosima::ddsrouter;
+
 
 int main(
         int argc,
         char** argv)
 {
-    // TODO: main
+    logUser(DDSROUTER_EXECUTION, "Starting DDS Router execution.");
 
-    static_cast<void>(argc);
-    static_cast<void>(argv);
+    // Configuration File path
+    std::string file_path = DEFAULT_CONFIGURATION_FILE_NAME;
 
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+    // Reload time
+    eprosima::ddsrouter::Duration_ms reload_time = 0;
 
-    // Generate configuration
-    std::string file_name = DEFAULT_CONFIGURATION_FILE_NAME;
-    RawConfiguration configuration = load_configuration_from_file(file_name);
+    // Debug option active
+    bool activate_debug = false;
 
-    // Create DDSRouter entity
-    DDSRouter router(configuration);
+    // Parse arguments
+    ui::ProcessReturnCode arg_parse_result =
+            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
-    // Start DDSRouter
-    router.start();
+    if (arg_parse_result == ui::ProcessReturnCode::HELP_ARGUMENT)
+    {
+        return ui::ProcessReturnCode::SUCCESS;
+    }
+    else if (arg_parse_result != ui::ProcessReturnCode::SUCCESS)
+    {
+        return arg_parse_result;
+    }
 
-    std::this_thread::sleep_for(std::chrono::seconds(60));
+    // Activate Debug
+    if (activate_debug)
+    {
+        // Activate log
+        Log::SetVerbosity(Log::Kind::Info);
+        Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+    }
 
-    // Stop DDS Router
-    router.stop();
+    // Encapsulating execution in block to erase all memory correctly before closing process
+    {
+        /////
+        // DDS Router Initialization
 
-    return 0;
+        // Load DDS Router Configuration
+        RawConfiguration router_configuration = load_configuration_from_file(file_path);
+
+        // Create DDS Router
+        DDSRouter router(router_configuration);
+
+        /////
+        // File Watcher Handler
+
+        // Callback will reload configuration and pass it to DDSRouter
+        std::function<void(std::string)> filewatcher_callback =
+                [&router]
+                    (std::string file_path)
+                {
+                    logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
+                    try
+                    {
+                        RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                        router.reload_configuration(router_configuration);
+                    }
+                    catch (const std::exception& e)
+                    {
+                        logWarning(DDSROUTER_EXECUTION,
+                                "Error reloading configuration file " << file_path << " with error: " << e.what());
+                    }
+                };
+
+        // Creating FileWatcher event handler
+        event::FileWatcherHandler file_watcher_handler(filewatcher_callback, file_path);
+
+        /////
+        // Periodic Handler for reload configuration in periodic time
+
+        // It must be a ptr, so the object is only created when required by a specific configuration
+        std::unique_ptr<event::PeriodicEventHandler> periodic_handler;
+
+        // If reload time is higher than 0, create a periodic event to reload configuration
+        if (reload_time > 0)
+        {
+            // Callback will reload configuration and pass it to DDSRouter
+            std::function<void()> periodic_callback =
+                    [&router, file_path]
+                        ()
+                    {
+                        logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
+                        try
+                        {
+                            RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                            router.reload_configuration(router_configuration);
+                        }
+                        catch (const std::exception& e)
+                        {
+                            logWarning(DDSROUTER_EXECUTION,
+                                    "Error reloading configuration file " << file_path << " with error: " << e.what());
+                        }
+                    };
+
+            periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
+        }
+
+        // Signal handler
+        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
+
+        // Start Router
+        router.start();
+
+        // Wait until signal arrives
+        signal_handler.wait_for_event();
+
+        // Stop Router
+        router.stop();
+    }
+
+    logUser(DDSROUTER_EXECUTION, "Finishing DDS Router execution correctly.");
+
+    return ui::ProcessReturnCode::SUCCESS;
 }

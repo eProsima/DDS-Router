@@ -98,10 +98,8 @@ void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
     logInfo(DDSROUTER_SIGNALHANDLER,
             "Erase signal handler from signal " << SigNum << ".");
 
-    std::remove(
-        active_handlers_.begin(),
-        active_handlers_.end(),
-        this),
+    auto res = std::remove(active_handlers_.begin(), active_handlers_.end(), this);
+    static_cast<void> (res); // Windows require to get this value, but it is not useful here
 
     // Last handler erased, unset signal handler
     if (active_handlers_.size() == 0)
