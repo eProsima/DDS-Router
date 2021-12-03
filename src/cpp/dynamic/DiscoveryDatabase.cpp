@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -48,20 +48,31 @@ bool DiscoveryDatabase::endpoint_exists(
     return entities_.find(guid) != entities_.end();
 }
 
-bool DiscoveryDatabase::add_or_modify_endpoint(
-        const Endpoint& new_endpoint) noexcept
+bool DiscoveryDatabase::add_endpoint(
+        const Endpoint& new_endpoint)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
     auto it = entities_.find(new_endpoint.guid());
     if (it != entities_.end())
     {
-        // Already exists, modify it
-        it->second = new_endpoint;
+        // Already exists
+        if (it->second.active())
+        {
+            throw InconsistencyException(
+                      utils::Formatter() <<
+                          "Error adding Endpoint to database. Endpoint already exists." << new_endpoint);
+        }
+        else
+        {
+            // If exists but inactive, modify entry
+            it->second = new_endpoint;
 
-        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
+            logInfo(DDSROUTER_DISCOVERY_DATABASE,
+                    "Modifying an already discovered (inactive) Endpoint " << new_endpoint << ".");
 
-        return false;
+            return true;
+        }
     }
     else
     {
@@ -74,8 +85,32 @@ bool DiscoveryDatabase::add_or_modify_endpoint(
     }
 }
 
+bool DiscoveryDatabase::update_endpoint(
+        const Endpoint& new_endpoint)
+{
+    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+
+    auto it = entities_.find(new_endpoint.guid());
+    if (it == entities_.end())
+    {
+        // Entry not found
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error updating Endpoint in database. Endpoint entry not found." << new_endpoint);
+    }
+    else
+    {
+        // Modify entry
+        it->second = new_endpoint;
+
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
+
+        return true;
+    }
+}
+
 ReturnCode DiscoveryDatabase::erase_endpoint(
-        const Guid& guid_of_endpoint_to_erase) noexcept
+        const Guid& guid_of_endpoint_to_erase)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -83,7 +118,10 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
 
     if (erased == 0)
     {
-        return ReturnCode::RETCODE_NO_DATA;
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase <<
+                      " from database. Endpoint entry not found.");
     }
     else
     {
@@ -92,15 +130,17 @@ ReturnCode DiscoveryDatabase::erase_endpoint(
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
-        const Guid& endpoint_guid) const noexcept
+        const Guid& endpoint_guid) const
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
 
     auto it = entities_.find(endpoint_guid);
     if (it == entities_.end())
     {
-        // TODO: Add log warning
-        return Endpoint();
+        throw InconsistencyException(
+                  utils::Formatter() <<
+                      "Error retrieving Endpoint with GUID " << endpoint_guid <<
+                      " from database. Endpoint entry not found.");
     }
 
     return it->second;

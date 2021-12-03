@@ -52,32 +52,44 @@ public:
             const Guid& guid) const noexcept;
 
     /**
-     * @brief Add a new endpoint or modify it inside the database in case it already exists.
+     * @brief Add a new endpoint to the database.
      *
      * @param [in] new_endpoint: new endpoint to store
-     * @return true if the endpoint has been updated, false if it has been added
+     * @return true if the endpoint has been added
+     * @throw \c InconsistencyException in case an endpoint with the same guid already exists and is active
      */
-    bool add_or_modify_endpoint(
-            const Endpoint& new_endpoint) noexcept;
+    bool add_endpoint(
+            const Endpoint& new_endpoint);
+
+    /**
+     * @brief Update an entry of the database by replacing the stored endpoint by a new one.
+     *
+     * @param [in] new_endpoint: new endpoint to store
+     * @return true if the endpoint has been updated
+     * @throw \c InconsistencyException in case there is no entry associated to this endpoint
+     */
+    bool update_endpoint(
+            const Endpoint& new_endpoint);
 
     /**
      * @brief Erase an endpoint inside the database
      *
      * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
      * @return \c RETCODE_OK if correctly erased
-     * @return \c RETCODE_NO_DATA if the endpoint was not in the database
+     * @throw \c InconsistencyException in case there is no entry associated to this guid
      */
     ReturnCode erase_endpoint(
-            const Guid& guid_of_endpoint_to_erase) noexcept;
+            const Guid& guid_of_endpoint_to_erase);
 
     /**
      * @brief Get the endpoint object with this guid
      *
      * @param [in] guid: guid to query
-     * @return Endpoint referring to this guid. In case the endpoint does not exist, return an invalid endpoint.
+     * @return Endpoint referring to this guid
+     * @throw \c InconsistencyException in case there is no entry associated to this guid
      */
     Endpoint get_endpoint(
-            const Guid& endpoint_guid) const noexcept;
+            const Guid& endpoint_guid) const;
 
     // TODO
     // some way of allowing participants to subscribe to a callback when new information arrives

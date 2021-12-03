@@ -30,6 +30,14 @@ Topic::Topic(
 {
 }
 
+Topic& Topic::operator =(
+        const Topic& other)
+{
+    this->topic_name_ = other.topic_name_;
+    this->topic_type_ = other.topic_type_;
+    return *this;
+}
+
 const std::string& Topic::topic_name() const
 {
     return topic_name_;

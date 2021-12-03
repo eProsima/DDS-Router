@@ -74,6 +74,7 @@ public:
     void active(
             bool status) noexcept;
 
+    //! Whether the endpoint referenced is valid
     bool is_valid() const noexcept;
 
     /********************
@@ -89,6 +90,10 @@ public:
     //! Copy operator
     Endpoint& operator =(
             const Endpoint& other) noexcept;
+
+    //! Equality operator (does not take \c active_ into consideration)
+    bool operator ==(
+            const Endpoint& other) const noexcept;
 
 protected:
 

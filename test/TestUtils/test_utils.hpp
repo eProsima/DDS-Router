@@ -13,28 +13,31 @@
 // limitations under the License.
 
 /**
- * @file UnsupportedException.hpp
+ * @file test_utils.hpp
  */
 
-#ifndef _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
-#define _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+#ifndef _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
+#define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 
-#include <ddsrouter/exceptions/Exception.hpp>
+#include <ddsrouter/types/endpoint/Guid.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace test {
 
 /**
- * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
+ * @brief Create a \c Guid with some of its bits determined by the input
+ *
+ * @param [in] seed : differentiating value for guid creation
+ * @return generated Guid
+ * @todo Make truly random using \c seed as such
+ *
  */
-class UnsupportedException : public Exception
-{
-    // Use parent class constructors
-    using Exception::Exception;
-};
+Guid random_guid(
+        uint16_t seed = 1);
 
-} // namespace ddsrouter
-} // namespace eprosima
+} /* namespace test */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
 
-#endif // _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
-
+#endif /* _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_ */

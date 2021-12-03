@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file UnsupportedException.hpp
+ * @file InconsistencyException.hpp
  */
 
-#ifndef _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
-#define _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+#ifndef _DDSROUTER_EXCEPTIONS_INCONSISTENCYEXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_INCONSISTENCYEXCEPTION_HPP_
 
 #include <ddsrouter/exceptions/Exception.hpp>
 
@@ -25,9 +25,15 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
+ * @brief Exception thrown when data inconsistency is detected.
+ * Some examples would be:
+ * 1. Add an element to a database that already contains this (active) element.
+ * 2. Update an element in a database that does not contain this element.
+ * 3. Delete an element from a database that does not contain this element.
+ * 4. Delete an element whose subelements have not been correctly deleted.
+ * etc.
  */
-class UnsupportedException : public Exception
+class InconsistencyException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;
@@ -36,5 +42,5 @@ class UnsupportedException : public Exception
 } // namespace ddsrouter
 } // namespace eprosima
 
-#endif // _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+#endif // _DDSROUTER_EXCEPTIONS_INCONSISTENCYEXCEPTION_HPP_
 
