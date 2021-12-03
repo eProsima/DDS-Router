@@ -21,7 +21,6 @@
 #define EPROSIMA_DDSROUTER_USERINTERFACE_ARGCONFIURATION_HPP
 
 #include <string>
-#include <unistd.h>
 
 #include <optionparser.h>
 
@@ -37,115 +36,41 @@ namespace ui {
  */
 struct Arg : public option::Arg
 {
+    //! Print generic error message
     static void print_error(
             const char* msg1,
             const option::Option& opt,
-            const char* msg2)
-    {
-        fprintf(stderr, "%s", msg1);
-        fwrite(opt.name, opt.namelen, 1, stderr);
-        fprintf(stderr, "%s", msg2);
-    }
+            const char* msg2);
 
+    //! Print error message when argument type is not known
     static option::ArgStatus Unknown(
             const option::Option& option,
-            bool msg)
-    {
-        if (msg)
-        {
-            print_error("Unknown option '", option, "'\nUse -h to see this executable possible arguments.\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
+            bool msg);
 
+    //! Check that the argument is set
     static option::ArgStatus Required(
             const option::Option& option,
-            bool msg)
-    {
-        if (option.arg != 0 && option.arg[0] != 0)
-        {
-            return option::ARG_OK;
-        }
+            bool msg);
 
-        if (msg)
-        {
-            print_error("Option '", option, "' requires an argument\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
-
+    //! Check that the argument has integer numeric value
     static option::ArgStatus Numeric(
             const option::Option& option,
-            bool msg)
-    {
-        char* endptr = 0;
-        if (option.arg != 0 && std::strtol(option.arg, &endptr, 10))
-        {
-        }
-        if (endptr != option.arg && *endptr == 0)
-        {
-            return option::ARG_OK;
-        }
+            bool msg);
 
-        if (msg)
-        {
-            print_error("Option '", option, "' requires a numeric argument\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
-
+    //! Check that the argument has float (or int) numeric value
     static option::ArgStatus Float(
             const option::Option& option,
-            bool msg)
-    {
-        char* endptr = 0;
-        if (option.arg != 0 && std::strtof(option.arg, &endptr))
-        {
-        }
-        if (endptr != option.arg && *endptr == 0)
-        {
-            return option::ARG_OK;
-        }
+            bool msg);
 
-        if (msg)
-        {
-            print_error("Option '", option, "' requires a float argument\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
-
+    //! Check that the argument is a string
     static option::ArgStatus String(
             const option::Option& option,
-            bool msg)
-    {
-        if (option.arg != 0)
-        {
-            return option::ARG_OK;
-        }
-        if (msg)
-        {
-            print_error("Option '", option, "' requires a text argument\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
+            bool msg);
 
-    static option::ArgStatus File(
+    //! Check that the argument is a redeable file with access permissions
+    static option::ArgStatus Readable_File(
             const option::Option& option,
-            bool msg)
-    {
-        if (option.arg != 0)
-        {
-            if (access( option.arg, F_OK ) != -1)
-            {
-                return option::ARG_OK;
-            }
-        }
-        if (msg)
-        {
-            print_error("Option '", option, "' requires an existing file as argument\n");
-        }
-        return option::ARG_ILLEGAL;
-    }
+            bool msg);
 };
 
 /*
@@ -160,66 +85,12 @@ enum  optionIndex
     ACTIVE_DEBUG,
 };
 
-/*
+/**
  * Usage description
+ *
+ * @note : Extern used to initialize it in source file
  */
-const option::Descriptor usage[] = {
-    {
-        optionIndex::UNKNOWN_OPT,
-        0,
-        "",
-        "",
-        Arg::None,
-        "Usage: Fast DDS Router \n" \
-        "Connect different DDS networks via DDS through LAN or WAN.\n" \
-        "It will build a bridge between the different Participant configurations set.\n" \
-        "General options:"
-    },
-
-    {
-        optionIndex::HELP,
-        0,
-        "h",
-        "help",
-        Arg::None,
-        "  -h \t--help\t  \t" \
-        "Produce this help message."
-    },
-
-    {
-        optionIndex::CONFIGURATION_FILE,
-        0,
-        "f",
-        "config-path",
-        Arg::File,
-        "  -f \t--config-path\t  \t" \
-        "Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml]."
-    },
-
-    {
-        optionIndex::RELOAD_TIME,
-        0,
-        "r",
-        "reload",
-        Arg::Numeric,
-        "  -r \t--reload\t  \t" \
-        "Time period in miliseconds to reload configuration file. " \
-        "This is needed when FileWatcher functionality is not available (config file is a symbolic link). " \
-        "Value 0 does not reload file. [Default: 0]."
-    },
-
-    {
-        optionIndex::ACTIVE_DEBUG,
-        0,
-        "d",
-        "debug",
-        Arg::None,
-        "  -d \t--debug\t  \t" \
-        "Active debug Logs. (Be aware that some logs may require to have compiled with specific CMAKE options)"
-    },
-
-    { 0, 0, 0, 0, 0, 0 }
-};
+extern const option::Descriptor usage[];
 
 ProcessReturnCode parse_arguments(
     int argc,

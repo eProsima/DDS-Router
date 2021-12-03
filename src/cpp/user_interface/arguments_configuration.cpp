@@ -19,12 +19,76 @@
 
 #include <vector>
 
+#if defined(_WIN32)
+#include  <stdlib.h>
+#else
+#include <unistd.h>
+#endif // if defined(_WIN32)
+
 #include <ddsrouter/user_interface/arguments_configuration.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace ui {
+
+const option::Descriptor usage[] = {
+    {
+        optionIndex::UNKNOWN_OPT,
+        0,
+        "",
+        "",
+        Arg::None,
+        "Usage: Fast DDS Router \n" \
+        "Connect different DDS networks via DDS through LAN or WAN.\n" \
+        "It will build a bridge between the different Participant configurations set.\n" \
+        "General options:"
+    },
+
+    {
+        optionIndex::HELP,
+        0,
+        "h",
+        "help",
+        Arg::None,
+        "  -h \t--help\t  \t" \
+        "Produce this help message."
+    },
+
+    {
+        optionIndex::CONFIGURATION_FILE,
+        0,
+        "f",
+        "config-path",
+        Arg::Readable_File,
+        "  -f \t--config-path\t  \t" \
+        "Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml]."
+    },
+
+    {
+        optionIndex::RELOAD_TIME,
+        0,
+        "r",
+        "reload",
+        Arg::Numeric,
+        "  -r \t--reload\t  \t" \
+        "Time period in miliseconds to reload configuration file. " \
+        "This is needed when FileWatcher functionality is not available (config file is a symbolic link). " \
+        "Value 0 does not reload file. [Default: 0]."
+    },
+
+    {
+        optionIndex::ACTIVE_DEBUG,
+        0,
+        "d",
+        "debug",
+        Arg::None,
+        "  -d \t--debug\t  \t" \
+        "Active debug Logs. (Be aware that some logs may require to have compiled with specific CMAKE options)"
+    },
+
+    { 0, 0, 0, 0, 0, 0 }
+};
 
 ProcessReturnCode parse_arguments(
     int argc,
@@ -104,6 +168,122 @@ ProcessReturnCode parse_arguments(
     }
 
     return ProcessReturnCode::SUCCESS;
+}
+
+void Arg::print_error(
+        const char* msg1,
+        const option::Option& opt,
+        const char* msg2)
+{
+    fprintf(stderr, "%s", msg1);
+    fwrite(opt.name, opt.namelen, 1, stderr);
+    fprintf(stderr, "%s", msg2);
+}
+
+option::ArgStatus Arg::Unknown(
+        const option::Option& option,
+        bool msg)
+{
+    if (msg)
+    {
+        print_error("Unknown option '", option, "'\nUse -h to see this executable possible arguments.\n");
+    }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::Required(
+        const option::Option& option,
+        bool msg)
+{
+    if (option.arg != 0 && option.arg[0] != 0)
+    {
+        return option::ARG_OK;
+    }
+
+    if (msg)
+    {
+        print_error("Option '", option, "' requires an argument\n");
+    }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::Numeric(
+        const option::Option& option,
+        bool msg)
+{
+    char* endptr = 0;
+    if (option.arg != 0 && std::strtol(option.arg, &endptr, 10))
+    {
+    }
+    if (endptr != option.arg && *endptr == 0)
+    {
+        return option::ARG_OK;
+    }
+
+    if (msg)
+    {
+        print_error("Option '", option, "' requires a numeric argument\n");
+    }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::Float(
+        const option::Option& option,
+        bool msg)
+{
+    char* endptr = 0;
+    if (option.arg != 0 && std::strtof(option.arg, &endptr))
+    {
+    }
+    if (endptr != option.arg && *endptr == 0)
+    {
+        return option::ARG_OK;
+    }
+
+    if (msg)
+    {
+        print_error("Option '", option, "' requires a float argument\n");
+    }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::String(
+        const option::Option& option,
+        bool msg)
+{
+    if (option.arg != 0)
+    {
+        return option::ARG_OK;
+    }
+    if (msg)
+    {
+        print_error("Option '", option, "' requires a text argument\n");
+    }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::Readable_File(
+        const option::Option& option,
+        bool msg)
+{
+    if (option.arg != 0)
+    {
+// Windows has not unistd library, so to check if file is redeable use a different method
+#if defined(_WIN32)
+        if (_access( option.arg, 04 /*read only*/ )) != -1 )
+#else
+        if (access( option.arg, R_OK ) != -1)
+#endif // if defined(_WIN32)
+
+        {
+            return option::ARG_OK;
+        }
+    }
+    if (msg)
+    {
+        print_error("Option '", option, "' requires an existing file as argument\n");
+    }
+    return option::ARG_ILLEGAL;
 }
 
 } /* namespace ui */
