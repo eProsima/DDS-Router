@@ -44,7 +44,8 @@
    :numbered: 5
    :hidden:
 
-   Participants </rst/user_manual/participants/participant>
+   Participant </rst/user_manual/participants/participant>
+   Configuration </rst/user_manual/configuration>
    /rst/user_manual/glossary
 
 

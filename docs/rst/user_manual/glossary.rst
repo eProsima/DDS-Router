@@ -60,8 +60,14 @@ DDS nomenclature
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/topic/topic.html>`__
         for further information.
 
+    GuidPrefix
+        Global Unique Identifier shared by a Participant and all its sub-entities.
+        Identifies uniquely a DDS Participant.
+
     Guid
         Global Unique Identifier.
+        It contains a GuidPrefix and an EntityId.
+        The EntityId uniquely identifies sub-entities inside a Participant.
         Identifies uniquely a DDS entity (DomainParticipant, DataWriter or DataReader).
 
     Endpoint

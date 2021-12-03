@@ -73,6 +73,8 @@ Below are some examples of how to configure a Participant:
     simple:     # New Participant with Id: 'simple' and Type: 'simple'
         extra_configuration: ...
 
+.. _user_manual_participant_participant_types:
+
 Participant types
 =================
 
