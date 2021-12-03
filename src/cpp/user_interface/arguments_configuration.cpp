@@ -20,8 +20,9 @@
 #include <vector>
 
 #if defined(_WIN32)
-// #include <stdlib.h>
-#define access _access
+#include <io.h>         // Use _access windows method
+#define access _access  // Use access method as windows _access method
+#define R_OK 04         // Use R_OK variable as Redeable for _access
 #else
 #include <unistd.h>
 #endif // if defined(_WIN32)
