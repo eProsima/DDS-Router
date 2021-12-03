@@ -97,7 +97,7 @@ public:
     GuidPrefix(
         const RawConfiguration& configuration);
 
-    //! Dump this object in \c configuration variable (at this same level).
+    //! Dump this object in \c configuration variable at \c configuration yaml base level.
     RawConfiguration dump(RawConfiguration& configuration) const; // TODO: Once implemented add noexcept
 
 protected:

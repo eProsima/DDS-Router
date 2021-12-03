@@ -51,7 +51,6 @@ public:
     DomainId (
             const DomainIdType& domain) noexcept;
 
-
     //! Return Fast DDS value for Domain ID
     DomainIdType operator ()() const noexcept;
 
@@ -65,7 +64,7 @@ public:
     DomainId (
             const RawConfiguration& configuration);
 
-    //! Dump this object in \c configuration variable (at this same level).
+    //! Dump this object in \c configuration variable at \c configuration yaml base level.
     RawConfiguration dump(RawConfiguration& configuration) const; // add noexcept when implemented
 
 protected:
