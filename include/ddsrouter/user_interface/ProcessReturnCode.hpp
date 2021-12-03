@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file arg_configuration.hpp
+ * @file ProcessReturnCode.hpp
  *
  */
 
@@ -30,7 +30,7 @@ enum ProcessReturnCode
     HELP_ARGUMENT = 1,
     INCORRECT_ARGUMENT = 10,
     REQUIRED_ARGUMENT_FAILED = 11,
-    EXECUTION_FAIL = 20,
+    EXECUTION_FAILED = 20,
 };
 
 } /* namespace ui */

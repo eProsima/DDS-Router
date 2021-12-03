@@ -13,12 +13,12 @@
 // limitations under the License.
 
 /**
- * @file arg_configuration.hpp
+ * @file arguments_configuration.hpp
  *
  */
 
-#ifndef EPROSIMA_DDSROUTER_USERINTERFACE_ARGCONFIURATION_HPP
-#define EPROSIMA_DDSROUTER_USERINTERFACE_ARGCONFIURATION_HPP
+#ifndef EPROSIMA_DDSROUTER_USERINTERFACE_ARGUMENTSCONFIURATION_HPP
+#define EPROSIMA_DDSROUTER_USERINTERFACE_ARGUMENTSCONFIURATION_HPP
 
 #include <string>
 
@@ -67,7 +67,7 @@ struct Arg : public option::Arg
             const option::Option& option,
             bool msg);
 
-    //! Check that the argument is a redeable file with access permissions
+    //! Check that the argument is a readable file and can be accessed
     static option::ArgStatus Readable_File(
             const option::Option& option,
             bool msg);
@@ -82,7 +82,7 @@ enum  optionIndex
     HELP,
     CONFIGURATION_FILE,
     RELOAD_TIME,
-    ACTIVE_DEBUG,
+    ACTIVATE_DEBUG,
 };
 
 /**
@@ -97,10 +97,10 @@ ProcessReturnCode parse_arguments(
     char** argv,
     std::string& file_path,
     eprosima::ddsrouter::Duration_ms& reload_time,
-    bool& active_debug);
+    bool& activate_debug);
 
 } /* namespace ui */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* EPROSIMA_DDSROUTER_USERINTERFACE_ARGCONFIURATION_HPP */
+#endif /* EPROSIMA_DDSROUTER_USERINTERFACE_ARGUMENTSCONFIURATION_HPP */

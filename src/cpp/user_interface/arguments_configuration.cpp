@@ -20,7 +20,7 @@
 #include <vector>
 
 #if defined(_WIN32)
-#include  <stdlib.h>
+#include <stdlib.h>
 #else
 #include <unistd.h>
 #endif // if defined(_WIN32)
@@ -41,7 +41,8 @@ const option::Descriptor usage[] = {
         Arg::None,
         "Usage: Fast DDS Router \n" \
         "Connect different DDS networks via DDS through LAN or WAN.\n" \
-        "It will build a bridge between the different Participant configurations set.\n" \
+        "It will build a communication bridge between the different " \
+        "Participants included in the provided configuration file.\n" \
         "General options:"
     },
 
@@ -52,7 +53,7 @@ const option::Descriptor usage[] = {
         "help",
         Arg::None,
         "  -h \t--help\t  \t" \
-        "Produce this help message."
+        "Print this help message."
     },
 
     {
@@ -61,7 +62,7 @@ const option::Descriptor usage[] = {
         "f",
         "config-path",
         Arg::Readable_File,
-        "  -f \t--config-path\t  \t" \
+        "  -c \t--config-path\t  \t" \
         "Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml]."
     },
 
@@ -71,20 +72,21 @@ const option::Descriptor usage[] = {
         "r",
         "reload",
         Arg::Numeric,
-        "  -r \t--reload\t  \t" \
-        "Time period in miliseconds to reload configuration file. " \
-        "This is needed when FileWatcher functionality is not available (config file is a symbolic link). " \
+        "  -r \t--reload-time\t  \t" \
+        "Time period in milliseconds to reload configuration file. " \
+        "This is needed when FileWatcher functionality is not available (i.e. config file is a symbolic link). " \
         "Value 0 does not reload file. [Default: 0]."
     },
 
     {
-        optionIndex::ACTIVE_DEBUG,
+        optionIndex::ACTIVATE_DEBUG,
         0,
         "d",
         "debug",
         Arg::None,
         "  -d \t--debug\t  \t" \
-        "Active debug Logs. (Be aware that some logs may require to have compiled with specific CMAKE options)"
+        "Activate debug Logs. (Be aware that some logs may require to have compiled with specific CMAKE " \
+        "compilation options)"
     },
 
     { 0, 0, 0, 0, 0, 0 }
@@ -95,7 +97,7 @@ ProcessReturnCode parse_arguments(
     char** argv,
     std::string& file_path,
     eprosima::ddsrouter::Duration_ms& reload_time,
-    bool& active_debug)
+    bool& activate_debug)
 {
     // Variable to pretty print usage help
     int columns;
@@ -152,8 +154,8 @@ ProcessReturnCode parse_arguments(
                     reload_time = std::stol(opt.arg);
                     break;
 
-                case optionIndex::ACTIVE_DEBUG:
-                    active_debug = true;
+                case optionIndex::ACTIVATE_DEBUG:
+                    activate_debug = true;
                     break;
 
                 default:
@@ -268,7 +270,7 @@ option::ArgStatus Arg::Readable_File(
 {
     if (option.arg != 0)
     {
-// Windows has not unistd library, so to check if file is redeable use a different method
+// Windows has not unistd library, so to check if file is readable use a different method
 #if defined(_WIN32)
         if (_access( option.arg, 04 /*read only*/ )) != -1 )
 #else
@@ -281,7 +283,7 @@ option::ArgStatus Arg::Readable_File(
     }
     if (msg)
     {
-        print_error("Option '", option, "' requires an existing file as argument\n");
+        print_error("Option '", option, "' requires an existing readable file as argument\n");
     }
     return option::ARG_ILLEGAL;
 }

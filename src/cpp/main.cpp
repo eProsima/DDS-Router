@@ -17,15 +17,15 @@
  *
  */
 
+#include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/event/FileWatcherHandler.hpp>
+#include <ddsrouter/event/PeriodicEventHandler.hpp>
+#include <ddsrouter/event/SignalHandler.hpp>
+#include <ddsrouter/types/constants.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/Time.hpp>
-#include <ddsrouter/types/constants.hpp>
-#include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/user_interface/arguments_configuration.hpp>
-#include <ddsrouter/event/FileWatcherHandler.hpp>
-#include <ddsrouter/event/SignalHandler.hpp>
-#include <ddsrouter/event/PeriodicEventHandler.hpp>
 #include <ddsrouter/user_interface/ProcessReturnCode.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -105,7 +105,7 @@ int main(
         /////
         // Periodic Handler for reload configuration in periodic time
 
-        // It must be a ptr because could not be created
+        // It must be a ptr, so the object is only created when required by a specific configuration
         std::unique_ptr<event::PeriodicEventHandler> periodic_handler;
 
         // If reload time is higher than 0, create a periodic event to reload configuration
