@@ -48,7 +48,7 @@ int main(
 
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-        ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
+            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
     if (arg_parse_result == ui::ProcessReturnCode::HELP_ARGUMENT)
     {
@@ -83,21 +83,21 @@ int main(
 
         // Callback will reload configuration and pass it to DDSRouter
         std::function<void(std::string)> filewatcher_callback =
-            [&router]
-            (std::string file_path)
-            {
-                logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
-                try
+                [&router]
+                    (std::string file_path)
                 {
-                    RawConfiguration router_configuration = load_configuration_from_file(file_path);
-                    router.reload_configuration(router_configuration);
-                }
-                catch(const std::exception& e)
-                {
-                    logWarning(DDSROUTER_EXECUTION,
-                        "Error reloading configuration file " << file_path << " with error: " << e.what());
-                }
-            };
+                    logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
+                    try
+                    {
+                        RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                        router.reload_configuration(router_configuration);
+                    }
+                    catch (const std::exception& e)
+                    {
+                        logWarning(DDSROUTER_EXECUTION,
+                                "Error reloading configuration file " << file_path << " with error: " << e.what());
+                    }
+                };
 
         // Creating FileWatcher event handler
         event::FileWatcherHandler file_watcher_handler(filewatcher_callback, file_path);
@@ -113,21 +113,21 @@ int main(
         {
             // Callback will reload configuration and pass it to DDSRouter
             std::function<void()> periodic_callback =
-                [&router, file_path]
-                ()
-                {
-                    logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
-                    try
+                    [&router, file_path]
+                        ()
                     {
-                        RawConfiguration router_configuration = load_configuration_from_file(file_path);
-                        router.reload_configuration(router_configuration);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        logWarning(DDSROUTER_EXECUTION,
-                            "Error reloading configuration file " << file_path << " with error: " << e.what());
-                    }
-                };
+                        logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
+                        try
+                        {
+                            RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                            router.reload_configuration(router_configuration);
+                        }
+                        catch (const std::exception& e)
+                        {
+                            logWarning(DDSROUTER_EXECUTION,
+                                    "Error reloading configuration file " << file_path << " with error: " << e.what());
+                        }
+                    };
 
             periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
         }
