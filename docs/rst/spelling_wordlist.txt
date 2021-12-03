@@ -3,4 +3,5 @@ CMake
 Colcon
 eProsima
 Gtest
+guid
 wget

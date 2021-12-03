@@ -33,6 +33,8 @@
    :numbered: 5
    :hidden:
 
+   /rst/getting_started/tutorial
+
 
 .. _index_user_manual:
 
@@ -41,6 +43,9 @@
    :maxdepth: 2
    :numbered: 5
    :hidden:
+
+   Participants </rst/user_manual/participants/participant>
+   /rst/user_manual/glossary
 
 
 .. _index_developer_manual:
