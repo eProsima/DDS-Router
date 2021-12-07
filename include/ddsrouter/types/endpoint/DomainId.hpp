@@ -65,7 +65,8 @@ public:
             const RawConfiguration& configuration);
 
     //! Dump this object in \c configuration variable at \c configuration yaml base level.
-    RawConfiguration dump(RawConfiguration& configuration) const; // add noexcept when implemented
+    RawConfiguration dump(
+            RawConfiguration& configuration) const;               // add noexcept when implemented
 
 protected:
 

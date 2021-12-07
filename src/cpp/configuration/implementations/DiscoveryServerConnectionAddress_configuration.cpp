@@ -41,9 +41,9 @@ DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
         if (!configuration[COLLECTION_ADDRESSES_TAG].IsSequence())
         {
             throw ConfigurationException(
-                utils::Formatter() <<
-                "Discovery Server Connection Address must have sequence of address under tag: " <<
-                COLLECTION_ADDRESSES_TAG);
+                      utils::Formatter() <<
+                          "Discovery Server Connection Address must have sequence of address under tag: " <<
+                          COLLECTION_ADDRESSES_TAG);
         }
 
         // For each element in sequence, get address
@@ -55,7 +55,8 @@ DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
     }
 }
 
-RawConfiguration DiscoveryServerConnectionAddress::dump(RawConfiguration&) const
+RawConfiguration DiscoveryServerConnectionAddress::dump(
+        RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("DiscoveryServerConnectionAddress::dump is not supported yet.");

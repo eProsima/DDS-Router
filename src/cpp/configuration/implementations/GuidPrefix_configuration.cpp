@@ -36,12 +36,12 @@ GuidPrefix::GuidPrefix(
         try
         {
             *this =
-                GuidPrefix(configuration[DISCOVERY_SERVER_GUID_TAG].as<std::string>());
+                    GuidPrefix(configuration[DISCOVERY_SERVER_GUID_TAG].as<std::string>());
         }
         catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Guid Prefix has incorrect format" << e.what());
+                          "Guid Prefix has incorrect format" << e.what());
         }
     }
 
@@ -57,7 +57,7 @@ GuidPrefix::GuidPrefix(
         catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Ros Guid Prefix Tag has incorrect format. Must be boolean." << e.what());
+                          "Ros Guid Prefix Tag has incorrect format. Must be boolean." << e.what());
         }
     }
 
@@ -75,7 +75,7 @@ GuidPrefix::GuidPrefix(
         catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Guid Prefix Id has incorrect format. Must be uint32." << e.what());
+                          "Guid Prefix Id has incorrect format. Must be uint32." << e.what());
         }
     }
 
@@ -89,7 +89,8 @@ GuidPrefix::GuidPrefix(
     }
 }
 
-RawConfiguration GuidPrefix::dump(RawConfiguration&) const
+RawConfiguration GuidPrefix::dump(
+        RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("GuidPrefix::dump is not supported yet.");

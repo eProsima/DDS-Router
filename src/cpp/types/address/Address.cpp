@@ -165,7 +165,7 @@ bool Address::operator <(
         {
             return true;
         }
-        else if(this->port_ > other.port_)
+        else if (this->port_ > other.port_)
         {
             return false;
         }

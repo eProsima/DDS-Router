@@ -73,11 +73,12 @@ public:
      * @param default_transport : default transport protocol in case it is not set in yaml
      */
     DiscoveryServerConnectionAddress(
-        const RawConfiguration& configuration,
-        TransportProtocol default_transport = Address::default_transport_protocol());
+            const RawConfiguration& configuration,
+            TransportProtocol default_transport = Address::default_transport_protocol());
 
     //! Dump this object in \c configuration variable at \c configuration yaml base level.
-    RawConfiguration dump(RawConfiguration& configuration) const; // TODO: Once implemented add noexcept
+    RawConfiguration dump(
+            RawConfiguration& configuration) const;               // TODO: Once implemented add noexcept
 
 protected:
 

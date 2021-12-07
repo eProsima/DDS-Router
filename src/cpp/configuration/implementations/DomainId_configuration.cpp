@@ -27,7 +27,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 DomainId::DomainId(
-    const RawConfiguration& configuration)
+        const RawConfiguration& configuration)
 {
     if (configuration[DOMAIN_ID_TAG])
     {
@@ -39,17 +39,18 @@ DomainId::DomainId(
         catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Domain has incorrect format" << e.what());
+                          "Domain has incorrect format" << e.what());
         }
     }
     else
     {
         throw ConfigurationException(
-            "Not domain tag found");
+                  "Not domain tag found");
     }
 }
 
-RawConfiguration DomainId::dump(RawConfiguration&) const
+RawConfiguration DomainId::dump(
+        RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("DomainId::dump is not supported yet.");

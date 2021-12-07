@@ -41,9 +41,9 @@ void set_domain(
 }
 
 ParticipantConfiguration get_random_participant_configuration(
-    ParticipantId id,
-    ParticipantType type,
-    uint32_t seed = 0)
+        ParticipantId id,
+        ParticipantType type,
+        uint32_t seed = 0)
 {
     RawConfiguration config;
 
@@ -75,7 +75,7 @@ std::shared_ptr<IParticipant> create_participant(
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
     ParticipantId id(id_str);
     ParticipantConfiguration participant_configuration =
-        get_random_participant_configuration(id, type);
+            get_random_participant_configuration(id, type);
 
     return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database);
 }

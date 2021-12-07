@@ -27,8 +27,8 @@ namespace eprosima {
 namespace ddsrouter {
 
 Address::Address(
-    const RawConfiguration& configuration,
-    TransportProtocol default_transport /*= Address::default_transport_protocol()*/)
+        const RawConfiguration& configuration,
+        TransportProtocol default_transport /*= Address::default_transport_protocol()*/)
 {
     // Get IP
     if (configuration[ADDRESS_IP_TAG])
@@ -37,10 +37,10 @@ Address::Address(
         {
             ip_ = configuration.as<IpType>();
         }
-        catch(const std::exception& e)
+        catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Error getting Address ip: " << e.what());
+                          "Error getting Address ip: " << e.what());
         }
     }
     else
@@ -55,10 +55,10 @@ Address::Address(
         {
             port_ = configuration.as<PortType>();
         }
-        catch(const std::exception& e)
+        catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Error getting Address port: " << e.what());
+                          "Error getting Address port: " << e.what());
         }
     }
     else
@@ -84,13 +84,13 @@ Address::Address(
             else
             {
                 throw ConfigurationException(utils::Formatter() <<
-                    "Error getting Address transport type: it must be set <udp> or <tcp>");
+                              "Error getting Address transport type: it must be set <udp> or <tcp>");
             }
         }
-        catch(const std::exception& e)
+        catch (const std::exception& e)
         {
             throw ConfigurationException(utils::Formatter() <<
-                "Error getting Address transport type: " << e.what());
+                          "Error getting Address transport type: " << e.what());
         }
     }
     else
@@ -101,7 +101,8 @@ Address::Address(
     // TODO do ip version
 }
 
-RawConfiguration Address::dump(RawConfiguration&) const
+RawConfiguration Address::dump(
+        RawConfiguration&) const
 {
     // TODO
     throw UnsupportedException("Address::dump is not supported yet.");
