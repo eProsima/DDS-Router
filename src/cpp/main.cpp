@@ -69,6 +69,10 @@ int main(
 
     // Encapsulating execution in block to erase all memory correctly before closing process
     {
+        // First of all, create signal handler so SIGINT does not break the program while initializing
+        // Signal handler
+        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
+
         /////
         // DDS Router Initialization
 
@@ -132,9 +136,6 @@ int main(
 
             periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
         }
-
-        // Signal handler
-        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
 
         // Start Router
         router.start();

@@ -105,6 +105,8 @@ ReturnCode DDSRouter::reload_configuration(
     // Set new Allowed list
     allowed_topics_ = new_allowed_topic_list;
 
+    logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
+
     // TODO refactor with discovery functionality
     // TODO add bridge creation when initial topics configuration added
 
@@ -207,6 +209,8 @@ void DDSRouter::init_allowed_topics_()
     allowed_topics_ = AllowedTopicList(
         configuration_.allowlist(),
         configuration_.blocklist());
+
+    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
 }
 
 void DDSRouter::init_participants_()

@@ -68,7 +68,7 @@ fastrtps::rtps::RTPSParticipantAttributes
         if (!address.is_valid())
         {
             // Invalid address, continue with next one
-            logInfo(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+            logInfo(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
             continue;
         }
@@ -116,11 +116,12 @@ fastrtps::rtps::RTPSParticipantAttributes
 
         // Port
         eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
+        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
 
-        logDebug(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
             "Add listening address " << address << " to Participant " << this->id() << ".");
     }
 
@@ -131,7 +132,7 @@ fastrtps::rtps::RTPSParticipantAttributes
         if (!connection_address.is_valid())
         {
             // Invalid address, continue with next one
-            logInfo(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+            logInfo(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Discard connection address with remote server: " << connection_address.discovery_server_guid() <<
                 " in Participant " << this->id() << " initialization.");
             continue;
@@ -174,13 +175,14 @@ fastrtps::rtps::RTPSParticipantAttributes
 
             // PORT
             eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
+            eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
             // Warning: Logical port is not needed unless domain could change
 
             // Add as remote server and add it to builtin
             server_attr.metatrafficUnicastLocatorList.push_back(locator);
             params.builtin.discovery_config.m_DiscoveryServers.push_back(server_attr);
 
-            logDebug(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+            logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Add connection address " << address << " for server " << server_prefix <<
                 " to Participant " << this->id() << ".");
         }
@@ -200,7 +202,7 @@ fastrtps::rtps::RTPSParticipantAttributes
 
         if (!has_connection_addresses)
         {
-            logWarning(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Creating Participant " << this->id() << " without listening or connection addresses. " <<
                 "It will not communicate with any other Participant.");
         }
@@ -222,6 +224,9 @@ fastrtps::rtps::RTPSParticipantAttributes
         std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
                 std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
         params.userTransports.push_back(descriptor);
+
+        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            "Adding TCP Transport to Participant " << this->id() << ".");
     }
 
     // If has UDP, create descriptor because it has not been created yet
@@ -230,9 +235,12 @@ fastrtps::rtps::RTPSParticipantAttributes
         std::shared_ptr<eprosima::fastdds::rtps::UDPv4TransportDescriptor> descriptor =
                 std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
         params.userTransports.push_back(descriptor);
+
+        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            "Adding UDP Transport to Participant " << this->id() << ".");
     }
 
-    logDebug(DDSROUTER_DISCOVERY_SERVER_PARTICIPANT,
+    logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
         "Configured Participant " << this->id() << " with server guid: " << this->configuration_.discovery_server_guid());
 
     return params;

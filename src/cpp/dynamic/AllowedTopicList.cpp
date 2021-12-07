@@ -19,6 +19,7 @@
 
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,13 +31,16 @@ AllowedTopicList::AllowedTopicList(
 {
     allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
+
+    logDebug(DDSROUTER_ALLOWEDTOPICLIST, "New Allowed topic list created:");
+    logDebug(DDSROUTER_ALLOWEDTOPICLIST, "New Allowed topic list created: " << *this << ".");
 }
 
 AllowedTopicList& AllowedTopicList::operator =(
         const AllowedTopicList& other)
 {
-    this->allowlist_ = allowlist_;
-    this->blocklist_ = blocklist_;
+    this->allowlist_ = other.allowlist_;
+    this->blocklist_ = other.blocklist_;
 
     return *this;
 }
@@ -139,6 +143,25 @@ std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_
     }
 
     return non_repeated_list;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const AllowedTopicList& atl)
+{
+    os << "AllowedTopicList{";
+
+    // Allowed topics
+    os << "allowed";
+    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.allowlist_);
+
+    // Blocked topics
+    os << "blocked";
+    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.blocklist_);
+
+    os << "}";
+
+    return os;
 }
 
 } /* namespace ddsrouter */

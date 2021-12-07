@@ -27,7 +27,6 @@ namespace ddsrouter {
 const TransportProtocol WANParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
     TransportProtocol::TCP;
 
-
 WANParticipantConfiguration::WANParticipantConfiguration(
         const ParticipantConfiguration& configuration)
     : DiscoveryServerRTPSParticipantConfiguration(configuration.id(), configuration.raw_configuration())
