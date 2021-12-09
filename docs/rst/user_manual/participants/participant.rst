@@ -47,7 +47,7 @@ Participant creation
 Each Participant has a unique Participant Id that can not be repeated in a |ddsrouter| execution.
 This id is the name of the tag that contains the Participant configuration.
 
-.. note:
+.. note::
 
     If the id is repeated, the yaml will be bad formed and the |ddsrouter| execution will fail when configured.
 

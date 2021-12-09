@@ -10,10 +10,11 @@ A |ddsrouter| execution is configured by a *.yaml* single configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, as topics filtering,
 and :term:`Participant` configurations.
 
+
 Topic Filtering
 ===============
 
-..note:
+.. note::
 
     The |ddsrouter| discovery module is a work in progress.
     Thus, the functionality regarding Topic filtering is still in its early stages.
@@ -28,11 +29,8 @@ See Topic section for further information about the topic
 
     Add link to topic page when created
 
-Example
--------
-
-In this yaml example, the |ddsrouter| will transmit the topic ``rt/chatter`` (default ROS2 topic for ``talker`` and
-``listener``) with type name ``std_msgs::msg::dds_::String_``.
+In the following yaml example, the |ddsrouter| will transmit the topic ``rt/chatter`` (default ROS2 topic for
+``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``.
 It also will transmit the topic  ``HelloWorldTopic`` (default FastDDS topic for ``HelloWorldExample``)
 with type name ``HelloWorld``.
 
@@ -44,9 +42,10 @@ with type name ``HelloWorld``.
         {name: "HelloWorldTopic", type: "HelloWorld"},
     ]
 
-.. note:
+.. note::
 
     Tag ``allowlist`` must be at yaml base level (it must not be inside any other tag).
+
 
 Participant Configuration
 =========================
@@ -61,16 +60,13 @@ Each Participant has its specific configuration.
 Please, refer to :ref:`user_manual_participant_participant_types` in order to see each of the
 :term:`Participant Types<Participant Type>` requirements.
 
-.. warning:
+.. warning::
 
     Do not configure two Participants in a way that they can communicate to each other (e.g. two Simple participants
     in the same domain).
     This will lead to an infinite feedback loop for one to each other.
 
-Example
--------
-
-In this yaml example, the |ddsrouter| will create two Simple Participants, one for ``domain 0`` and one for
+In the following yaml example, the |ddsrouter| will create two Simple Participants, one for ``domain 0`` and one for
 ``domain 1``.
 This is a typical use case of Domain bridge.
 The topics allowed in the two domains will start communicating to each other .
@@ -79,74 +75,156 @@ Be aware that the communication is not P2P, the data must reach the |ddsrouter| 
 .. todo:
 
     Add link to Simple Participant when page created
-    Add link to use case domain swap
-
-The first Participant `Participant0` has ParticipantId *Participant0* and ParticipantType *simple*.
-The second Participant has ParticipantId *simple*, and type is not required to be specified as it is get from the
-ParticipantId.
+    Add link to use case domain bridge
 
 .. code-block:: yaml
 
-    Participant0:       # ParticipantId <Participant0>
-        type: local     # ParticipantType <simple>
-        domain: 3       # DomainId <3>
+    Participant0:       # Participant Id = Participant0
+        type: local     # Participant Type = simple
+        domain: 3       # DomainId = 3
 
-    simple:             # ParticipantId <simple> ; ParticipantType <simple>
-        domain: 6       # DomainId <6>
+    ################
 
-.. note:
+    simple:             # Participant Id = simple ; Participant Type = simple
+        domain: 6       # DomainId = 6
 
-    Type is not case sensitive.
+The first Participant `Participant0` has Participant Id *Participant0* and Participant Type *simple*.
+The second Participant has Participant Id *simple*, and type is not required to be specified as it is get from the
+Participant Id.
+
+.. note::
+
+    Participant Type is not case sensitive.
     A Participant called *Simple* would be of type ``simple``.
 
-.. note:
+.. note::
 
-    The ParticipantId is get as ParticipantType when type is not specified.
-    If type is explicitly specified, the ParticipantId is not used to get the type.
+    The Participant Id is get as Participant Type when type is not specified.
+    If type is explicitly specified, the Participant Id is not used to get the type.
+
 
 Network Address
 ===============
 
 Network Addresses are elements that can be configured for specific Participants.
 An Address is set by:
-    - *IP*: IP of the host (public IP in case of WAN).
-    - *Port*: Port where the Participant is listening.
-    - *Transport Protocol*: ``UDP`` or ``TCP``.
-    If it is not set, it would be chosen by default depending on the Participant Type.
-    - *IP version*: ``v4`` or ``v6``.
-    If it is not set, it would be chosen depending on the *IP* string format.
 
-Example
--------
+* *IP*: IP of the host (public IP in case of WAN).
+* *Port*: Port where the Participant is listening.
+* *Transport Protocol*: ``UDP`` or ``TCP``.
+  If it is not set, it would be chosen by default depending on the Participant Type.
+* *IP version*: ``v4`` or ``v6``.
+  If it is not set, it would be chosen depending on the *IP* string format.
 
 .. code-block:: yaml
 
-    ip: "127.0.0.1",
-    port: 11666,
-    transport: "tcp",   # | "udp"
-    ip-version: "v4",   # | "v6"
+    ip: "127.0.0.1"
+    port: 11666
+    transport: "tcp"
+    ip-version: "v4"
+
+    ################
+
+    ip: "2001:4860:4860::8844"      # It is recognized as IPv6
+    port: 1616
+
+.. warning::
+
+    ``ip`` field does not allow DNS names, only well-formed IP addresses.
+
 
 Discovery Server GuidPrefix
 ===========================
 
-A Discovery Server requires a DDS :term:`GuidPrefix` in order to other Participants connect to it.
+A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order to other Participants connect to it.
 There are several possibilities for configuring a GuidPrefix.
+
 
 Discovery Server GuidPrefix by string
 -------------------------------------
 
-Using tag ``guid``
-
-
-Example
--------
+Using tag ``guid``, the GuidPrefix of the Discovery Server will be set as it.
+Be aware of using the correct format for GuidPrefix.
+That is, 12 hexadecimal numbers (lower than ``ff``) separated with ``.``.
 
 .. code-block:: yaml
 
-    ip: "127.0.0.1",
-    port: 11666,
-    transport: "tcp",   # | "udp"
-    ip-version: "v4",   # | "v6"
+    guid: "1.f.1.0.0.0.0.0.0.0.ca.fe"     # GuidPrefix = 01.0f.01.00.00.00.00.00.00.00.ca.fe
+
+
+Discovery Server GuidPrefix by Id
+---------------------------------
+
+Using tag ``id``, the GuidPrefix will be calculated arbitrarily using a default |ddsrouter| GuidPrefix.
+This default GuidPrefix is ``01.0f.x.00.00.00.00.00.00.00.ca.fe`` where ``x`` is the value of the id.
+Default value for ``id`` is ``0``.
+
+.. code-block:: yaml
+
+    id: 13                          # GuidPrefix = 01.0f.0d.00.00.00.00.00.00.00.ca.fe
+
+.. note::
+
+    In the actual version only 256 different ids are allowed.
+    In future releases it would be implemented to allow further ids.
+
+
+ROS Discovery Server GuidPrefix
+-------------------------------
+
+There is a specific GuidPrefix for ROS2 executions, so it could be used using Fast DDS CLI and
+ROS2 ``ROS_DISCOVERY_SERVER`` environment variable
+(`<https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/ros2/discovery_server/ros2_discovery_server.html>`__).
+
+The ROS2 Discovery Server GuidPrefix is set by default to ``44.53.x.5f.45.50.52.4f.53.49.4d.41`` where ``x`` is the
+specific id of the Server.
+This GuidPrefix also allow an ``id``` value to specify which id is used in the GuidPrefix.
+Default value for ``id`` is ``0``.
+
+.. code-block:: yaml
+
+    ros-discovery-server: true      # GuidPrefix = 44.53.x.5f.45.50.52.4f.53.49.4d.41
+    id: 13                          # GuidPrefix = 44.53.0d.5f.45.50.52.4f.53.49.4d.41
+
+
+Discovery Server Connection Addresses
+=====================================
+
+Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
+``connection-addresses`` is the *key* for an array where each element has a GuidPrefix referencing the Discovery
+Server to connect with; and a tag ``addresses`` configuring the addresses of such Discovery Server.
+
+.. code-block:: yaml
+
+    connection-addresses:
+    [
+        {
+            guid: "44.53.0d.5f.45.50.52.4f.53.49.4d.41"
+            addresses:
+            [
+                {
+                    ip: "127.0.0.1",
+                    port: 11666,
+                }
+            ]
+        },
+        {
+            id: 4
+            addresses:
+            [
+                {
+                    ip: "2001:4860:4860::8888",
+                    port: 11667,
+                    transport: "tcp"
+                },
+                {
+                    ip: "2001:4860:4860::8844",
+                    port: 11668,
+                    transport: "tcp"
+                }
+            ]
+        }
+    ]
 
 
 General Example
@@ -167,9 +245,9 @@ General Example
 
     # Simple DDS Participant in domain 3
 
-    Participant0:                       # ParticipantId = Participant0
+    Participant0:                       # Participant Id = Participant0
 
-        type: local                     # ParticipantType = simple
+        type: local                     # Participant Type = simple
 
         domain: 3                       # DomainId = 3
 
@@ -178,9 +256,9 @@ General Example
     # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS2 Client could connect to it
     # This Discovery Server will listen in ports 11600 and 11601 in localhost
 
-    simple:                             # ParticipantId = simple
+    simple:                             # Participant Id = simple
 
-        type: "local-discovery-server"  # ParticipantType = local-discovery-server
+        type: "local-discovery-server"  # Participant Type = local-discovery-server
 
         id: 1
         ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
@@ -203,7 +281,7 @@ General Example
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                                # ParticipantId = simple ; ParticipantType = wan
+    Wan:                                # Participant Id = simple ; Participant Type = wan
 
         id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
