@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
@@ -32,12 +32,12 @@ namespace ddsrouter {
 /**
  * This class joins WAN Participant Configuration features and give methods to interact with it.
  */
-class WANParticipantConfiguration : public DiscoveryServerRTPSParticipantConfiguration
+class WANParticipantConfiguration : public DiscoveryServerParticipantConfiguration
 {
 public:
 
     // Using parent constructors
-    using DiscoveryServerRTPSParticipantConfiguration::DiscoveryServerRTPSParticipantConfiguration;
+    using DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration;
 
     WANParticipantConfiguration(
             const ParticipantConfiguration& configuration);

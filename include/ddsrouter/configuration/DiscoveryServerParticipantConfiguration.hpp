@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerRTPSParticipantConfiguration.hpp
+ * @file DiscoveryServerParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/address/Address.hpp>
@@ -31,14 +31,14 @@ namespace ddsrouter {
 /**
  * This class joins Discovery Server Participant Configuration features and give methods to interact with it.
  */
-class DiscoveryServerRTPSParticipantConfiguration : public ParticipantConfiguration
+class DiscoveryServerParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
     // Using parent constructors
     using ParticipantConfiguration::ParticipantConfiguration;
 
-    DiscoveryServerRTPSParticipantConfiguration(
+    DiscoveryServerParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
     std::vector<Address> listening_addresses() const;
@@ -61,4 +61,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_DISCOVERYSERVERRTPSPARTICIPANTCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_ */

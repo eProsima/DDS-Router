@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerRTPSRouterParticipant.cpp
+ * @file DiscoveryServerParticipant.cpp
  */
 
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
@@ -22,7 +22,7 @@
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
 
-#include <ddsrouter/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,7 +30,7 @@ namespace rtps {
 
 
 template <class ConfigurationType>
-DiscoveryServerRTPSRouterParticipant<ConfigurationType>::DiscoveryServerRTPSRouterParticipant(
+DiscoveryServerParticipant<ConfigurationType>::DiscoveryServerParticipant(
         const ParticipantConfiguration& participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
@@ -41,7 +41,7 @@ DiscoveryServerRTPSRouterParticipant<ConfigurationType>::DiscoveryServerRTPSRout
 
 template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-    DiscoveryServerRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
+    DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const noexcept
 {
     // Get Configuration information
     std::vector<Address> listening_addresses = this->configuration_.listening_addresses();

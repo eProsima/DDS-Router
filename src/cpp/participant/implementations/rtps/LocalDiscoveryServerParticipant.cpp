@@ -13,30 +13,25 @@
 // limitations under the License.
 
 /**
- * @file ParticipantConfiguration.cpp
+ * @file LocalDiscoveryServerParticipant.cpp
  */
 
-#include <ddsrouter/configuration/WANParticipantConfiguration.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-const TransportProtocol WANParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
-    TransportProtocol::TCP;
-
-WANParticipantConfiguration::WANParticipantConfiguration(
-        const ParticipantConfiguration& configuration)
-    : DiscoveryServerParticipantConfiguration(configuration.id(), configuration.raw_configuration())
+LocalDiscoveryServerParticipant::LocalDiscoveryServerParticipant(
+        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
+    : DiscoveryServerParticipant<DiscoveryServerParticipantConfiguration>
+        (participant_configuration, payload_pool, discovery_database)
 {
+    create_participant_();
 }
 
-TransportProtocol WANParticipantConfiguration::default_transport_protocol_() const noexcept
-{
-    return DEFAULT_TRANSPORT_PROTOCOL_;
-}
-
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

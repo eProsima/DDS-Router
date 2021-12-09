@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerRTPSRouterParticipant.hpp
+ * @file DiscoveryServerParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
 
 namespace eprosima {
@@ -30,15 +30,15 @@ namespace rtps {
  * TODO
  */
 template <class ConfigurationType>
-class DiscoveryServerRTPSRouterParticipant
+class DiscoveryServerParticipant
     : public CommonRTPSRouterParticipant<ConfigurationType>
 {
 public:
 
-// Force ConfigurationType to be subclass of DiscoveryServerRTPSParticipantConfiguration
-FORCE_TEMPLATE_SUBCLASS(DiscoveryServerRTPSParticipantConfiguration, ConfigurationType);
+// Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
+FORCE_TEMPLATE_SUBCLASS(DiscoveryServerParticipantConfiguration, ConfigurationType);
 
-    DiscoveryServerRTPSRouterParticipant(
+    DiscoveryServerParticipant(
             const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
@@ -51,6 +51,6 @@ FORCE_TEMPLATE_SUBCLASS(DiscoveryServerRTPSParticipantConfiguration, Configurati
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter/participant/implementations/rtps/impl/DiscoveryServerRTPSRouterParticipant.ipp>
+#include <ddsrouter/participant/implementations/rtps/impl/DiscoveryServerParticipant.ipp>
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERPARTICIPANT_HPP_ */

@@ -13,10 +13,10 @@
 // limitations under the License.
 
 /**
- * @file ParticipantConfiguration.cpp
+ * @file DiscoveryServerParticipantConfiguration.cpp
  */
 
-#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
@@ -24,18 +24,18 @@
 namespace eprosima {
 namespace ddsrouter {
 
-const TransportProtocol DiscoveryServerRTPSParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
+const TransportProtocol DiscoveryServerParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
     TransportProtocol::UDP;
 
-const DomainId DiscoveryServerRTPSParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66u);
+const DomainId DiscoveryServerParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66u);
 
-DiscoveryServerRTPSParticipantConfiguration::DiscoveryServerRTPSParticipantConfiguration(
+DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
         const ParticipantConfiguration& configuration)
     : ParticipantConfiguration(configuration.id(), configuration.raw_configuration())
 {
 }
 
-std::vector<Address> DiscoveryServerRTPSParticipantConfiguration::listening_addresses() const
+std::vector<Address> DiscoveryServerParticipantConfiguration::listening_addresses() const
 {
     std::vector<Address> result;
 
@@ -56,7 +56,7 @@ std::vector<Address> DiscoveryServerRTPSParticipantConfiguration::listening_addr
     return result;
 }
 
-std::vector<DiscoveryServerConnectionAddress> DiscoveryServerRTPSParticipantConfiguration::connection_addresses() const
+std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfiguration::connection_addresses() const
 {
     std::vector<DiscoveryServerConnectionAddress> result;
 
@@ -77,19 +77,19 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerRTPSParticipantConf
     return result;
 }
 
-GuidPrefix DiscoveryServerRTPSParticipantConfiguration::discovery_server_guid() const
+GuidPrefix DiscoveryServerParticipantConfiguration::discovery_server_guid() const
 {
     return GuidPrefix(raw_configuration_);
 }
 
-DomainId DiscoveryServerRTPSParticipantConfiguration::domain() const
+DomainId DiscoveryServerParticipantConfiguration::domain() const
 {
     // This method always return the same domain for the Discovery Server in order
     // to avoid problems with the LogicalPort
     return DEFAULT_DS_DOMAIN_ID_;
 }
 
-TransportProtocol DiscoveryServerRTPSParticipantConfiguration::default_transport_protocol_() const noexcept
+TransportProtocol DiscoveryServerParticipantConfiguration::default_transport_protocol_() const noexcept
 {
     return DEFAULT_TRANSPORT_PROTOCOL_;
 }

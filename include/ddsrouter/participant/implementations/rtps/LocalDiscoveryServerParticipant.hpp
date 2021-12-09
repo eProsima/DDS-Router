@@ -13,14 +13,14 @@
 // limitations under the License.
 
 /**
- * @file LocalDiscoveryServerRouterParticipant.hpp
+ * @file LocalDiscoveryServerParticipant.hpp
  */
 
-#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_
-#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_
+#ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERPARTICIPANT_HPP_
+#define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/DiscoveryServerRTPSParticipantConfiguration.hpp>
-#include <ddsrouter/participant/implementations/rtps/DiscoveryServerRTPSRouterParticipant.hpp>
+#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,12 +29,12 @@ namespace rtps {
 /**
  * TODO
  */
-class LocalDiscoveryServerRouterParticipant
-    : public DiscoveryServerRTPSRouterParticipant<DiscoveryServerRTPSParticipantConfiguration>
+class LocalDiscoveryServerParticipant
+    : public DiscoveryServerParticipant<DiscoveryServerParticipantConfiguration>
 {
 public:
 
-    LocalDiscoveryServerRouterParticipant(
+    LocalDiscoveryServerParticipant(
             const ParticipantConfiguration& participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
@@ -44,4 +44,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERROUTERPARTICIPANT_HPP_ */
+#endif /* _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_LOCALDISCOVERYSERVERPARTICIPANT_HPP_ */
