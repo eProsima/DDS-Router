@@ -29,7 +29,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter configuration characteristic and includes methods
+ * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
 class DDSRouterConfiguration : public BaseConfiguration

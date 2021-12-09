@@ -41,7 +41,7 @@ DiscoveryServerRTPSRouterParticipant<ConfigurationType>::DiscoveryServerRTPSRout
 
 template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-    DiscoveryServerRTPSRouterParticipant<ConfigurationType>::participant_attributes() const noexcept
+    DiscoveryServerRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
 {
     // Get Configuration information
     std::vector<Address> listening_addresses = this->configuration_.listening_addresses();

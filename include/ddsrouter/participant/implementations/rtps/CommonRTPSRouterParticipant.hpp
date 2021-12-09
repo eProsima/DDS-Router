@@ -79,7 +79,7 @@ protected:
     /////
     // RTPS specific methods
 
-    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes() const noexcept = 0;
+    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const noexcept;
 
     /////
     // VARIABLES

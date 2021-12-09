@@ -27,8 +27,7 @@ namespace ddsrouter {
 namespace rtps {
 
 /**
- * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
- * Each Participant that require specific configuration must inherit from this class.
+ * This class joins Simple Participant Configuration features and give methods to interact with it.
  */
 class SimpleParticipantConfiguration : public ParticipantConfiguration
 {
