@@ -28,7 +28,14 @@ bool CopyPayloadPool::release_payload(
 {
     if (cache_change.payload_owner() == this)
     {
-        return release_payload(cache_change.serializedPayload);
+        if (release_payload(cache_change.serializedPayload))
+        {
+            cache_change.payload_owner(nullptr);
+        }
+        else
+        {
+            return false;
+        }
     }
     return false;
 }
@@ -68,6 +75,10 @@ bool CopyPayloadPool::release_payload(
         Payload& payload)
 {
     get_payload(0, payload);
+    payload.length = 0;
+    payload.pos = 0;
+    payload.max_size = 0;
+    payload.data = nullptr;
     return true;
 }
 
