@@ -43,7 +43,7 @@ FORCE_TEMPLATE_SUBCLASS(DiscoveryServerRTPSParticipantConfiguration, Configurati
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
-    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes() const noexcept override;
+    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const noexcept override;
 };
 
 } /* namespace rpts */

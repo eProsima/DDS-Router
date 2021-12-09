@@ -89,7 +89,7 @@ template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
 {
     DomainId domain = this->configuration_.domain();
-    fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes();
+    fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes_();
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
         "Creating Participant in domain " << domain);
@@ -123,13 +123,13 @@ std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_
     return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, rtps_participant_);
 }
 
-// template <class ConfigurationType>
-// fastrtps::rtps::RTPSParticipantAttributes
-//     CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes() const noexcept
-// {
-//     fastrtps::rtps::RTPSParticipantAttributes params;
-//     return params;
-// }
+template <class ConfigurationType>
+fastrtps::rtps::RTPSParticipantAttributes
+    CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
+{
+    fastrtps::rtps::RTPSParticipantAttributes params;
+    return params;
+}
 
 } /* namespace rtps */
 } /* namespace ddsrouter */

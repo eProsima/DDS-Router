@@ -29,8 +29,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter Participant Configuration characteristic and give methods to interact with it.
- * Each Participant that require specific configuration must inherit from this class.
+ * This class joins Discovery Server Participant Configuration features and give methods to interact with it.
  */
 class DiscoveryServerRTPSParticipantConfiguration : public ParticipantConfiguration
 {

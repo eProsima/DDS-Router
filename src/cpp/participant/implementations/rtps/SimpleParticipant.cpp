@@ -37,11 +37,6 @@ SimpleParticipant::SimpleParticipant(
     create_participant_();
 }
 
-fastrtps::rtps::RTPSParticipantAttributes SimpleParticipant::participant_attributes() const noexcept
-{
-    return fastrtps::rtps::RTPSParticipantAttributes();
-}
-
 } /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
