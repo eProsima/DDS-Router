@@ -38,7 +38,7 @@ std::ostream& operator <<(
 {
     os << "Payload{";
 
-    for (int i = 0; i < (payload.length - 1); ++i)
+    for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
     {
         os << payload.data[i] << " ";
     }
