@@ -53,7 +53,7 @@ protected:
 
     virtual TransportProtocol default_transport_protocol_() const noexcept;
 
-    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // TCP
+    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // UDP
 
     static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
