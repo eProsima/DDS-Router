@@ -94,3 +94,11 @@ DDS nomenclature
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html>`__
         for further information.
+
+    Domain Id
+        The Domain Id is a virtual partition for DDS networks.
+        Only DomainParticipants with the same Domain Id would be able to communicate to each other.
+        DomainParticipants  in different Domains will not even discover each other.
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1//fastdds/dds_layer/domain/domain.html>`__
+        for further information.

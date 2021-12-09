@@ -106,6 +106,21 @@ That is because the type is not required to be specified as it is get from the P
     If type is explicitly specified, the Participant Id is not used to get the type.
 
 
+.. _user_manual_configuration_domain_id:
+
+Domain Id
+=========
+
+Tag ``domain`` configures the :term:`Domain Id` of a specific Participant.
+Be aware that some Participants (e.g. Discovery Servers) does not need a Domain Id configuration.
+
+.. code-block:: yaml
+
+    domain: 101
+
+
+.. _user_manual_configuration_network_address:
+
 Network Address
 ===============
 
@@ -191,12 +206,40 @@ Default value for ``id`` is ``0``.
     id: 13                          # GuidPrefix = 44.53.0d.5f.45.50.52.4f.53.49.4d.41
 
 
+.. _user_manual_configuration_discovery_server_listening_addresses:
+
+Discovery Server Listening Addresses
+====================================
+
+Tag ``listening-addresses`` configures the network addresses where the Discovery Server configured is going to
+listen for remote clients or servers.
+``listening-addresses`` is *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
+
+.. code-block:: yaml
+
+    listening-addresses:
+    [
+        {
+            ip: "127.0.0.1",
+            port: 11667,
+        },
+        {
+            ip: "2001:4860:4860::8844",
+            port: 11668,
+            transport: "tcp"
+        }
+    ]
+
+
+.. _user_manual_configuration_discovery_server_connection_addresses:
+
 Discovery Server Connection Addresses
 =====================================
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
 ``connection-addresses`` is the *key* for an array in which each element has a GuidPrefix referencing the Discovery
 Server to connect with; and a tag ``addresses`` configuring the addresses of such Discovery Server.
+Each element inside ``addresses`` must follow the configuration for :ref:`user_manual_configuration_network_address`.
 
 .. code-block:: yaml
 
