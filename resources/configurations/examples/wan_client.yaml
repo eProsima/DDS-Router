@@ -1,0 +1,49 @@
+
+# Allow rt chatter topic for talker and listener
+
+allowlist:
+  [
+    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},
+  ]
+
+#################################
+# Echo
+
+echo:
+  type: echo
+
+#################################
+# ROS in domain 6
+
+simple6:
+  type: local
+
+  domain: 6
+
+#################################
+# WAN server
+
+wan:
+
+  id: 3
+  connection-addresses:
+    [
+      {
+        id: 2,
+        addresses:
+          [
+            {
+              ip: "127.0.0.1",
+              port: 11811,
+            }
+          ]
+      }
+    ]
+
+  listening-addresses:
+    [
+      {
+        ip: "127.0.0.1",
+        port: 11812,
+      }
+    ]
