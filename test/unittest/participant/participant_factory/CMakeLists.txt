@@ -21,6 +21,7 @@ set(TEST_NAME ParticipantFactoryTest)
 set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DomainId_configuration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/SimpleParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
@@ -35,6 +36,9 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/DiscoveryServerConnectionAddress.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/DomainId.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp

@@ -31,35 +31,9 @@ SimpleParticipantConfiguration::SimpleParticipantConfiguration(
 {
 }
 
-DomainId SimpleParticipantConfiguration::domain() const noexcept
+DomainId SimpleParticipantConfiguration::domain() const
 {
-    DomainId domain = 0; // Default 0
-
-    if (raw_configuration_[DOMAIN_ID_TAG])
-    {
-        // Try to get domain value from configuration
-        try
-        {
-            domain = raw_configuration_[DOMAIN_ID_TAG].as<DomainId>();
-        }
-        catch (const std::exception& e)
-        {
-            // Using default domain
-            logWarning(SIMPLE_RTPS_PARTICIPANT_CONFIGURATION,
-                    "Incorrect Domain Configuration " << raw_configuration_[DOMAIN_ID_TAG] << " " <<
-                    "while reading configuration for Participant: " << id() << ". " <<
-                    "Domain must be an unsigned integer. Using default DomainId 0.");
-
-        }
-    }
-    else
-    {
-        // If it is not specified use domain 0
-        logInfo(SIMPLE_RTPS_PARTICIPANT_CONFIGURATION,
-                "Participant " << id() << " has not domain specified. Using default DomainId 0.");
-    }
-
-    return domain;
+    return DomainId(raw_configuration_);
 }
 
 } /* namespace rtps */

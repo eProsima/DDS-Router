@@ -1,0 +1,6 @@
+
+# Participant with Simple Discovery Server in Domain 1
+
+simple_participant:
+  type: local
+  domain: 1

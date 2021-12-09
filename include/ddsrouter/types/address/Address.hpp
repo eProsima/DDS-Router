@@ -24,6 +24,8 @@
 
 #include <fastdds/rtps/common/Locator.h>
 
+#include <ddsrouter/types/RawConfiguration.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -118,6 +120,10 @@ public:
      */
     virtual bool is_valid() const noexcept;
 
+    //! Minor operator
+    bool operator <(
+            const Address& other) const noexcept;
+
     //! Whether string \c ip has correct IPv4 format.
     static bool is_ipv4_correct(
             const IpType& ip) noexcept;
@@ -134,6 +140,27 @@ public:
     static IpVersion default_ip_version() noexcept;
     //! Default transport protocol for address when is not set: UDP
     static TransportProtocol default_transport_protocol() noexcept;
+
+    /////
+    // YAML methods
+
+    /**
+     * @brief Construct a new Address from yaml object
+     *
+     * The tags required by addres are ADDRESS_|IP|PORT|IP_VERSION|TRANSPORT| .
+     * This tags and their values will be in the base level of the yaml \c configuration .
+     * This means the tags will be accessible as configuration[<tag>] and not inside further tags.
+     *
+     * @param configuration configuration where this address must be set
+     * @param default_transport default transport protocol in case it is not set in yaml
+     */
+    Address(
+            const RawConfiguration& configuration,
+            TransportProtocol default_transport = Address::default_transport_protocol());
+
+    //! Dump this object in \c configuration variable at \c configuration yaml base level.
+    RawConfiguration dump(
+            RawConfiguration& configuration) const;               // TODO: Once implemented add noexcept
 
 protected:
 

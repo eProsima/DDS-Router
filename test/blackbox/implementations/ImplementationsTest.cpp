@@ -41,6 +41,13 @@ void set_allowed_topic(
     configuration[ALLOWLIST_TAG] = allow_list;
 }
 
+void set_domain(
+        RawConfiguration& configuration,
+        uint16_t seed = 0)
+{
+    configuration[DOMAIN_ID_TAG] = seed;
+}
+
 RawConfiguration participant_configuration(
         ParticipantType type,
         uint16_t value = 0)
@@ -51,6 +58,9 @@ RawConfiguration participant_configuration(
 
     switch (type())
     {
+        case ParticipantType::SIMPLE_RTPS:
+            set_domain(participant_configuration);
+
         // Add cases where Participants need specific arguments
         default:
             break;
