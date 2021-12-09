@@ -135,6 +135,7 @@ An Address is defined by:
 
     ``ip`` field does not currently support DNS names, only well-formed IP addresses.
 
+.. _user_manual_configuration_discovery_server_guidprefix:
 
 Discovery Server GuidPrefix
 ===========================

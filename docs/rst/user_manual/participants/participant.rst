@@ -1,4 +1,5 @@
 .. include:: ../../exports/alias.include
+.. include:: ../../exports/roles.include
 
 .. _user_manual_participant:
 
@@ -87,10 +88,35 @@ Below is the list with all the available Participant Types.
         - Aliases
         - Specific configuration tags
         - Description
+
     *   - :ref:`user_manual_participants_echo`
         - ``echo``
         -
         - Print in `stdout` every data received.
+
+    *   - :ref:`user_manual_participants_simple`
+        - ``simple`` |br|
+          ``local``
+        - ``domain``
+        - Simple DDS DomainParticipant.
+
+    *   - :ref:`user_manual_participants_local_discovery_server`
+        - ``discovery-server`` |br|
+          ``local-ds`` |br|
+          ``ds``
+        - ``guid`` |br|
+          ``listening-addresses`` |br|
+          ``connection-addresses``
+        - Discovery Server DDS DomainParticipant for local communication.
+
+    *   - :ref:`user_manual_participants_wan`
+        - ``wan`` |br|
+          ``router``
+        - ``guid`` |br|
+          ``listening-addresses`` |br|
+          ``connection-addresses``
+        - Discovery Server DDS DomainParticipant for WAN communication.
+
 
 ..
     This toctree is needed so participants files are linked from somewhere. It is hidden so it is not be visible.
@@ -99,3 +125,6 @@ Below is the list with all the available Participant Types.
     :hidden:
 
     echo
+    simple
+    local_discovery_server
+    wan
