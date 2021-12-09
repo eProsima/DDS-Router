@@ -59,7 +59,18 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
 {
     if (info.info.m_guid.guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
-        logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Participant " << info.info.m_guid);
+        if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Participant " << info.info.m_guid << ".");
+        }
+        else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
+        }
+        else
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " dropped.");
+        }
     }
 }
 
@@ -70,7 +81,18 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
-        logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Reader " << info.info.guid());
+        if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Reader " << info.info.guid() << ".");
+        }
+        else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
+        }
+        else
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
+        }
     }
 }
 
@@ -81,7 +103,18 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
-        logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Writer " << info.info.guid());
+        if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Found in Participant " << this->id() << " new Writer " << info.info.guid() << ".");
+        }
+        else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+        }
+        else
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
+        }
     }
 }
 
