@@ -39,7 +39,7 @@ PayloadPool::~PayloadPool()
     else if (reserve_count_ != release_count_)
     {
         logWarning(DDSROUTER_PAYLOADPOOL, "Removing PayloadPool with " << (reserve_count_ - release_count_) <<
-            " messages without released.");
+                " messages without released.");
     }
     else
     {

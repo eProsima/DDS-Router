@@ -41,7 +41,7 @@ DiscoveryServerParticipant<ConfigurationType>::DiscoveryServerParticipant(
 
 template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-    DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const noexcept
+DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const noexcept
 {
     // Get Configuration information
     std::vector<Address> listening_addresses = this->configuration_.listening_addresses();
@@ -50,7 +50,7 @@ fastrtps::rtps::RTPSParticipantAttributes
 
     // Set attributes
     fastrtps::rtps::RTPSParticipantAttributes params;
-        // CommonRTPSRouterParticipant::participant_attributes(); // Use default as base attributes
+    // CommonRTPSRouterParticipant::participant_attributes(); // Use default as base attributes
 
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
@@ -69,7 +69,7 @@ fastrtps::rtps::RTPSParticipantAttributes
         {
             // Invalid address, continue with next one
             logInfo(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
+                    "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
             continue;
         }
 
@@ -123,7 +123,7 @@ fastrtps::rtps::RTPSParticipantAttributes
         params.defaultUnicastLocatorList.push_back(locator);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-            "Add listening address " << address << " to Participant " << this->id() << ".");
+                "Add listening address " << address << " to Participant " << this->id() << ".");
     }
 
     /////
@@ -134,8 +134,8 @@ fastrtps::rtps::RTPSParticipantAttributes
         {
             // Invalid address, continue with next one
             logInfo(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Discard connection address with remote server: " << connection_address.discovery_server_guid() <<
-                " in Participant " << this->id() << " initialization.");
+                    "Discard connection address with remote server: " << connection_address.discovery_server_guid() <<
+                    " in Participant " << this->id() << " initialization.");
             continue;
         }
 
@@ -184,8 +184,8 @@ fastrtps::rtps::RTPSParticipantAttributes
             params.builtin.discovery_config.m_DiscoveryServers.push_back(server_attr);
 
             logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Add connection address " << address << " for server " << server_prefix <<
-                " to Participant " << this->id() << ".");
+                    "Add connection address " << address << " for server " << server_prefix <<
+                    " to Participant " << this->id() << ".");
         }
     }
 
@@ -204,8 +204,8 @@ fastrtps::rtps::RTPSParticipantAttributes
         if (!has_connection_addresses)
         {
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Creating Participant " << this->id() << " without listening or connection addresses. " <<
-                "It will not communicate with any other Participant.");
+                    "Creating Participant " << this->id() << " without listening or connection addresses. " <<
+                    "It will not communicate with any other Participant.");
         }
     }
 
@@ -227,7 +227,7 @@ fastrtps::rtps::RTPSParticipantAttributes
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-            "Adding TCP Transport to Participant " << this->id() << ".");
+                "Adding TCP Transport to Participant " << this->id() << ".");
     }
 
     // If has UDP, create descriptor because it has not been created yet
@@ -238,11 +238,12 @@ fastrtps::rtps::RTPSParticipantAttributes
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-            "Adding UDP Transport to Participant " << this->id() << ".");
+                "Adding UDP Transport to Participant " << this->id() << ".");
     }
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-        "Configured Participant " << this->id() << " with server guid: " << this->configuration_.discovery_server_guid());
+            "Configured Participant " << this->id() << " with server guid: " <<
+            this->configuration_.discovery_server_guid());
 
     return params;
 }

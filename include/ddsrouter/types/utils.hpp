@@ -76,8 +76,8 @@ protected:
 
 template <typename T, bool Ptr = false>
 std::ostream& element_to_stream(
-    std::ostream& os,
-    T element)
+        std::ostream& os,
+        T element)
 {
     if (Ptr)
     {
@@ -102,15 +102,15 @@ std::ostream& element_to_stream(
  */
 template <typename T, bool Ptr = false>
 std::ostream& container_to_stream(
-    std::ostream& os,
-    std::vector<T> list,
-    std::string separator = ";")
+        std::ostream& os,
+        std::vector<T> list,
+        std::string separator = ";")
 {
     os << "{";
 
     size_t size = list.size();
 
-    for (size_t i=0; size!=0 && i<size-1; ++i)
+    for (size_t i = 0; size != 0 && i < size - 1; ++i)
     {
         element_to_stream<T, Ptr>(os, list[i]);
         os << separator;
@@ -129,9 +129,9 @@ std::ostream& container_to_stream(
 //! Concatenate a set by converting to vector.
 template <typename T, bool Ptr = false>
 std::ostream& container_to_stream(
-    std::ostream& os,
-    std::set<T> list,
-    std::string separator = ";")
+        std::ostream& os,
+        std::set<T> list,
+        std::string separator = ";")
 {
     return container_to_stream<T, Ptr>(os, std::vector<T>(list.begin(), list.end()), separator);
 }

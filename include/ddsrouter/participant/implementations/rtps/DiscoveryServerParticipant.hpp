@@ -35,8 +35,8 @@ class DiscoveryServerParticipant
 {
 public:
 
-// Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
-FORCE_TEMPLATE_SUBCLASS(DiscoveryServerParticipantConfiguration, ConfigurationType);
+    // Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
+    FORCE_TEMPLATE_SUBCLASS(DiscoveryServerParticipantConfiguration, ConfigurationType);
 
     DiscoveryServerParticipant(
             const ParticipantConfiguration& participant_configuration,

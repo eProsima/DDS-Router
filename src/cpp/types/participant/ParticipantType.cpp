@@ -111,7 +111,10 @@ std::vector<ParticipantType> ParticipantType::all_valid_participant_types() noex
         std::remove_if(
             result.begin(),
             result.end(),
-            [](ParticipantType x){return !x.is_valid();}));
+            [](ParticipantType x)
+            {
+                return !x.is_valid();
+            }));
 
     return result;
 }

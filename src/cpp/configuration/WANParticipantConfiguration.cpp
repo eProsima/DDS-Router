@@ -25,7 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 const TransportProtocol WANParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
-    TransportProtocol::UDP;
+        TransportProtocol::UDP;
 
 WANParticipantConfiguration::WANParticipantConfiguration(
         const ParticipantConfiguration& configuration)

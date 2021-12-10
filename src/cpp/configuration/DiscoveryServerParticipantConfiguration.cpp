@@ -25,7 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 const TransportProtocol DiscoveryServerParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
-    TransportProtocol::UDP;
+        TransportProtocol::UDP;
 
 const DomainId DiscoveryServerParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66u);
 

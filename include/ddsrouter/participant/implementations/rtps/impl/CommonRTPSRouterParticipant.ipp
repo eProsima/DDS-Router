@@ -54,15 +54,15 @@ CommonRTPSRouterParticipant<ConfigurationType>::~CommonRTPSRouterParticipant()
 
 template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
-    fastrtps::rtps::RTPSParticipant*,
-    fastrtps::rtps::ParticipantDiscoveryInfo&& info)
+        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::ParticipantDiscoveryInfo&& info)
 {
     if (info.info.m_guid.guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
+                    "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
@@ -77,15 +77,15 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
 
 template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
-    fastrtps::rtps::RTPSParticipant*,
-    fastrtps::rtps::ReaderDiscoveryInfo&& info)
+        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::ReaderDiscoveryInfo&& info)
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
+                    "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
@@ -100,15 +100,15 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
 
 template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
-    fastrtps::rtps::RTPSParticipant*,
-    fastrtps::rtps::WriterDiscoveryInfo&& info)
+        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::WriterDiscoveryInfo&& info)
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
+                    "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
@@ -128,19 +128,19 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes_();
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-        "Creating Participant in domain " << domain);
+            "Creating Participant in domain " << domain);
 
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params, this);
     if (!rtps_participant_)
     {
         throw InitializationException(
-            utils::Formatter() << "Error creating RTPS Participant " << this->id());
+                  utils::Formatter() << "Error creating RTPS Participant " << this->id());
     }
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-        "New Participant " << this->configuration_.type() <<
-        " created with id " << this->id() <<
-        " in domain " << domain << " with guid " << rtps_participant_->getGuid());
+            "New Participant " << this->configuration_.type() <<
+            " created with id " << this->id() <<
+            " in domain " << domain << " with guid " << rtps_participant_->getGuid());
 }
 
 template <class ConfigurationType>
@@ -149,7 +149,7 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
 {
     return std::make_shared<Writer>(
         this->id(), topic,
-    this->payload_pool_, rtps_participant_);
+        this->payload_pool_, rtps_participant_);
 }
 
 template <class ConfigurationType>
@@ -161,7 +161,7 @@ std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_
 
 template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-    CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
+CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
     return params;
