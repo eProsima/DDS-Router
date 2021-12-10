@@ -167,6 +167,8 @@ jobs:
           --exclude='.*docs/.*' \
           --exclude='.*test/.*' \
           --exclude='.*github/.*' \
+          --exclude='.*thirdparty/.*' \
+          --exclude='.*resources/.*' \
           --exclude-unreachable-branches
 
       - name: Upload coverage
