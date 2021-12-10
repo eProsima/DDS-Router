@@ -46,7 +46,7 @@ protected:
 
     TransportProtocol default_transport_protocol_() const noexcept override;
 
-    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // TCP
+    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // UDP
 };
 
 } /* namespace ddsrouter */

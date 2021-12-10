@@ -120,6 +120,7 @@ fastrtps::rtps::RTPSParticipantAttributes
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
+        params.defaultUnicastLocatorList.push_back(locator);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
             "Add listening address " << address << " to Participant " << this->id() << ".");

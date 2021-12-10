@@ -56,7 +56,7 @@ RawConfiguration participant_configuration(
 
     RawConfiguration address;
     address[ADDRESS_IP_TAG] = "127.0.0.1";
-    address[ADDRESS_PORT_TAG] = 11666;
+    address[ADDRESS_PORT_TAG] = 11666 + value;
 
     participant_configuration[PARTICIPANT_TYPE_TAG] = type.to_string();
 
