@@ -19,6 +19,7 @@
 #ifndef _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_PARTICIPANTCONFIGURATION_HPP_
 
+#include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/participant/ParticipantType.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
@@ -30,7 +31,7 @@ namespace ddsrouter {
  * This class joins every DDSRouter Participant Configuration characteristic and includes methods to interact with it.
  * Each Participant that requires specific configuration must inherit from this class.
  */
-class ParticipantConfiguration
+class ParticipantConfiguration : public BaseConfiguration
 {
 public:
 
@@ -102,9 +103,6 @@ protected:
 
     //! Participant Type associated with this configuration
     ParticipantType type_;
-
-    //! Yaml object with the configuration info
-    const RawConfiguration raw_configuration_;
 };
 
 } /* namespace ddsrouter */

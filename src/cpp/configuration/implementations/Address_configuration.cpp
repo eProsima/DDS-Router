@@ -35,7 +35,7 @@ Address::Address(
     {
         try
         {
-            ip_ = configuration.as<IpType>();
+            ip_ = configuration[ADDRESS_IP_TAG].as<IpType>();
         }
         catch (const std::exception& e)
         {
@@ -53,7 +53,7 @@ Address::Address(
     {
         try
         {
-            port_ = configuration.as<PortType>();
+            port_ = configuration[ADDRESS_PORT_TAG].as<PortType>();
         }
         catch (const std::exception& e)
         {
@@ -71,7 +71,7 @@ Address::Address(
     {
         try
         {
-            std::string tag = configuration.as<std::string>();
+            std::string tag = configuration[ADDRESS_TRANSPORT_TAG].as<std::string>();
 
             if (tag == ADDRESS_TRANSPORT_UDP_TAG)
             {
@@ -84,7 +84,7 @@ Address::Address(
             else
             {
                 throw ConfigurationException(utils::Formatter() <<
-                              "Error getting Address transport type: it must be set <udp> or <tcp>");
+                              "Error getting Address transport type: it must be <udp> or <tcp>");
             }
         }
         catch (const std::exception& e)
@@ -98,7 +98,45 @@ Address::Address(
         transport_protocol_ = default_transport;
     }
 
-    // TODO do ip version
+    // Get ip version
+    if (configuration[ADDRESS_IP_VERSION_TAG])
+    {
+        try
+        {
+            std::string tag = configuration[ADDRESS_IP_VERSION_TAG].as<std::string>();
+
+            if (tag == ADDRESS_IP_VERSION_V4_TAG)
+            {
+                ip_version_ = IPv4;
+            }
+            else if (tag == ADDRESS_IP_VERSION_V6_TAG)
+            {
+                ip_version_ = IPv6;
+            }
+            else
+            {
+                throw ConfigurationException(utils::Formatter() <<
+                              "Error getting Address ip version: it must be <v4> or <v6>");
+            }
+        }
+        catch (const std::exception& e)
+        {
+            throw ConfigurationException(utils::Formatter() <<
+                          "Error getting Address ip version: " << e.what());
+        }
+    }
+    else
+    {
+        // Set ip version depending on ip
+        if (Address::is_ipv4_correct(ip_))
+        {
+            ip_version_ = IPv4;
+        }
+        else
+        {
+            ip_version_ = IPv6;
+        }
+    }
 }
 
 RawConfiguration Address::dump(

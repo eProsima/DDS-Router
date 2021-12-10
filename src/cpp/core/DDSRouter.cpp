@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include <ddsrouter/configuration/Configuration.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
@@ -31,7 +31,7 @@ namespace ddsrouter {
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouter::DDSRouter(
-        const Configuration& configuration)
+        const DDSRouterConfiguration& configuration)
     : payload_pool_(new CopyPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
@@ -84,7 +84,7 @@ DDSRouter::~DDSRouter()
 }
 
 ReturnCode DDSRouter::reload_configuration(
-        const Configuration& new_configuration)
+        const DDSRouterConfiguration& new_configuration)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -105,8 +105,15 @@ ReturnCode DDSRouter::reload_configuration(
     // Set new Allowed list
     allowed_topics_ = new_allowed_topic_list;
 
+    logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
+
     // TODO refactor with discovery functionality
     // TODO add bridge creation when initial topics configuration added
+    // Create new bridges for topics that does not exist yet
+    for (RealTopic topic : new_configuration.real_topics())
+    {
+        discovered_topic_(topic);
+    }
 
     // It must change the configuration. Check every topic discovered and active if needed.
     for (auto& topic_it : current_topics_)
@@ -128,6 +135,8 @@ ReturnCode DDSRouter::reload_configuration(
             }
         }
     }
+
+    configuration_ = new_configuration;
 
     return ReturnCode::RETCODE_OK;
 }
@@ -207,6 +216,8 @@ void DDSRouter::init_allowed_topics_()
     allowed_topics_ = AllowedTopicList(
         configuration_.allowlist(),
         configuration_.blocklist());
+
+    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
 }
 
 void DDSRouter::init_participants_()

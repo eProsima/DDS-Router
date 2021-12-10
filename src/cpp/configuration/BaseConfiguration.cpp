@@ -13,45 +13,24 @@
 // limitations under the License.
 
 /**
- * @file Data.cpp
+ * @file BaseConfiguration.cpp
  *
  */
 
-#include <sstream>
-
-#include <ddsrouter/types/Data.hpp>
+#include <ddsrouter/configuration/BaseConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const eprosima::fastrtps::rtps::octet& octet)
+BaseConfiguration::BaseConfiguration(
+        const RawConfiguration& raw_configuration)
+    : raw_configuration_(raw_configuration)
 {
-    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
-    return os;
 }
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const Payload& payload)
+RawConfiguration BaseConfiguration::raw_configuration() const noexcept
 {
-    os << "Payload{";
-
-    for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
-    {
-        os << payload.data[i] << " ";
-    }
-
-    // Avoid printing extra space after last byte
-    if (payload.length > 0)
-    {
-        os << payload.data[payload.length - 1];
-    }
-
-    os << "}";
-
-    return os;
+    return raw_configuration_;
 }
 
 } /* namespace ddsrouter */

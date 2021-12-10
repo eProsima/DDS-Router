@@ -24,6 +24,8 @@
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/implementations/rtps/SimpleParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
+#include <ddsrouter/participant/implementations/rtps/WANParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/utils.hpp>
@@ -64,20 +66,36 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
             break;
 
+        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+            // Discovery Server RTPS Participant
+            return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
+                participant_configuration,
+                payload_pool,
+                discovery_database);
+            break;
+
+        case ParticipantType::WAN:
+            // Discovery Server RTPS Participant
+            return std::make_shared<rtps::WANParticipant> (
+                participant_configuration,
+                payload_pool,
+                discovery_database);
+            break;
+
         case ParticipantType::PARTICIPANT_TYPE_INVALID:
             // TODO: Add warning log
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
                                                             << " is not a valid" << " participant type name.");
-            return nullptr; // Unreacheable code
+            return nullptr; // Unreachable code
             break;
 
         default:
             // This should not happen as every type must be in the switch
             assert(false);
-            return nullptr; // Unreacheable code
+            return nullptr; // Unreachable code
             break;
     }
-    return nullptr; // Unreacheable code
+    return nullptr; // Unreachable code
 }
 
 void ParticipantFactory::remove_participant(

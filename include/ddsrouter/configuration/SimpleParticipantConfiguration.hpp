@@ -27,7 +27,7 @@ namespace ddsrouter {
 namespace rtps {
 
 /**
- * This Configuration give methods for a \c SimpleParticipant to be configured.
+ * This class joins Simple Participant Configuration features and give methods to interact with it.
  */
 class SimpleParticipantConfiguration : public ParticipantConfiguration
 {

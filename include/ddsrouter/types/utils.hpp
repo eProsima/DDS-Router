@@ -24,6 +24,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -45,7 +46,7 @@ void to_lowercase(
         std::string& st) noexcept;
 
 /**
- * @brief Auxiliar function to concatenate inplace every kind of object << stream
+ * @brief Auxiliary function to concatenate inplace every kind of object << stream
  *
  * The main case to use this class is in Exception creation. In order to generate an Exception message
  * using the << operator for the objects in the block, add them to Formatter() object and they will be
@@ -69,9 +70,71 @@ public:
 
 protected:
 
-    //! Concatenated stream where the stremas are added at the end
+    //! Concatenated stream where the streams are added at the end
     std::stringstream ss_;
 };
+
+template <typename T, bool Ptr = false>
+std::ostream& element_to_stream(
+        std::ostream& os,
+        T element)
+{
+    if (Ptr)
+    {
+        os << (*element);
+    }
+    else
+    {
+        os << element;
+    }
+
+    return os;
+}
+
+/**
+ * @brief Concatenate serialization of elements in an array separated by \c separator .
+ *
+ * @tparam T type of each element. This object must have an << operator
+ * @param os stream to store the concatenation result
+ * @param list list of elements
+ * @param separator char or string separator between elements
+ * @return std::ostream& with the result stream concatenated
+ */
+template <typename T, bool Ptr = false>
+std::ostream& container_to_stream(
+        std::ostream& os,
+        std::vector<T> list,
+        std::string separator = ";")
+{
+    os << "{";
+
+    size_t size = list.size();
+
+    for (size_t i = 0; size != 0 && i < size - 1; ++i)
+    {
+        element_to_stream<T, Ptr>(os, list[i]);
+        os << separator;
+    }
+
+    if (size > 0)
+    {
+        element_to_stream<T, Ptr>(os, list[size - 1]);
+    }
+
+    os << "}";
+
+    return os;
+}
+
+//! Concatenate a set by converting to vector.
+template <typename T, bool Ptr = false>
+std::ostream& container_to_stream(
+        std::ostream& os,
+        std::set<T> list,
+        std::string separator = ";")
+{
+    return container_to_stream<T, Ptr>(os, std::vector<T>(list.begin(), list.end()), separator);
+}
 
 } /* namespace utils */
 } /* namespace ddsrouter */

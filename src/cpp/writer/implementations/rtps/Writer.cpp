@@ -79,6 +79,9 @@ Writer::~Writer()
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
 
+    // Explicitly delete every data in the history
+    rtps_history_->remove_all_changes();
+
     // Delete History
     if (rtps_history_)
     {
@@ -119,7 +122,11 @@ ReturnCode Writer::write_(
     }
 
     // Get the Payload (copying it)
-    payload_pool_->get_payload(data->payload, new_change->serializedPayload);
+    if (!payload_pool_->get_payload(data->payload, (*new_change)))
+    {
+        logError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
+        return ReturnCode::RETCODE_ERROR;
+    }
 
     logDebug(DDSROUTER_RTPS_WRITER,
             "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<

@@ -69,6 +69,10 @@ int main(
 
     // Encapsulating execution in block to erase all memory correctly before closing process
     {
+        // First of all, create signal handler so SIGINT does not break the program while initializing
+        // Signal handler
+        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
+
         /////
         // DDS Router Initialization
 
@@ -82,9 +86,10 @@ int main(
         // File Watcher Handler
 
         // Callback will reload configuration and pass it to DDSRouter
+        // WARNING: it is needed to pass file_path, as FileWatcher only retrieves file_name
         std::function<void(std::string)> filewatcher_callback =
-                [&router]
-                    (std::string file_path)
+                [&router, file_path]
+                    (std::string file_name)
                 {
                     logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
                     try
@@ -95,7 +100,7 @@ int main(
                     catch (const std::exception& e)
                     {
                         logWarning(DDSROUTER_EXECUTION,
-                                "Error reloading configuration file " << file_path << " with error: " << e.what());
+                                "Error reloading configuration file " << file_name << " with error: " << e.what());
                     }
                 };
 
@@ -131,9 +136,6 @@ int main(
 
             periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
         }
-
-        // Signal handler
-        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
 
         // Start Router
         router.start();

@@ -61,7 +61,7 @@ const option::Descriptor usage[] = {
     {
         optionIndex::CONFIGURATION_FILE,
         0,
-        "f",
+        "c",
         "config-path",
         Arg::Readable_File,
         "  -c \t--config-path\t  \t" \

@@ -13,45 +13,29 @@
 // limitations under the License.
 
 /**
- * @file Data.cpp
- *
+ * @file ParticipantConfiguration.cpp
  */
 
-#include <sstream>
-
-#include <ddsrouter/types/Data.hpp>
+#include <ddsrouter/configuration/WANParticipantConfiguration.hpp>
+#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const eprosima::fastrtps::rtps::octet& octet)
+const TransportProtocol WANParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
+        TransportProtocol::UDP;
+
+WANParticipantConfiguration::WANParticipantConfiguration(
+        const ParticipantConfiguration& configuration)
+    : DiscoveryServerParticipantConfiguration(configuration.id(), configuration.raw_configuration())
 {
-    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
-    return os;
 }
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const Payload& payload)
+TransportProtocol WANParticipantConfiguration::default_transport_protocol_() const noexcept
 {
-    os << "Payload{";
-
-    for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
-    {
-        os << payload.data[i] << " ";
-    }
-
-    // Avoid printing extra space after last byte
-    if (payload.length > 0)
-    {
-        os << payload.data[payload.length - 1];
-    }
-
-    os << "}";
-
-    return os;
+    return DEFAULT_TRANSPORT_PROTOCOL_;
 }
 
 } /* namespace ddsrouter */

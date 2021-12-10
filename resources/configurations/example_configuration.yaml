@@ -10,6 +10,10 @@ blocklist:
     {name: "*ros*"}
   ]
 
+local_participant:
+  type: "simple"
+  domain: 11
+
 #################################
 
 wan:
@@ -32,16 +36,21 @@ k8s:
   connection-addresses:
     [
       {
-        ip: "8.8.8.8",
-        port: 36000,
-        id: 0
+        id: 0,
+        addresses:
+          [
+            {
+              ip: "8.8.8.8",
+              port: 36000,
+            }
+          ]
       }
     ]
 
 #################################
 
 local:
-  type: ros
+  type: local-ds
   domain: 2
   discovery-server:
     id: 3
@@ -55,18 +64,3 @@ local:
     ]
 
 #################################
-
-local_no_ros:
-  filename: "./local_no_ros_participant_configuration.yaml"
-
-###########################################################
-# ./local_no_ros_participant_configuration.yaml
-###########################################################
-
-type: local
-blocklist:
-  [
-    {name: "*ros*"},
-    {name: "*rt*"}
-  ]
-domain: 1

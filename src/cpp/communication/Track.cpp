@@ -182,10 +182,6 @@ void Track::transmit_nts_() noexcept
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         ReturnCode ret = reader_->take(data);
 
-        logDebug(DDSROUTER_TRACK,
-                "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->source_guid << ".");
-
         if (ret == ReturnCode::RETCODE_NO_DATA)
         {
             // There is no more data, so finish loop and wait again for new data
@@ -199,6 +195,10 @@ void Track::transmit_nts_() noexcept
                                                                       << ". Skipping data and continue.");
             continue;
         }
+
+        logDebug(DDSROUTER_TRACK,
+                "Track " << reader_participant_id_ << " for topic " << topic_ <<
+                " transmitting data from remote endpoint " << data->source_guid << ".");
 
         // Send data through writers
         for (auto& writer_it : writers_)

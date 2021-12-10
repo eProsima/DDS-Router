@@ -31,7 +31,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 template <class ConfigurationType>
-BaseParticipant <ConfigurationType> ::BaseParticipant(
+BaseParticipant<ConfigurationType>::BaseParticipant(
         const ParticipantConfiguration& participant_configuration,
         std::shared_ptr <PayloadPool> payload_pool,
         std::shared_ptr <DiscoveryDatabase> discovery_database)
@@ -43,7 +43,7 @@ BaseParticipant <ConfigurationType> ::BaseParticipant(
 }
 
 template <class ConfigurationType>
-BaseParticipant <ConfigurationType> ::~BaseParticipant()
+BaseParticipant<ConfigurationType>::~BaseParticipant()
 {
     logDebug(DDSROUTER_TRACK, "Destroying Participant " << *this << ".");
 
@@ -63,7 +63,7 @@ BaseParticipant <ConfigurationType> ::~BaseParticipant()
 }
 
 template <class ConfigurationType>
-ParticipantId BaseParticipant <ConfigurationType> ::id() const noexcept
+ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
@@ -71,7 +71,7 @@ ParticipantId BaseParticipant <ConfigurationType> ::id() const noexcept
 }
 
 template <class ConfigurationType>
-ParticipantType BaseParticipant <ConfigurationType> ::type() const noexcept
+ParticipantType BaseParticipant<ConfigurationType>::type() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
@@ -79,7 +79,7 @@ ParticipantType BaseParticipant <ConfigurationType> ::type() const noexcept
 }
 
 template <class ConfigurationType>
-std::shared_ptr <IWriter> BaseParticipant <ConfigurationType> ::create_writer(
+std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
         RealTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
@@ -103,7 +103,7 @@ std::shared_ptr <IWriter> BaseParticipant <ConfigurationType> ::create_writer(
 }
 
 template <class ConfigurationType>
-std::shared_ptr <IReader> BaseParticipant <ConfigurationType> ::create_reader(
+std::shared_ptr<IReader> BaseParticipant<ConfigurationType>::create_reader(
         RealTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
@@ -127,7 +127,7 @@ std::shared_ptr <IReader> BaseParticipant <ConfigurationType> ::create_reader(
 }
 
 template <class ConfigurationType>
-void BaseParticipant <ConfigurationType> ::delete_writer(
+void BaseParticipant<ConfigurationType>::delete_writer(
         std::shared_ptr <IWriter> writer) noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
@@ -144,7 +144,7 @@ void BaseParticipant <ConfigurationType> ::delete_writer(
 }
 
 template <class ConfigurationType>
-void BaseParticipant <ConfigurationType> ::delete_reader(
+void BaseParticipant<ConfigurationType>::delete_reader(
         std::shared_ptr <IReader> reader) noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
@@ -161,17 +161,23 @@ void BaseParticipant <ConfigurationType> ::delete_reader(
 }
 
 template <class ConfigurationType>
-void BaseParticipant <ConfigurationType> ::delete_writer_(
+void BaseParticipant<ConfigurationType>::delete_writer_(
         std::shared_ptr <IWriter>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
 template <class ConfigurationType>
-void BaseParticipant <ConfigurationType> ::delete_reader_(
+void BaseParticipant<ConfigurationType>::delete_reader_(
         std::shared_ptr <IReader>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
+}
+
+template <class ConfigurationType>
+ParticipantId BaseParticipant<ConfigurationType>::id_nts_() const noexcept
+{
+    return configuration_.id();
 }
 
 template <class ConfigurationType>

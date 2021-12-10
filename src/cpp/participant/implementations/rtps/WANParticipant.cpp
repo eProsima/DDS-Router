@@ -13,46 +13,25 @@
 // limitations under the License.
 
 /**
- * @file Data.cpp
- *
+ * @file WANParticipant.cpp
  */
 
-#include <sstream>
-
-#include <ddsrouter/types/Data.hpp>
+#include <ddsrouter/participant/implementations/rtps/WANParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace rtps {
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const eprosima::fastrtps::rtps::octet& octet)
+WANParticipant::WANParticipant(
+        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
+    : DiscoveryServerParticipant<WANParticipantConfiguration>
+        (participant_configuration, payload_pool, discovery_database)
 {
-    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
-    return os;
+    create_participant_();
 }
 
-std::ostream& operator <<(
-        std::ostream& os,
-        const Payload& payload)
-{
-    os << "Payload{";
-
-    for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
-    {
-        os << payload.data[i] << " ";
-    }
-
-    // Avoid printing extra space after last byte
-    if (payload.length > 0)
-    {
-        os << payload.data[payload.length - 1];
-    }
-
-    os << "}";
-
-    return os;
-}
-
+} /* namespace rtps */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

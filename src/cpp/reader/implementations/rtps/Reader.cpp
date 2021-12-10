@@ -110,6 +110,32 @@ ReturnCode Reader::take_(
         return ReturnCode::RETCODE_ERROR;
     }
 
+    // Check that the data is consistent
+    if (!(received_change->serializedPayload.length > 0))
+    {
+        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+                "Error taking data with length " << received_change->serializedPayload.length << ".");
+
+        // Remove the change in the History and release it in the reader
+        rtps_reader_->getHistory()->remove_change(received_change);
+        rtps_reader_->releaseCache(received_change);
+
+        return ReturnCode::RETCODE_ERROR;
+    }
+
+    // Check that the guid is consistent
+    if (received_change->writerGUID == fastrtps::rtps::GUID_t::unknown())
+    {
+        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+                "Error taking data without correct writer GUID.");
+
+        // Remove the change in the History and release it in the reader
+        rtps_reader_->getHistory()->remove_change(received_change);
+        rtps_reader_->releaseCache(received_change);
+
+        return ReturnCode::RETCODE_ERROR;
+    }
+
     // Store the new data that has arrived in the Track data
     // Get the writer guid
     data->source_guid = received_change->writerGUID;
@@ -175,7 +201,7 @@ void Reader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader*,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
-    if (!come_from_this_participant_(change))
+    if (enabled_ && !come_from_this_participant_(change))
     {
         // Call Track callback (by calling BaseReader callback method)
         logDebug(DDSROUTER_RTPS_READER_LISTENER,
@@ -185,7 +211,7 @@ void Reader::onNewCacheChangeAdded(
     }
     else
     {
-        // If it is a message from this Participant, do not send it forward and remove it
+        // If it is a message from this Participant, or Reader is disabled, do not send it forward and remove it
         // TODO: do this more elegant
         rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
     }

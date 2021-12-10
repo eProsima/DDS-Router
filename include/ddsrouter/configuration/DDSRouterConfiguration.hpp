@@ -13,13 +13,14 @@
 // limitations under the License.
 
 /**
- * @file Configuration.hpp
+ * @file DDSRouterConfiguration.hpp
  */
 
 #ifndef _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
@@ -28,22 +29,22 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * This class joins every DDSRouter Configuration characteristic and includes methods
+ * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-class Configuration
+class DDSRouterConfiguration : public BaseConfiguration
 {
 public:
 
     /**
-     * @brief Construct a new Configuration object from a yaml object
+     * @brief Construct a new DDSRouterConfiguration object from a yaml object
      *
      * @param raw_configuration represents the yaml to this object to get the configuration data. This yaml must be a
      *  map or an empty yaml, and nothing else
      *
      * @throw \c ConfigurationException in case the yaml is not well formed or is not a map nor empty
      */
-    Configuration(
+    DDSRouterConfiguration(
             const RawConfiguration& raw_configuration);
 
     /**
@@ -67,7 +68,7 @@ public:
     /**
      * @brief Return a list with the different \c ParticipantConfigurations in the yaml
      *
-     * Every tag inside the yaml that is not a key word for the Configuration could be a Participant.
+     * Every tag inside the yaml that is not a key word for the DDSRouterConfiguration could be a Participant.
      * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
      * is created and added to the list to be returned.
      * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
@@ -104,9 +105,6 @@ protected:
      */
     std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
             const char* list_tag) const;
-
-    //! Yaml object with the configuration info
-    const RawConfiguration raw_configuration_;
 };
 
 } /* namespace ddsrouter */

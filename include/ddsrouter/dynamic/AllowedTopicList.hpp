@@ -112,7 +112,17 @@ protected:
 
     //! Mutex to restrict access to the class
     mutable std::recursive_mutex mutex_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const AllowedTopicList&);
 };
+
+//! \c AllowedTopicList to stream serializator
+std::ostream& operator <<(
+        std::ostream& os,
+        const AllowedTopicList& atl);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
