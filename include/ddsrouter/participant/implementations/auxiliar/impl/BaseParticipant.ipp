@@ -175,6 +175,12 @@ void BaseParticipant <ConfigurationType> ::delete_reader_(
 }
 
 template <class ConfigurationType>
+ParticipantId BaseParticipant <ConfigurationType> ::id_nts_() const noexcept
+{
+    return configuration_.id();
+}
+
+template <class ConfigurationType>
 std::ostream& operator <<(
         std::ostream& os,
         const BaseParticipant<ConfigurationType>& participant)

@@ -74,7 +74,6 @@ public:
      */
     ParticipantId id() const noexcept override;
 
-
     /**
      * @brief Override type() IParticipant method
      *
@@ -169,6 +168,18 @@ protected:
      */
     virtual void delete_reader_(
             std::shared_ptr<IReader> reader) noexcept;
+
+    /**
+     * @brief Get Id without locking a mutex
+     *
+     * It gets the id from the configuration.
+     *
+     * Not Thread safe.
+     *
+     * @warning this method is called from discovery callbacks, that could be called from Fast DDS while
+     * creating an endpoint. So it could lead to a dead lock. That is why it is not thread safe.
+     */
+    ParticipantId id_nts_() const noexcept;
 
     //! Participant configuration
     ConfigurationType configuration_;
