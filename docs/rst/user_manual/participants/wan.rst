@@ -48,6 +48,12 @@ check the following section
     The network addresses set in *listening-addresses* and *connection-addresses* use ``UDP`` transport by default
     if the transport is not specified in the address configuration.
 
+WAN Configuration
+-----------------
+
+Refer to section :ref:`user_manual_wan_configuration` for detailed explanation on how to correctly configure
+the |ddsrouter| for WAN communication.
+
 Configuration Example
 =====================
 

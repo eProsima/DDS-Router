@@ -2,9 +2,9 @@
 
 .. _user_manual_glossary:
 
-########
-Glossary
-########
+############
+Nomenclature
+############
 
 
 DDS Router nomenclature
@@ -44,47 +44,18 @@ DDS nomenclature
 
 .. glossary::
 
-    DomainParticipant
-        A DomainParticipant is the entry point of the application to a DDS Domain.
-        Every DomainParticipant is linked to a single domain from its creation,
-        and contains all the Entities related to that domain.
-        It also acts as a factory for Publisher, Subscriber and Topic.
+    DataReader
+        DDS element that subscribes to a specific Topic.
+        It belong to one and only one Participant, and it is uniquely identified by a Guid.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/subscriber/subscriber.html>`__
         for further information.
-
-    Topic
-        DDS isolation abstraction to encapsulate subscriptions and publications.
-        Each Topic is uniquely identified by a topic name and a topic type name (name of the data type it transmits).
-
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/topic/topic.html>`__
-        for further information.
-
-    GuidPrefix
-        Global Unique Identifier shared by a Participant and all its sub-entities.
-        Identifies uniquely a DDS Participant.
-
-    Guid
-        Global Unique Identifier.
-        It contains a GuidPrefix and an EntityId.
-        The EntityId uniquely identifies sub-entities inside a Participant.
-        Identifies uniquely a DDS entity (DomainParticipant, DataWriter or DataReader).
-
-    Endpoint
-        DDS element that publish or subscribes in a specific Topic. Endpoint kinds are *DataWriter* or *DataReader*.
 
     DataWriter
         DDS entity that publish data in a specific Topic.
         It belong to one and only one Participant, and it is uniquely identified by a Guid.
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/publisher/dataWriter/dataWriter.html>`__
-        for further information.
-
-    DataReader
-        DDS element that subscribes to a specific Topic.
-        It belong to one and only one Participant, and it is uniquely identified by a Guid.
-
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/subscriber/subscriber.html>`__
         for further information.
 
     Discovery Server
@@ -101,4 +72,32 @@ DDS nomenclature
         DomainParticipants  in different Domains will not even discover each other.
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1//fastdds/dds_layer/domain/domain.html>`__
+        for further information.
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
+        for further information.
+
+    DomainParticipant
+        A DomainParticipant is the entry point of the application to a DDS Domain.
+        Every DomainParticipant is linked to a single domain from its creation, and cannot change such domain.
+        It also acts as a factory for Publisher, Subscriber and Topic.
+
+    Endpoint
+        DDS element that publish or subscribes in a specific Topic. Endpoint kinds are *DataWriter* or *DataReader*.
+
+    Guid
+        Global Unique Identifier.
+        It contains a GuidPrefix and an EntityId.
+        The EntityId uniquely identifies sub-entities inside a Participant.
+        Identifies uniquely a DDS entity (DomainParticipant, DataWriter or DataReader).
+
+    GuidPrefix
+        Global Unique Identifier shared by a Participant and all its sub-entities.
+        Identifies uniquely a DDS Participant.
+
+    Topic
+        DDS isolation abstraction to encapsulate subscriptions and publications.
+        Each Topic is uniquely identified by a topic name and a topic type name (name of the data type it transmits).
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/topic/topic.html>`__
         for further information.

@@ -86,7 +86,8 @@ Below is the list with all the available Participant Types.
 
     *   - Participant Type
         - Aliases
-        - Specific configuration tags
+        - Specific |br|
+          configuration tags
         - Description
 
     *   - :ref:`user_manual_participants_echo`
@@ -107,7 +108,8 @@ Below is the list with all the available Participant Types.
         - ``guid`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses``
-        - Discovery Server DDS DomainParticipant for local communication.
+        - Discovery Server DDS DomainParticipant |br|
+          for local communication.
 
     *   - :ref:`user_manual_participants_wan`
         - ``wan`` |br|
@@ -115,7 +117,8 @@ Below is the list with all the available Participant Types.
         - ``guid`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses``
-        - Discovery Server DDS DomainParticipant for WAN communication.
+        - Discovery Server DDS DomainParticipant |br|
+          for WAN communication.
 
 
 ..
