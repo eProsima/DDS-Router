@@ -60,8 +60,14 @@ DDS nomenclature
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/topic/topic.html>`__
         for further information.
 
+    GuidPrefix
+        Global Unique Identifier shared by a Participant and all its sub-entities.
+        Identifies uniquely a DDS Participant.
+
     Guid
         Global Unique Identifier.
+        It contains a GuidPrefix and an EntityId.
+        The EntityId uniquely identifies sub-entities inside a Participant.
         Identifies uniquely a DDS entity (DomainParticipant, DataWriter or DataReader).
 
     Endpoint
@@ -79,4 +85,12 @@ DDS nomenclature
         It belong to one and only one Participant, and it is uniquely identified by a Guid.
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/subscriber/subscriber.html>`__
+        for further information.
+
+    Discovery Server
+        Discovery Server Discovery Protocol is a Fast DDS feature that enables a new Discovery mechanism based on a
+        Server that filters and distribute the discovery information.
+        This is highly recommended in networks where multicast is not available (e.g. WAN).
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html>`__
         for further information.
