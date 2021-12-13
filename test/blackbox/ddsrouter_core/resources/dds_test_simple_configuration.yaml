@@ -1,0 +1,16 @@
+
+# This .yaml contains the configuration for the complex test.
+# It is composed of two simple (RTPS) participants.
+
+allowlist:
+  [
+    {name: "HelloWorldTopic", type: "HelloWorld"}
+  ]
+
+participant_0:
+  type: "local"
+  domain: 0
+
+participant_1:
+  type: "local"
+  domain: 1
