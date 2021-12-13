@@ -15,8 +15,9 @@ Use case
 ========
 
 Use this Participant in order to communicate an internal DDS network using Discovery Server.
-For example, in networks that do not allow multicast, or to reduce discovery traffic.
-
+This is highly useful in networks that do not support multicast communication;
+or to reduce the number of meta-traffic packets exchanged in discovery,
+reducing the network traffic in the discovery process.
 
 Type aliases
 ============
@@ -40,16 +41,18 @@ check the following section
 
 .. note::
 
-    Those addresses in *listening-addresses* and *connection-addresses* use ``UDP`` transport by default
+    The network addresses set in *listening-addresses* and *connection-addresses* use ``UDP`` transport by default
     if the transport is not specified in the address configuration.
 
 Configuration Example
 =====================
 
-Configure a Local Discovery Server with ROS2 GuidPrefix with id ``2`` (``44.53.02.5f.45.50.52.4f.53.49.4d.41``).
+Configure a Local Discovery Server setting the GuidPrefix used for ROS 2 deployments with id ``2``
+(``44.53.02.5f.45.50.52.4f.53.49.4d.41``).
 It listens for clients in *localhost* in ports ``11600`` in ``UDP`` and ``11601`` in ``TCP``.
-It connects with a remote Discovery Server in IPv6 address ``2001:4860:4860::8888`` and port ``11666`` which Discovery
-Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe``
+This example connects the local Discovery Server Participant with a remote Discovery Server listening in IPv6 address
+``2001:4860:4860::8888`` and port ``11666`` and configured with ``01.0f.04.00.00.00.00.00.00.00.ca.fe``
+Discovery Server GuidPrefix.
 
 .. code-block:: yaml
 

@@ -2,9 +2,9 @@
 
 .. _user_manual_participants_wan:
 
-###
-WAN
-###
+###############
+WAN Participant
+###############
 
 This type of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant` that communicates
 with other **WAN** Participants in different networks.
@@ -19,8 +19,8 @@ a |ddsrouter| with an active WAN Participant.
 Use case
 ========
 
-Use this Participant in order to communicate an internal DDS network with other networks in different LANs.
-Each of the networks to communicate will need a running |ddsrouter|, and the messages will be relay from one to
+Use this Participant to communicate an internal DDS network with other LANs through a WAN communication.
+Each of the networks to be connected require a running |ddsrouter|, and the messages will be relay from one to
 another depending on the topics filtered by each of them.
 
 
@@ -45,13 +45,13 @@ check the following section
 
 .. note::
 
-    Those addresses in *listening-addresses* and *connection-addresses* use ``TCP`` transport by default
+    The network addresses set in *listening-addresses* and *connection-addresses* use ``UDP`` transport by default
     if the transport is not specified in the address configuration.
 
 Configuration Example
 =====================
 
-Configure a WAN Discovery Server with ROS2 GuidPrefix with id ``2`` (``44.53.02.5f.45.50.52.4f.53.49.4d.41``).
+Configure a WAN Discovery Server with GuidPrefix id ``2`` (``01.0f.02.00.00.00.00.00.00.00.ca.fe``).
 It listens for clients in public IP ``82.0.0.1`` in port ``11600`` in ``TCP``.
 It connects with a remote WAN Participant in IPv6 address ``2001:4860:4860::8888`` and port ``11666`` which Discovery
 Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` transport.
