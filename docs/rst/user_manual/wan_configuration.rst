@@ -34,7 +34,7 @@ Most network routers support a graphical interface where port forwarding could b
 
 .. note:
 
-    It is needed to use same public port and internal port because of Fast DDS configuration requirements.
+    It is needed to use same public port and internal port due to of Fast DDS configuration requirements.
 
 
 TCP vs UDP
@@ -70,9 +70,9 @@ These are a list of tips to help choosing whether to use one or the other.
 
 .. note:
 
-    DDS is thought to work over UDP and has its own reliability methods.
-    Thus, it is recommended to UDP in |ddsrouter|,
-    and it uses UDP transport by default if the transport is not specified explicitly in the configuration.
+    DDS is thought to work over UDP and has its own reliability mechanisms.
+    Thus, the |ddsrouter| uses UDP transport by default for every address that has not explicitly specified
+    a transport in the configuration file.
 
 
 Examples
@@ -88,8 +88,8 @@ with a public IP ``2.2.2.2``.
 *A* will act as server of the TCP communication, while *B* will act as client.
 
 User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-This is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(It is necessary to use same public port as the internal one).
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
+(it is required to use the same public port as the internal one).
 User *A* should set its *listening-addresses* as follows:
 
 .. yaml:
@@ -140,8 +140,8 @@ It does not matter whether *A* knows *B* address, *B* knows *A*, or both know ea
 In this example, *B* will know *A* address, and not the other way around.
 
 User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-This is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(It is necessary to use same public port as the internal one).
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
+(it is required to use same public port as the internal one).
 User *A* should set its *listening-addresses* as follows:
 
 .. yaml:
@@ -156,7 +156,7 @@ User *A* should set its *listening-addresses* as follows:
     ]
 
 User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11777``.
-This is, every datagram that arrives to IP ``1.1.1.1:11777`` will be forwarded to ``192.168.2.2:11777``
+This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11777``
 (It is necessary to use same public port as the internal one).
 User *B* should set its *listening-addresses* and *connection-addresses* as follows:
 
@@ -185,5 +185,5 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
     ]
 
 This way, *B* will connect to *A*.
-Once *A* receives the message from *B*, it will communicate with it via address ``1.1.1.1:11777``.
+Once *A* receives the message from *B*, it will communicate with it via address ``2.2.2.2:11777``.
 *B* will continue communicating with *A* via address ``1.1.1.1:11666``.

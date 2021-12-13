@@ -74,13 +74,13 @@ DDS nomenclature
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1//fastdds/dds_layer/domain/domain.html>`__
         for further information.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
-        for further information.
-
     DomainParticipant
         A DomainParticipant is the entry point of the application to a DDS Domain.
         Every DomainParticipant is linked to a single domain from its creation, and cannot change such domain.
         It also acts as a factory for Publisher, Subscriber and Topic.
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
+        for further information.
 
     Endpoint
         DDS element that publish or subscribes in a specific Topic. Endpoint kinds are *DataWriter* or *DataReader*.
