@@ -1,24 +1,26 @@
 
+#################################
+# Topics Allowed
+
 allowlist:
   [
-    {name: "*", type: "*"}
+    {name: "HelloWorldTopic", type: "HelloWorld"},
   ]
 
 #################################
+# Simple Participant in domain 0
+
+local:
+  domain: 0
+
+#################################
+# WAN Participant
 
 wan:
-  type: wan
   listening-addresses:
     [
       {
         ip: "2.2.2.2",
-        port: 11800,
-        transport: "tcp"
+        port: 11666,
       }
     ]
-
-#################################
-
-local:
-  type: local
-  domain: 1

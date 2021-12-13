@@ -1,49 +1,83 @@
 
-# Allow rt chatter topic for talker and listener
+# WAN CLIENT EXAMPLE
+# With this example, a DDS Router subscribes to every topic in allowlist and transmit this data through
+# WAN connection to another DDS Router.
+# It will also publish locally the data received from the remote DDS Router.
+# Client specifies which DDS Router start the communication with the other, and do not change the behavior of each
+# of the routers.
+
+##################################
+# ALLOWED TOPICS
+# Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
   [
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},
+    {name: "HelloWorldTopic", type: "HelloWorld"},               # 1
+    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},  # 2
+
+    # 3
   ]
 
-#################################
-# Echo
+##################################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
-echo:
-  type: echo
+SimpleParticipant:                # 4
+  type: local                     # 5
+  domain: 0                       # 6
 
-#################################
-# ROS in domain 6
+##################################
+# ROS DISCOVERY CLIENT
+# This participant will subscribe to topics in allowlist using Discovery Server protocol as SuperClient.
 
-simple6:
-  type: local
+WANClient:                                                # 7
+  type: wan                                               # 8
+  id: 2                                                   # 9
+  connection-addresses:                                   # 10
+  [
+    {
+      id: 1,                                              # 11
+      addresses:
+      [
+        {ip: "1.1.1.1", port: 11888, transport: "tcp"}    # 12
 
-  domain: 6
+        # 13
+      ]
 
-#################################
-# WAN server
+    #14
+  ]
 
-wan:
 
-  id: 3
-  connection-addresses:
-    [
-      {
-        id: 2,
-        addresses:
-          [
-            {
-              ip: "127.0.0.1",
-              port: 11811,
-            }
-          ]
-      }
-    ]
+##################################
+# CONFIGURATION DESCRIPTION
 
-  listening-addresses:
-    [
-      {
-        ip: "127.0.0.1",
-        port: 11812,
-      }
-    ]
+# 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+
+# 2: Allow DDS ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
+
+# 3: Insert new topics in order to route them.
+
+# 4: New Participant with name <SimpleParticipant>.
+
+# 5: Type of SimpleParticipant: <local>.
+# LAN UDP communication with default simple multicast discovery.
+
+# 6: SimpleParticipant will use DDS Domain ID <0>.
+
+# 7: New Participant with name <WANClient>.
+
+# 8: Type of WANClient: <wan>.
+# WAN communication with another DDS Router.
+
+# 9: Set the Discovery Server GuidPrefix to <01.0f.02.00.00.00.00.00.00.00.ca.fe> for WANClient.
+
+# 10: Add the addresses where to reach the remote DDS Routers that will connect to.
+
+# 11: Set the Remote Discovery Server GuidPrefix to <44.53.01.5f.45.50.52.4f.53.49.4d.41>.
+
+# 12: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11888.
+# This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
+
+# 13: Add every other address where trying to reach this same remote WAN Discovery Server.
+
+# 14: Add every other WAN Discovery Server connection.

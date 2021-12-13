@@ -1,0 +1,76 @@
+
+# WAN SERVER EXAMPLE
+# With this example, a DDS Router subscribes to every topic in allowlist and transmit this data through
+# WAN connection to another DDS Router.
+# It will also publish locally the data received from the remote DDS Router.
+# Server specifies that this DDS Router will be communicated from remote DDS Routers for the first time.
+# Once the communication has been established the behavior of each of the routers do not change.
+
+##################################
+# ALLOWED TOPICS
+# Allowing FastDDS and ROS2 HelloWorld demo examples topics
+
+allowlist:
+  [
+    {name: "HelloWorldTopic", type: "HelloWorld"},               # 1
+    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},  # 2
+
+    # 3
+  ]
+
+##################################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
+
+SimpleParticipant:                # 4
+  type: local                     # 5
+  domain: 0                       # 6
+
+##################################
+# ROS DISCOVERY SERVER
+# This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
+
+WANServer:                                            # 7
+  type: wan                                           # 8
+  id: 1                                               # 9
+  listening-addresses:                                # 10
+  [
+    {ip: "1.1.1.1", port: 11888, transport: "udp"}    # 11
+
+    #12
+  ]
+
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+
+# 2: Allow DDS ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
+
+# 3: Insert new topics in order to route them.
+
+# 4: New Participant with name <SimpleParticipant>.
+
+# 5: Type of SimpleParticipant: <local>.
+# LAN UDP communication with default simple multicast discovery.
+
+# 6: SimpleParticipant will use DDS Domain ID <0>.
+
+# 7: New Participant with name <WANServer>.
+
+# 8: Type of WANServer: <wan>.
+# WAN communication with another DDS Router.
+
+# 9: Set the Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe> for WANServer.
+# This GuidPrefix is needed in order from a remote DDS Router to connect with this one.
+
+# 10: Add the interfaces where this Participant will listen in WAN for discovery traffic.
+
+# 11: Listen in IP localhost(1.1.1.1) port 11888 for remote traffic.
+# This IP must be set to the public IP of the host where this DDS Router will run.
+# Remember that if the host is under a NAT, the IP must be the public one and must be forwarded from network
+# router to this host to the same port.
+# It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
+
+# 12: Add here new addresses where the Participant will listen for remote connections.

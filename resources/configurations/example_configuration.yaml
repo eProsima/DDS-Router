@@ -1,13 +1,10 @@
 
+#################################
+# Topics Allowed
+
 allowlist:
   [
-    {name: "*chatter"},
-    {name: "HelloWorldTopic", type: "HelloWorld"}
-  ]
-
-blocklist:
-  [
-    {name: "*ros*"}
+    {name: "HelloWorldTopic", type: "HelloWorld"}     # Allow HelloWorldTopic with type HelloWorld
   ]
 
 local_participant:
@@ -15,52 +12,40 @@ local_participant:
   domain: 11
 
 #################################
+# Simple Participant in domain 0
 
-wan:
-  type: "wan"
-  id: 1
-  listening-addresses:
-    [
-      {
-        ip: "2.2.2.2",
-        port: 11800,
-        transport: "udp"
-      }
-    ]
+SimpleParticipant:
+  type: "local"
+  domain: 0
 
 #################################
+# k8s WAN connection Participant
 
 k8s:
   type: "wan"
   id: 2
   connection-addresses:
     [
+      id: 0
       {
-        id: 0,
-        addresses:
-          [
-            {
-              ip: "8.8.8.8",
-              port: 36000,
-            }
-          ]
+        ip: "8.8.8.8",
+        port: 26000,
+        transport: "tcp"
       }
     ]
 
 #################################
+# Local Discovery Server using ROS2 default Guid Prefix
 
 local:
-  type: local-ds
-  domain: 2
-  discovery-server:
-    id: 3
-    listening-addresses:
-    [
-      {
-        ip: "127.0.0.1",
-        port: 11811,
-        transport: "udp"
-      }
-    ]
+  type: local-discovery-server
+  ros-discovery-server: true
+  listening-addresses:
+  [
+    {
+      ip: "127.0.0.1",
+      port: 11666
+    }
+  ]
 
 #################################
