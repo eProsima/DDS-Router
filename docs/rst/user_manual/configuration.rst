@@ -6,9 +6,9 @@
 DDS Router Configuration
 ########################
 
-A |ddsrouter| execution is configured by a *.yaml* single configuration file.
-This *.yaml* file contains all the information regarding the |ddsrouter| configuration, as topics filtering,
-and :term:`Participant` configurations.
+A |ddsrouter| is configured by a *.yaml* configuration file.
+This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering
+and :term:`Participants <Participant>` configurations.
 
 
 Topic Filtering
@@ -16,22 +16,23 @@ Topic Filtering
 
 .. note::
 
-    The |ddsrouter| discovery module is a work in progress.
+    The |ddsrouter| topic discovery module is a work in progress.
     Thus, the functionality regarding Topic filtering is still in its early stages.
 
-The |ddsrouter| requires a list of :term:`Topics<Topic>` that will be the ones that will be relay.
-The yaml must contain a tag ``allowlist`` which element is a vector (``[]``).
-This vector elements are the different Topics that will be transmitted (this requires to create the
+The |ddsrouter| requires a list of allowed :term:`Topics<Topic>`.
+The data transmitted under these topics will be the data relayed by the |ddsrouter|.
+The YAML configuration file must contain an ``allowlist`` tag which is a vector (``[]``).
+This vector elements contains the Topics that will be forwarded (subsequently the |ddsrouter| creates a
 :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each topic for each Participant).
-See Topic section for further information about the topic
+See Topic section for further information about the topic.
 
 .. todo:
 
     Add link to topic page when created
 
-In the following yaml example, the |ddsrouter| will transmit the topic ``rt/chatter`` (default ROS2 topic for
+In the following configuration example, the |ddsrouter| will transmit the topic ``rt/chatter`` (default ROS 2 topic for
 ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``.
-It also will transmit the topic  ``HelloWorldTopic`` (default FastDDS topic for ``HelloWorldExample``)
+It also will transmit the topic ``HelloWorldTopic`` (default FastDDS topic for ``HelloWorldExample``)
 with type name ``HelloWorld``.
 
 .. code-block:: yaml
@@ -50,8 +51,8 @@ with type name ``HelloWorld``.
 Participant Configuration
 =========================
 
-At the yaml base level, along with ``allowlist`` tag, there will be the different Participants that will be created,
-along with their specific configuration.
+At the yaml base level, along with ``allowlist`` tag, there will be the Participants that will be created,
+together with their specific configuration.
 Each Participant is identified by a unique :term:`Participant Id` that will be the yaml *key*.
 The yaml *value* for this *key* is the configuration for this specific Participant.
 There could be any number of Participants, and Participant types could be repeated.
@@ -66,11 +67,12 @@ Please, refer to :ref:`user_manual_participant_participant_types` in order to se
     in the same domain).
     This will lead to an infinite feedback loop for one to each other.
 
-In the following yaml example, the |ddsrouter| will create two Simple Participants, one for ``domain 0`` and one for
-``domain 1``.
-This is a typical use case of Domain bridge.
-The topics allowed in the two domains will start communicating to each other .
-Be aware that the communication is not P2P, the data must reach the |ddsrouter| and this will forward the data.
+In the following configuration example, the |ddsrouter| will create two Simple Participants,
+one for ``domain 0`` and one for ``domain 1``.
+This is a typical use case of DDS Domain bridge.
+The topics allowed in the two domains will start communicating to each other.
+Note that the communication is not performed between the end-user DDS entities,
+i.e. the data must reach the |ddsrouter| and this will forward the data.
 
 .. todo:
 
@@ -88,9 +90,10 @@ Be aware that the communication is not P2P, the data must reach the |ddsrouter| 
     simple:             # Participant Id = simple ; Participant Type = simple
         domain: 6       # DomainId = 6
 
-The first Participant `Participant0` has Participant Id *Participant0* and Participant Type *simple*.
-The second Participant has Participant Id *simple*, and type is not required to be specified as it is get from the
-Participant Id.
+The first Participant `Participant0` has Participant Id *Participant0* and is configured to be of the *simple*
+Participant Type.
+The second Participant has Participant Id *simple* and it is configured to be of the *simple* type.
+That is because the type is not required to be specified as it is get from the Participant Id.
 
 .. note::
 
@@ -107,9 +110,9 @@ Network Address
 ===============
 
 Network Addresses are elements that can be configured for specific Participants.
-An Address is set by:
+An Address is defined by:
 
-* *IP*: IP of the host (public IP in case of WAN).
+* *IP*: IP of the host (public IP in case of WAN communication).
 * *Port*: Port where the Participant is listening.
 * *Transport Protocol*: ``UDP`` or ``TCP``.
   If it is not set, it would be chosen by default depending on the Participant Type.
@@ -125,12 +128,12 @@ An Address is set by:
 
     ################
 
-    ip: "2001:4860:4860::8844"      # It is recognized as IPv6
+    ip: "2001:4860:4860::8844"      # Recognized as IPv6
     port: 1616
 
 .. warning::
 
-    ``ip`` field does not allow DNS names, only well-formed IP addresses.
+    ``ip`` field does not currently support DNS names, only well-formed IP addresses.
 
 
 Discovery Server GuidPrefix
@@ -143,7 +146,7 @@ There are several possibilities for configuring a GuidPrefix.
 Discovery Server GuidPrefix by string
 -------------------------------------
 
-Using tag ``guid``, the GuidPrefix of the Discovery Server will be set as it.
+The GuidPrefix of the Discovery Server can be configured using ``guid`` tag.
 Be aware of using the correct format for GuidPrefix.
 That is, 12 hexadecimal numbers (lower than ``ff``) separated with ``.``.
 
@@ -156,7 +159,7 @@ Discovery Server GuidPrefix by Id
 ---------------------------------
 
 Using tag ``id``, the GuidPrefix will be calculated arbitrarily using a default |ddsrouter| GuidPrefix.
-This default GuidPrefix is ``01.0f.x.00.00.00.00.00.00.00.ca.fe`` where ``x`` is the value of the id.
+This default GuidPrefix is ``01.0f.<id>.00.00.00.00.00.00.00.ca.fe``.
 Default value for ``id`` is ``0``.
 
 .. code-block:: yaml
@@ -165,19 +168,19 @@ Default value for ``id`` is ``0``.
 
 .. note::
 
-    In the actual version only 256 different ids are allowed.
-    In future releases it would be implemented to allow further ids.
+    In the current version of the |ddsrouter| only ids in the range 0 to 256 are allowed.
+    In future releases it would be implemented to allow a wider range of ids.
 
 
 ROS Discovery Server GuidPrefix
 -------------------------------
 
-There is a specific GuidPrefix for ROS2 executions, so it could be used using Fast DDS CLI and
-ROS2 ``ROS_DISCOVERY_SERVER`` environment variable
+There is a specific GuidPrefix for ROS 2 executions, so it could be used using Fast DDS CLI and
+ROS 2 ``ROS_DISCOVERY_SERVER`` environment variable
 (`<https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/ros2/discovery_server/ros2_discovery_server.html>`__).
 
-The ROS2 Discovery Server GuidPrefix is set by default to ``44.53.x.5f.45.50.52.4f.53.49.4d.41`` where ``x`` is the
-specific id of the Server.
+The ROS 2 Discovery Server GuidPrefix is set by default to ``44.53.<id>.5f.45.50.52.4f.53.49.4d.41`` where ``<id>``
+is the specific id of the Server.
 This GuidPrefix also allow an ``id``` value to specify which id is used in the GuidPrefix.
 Default value for ``id`` is ``0``.
 
@@ -191,7 +194,7 @@ Discovery Server Connection Addresses
 =====================================
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
-``connection-addresses`` is the *key* for an array where each element has a GuidPrefix referencing the Discovery
+``connection-addresses`` is the *key* for an array in which each element has a GuidPrefix referencing the Discovery
 Server to connect with; and a tag ``addresses`` configuring the addresses of such Discovery Server.
 
 .. code-block:: yaml
@@ -230,6 +233,8 @@ Server to connect with; and a tag ``addresses`` configuring the addresses of suc
 General Example
 ===============
 
+A complete example of all the configurations described on this page can be found below.
+
 .. code-block:: yaml
 
     # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
@@ -253,7 +258,7 @@ General Example
 
     ####################
 
-    # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS2 Client could connect to it
+    # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS 2 Client could connect to it
     # This Discovery Server will listen in ports 11600 and 11601 in localhost
 
     simple:                             # Participant Id = simple

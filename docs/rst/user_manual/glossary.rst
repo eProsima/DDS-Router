@@ -90,7 +90,7 @@ DDS nomenclature
     Discovery Server
         Discovery Server Discovery Protocol is a Fast DDS feature that enables a new Discovery mechanism based on a
         Server that filters and distribute the discovery information.
-        This is very helpful in networks where multicast is not available (e.g. WAN).
+        This is highly recommended in networks where multicast is not available (e.g. WAN).
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html>`__
         for further information.
