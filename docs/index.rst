@@ -51,6 +51,20 @@
    /rst/user_manual/user_manual_glossary
 
 
+.. _index_examples:
+
+.. toctree::
+   :caption: Examples
+   :maxdepth: 2
+   :numbered: 5
+   :hidden:
+
+   /rst/examples/echo_example
+   /rst/examples/change_domain_example
+   /rst/examples/ros_discovery_server_example
+   /rst/examples/wan_example
+
+
 .. _index_developer_manual:
 
 .. toctree::
