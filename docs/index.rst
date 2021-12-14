@@ -44,6 +44,7 @@
    :numbered: 5
    :hidden:
 
+   /rst/user_manual/user_interface
    Participant </rst/user_manual/participants/participant>
    /rst/user_manual/configuration
    /rst/user_manual/wan_configuration
