@@ -31,13 +31,14 @@ Configuration
 =============
 
 Local Discovery Server Participant allow configure the standard attributes of a Discovery Server.
-To configure the Discovery Server :term:`GuidPrefix`, check the following section
-:ref:`Configuration section <user_manual_configuration_domain_id>`.
-To configure the Discovery Server listening addresses, check the following section
-:ref:`Configuration section <user_manual_configuration_discovery_server_listening_addresses>`.
-To configure the Discovery Server connection addresses to connect with other Discovery Servers,
-check the following section
-:ref:`Configuration section <user_manual_configuration_discovery_server_connection_addresses>`.
+
+* To configure the Discovery Server :term:`GuidPrefix`, check the following section
+  :ref:`Configuration section <user_manual_configuration_domain_id>`.
+* To configure the Discovery Server listening addresses, check the following section
+  :ref:`Configuration section <user_manual_configuration_discovery_server_listening_addresses>`.
+* To configure the Discovery Server connection addresses to connect with other Discovery Servers,
+  check the following section
+  :ref:`Configuration section <user_manual_configuration_discovery_server_connection_addresses>`.
 
 .. note::
 
