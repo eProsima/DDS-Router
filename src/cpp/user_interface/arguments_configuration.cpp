@@ -131,8 +131,9 @@ ProcessReturnCode parse_arguments(
         std::vector<option::Option> buffer(stats.buffer_max);
         option::Parser parse(usage, argc, argv, &options[0], &buffer[0]);
 
-        if (parse.error())
+        if (parse.error() || parse.nonOptionsCount())
         {
+            option::printUsage(fwrite, stdout, usage, columns);
             return ProcessReturnCode::INCORRECT_ARGUMENT;
         }
 
@@ -158,6 +159,11 @@ ProcessReturnCode parse_arguments(
 
                 case optionIndex::ACTIVATE_DEBUG:
                     activate_debug = true;
+                    break;
+
+                case optionIndex::UNKNOWN_OPT:
+                    option::printUsage(fwrite, stdout, usage, columns);
+                    return ProcessReturnCode::INCORRECT_ARGUMENT;
                     break;
 
                 default:
