@@ -1,10 +1,13 @@
+.. include:: ../../../exports/alias.include
+.. include:: ../../../exports/roles.include
+
 .. _developer_manual_installation_sources_linux:
 
 ###############################
 Linux installation from sources
 ###############################
 
-The instructions for installing the *eProsima DDS Router* application from sources and its required
+The instructions for installing the |ddsrouter| application from sources and its required
 dependencies are provided in this page.
 It is organized as follows:
 
@@ -13,13 +16,12 @@ It is organized as follows:
     :backlinks: none
     :depth: 2
 
-.. _fastdds_lib_sl:
 
 Dependencies installation
 =========================
 
-*DDS Router* depends on *eProsima Fast DDS* library and certain Debian packages.
-This section describes the instructions for installing *eProsima DDS Router* dependencies and requirements in a Linux
+|ddsrouter| depends on *eProsima Fast DDS* library and certain Debian packages.
+This section describes the instructions for installing |ddsrouter| dependencies and requirements in a Linux
 environment from sources.
 The following packages will be installed:
 
@@ -37,7 +39,7 @@ Afterwards, the user can choose whether to follow either the :ref:`colcon <colco
 Requirements
 ------------
 
-The installation of *eProsima DDS Router* in a Linux environment from binaries requires the following tools to be
+The installation of |ddsrouter| in a Linux environment from sources requires the following tools to be
 installed in the system:
 
 * :ref:`cmake_gcc_pip_wget_git_sl`
@@ -50,7 +52,7 @@ installed in the system:
 CMake, g++, pip, wget and git
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-These packages provide the tools required to install *eProsima Fast DDS* and its dependencies from command line.
+These packages provide the tools required to install |ddsrouter| and its dependencies from command line.
 Install CMake_, `g++ <https://gcc.gnu.org/>`_, pip_, wget_ and git_ using the package manager of the appropriate
 Linux distribution. For example, on Ubuntu use the command:
 
@@ -82,7 +84,7 @@ Gtest
 ^^^^^
 
 Gtest is a unit testing library for C++.
-By default, *eProsima DDS Router* does not compile tests.
+By default, |ddsrouter| does not compile tests.
 It is possible to activate them with the opportune
 `CMake options <https://colcon.readthedocs.io/en/released/reference/verb/build.html#cmake-options>`_
 when calling colcon_ or CMake_.
@@ -95,7 +97,7 @@ For a detailed description of the Gtest installation process, please refer to th
 Dependencies
 ------------
 
-*eProsima DDS Router* has the following dependencies, when installed from sources in a Linux environment:
+|ddsrouter| has the following dependencies, when installed from sources in a Linux environment:
 
 * :ref:`asiotinyxml2_sl`
 * :ref:`openssl_sl`
@@ -135,13 +137,13 @@ eProsima dependencies
 ^^^^^^^^^^^^^^^^^^^^^
 
 If it already exists in the system an installation of *Fast DDS* library with version greater than `2.4.0`, just source
-this library when building the *DDS Router* application by using the command:
+this library when building the |ddsrouter| application by using the command:
 
 .. code-block:: bash
 
     source <fastdds-installation-path>/install/setup.bash
 
-In other case, just download *Fast DDS* project from sources and build it together with *DDS Router* using colcon
+In other case, just download *Fast DDS* project from sources and build it together with |ddsrouter| using colcon
 as it is explained in section :ref:`colcon_installation`.
 
 
@@ -151,7 +153,7 @@ Colcon installation
 ===================
 
 #.  Create a :code:`DDS-Router` directory and download the :code:`.repos` file that will be used to install
-    *eProsima DDS Router* and its dependencies:
+    |ddsrouter| and its dependencies:
 
     .. code-block:: bash
 
@@ -164,7 +166,7 @@ Colcon installation
 
         In case there is already a *Fast DDS* installation in the system it is not required to download and build
         every dependency in the :code:`.repos` file.
-        It is just needed to download and build the *DDS Router* project having sourced its dependencies.
+        It is just needed to download and build the |ddsrouter| project having sourced its dependencies.
         Refer to section :ref:`eprosima_dependencies` in order to check how to source *Fast DDS* library.
 
 #.  Build the packages:
@@ -186,7 +188,7 @@ Colcon installation
 CMake installation
 ==================
 
-This section explains how to compile *eProsima DDS Router* with CMake_, either
+This section explains how to compile |ddsrouter| with CMake_, either
 :ref:`locally <local_installation_sl>` or :ref:`globally <global_installation_sl>`.
 
 .. _local_installation_sl:
@@ -194,7 +196,7 @@ This section explains how to compile *eProsima DDS Router* with CMake_, either
 Local installation
 ------------------
 
-#.  Create a :code:`Fast-DDS` directory where to download and build *eProsima DDS Router* and its dependencies:
+#.  Create a :code:`DDS-Router` directory where to download and build |ddsrouter| and its dependencies:
 
     .. code-block:: bash
 
@@ -235,7 +237,7 @@ Local installation
             cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
-#.  Once all dependencies are installed, install *eProsima DDS Router*:
+#.  Once all dependencies are installed, install |ddsrouter|:
 
     .. code-block:: bash
 
@@ -249,7 +251,7 @@ Local installation
 
 .. note::
 
-    By default, *eProsima DDS Router* does not compile tests.
+    By default, |ddsrouter| does not compile tests.
     However, they can be activated by downloading and installing `Gtest <https://github.com/google/googletest>`_
     and building with CMake option ``-DBUILD_TESTS=ON``.
 
@@ -259,7 +261,7 @@ Local installation
 Global installation
 -------------------
 
-To install *eProsima Fast DDS* system-wide instead of locally, remove all the flags that
+To install |ddsrouter| system-wide instead of locally, remove all the flags that
 appear in the configuration steps of :code:`Fast-CDR`, :code:`Fast-DDS`, and
 :code:`DDS-Router`, and change the first in the configuration step of :code:`foonathan_memory_vendor` to the
 following:
@@ -273,7 +275,7 @@ following:
 Run an application
 ==================
 
-To run the *eProsima DDS Router* application, source the *Fast DDS* library
+To run the |ddsrouter| application, source the *Fast DDS* library
 and execute the executable file that has been installed in :code:`<install-path>/ddsrouter/bin/ddsrouter`:
 
 .. code-block:: bash
