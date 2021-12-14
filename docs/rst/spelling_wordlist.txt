@@ -12,6 +12,8 @@ Gtest
 guid
 IPv
 kubernetes
+localhost
+metatraffic
 multicast
 Redistributable
 runtime
