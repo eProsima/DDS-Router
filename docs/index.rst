@@ -45,8 +45,9 @@
    :hidden:
 
    Participant </rst/user_manual/participants/participant>
-   Configuration </rst/user_manual/configuration>
-   /rst/user_manual/glossary
+   /rst/user_manual/configuration
+   /rst/user_manual/wan_configuration
+   /rst/user_manual/user_manual_glossary
 
 
 .. _index_developer_manual:
@@ -69,3 +70,13 @@
    :hidden:
 
    /rst/notes/notes
+
+
+.. _index_appendix:
+
+.. toctree::
+   :caption: Appendixes
+   :maxdepth: 2
+   :hidden:
+
+   /rst/appendixes/glossary

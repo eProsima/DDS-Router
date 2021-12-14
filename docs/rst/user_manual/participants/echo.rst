@@ -28,6 +28,20 @@ and written by an **Echo Participant**:
 
     This Participant does not perform any discovery or data reception functionality.
 
+
+Use case
+========
+
+Use this Participant in order to see in ``stdout`` the data that is being relayed by the router.
+All the data received by any of the Participants of the router will be printed with timestamp, topic and source guid
+along with the payload.
+
+
+Type aliases
+============
+
+* ``echo``
+
 Configuration
 =============
 
@@ -38,5 +52,5 @@ Configuration Example
 
 .. code-block:: yaml
 
-    echo_participant:
+    echo_participant:       # Participant Id = echo_participant
         type: echo
