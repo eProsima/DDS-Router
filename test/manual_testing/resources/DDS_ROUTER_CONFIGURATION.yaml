@@ -1,0 +1,9 @@
+
+allowlist:
+  [{name: "rt/chatter", type: "std_msgs::msg::dds_::String_"}]
+
+echo:
+  type: echo
+
+simple:
+  domain: 0
