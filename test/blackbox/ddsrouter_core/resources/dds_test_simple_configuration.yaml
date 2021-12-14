@@ -1,6 +1,6 @@
 
-# This .yaml contains the configuration for the complex test.
-# It is composed of two simple (RTPS) participants.
+# This YAML configures the DDS Router for the DDS communication test.
+# It is composed of two Simple Participants.
 
 allowlist:
   [

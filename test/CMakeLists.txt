@@ -78,7 +78,7 @@ endif(WIN32)
 # TEST_NAME -> test name (name of the class of the test in Test .cpp)
 # TEST_LIST -> test cases implemented in the Test .cpp
 # TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
-# [TEST_EXTRA_HEADERS] -> a sixth optional argument with extra headers needed for the test
+# ARGV5 -> extra headers needed for the test (sixth optional argument)
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
 function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LIST TEST_EXTRA_LIBRARIES)
 
