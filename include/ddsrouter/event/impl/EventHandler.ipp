@@ -52,9 +52,17 @@ EventHandler<Args...>::EventHandler(
 }
 
 template <typename ... Args>
+EventHandler<Args...>::~EventHandler()
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+}
+
+template <typename ... Args>
 void EventHandler<Args...>::set_callback(
         std::function<void(Args...)> callback) noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     is_callback_set_.store(true);
     callback_ = callback;
     callback_set_();
@@ -63,6 +71,8 @@ void EventHandler<Args...>::set_callback(
 template <typename ... Args>
 void EventHandler<Args...>::unset_callback() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     is_callback_set_.store(false);
     callback_ = DEFAULT_CALLBACK_;
     callback_unset_();
@@ -93,6 +103,8 @@ template <typename ... Args>
 void EventHandler<Args...>::event_occurred_(
         Args... args) noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
     {
         // Lock to avoid changing values while wait is processing condition
         std::lock_guard<std::mutex> lock(wait_mutex_);

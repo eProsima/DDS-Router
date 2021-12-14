@@ -19,6 +19,7 @@
 #ifndef _DDSROUTER_EVENT_PERIODICEVENTHANDLER_HPP_
 #define _DDSROUTER_EVENT_PERIODICEVENTHANDLER_HPP_
 
+#include <atomic>
 #include <functional>
 #include <thread>
 
@@ -92,6 +93,9 @@ protected:
 
     //! Period thread
     std::thread period_thread_;
+
+    //! Whether the event loop must keep running
+    std::atomic<bool> active_;
 };
 
 } /* namespace event */

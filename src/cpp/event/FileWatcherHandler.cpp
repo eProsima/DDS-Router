@@ -57,6 +57,9 @@ void FileWatcherHandler::start_filewatcher_()
             file_path_,
             [this](const std::string& path, const filewatch::Event change_type)
             {
+                // Lock mutex so object is not destroyed while in callback
+                std::lock_guard<std::recursive_mutex> lock(mutex_);
+
                 switch (change_type)
                 {
                     case filewatch::Event::modified:
@@ -80,6 +83,7 @@ void FileWatcherHandler::start_filewatcher_()
 
 void FileWatcherHandler::stop_filewatcher_()
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     file_watch_handler_.reset();
 }
 

@@ -109,7 +109,8 @@ int main(
                 };
 
         // Creating FileWatcher event handler
-        event::FileWatcherHandler file_watcher_handler(filewatcher_callback, file_path);
+        std::unique_ptr<event::FileWatcherHandler> file_watcher_handler =
+            std::make_unique<event::FileWatcherHandler>(filewatcher_callback, file_path);
 
         /////
         // Periodic Handler for reload configuration in periodic time
@@ -146,6 +147,17 @@ int main(
 
         // Wait until signal arrives
         signal_handler.wait_for_event();
+
+        // Before stopping the Router erase event handlers that reload configuration
+        if (periodic_handler)
+        {
+            periodic_handler.reset();
+        }
+
+        if (file_watcher_handler)
+        {
+            file_watcher_handler.reset();
+        }
 
         // Stop Router
         router.stop();

@@ -20,6 +20,7 @@
 #define _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 
 #include <functional>
+#include <mutex>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -59,6 +60,14 @@ public:
      */
     EventHandler(
             std::function<void(Args...)> callback);
+
+    /**
+     * @brief Destroy the Event Handler object if it is not being executed
+     *
+     * Stop if \c mutex_ is taken until the event callback has been executed, and after
+     * it destroy the object.
+     */
+    ~EventHandler();
 
     /**
      * @brief Set the callback
@@ -133,6 +142,9 @@ protected:
 
     //! Whether the callback of this Handler is set
     std::atomic<bool> is_callback_set_;
+
+    //! Mutex to block event execution while lambda is being set or called
+    mutable std::recursive_mutex mutex_;
 
     /**
      * @brief Default callback. It shows a warning that callback is not set

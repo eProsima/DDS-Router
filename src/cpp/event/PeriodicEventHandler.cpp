@@ -29,6 +29,7 @@ PeriodicEventHandler::PeriodicEventHandler(
         Duration_ms period_time)
     : EventHandler<>()
     , period_time_(period_time)
+    , active_(true)
 {
     // In case period time is set to 0, the object is not created
     if (period_time <= 0)
@@ -44,6 +45,7 @@ PeriodicEventHandler::PeriodicEventHandler(
         Duration_ms period_time)
     : EventHandler<>(callback)
     , period_time_(period_time)
+    , active_(true)
 {
     // In case period time is set to 0, the object is not created
     if (period_time <= 0)
@@ -61,9 +63,18 @@ PeriodicEventHandler::~PeriodicEventHandler()
 
 void PeriodicEventHandler::period_thread_routine_() noexcept
 {
-    while (true)
+    while (active_.load())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(period_time_));
+
+        // It locks so it is not erased while callback is running
+        // This is needed as this is a different thread than the one that will destroy the object
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+        if (!active_.load())
+        {
+            break;
+        }
 
         event_occurred_();
     }
@@ -77,6 +88,8 @@ void PeriodicEventHandler::start_period_thread_() noexcept
 
 void PeriodicEventHandler::stop_period_thread_() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    active_.store(false);
     if (period_thread_.joinable())
     {
         period_thread_.detach();
