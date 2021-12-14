@@ -79,12 +79,10 @@ Writer::~Writer()
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
 
-    // Explicitly delete every data in the history
-    rtps_history_->remove_all_changes();
-
     // Delete History
     if (rtps_history_)
     {
+        // Deleting history correctly releases payloads in the Payload Pool
         delete rtps_history_;
     }
 
