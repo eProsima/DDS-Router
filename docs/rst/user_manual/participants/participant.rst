@@ -58,10 +58,12 @@ Participant Id as the alias of the type.
 If the type is not any of the valid aliases, the Participant will not be created and the
 execution will fail.
 
-There could be as many Participants as required, and their types could be repeated,
-but all ids must be unique.
+.. note::
 
-Below are some examples of how to configure a Participant:
+    There could be as many Participants as required, and their types could be repeated,
+    but all ids must be unique.
+
+Below are some examples on how to configure a Participant:
 
 .. code-block:: yaml
 

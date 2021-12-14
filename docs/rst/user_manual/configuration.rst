@@ -65,7 +65,7 @@ Please, refer to :ref:`user_manual_participant_participant_types` in order to se
 
     Do not configure two Participants in a way that they can communicate to each other (e.g. two Simple participants
     in the same domain).
-    This will lead to an infinite feedback loop for one to each other.
+    This will lead to an infinite feedback loop between each other.
 
 In the following configuration example, the |ddsrouter| will create two Simple Participants,
 one for ``domain 0`` and one for ``domain 1``.
@@ -168,7 +168,7 @@ That is, 12 hexadecimal numbers (lower than ``ff``) separated with ``.``.
 
 .. code-block:: yaml
 
-    guid: "1.f.1.0.0.0.0.0.0.0.ca.fe"     # GuidPrefix = 01.0f.01.00.00.00.00.00.00.00.ca.fe
+    guid: "1.f.1.0.0.0.0.0.0.0.ca.fe"       # GuidPrefix = 01.0f.01.00.00.00.00.00.00.00.ca.fe
 
 
 Discovery Server GuidPrefix by Id
@@ -180,7 +180,7 @@ Default value for ``id`` is ``0``.
 
 .. code-block:: yaml
 
-    id: 13                          # GuidPrefix = 01.0f.0d.00.00.00.00.00.00.00.ca.fe
+    id: 13                                  # GuidPrefix = 01.0f.0d.00.00.00.00.00.00.00.ca.fe
 
 .. note::
 
@@ -202,8 +202,8 @@ Default value for ``id`` is ``0``.
 
 .. code-block:: yaml
 
-    ros-discovery-server: true      # GuidPrefix = 44.53.x.5f.45.50.52.4f.53.49.4d.41
-    id: 13                          # GuidPrefix = 44.53.0d.5f.45.50.52.4f.53.49.4d.41
+    ros-discovery-server: true              # GuidPrefix = 44.53.x.5f.45.50.52.4f.53.49.4d.41
+    id: 13                                  # GuidPrefix = 44.53.0d.5f.45.50.52.4f.53.49.4d.41
 
 
 .. _user_manual_configuration_discovery_server_listening_addresses:
@@ -219,12 +219,12 @@ listen for remote clients or servers.
 
     listening-addresses:
     [
-        {
+        {                                   # UDP by default
             ip: "127.0.0.1",
             port: 11667,
         },
         {
-            ip: "2001:4860:4860::8844",
+            ip: "2001:4860:4860::8844",     # Recognized as IPv6
             port: 11668,
             transport: "tcp"
         }
@@ -256,7 +256,7 @@ Each element inside ``addresses`` must follow the configuration for :ref:`user_m
             ]
         },
         {
-            id: 4
+            id: 4,
             addresses:
             [
                 {
@@ -337,7 +337,7 @@ A complete example of all the configurations described on this page can be found
         connection-addresses:           # WAN Discovery Server Connection Addresses
         [
             {
-                id: 4                   # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+                id: 4,                   # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
                 addresses:
                 [
                     {
