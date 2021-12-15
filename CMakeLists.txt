@@ -202,4 +202,4 @@ endif()
 
 INSTALL(
     DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/examples/
-    DESTINATION ${BIN_INSTALL_DIR}/resources/)
+    DESTINATION ${DATA_INSTALL_DIR}/resources/)
