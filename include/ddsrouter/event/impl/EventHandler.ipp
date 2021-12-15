@@ -20,6 +20,7 @@
 #define _DDSROUTER_EVENT_IMPL_EVENTHANDLER_IPP_
 
 #include <functional>
+#include <assert.h>
 
 #include <ddsrouter/types/Log.hpp>
 
@@ -31,7 +32,9 @@ template <typename ... Args>
 const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
         [](Args...)
         {
-            logError(DDSROUTER_HANDLER, "This callback should not be called.");
+            // This should never happen
+            logError(DDSROUTER_HANDLER, "This callback must not be called.");
+            assert(false);
         };
 
 template <typename ... Args>
@@ -39,57 +42,76 @@ EventHandler<Args...>::EventHandler()
     : callback_(DEFAULT_CALLBACK_)
     , is_callback_set_(false)
     , number_of_events_registered_(0)
+    , threads_waiting_(0)
 {
-}
-
-template <typename ... Args>
-EventHandler<Args...>::EventHandler(
-        std::function<void(Args...)> callback)
-    : callback_(callback)
-    , is_callback_set_(true)
-    , number_of_events_registered_(0)
-{
-}
-
-template <typename ... Args>
-EventHandler<Args...>::~EventHandler()
-{
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
 }
 
 template <typename ... Args>
 void EventHandler<Args...>::set_callback(
         std::function<void(Args...)> callback) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
     is_callback_set_.store(true);
     callback_ = callback;
-    callback_set_();
+
+    // Call child methods in case they should do something when handler is enabled or change callback
+    callback_set_nts_();
 }
 
 template <typename ... Args>
 void EventHandler<Args...>::unset_callback() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
-    is_callback_set_.store(false);
-    callback_ = DEFAULT_CALLBACK_;
-    callback_unset_();
+    if (is_callback_set_)
+    {
+        {
+            // Setting callback
+            std::unique_lock<std::mutex> lock(wait_mutex_);
+            is_callback_set_.store(false);
+        }
+
+        // Awaking every thread waiting in wait_for_event()
+        awake_all_waiting_threads_nts_();
+
+        // Setting new callback (even when it will not be called)
+        callback_ = DEFAULT_CALLBACK_;
+
+        // Call child methods in case they should do something when handler is disabled
+        callback_unset_nts_();
+    }
+    else
+    {
+        logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had already no callback set.")
+    }
 }
 
 template <typename ... Args>
-void EventHandler<Args...>::wait_for_event(
+bool EventHandler<Args...>::wait_for_event(
         uint32_t n /*= 1*/) const noexcept
 {
-    std::unique_lock<std::mutex> lock(wait_mutex_);
-    wait_condition_variable_.wait(
-        lock,
-        [n, this]
-        {
-            // Exit if number of events is bigger than expected n
-            return number_of_events_registered_ >= n;
-        });
+    if (is_callback_set_.load())
+    {
+        std::unique_lock<std::mutex> lock(wait_mutex_);
+
+        ++threads_waiting_;
+
+        wait_condition_variable_.wait(
+            lock,
+            [n, this]
+            {
+                // Exit if number of events is bigger than expected n
+                // or if callback is no longer set
+                return number_of_events_registered_ >= n || !is_callback_set_.load();
+            });
+
+        --threads_waiting_;
+    }
+
+    // Return true if the condition has been fulfilled. It could stop due to a unset callback
+    // Note: number_of_events_registered_ does not required a mutex because it is being read and it is atomic
+    return number_of_events_registered_.load() >= n;
 }
 
 template <typename ... Args>
@@ -103,38 +125,52 @@ template <typename ... Args>
 void EventHandler<Args...>::event_occurred_(
         Args... args) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    // While event occurred is being process, avoid setting/unsetting callback or destroying object
+    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
+    if (is_callback_set_.load())
     {
-        // Lock to avoid changing values while wait is processing condition
-        std::lock_guard<std::mutex> lock(wait_mutex_);
+        callback_(args ...);
 
-        // Call callback
-        if (is_callback_set_.load())
+        // TODO: decide if a disabled event should add number of events registered
         {
-            callback_(args ...);
+            // Increase number of callbacks received
+            std::lock_guard<std::mutex> lock(wait_mutex_);
+            ++number_of_events_registered_;
         }
-        else
-        {
-            logWarning(DDSROUTER_HANDLER, "Calling unset callback.");
-        }
-
-        // Increase number of callbacks
-        ++number_of_events_registered_;
+    }
+    else
+    {
+        logInfo(DDSROUTER_HANDLER, "Skipping callback in a not enabled EventHandler.");
     }
 
-    // Awake every thread waiting for event
+    // Awake every thread waiting for event to occur
     wait_condition_variable_.notify_all();
 }
 
 template <typename ... Args>
-void EventHandler<Args...>::callback_set_() noexcept
+void EventHandler<Args...>::awake_all_waiting_threads_nts_() noexcept
+{
+    bool exit = false;
+
+    while(!exit)
+    {
+        wait_condition_variable_.notify_all();
+        {
+            std::lock_guard<std::mutex> lock(wait_mutex_);
+            exit = threads_waiting_.load() == 0;
+        }
+    }
+}
+
+template <typename ... Args>
+void EventHandler<Args...>::callback_set_nts_() noexcept
 {
     // Do nothing. Implement it in child classes if needed.
 }
 
 template <typename ... Args>
-void EventHandler<Args...>::callback_unset_() noexcept
+void EventHandler<Args...>::callback_unset_nts_() noexcept
 {
     // Do nothing. Implement it in child classes if needed.
 }

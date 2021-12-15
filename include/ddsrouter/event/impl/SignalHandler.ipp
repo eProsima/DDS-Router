@@ -42,7 +42,7 @@ SignalHandler<SigNum>::SignalHandler() noexcept
         [](int signum)
         {
             logInfo(DDSROUTER_SIGNALHANDLER,
-            "Received signal " << signum << " in specific handler .");
+            "Received signal " << signum << " in specific handler.");
         })
 {
 }
@@ -50,25 +50,25 @@ SignalHandler<SigNum>::SignalHandler() noexcept
 template <int SigNum>
 SignalHandler<SigNum>::SignalHandler(
         std::function<void(int)> callback) noexcept
-    : EventHandler<int>(callback)
+    : EventHandler<int>()
 {
-    add_to_active_handlers_();
+    set_callback(callback);
 }
 
 template <int SigNum>
 SignalHandler<SigNum>::~SignalHandler()
 {
-    erase_from_active_handlers_();
+    unset_callback();
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::callback_set_() noexcept
+void SignalHandler<SigNum>::callback_set_nts_() noexcept
 {
     add_to_active_handlers_();
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::callback_unset_() noexcept
+void SignalHandler<SigNum>::callback_unset_nts_() noexcept
 {
     erase_from_active_handlers_();
 }

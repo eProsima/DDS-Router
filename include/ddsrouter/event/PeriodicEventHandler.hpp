@@ -62,6 +62,11 @@ public:
             std::function<void()> callback,
             Duration_ms period_time);
 
+    /**
+     * @brief Destroy the PeriodicEventHandler object
+     *
+     * Calls \c unset_callback
+     */
     ~PeriodicEventHandler();
 
 protected:
@@ -77,16 +82,38 @@ protected:
     /**
      * @brief Create thread and start period time
      *
-     * Only called from constructor
+     * Only called from \c callback_set_nts_
+     *
+     * It is already guarded by \c event_mutex_ .
      */
-    void start_period_thread_() noexcept;
+    void start_period_thread_nts_() noexcept;
 
     /**
      * @brief Stop period time and detach thread
      *
      * Only called from destructor
+     *
+     * It is already guarded by \c event_mutex_ .
      */
-    void stop_period_thread_() noexcept;
+    void stop_period_thread_nts_() noexcept;
+
+    /**
+     * @brief Override \c callback_set_ from \c EventHandler .
+     *
+     * It starts filewatcher if it has not been started.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_set_nts_() noexcept override;
+
+    /**
+     * @brief Override \c callback_set_ from \c EventHandler .
+     *
+     * It stops filewatcher if it has been started.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_unset_nts_() noexcept override;
 
     //! Period time in milliseconds
     Duration_ms period_time_;
@@ -94,8 +121,25 @@ protected:
     //! Period thread
     std::thread period_thread_;
 
-    //! Whether the event loop must keep running
-    std::atomic<bool> active_;
+    /**
+     * @brief Whether the file_watcher has already been started
+     *
+     * Guarded by \c periodic_wait_mutex_
+     */
+    std::atomic<bool> timer_active_;
+
+    /**
+     * @brief Condition variable to wait until the time has passed or stop when handler disabled
+     *
+     * Guard by \c periodic_wait_mutex_
+     *
+     * This condition variable is used to wait for an amount of time, and if the time has passed OR
+     * the object has been disabled, it stops.
+     */
+    mutable std::condition_variable periodic_wait_condition_variable_;
+
+    //! Guard access to \c periodic_wait_condition_variable_
+    mutable std::mutex periodic_wait_mutex_;
 };
 
 } /* namespace event */

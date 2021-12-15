@@ -29,25 +29,27 @@ FileWatcherHandler::FileWatcherHandler(
         std::string file_path)
     : EventHandler<std::string>()
     , file_path_(file_path)
+    , filewatcher_started_(false)
 {
-    start_filewatcher_();
+    logDebug(
+        DDSROUTER_PERIODICHANDLER,
+        "FileWatcher Event Handler created with file path " << file_path_ << " .");
 }
 
 FileWatcherHandler::FileWatcherHandler(
         std::function<void(std::string)> callback,
         std::string file_path)
-    : EventHandler<std::string>(callback)
-    , file_path_(file_path)
+    : FileWatcherHandler(file_path)
 {
-    start_filewatcher_();
+    set_callback(callback);
 }
 
 FileWatcherHandler::~FileWatcherHandler()
 {
-    stop_filewatcher_();
+    unset_callback();
 }
 
-void FileWatcherHandler::start_filewatcher_()
+void FileWatcherHandler::start_filewatcher_nts_()
 {
     logInfo(DDSROUTER_FILEWATCHER, "Starting FileWatcher in file: " << file_path_);
 
@@ -57,9 +59,6 @@ void FileWatcherHandler::start_filewatcher_()
             file_path_,
             [this](const std::string& path, const filewatch::Event change_type)
             {
-                // Lock mutex so object is not destroyed while in callback
-                std::lock_guard<std::recursive_mutex> lock(mutex_);
-
                 switch (change_type)
                 {
                     case filewatch::Event::modified:
@@ -78,13 +77,33 @@ void FileWatcherHandler::start_filewatcher_()
                 "Error creating file watcher: " << e.what());
     }
 
-    logInfo(DDSROUTER_FILEWATCHER, "Watching file: " << file_path_);
+    filewatcher_started_.store(true);
+
+    logInfo(DDSROUTER_FILEWATCHER, "Start Watching file: " << file_path_);
 }
 
-void FileWatcherHandler::stop_filewatcher_()
+void FileWatcherHandler::stop_filewatcher_nts_()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
     file_watch_handler_.reset();
+    filewatcher_started_.store(false);
+
+    logInfo(DDSROUTER_FILEWATCHER, "Stop Watching file: " << file_path_);
+}
+
+void FileWatcherHandler::callback_set_nts_() noexcept
+{
+    if (!filewatcher_started_)
+    {
+        start_filewatcher_nts_();
+    }
+}
+
+void FileWatcherHandler::callback_unset_nts_() noexcept
+{
+    if (filewatcher_started_)
+    {
+        stop_filewatcher_nts_();
+    }
 }
 
 } /* namespace event */
