@@ -21,6 +21,7 @@
 
 // Use FastDDS log
 #include <fastdds/dds/log/Log.hpp>
+
 #include <ddsrouter/types/macros.hpp>
 
 namespace eprosima {
