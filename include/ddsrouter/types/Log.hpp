@@ -22,6 +22,8 @@
 // Use FastDDS log
 #include <fastdds/dds/log/Log.hpp>
 
+#include <ddsrouter/types/macros.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -38,8 +40,10 @@ using Log = eprosima::fastdds::dds::Log;
  * @brief Log level for messages that will be shown to the User (user interactions, start or finish process, etc.)
  *
  * As this level is not implemented, it is used as Info level.
+ *
+ * @todo Decide if setting the log TAG as in fastrtps logging or not.
  */
-#define logUser(cat, msg) logUser_(cat, msg)
+#define logUser(cat, msg) std::cout /* << STRINGIFY(cat) << " : " */ << msg << std::endl;
 
 // Allow multiconfig platforms like windows to disable info queueing on Release and other non-debug configs
 #if !HAVE_LOG_NO_INFO &&  \

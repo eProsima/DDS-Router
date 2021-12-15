@@ -21,6 +21,8 @@
 #include <ddsrouter/event/FileWatcherHandler.hpp>
 #include <ddsrouter/event/PeriodicEventHandler.hpp>
 #include <ddsrouter/event/SignalHandler.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/constants.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
@@ -68,6 +70,7 @@ int main(
     }
 
     // Encapsulating execution in block to erase all memory correctly before closing process
+    try
     {
         // First of all, create signal handler so SIGINT does not break the program while initializing
         // Signal handler
@@ -78,6 +81,7 @@ int main(
 
         // Load DDS Router Configuration
         RawConfiguration router_configuration = load_configuration_from_file(file_path);
+
 
         // Create DDS Router
         DDSRouter router(router_configuration);
@@ -145,6 +149,19 @@ int main(
 
         // Stop Router
         router.stop();
+    }
+    catch (const ConfigurationException& e)
+    {
+        logError(DDSROUTER_ERROR,
+                "Error Loading DDS Router Configuration from file " << file_path <<
+                ". Error message: " << e.what());
+        return ui::ProcessReturnCode::EXECUTION_FAILED;
+    }
+    catch (const InitializationException& e)
+    {
+        logError(DDSROUTER_ERROR,
+                "Error Initializing DDS Router. Error message: " << e.what());
+        return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
 
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router execution correctly.");
