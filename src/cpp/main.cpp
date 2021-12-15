@@ -153,14 +153,14 @@ int main(
     catch (const ConfigurationException& e)
     {
         logError(DDSROUTER_ERROR,
-            "Error Loading DDS Router Configuration from file " << file_path <<
-            ". Error message: " << e.what());
+                "Error Loading DDS Router Configuration from file " << file_path <<
+                ". Error message: " << e.what());
         return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
     catch (const InitializationException& e)
     {
         logError(DDSROUTER_ERROR,
-            "Error Initializing DDS Router. Error message: " << e.what());
+                "Error Initializing DDS Router. Error message: " << e.what());
         return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
 
