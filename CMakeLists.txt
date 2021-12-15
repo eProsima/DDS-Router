@@ -178,7 +178,7 @@ if(BUILD_DOCUMENTATION OR BUILD_DOCUMENTATION_TESTS)
 endif()
 
 ###############################################################################
-# Logging.
+# Logging
 ###############################################################################
 # In Debug, log set to ON
 if ("Debug" STREQUAL ${CMAKE_BUILD_TYPE})
@@ -194,3 +194,12 @@ if (LOG_INFO)
         PRIVATE HAVE_LOG_NO_INFO=0
         )
 endif()
+
+###############################################################################
+# Install Resources
+###############################################################################
+# Install example files
+
+INSTALL(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/examples/
+    DESTINATION ${DATA_INSTALL_DIR}/resources/)
