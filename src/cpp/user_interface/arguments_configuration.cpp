@@ -17,6 +17,8 @@
  *
  */
 
+#include <iostream>
+#include <string>
 #include <vector>
 
 #if defined(_WIN32)
@@ -131,8 +133,18 @@ ProcessReturnCode parse_arguments(
         std::vector<option::Option> buffer(stats.buffer_max);
         option::Parser parse(usage, argc, argv, &options[0], &buffer[0]);
 
+        // Parsing error
         if (parse.error())
         {
+            option::printUsage(fwrite, stdout, usage, columns);
+            return ProcessReturnCode::INCORRECT_ARGUMENT;
+        }
+
+        // Unknown args provided
+        if (parse.nonOptionsCount())
+        {
+            std::cerr << "ERROR: Unknown argument " << parse.nonOption(0) << std::endl;
+            option::printUsage(fwrite, stdout, usage, columns);
             return ProcessReturnCode::INCORRECT_ARGUMENT;
         }
 
@@ -158,6 +170,12 @@ ProcessReturnCode parse_arguments(
 
                 case optionIndex::ACTIVATE_DEBUG:
                     activate_debug = true;
+                    break;
+
+                case optionIndex::UNKNOWN_OPT:
+                    Arg::print_error("ERROR: ", opt, " is not a valid argument.\n");
+                    option::printUsage(fwrite, stdout, usage, columns);
+                    return ProcessReturnCode::INCORRECT_ARGUMENT;
                     break;
 
                 default:
