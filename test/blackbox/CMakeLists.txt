@@ -16,8 +16,8 @@
 # Arguments:
 # TEST_NAME -> test name (it will add "_Test" after name)
 # TEST_SOURCES -> sources for the test
-# TEST_HEADERS -> headers for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
+# ARGV4 -> extra headers needed for the test (fifth optional argument)
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
 function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
 
@@ -69,6 +69,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         "${TEST_NAME}"
         "${TEST_LIST}"
         "${EXTRA_LIBRARIES}"
+        "${ARGV4}"  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
 endfunction(add_blackbox_executable)

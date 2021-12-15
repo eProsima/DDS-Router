@@ -123,7 +123,7 @@ void Track::disable() noexcept
 
 void Track::no_more_data_available_() noexcept
 {
-    logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to sent.");
+    logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
     is_data_available_.store(false);
 }
 

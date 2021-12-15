@@ -32,7 +32,7 @@ BaseWriter::BaseWriter(
     , payload_pool_(payload_pool)
     , enabled_(false)
 {
-    logDebug(DDSROUTER_BASEWRITER, "Creating Reader " << *this << ".");
+    logDebug(DDSROUTER_BASEWRITER, "Creating Writer " << *this << ".");
 }
 
 void BaseWriter::enable() noexcept

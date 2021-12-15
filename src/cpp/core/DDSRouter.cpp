@@ -186,7 +186,7 @@ ReturnCode DDSRouter::start_() noexcept
     }
     else
     {
-        logInfo(DDSROUTER, "Trying to stop a not enabled DDS Router.");
+        logInfo(DDSROUTER, "Trying to start an already enabled DDS Router.");
         return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }
@@ -206,7 +206,7 @@ ReturnCode DDSRouter::stop_() noexcept
     }
     else
     {
-        logInfo(DDSROUTER, "Trying to start a disabled DDS Router.");
+        logInfo(DDSROUTER, "Trying to stop a disabled DDS Router.");
         return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }

@@ -78,6 +78,7 @@ endif(WIN32)
 # TEST_NAME -> test name (name of the class of the test in Test .cpp)
 # TEST_LIST -> test cases implemented in the Test .cpp
 # TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
+# ARGV5 -> extra headers needed for the test (sixth optional argument)
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
 function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LIST TEST_EXTRA_LIBRARIES)
 
@@ -97,6 +98,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}/include
         ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
+        ${ARGV5}  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
     target_link_libraries(${TEST_EXECUTABLE_NAME} PUBLIC ${GTEST_LIBRARIES} ${TEST_EXTRA_LIBRARIES})
@@ -112,6 +114,10 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
             set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
         endif(TEST_FRIENDLY_PATH)
     endforeach()
+
+    target_compile_definitions(${TEST_EXECUTABLE_NAME}
+        PRIVATE FASTDDS_ENFORCE_LOG_INFO
+        PRIVATE HAVE_LOG_NO_INFO=0)
 
 endfunction(add_test_executable)
 

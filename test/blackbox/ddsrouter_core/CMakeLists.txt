@@ -43,3 +43,32 @@ add_blackbox_executable(
     "${TEST_SOURCES}"
     "${TEST_LIST}"
     "${TEST_NEEDED_SOURCES}")
+
+############
+# DDS Test #
+############
+
+set(TEST_NAME
+    DDSTest)
+
+set(TEST_SOURCES
+    DDSTest.cpp
+    types/HelloWorld/HelloWorld.cxx
+    types/HelloWorld/HelloWorldPubSubTypes.cxx)
+
+set(TEST_LIST
+    simple_initialization
+    end_to_end_communication)
+
+set(TEST_NEEDED_SOURCES
+    resources/dds_test_simple_configuration.yaml)
+
+set(TEST_EXTRA_HEADERS
+    types/HelloWorld)
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
