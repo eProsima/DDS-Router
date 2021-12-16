@@ -53,7 +53,7 @@ void EventHandler<Args...>::set_callback(
     std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
     {
-        // setting callback
+        // Setting callback
         // Wait mutex must be taken because this variable is used in wait_for_event() wait
         std::lock_guard<std::mutex> lock(wait_mutex_);
         is_callback_set_.store(true);
@@ -73,7 +73,7 @@ void EventHandler<Args...>::unset_callback() noexcept
     if (is_callback_set_)
     {
         {
-            // unsetting callback
+            // Unsetting callback
             // Wait mutex must be taken because this variable is used in wait_for_event() wait
             std::unique_lock<std::mutex> lock(wait_mutex_);
             is_callback_set_.store(false);
@@ -90,7 +90,7 @@ void EventHandler<Args...>::unset_callback() noexcept
     }
     else
     {
-        logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had yet no callback set.")
+        logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had no callback set.")
     }
 }
 
@@ -116,7 +116,7 @@ bool EventHandler<Args...>::wait_for_event(
         --threads_waiting_;
     }
 
-    // Return true if the condition has been fulfilled. It could stop due to a unset callback
+    // Return true if the condition has been fulfilled. It could stop due to an unset callback
     // Note: number_of_events_registered_ does not required a mutex because it is being read and it is atomic
     return number_of_events_registered_.load() >= n;
 }

@@ -110,7 +110,6 @@ int main(
                 };
 
         // Creating FileWatcher event handler
-        std::cout << file_path << std::endl;
         std::unique_ptr<event::FileWatcherHandler> file_watcher_handler =
                 std::make_unique<event::FileWatcherHandler>(filewatcher_callback, file_path);
 

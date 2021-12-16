@@ -46,8 +46,8 @@ namespace event {
  * Inherit:
  * In order to create child classes, be aware of:
  * - While EventHandler is disabled (unset callback) the event should not repeat.
- *   This is because could lead to a problem if when destroying the EventHandler an event happens.
- *   It will try to access data of a destroyed object, and will crush.
+ *   This is because that could lead to a problem if when destroying the EventHandler an event occurs.
+ *   It will try to access data of a destroyed object, and will crash.
  *   Disable the event listener when \c callback_unset_nts_ is called, and enable it with \c callback_set_nts_
  * - TIP: avoid setting listeners in constructor or unsetting them in destructor. Use \c callback_unset_nts_
  *   and \c callback_set_nts_ instead.
@@ -69,7 +69,7 @@ public:
      * @brief Set the callback, and enable EventHandler if callback was not set
      *
      * If callback is already set, it overwrites it.
-     * If callback is not set yet, it uses this callback in advance and enables the Handler
+     * If callback is not set yet, it uses this callback in advance and enables the Handler.
      *
      * It calls the internal method \c callback_set_ once the callback is set so
      * child classes can add functionality when a callback is set.
@@ -85,7 +85,7 @@ public:
      * It calls the internal method \c callback_unset_ once the callback is unset so
      * child classes can add functionality when a callback is unset.
      *
-     * It waits in \c mutex_ if the callback is being called.
+     * It waits in \c event_mutex_ if the callback is being called.
      */
     void unset_callback() noexcept;
 
@@ -97,8 +97,8 @@ public:
      *
      * @param n : number of events at which this thread will awake
      *
-     * @return \c true if it has exit wait due to number of events
-     * @return \c false if it has exit wait due to other reasons (disable Handler)
+     * @return \c true if exits wait due to number of events
+     * @return \c false if exits wait due to other reasons (disable Handler)
      */
     bool wait_for_event(
             uint32_t n = 1) const noexcept;
@@ -120,9 +120,9 @@ protected:
             Args... args) noexcept;
 
     /**
-     * @brief Do not leave this method until every thread waiting in \c wait_for_event have exited
+     * @brief Do not leave this method until every thread waiting in \c wait_for_event has exited
      *
-     * This method must be called only with \c is_callback_set_ to false, otherwise events could never end.
+     * This method must be called only when \c is_callback_set_ is false, otherwise events could never end.
      */
     void awake_all_waiting_threads_nts_() noexcept;
 
@@ -158,7 +158,7 @@ protected:
      */
     std::atomic<bool> is_callback_set_;
 
-    //! Mutex to block EventHandler execution while lambda is being set or called
+    //! Mutex to block EventHandler execution while lambda is being set/unset or called
     mutable std::recursive_mutex event_mutex_;
 
     /**
@@ -194,8 +194,8 @@ protected:
     static const std::function<void(Args...)> DEFAULT_CALLBACK_;
 };
 
-}         /* namespace event */
-}         /* namespace ddsrouter */
+} /* namespace event */
+} /* namespace ddsrouter */
 } /* namespace eprosima */
 
 // Include implementation template file
