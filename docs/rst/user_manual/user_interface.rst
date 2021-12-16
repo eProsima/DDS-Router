@@ -6,7 +6,7 @@
 User Interface
 ##############
 
-The |ddsrouter| is an application that is executed from command line.
+The |eddsrouter| is an application executed from command line.
 
 .. contents::
     :local:
@@ -16,10 +16,10 @@ The |ddsrouter| is an application that is executed from command line.
 Source Dependency Libraries
 ---------------------------
 
-The |ddsrouter| depends on Fast DDS ``fastrtps`` and ``fastcdr`` libraries.
-In order to correctly execute the Router, be sure that ``fastrtps`` and ``fastcdr`` are sourced.
+The |eddsrouter| depends on |fastdds| ``fastrtps`` and ``fastcdr`` libraries.
+In order to correctly execute the Router, make sure that ``fastrtps`` and ``fastcdr`` are properly sourced.
 
-.. code-block: bash
+.. code-block:: bash
 
     source <path-to-fastdds-installation>/install/setup.bash
 
@@ -31,7 +31,7 @@ In order to correctly execute the Router, be sure that ``fastrtps`` and ``fastcd
 Application Arguments
 ---------------------
 
-The |ddsrouter| application support several input arguments:
+The |ddsrouter| application supports several input arguments:
 
 .. list-table::
     :header-rows: 1
@@ -72,7 +72,7 @@ The |ddsrouter| application support several input arguments:
 Help Argument
 ^^^^^^^^^^^^^
 
-It shows the Manual information for the application.
+It shows the usage information of the application.
 
 .. code-block:: console
 
@@ -84,7 +84,7 @@ It shows the Manual information for the application.
     -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
     -r --reload-time  Time period in milliseconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link).
                         Value 0 does not reload file. [Default: 0].
-    -d --debug        Activate debug Logs. (Be aware that some logs may require specific CMAKE compilation options.compilation options)
+    -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
 
 
 .. _user_manual_user_interface_configuration_file_argument:
@@ -109,8 +109,8 @@ Debug Argument
 ^^^^^^^^^^^^^^
 
 Activate ``INFO`` and ``DEBUG`` logs for the |ddsrouter| execution.
-For this argument to work, the |ddsrouter| must have been compiled in ``debug`` CMake build type, or compiled with
-CMake option ``LOG_INFO=ON``.
+For this argument to work, the |ddsrouter| must have been compiled with CMake option ``CMAKE_BUILD_TYPE=Debug``,
+or compiled with CMake option ``LOG_INFO=ON``.
 
 
 .. _user_manual_user_interface_configuration_file:
@@ -122,33 +122,33 @@ A |ddsrouter| **requires** one and only one *YAML* configuration file.
 Check section :ref:`user_manual_configuration` in order to know how to write this configuration file.
 
 This *YAML* configuration file must be passed as argument to the |ddsrouter| when executed.
-If configuration file is not defined as argument, the |ddsrouter| will be initialized with a file with
-default name ``DDS_ROUTER_CONFIGURATION.yaml`` that must be in the directory where the application has been executed.
-If the configuration file is not passed as argument, and it does not exist a file with the default configuration
-file name in the current directory, the application will fail.
+If no configuration file is provided as argument, the |ddsrouter| will attempt to load a file named
+``DDS_ROUTER_CONFIGURATION.yaml`` that must be in the same directory where the application is executed.
+If no configuration file is passed as argument, and the default configuration file does not exist
+in the current directory, the application will fail.
 
 
 Reload Topics
 -------------
 
-The topics that the |ddsrouter| is routing could be changed in run time.
-Including topics in ``allowedlist`` in the configuration will create new :term:`Writers <DataWriter>` and
+The topics that the |ddsrouter| is routing could be changed at runtime.
+Including topics in configuration's ``allowedlist`` will create new :term:`Writers <DataWriter>` and
 :term:`Readers <DataReader>` for each Participant in the Router.
 Removing a topic from ``allowedlist`` will disable this topic, and so it will stop routing data in such topic.
 Be aware that disabling a topic does not eliminate the entities of that topic.
 So, if a topic has been active before, the Writers and Readers will still be present in the |ddsrouter| and will still
 receive data.
 
-There exist two methods to reload the topics, an active and a passive one.
-Both methods work over the same configuration file which the |ddsrouter| has been initialized with.
+There exist two methods to reload the list of allowed topics, an active and a passive one.
+Both methods work over the same configuration file with which the |ddsrouter| has been initialized.
 
 
 File Watcher
 ^^^^^^^^^^^^
 
-A File Watcher is a process that runs in background and watch the |ddsrouter| configuration file.
-Every time that the file is changed, the OS sends a notification, and the File Watcher listens such notification
-and interact with the |ddsrouter| in order to reload the topics.
+A File Watcher is a process that runs in the background and watches for changes in the |ddsrouter| configuration file.
+Every time the file is changed, the OS sends a notification, and the File Watcher listens such notification
+and interacts with the |ddsrouter| in order to reload the topics.
 This event occurs every time the configuration file is saved.
 
 FileWatcher is used in every |ddsrouter| execution by default.
@@ -161,7 +161,7 @@ Reload Timer
 ^^^^^^^^^^^^
 
 A timer could be set in order to periodically reload the configuration file.
-The configuration file will be automatically reloaded with the period set.
+The configuration file will be automatically reloaded according to the specified time period.
 
 
 Close Application

@@ -89,8 +89,7 @@ const option::Descriptor usage[] = {
         "debug",
         Arg::None,
         "  -d \t--debug\t  \t" \
-        "Activate debug Logs. (Be aware that some logs may require specific CMAKE compilation options." \
-        "compilation options)"
+        "Activate debug Logs (be aware that some logs may require specific CMAKE compilation options)." \
     },
 
     { 0, 0, 0, 0, 0, 0 }
