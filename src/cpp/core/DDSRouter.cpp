@@ -88,57 +88,64 @@ ReturnCode DDSRouter::reload_configuration(
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    logDebug(DDSROUTER, "Reloading DDS Router configuration...");
-
-    // Load new configuration and check it is okey
-    AllowedTopicList new_allowed_topic_list(
-        new_configuration.allowlist(),
-        new_configuration.blocklist());
-
-    // Check if it should change or is the same configuration
-    if (new_allowed_topic_list == allowed_topics_)
+    if (enabled_.load())
     {
-        logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
-        return ReturnCode::RETCODE_NO_DATA;
-    }
+        logDebug(DDSROUTER, "Reloading DDS Router configuration...");
 
-    // Set new Allowed list
-    allowed_topics_ = new_allowed_topic_list;
+        // Load new configuration and check it is okey
+        AllowedTopicList new_allowed_topic_list(
+            new_configuration.allowlist(),
+            new_configuration.blocklist());
 
-    logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
-
-    // TODO refactor with discovery functionality
-    // TODO add bridge creation when initial topics configuration added
-    // Create new bridges for topics that does not exist yet
-    for (RealTopic topic : new_configuration.real_topics())
-    {
-        discovered_topic_(topic);
-    }
-
-    // It must change the configuration. Check every topic discovered and active if needed.
-    for (auto& topic_it : current_topics_)
-    {
-        // If topic is active and it is blocked, deactivate it
-        if (topic_it.second)
+        // Check if it should change or is the same configuration
+        if (new_allowed_topic_list == allowed_topics_)
         {
-            if (!allowed_topics_.is_topic_allowed(topic_it.first))
+            logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
+            return ReturnCode::RETCODE_NO_DATA;
+        }
+
+        // Set new Allowed list
+        allowed_topics_ = new_allowed_topic_list;
+
+        logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
+
+        // TODO refactor with discovery functionality
+        // TODO add bridge creation when initial topics configuration added
+        // Create new bridges for topics that does not exist yet
+        for (RealTopic topic : new_configuration.real_topics())
+        {
+            discovered_topic_(topic);
+        }
+
+        // It must change the configuration. Check every topic discovered and active if needed.
+        for (auto& topic_it : current_topics_)
+        {
+            // If topic is active and it is blocked, deactivate it
+            if (topic_it.second)
             {
-                deactivate_topic_(topic_it.first);
+                if (!allowed_topics_.is_topic_allowed(topic_it.first))
+                {
+                    deactivate_topic_(topic_it.first);
+                }
+            }
+            else
+            {
+                // If topic is not active and it is allowed, activate it
+                if (allowed_topics_.is_topic_allowed(topic_it.first))
+                {
+                    activate_topic_(topic_it.first);
+                }
             }
         }
-        else
-        {
-            // If topic is not active and it is allowed, activate it
-            if (allowed_topics_.is_topic_allowed(topic_it.first))
-            {
-                activate_topic_(topic_it.first);
-            }
-        }
+
+        configuration_ = new_configuration;
+
+        return ReturnCode::RETCODE_OK;
     }
-
-    configuration_ = new_configuration;
-
-    return ReturnCode::RETCODE_OK;
+    else
+    {
+        return ReturnCode::RETCODE_NOT_ENABLED;
+    }
 }
 
 ReturnCode DDSRouter::start() noexcept
@@ -150,7 +157,7 @@ ReturnCode DDSRouter::start() noexcept
     }
     else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
-        logUser(DDSROUTER, "Trying to start a disabled DDS Router.");
+        logUser(DDSROUTER, "Trying to start an enabled DDS Router.");
     }
 
     return ret;

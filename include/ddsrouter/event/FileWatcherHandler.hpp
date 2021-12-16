@@ -64,7 +64,7 @@ public:
     /**
      * @brief Destroy the File Watcher Handler object
      *
-     * Stop file watching
+     * Calls \c unset_callback
      */
     ~FileWatcherHandler();
 
@@ -77,20 +77,41 @@ protected:
      *
      * @note Method called only from constructor
      */
-    void start_filewatcher_();
+    void start_filewatcher_nts_();
 
     /**
      * @brief Stop watching file
      *
      * @note Method called only from destructor
      */
-    void stop_filewatcher_();
+    void stop_filewatcher_nts_();
+
+    /**
+     * @brief Override \c callback_set_ from \c EventHandler .
+     *
+     * It starts filewatcher if it has not been started.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_set_nts_() noexcept override;
+
+    /**
+     * @brief Override \c callback_set_ from \c EventHandler .
+     *
+     * It stops filewatcher if it has been started.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_unset_nts_() noexcept override;
 
     //! Path of file to watch
     std::string file_path_;
 
     //! File Watcher object
     std::unique_ptr<filewatch::FileWatch<std::string>> file_watch_handler_;
+
+    //! Whether the file_watcher has already been started
+    std::atomic<bool> filewatcher_started_;
 };
 
 } /* namespace event */

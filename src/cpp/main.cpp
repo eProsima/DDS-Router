@@ -74,7 +74,8 @@ int main(
     {
         // First of all, create signal handler so SIGINT does not break the program while initializing
         // Signal handler
-        event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
+        std::unique_ptr<event::SignalHandler<event::SIGNAL_SIGINT>> signal_handler =
+                std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>();
 
         /////
         // DDS Router Initialization
@@ -109,7 +110,8 @@ int main(
                 };
 
         // Creating FileWatcher event handler
-        event::FileWatcherHandler file_watcher_handler(filewatcher_callback, file_path);
+        std::unique_ptr<event::FileWatcherHandler> file_watcher_handler =
+                std::make_unique<event::FileWatcherHandler>(filewatcher_callback, file_path);
 
         /////
         // Periodic Handler for reload configuration in periodic time
@@ -145,7 +147,18 @@ int main(
         router.start();
 
         // Wait until signal arrives
-        signal_handler.wait_for_event();
+        signal_handler->wait_for_event();
+
+        // Before stopping the Router erase event handlers that reload configuration
+        if (periodic_handler)
+        {
+            periodic_handler.reset();
+        }
+
+        if (file_watcher_handler)
+        {
+            file_watcher_handler.reset();
+        }
 
         // Stop Router
         router.stop();

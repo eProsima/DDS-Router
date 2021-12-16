@@ -32,7 +32,7 @@ namespace event {
 //! Available data types for SignalHandler class
 enum Signals
 {
-    SIGNAL_SIGINT = SIGINT, //! SIGINT = C^
+    SIGNAL_SIGINT = SIGINT, //! SIGINT = ^C
 };
 
 /**
@@ -55,7 +55,7 @@ class SignalHandler : public EventHandler<int>
 public:
 
     /**
-     * @brief Default constructor
+     * @brief Default constructor that intialized the EventHandler with a default callback.
      *
      * It is initialized with a callback that only prints a Log message when the signal has arrived.
      *
@@ -63,6 +63,8 @@ public:
      * This default callback only logs that a signal has been received.
      *
      * @note Adds \c this to a static list of active \c SignalHandlers .
+     *
+     * @warning Default callback is set in this constructor, so EventHandler is enabled.
      */
     SignalHandler() noexcept;
 
@@ -80,6 +82,8 @@ public:
     /**
      * @brief Destroy Signal Handler object
      *
+     * Calls \c unset_callback
+     *
      * @note It eliminates \c this from static list of \c SignalHandlers .
      * If it is the last one, unset the static signal handler function.
      */
@@ -88,10 +92,10 @@ public:
 protected:
 
     //! Specific set method that adds \c this to \c active_handlers_
-    void callback_set_() noexcept override;
+    void callback_set_nts_() noexcept override;
 
     //! Specific set method that removes \c this from \c active_handlers_
-    void callback_unset_() noexcept override;
+    void callback_unset_nts_() noexcept override;
 
     //! Add \c this to the active handlers list. Called when callback is set.
     void add_to_active_handlers_() noexcept;

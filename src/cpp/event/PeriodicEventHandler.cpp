@@ -29,6 +29,7 @@ PeriodicEventHandler::PeriodicEventHandler(
         Duration_ms period_time)
     : EventHandler<>()
     , period_time_(period_time)
+    , timer_active_(false)
 {
     // In case period time is set to 0, the object is not created
     if (period_time <= 0)
@@ -36,50 +37,96 @@ PeriodicEventHandler::PeriodicEventHandler(
         throw InitializationException("Periodic Event Handler could no be created with period time 0");
     }
 
-    start_period_thread_();
+    logDebug(
+        DDSROUTER_PERIODICHANDLER,
+        "Periodic Event Handler created with period time " << period_time_ << " .");
 }
 
 PeriodicEventHandler::PeriodicEventHandler(
         std::function<void()> callback,
         Duration_ms period_time)
-    : EventHandler<>(callback)
-    , period_time_(period_time)
+    : PeriodicEventHandler(period_time)
 {
-    // In case period time is set to 0, the object is not created
-    if (period_time <= 0)
-    {
-        throw InitializationException("Periodic Event Handler could no be created with period time 0");
-    }
-
-    start_period_thread_();
+    set_callback(callback);
 }
 
 PeriodicEventHandler::~PeriodicEventHandler()
 {
-    stop_period_thread_();
+    unset_callback();
 }
 
 void PeriodicEventHandler::period_thread_routine_() noexcept
 {
-    while (true)
+    while (timer_active_.load())
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(period_time_));
+
+        std::unique_lock<std::mutex> lock(periodic_wait_mutex_);
+
+        // Wait for period time or awake if object has been disabled
+        wait_condition_variable_.wait_for(
+            lock,
+            std::chrono::milliseconds(period_time_),
+            [this]
+            {
+                // Exit if number of events is bigger than expected n
+                // or if callback is no longer set
+                return !timer_active_.load();
+            });
+
+        if (!timer_active_.load())
+        {
+            break;
+        }
 
         event_occurred_();
     }
 }
 
-void PeriodicEventHandler::start_period_thread_() noexcept
+void PeriodicEventHandler::start_period_thread_nts_() noexcept
 {
+    {
+        std::unique_lock<std::mutex> lock(periodic_wait_mutex_);
+        timer_active_.store(true);
+    }
+
     period_thread_ = std::thread(
         &PeriodicEventHandler::period_thread_routine_, this);
+
+    logDebug(
+        DDSROUTER_PERIODICHANDLER,
+        "Periodic Event Handler thread starts with period time " << period_time_ << " .");
 }
 
-void PeriodicEventHandler::stop_period_thread_() noexcept
+void PeriodicEventHandler::stop_period_thread_nts_() noexcept
 {
-    if (period_thread_.joinable())
+    // Set timer as inactive and awake thread so it stops
     {
-        period_thread_.detach();
+        std::unique_lock<std::mutex> lock(periodic_wait_mutex_);
+        timer_active_.store(false);
+    }
+    periodic_wait_condition_variable_.notify_one();
+
+    // Wait for the periodic thread to finish as it will skip sleep due to the condition variable
+    period_thread_.join();
+
+    logDebug(
+        DDSROUTER_PERIODICHANDLER,
+        "Periodic Event Handler thread stops.");
+}
+
+void PeriodicEventHandler::callback_set_nts_() noexcept
+{
+    if (!timer_active_)
+    {
+        start_period_thread_nts_();
+    }
+}
+
+void PeriodicEventHandler::callback_unset_nts_() noexcept
+{
+    if (timer_active_)
+    {
+        stop_period_thread_nts_();
     }
 }
 
