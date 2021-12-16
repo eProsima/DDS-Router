@@ -52,7 +52,13 @@ void EventHandler<Args...>::set_callback(
 {
     std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
-    is_callback_set_.store(true);
+    {
+        // setting callback
+        // Wait mutex must be taken because this variable is used in wait_for_event() wait
+        std::lock_guard<std::mutex> lock(wait_mutex_);
+        is_callback_set_.store(true);
+    }
+
     callback_ = callback;
 
     // Call child methods in case they should do something when handler is enabled or change callback
@@ -67,7 +73,8 @@ void EventHandler<Args...>::unset_callback() noexcept
     if (is_callback_set_)
     {
         {
-            // Setting callback
+            // unsetting callback
+            // Wait mutex must be taken because this variable is used in wait_for_event() wait
             std::unique_lock<std::mutex> lock(wait_mutex_);
             is_callback_set_.store(false);
         }
@@ -83,7 +90,7 @@ void EventHandler<Args...>::unset_callback() noexcept
     }
     else
     {
-        logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had already no callback set.")
+        logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had yet no callback set.")
     }
 }
 
