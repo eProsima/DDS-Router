@@ -113,7 +113,7 @@ void PayloadPool::add_release_payload_()
     ++release_count_;
     if (release_count_ > reserve_count_)
     {
-        logWarning(DDSROUTER_PAYLOADPOOL,
+        logError(DDSROUTER_PAYLOADPOOL,
                 "Inconsistent PayloadPool, releasing more payloads than reserved.");
     }
 }
@@ -122,6 +122,13 @@ bool PayloadPool::reserve_(
         uint32_t size,
         Payload& payload)
 {
+    if (size == 0)
+    {
+        logError(DDSROUTER_PAYLOADPOOL,
+                "Trying to reserve a data block of 0 bytes.");
+        return false;
+    }
+
     payload.reserve(size);
 
     add_reserved_payload_();

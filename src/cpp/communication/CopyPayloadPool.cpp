@@ -70,8 +70,7 @@ bool CopyPayloadPool::get_payload(
 bool CopyPayloadPool::release_payload(
         Payload& payload)
 {
-    release_(payload);
-    return true;
+    return release_(payload);
 }
 
 bool CopyPayloadPool::get_payload(
