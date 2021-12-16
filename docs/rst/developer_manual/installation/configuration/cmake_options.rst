@@ -24,7 +24,7 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - Possible values
         - Default
     *   - :class:`CMAKE_BUILD_TYPE`
-        - CMake optimization build type
+        - CMake optimization build type.
         - ``Release`` |br|
           ``Debug``
         - ``Release``

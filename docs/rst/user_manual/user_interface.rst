@@ -6,7 +6,7 @@
 User Interface
 ##############
 
-The |eddsrouter| is an application executed from command line.
+|eddsrouter| is an application executed from command line.
 
 .. contents::
     :local:
@@ -16,14 +16,14 @@ The |eddsrouter| is an application executed from command line.
 Source Dependency Libraries
 ---------------------------
 
-The |eddsrouter| depends on |fastdds| ``fastrtps`` and ``fastcdr`` libraries.
+|eddsrouter| depends on |fastdds| ``fastrtps`` and ``fastcdr`` libraries.
 In order to correctly execute the Router, make sure that ``fastrtps`` and ``fastcdr`` are properly sourced.
 
 .. code-block:: bash
 
     source <path-to-fastdds-installation>/install/setup.bash
 
-.. note:
+.. note::
 
     If Fast DDS has been installed in the system, these libraries would be sourced by default.
 
