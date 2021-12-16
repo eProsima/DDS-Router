@@ -158,6 +158,13 @@ public:
 
 protected:
 
+    bool reserve_(
+            uint32_t size,
+            Payload& payload);
+
+    bool release_(
+            Payload& payload);
+
     void add_reserved_payload_();
     void add_release_payload_();
 

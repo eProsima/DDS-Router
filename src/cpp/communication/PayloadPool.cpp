@@ -118,5 +118,26 @@ void PayloadPool::add_release_payload_()
     }
 }
 
+bool PayloadPool::reserve_(
+        uint32_t size,
+        Payload& payload)
+{
+    payload.reserve(size);
+
+    add_reserved_payload_();
+
+    return true;
+}
+
+bool PayloadPool::release_(
+        Payload& payload)
+{
+    payload.empty();
+
+    add_release_payload_();
+
+    return true;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
