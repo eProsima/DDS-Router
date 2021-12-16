@@ -24,8 +24,8 @@
 namespace eprosima {
 namespace ddsrouter {
 
-//! Type of Duration in milliseconds
-using Duration_ms = uint32_t;
+//! Type of Duration in seconds
+using Duration_s = uint32_t;
 
 /**
  * Type used to represent time points

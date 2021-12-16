@@ -77,7 +77,7 @@ const option::Descriptor usage[] = {
         "reload",
         Arg::Numeric,
         "  -r \t--reload-time\t  \t" \
-        "Time period in milliseconds to reload configuration file. " \
+        "Time period in seconds to reload configuration file. " \
         "This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). " \
         "Value 0 does not reload file. [Default: 0]."
     },
@@ -99,7 +99,7 @@ ProcessReturnCode parse_arguments(
         int argc,
         char** argv,
         std::string& file_path,
-        eprosima::ddsrouter::Duration_ms& reload_time,
+        eprosima::ddsrouter::Duration_s& reload_time,
         bool& activate_debug)
 {
     // Variable to pretty print usage help

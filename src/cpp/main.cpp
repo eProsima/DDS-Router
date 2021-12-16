@@ -43,7 +43,7 @@ int main(
     std::string file_path = DEFAULT_CONFIGURATION_FILE_NAME;
 
     // Reload time
-    eprosima::ddsrouter::Duration_ms reload_time = 0;
+    eprosima::ddsrouter::Duration_s reload_time = 0;
 
     // Debug option active
     bool activate_debug = false;

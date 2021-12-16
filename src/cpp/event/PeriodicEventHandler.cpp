@@ -26,7 +26,7 @@ namespace ddsrouter {
 namespace event {
 
 PeriodicEventHandler::PeriodicEventHandler(
-        Duration_ms period_time)
+        Duration_s period_time)
     : EventHandler<>()
     , period_time_(period_time)
     , timer_active_(false)
@@ -44,7 +44,7 @@ PeriodicEventHandler::PeriodicEventHandler(
 
 PeriodicEventHandler::PeriodicEventHandler(
         std::function<void()> callback,
-        Duration_ms period_time)
+        Duration_s period_time)
     : PeriodicEventHandler(period_time)
 {
     set_callback(callback);
@@ -65,7 +65,7 @@ void PeriodicEventHandler::period_thread_routine_() noexcept
         // Wait for period time or awake if object has been disabled
         wait_condition_variable_.wait_for(
             lock,
-            std::chrono::milliseconds(period_time_),
+            std::chrono::seconds(period_time_),
             [this]
             {
                 // Exit if number of events is bigger than expected n
