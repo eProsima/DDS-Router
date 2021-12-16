@@ -160,7 +160,7 @@ void EventHandler<Args...>::awake_all_waiting_threads_nts_() noexcept
 {
     bool exit = false;
 
-    while(!exit)
+    while (!exit)
     {
         wait_condition_variable_.notify_all();
         {
