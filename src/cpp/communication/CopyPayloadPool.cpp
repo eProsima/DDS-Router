@@ -31,32 +31,25 @@ bool CopyPayloadPool::release_payload(
         if (release_payload(cache_change.serializedPayload))
         {
             cache_change.payload_owner(nullptr);
+            return true;
         }
         else
         {
             return false;
         }
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 bool CopyPayloadPool::get_payload(
         uint32_t size,
         Payload& payload)
 {
-    payload.reserve(size);
+    reserve_(size, payload);
     payload.length = size;
-
-    if (size > 0)
-    {
-        // Set that a payload has been reserved
-        add_reserved_payload_();
-    }
-    else
-    {
-        // Set that a payload has been released
-        add_release_payload_();
-    }
 
     return true;
 }
@@ -65,7 +58,10 @@ bool CopyPayloadPool::get_payload(
         const Payload& src_payload,
         Payload& target_payload)
 {
-    get_payload(src_payload.length, target_payload);
+    if (!get_payload(src_payload.length, target_payload))
+    {
+        return false;
+    }
     std::memcpy(target_payload.data, src_payload.data, src_payload.length);
 
     return true;
@@ -74,12 +70,7 @@ bool CopyPayloadPool::get_payload(
 bool CopyPayloadPool::release_payload(
         Payload& payload)
 {
-    get_payload(0, payload);
-    payload.length = 0;
-    payload.pos = 0;
-    payload.max_size = 0;
-    payload.data = nullptr;
-    return true;
+    return release_(payload);
 }
 
 bool CopyPayloadPool::get_payload(
