@@ -44,10 +44,10 @@ This Participant is configured by a name, a type and the Domain Id, in this case
 WAN Participant Server
 ----------------------
 
-This Participant is configured by a name, a type and listening addresses where
-this Participant will expect data from other remote WAN Participant Clients.
+This Participant is configured with a name, a type and the listening addresses where
+it will expect data from other remote WAN Participant Clients.
 This Participant act as a Server only to receive the discovery data from other WAN Participants.
-Once the connection has been established, the communication will be symmetrical (except in TCP case, that
+Once the connection has been established, the communication will be symmetrical (except in TCP case, in which case
 this Participant will work as TCP Server).
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
@@ -68,21 +68,21 @@ In order to create a WAN Participant Client, check the configuration file
 Execute example
 ===============
 
-In order to run this example, there must be two different hosts belonging to different WANs:
+In order to run this example, there must be two different hosts located in different local networks:
 * host *H*:sub:`A` with private IP ``192.168.1.2`` connected to network router *R*:sub:`A` with public IP ``1.1.1.1``.
 * host *H*:sub:`B` with private IP ``192.168.2.2`` connected to network router *R*:sub:`B` with public IP ``2.2.2.2``.
 
-This example could be run in localhost or with two hosts in the same LAN, but it would not use the WAN
+This example could be run in localhost or with two hosts in the same LAN, but it will not use the WAN
 communication features of the |ddsrouter|.
 
 Host *H*:sub:`A`
 ----------------
 
-In this host is going to run the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
+This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
 Execute |ddsrouter| using file ``path-to-ddsrouter/src/databroker/resources/configurations/examples/wan_server.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
-port forwarding is configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
-For a detailed explanation on how to execute the |ddsrouter|, refer to this section.
+the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
+Please refer to this section for a detailed explanation on how to execute the |ddsrouter|.
 
 .. todo:
 
@@ -99,7 +99,7 @@ This listener will discover the Simple Participant in the |ddsrouter|, but will 
 Host *H*:sub:`B`
 ----------------
 
-In this host is going to run the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
+This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
 Execute |ddsrouter| using file ``path-to-ddsrouter/src/databroker/resources/configurations/examples/wan_client.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 port forwarding is configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.

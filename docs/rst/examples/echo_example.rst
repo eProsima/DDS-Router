@@ -6,7 +6,7 @@
 Echo Participant Example
 ########################
 
-In the following snippet we see a yaml file to configure a DDS Router to create a
+The following YAML configuration file configures a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in :term:`Domain Id` ``0`` and an
 :ref:`Echo Participant <user_manual_participants_echo>` that will print in ``stdout`` every message get in Domain ``0``.
 
@@ -20,7 +20,7 @@ Configuration
 Allowed Topics
 --------------
 
-In this section are the :term:`Topics <Topic>` that the DDS Router will route from
+This section lists the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
 Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
 and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
@@ -34,7 +34,7 @@ and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` wi
 Simple Participant
 ------------------
 
-This Participant is configured by a name, a type and the Domain Id, in this case ``0``.
+This Participant is configured with a name, a type and the Domain Id, which is ``0`` in this case.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
