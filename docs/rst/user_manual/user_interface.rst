@@ -82,7 +82,7 @@ It shows the usage information of the application.
     General options:
     -h --help         Print this help message.
     -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
-    -r --reload-time  Time period in milliseconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link).
+    -r --reload-time  Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link).
                         Value 0 does not reload file. [Default: 0].
     -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
 
@@ -100,7 +100,7 @@ Set the :ref:`user_manual_user_interface_configuration_file`.
 Reload Time Argument
 ^^^^^^^^^^^^^^^^^^^^
 
-Set the :ref:`user_manual_user_interface_reload_timer` in **milliseconds**.
+Set the :ref:`user_manual_user_interface_reload_timer` in **seconds**.
 
 
 .. _user_manual_user_interface_debug_argument:

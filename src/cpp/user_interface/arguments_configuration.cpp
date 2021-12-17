@@ -77,7 +77,7 @@ const option::Descriptor usage[] = {
         "reload",
         Arg::Numeric,
         "  -r \t--reload-time\t  \t" \
-        "Time period in milliseconds to reload configuration file. " \
+        "Time period in seconds to reload configuration file. " \
         "This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). " \
         "Value 0 does not reload file. [Default: 0]."
     },
@@ -164,7 +164,7 @@ ProcessReturnCode parse_arguments(
                     break;
 
                 case optionIndex::RELOAD_TIME:
-                    reload_time = std::stol(opt.arg);
+                    reload_time = std::stol(opt.arg) * 1000; // pass to milliseconds
                     break;
 
                 case optionIndex::ACTIVATE_DEBUG:
