@@ -21,7 +21,7 @@ Dependencies installation
 =========================
 
 |ddsrouter| depends on *eProsima Fast DDS* library and certain Debian packages.
-This section describes the instructions for installing |ddsrouter| dependencies and requirements in a Linux
+This section describes the instructions for installing |ddsrouter| dependencies and requirements in a Windows
 environment from sources.
 The following packages will be installed:
 
@@ -129,7 +129,7 @@ process.
 Dependencies
 ------------
 
-|ddsrouter| has the following dependencies, when installed from sources in a Linux environment:
+|ddsrouter| has the following dependencies, when installed from sources in a Windows environment:
 
 * :ref:`windows_sources_asiotinyxml2`
 * :ref:`windows_sources_openssl`
