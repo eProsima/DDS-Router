@@ -96,7 +96,7 @@ ProcessReturnCode parse_arguments(
         int argc,
         char** argv,
         std::string& file_path,
-        eprosima::ddsrouter::Duration_s& reload_time,
+        eprosima::ddsrouter::Duration_ms& reload_time,
         bool& activate_debug);
 
 } /* namespace ui */

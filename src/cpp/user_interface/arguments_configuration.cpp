@@ -99,7 +99,7 @@ ProcessReturnCode parse_arguments(
         int argc,
         char** argv,
         std::string& file_path,
-        eprosima::ddsrouter::Duration_s& reload_time,
+        eprosima::ddsrouter::Duration_ms& reload_time,
         bool& activate_debug)
 {
     // Variable to pretty print usage help
@@ -164,7 +164,7 @@ ProcessReturnCode parse_arguments(
                     break;
 
                 case optionIndex::RELOAD_TIME:
-                    reload_time = std::stol(opt.arg);
+                    reload_time = std::stol(opt.arg) * 1000; // pass to milliseconds
                     break;
 
                 case optionIndex::ACTIVATE_DEBUG:
