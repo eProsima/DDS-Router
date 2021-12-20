@@ -27,7 +27,6 @@
 #endif // if defined(_WIN32)
 
 #include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
