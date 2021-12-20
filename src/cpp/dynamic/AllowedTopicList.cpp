@@ -99,7 +99,9 @@ bool AllowedTopicList::is_topic_allowed(
 bool AllowedTopicList::operator ==(
         const AllowedTopicList& other) const noexcept
 {
-    return allowlist_ == other.allowlist_ && blocklist_ == other.blocklist_;
+    return
+        utils::are_set_of_ptr_equal<FilterTopic>(allowlist_, other.allowlist_) &&
+        utils::are_set_of_ptr_equal<FilterTopic>(blocklist_, other.blocklist_);
 }
 
 std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(

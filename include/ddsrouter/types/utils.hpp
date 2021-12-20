@@ -21,6 +21,7 @@
 #ifndef _DDSROUTER_TYPES_UTILS_HPP_
 #define _DDSROUTER_TYPES_UTILS_HPP_
 
+#include <memory>
 #include <set>
 #include <sstream>
 #include <string>
@@ -134,6 +135,63 @@ std::ostream& container_to_stream(
         std::string separator = ";")
 {
     return container_to_stream<T, Ptr>(os, std::vector<T>(list.begin(), list.end()), separator);
+}
+
+template <typename T>
+bool set_of_ptr_contains(
+        const std::set<std::shared_ptr<T>> set,
+        const std::shared_ptr<T> element)
+{
+    // If the pointer belongs to set, it is contained
+    if (set.find(element) != set.end())
+    {
+        return true;
+    }
+
+    // If element we are looking for is nullptr, do not search as we already know it is not in the set
+    // (every nullptr is compared to equal)
+    if (!element)
+    {
+        return false;
+    }
+
+    // If not, check if any object internally is the one we are looking for
+    for (auto itr = set.begin(); itr != set.end(); itr++)
+    {
+        // In case the set element is nullptr, do not call == or it will crash
+        if (nullptr != *itr)
+        {
+            if (*itr->get() == *element.get())
+            {
+                // If are equal, element is contained
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+template <typename T>
+bool are_set_of_ptr_equal(
+        const std::set<std::shared_ptr<T>> set1,
+        const std::set<std::shared_ptr<T>> set2)
+{
+    if (set1.size() != set2.size())
+    {
+        return false;
+    }
+
+    // Check if every element in set1 is in set2
+    for (auto itr1 = set1.begin(); itr1 != set1.end(); itr1++)
+    {
+        if (!set_of_ptr_contains(set2, *itr1))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 } /* namespace utils */

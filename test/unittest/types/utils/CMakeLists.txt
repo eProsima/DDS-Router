@@ -12,8 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(configuration_tags)
-add_subdirectory(endpoint)
-add_subdirectory(participant)
-add_subdirectory(topic)
-add_subdirectory(utils)
+set(TEST_NAME utilsTest)
+
+set(TEST_SOURCES
+        utilsTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
+    )
+
+set(TEST_LIST
+        set_of_ptr_contains_int
+        set_of_ptr_with_null_contains_int
+        set_of_ptr_contains_string
+        are_set_of_ptr_equal_int
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
