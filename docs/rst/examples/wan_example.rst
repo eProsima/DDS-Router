@@ -82,12 +82,9 @@ This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients
 Execute |ddsrouter| using file ``<path/to/ddsrouter>/src/ddsrouter/resources/configurations/examples/wan_server.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
-Please refer to this section for a detailed explanation on how to execute the |ddsrouter|.
-
-.. todo:
-
-    Link to WAN configuration.
-    Link ddsrouter execution when section exists.
+Check the following :ref:`section <user_manual_wan_configuration>` for further information about how to configure
+WAN in |ddsrouter|.
+Refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the |ddsrouter|.
 
 First of all, execute a ROS 2 ``demo_nodes_cpp`` *listener* in domain ``0``.
 This listener will discover the Simple Participant in the |ddsrouter|, but will not receive any data yet.
@@ -103,12 +100,9 @@ This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients
 Execute |ddsrouter| using file ``<path/to/ddsrouter>/src/ddsrouter/resources/configurations/examples/wan_client.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 port forwarding is configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
-For a detailed explanation on how to execute the |ddsrouter|, refer to this section.
-
-.. todo:
-
-    Link to WAN configuration.
-    Link ddsrouter execution when section exists.
+Check the following :ref:`section <user_manual_wan_configuration>` for further information about how to configure
+WAN in |ddsrouter|.
+Refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the |ddsrouter|.
 
 In this case, the Simple Participant is configured to use the Domain Id ``1``,
 so execute a ROS 2 ``demo_nodes_cpp`` *talker* in domain ``1``.

@@ -67,17 +67,16 @@ The whole application has been thought to be user-friendly, following a user-ori
 
 * **RUN**: In order to run a |ddsrouter| application, just a *YAML* configuration file is required with the specific
   configurations (see :ref:`section <user_manual_configuration>` to check how to configure a DDS Router)
-  (see section TODO to check the application supported arguments).
+  (see section :ref:`section <user_manual_user_interface_application_arguments>`
+  to check the application supported arguments).
 * **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication could be
   changed in runtime by just changing the *YAML* configuration file
-  (see section TODO for more details about re-configuring a running |ddsrouter|)..
+  (see section :ref:`user_manual_user_interface_reload_topics`
+  for more details about re-configuring a running |ddsrouter|)..
 * **STOP**: To stop the |ddsrouter| just send a `^C` signal to the process, and it will gracefully close the whole
-  application (see section TODO for more details on how to close the application).
+  application
+  (see section :ref:`user_manual_user_interface_close_application` for more details on how to close the application).
 
-
-.. todo:
-
-    Add links to user interface manual
 
 Common Use Cases
 ================
@@ -93,13 +92,13 @@ These are most common use cases so far:
         - Example
 
     *   - Communicating two different DDS Domain Ids
-        -
+        - :ref:`examples_change_domain_example`
 
     *   - Communicating ROS 2 Discovery Server executions
-        -
+        - :ref:`examples_tos_discovery_server_example`
 
     *   - WAN Communication
-        -
+        - :ref:`examples_wan_example`
 
 .. todo:
 

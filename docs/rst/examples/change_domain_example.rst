@@ -53,11 +53,8 @@ This Participant is configured with a name, a type and the Domain Id, which is `
 Execute example
 ===============
 
-Please refer to this section for a detailed explanation on how to execute the |ddsrouter|.
-
-.. todo:
-
-    Link when section exists.
+Please refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the
+|ddsrouter|.
 
 .. todo:
 

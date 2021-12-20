@@ -67,17 +67,12 @@ Please, refer to :ref:`user_manual_participant_participant_types` in order to se
     in the same domain).
     This will lead to an infinite feedback loop between each other.
 
-In the following configuration example, the |ddsrouter| will create two Simple Participants,
-one for ``domain 0`` and one for ``domain 1``.
-This is a typical use case of DDS Domain bridge.
+In the following configuration example, the |ddsrouter| will create two
+:ref:`Simple Participants <user_manual_participants_simple>`, one for ``domain 0`` and one for ``domain 1``.
+This is a typical use case of :ref:`DDS Domain bridge <examples_change_domain_example>`.
 The topics allowed in the two domains will start communicating to each other.
-Note that the communication is not performed between the end-user DDS entities,
+Note that the communication is not P2P performed between the end-user DDS entities,
 i.e. the data must reach the |ddsrouter| and this will forward the data.
-
-.. todo:
-
-    Add link to Simple Participant when page created
-    Add link to use case domain bridge
 
 .. code-block:: yaml
 
