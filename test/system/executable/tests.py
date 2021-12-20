@@ -44,6 +44,16 @@ SLEEP_TIME = 1
 MAX_SIGNALS_SEND_ITERATIONS = 3
 
 
+def signal_handler(signum, frame):
+    """
+    Ignore Signal handler.
+
+    This method is required in Windows to not handle the signal that
+    is sent to the subprocess.
+    """
+    pass
+
+
 def executable_permission_value():
     """Return executable permissions value depending on the OS."""
     if os.name == 'nt':
@@ -137,6 +147,10 @@ def test_ddsrouter_closure(ddsrouter, configuration_file):
         logger.debug('STDOUT: \n' + str(output))
         logger.debug('STDERR: \n' + str(err))
         return 1
+
+    # direct this script to ignore SIGINT in case of windows
+    if os.name == 'nt':
+        signal.signal(signal.SIGINT, signal_handler)
 
     # send SIGINT to process and wait for processing
     lease = 0
