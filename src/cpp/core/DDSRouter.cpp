@@ -264,7 +264,7 @@ void DDSRouter::init_participants_()
     if (participants_database_->size() < 2)
     {
         throw InitializationException(utils::Formatter()
-                << "DDS Router requires at least 2 Participants to start.");
+                      << "DDS Router requires at least 2 Participants to start.");
     }
 }
 
