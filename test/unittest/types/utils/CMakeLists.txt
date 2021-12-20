@@ -26,7 +26,9 @@ set(TEST_LIST
         are_set_of_ptr_equal_int
     )
 
-set(TEST_EXTRA_LIBRARIES)
+set(TEST_EXTRA_LIBRARIES
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
 
 add_unittest_executable(
         "${TEST_NAME}"
