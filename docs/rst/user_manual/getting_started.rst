@@ -6,29 +6,31 @@
 Getting Started
 ###############
 
-|ddsrouter| is a cross-platform non-graphic application developed by eProsima and powered by Fast DDS
-that allow to create a communication bridge that connects two DDS networks that otherwise would be isolated.
+|ddsrouter| is a cross-platform non-graphical application developed by eProsima and powered by Fast DDS
+that allows to create a communication bridge that connects two DDS networks that otherwise would be isolated.
 The main use case of the |ddsrouter| is to communicate two DDS networks that are physically or virtually separated
-and belong to different LANs, allowing those entities to publish and subscribe to local and remote topics indistinctly.
+and belong to different LANs, allowing the entities of each network to publish and subscribe to local
+and remote topics indistinctly.
 
 
 Project Overview
 ================
 
-The |ddsrouter| is an application that internally run :term:`Participants <Participant>`, that are an abstraction of
+The |ddsrouter| is an application that internally run :term:`Participants <Participant>`, which are an abstraction of
 DDS :term:`DomainParticipants <DomainParticipant>`.
-Each one of these Participants is an communication interface: a "door" to a specific DDS network configuration.
+Each one of these Participants is an communication interface, a "door" to a specific DDS network configuration.
 These Participants allow the application to connect to different DDS networks at the same time.
-Every time one of these Participants receives a message from the DDS network it is connected, it will forward the
-data and the source of this message through the other Participants.
-In which DDS configurations and which topics the |ddsrouter| will work depends on the initial
+Every time one of these Participants receives a message from the DDS network to which they are connected,
+they will forward the data and the source of this message through the other Participants.
+The |ddsrouter| configuration and the topics in which it operates depends on the initial
 :ref:`DDS Router configuration <user_manual_configuration>`.
 
 The following schema represents a |ddsrouter| local use case.
-In this scenario, we have different DDS networks that are isolated one to each other, due to Transport Protocol
-(UDP, TCP, etc.), Discovery Protocol (Simple, Discovery Server, etc.) or by DDS :term:`Domain Id`.
-Configuring the |ddsrouter| to have 4 different Participants, each of them using one of the different scenario
-configurations, will create internally 4 Participants.
+This scenario presents different DDS networks that are isolated one to each other due to the Transport Protocol
+(UDP, TCP, etc.), the Discovery Protocol (Simple, Discovery Server, etc.) or the DDS :term:`Domain Id` used
+by each DDS entity.
+Configuring the |ddsrouter| to have 4 different Participants, each of them configured for one isolated DDS network,
+will create internally 4 Participants.
 All the data that arrives to one of the Participants will be forwarded through the others, allowing all the machines
 to connect to each other independently of their different configurations.
 
@@ -38,18 +40,20 @@ to connect to each other independently of their different configurations.
 WAN Communication
 -----------------
 
-In order to achieve a WAN communication of two networks that work in different LANs, each LAN requires a running
-|ddsrouter| application.
-These |ddsrouter| will communicate to each other using DDS over WAN, and will route every message received in LAN
-to the remote |ddsrouter|.
-Once the remote Router has received it, it will transmit the data to the local networks it is connected with.
+To achieve a WAN communication of two networks that work in different LANs requires a running
+|ddsrouter| application on each LAN.
+The |ddsrouter| deployed will communicate to each other using DDS over WAN,
+and will route every message received in LAN to the remote |ddsrouter|.
+Once the remote Router receives data, it will transmit it to the local networks to which it is connected.
 This way, both DDS networks will behave as if they would belong to the same LAN.
 
-A great feature as well is that WAN communications is not limited to a single pair of |ddsrouter|.
-The communication used in WAN is DDS using Discovery Server (dynamic discovery over non-multicast networks).
+Another important feature is that WAN communications is not limited to a single pair of |ddsrouter|.
+The WAN communication is performed using the
+`eProsima Discovery Server discovery mechanism <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html#discovery-server>`__
+(dynamic discovery over non-multicast networks).
 Thus, any DDS Router connected to the same Discovery Servers will works as a standard DDS node, publishing
-and subscribing in the nodes required.
-This allows to create a non limited and hugely scalable decentralized and distributed DDS network.
+and subscribing in the shared DDS topics.
+This allows to create a non limited and highly scalable decentralized and distributed DDS network.
 
 .. figure:: /rst/figures/ddsrouter_overview_wan.png
 
@@ -57,12 +61,12 @@ This allows to create a non limited and hugely scalable decentralized and distri
 Usage Description
 =================
 
-The |ddsrouter| is a terminal (non-graphical) application that create the DDS bridge as long as it is running.
-The configuration and user interaction with this application has been studied and probed to be very easy to learn
-and user friendly.
+The |ddsrouter| is a terminal (non-graphical) application that creates the DDS bridge as long as it is running.
+The configuration in *YAML* format is very intuitive and human-readable.
+The whole application has been thought to be user-friendly, following a user-oriented design.
 
 * **RUN**: In order to run a |ddsrouter| application, just a *YAML* configuration file is required with the specific
-  Router configurations (see :ref:`section <user_manual_configuration>` to check how to configure a DDS Router)
+  configurations (see :ref:`section <user_manual_configuration>` to check how to configure a DDS Router)
   (see section TODO to check the application supported arguments).
 * **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication could be
   changed in runtime by just changing the *YAML* configuration file
