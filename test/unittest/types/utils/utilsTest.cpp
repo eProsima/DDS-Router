@@ -156,7 +156,7 @@ TEST(utilsTest, set_of_ptr_contains_string)
     std::shared_ptr<std::string> ptr_very_long_st = std::make_shared<std::string>(
         "I count him braver who overcomes his desires than him who conquers his enemies, "
         "for the hardest victory is over self. ― Aristotle"
-    );
+        );
 
     // Add elements to set
     set.insert(ptr_a);
@@ -165,9 +165,9 @@ TEST(utilsTest, set_of_ptr_contains_string)
     set.insert(ptr_very_long_st);
 
     // Elements to look for
-    std::shared_ptr<std::string> ptr_ab = std::make_shared<std::string>("a");; // contained
-    std::shared_ptr<std::string> ptr_b = std::make_shared<std::string>("Barro");; // contained
-    std::shared_ptr<std::string> ptr_b2 = std::make_shared<std::string>("Barr");; // substring contained
+    std::shared_ptr<std::string> ptr_ab = std::make_shared<std::string>("a");  // contained
+    std::shared_ptr<std::string> ptr_b = std::make_shared<std::string>("Barro");  // contained
+    std::shared_ptr<std::string> ptr_b2 = std::make_shared<std::string>("Barr");  // substring contained
     std::shared_ptr<std::string> ptr_spaces_b = std::make_shared<std::string>("Stringwithspaces"); // almost contained
     std::shared_ptr<std::string> ptr_4 = std::make_shared<std::string>("4"); // not contained
 

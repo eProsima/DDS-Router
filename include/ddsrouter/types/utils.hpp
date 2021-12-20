@@ -156,7 +156,7 @@ bool set_of_ptr_contains(
     }
 
     // If not, check if any object internally is the one we are looking for
-    for(auto itr = set.begin(); itr != set.end(); itr++)
+    for (auto itr = set.begin(); itr != set.end(); itr++)
     {
         // In case the set element is nullptr, do not call == or it will crash
         if (nullptr != *itr)
@@ -183,7 +183,7 @@ bool are_set_of_ptr_equal(
     }
 
     // Check if every element in set1 is in set2
-    for(auto itr1 = set1.begin(); itr1 != set1.end(); itr1++)
+    for (auto itr1 = set1.begin(); itr1 != set1.end(); itr1++)
     {
         if (!set_of_ptr_contains(set2, *itr1))
         {
