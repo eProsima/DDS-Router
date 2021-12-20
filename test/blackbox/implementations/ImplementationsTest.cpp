@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/utils.hpp>
@@ -82,6 +83,25 @@ RawConfiguration participant_configuration(
     static_cast<void>(value);
 
     return participant_configuration;
+}
+
+/**
+ * Test that tries to create a DDSRouter with only one Participant
+ */
+TEST(ImplementationsTest, solo_participant_implementation)
+{
+    // For each Participant Type
+    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    {
+        // Generate configuration
+        RawConfiguration configuration;
+
+        // Add two participants
+        configuration["participant_1"] = participant_configuration(1);
+
+        // Create DDSRouter entity
+        ASSERT_THROW(DDSRouter router(configuration), InitializationException);
+    }
 }
 
 /**

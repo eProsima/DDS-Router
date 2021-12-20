@@ -71,6 +71,9 @@ public:
     //! Whether the database is empty
     bool empty() const noexcept;
 
+    //! Number of Participants in the Database
+    size_t size() const noexcept;
+
 protected:
 
     /**

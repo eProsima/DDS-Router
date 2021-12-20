@@ -67,6 +67,11 @@ bool ParticipantsDatabase::empty() const noexcept
     return participants_.empty();
 }
 
+size_t ParticipantsDatabase::size() const noexcept
+{
+    return participants_.size();
+}
+
 void ParticipantsDatabase::add_participant_(
         ParticipantId id,
         std::shared_ptr<IParticipant> participant) noexcept
