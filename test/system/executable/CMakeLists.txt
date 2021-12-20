@@ -26,11 +26,6 @@ if(PYTHONINTERP_FOUND)
         simple_configuration
     )
 
-    # Copy configuration files
-    # set(CONFIGURATION_FILES
-    #     "configurations/void_configuration.yaml"
-    #     "configurations/simple_configuration.yaml"
-    # )
     foreach(TEST_CONFIGURATION ${TEST_CONFIGURATIONS})
         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configurations/${TEST_CONFIGURATION}.yaml
             ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST_CONFIGURATION}.yaml
@@ -38,30 +33,13 @@ if(PYTHONINTERP_FOUND)
     endforeach()
 
     # windows auxiliary script to fork test execution
-    # set(PWS_LAUNCHER
-    #     ${CMAKE_CURRENT_SOURCE_DIR}/launcher.ps1
-    # )
+    set(PWS_LAUNCHER
+        ${CMAKE_CURRENT_SOURCE_DIR}/launcher.ps1
+    )
 
     # Calculate environment
     set(TEST_ENVIRONMENT
         "PATH=$ENV{PATH};$<TARGET_FILE_DIR:fastcdr>;$<TARGET_FILE_DIR:fastrtps>;$<TARGET_FILE_DIR:ddsrouter>")
-
-    # if(WIN32)
-
-    #     if(TARGET tinyxml2 OR TARGET tinyxml2::tinyxml2)
-    #         set(TEST_ENVIRONMENT
-    #             "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${TINYXML2_LIBRARY}>")
-    #     elseif(EXISTS TINYXML2_LIBRARY)
-    #         get_filename_component(
-    #             TINYXML2_LIBRARY_DIR ${TINYXML2_LIBRARY} DIRECTORY)
-    #         set(TEST_ENVIRONMENT
-    #             "${TEST_ENVIRONMENT};${TINYXML2_LIBRARY_DIR}")
-    #         unset(TINYXML2_LIBRARY_DIR)
-    #     endif()
-
-    #     string(REPLACE ";" "\\;" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
-
-    # endif(WIN32)
 
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
@@ -71,32 +49,24 @@ if(PYTHONINTERP_FOUND)
         # CTest has issues with signals on windows. We forked the test
         # execution using an auxiliary powershell script
         if(WIN32)
-        #    add_test(
-        #             NAME system.tools.fastdds.${TEST}
-        #             COMMAND powershell "-File" ${PWS_LAUNCHER}
-        #                     ${PYTHON_EXECUTABLE}
-        #                     ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-        #                     $<TARGET_FILE:fast-discovery-server>
-        #                     ${TEST}
-        #         )
+           add_test(
+                    NAME system.tools.ddsrouter.${TEST}
+                    COMMAND powershell "-File" ${PWS_LAUNCHER}
+                            ${PYTHON_EXECUTABLE}
+                            ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
+                            $<TARGET_FILE:ddsrouter>
+                            ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
+                )
         else()
             add_test(
                     NAME system.tools.ddsrouter.${TEST}
                     COMMAND ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
                             "--exe" $<TARGET_FILE:ddsrouter>
-                            "--config-file" configurations/${TEST}.yaml
+                            "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                             # "--debug" # Add for debugging
                 )
         endif()
-
-        # Set test properties
-        # set_tests_properties(
-        #     system.tools.fastdds.${TEST}
-        #     PROPERTIES
-        #         LABELS "NoMemoryCheck"
-        #         ENVIRONMENT "${TEST_ENVIRONMENT}"
-        #     )
 
     endforeach()
 
