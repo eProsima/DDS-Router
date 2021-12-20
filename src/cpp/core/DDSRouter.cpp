@@ -259,6 +259,13 @@ void DDSRouter::init_participants_()
             new_participant->id(),
             new_participant);
     }
+
+    // If DDS Router has not two or more Participants configured, it should fail
+    if (participants_database_->size() < 2)
+    {
+        throw InitializationException(utils::Formatter()
+                << "DDS Router requires at least 2 Participants to start.");
+    }
 }
 
 void DDSRouter::init_bridges_()
