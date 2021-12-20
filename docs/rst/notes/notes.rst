@@ -3,13 +3,14 @@
 .. _release_notes:
 
 ##############
-Version v0.0.0
+Version v0.1.0
 ##############
 
 This is the first release of eProsima |ddsrouter|.
 
-This release includes several **features** regarding the routing of DDS data, the configuration and user interaction
-with the |ddsrouter|, the different DDS configurations that the application is able to reproduce, etc.
+This release includes several **features** regarding the routing of DDS data, the |ddsrouter| configuration,
+the user interaction
+with the |ddsrouter|, and the different DDS configurations that the application is able to reproduce.
 
 This release includes the following **User Interface features**:
 
@@ -29,9 +30,9 @@ This release includes the following **User Interface features**:
 
 This release includes the following **Configuration features**:
 
-* Allow to execute application with a *YAML* configuration file.
-* Support initial topics in allowlist.
-* Support block topic filters.
+* Allow to execute the application with a *YAML* configuration file.
+* Support for initial topics in allowlist.
+* Support for block topic filters.
 * Different Participant configurations:
 
     * Domain Id.
@@ -42,19 +43,19 @@ This release includes the following **Configuration features**:
 
 This release includes the following **Routing features**:
 
-* Support to route Topics specified in allowlist regarding Topic name and Topic Type name.
-* Support connect to new Topics in run time (by reloading configuration).
-* Support disabling a Topic in run time.
-* Support enabling a Topic that has been disabled in run time.
+* Support for routing Topics specified in allowlist regarding Topic name and Topic Type name.
+* Support for connecting to new Topics in run-time (by reloading configuration).
+* Support for disabling a Topic in run-time.
+* Support for enabling a Topic that has been disabled in run-time.
 * Route messages of each Participant to all the other Participants.
-* Data types agnostic.
+* Agnostic to topic data types.
 
 
 This release includes the following **DDS features**:
 
 * Allow UDP, TCP and SHM transport communication.
 * Allow dynamic discovery of new entities.
-* Using Fast DDS RTPS layer for discovery, publication and subscription.
+* Using |efastdds| RTPS layer for discovery, publication and subscription.
 
 
 This release includes the following **Participant features**:
@@ -69,10 +70,11 @@ This release includes the following **Examples**:
 
 * **Echo Example**, to monitor a local simple network.
 * **Domain Change Example**, to connect two different domains.
-* **ROS 2 Discovery Server Example**, to connect a simple DDS with Discovery Server using ROS 2 configuration.
+* **ROS 2 Discovery Server Example**, to connect a regular DDS network with a Discovery Server network using
+  ROS 2 configuration.
 * **WAN Example**, to connect two DDS networks in different LANs.
 
 
 This release includes the following **Documentation features**:
 
-* This Documentation.
+* This same documentation.
