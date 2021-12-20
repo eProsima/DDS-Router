@@ -55,12 +55,7 @@ Discovery Server will expect metatraffic data from clients.
 Execute example
 ===============
 
-For a detailed explanation on how to execute the |ddsrouter|, refer to this section.
-
-.. todo:
-
-    Link when section exists.
-
+For a detailed explanation on how to execute the |ddsrouter|, refer to this :ref:`section <user_manual_user_interface>`.
 Execute a ROS 2 ``demo_nodes_cpp`` *talker* in domain ``0``:
 
 .. code-block:: bash

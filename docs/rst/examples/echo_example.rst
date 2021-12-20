@@ -54,11 +54,8 @@ This Participant does not require further configuration than name and type.
 Execute example
 ===============
 
-For a detailed explanation on how to execute the |ddsrouter|, refer to this section.
+For a detailed explanation on how to execute the |ddsrouter|, refer to this :ref:`section <user_manual_user_interface>`.
 
-.. todo:
-
-    Link when section exists.
 
 Execute with Fast DDS HelloWorld Example
 ----------------------------------------

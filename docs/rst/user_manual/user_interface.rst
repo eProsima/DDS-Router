@@ -28,6 +28,8 @@ In order to correctly execute the Router, make sure that ``fastrtps`` and ``fast
     If Fast DDS has been installed in the system, these libraries would be sourced by default.
 
 
+.. _user_manual_user_interface_application_arguments:
+
 Application Arguments
 ---------------------
 
@@ -128,6 +130,8 @@ If no configuration file is passed as argument, and the default configuration fi
 in the current directory, the application will fail.
 
 
+.. _user_manual_user_interface_reload_topics:
+
 Reload Topics
 -------------
 
@@ -163,6 +167,8 @@ Reload Timer
 A timer could be set in order to periodically reload the configuration file.
 The configuration file will be automatically reloaded according to the specified time period.
 
+
+.. _user_manual_user_interface_close_application:
 
 Close Application
 -----------------

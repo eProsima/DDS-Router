@@ -10,6 +10,7 @@ fastcdr
 fastrtps
 Gtest
 guid
+guid
 IPv
 kubernetes
 localhost
@@ -17,4 +18,5 @@ metatraffic
 multicast
 Redistributable
 runtime
+scalable
 wget
