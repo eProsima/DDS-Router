@@ -44,9 +44,17 @@ SLEEP_TIME = 1
 MAX_SIGNALS_SEND_ITERATIONS = 3
 
 
+def executable_permission_value():
+    """Return executable permissions value depending on the OS."""
+    if os.name == 'nt':
+        return os.X_OK  # windows
+    else:
+        return os.EX_OK
+
+
 def file_exist_and_have_permissions(file_path):
     """Check if a file exists and have executable permissions."""
-    if os.access(file_path, os.EX_OK):
+    if os.access(file_path, executable_permission_value()):
         return file_path
     else:
         return None
