@@ -36,6 +36,7 @@ set(TEST_LIST
         get_participants_ids
         get_participants_map
         pop
+        size
     )
 
 set(TEST_EXTRA_LIBRARIES
