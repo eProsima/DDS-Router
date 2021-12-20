@@ -20,29 +20,33 @@ set(TEST_NAME
     ImplementationsTest)
 
 set(TEST_SOURCES
-    ImplementationsTest.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/LocalDiscoveryServerParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/WANParticipant.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp)
+        ImplementationsTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/LocalDiscoveryServerParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/WANParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp
+    )
 
 set(TEST_LIST
-    pair_implementation
-    pair_implementation_with_topic
-    all_implementations)
+        pair_implementation
+        pair_implementation_with_topic
+        all_implementations
+        solo_participant_implementation
+    )
 
 set(TEST_NEEDED_SOURCES
     )
 
 add_blackbox_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_NEEDED_SOURCES}")
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_NEEDED_SOURCES}"
+    )
