@@ -1,4 +1,4 @@
-# Copyright 2020 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,9 +84,9 @@ if(PYTHONINTERP_FOUND)
                     NAME system.tools.ddsrouter.${TEST}
                     COMMAND ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            "-e" $<TARGET_FILE:ddsrouter>
-                            "-c" configurations/${TEST}.yaml
-                            # Add -d for debugging
+                            "--exe" $<TARGET_FILE:ddsrouter>
+                            "--config-file" configurations/${TEST}.yaml
+                            # "--debug" # Add for debugging
                 )
         endif()
 

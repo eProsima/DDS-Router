@@ -1,4 +1,4 @@
-# Copyright 2020 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """
-    Tests for the ddsrouter executable.
+Tests for the ddsrouter executable.
 
-    Contains a package of system test for ddsrouter tool
+Contains a package of system test for ddsrouter tool
 
-    usage: test.py -e <binary_path> -c <config_file>
+Usage: test.py -e <binary_path> -c <config_file_path>
 
-    binary_path: DDS Router binary path
+Arguments:
 
+    DDS Router binary path : -e | --exe binary_path
+
+    DDS Router binary path : -c | --config-file config_file_path
+
+    Run test in Debug mode : -d | --debug
 """
 
 import argparse
@@ -33,11 +37,20 @@ import time
 
 DESCRIPTION = """Script to execute DDS Router executable test"""
 USAGE = ('python3 tests.py -e <path/to/ddsrouter-executable>'
-         ' [-t LIST[test-name]] [-d]')
+         ' -c config_file_path [-d]')
 
 # Sleep time to let process init and finish
 SLEEP_TIME = 1
 MAX_SIGNALS_SEND_ITERATIONS = 3
+
+
+def file_exist_and_have_permissions(file_path):
+    """Check if a file exists and have executable permissions."""
+    if os.access(file_path, os.EX_OK):
+        return file_path
+    else:
+        return None
+
 
 def parse_options():
     """
@@ -55,14 +68,14 @@ def parse_options():
     required_args.add_argument(
         '-e',
         '--exe',
-        type=str,
+        type=file_exist_and_have_permissions,
         required=True,
         help='Path to discovery-server executable.'
     )
     required_args.add_argument(
         '-c',
         '--config-file',
-        type=str,
+        type=file_exist_and_have_permissions,
         required=True,
         help='Configuration file path.'
     )
@@ -76,18 +89,32 @@ def parse_options():
 
 
 def test_ddsrouter_closure(ddsrouter, configuration_file):
-    """Test that dsdrouter command closes correctly."""
+    """
+    Test that ddsrouter command closes correctly.
+
+    It creates a command line with the executable and the configuration
+    file, executes the process and send it a signal after SLEEP_TIME sec.
+    If the process has finished before the signal, test fails.
+    If the process does not end after sending MAX_SIGNALS_SEND_ITERATIONS
+    it is hard killed and the test fails.
+
+    Parameters:
+    ddsrouter (path): Path to ddsrouter binary executable
+    configuration_file (path): Path to ddsrouter yaml configuration file
+
+    Returns:
+    0 if okay, otherwise the return code of the command executed
+    """
     command = [ddsrouter, '-c', configuration_file]
 
-    logger.info("Executing command: " + str(command))
+    logger.info('Executing command: ' + str(command))
 
     # this subprocess cannot be executed in shell=True or using bash
     #  because a background script will not broadcast the signals
     #  it receives
     proc = subprocess.Popen(command,
                             stdout=subprocess.PIPE,
-                            universal_newlines=True
-                           )
+                            universal_newlines=True)
 
     # sleep to let the server run
     time.sleep(SLEEP_TIME)
@@ -99,8 +126,8 @@ def test_ddsrouter_closure(ddsrouter, configuration_file):
         output, err = proc.communicate()
         logger.error('Command ' + str(command) + ' failed before signal.')
         logger.debug('Command output:')
-        logger.debug('STDOUT: "' + output + '"')
-        logger.debug('STDERR: "' + err + '"')
+        logger.debug('STDOUT: \n' + str(output))
+        logger.debug('STDERR: \n' + str(err))
         return 1
 
     # send SIGINT to process and wait for processing
@@ -132,8 +159,8 @@ def test_ddsrouter_closure(ddsrouter, configuration_file):
     logger.info(
         'Command ' + str(command) + ' finished correctly')
     logger.debug('Command output:')
-    logger.debug('STDOUT: "' + str(output) + '"')
-    logger.debug('STDERR: "' + str(err) + '"')
+    logger.debug('STDOUT: \n' + str(output))
+    logger.debug('STDERR: \n' + str(err))
 
     return 0
 
@@ -143,7 +170,7 @@ if __name__ == '__main__':
     args = parse_options()
 
     # Create a custom logger
-    logger = logging.getLogger('VALIDATION')
+    logger = logging.getLogger('SYS_TEST')
     # Create handlers
     l_handler = logging.StreamHandler()
     # Create formatters and add it to handlers
@@ -157,5 +184,17 @@ if __name__ == '__main__':
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
+
+    if args.exe is None:
+        logger.error(
+            'Executable binary file does not exist or has no '
+            'executable permissions.')
+        sys.exit(1)
+
+    if args.config_file is None:
+        logger.error(
+            'Configuration file does not exist or has no '
+            'executable permissions.')
+        sys.exit(1)
 
     sys.exit(test_ddsrouter_closure(args.exe, args.config_file))
