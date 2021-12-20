@@ -194,7 +194,8 @@ TEST(utilsTest, set_of_ptr_contains_string)
  *  both empty set
  *  one empty set
  *  same elements
- *  different elements
+ *  different elements different size
+ *  different elements same size
  *  different elements one with nullptr
  *  same elements with nullptr
  *  each with itself
@@ -210,6 +211,7 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
     std::shared_ptr<int> ptra_1 = std::make_shared<int>(1);
     std::shared_ptr<int> ptra_2 = std::make_shared<int>(2);
     std::shared_ptr<int> ptra_3 = std::make_shared<int>(3);
+    std::shared_ptr<int> ptra_4 = std::make_shared<int>(4);
     std::shared_ptr<int> ptra_n; // nullptr
 
     // Elements to add to set 2
@@ -217,6 +219,7 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
     std::shared_ptr<int> ptrb_1 = std::make_shared<int>(1);
     std::shared_ptr<int> ptrb_2 = std::make_shared<int>(2);
     std::shared_ptr<int> ptrb_3 = std::make_shared<int>(3);
+    std::shared_ptr<int> ptrb_4 = std::make_shared<int>(4);
     std::shared_ptr<int> ptrb_n; // nullptr
 
     {
@@ -251,13 +254,24 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
     set1.insert(ptra_3);
 
     {
-        // different elements
+        // different elements different size
         ASSERT_FALSE(are_set_of_ptr_equal(set1, set2));
         ASSERT_EQ(are_set_of_ptr_equal(set1, set2), are_set_of_ptr_equal(set2, set1));
     }
 
-    // Add elements to set 1
+    // Add elements to set 2
+    set2.insert(ptrb_4);
+
+    {
+        // different elements same size
+        ASSERT_FALSE(are_set_of_ptr_equal(set1, set2));
+        ASSERT_EQ(are_set_of_ptr_equal(set1, set2), are_set_of_ptr_equal(set2, set1));
+    }
+
+    // Add nullptr to set 1
     set1.insert(ptra_n);
+    // Add 3 to set 2 so both has same size
+    set2.insert(ptrb_3);
 
     {
         // different elements one with nullptr
@@ -265,9 +279,10 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
         ASSERT_EQ(are_set_of_ptr_equal(set1, set2), are_set_of_ptr_equal(set2, set1));
     }
 
-    // Add elements to set 2
-    set2.insert(ptrb_3);
+    // Add nullptr to set 2
     set2.insert(ptrb_n);
+    // Add 4 to set 1 so both has same elements
+    set1.insert(ptra_4);
 
     {
         // same elements with nullptr
