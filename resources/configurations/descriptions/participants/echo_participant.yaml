@@ -1,0 +1,14 @@
+
+##################################
+# Echo Participant Configuration #
+##################################
+
+# Echo participant
+
+  # --------------------
+  # TYPE
+  # --------------------
+
+    # Set Type to create this type of participant
+
+    type: "echo"

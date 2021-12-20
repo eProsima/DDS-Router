@@ -15,7 +15,7 @@
     ## Or
 
     # Uint for seed to the Guid
-    id: 0 # uint : This result in "01.0f.ff.00.00.00.00.00.00.00.00.ff"
+    id: 0 # uint : This result in "01.0f.00.00.00.00.00.00.00.00.ca.fe"
 
     ## Or
 
@@ -24,4 +24,4 @@
     id: 0 # uint : This result in "44.53.00.5f.45.50.52.4f.53.49.4d.41"
 
     # Default:
-    #   guid: "01.0f.ff.00.00.00.00.00.00.00.00.ff"
+    #   guid: "01.0f.00.00.00.00.00.00.00.00.ca.fe"

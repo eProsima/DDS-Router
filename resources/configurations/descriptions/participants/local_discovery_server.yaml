@@ -1,0 +1,38 @@
+
+####################################
+# Simple Participant Configuration #
+####################################
+
+# Simple participant for local communication
+
+  # --------------------
+  # TYPE
+  # --------------------
+
+    # Set Type to create this type of participant
+
+    type: "local-discovery-server"
+
+    ## Or
+
+    type: "ds"
+
+    ## Or
+
+    type: "local-ds"
+
+  # --------------------
+  # GUID PREFIX
+  # --------------------
+
+    # Configure Discovery Server Guid Prefix
+
+    DiscoveryServerGuid # See Reference: resources/configurations/fields/discovery_server_guid.yaml
+
+  # --------------------
+  # LISTENING ADDRESSES
+  # --------------------
+
+    # Configure Discovery Server Guid Prefix
+
+    ListeningAddresses # See Reference: resources/configurations/fields/listening_addresses.yaml

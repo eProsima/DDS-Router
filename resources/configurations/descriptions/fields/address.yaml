@@ -57,10 +57,3 @@
     ip-version: "v6" # for IPv6
 
     # Default: "v4"
-
-  # -----------------------------------
-  # Discovery Server Guid
-  # -----------------------------------
-
-    # Only for connection addresses, set the discovery server guid
-    # Description in discovery_server_guid.yaml

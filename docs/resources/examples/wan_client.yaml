@@ -83,6 +83,16 @@ WANClient:                                                        # 6
 
 # 12: Add every other WAN Discovery Server connection.
 
+# 9: Add the interfaces where this Participant will listen in WAN.
+# This is only needed if the Server to this Client uses only UDP.
+
+# 10: Listen in public IP (1.1.1.1) port 11777 for remote traffic.
+# This IP must be set to the public IP of the host where this DDS Router will run.
+# Remember that if the host is under a NAT, the IP must be the public one and must be forwarded from network
+# router to this host on the same port.
+# It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
+# Add here new addresses where the Participant will listen for remote connections.
+
 # 13: Add the interfaces where this Participant will listen in WAN.
 # This is only needed if Remote WAN Server is using only UDP.
 
