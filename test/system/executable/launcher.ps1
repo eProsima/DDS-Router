@@ -20,21 +20,32 @@ Param(
     [Parameter(Position=3, Mandatory=$true)]
     [ValidateNotNullOrEmpty()]
     [String]
-    # test_name
-    $test_name
+    # test_config_file
+    $test_config_file
 )
+
+$test_name = (Get-Item $test_config_file).BaseName
 
 $test = Start-Process -Passthru -Wait `
     -FilePath $python_path `
     -ArgumentList (
         $test_script,
         "--exe", $tool_path,
-        "--config-file", $test_name,
-        "--debug")`
-    -WindowStyle Hidden
+        "--config-file", $test_config_file,
+        "--debug") `
+    -WindowStyle Hidden `
+    -RedirectStandardError ($env:TEMP + "\" + $test_name + "_error.txt") `
+    -RedirectStandardOutput ($env:TEMP + "\" + $test_name + "_output.txt")
+
+Write-Host "Stdout: " -ForegroundColor Green
+Get-Content -Path ($env:TEMP + "\" + $test_name + "_output.txt") | Write-Host
+Write-Host "Stderr: " -ForegroundColor Red
+Get-Content -Path ($env:TEMP + "\" + $test_name + "_error.txt") | Write-Host
 
 if( $test.ExitCode -ne 0 )
 {
     $error_message = "Test: $test_name failed with exit code $($test.ExitCode)."
     throw $error_message
 }
+
+
