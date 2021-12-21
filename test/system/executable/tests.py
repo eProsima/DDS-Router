@@ -142,10 +142,12 @@ def test_ddsrouter_closure(ddsrouter, configuration_file):
         # If the process has already exit means something has gone wrong.
         # Capture and print output for traceability and exit with code s1.
         output, err = proc.communicate()
+        logger.debug('-----------------------------------------------------')
         logger.error('Command ' + str(command) + ' failed before signal.')
         logger.debug('Command output:')
-        logger.debug('STDOUT: \n' + str(output))
-        logger.debug('STDERR: \n' + str(err))
+        logger.debug('Stdout: \n' + str(output))
+        logger.debug('Stderr: \n' + str(err))
+        logger.debug('-----------------------------------------------------')
         return 1
 
     # direct this script to ignore SIGINT in case of windows
@@ -174,15 +176,23 @@ def test_ddsrouter_closure(ddsrouter, configuration_file):
     if proc.poll() is None:
         # SIGINT couldn't terminate the process. Kill it and exit with code 2
         proc.kill()
+        output, err = proc.communicate()
+        logger.debug('-----------------------------------------------------')
+        logger.debug('Internal DDS Router output:')
+        logger.debug('Stdout: \n' + str(output))
+        logger.debug('Stderr: \n' + str(err))
         logger.error('Signal could not kill process')
+        logger.debug('-----------------------------------------------------')
         return 1
 
     output, err = proc.communicate()
+    logger.debug('-----------------------------------------------------')
     logger.info(
         'Command ' + str(command) + ' finished correctly')
     logger.debug('Command output:')
-    logger.debug('STDOUT: \n' + str(output))
-    logger.debug('STDERR: \n' + str(err))
+    logger.debug('Stdout: \n' + str(output))
+    logger.debug('Stderr: \n' + str(err))
+    logger.debug('-----------------------------------------------------')
 
     return 0
 

@@ -41,6 +41,34 @@ if(PYTHONINTERP_FOUND)
     set(TEST_ENVIRONMENT
         "PATH=$ENV{PATH};$<TARGET_FILE_DIR:fastcdr>;$<TARGET_FILE_DIR:fastrtps>;$<TARGET_FILE_DIR:ddsrouter>")
 
+    if(WIN32)
+
+        if(TARGET tinyxml2 OR TARGET tinyxml2::tinyxml2)
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${TINYXML2_LIBRARY}>")
+        elseif(EXISTS TINYXML2_LIBRARY)
+            get_filename_component(
+                TINYXML2_LIBRARY_DIR ${TINYXML2_LIBRARY} DIRECTORY)
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};${TINYXML2_LIBRARY_DIR}")
+            unset(TINYXML2_LIBRARY_DIR)
+        endif()
+
+        if(TARGET yamlcpp OR TARGET yamlcpp::yamlcpp)
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${YAMLCPP_LIBRARY}>")
+        elseif(EXISTS YAMLCPP_LIBRARY)
+            get_filename_component(
+                YAMLCPP_LIBRARY_DIR ${YAMLCPP_LIBRARY} DIRECTORY)
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};${YAMLCPP_LIBRARY_DIR}")
+            unset(YAMLCPP_LIBRARY_DIR)
+        endif()
+
+        string(REPLACE ";" "\\;" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
+
+    endif(WIN32)
+
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
 
@@ -64,9 +92,16 @@ if(PYTHONINTERP_FOUND)
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
                             "--exe" $<TARGET_FILE:ddsrouter>
                             "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
-                            # "--debug" # Add for debugging
+                            "--debug"
                 )
         endif()
+
+        # Set test properties
+        set_tests_properties(
+            system.tools.ddsrouter.${TEST}
+            PROPERTIES
+                ENVIRONMENT "${TEST_ENVIRONMENT}"
+            )
 
     endforeach()
 
