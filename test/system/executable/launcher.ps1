@@ -24,8 +24,6 @@ Param(
     $test_config_file
 )
 
-$test_name = (Get-Item $test_config_file).BaseName
-
 $test = Start-Process -Passthru -Wait `
     -FilePath $python_path `
     -ArgumentList (
@@ -33,14 +31,7 @@ $test = Start-Process -Passthru -Wait `
         "--exe", $tool_path,
         "--config-file", $test_config_file,
         "--debug") `
-    -WindowStyle Hidden `
-    -RedirectStandardError ($env:TEMP + "\" + $test_name + "_error.txt") `
-    -RedirectStandardOutput ($env:TEMP + "\" + $test_name + "_output.txt")
-
-Write-Host "Stdout: " -ForegroundColor Green
-Get-Content -Path ($env:TEMP + "\" + $test_name + "_output.txt") | Write-Host
-Write-Host "Stderr: " -ForegroundColor Red
-Get-Content -Path ($env:TEMP + "\" + $test_name + "_error.txt") | Write-Host
+    -WindowStyle Hidden
 
 if( $test.ExitCode -ne 0 )
 {
