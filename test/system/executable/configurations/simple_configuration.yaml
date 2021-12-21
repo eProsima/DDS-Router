@@ -1,0 +1,6 @@
+
+echo:
+  type: echo
+
+simple:
+  domain: 0

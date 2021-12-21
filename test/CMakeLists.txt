@@ -122,4 +122,5 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
 endfunction(add_test_executable)
 
 add_subdirectory(blackbox)
+add_subdirectory(system)
 add_subdirectory(unittest)
