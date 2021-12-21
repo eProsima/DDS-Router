@@ -1,3 +1,4 @@
+allowlist
 Asio
 Chocolatey
 CMake
