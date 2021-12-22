@@ -1,0 +1,35 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ddsrouter-config
+data:
+  ddsrouter.config.file: |-
+    allowlist:
+      [
+        {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"}
+      ]
+
+    LocalDiscoveryServer:
+      type: local-discovery-server
+      ros-discovery-server: true
+      id: 1
+      listening-addresses:
+      [
+        {
+          ip: "192.168.1.11",  # cluster private IP
+          port: 30001,
+          transport: "udp"
+        }
+      ]
+
+    CloudWAN:
+      type: wan
+      id: 2
+      listening-addresses:
+      [
+        {
+          ip: "2.2.2.2", # cluster public IP
+          port: 30002,
+          transport: "udp"
+        }
+      ]

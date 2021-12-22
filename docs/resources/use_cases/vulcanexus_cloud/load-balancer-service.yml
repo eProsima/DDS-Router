@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ddsrouter
+  labels:
+    app: ddsrouter
+spec:
+  ports:
+    - name: UDP-30002
+      protocol: UDP
+      port: 30002
+      targetPort: 30002
+  selector:
+    app: ddsrouter
+  type: LoadBalancer
