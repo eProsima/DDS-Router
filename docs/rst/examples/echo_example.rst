@@ -2,9 +2,9 @@
 
 .. _examples_echo_example:
 
-########################
-Echo Participant Example
-########################
+############
+Echo Example
+############
 
 The following YAML configuration file configures a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in :term:`Domain Id` ``0`` and an
