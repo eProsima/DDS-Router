@@ -35,7 +35,7 @@ const std::map<ParticipantTypeValue, std::vector<std::string>> ParticipantType::
     {ECHO, {"echo"}},
     {DUMMY, {"dummy"}},
     {SIMPLE_RTPS, {"local", "simple"}},
-    {LOCAL_DISCOVERY_SERVER, {"discovery-server", "ds", "local-ds"}},
+    {LOCAL_DISCOVERY_SERVER, {"discovery-server", "ds", "local-ds", "local-discovery-server"}},
     {WAN, {"wan", "router"}},
 };
 
