@@ -11,9 +11,9 @@ user and development experience, such as *Fast-DDS-Monitor* for monitoring the h
 a framework aimed at optimizing and extending *ROS2* toolkit to microcontroller-based devices.
 
 Apart from plain LAN-to-LAN communication, Cloud environments such as container-oriented platforms have also been
-present throughout the |ddsrouter| design phase. In this walk-through example, we will set up both a *Kubernetes* (|k8s|)
-network and local environment in order to establish communication between a pair of ROS nodes, one sending messages from
-a LAN (talker) and another one (listener) receiving them in the Cloud.
+present throughout the |ddsrouter| design phase. In this walk-through example, we will set up both a *Kubernetes*
+(|k8s|) network and local environment in order to establish communication between a pair of ROS nodes, one sending
+messages from a LAN (talker) and another one (listener) receiving them in the Cloud.
 
 
 
@@ -42,8 +42,8 @@ The configuration file used by the local router will be the following:
 
 Note that the simple participant will be receiving messages sent in DDS domain ``0``. Also note that, due to the choice
 of UDP as transport protocol, a listening address with the LAN public IP address needs to be specified for the local WAN
-participant, even when behaving as client in the participant discovery process. Make sure that the given port is reachable
-from outside this local network by properly configuring port forwarding in your Internet router device.
+participant, even when behaving as client in the participant discovery process. Make sure that the given port is
+reachable from outside this local network by properly configuring port forwarding in your Internet router device.
 The connection address points to the remote WAN participant deployed in the |k8s| cluster.
 
 To launch the local router from within a Vulcanexus Docker image, execute the following:
@@ -73,10 +73,10 @@ Kubernetes setup
 ================
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants; a WAN participant that receives the messages coming from our LAN through
-the afore-mentioned UDP tunnel, and a :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>`
-(local DS) that propagates them to a ROS2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery Server
-instead of a Simple Participant to communicate with the listener has to do with the difficulty of enabling multicast
-routing in cloud environments.
+the aforementioned UDP tunnel, and a :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>`
+(local DS) that propagates them to a ROS2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery
+Server instead of a Simple Participant to communicate with the listener has to do with the difficulty of enabling
+multicast routing in cloud environments.
 
 The described scheme is represented in the following figure:
 
