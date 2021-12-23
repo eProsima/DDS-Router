@@ -1,4 +1,4 @@
-# local-ddsrouter.yml
+# local-ddsrouter.yaml
 
 allowlist:
   [
@@ -12,7 +12,7 @@ SimpleParticipant:
 LocalWAN:
   type: wan
   id: 3
-  listening-addresses:  # needed for UDP communication, even when being the client
+  listening-addresses:  # Needed for UDP communication
   [
     {
       ip: "3.3.3.3",  # LAN public IP
@@ -27,7 +27,7 @@ LocalWAN:
       addresses:
       [
         {
-          ip: "2.2.2.2",  # cluster public IP
+          ip: "2.2.2.2",  # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
           port: 30002,
           transport: "udp"
         }

@@ -10,5 +10,5 @@ spec:
       targetPort: 30001
   selector:
     app: ddsrouter
-  clusterIP: 192.168.1.11  # ddsrouter pod cluster private IP
+  clusterIP: 192.168.1.11  # Private IP only reachable within the k8s cluster to communicate with the ddsrouter application
   type: ClusterIP

@@ -16,7 +16,7 @@ present throughout the |ddsrouter| design phase. In this walk-through example, w
 messages from a LAN (talker) and another one (listener) receiving them in the Cloud. This will be accomplished by having
 a |ddsrouter| instance at each side of the communication.
 
-
+.. figure:: /rst/figures/ddsrouter_overview_wan.png
 
 Local setup
 ===========
@@ -24,10 +24,10 @@ The local instance of |ddsrouter| (local router) only requires to have a :ref:`S
 and a :ref:`WAN Participant <user_manual_participants_wan>` that will play the client role in the discovery process of
 remote participants (see `Discovery Server <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/discovery_server.html>`_).
 
-After having acknowledged each other’s existence through (multicast) `Simple Discovery <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_,
-the local participant will start receiving messages published by the talker ROS node, and will then forward them to the
-WAN participant. Following, these messages will be sent through a UDP tunnel with another WAN participant hosted on a
-|k8s| pod as destination.
+After having acknowledged each other’s existence through `Simple DDS discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_
+(mutlicast communcation), the local participant will start receiving messages published by the ROS 2 talker node, and
+will then forward them to the WAN participant. Following, these messages will be sent to another participant hosted on a
+|k8s| cluster to which it connects via WAN communication over UDP/IP.
 
 Following is a representation of the above-described scenario:
 
@@ -38,7 +38,7 @@ Local router
 ------------
 The configuration file used by the local router will be the following:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-ddsrouter.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-ddsrouter.yaml
     :language: yaml
 
 Note that the simple participant will be receiving messages sent in DDS domain ``0``. Also note that, due to the choice
@@ -51,7 +51,7 @@ To launch the local router from within a Vulcanexus Docker image, execute the fo
 
 .. code-block:: bash
 
-    docker run -it --net=host -v local-ddsrouter.yml:/tmp/local-ddsrouter.yml ubuntu-vulcanexus:galactic -r "ddsrouter -c /tmp/local-ddsrouter.yml"
+    docker run -it --net=host -v local-ddsrouter.yaml:/tmp/local-ddsrouter.yaml ubuntu-vulcanexus:galactic -r "ddsrouter -c /tmp/local-ddsrouter.yaml"
 
 
 Talker
@@ -76,7 +76,7 @@ Kubernetes setup
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants; a WAN participant that receives the messages coming from our LAN through
 the aforementioned UDP tunnel, and a :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>`
-(local DS) that propagates them to a ROS listener node hosted in a different |k8s| pod. The choice of a Local Discovery
+(local DS) that propagates them to a ROS 2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery
 Server instead of a Simple Participant to communicate with the listener has to do with the difficulty of enabling
 multicast routing in cloud environments.
 
@@ -89,10 +89,10 @@ are required in order to direct dataflow to each of the pods. A LoadBalancer wil
 to the WAN participant of the cloud router, and a ClusterIP service will be in charge of delivering messages from the
 local DS to the listener pod. Following are the settings needed to launch these services in |k8s|:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/load-balancer-service.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/load-balancer-service.yaml
     :language: yaml
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-service.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-service.yaml
     :language: yaml
 
 .. note::
@@ -103,7 +103,7 @@ local DS to the listener pod. Following are the settings needed to launch these 
 
 The configuration file used for the cloud router will be provided by setting up a `ConfigMap <https://kubernetes.io/docs/concepts/configuration/configmap/>`_:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ConfigMap.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ConfigMap.yaml
     :language: yaml
 
 Following is represented the overall configuration of our |k8s| cluster:
@@ -116,7 +116,7 @@ DDS-Router deployment
 The cloud router is launched from within a Vulcanexus Docker image, which uses as configuration file the one hosted in
 the previously set up ConfigMap. The cloud router will be deployed with the following settings:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ddsrouter.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ddsrouter.yaml
     :language: yaml
 
 
@@ -141,7 +141,7 @@ As before, to build the extended Docker image it suffices to run:
 
 Now, the listener pod can be deployed by providing the following configuration:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/listener.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/listener.yaml
     :language: yaml
 
 
