@@ -161,7 +161,7 @@ std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_
 
 template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const noexcept
+CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
     return params;
