@@ -144,6 +144,7 @@ protected:
     /**
      * @brief  Create participants and add them to the participants database
      *
+     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No type)
      * @throw \c InitializationException in case \c IParticipants creation fails.
      */
     void init_participants_();
