@@ -2,6 +2,13 @@
 
 .. _vulcanexus_cloud:
 
+.. warning::
+
+    *Vulcanexus* distribution is not currently available, but it will very soon. To follow this tutorial, a
+    *ROS 2 galactic* Docker image may be used instead, :ref:`installing <developer_manual_installation_sources_linux>`
+    |ddsrouter| whenever required. Please also take into account that environment variable ``RMW_IMPLEMENTATION`` must
+    be exported so as to utilize |fastdds| as middleware in *ROS* (see `Working with eProsima Fast DDS <https://docs.ros.org/en/galactic/Installation/DDS-Implementations/Working-with-eProsima-Fast-DDS.html>`_).
+
 ################
 Vulcanexus Cloud
 ################
@@ -25,7 +32,7 @@ and a :ref:`WAN Participant <user_manual_participants_wan>` that will play the c
 remote participants (see `Discovery Server <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/discovery_server.html>`_).
 
 After having acknowledged each other’s existence through `Simple DDS discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_
-(mutlicast communcation), the local participant will start receiving messages published by the ROS 2 talker node, and
+(multicast communication), the local participant will start receiving messages published by the ROS 2 talker node, and
 will then forward them to the WAN participant. Following, these messages will be sent to another participant hosted on a
 |k8s| cluster to which it connects via WAN communication over UDP/IP.
 
@@ -76,9 +83,9 @@ Kubernetes setup
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants; a WAN participant that receives the messages coming from our LAN through
 the aforementioned UDP tunnel, and a :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>`
-(local DS) that propagates them to a ROS 2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery
-Server instead of a Simple Participant to communicate with the listener has to do with the difficulty of enabling
-multicast routing in cloud environments.
+(local DS) that propagates them to a ROS 2 listener node hosted in a different |k8s| pod. The choice of a Local
+Discovery Server instead of a Simple Participant to communicate with the listener has to do with the difficulty of
+enabling multicast routing in cloud environments.
 
 The described scheme is represented in the following figure:
 

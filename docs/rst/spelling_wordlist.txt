@@ -20,6 +20,7 @@ kubernetes
 localhost
 metatraffic
 microcontroller
+middleware
 multicast
 Redistributable
 runtime
