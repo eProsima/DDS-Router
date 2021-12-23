@@ -64,7 +64,7 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfigur
     {
         if (!raw_configuration_[CONNECTION_ADDRESSES_TAG].IsSequence())
         {
-            throw ConfigurationException("Listening addresses must be a sequence.");
+            throw ConfigurationException("Connection addresses must be a sequence.");
         }
 
         for (auto address : raw_configuration_[CONNECTION_ADDRESSES_TAG])
