@@ -75,8 +75,10 @@ public:
      * invalid \c ParticipantType ) will be added to the list.
      *
      * @return List of \c ParticipantConfigurations
+     *
+     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No type)
      */
-    std::list<ParticipantConfiguration> participants_configurations() const noexcept;
+    std::list<ParticipantConfiguration> participants_configurations() const;
 
 
     /**

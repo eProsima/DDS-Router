@@ -48,7 +48,7 @@ std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::blocklist() cons
     return generic_get_topic_list_(BLOCKLIST_TAG);
 }
 
-std::list<ParticipantConfiguration> DDSRouterConfiguration::participants_configurations() const noexcept
+std::list<ParticipantConfiguration> DDSRouterConfiguration::participants_configurations() const
 {
     std::list<ParticipantConfiguration> result;
 
@@ -64,19 +64,9 @@ std::list<ParticipantConfiguration> DDSRouterConfiguration::participants_configu
             continue;
         }
 
-        try
-        {
-            // Add new Participant with its configuration
-            // NOTE: There will not be repeated Participant Ids as in a yaml the keys are unique
-            result.push_back(ParticipantConfiguration(ParticipantId(id_str), participant_it->second));
-        }
-        catch (const std::exception& e)
-        {
-            // Add invalid ParticipantConfiguration
-            result.push_back(ParticipantConfiguration(ParticipantId(id_str)));
-            logWarning(DDSROUTER_CONFIGURATION,
-                    "Failed to create participant configuration " << id_str << " with error: " << e.what());
-        }
+        // Add new Participant with its configuration
+        // NOTE: There will not be repeated Participant Ids as in a yaml the keys are unique
+        result.push_back(ParticipantConfiguration(ParticipantId(id_str), participant_it->second));
     }
 
     return result;
