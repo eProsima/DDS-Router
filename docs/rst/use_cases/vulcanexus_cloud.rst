@@ -6,14 +6,15 @@
 Vulcanexus Cloud
 ################
 
-*Vulcanexus* is an extended *ROS2* distribution provided by *eProsima* which includes additional tools for an improved
+*Vulcanexus* is an extended *ROS 2* distribution provided by *eProsima* which includes additional tools for an improved
 user and development experience, such as *Fast-DDS-Monitor* for monitoring the health of DDS networks, or *micro-ROS*,
-a framework aimed at optimizing and extending *ROS2* toolkit to microcontroller-based devices.
+a framework aimed at optimizing and extending *ROS 2* toolkit to microcontroller-based devices.
 
 Apart from plain LAN-to-LAN communication, Cloud environments such as container-oriented platforms have also been
 present throughout the |ddsrouter| design phase. In this walk-through example, we will set up both a *Kubernetes*
 (|k8s|) network and local environment in order to establish communication between a pair of ROS nodes, one sending
-messages from a LAN (talker) and another one (listener) receiving them in the Cloud.
+messages from a LAN (talker) and another one (listener) receiving them in the Cloud. This will be accomplished by having
+a |ddsrouter| instance at each side of the communication.
 
 
 
@@ -55,10 +56,11 @@ To launch the local router from within a Vulcanexus Docker image, execute the fo
 
 Talker
 ------
-ROS2 demo nodes is not installed in Vulcanexus distribution by default, but one can easily create a new Docker image
-including this feature by using the following Dockerfile:
+*ROS 2* demo nodes is not installed in *Vulcanexus* distribution by default, but one can easily create a new Docker
+image including this feature by using the following Dockerfile:
 
 .. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/Dockerfile_LAN
+    :language: Dockerfile
 
 Create the new image and start publishing messages by executing:
 
@@ -74,7 +76,7 @@ Kubernetes setup
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants; a WAN participant that receives the messages coming from our LAN through
 the aforementioned UDP tunnel, and a :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>`
-(local DS) that propagates them to a ROS2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery
+(local DS) that propagates them to a ROS listener node hosted in a different |k8s| pod. The choice of a Local Discovery
 Server instead of a Simple Participant to communicate with the listener has to do with the difficulty of enabling
 multicast routing in cloud environments.
 
@@ -82,15 +84,15 @@ The described scheme is represented in the following figure:
 
 .. figure:: /rst/figures/vulcanexus_cloud.png
 
-In addition to the two mentioned deployments, two |k8s| `services <https://kubernetes.io/es/docs/concepts/services-networking/service/>`_
+In addition to the two mentioned deployments, two |k8s| `services <https://kubernetes.io/docs/concepts/services-networking/service/>`_
 are required in order to direct dataflow to each of the pods. A LoadBalancer will forward messages reaching the cluster
 to the WAN participant of the cloud router, and a ClusterIP service will be in charge of delivering messages from the
 local DS to the listener pod. Following are the settings needed to launch these services in |k8s|:
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-service.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/load-balancer-service.yml
     :language: yaml
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/load-balancer-service.yml
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/local-service.yml
     :language: yaml
 
 .. note::
@@ -99,7 +101,7 @@ local DS to the listener pod. Following are the settings needed to launch these 
     LoadBalancer service to make it externally-reachable. In this example we consider the assigned public IP address to
     be ``2.2.2.2``.
 
-The configuration file used for the cloud router will be provided by setting up a `ConfigMap <https://kubernetes.io/es/docs/concepts/configuration/configmap/>`_:
+The configuration file used for the cloud router will be provided by setting up a `ConfigMap <https://kubernetes.io/docs/concepts/configuration/configmap/>`_:
 
 .. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ConfigMap.yml
     :language: yaml
@@ -112,7 +114,7 @@ Following is represented the overall configuration of our |k8s| cluster:
 DDS-Router deployment
 ---------------------
 The cloud router is launched from within a Vulcanexus Docker image, which uses as configuration file the one hosted in
-the previously deployed ConfigMap. The cloud router will be deployed with the following settings:
+the previously set up ConfigMap. The cloud router will be deployed with the following settings:
 
 .. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/ddsrouter.yml
     :language: yaml
@@ -120,14 +122,15 @@ the previously deployed ConfigMap. The cloud router will be deployed with the fo
 
 Listener deployment
 -------------------
-Again, since demo nodes is not installed by default in Vulcanexus we have to create a new Docker image adding in this
+Again, since demo nodes is not installed by default in *Vulcanexus* we have to create a new Docker image adding in this
 functionality. The Dockerfile used for the listener will slightly differ from the one utilized to launch a talker in
 our LAN, as here we need to specify the port and IP address of the local DS. This can be achieved by using the following
 Dockerfile and entrypoint:
 
 .. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/Dockerfile_cloud
+    :language: Dockerfile
 
-.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/Dockerfile_LAN
+.. literalinclude:: ../../resources/use_cases/vulcanexus_cloud/run.bash
     :language: bash
 
 As before, to build the extended Docker image it suffices to run:
