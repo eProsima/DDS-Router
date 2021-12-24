@@ -65,6 +65,17 @@
    /rst/examples/wan_example
 
 
+.. _index_use_cases:
+
+.. toctree::
+   :caption: Use Cases
+   :maxdepth: 2
+   :numbered: 5
+   :hidden:
+
+   /rst/use_cases/vulcanexus_cloud.rst
+
+
 .. _index_developer_manual:
 
 .. toctree::

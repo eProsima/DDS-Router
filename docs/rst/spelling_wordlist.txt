@@ -3,8 +3,11 @@ Asio
 Chocolatey
 CMake
 Colcon
+dataflow
 datagram
 ddsrouter
+Dockerfile
+entrypoint
 eProsima
 executables
 fastcdr
@@ -16,8 +19,11 @@ IPv
 kubernetes
 localhost
 metatraffic
+microcontroller
+middleware
 multicast
 Redistributable
 runtime
 scalable
+Vulcanexus
 wget
