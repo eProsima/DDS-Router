@@ -1,0 +1,13 @@
+{
+    "names":
+    {
+        "ddsrouter":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DLOG_INFO=ON"
+            ]
+        }
+    }
+}
