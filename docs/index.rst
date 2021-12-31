@@ -33,6 +33,8 @@
    :numbered: 5
    :hidden:
 
+   /rst/getting_started/getting_started
+   /rst/getting_started/usage_example
 
 
 .. _index_user_manual:
@@ -43,7 +45,6 @@
    :numbered: 5
    :hidden:
 
-   /rst/user_manual/getting_started
    /rst/user_manual/user_interface
    Participant </rst/user_manual/participants/participant>
    /rst/user_manual/configuration
