@@ -39,7 +39,7 @@ Reader::Reader(
     rtps_history_ = new fastrtps::rtps::ReaderHistory(history_att);
 
     // Create Reader
-    fastrtps::rtps::ReaderAttributes reader_att = reader_attributes_();
+    fastrtps::rtps::ReaderAttributes reader_att = reader_attributes_(topic.topic_with_key());
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant,
         reader_att,
@@ -53,7 +53,7 @@ Reader::Reader(
     }
 
     // Register reader with topic
-    fastrtps::TopicAttributes topic_att = topic_attributes_();
+    fastrtps::TopicAttributes topic_att = topic_attributes_(topic.topic_with_key());
     fastrtps::ReaderQos reader_qos = reader_qos_();
 
     if (!rtps_participant->registerReader(rtps_reader_, topic_att, reader_qos))
@@ -172,18 +172,35 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
     return att;
 }
 
-fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
+fastrtps::rtps::ReaderAttributes Reader::reader_attributes_(
+        bool topic_with_key) const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
     att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
     att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+    if (topic_with_key)
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     return att;
 }
 
-fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
+fastrtps::TopicAttributes Reader::topic_attributes_(
+        bool topic_with_key) const noexcept
 {
     fastrtps::TopicAttributes att;
-    att.topicKind = fastrtps::rtps::TopicKind_t::NO_KEY;
+    if (topic_with_key)
+    {
+        att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     att.topicName = topic_.topic_name();
     att.topicDataType = topic_.topic_type();
     return att;

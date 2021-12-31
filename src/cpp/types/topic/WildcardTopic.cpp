@@ -24,8 +24,9 @@ namespace eprosima {
 namespace ddsrouter {
 
 WildcardTopic::WildcardTopic(
-        const std::string& topic_name)
-    : FilterTopic(topic_name, "*")
+        const std::string& topic_name,
+        bool topic_with_key /* = false */)
+    : FilterTopic(topic_name, "*", topic_with_key)
 {
 }
 
@@ -40,10 +41,13 @@ bool WildcardTopic::contains(
 bool WildcardTopic::matches(
         const RealTopic& other) const
 {
-    if (utils::match_pattern(this->topic_name(), other.topic_name()))
+    if (this->topic_with_key() == other.topic_with_key())
     {
-        // Topic name mathes, check if type matches
-        return utils::match_pattern(this->topic_type(), other.topic_type());
+        if (utils::match_pattern(this->topic_name(), other.topic_name()))
+        {
+            // Topic name mathes, check if type matches
+            return utils::match_pattern(this->topic_type(), other.topic_type());
+        }
     }
     return false;
 }

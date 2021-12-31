@@ -136,12 +136,15 @@ protected:
      * durability: VOLATILE
      * reliability: BEST_EFFORT
      *
+     * @param topic_with_key : topic kind
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    fastrtps::rtps::ReaderAttributes reader_attributes_(
+            bool topic_with_key) const noexcept;
 
     //! Default Topic Attributes to create Reader
-    fastrtps::TopicAttributes topic_attributes_() const noexcept;
+    fastrtps::TopicAttributes topic_attributes_(
+            bool topic_with_key) const noexcept;
 
     //! Default QoS Reader (must be the same as the attributes)
     fastrtps::ReaderQos reader_qos_() const noexcept;

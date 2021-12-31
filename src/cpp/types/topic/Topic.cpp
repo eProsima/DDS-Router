@@ -24,9 +24,11 @@ namespace ddsrouter {
 
 Topic::Topic(
         std::string topic_name,
-        std::string topic_type) noexcept
+        std::string topic_type,
+        bool topic_with_key /* = false */) noexcept
     : topic_name_(topic_name)
     , topic_type_(topic_type)
+    , topic_with_key_(topic_with_key)
 {
 }
 
@@ -35,6 +37,7 @@ Topic& Topic::operator =(
 {
     this->topic_name_ = other.topic_name_;
     this->topic_type_ = other.topic_type_;
+    this->topic_with_key_ = other.topic_with_key_;
     return *this;
 }
 
@@ -48,11 +51,17 @@ const std::string& Topic::topic_type() const
     return topic_type_;
 }
 
+bool Topic::topic_with_key() const
+{
+    return topic_with_key_;
+}
+
 bool Topic::operator ==(
         const Topic& other) const
 {
 
-    return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_;
+    return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_ &&
+           topic_with_key_ == other.topic_with_key_;
 }
 
 bool Topic::operator <(
@@ -86,7 +95,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Topic& a)
 {
-    os << "Topic{" << a.topic_name() << ", " << a.topic_type() << "}";
+    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << a.topic_with_key() << "}";
     return os;
 }
 
