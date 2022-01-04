@@ -41,7 +41,7 @@ TCP vs UDP
 ==========
 
 :term:`TCP` and :term:`UDP` are two well known network transport protocols.
-Both has its advantages and disadvantages regarding the scenario.
+Both have their advantages and disadvantages regarding the scenario.
 These are a list of tips to help choosing whether to use one or the other.
 
 .. list-table::
@@ -103,6 +103,7 @@ User *A* should set its *listening-addresses* as follows:
             {
                 IP: "1.1.1.1",              # Public IP of host Ha
                 port: 11666,                # Port forwarded router Ra
+                transport: "tcp"            # Transport protocol
             }
         ]
 
@@ -123,6 +124,7 @@ User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
                     {
                         IP: "1.1.1.1",      # Public IP of Ha
                         port: 11666,        # Port forwarded in Ra
+                        transport: "tcp"    # Transport protocol
                     }
                 ]
             }
