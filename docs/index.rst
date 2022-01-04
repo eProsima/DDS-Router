@@ -10,6 +10,7 @@
    :maxdepth: 2
    :hidden:
 
+   Overview <self>
    /rst/formalia/titlepage
 
 
@@ -63,17 +64,6 @@
    /rst/examples/change_domain_example
    /rst/examples/ros_discovery_server_example
    /rst/examples/wan_example
-
-
-.. _index_use_cases:
-
-.. toctree::
-   :caption: Use Cases
-   :maxdepth: 2
-   :numbered: 5
-   :hidden:
-
-   /rst/use_cases/vulcanexus_cloud.rst
 
 
 .. _index_developer_manual:
