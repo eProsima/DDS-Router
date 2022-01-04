@@ -23,6 +23,10 @@ such as mesh networks in which nodes are deployed in different private local net
 without any centralized network node, or cloud-based networks where there is a data processing cloud and
 multiple geographically distributed edge devices.
 
+########
+Overview
+########
+
 Following are some of the key features of *eProsima DDS Router*:
 
   1. **WAN communication over TCP**: it supports WAN over TCP communication to establish DDS communications over the

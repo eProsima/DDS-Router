@@ -10,7 +10,6 @@
    :maxdepth: 2
    :hidden:
 
-   Overview <self>
    /rst/formalia/titlepage
 
 
