@@ -44,48 +44,50 @@ GuidPrefix::GuidPrefix(
                           "Guid Prefix has incorrect format" << e.what());
         }
     }
-
-    // Check if tag for Ros exists
-    bool ros_guid = false;
-    if (configuration[DISCOVERY_SERVER_ID_ROS_TAG])
-    {
-        // Try to get domain value from configuration
-        try
-        {
-            ros_guid = configuration[DISCOVERY_SERVER_ID_ROS_TAG].as<bool>();
-        }
-        catch (const std::exception& e)
-        {
-            throw ConfigurationException(utils::Formatter() <<
-                          "Ros Guid Prefix Tag has incorrect format. Must be boolean." << e.what());
-        }
-    }
-
-    // Check if id exists, if not use default
-    bool has_id = false;
-    uint32_t id;
-    if (configuration[DISCOVERY_SERVER_ID_TAG])
-    {
-        // Try to get domain value from configuration
-        try
-        {
-            id = configuration[DISCOVERY_SERVER_ID_TAG].as<uint32_t>();
-            has_id = true;
-        }
-        catch (const std::exception& e)
-        {
-            throw ConfigurationException(utils::Formatter() <<
-                          "Guid Prefix Id has incorrect format. Must be uint32." << e.what());
-        }
-    }
-
-    if (has_id)
-    {
-        *this = GuidPrefix(ros_guid, id);
-    }
     else
     {
-        *this = GuidPrefix(ros_guid);
+        // Check if tag for Ros exists
+        bool ros_guid = false;
+        if (configuration[DISCOVERY_SERVER_ID_ROS_TAG])
+        {
+            // Try to get domain value from configuration
+            try
+            {
+                ros_guid = configuration[DISCOVERY_SERVER_ID_ROS_TAG].as<bool>();
+            }
+            catch (const std::exception& e)
+            {
+                throw ConfigurationException(utils::Formatter() <<
+                              "Ros Guid Prefix Tag has incorrect format. Must be boolean." << e.what());
+            }
+        }
+
+        // Check if id exists, if not use default
+        bool has_id = false;
+        uint32_t id;
+        if (configuration[DISCOVERY_SERVER_ID_TAG])
+        {
+            // Try to get domain value from configuration
+            try
+            {
+                id = configuration[DISCOVERY_SERVER_ID_TAG].as<uint32_t>();
+                has_id = true;
+            }
+            catch (const std::exception& e)
+            {
+                throw ConfigurationException(utils::Formatter() <<
+                              "Guid Prefix Id has incorrect format. Must be uint32." << e.what());
+            }
+        }
+
+        if (has_id)
+        {
+            *this = GuidPrefix(ros_guid, id);
+        }
+        else
+        {
+            *this = GuidPrefix(ros_guid);
+        }
     }
 }
 
