@@ -313,7 +313,7 @@ A complete example of all the configurations described on this page can be found
 
     Participant0:                       # Participant Id = Participant0
 
-        type: local                     # Participant Type = simple
+        type: local                     # Participant Type = local (= simple)
 
         domain: 3                       # DomainId = 3
 
@@ -322,9 +322,9 @@ A complete example of all the configurations described on this page can be found
     # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS 2 Client could connect to it
     # This Discovery Server will listen in ports 11600 and 11601 in localhost
 
-    simple:                             # Participant Id = simple
+    ServerROS2:                         # Participant Id = ServerROS2
 
-        type: "local-discovery-server"  # Participant Type = local-discovery-server
+        type: local-discovery-server    # Participant Type = local-discovery-server
 
         id: 1
         ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
@@ -338,7 +338,7 @@ A complete example of all the configurations described on this page can be found
             {
                 ip: "127.0.0.1",        # IP = localhost
                 port: 11601,            # Port = 11601
-                transport: "UDP",       # Transport = UDP
+                transport: "udp",       # Transport = UDP
             }
         ]
 
@@ -347,7 +347,9 @@ A complete example of all the configurations described on this page can be found
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                                # Participant Id = simple ; Participant Type = wan
+    Wan:                                # Participant Id = Wan
+
+        type: wan                       # Participant Type = wan
 
         id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
@@ -358,8 +360,9 @@ A complete example of all the configurations described on this page can be found
                 addresses:
                 [
                     {
-                        ip: "8.8.8.8",          # IP = 8.8.8.8 ; transport = TCP (by default)
+                        ip: "8.8.8.8",          # IP = 8.8.8.8
                         port: 11666,            # Port = 11666
+                        transport: "tcp",       # Transport = TCP
                     }
                 ]
             }

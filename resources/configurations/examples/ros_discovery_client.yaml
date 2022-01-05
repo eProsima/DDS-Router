@@ -86,7 +86,7 @@ ClientROS2:                                                       # 5
 # 13: Discovery Server listening port is 11888.
 
 # 14: This is the same configuration as the result using Fast DDS environment variable:
-# $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11890"
+# $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11888"
 # Add every other address where trying to reach this same remote Discovery Server.
 
 # 15: Add every other Discovery Server connection required.
