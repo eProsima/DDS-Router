@@ -125,6 +125,5 @@ frozen), while the circle should.
 
 .. figure:: /rst/figures/shapesdemo_circle.png
 
-Please feel free to explore sections :ref:`Examples <examples_echo_example>` and :ref:`Use Cases <vulcanexus_cloud>` for
-more information on how to configure and set up a router, as well as to discover multiple scenarios where |ddsrouter|
-may serve as a useful tool.
+Please feel free to explore section :ref:`Examples <examples_echo_example>` for more information on how to configure and
+set up a router, as well as to discover multiple scenarios where |ddsrouter| may serve as a useful tool.
