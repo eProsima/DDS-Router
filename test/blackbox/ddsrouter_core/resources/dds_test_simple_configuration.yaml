@@ -4,7 +4,8 @@
 
 allowlist:
   [
-    {name: "HelloWorldTopic", type: "HelloWorld"}
+    {name: "HelloWorldTopic", type: "HelloWorld"},
+    {name: "HelloWorldTopic", type: "HelloWorldKeyed", keyed: true}
   ]
 
 participant_0:

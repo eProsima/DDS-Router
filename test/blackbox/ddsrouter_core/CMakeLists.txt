@@ -54,17 +54,21 @@ set(TEST_NAME
 set(TEST_SOURCES
     DDSTest.cpp
     types/HelloWorld/HelloWorld.cxx
-    types/HelloWorld/HelloWorldPubSubTypes.cxx)
+    types/HelloWorld/HelloWorldPubSubTypes.cxx
+    types/HelloWorldKeyed/HelloWorldKeyed.cxx
+    types/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx)
 
 set(TEST_LIST
     simple_initialization
-    end_to_end_communication)
+    end_to_end_communication
+    end_to_end_communication_keyed)
 
 set(TEST_NEEDED_SOURCES
     resources/dds_test_simple_configuration.yaml)
 
 set(TEST_EXTRA_HEADERS
-    types/HelloWorld)
+    types/HelloWorld
+    types/HelloWorldKeyed)
 
 add_blackbox_executable(
     "${TEST_NAME}"
