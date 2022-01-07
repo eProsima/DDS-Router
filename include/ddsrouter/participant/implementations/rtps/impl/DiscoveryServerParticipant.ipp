@@ -20,7 +20,9 @@
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
 
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
+#include <fastdds/rtps/transport/UDPv6TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
+#include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 
@@ -55,9 +57,12 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
     bool has_connection_addresses = false;
-    bool has_listening_tcp = false;
-    bool has_connection_tcp = false;
-    bool has_udp = false;
+    bool has_listening_tcp_ipv4 = false;
+    bool has_listening_tcp_ipv6 = false;
+    bool has_connection_tcp_ipv4 = false;
+    bool has_connection_tcp_ipv6 = false;
+    bool has_udp_ipv4 = false;
+    bool has_udp_ipv6 = false;
 
     params.useBuiltinTransports = false;
 
@@ -78,24 +83,36 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         // TCP Listening WAN address
         if (address.is_tcp())
         {
-            has_listening_tcp = true;
-
-            std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                    std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
-
-            descriptor->add_listener_port(address.port());
-            descriptor->set_WAN_address(address.ip());
-
-            descriptor->sendBufferSize = 0;
-            descriptor->receiveBufferSize = 0;
-
             // TODO enable TLS
+            if (address.is_ipv4())
+            {
+                has_listening_tcp_ipv4 = true;
 
-            params.userTransports.push_back(descriptor);
+                std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
+                        std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+
+                descriptor->add_listener_port(address.port());
+                descriptor->set_WAN_address(address.ip());
+
+                params.userTransports.push_back(descriptor);
+            }
+            else
+            {
+                has_listening_tcp_ipv6 = true;
+
+                std::shared_ptr<eprosima::fastdds::rtps::TCPv6TransportDescriptor> descriptor =
+                        std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
+
+                descriptor->add_listener_port(address.port());
+
+                params.userTransports.push_back(descriptor);
+            }
+
         }
         else
         {
-            has_udp = true;
+            has_udp_ipv4 = address.is_ipv4();
+            has_udp_ipv6 = !address.is_ipv4();
         }
 
         // For any, UDP or TCP
@@ -157,11 +174,13 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             // In case it is TCP mark has_connection_tcp as true
             if (address.is_tcp())
             {
-                has_connection_tcp = true;
+                has_connection_tcp_ipv4 = address.is_ipv4();
+                has_connection_tcp_ipv6 = !address.is_ipv4();
             }
             else
             {
-                has_udp = true;
+                has_udp_ipv4 = address.is_ipv4();
+                has_udp_ipv6 = !address.is_ipv4();
             }
 
             // IP
@@ -216,29 +235,46 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     /////
     // Create specific descriptors if needed
 
-    // TODO create v6 descriptors
-
     // If has TCP connections but not TCP listening addresses, it must specify the TCP transport
-    if (has_connection_tcp && !has_listening_tcp)
+    // TODO enable tls
+    if (has_connection_tcp_ipv4 && !has_listening_tcp_ipv4)
     {
-        // TODO enable tls
         std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
                 std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding TCP Transport to Participant " << this->id() << ".");
+                "Adding TCPv4 Transport to Participant " << this->id() << ".");
+    }
+    if (has_connection_tcp_ipv6 && !has_listening_tcp_ipv6)
+    {
+        std::shared_ptr<eprosima::fastdds::rtps::TCPv6TransportDescriptor> descriptor =
+                std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
+        params.userTransports.push_back(descriptor);
+
+        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                "Adding TCPv6 Transport to Participant " << this->id() << ".");
     }
 
+
     // If has UDP, create descriptor because it has not been created yet
-    if (has_udp)
+    if (has_udp_ipv4)
     {
         std::shared_ptr<eprosima::fastdds::rtps::UDPv4TransportDescriptor> descriptor =
                 std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding UDP Transport to Participant " << this->id() << ".");
+                "Adding UDPv4 Transport to Participant " << this->id() << ".");
+    }
+    if (has_udp_ipv6)
+    {
+        std::shared_ptr<eprosima::fastdds::rtps::UDPv6TransportDescriptor> descriptor_v6 =
+                std::make_shared<eprosima::fastdds::rtps::UDPv6TransportDescriptor>();
+        params.userTransports.push_back(descriptor_v6);
+
+        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                "Adding UDPv6 Transport to Participant " << this->id() << ".");
     }
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
