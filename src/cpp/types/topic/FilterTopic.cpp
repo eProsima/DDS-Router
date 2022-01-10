@@ -32,7 +32,6 @@ FilterTopic::FilterTopic(
 {
 }
 
-
 bool FilterTopic::has_keyed_set() const
 {
     return has_keyed_set_;

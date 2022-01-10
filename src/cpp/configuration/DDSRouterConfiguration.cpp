@@ -135,7 +135,8 @@ std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topi
                 else
                 {
                     result.push_back(
-                        std::make_shared<WildcardTopic>(new_topic_name, new_topic_type, new_topic_has_keyed_set, new_topic_with_key));
+                        std::make_shared<WildcardTopic>(new_topic_name, new_topic_type, new_topic_has_keyed_set,
+                        new_topic_with_key));
                 }
             }
         }
