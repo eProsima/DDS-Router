@@ -34,7 +34,7 @@ DDSRouterConfiguration::DDSRouterConfiguration(
 {
     if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
     {
-        throw ConfigurationException("DDSRouter expects a map as base yaml type or an empty");
+        throw ConfigurationException("DDSRouter expects a map as base yaml type or an empty one.");
     }
 }
 

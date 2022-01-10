@@ -39,6 +39,7 @@ using PortType = uint16_t;
 //! Different versions allowed for IP
 enum IpVersion
 {
+    NONE_IPv,
     IPv4,
     IPv6
 };

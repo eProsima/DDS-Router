@@ -73,7 +73,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         if (!address.is_valid())
         {
             // Invalid address, continue with next one
-            logInfo(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                     "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
             continue;
         }

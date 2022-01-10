@@ -30,12 +30,83 @@ Address::Address(
         const RawConfiguration& configuration,
         TransportProtocol default_transport /*= Address::default_transport_protocol()*/)
 {
+    if (!configuration.IsMap() && !configuration.IsNull())
+    {
+        throw ConfigurationException("Address expects a map as base yaml type or an empty one.");
+    }
+
+    // Get IP version. This needs to go first because the DNS call needs to know the IP version
+    if (configuration[ADDRESS_IP_VERSION_TAG])
+    {
+        try
+        {
+            std::string tag = configuration[ADDRESS_IP_VERSION_TAG].as<std::string>();
+
+            if (tag == ADDRESS_IP_VERSION_V4_TAG)
+            {
+                ip_version_ = IPv4;
+            }
+            else if (tag == ADDRESS_IP_VERSION_V6_TAG)
+            {
+                ip_version_ = IPv6;
+            }
+            else
+            {
+                throw ConfigurationException(utils::Formatter() <<
+                              "Error getting Address ip version: it must be <v4> or <v6>");
+            }
+        }
+        catch (const std::exception& e)
+        {
+            throw ConfigurationException(utils::Formatter() <<
+                          "Error getting Address ip version: " << e.what());
+        }
+    }
+    else
+    {
+        // Set ip version default
+        ip_version_ = NONE_IPv;
+    }
+
     // Get IP
     if (configuration[ADDRESS_IP_TAG])
     {
         try
         {
             ip_ = configuration[ADDRESS_IP_TAG].as<IpType>();
+
+            // Check if it is a valid IP or it should call DNS
+            if (!Address::is_ipv4_correct(ip_) && !Address::is_ipv6_correct(ip_))
+            {
+                // Call
+                auto response = fastrtps::rtps::IPLocator::resolveNameDNS(ip_);
+
+                // Add the first valid IP found
+                if (ip_version_ == IPv6)
+                {
+                    if (response.second.size() > 0)
+                    {
+                        ip_ = response.second.begin()->data();
+                    }
+                    else
+                    {
+                        throw ConfigurationException(utils::Formatter() <<
+                          "Incorrect IPv6 set or DNS not found: " << ip_);
+                    }
+                }
+                else
+                {
+                    if (response.first.size() > 0)
+                    {
+                        ip_ = response.first.begin()->data();
+                    }
+                    else
+                    {
+                        throw ConfigurationException(utils::Formatter() <<
+                          "Incorrect IPv4 set or DNS not found: " << ip_);
+                    }
+                }
+            }
         }
         catch (const std::exception& e)
         {
@@ -46,6 +117,24 @@ Address::Address(
     else
     {
         ip_ = Address::default_ip();
+    }
+
+    // Check the IP Version is correctly set
+    if (ip_version_ == NONE_IPv)
+    {
+        if (Address::is_ipv4_correct(ip_))
+        {
+            ip_version_ = IPv4;
+        }
+        else if (Address::is_ipv6_correct(ip_))
+        {
+            ip_version_ = IPv6;
+        }
+        else
+        {
+            throw ConfigurationException(utils::Formatter() <<
+                    "Incorrect IP Address: " << ip_);
+        }
     }
 
     // Get Port
@@ -96,46 +185,6 @@ Address::Address(
     else
     {
         transport_protocol_ = default_transport;
-    }
-
-    // Get ip version
-    if (configuration[ADDRESS_IP_VERSION_TAG])
-    {
-        try
-        {
-            std::string tag = configuration[ADDRESS_IP_VERSION_TAG].as<std::string>();
-
-            if (tag == ADDRESS_IP_VERSION_V4_TAG)
-            {
-                ip_version_ = IPv4;
-            }
-            else if (tag == ADDRESS_IP_VERSION_V6_TAG)
-            {
-                ip_version_ = IPv6;
-            }
-            else
-            {
-                throw ConfigurationException(utils::Formatter() <<
-                              "Error getting Address ip version: it must be <v4> or <v6>");
-            }
-        }
-        catch (const std::exception& e)
-        {
-            throw ConfigurationException(utils::Formatter() <<
-                          "Error getting Address ip version: " << e.what());
-        }
-    }
-    else
-    {
-        // Set ip version depending on ip
-        if (Address::is_ipv4_correct(ip_))
-        {
-            ip_version_ = IPv4;
-        }
-        else
-        {
-            ip_version_ = IPv6;
-        }
     }
 }
 
