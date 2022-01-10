@@ -110,15 +110,12 @@ protected:
      *
      * @warning less restrictive would be PERSISTENCE, but those are not supported yet.
      *
-     * @param topic_with_key : topic kind
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::WriterAttributes writer_attributes_(
-            bool topic_with_key) const noexcept;
+    fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
 
     //! Default Topic Attributes to create Writer
-    fastrtps::TopicAttributes topic_attributes_(
-            bool topic_with_key) const noexcept;
+    fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
     //! Default QoS Writer (must be the same as the attributes)
     fastrtps::WriterQos writer_qos_() const noexcept;

@@ -480,9 +480,8 @@ TEST(ConfigurationTest, allowlist_wildcard)
     add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic2*", "type2*");
     DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.allowlist();
-    EXPECT_FALSE(topic_in_list(result3, WildcardTopic("topic1", "type1", true)));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1", false)));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*", false)));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic1"), std::string("type1"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic2*"), std::string("type2*"))));
 
     // Allowlist with random topics
     RawConfiguration yaml4;
@@ -531,9 +530,8 @@ TEST(ConfigurationTest, blocklist_wildcard)
     add_topic_to_list_to_yaml(yaml3, BLOCKLIST_TAG, "topic2*", "type2*");
     DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.blocklist();
-    EXPECT_FALSE(topic_in_list(result3, WildcardTopic("topic1", "type1", true)));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic1", "type1", false)));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic("topic2*", "type2*", false)));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic1"), std::string("type1"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic2*"), std::string("type2*"))));
 
     // Blocklist with random topics
     RawConfiguration yaml4;

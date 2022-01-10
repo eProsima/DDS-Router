@@ -37,7 +37,8 @@ public:
     //! Constructor that allows any type
     WildcardTopic(
             const std::string& topic_name,
-            bool topic_with_key = false);
+            bool has_keyed_set = false,
+            bool topic_with_key = false) noexcept;
 
     // TODO: extend test and documentation to admit ? and []
 

@@ -95,7 +95,8 @@ std::ostream& operator <<(
         std::ostream& os,
         const Topic& a)
 {
-    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << a.topic_with_key() << "}";
+    std::string keyed_str = a.topic_with_key() ? "keyed" : "no_key";
+    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << "}";
     return os;
 }
 

@@ -84,7 +84,7 @@ protected:
  * Serialization method
  *
  * It prints the topic name, type and kind inside "{}" and separated by ";"
- * Example: {TopicName;TopicType;0}
+ * Example: {TopicName;TopicType;no_key}
  */
 std::ostream& operator <<(
         std::ostream& os,

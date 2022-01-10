@@ -42,7 +42,7 @@ Writer::Writer(
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
 
     // Create Writer
-    fastrtps::rtps::WriterAttributes writer_att = writer_attributes_(topic.topic_with_key());
+    fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
     rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(rtps_participant, writer_att, rtps_history_, nullptr);
 
     if (!rtps_writer_)
@@ -52,7 +52,7 @@ Writer::Writer(
     }
 
     // Register writer with topic
-    fastrtps::TopicAttributes topic_att = topic_attributes_(topic.topic_with_key());
+    fastrtps::TopicAttributes topic_att = topic_attributes_();
     fastrtps::WriterQos writer_qos = writer_qos_();
 
     if (!rtps_participant->registerWriter(rtps_writer_, topic_att, writer_qos))
@@ -144,14 +144,13 @@ fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
     return att;
 }
 
-fastrtps::rtps::WriterAttributes Writer::writer_attributes_(
-        bool topic_with_key) const noexcept
+fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
-    if (topic_with_key)
+    if (topic_.topic_with_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -162,11 +161,10 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_(
     return att;
 }
 
-fastrtps::TopicAttributes Writer::topic_attributes_(
-        bool topic_with_key) const noexcept
+fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    if (topic_with_key)
+    if (topic_.topic_with_key())
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }

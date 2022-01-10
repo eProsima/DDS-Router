@@ -164,10 +164,9 @@ TEST(TopicTest, stdout_operator)
     std::vector<pair_topic_type> topics = {{"topic1", "type1"}, {"topic2", "type2"}};
     Topic dt("topic1", "type1");
 
-    testing::internal::CaptureStdout();
-    std::cout << dt;
-    std::string dt_string = testing::internal::GetCapturedStdout();
-    ASSERT_EQ(dt_string, "Topic{topic1;type1;0}");
+    std::stringstream ss;
+    ss << dt;
+    ASSERT_EQ(ss.str(), "Topic{topic1;type1;no_key}");
 }
 
 int main(

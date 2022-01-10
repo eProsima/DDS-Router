@@ -32,8 +32,12 @@ class FilterTopic : public Topic
 {
 public:
 
-    //! Using parent constructos
-    using Topic::Topic;
+    //! Constructor by topic name, topic type name, and (optionally) has_keyed_set and topic kind
+    FilterTopic(
+            const std::string& topic_name,
+            const std::string& topic_type,
+            bool has_keyed_set = false,
+            bool topic_with_key = false) noexcept;
 
     /**
      * Whether this topic filters the same of the topic by argument.
@@ -62,6 +66,14 @@ public:
      */
     virtual bool matches(
             const RealTopic& real_topic) const = 0;
+
+    //! \c has_keyed_set_ getter
+    bool has_keyed_set() const;
+
+protected:
+
+    //! Whether or not \c topic_with_key_ is explicitly set in yaml configuration
+    bool has_keyed_set_;
 };
 
 /**
