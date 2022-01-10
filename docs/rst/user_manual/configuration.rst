@@ -24,7 +24,29 @@ The data transmitted under these topics will be the data relayed by the |ddsrout
 The YAML configuration file must contain an ``allowlist`` tag which is a vector (``[]``).
 This vector elements contains the Topics that will be forwarded (subsequently the |ddsrouter| creates a
 :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each topic for each Participant).
-See Topic section for further information about the topic.
+Each Topic is determined by its entries ``name``, ``type`` and ``keyed``, with only the first one being mandatory.
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Topic entries
+        - Data type
+        - Default value
+
+    *   - ``name``
+        - ``string``
+        - \-
+
+    *   - ``type``
+        - ``string``
+        - ``"*"``
+
+    *   - ``keyed``
+        - ``bool``
+        - ``false``
+
+The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
+or not. See Topic section for further information about the topic.
 
 .. todo:
 

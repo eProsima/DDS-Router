@@ -150,13 +150,28 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+    if (topic_.topic_with_key())
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     return att;
 }
 
 fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    att.topicKind = eprosima::fastrtps::rtps::TopicKind_t::NO_KEY;
+    if (topic_.topic_with_key())
+    {
+        att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     att.topicName = topic_.topic_name();
     att.topicDataType = topic_.topic_type();
     return att;

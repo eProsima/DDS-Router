@@ -77,6 +77,7 @@ set(TEST_NAME WildcardTopicTest)
 
 set(TEST_SOURCES
         WildcardTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp

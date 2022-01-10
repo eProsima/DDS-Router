@@ -41,6 +41,7 @@
 #include <fastrtps/attributes/SubscriberAttributes.h>
 
 #include "HelloWorldPubSubTypes.h"
+#include "HelloWorldKeyedPubSubTypes.h"
 
 using namespace eprosima::ddsrouter;
 
@@ -54,12 +55,13 @@ class HelloWorldPublisher
 {
 public:
 
-    HelloWorldPublisher()
+    HelloWorldPublisher(
+            bool keyed = false)
         : participant_(nullptr)
         , publisher_(nullptr)
         , topic_(nullptr)
         , writer_(nullptr)
-        , type_(new HelloWorldPubSubType())
+        , keyed_(keyed)
     {
     }
 
@@ -99,7 +101,16 @@ public:
         }
 
         // REGISTER THE TYPE
-        type_.register_type(participant_);
+        eprosima::fastdds::dds::TypeSupport type;
+        if (keyed_)
+        {
+            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+        }
+        else
+        {
+            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldPubSubType());
+        }
+        type.register_type(participant_);
 
         // CREATE THE PUBLISHER
         publisher_ = participant_->create_publisher(eprosima::fastdds::dds::PUBLISHER_QOS_DEFAULT, nullptr);
@@ -110,7 +121,17 @@ public:
         }
 
         // CREATE THE TOPIC
-        topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld", eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        if (keyed_)
+        {
+            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
+                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        }
+        else
+        {
+            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
+                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+
+        }
 
         if (topic_ == nullptr)
         {
@@ -150,7 +171,7 @@ private:
 
     eprosima::fastdds::dds::DataWriter* writer_;
 
-    eprosima::fastdds::dds::TypeSupport type_;
+    bool keyed_;
 };
 
 /**
@@ -161,12 +182,13 @@ class HelloWorldSubscriber
 {
 public:
 
-    HelloWorldSubscriber()
+    HelloWorldSubscriber(
+            bool keyed = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
-        , type_(new HelloWorldPubSubType())
+        , keyed_(keyed)
         , data_received_(false)
     {
     }
@@ -213,7 +235,16 @@ public:
         }
 
         // REGISTER THE TYPE
-        type_.register_type(participant_);
+        eprosima::fastdds::dds::TypeSupport type;
+        if (keyed_)
+        {
+            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+        }
+        else
+        {
+            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldPubSubType());
+        }
+        type.register_type(participant_);
 
         // CREATE THE SUBSCRIBER
         subscriber_ = participant_->create_subscriber(eprosima::fastdds::dds::SUBSCRIBER_QOS_DEFAULT, nullptr);
@@ -224,7 +255,17 @@ public:
         }
 
         // CREATE THE TOPIC
-        topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld", eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        if (keyed_)
+        {
+            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
+                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        }
+        else
+        {
+            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
+                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+
+        }
 
         if (topic_ == nullptr)
         {
@@ -263,7 +304,7 @@ private:
 
     eprosima::fastdds::dds::DataReader* reader_;
 
-    eprosima::fastdds::dds::TypeSupport type_;
+    bool keyed_;
 
     //! Attribute set to true when new data is received
     std::atomic<bool> data_received_;
@@ -351,7 +392,7 @@ TEST(DDSTest, simple_initialization)
 }
 
 /**
- * Test communication between two DDS participants created in different domains
+ * Test communication in HelloWorld topic between two DDS participants created in different domains
  */
 TEST(DDSTest, end_to_end_communication)
 {
@@ -371,6 +412,56 @@ TEST(DDSTest, end_to_end_communication)
 
     // Create DDS Subscriber in domain 1
     HelloWorldSubscriber subscriber;
+    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
+
+    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
+    RawConfiguration router_configuration =
+            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+
+    // Create DDSRouter entity
+    DDSRouter router(router_configuration);
+    router.start();
+
+    // Wait for the endpoints to match before sending any data
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    // Start publishing
+    while (samples_sent < SAMPLES_TO_SEND)
+    {
+        subscriber.data_received(false);
+        msg.index(++samples_sent);
+        publisher.publish(msg);
+        std::unique_lock<std::mutex> lck(reception_cv_mtx);
+        reception_cv.wait(lck, [&]
+                {
+                    return subscriber.data_received();
+                });
+    }
+
+    router.stop();
+}
+
+/**
+ * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains
+ */
+TEST(DDSTest, end_to_end_communication_keyed)
+{
+    uint32_t samples_sent = 0;
+
+    HelloWorld msg;
+    msg.message("HelloWorldKeyed");
+
+    //! Condition variable used to synchronize data flow
+    std::condition_variable reception_cv;
+    //! Mutex managing access to subscriber's \c data_received_ attribute
+    std::mutex reception_cv_mtx;
+
+    // Create DDS Publisher in domain 0
+    HelloWorldPublisher publisher(true);
+    ASSERT_TRUE(publisher.init(0));
+
+    // Create DDS Subscriber in domain 1
+    HelloWorldSubscriber subscriber(true);
     ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
 
     // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1

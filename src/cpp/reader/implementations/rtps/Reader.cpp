@@ -177,13 +177,28 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
     fastrtps::rtps::ReaderAttributes att;
     att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
     att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+    if (topic_.topic_with_key())
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     return att;
 }
 
 fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    att.topicKind = fastrtps::rtps::TopicKind_t::NO_KEY;
+    if (topic_.topic_with_key())
+    {
+        att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
+    }
+    else
+    {
+        att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
+    }
     att.topicName = topic_.topic_name();
     att.topicDataType = topic_.topic_type();
     return att;

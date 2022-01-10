@@ -31,11 +31,12 @@ namespace ddsrouter {
 struct Topic
 {
     /**
-     * Std constructor by topic name and topic type name
+     * Std constructor by topic name, topic type name and (optionally) topic kind
      */
     Topic(
             std::string topic_name,
-            std::string topic_type) noexcept;
+            std::string topic_type,
+            bool topic_with_key = false) noexcept;
 
     //! Copy constructor
     Topic& operator =(
@@ -46,6 +47,9 @@ struct Topic
 
     //! Topic type name getter
     const std::string& topic_type() const;
+
+    //! Topic kind getter
+    bool topic_with_key() const;
 
     // OPERATOR OVERLOAD
     /**
@@ -71,13 +75,16 @@ protected:
 
     //! Topic type name
     std::string topic_type_;
+
+    //! Topic kind; WITH_KEY(true), NO_KEY(false)
+    bool topic_with_key_;
 };
 
 /**
  * Serialization method
  *
- * It prints the topic name and type inside "{}" and each inside "<>"
- * Example: {<TopicName>:<TopicType>}
+ * It prints the topic name, type and kind inside "{}" and separated by ";"
+ * Example: {TopicName;TopicType;no_key}
  */
 std::ostream& operator <<(
         std::ostream& os,

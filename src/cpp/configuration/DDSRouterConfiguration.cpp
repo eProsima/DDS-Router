@@ -80,7 +80,7 @@ std::set<RealTopic> DDSRouterConfiguration::real_topics() const
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
-            result.emplace(RealTopic(topic->topic_name(), topic->topic_type()));
+            result.emplace(RealTopic(topic->topic_name(), topic->topic_type(), topic->topic_with_key()));
         }
     }
 
@@ -102,6 +102,8 @@ std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topi
             {
                 std::string new_topic_name;
                 std::string new_topic_type;
+                bool new_topic_has_keyed_set = false;
+                bool new_topic_with_key = false;    // optional entry, false by default
 
                 if (topic[TOPIC_NAME_TAG])
                 {
@@ -119,15 +121,22 @@ std::list<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::generic_get_topi
                     new_topic_type = topic[TOPIC_TYPE_NAME_TAG].as<std::string>();
                 }
 
+                if (topic[TOPIC_KIND_TAG])
+                {
+                    new_topic_has_keyed_set = true;
+                    new_topic_with_key = topic[TOPIC_KIND_TAG].as<bool>();
+                }
+
                 if (new_topic_type.empty())
                 {
                     result.push_back(
-                        std::make_shared<WildcardTopic>(new_topic_name));
+                        std::make_shared<WildcardTopic>(new_topic_name, new_topic_has_keyed_set, new_topic_with_key));
                 }
                 else
                 {
                     result.push_back(
-                        std::make_shared<WildcardTopic>(new_topic_name, new_topic_type));
+                        std::make_shared<WildcardTopic>(new_topic_name, new_topic_type, new_topic_has_keyed_set,
+                        new_topic_with_key));
                 }
             }
         }

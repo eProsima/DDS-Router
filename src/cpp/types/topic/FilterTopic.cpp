@@ -13,44 +13,28 @@
 // limitations under the License.
 
 /**
- * @file WildcardTopic.cpp
+ * @file FilterTopic.cpp
  *
  */
 
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-WildcardTopic::WildcardTopic(
+FilterTopic::FilterTopic(
         const std::string& topic_name,
+        const std::string& topic_type,
         bool has_keyed_set, /* = false */
         bool topic_with_key /* = false */) noexcept
-    : FilterTopic(topic_name, "*", has_keyed_set, topic_with_key)
+    : Topic(topic_name, topic_type, topic_with_key)
+    , has_keyed_set_(has_keyed_set)
 {
 }
 
-bool WildcardTopic::contains(
-        const FilterTopic& other) const
+bool FilterTopic::has_keyed_set() const
 {
-    // TODO: implement
-    static_cast<void> (other);
-    return false;
-}
-
-bool WildcardTopic::matches(
-        const RealTopic& other) const
-{
-    if (!this->has_keyed_set() || (this->topic_with_key() == other.topic_with_key()))
-    {
-        if (utils::match_pattern(this->topic_name(), other.topic_name()))
-        {
-            // Topic name mathes, check if type matches
-            return utils::match_pattern(this->topic_type(), other.topic_type());
-        }
-    }
-    return false;
+    return has_keyed_set_;
 }
 
 } /* namespace ddsrouter */
