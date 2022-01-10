@@ -114,6 +114,14 @@ Activate ``INFO`` and ``DEBUG`` logs for the |ddsrouter| execution.
 For this argument to work, the |ddsrouter| must have been compiled with CMake option ``CMAKE_BUILD_TYPE=Debug``,
 or compiled with CMake option ``LOG_INFO=ON``.
 
+.. note::
+
+    If this option is enabled and Fast DDS has been compiled in debug, it will print the logs of the DDS Router
+    and Fast DDS mixed.
+    In order to skip Fast DDS logs, compile ``fastrtps`` library with CMake option ``-DLOG_NO_INFO=ON``
+    or cmake build type different to ``Debug``.
+
+
 
 .. _user_manual_user_interface_configuration_file:
 

@@ -66,7 +66,12 @@ int main(
     {
         // Activate log
         Log::SetVerbosity(Log::Kind::Info);
-        Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+
+        // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
+        // in non debug or with LOG_NO_INFO.
+        // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
+        // Change it when Log Module is independent and with more extensive API.
+        // Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
 
     // Encapsulating execution in block to erase all memory correctly before closing process
