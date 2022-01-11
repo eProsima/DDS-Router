@@ -28,7 +28,7 @@ will then forward them to the WAN participant. Following, these messages will be
 
 Following is a representation of the above-described scenario:
 
-.. figure:: /rst/figures/vulcanexus_local.png
+.. figure:: /rst/figures/k8s_local_router.png
 
 
 Local router
@@ -88,7 +88,7 @@ the difficulty of enabling multicast routing in cloud environments.
 
 The described scheme is represented in the following figure:
 
-.. figure:: /rst/figures/vulcanexus_cloud.png
+.. figure:: /rst/figures/k8s_cloud_router.png
 
 In addition to the two mentioned deployments, two |k8s| `services <https://kubernetes.io/docs/concepts/services-networking/service/>`_
 are required in order to direct dataflow to each of the pods. A LoadBalancer will forward messages reaching the cluster
@@ -114,7 +114,7 @@ The configuration file used for the cloud router will be provided by setting up 
 
 Following is a representation of the overall |k8s| cluster configuration:
 
-.. figure:: /rst/figures/vulcanexus_k8s.png
+.. figure:: /rst/figures/k8s_diagram.png
 
 
 DDS-Router deployment
