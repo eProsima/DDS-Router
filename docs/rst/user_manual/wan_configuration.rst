@@ -78,6 +78,8 @@ These are a list of tips to help choosing whether to use one or the other.
 Examples
 ========
 
+.. _tcp_example:
+
 TCP Port Forwarding Example
 ---------------------------
 

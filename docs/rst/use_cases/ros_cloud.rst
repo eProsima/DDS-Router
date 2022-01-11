@@ -45,6 +45,12 @@ reachable from outside this local network by properly configuring port forwardin
 The connection address points to the remote WAN participant deployed in the |k8s| cluster. For further details on how to
 configure WAN communication, please have a look at :ref:`WAN Configuration <user_manual_wan_configuration>`.
 
+.. note::
+
+    As an alternative, :ref:`TCP transport <tcp_example>` may be used instead of UDP. This has the advantage of not requiring
+    to set a listening address in the local router's WAN participant (TCP client), so there is no need to fiddle with
+    the configuration of your Internet router device.
+
 To launch the local router, execute:
 
 .. code-block:: bash
@@ -72,7 +78,8 @@ Kubernetes setup
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants:
 
-* A WAN participant that receives the messages coming from our LAN through the aforementioned UDP communication channel.
+* A :ref:`WAN Participant <user_manual_participants_wan>` that receives the messages coming from our LAN through the
+  aforementioned UDP communication channel.
 * A :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` (local DS) that propagates them to a
   ROS 2 listener node hosted in a different |k8s| pod.
 
