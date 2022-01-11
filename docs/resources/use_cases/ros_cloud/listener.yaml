@@ -1,0 +1,24 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ros2-galactic-listener
+  labels:
+    app: ros2-galactic-listener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ros2-galactic-listener
+  template:
+    metadata:
+      labels:
+        app: ros2-galactic-listener
+    spec:
+      containers:
+        - name: ros2-demo-nodes
+          image: ros2-demo-nodes:galactic
+          args:
+            - listener
+            - 192.168.1.11
+            - '30001'
+      restartPolicy: Always
