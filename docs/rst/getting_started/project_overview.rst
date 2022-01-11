@@ -1,20 +1,16 @@
 .. include:: ../exports/alias.include
 
-.. _getting_started_tutorial:
+.. _getting_started:
 
-###############
-Getting Started
-###############
+################
+Project Overview
+################
 
 |ddsrouter| is a cross-platform non-graphical application developed by eProsima and powered by Fast DDS
 that allows to create a communication bridge that connects two DDS networks that otherwise would be isolated.
 The main use case of the |ddsrouter| is to communicate two DDS networks that are physically or virtually separated
 and belong to different LANs, allowing the entities of each network to publish and subscribe to local
 and remote topics indistinctly.
-
-
-Project Overview
-================
 
 The |ddsrouter| is an application that internally run :term:`Participants <Participant>`, which are an abstraction of
 DDS :term:`DomainParticipants <DomainParticipant>`.
@@ -38,7 +34,7 @@ to connect to each other independently of their different configurations.
 
 
 WAN Communication
------------------
+=================
 
 To achieve a WAN communication of two networks that work in different LANs requires a running
 |ddsrouter| application on each LAN.
@@ -81,7 +77,7 @@ The whole application has been thought to be user-friendly, following a user-ori
 Common Use Cases
 ================
 
-The different cases where the |ddsrouter| could be applied are very vary, and would increase as new Participant Types
+The different cases where the |ddsrouter| could be applied are very varied, and would increase as new Participant Types
 will be added in future releases.
 These are most common use cases so far:
 

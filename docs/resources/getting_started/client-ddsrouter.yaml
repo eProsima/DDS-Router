@@ -1,0 +1,36 @@
+# client-ddsrouter.yaml
+
+allowlist:
+  [
+    {name: "Square", type: "ShapeType", keyed: true}
+  ]
+
+SimpleParticipant:
+  type: local
+  domain: 0
+
+ClientWAN:
+  type: wan
+  id: 1
+  connection-addresses:
+  [
+    {
+      id: 0,
+      addresses:
+      [
+        {
+          ip: "192.168.1.8",
+          port: 11800,
+          transport: "udp"
+        }
+      ]
+    }
+  ]
+  listening-addresses:
+  [
+    {
+      ip: "192.168.1.4",
+      port: 11008,
+      transport: "udp"
+    }
+  ]
