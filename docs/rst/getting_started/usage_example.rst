@@ -17,9 +17,9 @@ instances will establish communication after proper configuration and deployment
 
 .. note::
 
-    This example is valid both for LAN and WAN scenarios. For the WAN case, make sure that public IP addresses are used
-    instead, and that the provided ports are reachable by properly configuring port forwarding in your Internet router
-    devices.
+    This example applies to both LAN and WAN scenarios. For the WAN case, make sure that public IP addresses are used
+    instead of private ones, and that the provided ports are reachable by properly configuring port forwarding in your
+    Internet router devices.
 
 Launching ShapesDemo
 ====================
@@ -62,8 +62,8 @@ We must set ``keyed`` to ``true`` as shape topics use their color attribute as k
 
 Apart from selecting on which topics we wish to send/receive data, we must configure as well the participants that will
 ultimately perform communication. Each router instance will contain a :ref:`simple <user_manual_participants_simple>`
-and a :ref:`wan <user_manual_participants_wan>` participants. In brief, the simple participants will be in charge of
-locally communicating with the corresponding ShapesDemo application, while the wan participants will be the ones
+and a :ref:`WAN <user_manual_participants_wan>` participants. In brief, the simple participants will be in charge of
+locally communicating with the corresponding ShapesDemo application, while the WAN participants will be the ones
 bridging the connection between the two DDS networks.
 
 .. figure:: /rst/figures/shapesdemo_detailed.png
@@ -77,11 +77,11 @@ The only configuration required for simple participants is the DDS ``domain`` id
 If launching the two routers in the same LAN, set a different ``domain`` id in one of the two configuration files (same
 as the one previously set for ShapesDemo).
 
-The configuration of wan participants is more complex, and we will not be covering it here in detail. In short, in this
-example both wan participants will communicate through UDP, with one being the client and the other one having the
+The configuration of WAN participants is more complex, and we will not be covering it here in detail. In short, in this
+example both WAN participants will communicate through UDP, with one being the client and the other one having the
 server role. Both participants are required to have a ``listening address`` (for the UDP case) where they will expect to
-receive traffic, and a ``connection address`` in the case of the client, which points at the server’s
-``listening address``. Note that a unique ``id`` must be set for every wan participant, and this entry should also be
+receive traffic, and a ``connection address`` in the case of the client, which points at the server's
+``listening address``. Note that a unique ``id`` must be set for every WAN participant, and this entry should also be
 included in ``connection address``. Refer to :ref:`WAN Participant <user_manual_participants_wan>` and
 :ref:`WAN Configuration <user_manual_wan_configuration>` for more information. You may also have a look at
 :ref:`WAN Example <examples_wan_example>` for a detailed explanation on how to configure this kind of participant.
@@ -104,14 +104,14 @@ Now, with the configuration files ready, launching a |ddsrouter| instance is as 
     ddsrouter -c config-file.yaml
 
 After setting up both routers, communication between the two ShapesDemo instances should have been established so the
-square shape is now visible in the subscriber’s panel.
+square shape is now visible in the subscriber's panel.
 
 .. figure:: /rst/figures/shapesdemo_square.png
 
 |ddsrouter| supports the dynamic addition/deletion of topics at runtime (see
 :ref:`Reload Topics <user_manual_user_interface_reload_topics>`). Let us test this feature by adding the circle topic to
-the allowlist of both routers, and also by removing the square topic (removing this topic from one of the routers’
-allowlist will suffice).
+the allowlist of both routers. Also, by removing the square topic (removing this topic from one of the routers'
+allowlist will suffice) the square data should stop reaching the subscriber.
 
 .. code-block:: yaml
 
@@ -120,7 +120,7 @@ allowlist will suffice).
         {name: "Circle", type: "ShapeType", keyed: true}
     ]
 
-After applying these changes, the square should no longer be visible on the subscriber’s side (actually visible but
+After applying these changes, the square should no longer be updated in the subscriber's side (appearing visible but
 frozen), while the circle should.
 
 .. figure:: /rst/figures/shapesdemo_circle.png

@@ -33,7 +33,7 @@
    :numbered: 5
    :hidden:
 
-   /rst/getting_started/getting_started
+   /rst/getting_started/project_overview
    /rst/getting_started/usage_example
 
 

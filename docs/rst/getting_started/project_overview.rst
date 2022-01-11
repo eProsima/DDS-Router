@@ -1,6 +1,6 @@
 .. include:: ../exports/alias.include
 
-.. _getting_started_tutorial:
+.. _getting_started:
 
 ################
 Project Overview
@@ -54,9 +54,8 @@ This allows to create a non limited and highly scalable decentralized and distri
 .. figure:: /rst/figures/ddsrouter_overview_wan.png
 
 
-#################
 Usage Description
-#################
+=================
 
 The |ddsrouter| is a terminal (non-graphical) application that creates the DDS bridge as long as it is running.
 The configuration in *YAML* format is very intuitive and human-readable.
@@ -75,9 +74,8 @@ The whole application has been thought to be user-friendly, following a user-ori
   (see section :ref:`user_manual_user_interface_close_application` for more details on how to close the application).
 
 
-################
 Common Use Cases
-################
+================
 
 The different cases where the |ddsrouter| could be applied are very varied, and would increase as new Participant Types
 will be added in future releases.
