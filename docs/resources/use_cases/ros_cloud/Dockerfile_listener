@@ -1,11 +1,15 @@
-FROM ubuntu-vulcanexus:galactic
+FROM ros:galactic
 
 # Install demo-nodes-cpp
 RUN source /opt/ros/$ROS_DISTRO/setup.bash && \
-    source /vulcanexus_ws/install/setup.bash && \
     apt update && \
     apt install -y ros-$ROS_DISTRO-demo-nodes-cpp
 
+# Set Fast DDS as middleware
+ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+
+COPY ./run.bash /
+RUN chmod +x /run.bash
+
 # Setup entrypoint
-ENTRYPOINT ["/bin/bash", "/vulcanexus_entrypoint.sh"]
-CMD ["bash"]
+ENTRYPOINT ["/run.bash"]

@@ -12,7 +12,6 @@ SERVER_PORT=$3
 
 # Setup environment
 source "/opt/ros/$ROS_DISTRO/setup.bash"
-source "/vulcanexus_ws/install/setup.bash"
 
 echo "Starting ${NODE} as client of Discovery Server ${SERVER_IP}:${SERVER_PORT}"
 ROS_DISCOVERY_SERVER=";${SERVER_IP}:${SERVER_PORT}" ros2 run demo_nodes_cpp ${NODE}

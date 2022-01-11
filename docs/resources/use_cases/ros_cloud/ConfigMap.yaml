@@ -1,0 +1,26 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ddsrouter-config
+data:
+  ddsrouter.config.file: |-
+    allowlist:
+      - name: "rt/chatter"
+        type: "std_msgs::msg::dds_::String_"
+
+    LocalDiscoveryServer:
+      type: local-discovery-server
+      ros-discovery-server: true
+      id: 1
+      listening-addresses:
+        - ip: "192.168.1.11"  # Private IP only reachable within the k8s cluster to communicate with the ddsrouter application
+          port: 30001
+          transport: "udp"
+
+    CloudWAN:
+      type: wan
+      id: 2
+      listening-addresses:
+        - ip: "2.2.2.2" # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
+          port: 30002
+          transport: "udp"

@@ -22,8 +22,8 @@ spec:
               - key: ddsrouter.config.file
                 path: DDSROUTER_CONFIGURATION.yaml
       containers:
-        - name: ubuntu-vulcanexus
-          image: ubuntu-vulcanexus:galactic
+        - name: ddsrouter
+          image: ddsrouter:main
           ports:
             - containerPort: 30001
               protocol: UDP
@@ -31,6 +31,5 @@ spec:
               protocol: UDP
           volumeMounts:
             - name: config
-              mountPath: /vulcanexus_ws/install/ddsrouter/share/resources
-          args: ["-r", "ddsrouter -r 10 -c /vulcanexus_ws/install/ddsrouter/share/resources/DDSROUTER_CONFIGURATION.yaml"]
+              mountPath: /ddsrouter/resources
       restartPolicy: Always
