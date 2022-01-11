@@ -27,4 +27,4 @@ RUN mkdir resources && \
     colcon build --event-handlers=console_direct+
 
 SHELL ["/bin/bash", "-c"]
-CMD source ./install/setup.bash ; ddsrouter -c resources/DDSROUTER_CONFIGURATION.yaml
+CMD source ./install/setup.bash ; ddsrouter --config-path resources/DDSROUTER_CONFIGURATION.yaml

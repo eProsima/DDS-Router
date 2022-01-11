@@ -8,7 +8,7 @@ ROS 2 and Kubernetes
 
 Apart from plain LAN-to-LAN communication, Cloud environments such as container-oriented platforms have also been
 present throughout the |ddsrouter| design phase. In this walk-through example, we will set up both a *Kubernetes*
-(|k8s|) network and local environment in order to establish communication between a pair of ROS nodes, one sending
+(|k8s|) network and a local environment in order to establish communication between a pair of ROS nodes, one sending
 messages from a LAN (talker) and another one (listener) receiving them in the Cloud. This will be accomplished by having
 a |ddsrouter| instance at each side of the communication.
 
@@ -49,7 +49,7 @@ To launch the local router, execute:
 
 .. code-block:: bash
 
-    ddsrouter -c local-ddsrouter.yaml
+    ddsrouter --config-path local-ddsrouter.yaml
 
 
 Talker
@@ -70,12 +70,14 @@ Once *ROS 2* is installed, start publishing messages in DDS domain ``0`` by exec
 Kubernetes setup
 ================
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
-(cloud router) consists of two participants; a WAN participant that receives the messages coming from our LAN through
-the aforementioned UDP communication channel, and a
-:ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` (local DS) that propagates them to a
-ROS 2 listener node hosted in a different |k8s| pod. The choice of a Local Discovery Server instead of a Simple
-Participant to communicate with the listener has to do with the difficulty of enabling multicast routing in cloud
-environments.
+(cloud router) consists of two participants:
+
+* A WAN participant that receives the messages coming from our LAN through the aforementioned UDP communication channel.
+* A :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` (local DS) that propagates them to a
+  ROS 2 listener node hosted in a different |k8s| pod.
+
+The choice of a Local Discovery Server instead of a Simple Participant to communicate with the listener has to do with
+the difficulty of enabling multicast routing in cloud environments.
 
 The described scheme is represented in the following figure:
 
@@ -103,7 +105,7 @@ The configuration file used for the cloud router will be provided by setting up 
 .. literalinclude:: ../../resources/use_cases/ros_cloud/ConfigMap.yaml
     :language: yaml
 
-Following is represented the overall configuration of our |k8s| cluster:
+Following is a representation of the overall |k8s| cluster configuration:
 
 .. figure:: /rst/figures/vulcanexus_k8s.png
 
@@ -140,5 +142,7 @@ the following configuration:
 
 
 Once all these components are up and running, communication should have been established between talker and listener
-nodes. Feel free to interchange the locations of the ROS nodes by slightly modifying the provided configuration files,
-so that the talker is the one hosted in the |k8s| cluster while the listener runs in our LAN.
+nodes, so that messages finally manage to reach the listener pod and get printed in its ``STDOUT``.
+
+Feel free to interchange the locations of the ROS nodes by slightly modifying the provided configuration files, hosting
+the talker in the |k8s| cluster while the listener runs in our LAN.
