@@ -41,7 +41,7 @@
 
     transport: "tcp" # for TCP transport
 
-    # Default: depending if local or wan
+    # Default: udp
 
   # -----------------------------------
   # IP Version

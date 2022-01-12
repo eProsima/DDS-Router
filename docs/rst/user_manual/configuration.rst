@@ -60,10 +60,10 @@ with type name ``HelloWorld``.
 .. code-block:: yaml
 
     allowlist:
-    [
-        {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},
-        {name: "HelloWorldTopic", type: "HelloWorld"},
-    ]
+      - name: "rt/chatter"
+        type: "std_msgs::msg::dds_::String_"
+      - name: "HelloWorldTopic"
+        type: "HelloWorld"
 
 .. note::
 
@@ -98,14 +98,14 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 
 .. code-block:: yaml
 
-    Participant0:       # Participant Id = Participant0
-        type: local     # Participant Type = simple
-        domain: 3       # DomainId = 3
+    Participant0:     # Participant Id = Participant0
+      type: local     # Participant Type = simple
+      domain: 3       # DomainId = 3
 
     ################
 
-    simple:             # Participant Id = simple ; Participant Type = simple
-        domain: 6       # DomainId = 6
+    simple:           # Participant Id = simple ; Participant Type = simple
+      domain: 6       # DomainId = 6
 
 The first Participant `Participant0` has Participant Id *Participant0* and is configured to be of the *simple*
 Participant Type.
@@ -235,17 +235,11 @@ listen for remote clients or servers.
 .. code-block:: yaml
 
     listening-addresses:
-    [
-        {                                   # UDP by default
-            ip: "127.0.0.1",
-            port: 11667,
-        },
-        {
-            ip: "2001:4860:4860::8844",     # Recognized as IPv6
-            port: 11668,
-            transport: "tcp"
-        }
-    ]
+      - ip: "127.0.0.1"                # UDP by default
+        port: 11667
+      - ip: "2001:4860:4860::8844"     # Recognized as IPv6
+        port: 11668
+        transport: "tcp"
 
 
 .. _user_manual_configuration_discovery_server_connection_addresses:
@@ -261,34 +255,18 @@ Each element inside ``addresses`` must follow the configuration for :ref:`user_m
 .. code-block:: yaml
 
     connection-addresses:
-    [
-        {
-            guid: "44.53.0d.5f.45.50.52.4f.53.49.4d.41"
-            addresses:
-            [
-                {
-                    ip: "127.0.0.1",
-                    port: 11666,
-                }
-            ]
-        },
-        {
-            id: 4,
-            addresses:
-            [
-                {
-                    ip: "2001:4860:4860::8888",
-                    port: 11667,
-                    transport: "tcp"
-                },
-                {
-                    ip: "2001:4860:4860::8844",
-                    port: 11668,
-                    transport: "tcp"
-                }
-            ]
-        }
-    ]
+      - guid: "44.53.0d.5f.45.50.52.4f.53.49.4d.41"
+        addresses:
+          - ip: "127.0.0.1"
+            port: 11666
+      - id: 4
+        addresses:
+          - ip: "2001:4860:4860::8888"
+            port: 11667
+            transport: "tcp"
+          - ip: "2001:4860:4860::8844"
+            port: 11668
+            transport: "tcp"
 
 
 .. _user_manual_configuration_general_example:
@@ -304,66 +282,52 @@ A complete example of all the configurations described on this page can be found
     # Relay topic HelloWorldTopic and type HelloWorld
 
     allowlist:
-    [
-        {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},
-        {name: "HelloWorldTopic", type: "HelloWorld"},
-    ]
+      - name: "rt/chatter"
+        type: "std_msgs::msg::dds_::String_"
+      - name: "HelloWorldTopic"
+        type: "HelloWorld"
 
     ####################
 
     # Simple DDS Participant in domain 3
 
-    Participant0:                       # Participant Id = Participant0
+    Participant0:                     # Participant Id = Participant0
 
-        type: local                     # Participant Type = local (= simple)
+      type: local                     # Participant Type = local (= simple)
 
-        domain: 3                       # DomainId = 3
+      domain: 3                       # DomainId = 3
 
     ####################
 
     # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS 2 Client could connect to it
     # This Discovery Server will listen in ports 11600 and 11601 in localhost
 
-    ServerROS2:                         # Participant Id = ServerROS2
+    ServerROS2:                       # Participant Id = ServerROS2
 
-        type: local-discovery-server    # Participant Type = local-discovery-server
+      type: local-discovery-server    # Participant Type = local-discovery-server
 
-        id: 1
-        ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
+      id: 1
+      ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
 
-        listening-addresses:            # Local Discovery Server Listening Addresses
-        [
-            {
-                ip: "127.0.0.1",        # IP = localhost ; Transport = UDP (by default)
-                port: 11600,            # Port = 11600
-            },
-            {
-                ip: "127.0.0.1",        # IP = localhost
-                port: 11601,            # Port = 11601
-                transport: "udp",       # Transport = UDP
-            }
-        ]
+      listening-addresses:            # Local Discovery Server Listening Addresses
+        - ip: "127.0.0.1"             # IP = localhost ; Transport = UDP (by default)
+          port: 11600                 # Port = 11600
+        - ip: "127.0.0.1"             # IP = localhost
+          port: 11601                 # Port = 11601
+          transport: "udp"            # Transport = UDP
 
     ####################
 
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                                # Participant Id = Wan ; if type is not specified, this value is used to determine the Participant Type
+    Wan:                              # Participant Id = Wan ; if type is not specified, this value is used to determine the Participant Type
 
-        id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
+      id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
-        connection-addresses:           # WAN Discovery Server Connection Addresses
-        [
-            {
-                id: 4,                   # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-                addresses:
-                [
-                    {
-                        ip: "8.8.8.8",          # IP = 8.8.8.8
-                        port: 11666,            # Port = 11666
-                        transport: "tcp",       # Transport = TCP
-                    }
-                ]
-            }
-        ]
+      connection-addresses:           # WAN Discovery Server Connection Addresses
+        - id: 4                       # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+          addresses:
+            - ip: "8.8.8.8"           # IP = 8.8.8.8
+              port: 11666             # Port = 11666
+              transport: "tcp"        # Transport = TCP

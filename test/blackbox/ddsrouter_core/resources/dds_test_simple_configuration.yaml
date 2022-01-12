@@ -3,10 +3,11 @@
 # It is composed of two Simple Participants.
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},
-    {name: "HelloWorldTopic", type: "HelloWorldKeyed", keyed: true}
-  ]
+  - name: "HelloWorldTopic"
+    type: "HelloWorld"
+  - name: "HelloWorldTopic"
+    type: "HelloWorldKeyed"
+    keyed: true
 
 participant_0:
   type: "local"

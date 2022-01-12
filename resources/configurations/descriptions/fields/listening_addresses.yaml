@@ -12,7 +12,5 @@
     # Listening Addresses for Discovery Server configuration
 
     listening-addresses:
-    [
-      Address,  # See Reference: resources/configurations/fields/address.yaml
-      ...
-    ]
+      - Address  # See Reference: resources/configurations/fields/address.yaml
+        ...

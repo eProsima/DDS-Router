@@ -57,36 +57,22 @@ Discovery Server GuidPrefix.
 
 .. code-block:: yaml
 
-    local_discovery_server_participant:             # Participant Id = local_discovery_server_participant
+    local_discovery_server_participant:           # Participant Id = local_discovery_server_participant
 
-        type: "discovery-server"
+      type: "discovery-server"
 
-        id: 2
-        ros-discovery-server: true                  # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41
+      id: 2
+      ros-discovery-server: true                  # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41
 
-        listening-addresses:                        # Local Discovery Server Listening Addresses
-        [
-            {                                       # Use UDP by default
-                ip: "127.0.0.1",
-                port: 11600,
-            },
-            {
-                ip: "127.0.0.1",
-                port: 11601,
-                transport: "tcp"                    # Use TCP transport
-            }
-        ]
+      listening-addresses:                        # Local Discovery Server Listening Addresses
+        - ip: "127.0.0.1"                         # Use UDP by default
+          port: 11600
+        - ip: "127.0.0.1"
+          port: 11601
+          transport: "tcp"                        # Use TCP transport
 
-        connection-addresses:                       # External Discovery Server Listening Addresses
-        [
-            {
-                id: 4                               # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-                addresses:
-                [
-                    {                               # Use UDP by default
-                        ip: "2001:4860:4860::8888",
-                        port: 11666,
-                    }
-                ]
-            }
-        ]
+      connection-addresses:                       # External Discovery Server Listening Addresses
+        - id: 4                                   # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+          addresses:
+            - ip: "2001:4860:4860::8888"          # Use UDP by default
+              port: 11666

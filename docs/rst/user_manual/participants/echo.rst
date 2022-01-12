@@ -53,4 +53,4 @@ Configuration Example
 .. code-block:: yaml
 
     echo_participant:       # Participant Id = echo_participant
-        type: echo
+      type: echo

@@ -7,10 +7,10 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},                    # 1
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},       # 2
-  ]
+  - name: "HelloWorldTopic"                                           # 1
+    type: "HelloWorld"                                                # 1
+  - name: "rt/chatter"                                                # 2
+    type: "std_msgs::msg::dds_::String_"
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -32,7 +32,8 @@ EchoParticipant:                                                      # 6
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
-# HelloWorldTopic (from Fast DDS HelloWorld) and in topic rt/chatter from ROS2 demo_nodes
+# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to print the received
+# messages in stdout.
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
@@ -49,4 +50,3 @@ EchoParticipant:                                                      # 6
 
 # 7: Type of EchoParticipant: <echo>.
 # Prints in stdout every message received by the router, together with the source GUID, timestamp and Topic.
-

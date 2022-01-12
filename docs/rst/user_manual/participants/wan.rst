@@ -67,29 +67,17 @@ Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` trans
 
     wan_participant:             # Participant Id = wan_participant
 
-        type: "wan"
+      type: "wan"
 
-        id: 2                                       # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
+      id: 2                                       # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
-        listening-addresses:                        # WAN Discovery Server Listening Addresses
-        [
-            {                                       # Use TCP by default
-                ip: "82.0.0.1",
-                port: 11600,
-            }
-        ]
+      listening-addresses:                        # WAN Discovery Server Listening Addresses
+        - ip: "82.0.0.1"                          # Use UDP by default
+          port: 11600
 
-        connection-addresses:                       # Another WAN Participant Listening Addresses
-        [
-            {
-                id: 4                               # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-                addresses:
-                [
-                    {
-                        ip: "2001:4860:4860::8888",
-                        port: 11666,
-                        transport: udp              # Use UDP transport
-                    }
-                ]
-            }
-        ]
+      connection-addresses:                       # Another WAN Participant Listening Addresses
+        - id: 4                                   # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+          addresses:
+            - ip: "2001:4860:4860::8888"
+              port: 11666
+              transport: udp                      # Use UDP transport
