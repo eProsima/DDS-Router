@@ -62,13 +62,14 @@ In order to create a WAN Participant Client, check the configuration file
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
-    :lines: 27-37
+    :lines: 27-47
 
 
 Execute example
 ===============
 
 In order to run this example, there must be two different hosts located in different local networks:
+
 * host *H*:sub:`A` with private IP ``192.168.1.2`` connected to network router *R*:sub:`A` with public IP ``1.1.1.1``.
 * host *H*:sub:`B` with private IP ``192.168.2.2`` connected to network router *R*:sub:`B` with public IP ``2.2.2.2``.
 
@@ -96,13 +97,10 @@ This listener will discover the Simple Participant in the |ddsrouter|, but will 
 Host *H*:sub:`B`
 ----------------
 
-This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
+This host runs the |ddsrouter| WAN Client, which will connect to the previously launched WAN Server.
 Execute |ddsrouter| using file ``<path/to/ddsrouter>/src/ddsrouter/resources/configurations/examples/wan_client.yaml``.
-Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
-port forwarding is configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
-Check the following :ref:`section <user_manual_wan_configuration>` for further information about how to configure
-WAN in |ddsrouter|.
-Refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the |ddsrouter|.
+Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`,
+and be sure that port forwarding is configured in *R*:sub:`B` so *H*:sub:`B` is accessible from the outside.
 
 In this case, the Simple Participant is configured to use the Domain Id ``1``,
 so execute a ROS 2 ``demo_nodes_cpp`` *talker* in domain ``1``.
