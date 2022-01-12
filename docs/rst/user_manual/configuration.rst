@@ -291,6 +291,8 @@ Each element inside ``addresses`` must follow the configuration for :ref:`user_m
     ]
 
 
+.. _user_manual_configuration_general_example:
+
 General Example
 ===============
 
@@ -347,9 +349,7 @@ A complete example of all the configurations described on this page can be found
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                                # Participant Id = Wan
-
-        type: wan                       # Participant Type = wan
+    Wan:                                # Participant Id = Wan ; if type is not specified, this value is used to determine the Participant Type
 
         id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
