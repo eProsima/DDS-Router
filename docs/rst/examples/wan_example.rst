@@ -62,7 +62,7 @@ In order to create a WAN Participant Client, check the configuration file
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
-    :lines: 27-39
+    :lines: 27-38
 
 
 Execute example

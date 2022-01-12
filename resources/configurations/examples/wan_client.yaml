@@ -21,7 +21,7 @@ SimpleParticipant:                                                # 3
   domain: 1                                                       # 5
 
 ##################################
-# ROS DISCOVERY CLIENT
+# WAN CLIENT
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as SuperClient.
 
 WANClient:                                                        # 6
@@ -32,7 +32,6 @@ WANClient:                                                        # 6
       addresses:                                                  # 11
         - ip: "1.1.1.1"
           port: 11666
-          transport: "udp"
   listening-addresses:                                            # 12
     - ip: "2.2.2.2"                                               # 13
       port: 11670                                                 # 14
@@ -41,11 +40,13 @@ WANClient:                                                        # 6
 ##################################
 # CONFIGURATION DESCRIPTION
 
-# With this example, a DDS Router subscribes to every topic in allowlist and transmit this data through
-# WAN connection to another DDS Router.
-# It will also publish locally the data received from the remote DDS Router.
-# Client specifies which DDS Router start the communication with the other, and do not change the behavior of each
-# of the routers.
+# This configuration example configures a DDS Router to listen to every message published in domain 1 in topics
+# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
+# through a WAN Participant (configured as Super Client) to another WAN Participant.
+# The other direction of communication is also possible; receive messages at the WAN Participant and locally
+# publish them in domain 1.
+# Client specifies which DDS Router starts the communication with the other, and after communication has been
+# established, both routers behave in the same way.
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
@@ -70,7 +71,7 @@ WANClient:                                                        # 6
 
 # 10: Set the Remote Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe>.
 
-# 11: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11666.
+# 11: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11666 over UDP transport (default).
 # This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
 # Add every other address where trying to reach this same remote WAN Discovery Server.
 

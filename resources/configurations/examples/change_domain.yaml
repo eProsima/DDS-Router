@@ -33,7 +33,7 @@ SimpleParticipant_domain1:                                                  # 6
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in two different domains
-# and transmit those messages through the other domain
+# and transmit those messages through the other domain.
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
