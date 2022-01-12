@@ -71,8 +71,8 @@ Discovery Server GuidPrefix.
           port: 11601
           transport: "tcp"                        # Use TCP transport
 
-        connection-addresses:                     # External Discovery Server Listening Addresses
-          - id: 4                                 # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-            addresses:
-              - ip: "2001:4860:4860::8888"        # Use UDP by default
-                port: 11666
+      connection-addresses:                       # External Discovery Server Listening Addresses
+        - id: 4                                   # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+          addresses:
+            - ip: "2001:4860:4860::8888"          # Use UDP by default
+              port: 11666
