@@ -45,9 +45,9 @@ ClientROS2:                                                       # 5
 #
 # The last one will act as a Discovery Client.
 # It will connect to a remote Discovery Server and communicate to every node connected to it, and route data
-#  from the other interfaces.
+# from the other interfaces.
 
-# 1: Allow DDS ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
+# 1: Allow ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
 # Insert new topics in order to route them.
 
 # 2: New Participant with name <SimpleROS2>.

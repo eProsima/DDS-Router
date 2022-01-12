@@ -21,7 +21,7 @@ SimpleParticipant_domain0:                                                  # 3
   domain: 0                                                                 # 5
 
 ##################################
-# SIMPLE PARTICIPANT DOMAIN 0
+# SIMPLE PARTICIPANT DOMAIN 1
 # This Participant will print in stdout every message received by the other Participants
 
 SimpleParticipant_domain1:                                                  # 6
@@ -32,8 +32,8 @@ SimpleParticipant_domain1:                                                  # 6
 ##################################
 # CONFIGURATION DESCRIPTION
 
-# With this example, a DDS Router listens to every message published in two different domains and transmit
-# those messages trough the other domain
+# This configuration example configures a DDS Router to listen to every message published in two different domains
+# and transmit those messages through the other domain
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 

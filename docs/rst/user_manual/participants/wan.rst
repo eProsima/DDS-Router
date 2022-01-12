@@ -72,7 +72,7 @@ Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` trans
       id: 2                                       # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
       listening-addresses:                        # WAN Discovery Server Listening Addresses
-        - ip: "82.0.0.1"                          # Use TCP by default
+        - ip: "82.0.0.1"                          # Use UDP by default
           port: 11600
 
       connection-addresses:                       # Another WAN Participant Listening Addresses
