@@ -7,10 +7,10 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},                # 1
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},   # 2
-  ]
+  - name: "HelloWorldTopic"                                       # 1
+    type: "HelloWorld"                                            # 1
+  - name: "rt/chatter"                                            # 2
+    type: "std_msgs::msg::dds_::String_"
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -28,23 +28,15 @@ WANClient:                                                        # 6
   type: wan                                                       # 7
   id: 2                                                           # 8
   connection-addresses:                                           # 9
-  [
-    {
-      id: 1,                                                      # 10
-      addresses:
-      [
-        {ip: "1.1.1.1", port: 11666, transport: "udp"},           # 11
-      ]
-    },                                                            # 12
-  ]
-  listening-addresses:                                            # 13
-  [
-    {
-      ip: "2.2.2.2",                                              # 14
-      port: 11670,                                                # 15
-      transport: "udp"                                            # 16
-    },                                                            # 17
-  ]
+    - id: 1                                                       # 10
+      addresses:                                                  # 11
+        - ip: "1.1.1.1"
+          port: 11666
+          transport: "udp"
+  listening-addresses:                                            # 12
+    - ip: "2.2.2.2"                                               # 13
+      port: 11670                                                 # 14
+      transport: "udp"                                            # 15
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -74,6 +66,7 @@ WANClient:                                                        # 6
 # 8: Set the Discovery Server GuidPrefix to <01.0f.02.00.00.00.00.00.00.00.ca.fe> for WANClient.
 
 # 9: Add the addresses where to reach the remote DDS Routers that will connect to.
+# Add as many connection-addresses as needed.
 
 # 10: Set the Remote Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe>.
 
@@ -81,18 +74,15 @@ WANClient:                                                        # 6
 # This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
 # Add every other address where trying to reach this same remote WAN Discovery Server.
 
-# 12: Add every other WAN Discovery Server connection.
-
-# 13: Add the interfaces where this Participant will listen in WAN.
+# 12: Add the interfaces where this Participant will listen in WAN.
 # This is only needed if Remote WAN Server is using only UDP.
+# Add as many listening-addresses as needed.
 
-# 14: Listen in public IP (2.2.2.2) for remote traffic.
+# 13: Listen in public IP (2.2.2.2) for remote traffic.
 # This IP must be set to the public IP of the host where this DDS Router will run.
 
-# 15: Listening port is 11670.
+# 14: Listening port is 11670.
 # Remember that if the host is under a NAT, the IP must be the public one and must be forwarded from network
 # router to this host to the same port.
 
-# 16: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
-
-# 17: Add here new addresses where the Participant will listen for remote connections.
+# 15: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".

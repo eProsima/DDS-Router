@@ -7,9 +7,8 @@
 # Allowing ROS2 HelloWorld demo_nodes
 
 allowlist:
-  [
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},   # 1
-  ]
+  - name: "rt/chatter"                                            # 1
+    type: "std_msgs::msg::dds_::String_"                          # 1
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -28,19 +27,12 @@ ClientROS2:                                                       # 5
   ros-discovery-server: true                                      # 7
   id: 2                                                           # 8
   connection-addresses:                                           # 9
-  [
-    {
-      ros-discovery-server: true,                                 # 10
-      id: 1,                                                      # 11
+    - ros-discovery-server: true                                  # 10
+      id: 1                                                       # 11
       addresses:
-      [
-        {
-          ip: "127.0.0.1",                                        # 12
+        - ip: "127.0.0.1"                                         # 12
           port: 11888                                             # 13
-        },                                                        # 14
-      ]
-    },                                                            # 15
-  ]
+                                                                  # 14
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -53,9 +45,9 @@ ClientROS2:                                                       # 5
 #
 # The last one will act as a Discovery Client.
 # It will connect to a remote Discovery Server and communicate to every node connected to it, and route data
-# from the other interfaces.
+#  from the other interfaces.
 
-# 1: Allow ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
+# 1: Allow DDS ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
 # Insert new topics in order to route them.
 
 # 2: New Participant with name <SimpleROS2>.
@@ -87,6 +79,5 @@ ClientROS2:                                                       # 5
 
 # 14: This is the same configuration as the result using Fast DDS environment variable:
 # $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11888"
-# Add every other address where trying to reach this same remote Discovery Server.
-
-# 15: Add every other Discovery Server connection required.
+# Add every other address where trying to reach this same remote Discovery Server,
+# or add every other Discovery Server connection required.

@@ -97,40 +97,28 @@ User *A* should set its *listening-addresses* as follows:
 .. code-block:: yaml
 
     WANServerParticipant_userA:
-        type: "wan"
+      type: "wan"
 
-        id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
-        listening-addresses:
-        [
-            {
-                IP: "1.1.1.1",              # Public IP of host Ha
-                port: 11666,                # Port forwarded router Ra
-                transport: "tcp"            # Transport protocol
-            }
-        ]
+      id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
+      listening-addresses:
+        - ip: "1.1.1.1"                   # Public IP of host Ha
+          port: 11666                     # Port forwarded router Ra
+          transport: "tcp"                # Transport protocol
 
 User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
 
 .. code-block:: yaml
 
     WANClientParticipant_userB:
-        type: "wan"
+      type: "wan"
 
-        id: 3                               # Must be different than A one
-        connection-addresses:
-        [
-            {
-                id: 2                       # Id of the Discovery Server of A
-                addresses:
-                [
-                    {
-                        IP: "1.1.1.1",      # Public IP of Ha
-                        port: 11666,        # Port forwarded in Ra
-                        transport: "tcp"    # Transport protocol
-                    }
-                ]
-            }
-        ]
+      id: 3                               # Must be different than A one
+      connection-addresses:
+        - id: 2                           # Id of the Discovery Server of A
+          addresses:
+            - ip: "1.1.1.1"               # Public IP of Ha
+              port: 11666                 # Port forwarded in Ra
+              transport: "tcp"            # Transport protocol
 
 This way, *B* will connect to *A*.
 *A* will be able to receive the message because *R*:sub:`A` will forward the message to *H*:sub:`A`.
@@ -157,16 +145,12 @@ User *A* should set its *listening-addresses* as follows:
 .. code-block:: yaml
 
     WANServerParticipant_userA:
-        type: "wan"
+      type: "wan"
 
-        id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
-        listening-addresses:
-        [
-            {
-                IP: "1.1.1.1",              # Public IP of host Ha
-                port: 11666,                # Port forwarded router Ra
-            }
-        ]
+      id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
+      listening-addresses:
+        - ip: "1.1.1.1"                   # Public IP of host Ha
+          port: 11666                     # Port forwarded router Ra
 
 User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11777``.
 This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11777``
@@ -176,29 +160,17 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
 .. code-block:: yaml
 
     WANClientParticipant_userB:
-        type: "wan"
+      type: "wan"
 
-        id: 3                               # Must be different than A one
-        listening-addresses:
-        [
-            {
-                IP: "2.2.2.2",              # Public IP of host Hb
-                port: 11777,                # Port forwarded router Rb
-            }
-        ]
-        connection-addresses:
-        [
-            {
-                id: 2                       # Id of the Discovery Server of A
-                addresses:
-                [
-                    {
-                        IP: "1.1.1.1",      # Public IP of Ha
-                        port: 11666,        # Port forwarded in Ra
-                    }
-                ]
-            }
-        ]
+      id: 3                               # Must be different than A one
+      listening-addresses:
+        - ip: "2.2.2.2"                   # Public IP of host Hb
+          port: 11777                     # Port forwarded router Rb
+      connection-addresses:
+        - id: 2                           # Id of the Discovery Server of A
+          addresses:
+            - ip: "1.1.1.1"               # Public IP of Ha
+              port: 11666                 # Port forwarded in Ra
 
 This way, *B* will connect to *A*.
 Once *A* receives the message from *B*, it will communicate with it via address ``2.2.2.2:11777``.

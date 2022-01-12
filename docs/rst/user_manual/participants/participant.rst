@@ -68,13 +68,13 @@ Below are some examples on how to configure a Participant:
 .. code-block:: yaml
 
     participant_1:     # New Participant with Id: 'participant_1'
-        type: simple   # 'participant_1' will be created of type 'simple'
-        extra_configuration: ...
+      type: simple     # 'participant_1' will be created of type 'simple'
+      extra_configuration: ...
 
 .. code-block:: yaml
 
     simple:     # New Participant with Id: 'simple' and Type: 'simple'
-        extra_configuration: ...
+      extra_configuration: ...
 
 .. _user_manual_participant_participant_types:
 

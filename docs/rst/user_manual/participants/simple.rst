@@ -39,5 +39,5 @@ Configuration Example
 .. code-block:: yaml
 
     simple_participant:         # Participant Id = simple_participant
-        type: simple
-        domain: 2               # Domain Id = 2
+      type: simple
+      domain: 2                 # Domain Id = 2

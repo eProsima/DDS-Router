@@ -116,9 +116,9 @@ allowlist will suffice) the square data should stop reaching the subscriber.
 .. code-block:: yaml
 
     allowlist:
-    [
-        {name: "Circle", type: "ShapeType", keyed: true}
-    ]
+      - name: "Circle"
+        type: "ShapeType"
+        keyed: true
 
 After applying these changes, the square should no longer be updated in the subscriber's side (appearing visible but
 frozen), while the circle should.

@@ -7,34 +7,29 @@
 # Allowing ROS2 HelloWorld demo_nodes topic
 
 allowlist:
-  [
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},  # 1
-  ]
+  - name: "rt/chatter"                             # 1
+    type: "std_msgs::msg::dds_::String_"           # 1
 
 ##################################
 # SIMPLE PARTICIPANT
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
-SimpleROS2:                       # 2
-  type: local                     # 3
-  domain: 0                       # 4
+SimpleROS2:                                        # 2
+  type: local                                      # 3
+  domain: 0                                        # 4
 
 ##################################
 # ROS DISCOVERY SERVER
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
 
-ServerROS2:                         # 5
-  type: local-discovery-server      # 6
-  ros-discovery-server: true        # 7
-  id: 1                             # 8
-  listening-addresses:              # 9
-  [
-    {
-      ip: "127.0.0.1",              # 10
-      port: 11888                   # 11
-    },                              # 12
-  ]
-
+ServerROS2:                                        # 5
+  type: local-discovery-server                     # 6
+  ros-discovery-server: true                       # 7
+  id: 1                                            # 8
+  listening-addresses:                             # 9
+    - ip: "127.0.0.1"                              # 10
+      port: 11888                                  # 11
+                                                   # 12
 
 ##################################
 # CONFIGURATION DESCRIPTION

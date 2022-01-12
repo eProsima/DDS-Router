@@ -7,10 +7,10 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},                          # 1
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},             # 2
-  ]
+  - name: "HelloWorldTopic"                                                 # 1
+    type: "HelloWorld"                                                      # 1
+  - name: "rt/chatter"                                                      # 2
+    type: "std_msgs::msg::dds_::String_"
 
 ##################################
 # SIMPLE PARTICIPANT DOMAIN 0
@@ -21,7 +21,7 @@ SimpleParticipant_domain0:                                                  # 3
   domain: 0                                                                 # 5
 
 ##################################
-# SIMPLE PARTICIPANT DOMAIN 1
+# SIMPLE PARTICIPANT DOMAIN 0
 # This Participant will print in stdout every message received by the other Participants
 
 SimpleParticipant_domain1:                                                  # 6
@@ -32,8 +32,8 @@ SimpleParticipant_domain1:                                                  # 6
 ##################################
 # CONFIGURATION DESCRIPTION
 
-# This configuration example configures a DDS Router to listen to every message published in two different domains
-# and transmit those messages trough the other domain
+# With this example, a DDS Router listens to every message published in two different domains and transmit
+# those messages trough the other domain
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 

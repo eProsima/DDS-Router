@@ -7,10 +7,10 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},                    # 1
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},       # 2
-  ]
+  - name: "HelloWorldTopic"                                           # 1
+    type: "HelloWorld"                                                # 1
+  - name: "rt/chatter"                                                # 2
+    type: "std_msgs::msg::dds_::String_"
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -49,4 +49,3 @@ EchoParticipant:                                                      # 6
 
 # 7: Type of EchoParticipant: <echo>.
 # Prints in stdout every message received by the router, together with the source GUID, timestamp and Topic.
-

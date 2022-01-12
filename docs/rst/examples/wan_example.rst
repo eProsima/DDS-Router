@@ -12,7 +12,7 @@ In the following snippet we see a yaml file to configure a DDS Router to create 
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 5-37
+    :lines: 5-33
 
 Configuration
 =============
@@ -52,7 +52,7 @@ this Participant will work as TCP Server).
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 27-37
+    :lines: 27-33
 
 WAN Participant Client
 ----------------------
@@ -62,7 +62,7 @@ In order to create a WAN Participant Client, check the configuration file
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
-    :lines: 27-47
+    :lines: 27-39
 
 
 Execute example

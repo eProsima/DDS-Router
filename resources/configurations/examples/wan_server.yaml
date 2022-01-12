@@ -7,10 +7,10 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  [
-    {name: "HelloWorldTopic", type: "HelloWorld"},                # 1
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},   # 2
-  ]
+  - name: "HelloWorldTopic"                                       # 1
+    type: "HelloWorld"                                            # 1
+  - name: "rt/chatter"                                            # 2
+    type: "std_msgs::msg::dds_::String_"
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -28,14 +28,9 @@ WANServer:                                                        # 6
   type: wan                                                       # 7
   id: 1                                                           # 8
   listening-addresses:                                            # 9
-  [
-    {
-      ip: "1.1.1.1",                                              # 10
-      port: 11666,                                                # 11
+    - ip: "1.1.1.1"                                               # 10
+      port: 11666                                                 # 11
       transport: "udp"                                            # 12
-    },                                                            # 13
-  ]
-
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -66,6 +61,7 @@ WANServer:                                                        # 6
 # This GuidPrefix is needed in order from a remote DDS Router to connect with this one.
 
 # 9: Add the interfaces where this Participant will listen in WAN.
+# Add as many listening-addresses as needed.
 
 # 10: Listen in public IP (1.1.1.1) for remote traffic.
 # This IP must be set to the public IP of the host where this DDS Router will run.
@@ -75,5 +71,3 @@ WANServer:                                                        # 6
 # router to this host to the same port.
 
 # 12: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
-
-# 13: Add here new addresses where the Participant will listen for remote connections.

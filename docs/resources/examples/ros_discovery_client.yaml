@@ -7,9 +7,8 @@
 # Allowing ROS2 HelloWorld demo_nodes
 
 allowlist:
-  [
-    {name: "rt/chatter", type: "std_msgs::msg::dds_::String_"},   # 1
-  ]
+  - name: "rt/chatter"                                            # 1
+    type: "std_msgs::msg::dds_::String_"                          # 1
 
 ##################################
 # SIMPLE PARTICIPANT
@@ -28,19 +27,12 @@ ClientROS2:                                                       # 5
   ros-discovery-server: true                                      # 7
   id: 2                                                           # 8
   connection-addresses:                                           # 9
-  [
-    {
-      ros-discovery-server: true,                                 # 10
-      id: 1,                                                      # 11
+    - ros-discovery-server: true                                  # 10
+      id: 1                                                       # 11
       addresses:
-      [
-        {
-          ip: "127.0.0.1",                                        # 12
+        - ip: "127.0.0.1"                                         # 12
           port: 11888                                             # 13
-        },                                                        # 14
-      ]
-    },                                                            # 15
-  ]
+                                                                  # 14
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -87,6 +79,5 @@ ClientROS2:                                                       # 5
 
 # 14: This is the same configuration as the result using Fast DDS environment variable:
 # $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11888"
-# Add every other address where trying to reach this same remote Discovery Server.
-
-# 15: Add every other Discovery Server connection required.
+# Add every other address where trying to reach this same remote Discovery Server,
+# or add every other Discovery Server connection required.

@@ -3,9 +3,8 @@
 # It is composed by two dummy participants.
 
 allowlist:
-  [
-    {name: "trivial_topic", type: "trivial_type"}
-  ]
+  - name: "trivial_topic"
+    type: "trivial_type"
 
 participant_1:
   type: "dummy"
