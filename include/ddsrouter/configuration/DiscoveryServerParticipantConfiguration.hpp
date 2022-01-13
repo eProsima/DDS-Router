@@ -45,6 +45,8 @@ public:
 
     std::vector<DiscoveryServerConnectionAddress> connection_addresses() const;
 
+    std::map<std::string, std::string> tls_configuration() const;
+
     GuidPrefix discovery_server_guid() const;
 
     DomainId domain() const;

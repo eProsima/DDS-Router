@@ -77,6 +77,46 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfigur
     return result;
 }
 
+std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_configuration() const
+{
+    std::map<std::string, std::string> result;
+
+    if (raw_configuration_[TLS_TAG])
+    {
+        // Certificate Authority Certificate
+        if (raw_configuration_[TLS_TAG][TLS_CA_TAG])
+        {
+            result.insert({TLS_CA_TAG, raw_configuration_[TLS_TAG][TLS_CA_TAG].as<std::string>()});
+        }
+
+        // DDS-Router Password
+        if (raw_configuration_[TLS_TAG][TLS_PASSWORD_TAG])
+        {
+            result.insert({TLS_PASSWORD_TAG, raw_configuration_[TLS_TAG][TLS_PASSWORD_TAG].as<std::string>()});
+        }
+
+        // DDS-Router Certificate Private Key
+        if (raw_configuration_[TLS_TAG][TLS_PRIVATE_KEY_TAG])
+        {
+            result.insert({TLS_PRIVATE_KEY_TAG, raw_configuration_[TLS_TAG][TLS_PRIVATE_KEY_TAG].as<std::string>()});
+        }
+
+        // DDS-Router Certificate
+        if (raw_configuration_[TLS_TAG][TLS_CERT_TAG])
+        {
+            result.insert({TLS_CERT_TAG, raw_configuration_[TLS_TAG][TLS_CERT_TAG].as<std::string>()});
+        }
+
+        // Diffie-Hellman (DF) parameters
+        if (raw_configuration_[TLS_TAG][TLS_DHPARAMS_TAG])
+        {
+            result.insert({TLS_DHPARAMS_TAG, raw_configuration_[TLS_TAG][TLS_DHPARAMS_TAG].as<std::string>()});
+        }
+    }
+
+    return result;
+}
+
 GuidPrefix DiscoveryServerParticipantConfiguration::discovery_server_guid() const
 {
     return GuidPrefix(raw_configuration_);

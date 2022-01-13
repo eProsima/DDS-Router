@@ -109,7 +109,8 @@ Below is the list with all the available Participant Types.
           ``ds``
         - ``guid`` |br|
           ``listening-addresses`` |br|
-          ``connection-addresses``
+          ``connection-addresses`` |br|
+          ``tls``
         - Discovery Server DDS DomainParticipant |br|
           for local communication.
 
@@ -118,7 +119,8 @@ Below is the list with all the available Participant Types.
           ``router``
         - ``guid`` |br|
           ``listening-addresses`` |br|
-          ``connection-addresses``
+          ``connection-addresses`` |br|
+          ``tls``
         - Discovery Server DDS DomainParticipant |br|
           for WAN communication.
 

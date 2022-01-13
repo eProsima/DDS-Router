@@ -68,11 +68,78 @@ These are a list of tips to help choosing whether to use one or the other.
         - Require only server side of the communication |br|
           to have port forwarded from the router.
 
-.. note:
+.. note::
 
     DDS is thought to work over UDP and has its own reliability mechanisms.
     Thus, the |ddsrouter| uses UDP transport by default for every address that has not explicitly specified
     a transport in the configuration file.
+
+
+TLS
+---
+
+|eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
+and its configuration can be set per participant for types Local Discovery Server and WAN. Following is a list of the
+accepted entries under the ``tls`` tag:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Tag
+        - Description
+
+    *   - ``ca``
+        - Path to the CA (Certification- Authority) file.
+
+    *   - ``password``
+        - Password of the ``private_key_file`` or ``rsa_private_key_file``.
+
+    *   - ``private_key``
+        - Path to the private key certificate file.
+
+    *   - ``cert``
+        - Path to the public certificate chain file.
+
+    *   - ``dh_params``
+        - Path to the Diffie-Hellman parameters file.
+
+Below is an example on how to configure a WAN participant as a TLS server and client:
+
+.. code-block:: yaml
+
+    TLS_Server:
+      type: "wan"
+
+      id: 0
+      listening-addresses:
+        - ip: "1.1.1.1"
+          port: 11666
+          transport: "tcp"
+
+      tls:
+        password: "ddsrouterpass"
+        private_key: "ddsrouter.key"
+        cert: "ddsrouter.crt"
+        dh_params: "dh_params.pem"
+
+.. code-block:: yaml
+
+    TLS_Client:
+      type: "wan"
+
+      id: 1
+      connection-addresses:
+        - id: 0
+          addresses:
+            - ip: "1.1.1.1"
+              port: 11666
+              transport: "tcp"
+
+      tls:
+        ca: "ca.crt"
+
+You may also have a look at ``<path/to/ddsrouter>/resources/configurations/security/`` directory, which contains
+examples of key and certificate files as well as a script with the commands used to generate them.
 
 
 Examples
