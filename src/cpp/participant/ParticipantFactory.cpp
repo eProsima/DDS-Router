@@ -91,7 +91,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         default:
             // This should not happen as every type must be in the switch
-            assert(false);
+            utils::stsnh(
+                utils::Formatter() << "Value of ParticipantType out of enumeration.");
             return nullptr; // Unreachable code
             break;
     }

@@ -17,8 +17,6 @@
  *
  */
 
-#include <assert.h>
-
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 
 namespace eprosima {
