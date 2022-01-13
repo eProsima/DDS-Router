@@ -139,7 +139,7 @@ TEST(AddressConfigurationTest, yaml_ipv4)
     {
         std::vector<IpType> ips = {
             "127.0.0.1",
-            "::1"
+            "1.1.1.1"
         };
 
         for (IpType ip : ips)
@@ -187,8 +187,8 @@ TEST(AddressConfigurationTest, yaml_ipv6)
     // Set IPv6 type
     {
         std::vector<IpType> ips = {
-            "127.0.0.1",
-            "::1"
+            "::1",
+            "::8:8:8:8"
         };
 
         for (IpType ip : ips)
@@ -224,7 +224,7 @@ TEST(AddressConfigurationTest, yaml_dns)
         IpType expected_address = "127.0.0.1";
 
         RawConfiguration yaml;
-        yaml[ADDRESS_IP_TAG] = dns_name;
+        yaml[ADDRESS_DNS_TAG] = dns_name;
 
         Address address = Address(yaml);
         ASSERT_EQ(address.ip(), expected_address);
@@ -237,7 +237,7 @@ TEST(AddressConfigurationTest, yaml_dns)
         IpType expected_address = "127.0.0.1";
 
         RawConfiguration yaml;
-        yaml[ADDRESS_IP_TAG] = dns_name;
+        yaml[ADDRESS_DNS_TAG] = dns_name;
         yaml[ADDRESS_IP_VERSION_TAG] = ADDRESS_IP_VERSION_V4_TAG;
 
         Address address = Address(yaml);

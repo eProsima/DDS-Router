@@ -194,6 +194,13 @@ bool are_set_of_ptr_equal(
     return true;
 }
 
+/**
+ * @brief Shit, This Should Not Happen.
+ *
+ * @param formatter msg of the unexpected case.
+ */
+void stsnh(const Formatter& formatter);
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

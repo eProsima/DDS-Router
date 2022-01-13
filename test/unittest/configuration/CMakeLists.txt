@@ -88,6 +88,7 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 add_unittest_executable(
