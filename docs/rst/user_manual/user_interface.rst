@@ -116,10 +116,10 @@ or compiled with CMake option ``LOG_INFO=ON``.
 
 .. note::
 
-    If this option is enabled and Fast DDS has been compiled in debug, it will print the logs of the DDS Router
+    If this option is enabled and Fast DDS has been compiled in debug mode, it will print the logs of the DDS Router
     and Fast DDS mixed.
     In order to skip Fast DDS logs, compile ``fastrtps`` library with CMake option ``-DLOG_NO_INFO=ON``
-    or cmake build type different to ``Debug``.
+    or ``CMAKE_BUILD_TYPE`` different to ``Debug``.
 
 
 

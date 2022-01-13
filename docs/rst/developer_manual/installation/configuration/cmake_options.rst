@@ -56,7 +56,7 @@ These options allow the developer to enable/disable certain *DDS Router* setting
           ``ON``
         - ``OFF``
     *   - :class:`LOG_INFO`
-        - Active *DDS Router* execution logs. It is |br|
+        - Activate *DDS Router* execution logs. It is |br|
           set to ``ON`` if :class:`CMAKE_BUILD_TYPE` is set |br|
           to ``Debug``.
         - ``OFF`` |br|
