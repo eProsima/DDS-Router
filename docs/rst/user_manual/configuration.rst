@@ -150,6 +150,7 @@ An Address is defined by:
   If it is not set, it would be chosen by default depending on the Participant Type.
 * *IP version*: ``v4`` or ``v6``.
   If it is not set, it would be chosen depending on the *IP* string format.
+* *Domain Name*: Domain unique name to ask DNS server for the related IP.
 
 .. code-block:: yaml
 
@@ -163,9 +164,10 @@ An Address is defined by:
     ip: "2001:4860:4860::8844"      # Recognized as IPv6
     port: 1616
 
-.. warning::
+    ################
 
-    ``ip`` field does not currently support DNS names, only well-formed IP addresses.
+    domain: "localhost"             # DNS call get: 127.0.0.1
+    port: 33333
 
 .. _user_manual_configuration_discovery_server_guidprefix:
 

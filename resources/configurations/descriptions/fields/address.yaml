@@ -19,6 +19,16 @@
 
     # Default: "127.0.0.1"
 
+  # --------------------
+  # Domain Name
+  # --------------------
+
+    # Domain name to call DNS
+
+    domain: "localhost" # Valid domain in DNS
+
+    # If ip is set, domain is skipped
+
   # -----------------------------------
   # Port
   # -----------------------------------
