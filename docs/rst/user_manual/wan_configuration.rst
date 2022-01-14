@@ -95,7 +95,7 @@ accepted entries under the ``tls`` tag:
 
     *   - ``password``
         - Optional for TLS servers
-        - Password of the ``private_key_file`` or ``rsa_private_key_file``.
+        - Password of the ``private_key`` file.
 
     *   - ``private_key``
         - Mandatory for TLS servers
