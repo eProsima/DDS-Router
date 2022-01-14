@@ -83,34 +83,33 @@ std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_
 
     if (raw_configuration_[TLS_TAG])
     {
-        // Certificate Authority Certificate
-        if (raw_configuration_[TLS_TAG][TLS_CA_TAG])
+        if (!raw_configuration_[TLS_TAG].IsMap() && !raw_configuration_[TLS_TAG].IsNull())
         {
-            result.insert({TLS_CA_TAG, raw_configuration_[TLS_TAG][TLS_CA_TAG].as<std::string>()});
+            throw ConfigurationException("TLS configuration must be of map yaml type or empty");
         }
 
-        // DDS-Router Password
-        if (raw_configuration_[TLS_TAG][TLS_PASSWORD_TAG])
-        {
-            result.insert({TLS_PASSWORD_TAG, raw_configuration_[TLS_TAG][TLS_PASSWORD_TAG].as<std::string>()});
-        }
+        std::vector<const char*> tls_tags = {
+            TLS_CA_TAG,
+            TLS_PASSWORD_TAG,
+            TLS_PRIVATE_KEY_TAG,
+            TLS_CERT_TAG,
+            TLS_DHPARAMS_TAG
+        };
 
-        // DDS-Router Certificate Private Key
-        if (raw_configuration_[TLS_TAG][TLS_PRIVATE_KEY_TAG])
+        for (auto tls_tag : tls_tags)
         {
-            result.insert({TLS_PRIVATE_KEY_TAG, raw_configuration_[TLS_TAG][TLS_PRIVATE_KEY_TAG].as<std::string>()});
-        }
-
-        // DDS-Router Certificate
-        if (raw_configuration_[TLS_TAG][TLS_CERT_TAG])
-        {
-            result.insert({TLS_CERT_TAG, raw_configuration_[TLS_TAG][TLS_CERT_TAG].as<std::string>()});
-        }
-
-        // Diffie-Hellman (DF) parameters
-        if (raw_configuration_[TLS_TAG][TLS_DHPARAMS_TAG])
-        {
-            result.insert({TLS_DHPARAMS_TAG, raw_configuration_[TLS_TAG][TLS_DHPARAMS_TAG].as<std::string>()});
+            if (raw_configuration_[TLS_TAG][tls_tag])
+            {
+                try
+                {
+                    result.insert({tls_tag, raw_configuration_[TLS_TAG][tls_tag].as<std::string>()});
+                }
+                catch (const std::exception& e)
+                {
+                    throw ConfigurationException(utils::Formatter() <<
+                                  "Error parsing TLS configuration for entry " << tls_tag << ": " << e.what());
+                }
+            }
         }
     }
 
