@@ -20,6 +20,7 @@ set(TEST_NAME ParticipantsDatabaseTest)
 
 set(TEST_SOURCES
         ParticipantsDatabaseTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/ParticipantsDatabase.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
