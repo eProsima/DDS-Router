@@ -22,17 +22,19 @@
 #include <fastrtps/utils/IPLocator.h>
 
 #include <ddsrouter/types/address/Address.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 const PortType Address::DEFAULT_PORT_ = 11666;
-const IpType Address::DEFAULT_IP_ = "127.0.0.1";
+const IpType Address::DEFAULT_IP_v4_ = "127.0.0.1";
+const IpType Address::DEFAULT_IP_v6_ = "::1";
 const IpVersion Address::DEFAULT_IP_VERSION_ = IPv4;
 const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = UDP;
 
 Address::Address()
-    : Address(DEFAULT_IP_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
+    : Address(DEFAULT_IP_v4_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
 {
 }
 
@@ -206,9 +208,22 @@ PortType Address::default_port() noexcept
     return DEFAULT_PORT_;
 }
 
-IpType Address::default_ip() noexcept
+IpType Address::default_ip(
+        IpVersion ip_version /* = default_ip_version() */) noexcept
 {
-    return DEFAULT_IP_;
+    if (ip_version == IPv4)
+    {
+        return DEFAULT_IP_v4_;
+    }
+    else if (ip_version == IPv6)
+    {
+        return DEFAULT_IP_v6_;
+    }
+    else
+    {
+        utils::tsnh(utils::Formatter() << "Value " << ip_version << " is not allowed.");
+        return DEFAULT_IP_v4_;
+    }
 }
 
 IpVersion Address::default_ip_version() noexcept

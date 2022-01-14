@@ -18,6 +18,7 @@
  */
 
 #include <algorithm>
+#include <assert.h>
 #include <set>
 
 #if defined(_WIN32)
@@ -26,7 +27,9 @@
 #include <fnmatch.h>
 #endif // if defined(_WIN32)
 
+#include <ddsrouter/exceptions/ValueNotAllowedException.hpp>
 #include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -58,6 +61,14 @@ void to_lowercase(
 std::string Formatter::to_string() const noexcept
 {
     return ss_.str().c_str();
+}
+
+void tsnh(
+        const Formatter& formatter)
+{
+    logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter.to_string());
+    assert(false);
+    throw ValueNotAllowedException(formatter);
 }
 
 } /* namespace utils */

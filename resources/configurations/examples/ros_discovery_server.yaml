@@ -27,7 +27,7 @@ ServerROS2:                                        # 5
   ros-discovery-server: true                       # 7
   id: 1                                            # 8
   listening-addresses:                             # 9
-    - ip: "127.0.0.1"                              # 10
+    - domain: "localhost"                          # 10
       port: 11888                                  # 11
                                                    # 12
 

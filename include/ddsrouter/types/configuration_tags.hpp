@@ -47,6 +47,7 @@ constexpr const char* COLLECTION_ADDRESSES_TAG("addresses"); //! TODO: add comme
 
 // Address related tags
 constexpr const char* ADDRESS_IP_TAG("ip"); //! TODO: add comment
+constexpr const char* ADDRESS_DNS_TAG("domain"); //! TODO: add comment
 constexpr const char* ADDRESS_PORT_TAG("port"); //! TODO: add comment
 
 constexpr const char* ADDRESS_IP_VERSION_TAG("ip-version"); //! TODO: add comment

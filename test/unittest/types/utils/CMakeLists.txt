@@ -16,6 +16,7 @@ set(TEST_NAME utilsTest)
 
 set(TEST_SOURCES
         utilsTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
@@ -27,6 +28,8 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
