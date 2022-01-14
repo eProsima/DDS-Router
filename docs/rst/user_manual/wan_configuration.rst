@@ -138,7 +138,7 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
       tls:
         ca: "ca.crt"
 
-You may also have a look at ``<path/to/ddsrouter>/resources/configurations/security/`` directory, which contains
+You may also have a look at ``<path/to/ddsrouter>/share/resources/configurations/security/`` directory, which contains
 examples of key and certificate files as well as a script with the commands used to generate them.
 
 

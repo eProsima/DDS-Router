@@ -69,6 +69,6 @@ Execute a ROS 2 ``demo_nodes_cpp`` *listener* using Discovery Server as Discover
     ROS_DISCOVERY_SERVER=";127.0.0.1:11888" ros2 run demo_nodes_cpp listener
 
 Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter>/resources/configurations/examples/ros_discovery_server.yaml``).
+``<path/to/ddsrouter>/share/resources/configurations/examples/ros_discovery_server.yaml``).
 Once the |ddsrouter| is running, messages from *talker* in domain 0 will be forwarded by the Router
 to the *listener* using Discovery Server, that will print them in ``stdout``.
