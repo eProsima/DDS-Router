@@ -90,7 +90,7 @@ accepted entries under the ``tls`` tag:
         - Description
 
     *   - ``ca``
-        - Mandatory for TLS clients
+        - Mandatory for TLS servers and clients
         - Path to the CA (Certification- Authority) file.
 
     *   - ``password``
@@ -108,6 +108,11 @@ accepted entries under the ``tls`` tag:
     *   - ``dh_params``
         - Mandatory for TLS servers
         - Path to the Diffie-Hellman parameters file.
+
+.. note::
+
+    Although in principle only required for TLS clients, the CA (Certification- Authority) file must also be provided
+    for TLS servers, as they might assume the client role when connecting to other participants configured as servers.
 
 
 Examples
@@ -229,6 +234,7 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
           transport: "tcp"
 
       tls:
+        ca: "ca.crt"
         password: "ddsrouterpass"
         private_key: "ddsrouter.key"
         cert: "ddsrouter.crt"
