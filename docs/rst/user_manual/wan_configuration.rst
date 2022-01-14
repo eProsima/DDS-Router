@@ -86,21 +86,27 @@ accepted entries under the ``tls`` tag:
     :header-rows: 1
 
     *   - Tag
+        - Requiredness
         - Description
 
     *   - ``ca``
+        - Mandatory for TLS clients
         - Path to the CA (Certification- Authority) file.
 
     *   - ``password``
+        - Optional for TLS servers
         - Password of the ``private_key_file`` or ``rsa_private_key_file``.
 
     *   - ``private_key``
+        - Mandatory for TLS servers
         - Path to the private key certificate file.
 
     *   - ``cert``
+        - Mandatory for TLS servers
         - Path to the public certificate chain file.
 
     *   - ``dh_params``
+        - Mandatory for TLS servers
         - Path to the Diffie-Hellman parameters file.
 
 Below is an example on how to configure a WAN participant as a TLS server and client:
