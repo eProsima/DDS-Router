@@ -109,44 +109,6 @@ accepted entries under the ``tls`` tag:
         - Mandatory for TLS servers
         - Path to the Diffie-Hellman parameters file.
 
-Below is an example on how to configure a WAN participant as a TLS server and client:
-
-.. code-block:: yaml
-
-    TLS_Server:
-      type: "wan"
-
-      id: 0
-      listening-addresses:
-        - ip: "1.1.1.1"
-          port: 11666
-          transport: "tcp"
-
-      tls:
-        password: "ddsrouterpass"
-        private_key: "ddsrouter.key"
-        cert: "ddsrouter.crt"
-        dh_params: "dh_params.pem"
-
-.. code-block:: yaml
-
-    TLS_Client:
-      type: "wan"
-
-      id: 1
-      connection-addresses:
-        - id: 0
-          addresses:
-            - ip: "1.1.1.1"
-              port: 11666
-              transport: "tcp"
-
-      tls:
-        ca: "ca.crt"
-
-You may also have a look at ``<path/to/ddsrouter>/share/resources/configurations/security/`` directory, which contains
-examples of key and certificate files as well as a script with the commands used to generate them.
-
 
 Examples
 ========
@@ -248,3 +210,45 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
 This way, *B* will connect to *A*.
 Once *A* receives the message from *B*, it will communicate with it via address ``2.2.2.2:11777``.
 *B* will continue communicating with *A* via address ``1.1.1.1:11666``.
+
+
+TLS Configuration Example
+-------------------------
+
+Below is an example on how to configure a WAN participant as a TLS server and client:
+
+.. code-block:: yaml
+
+    TLS_Server:
+      type: "wan"
+
+      id: 0
+      listening-addresses:
+        - ip: "1.1.1.1"
+          port: 11666
+          transport: "tcp"
+
+      tls:
+        password: "ddsrouterpass"
+        private_key: "ddsrouter.key"
+        cert: "ddsrouter.crt"
+        dh_params: "dh_params.pem"
+
+.. code-block:: yaml
+
+    TLS_Client:
+      type: "wan"
+
+      id: 1
+      connection-addresses:
+        - id: 0
+          addresses:
+            - ip: "1.1.1.1"
+              port: 11666
+              transport: "tcp"
+
+      tls:
+        ca: "ca.crt"
+
+You may also have a look at ``<path/to/ddsrouter>/share/resources/configurations/security/`` directory, which contains
+examples of key and certificate files as well as a script with the commands used to generate them.
