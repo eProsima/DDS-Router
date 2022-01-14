@@ -17,8 +17,10 @@
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
+#include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/event/LogEventHandler.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
@@ -86,7 +88,9 @@ RawConfiguration participant_configuration(
 }
 
 /**
- * Test that tries to create a DDSRouter with only one Participant
+ * Test that tries to create a DDSRouter with only one Participant.
+ *
+ * It expects to receive an exception
  */
 TEST(ImplementationsTest, solo_participant_implementation)
 {
@@ -112,6 +116,8 @@ TEST(ImplementationsTest, solo_participant_implementation)
  */
 TEST(ImplementationsTest, pair_implementation)
 {
+    test::TestLogHandler test_log_handler;
+
     // For each Participant Type
     for (ParticipantType type : ParticipantType::all_valid_participant_types())
     {
@@ -144,6 +150,8 @@ TEST(ImplementationsTest, pair_implementation)
  */
 TEST(ImplementationsTest, pair_implementation_with_topic)
 {
+    test::TestLogHandler test_log_handler;
+
     // For each Participant Type
     for (ParticipantType type : ParticipantType::all_valid_participant_types())
     {
@@ -179,6 +187,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
  */
 TEST(ImplementationsTest, all_implementations)
 {
+    test::TestLogHandler test_log_handler;
+
     {
         // Generate configuration
         RawConfiguration configuration;

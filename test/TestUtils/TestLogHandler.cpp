@@ -13,32 +13,36 @@
 // limitations under the License.
 
 /**
- * @file test_utils.hpp
+ * @file TestLogHandler.cpp
+ *
  */
 
-#ifndef _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
-#define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
+#include <gtest/gtest.h>
 
-#include <ddsrouter/event/LogEventHandler.hpp>
-#include <ddsrouter/types/endpoint/Guid.hpp>
+#include <TestLogHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
-/**
- * @brief Create a \c Guid with some of its bits determined by the input
- *
- * @param [in] seed : differentiating value for guid creation
- * @return generated Guid
- * @todo Make truly random using \c seed as such
- *
- */
-Guid random_guid(
-        uint16_t seed = 1);
+TestLogHandler::TestLogHandler(
+        uint32_t max_severe_logs /* = 0 */)
+    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry){}))
+    , max_severe_logs_(max_severe_logs)
+{
+}
+
+void TestLogHandler::check_valid()
+{
+    ASSERT_LE(log_consumer_->event_count(), max_severe_logs_);
+}
+
+TestLogHandler::~TestLogHandler()
+{
+    check_valid();
+    Log::Reset();
+}
 
 } /* namespace test */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_ */

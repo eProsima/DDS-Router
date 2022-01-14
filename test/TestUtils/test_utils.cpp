@@ -17,6 +17,8 @@
  *
  */
 
+#include <gtest/gtest.h>
+
 #include <test_utils.hpp>
 
 namespace eprosima {

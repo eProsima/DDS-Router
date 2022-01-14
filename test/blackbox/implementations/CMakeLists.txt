@@ -21,6 +21,7 @@ set(TEST_NAME
 
 set(TEST_SOURCES
         ImplementationsTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp
@@ -32,6 +33,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
     )
 
 set(TEST_LIST
