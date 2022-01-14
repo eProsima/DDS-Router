@@ -140,7 +140,7 @@ bool Address::is_valid() const noexcept
             return is_ipv6_correct(ip_);
 
         default:
-            utils::stsnh(
+            utils::tsnh(
                 utils::Formatter() << "Ip version value out of IpVersion.");
             return false; // Unreachable code
     }

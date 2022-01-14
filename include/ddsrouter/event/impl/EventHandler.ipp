@@ -33,7 +33,7 @@ const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
         [](Args...)
         {
             // This should never happen
-            utils::stsnh(
+            utils::tsnh(
                 utils::Formatter() << "This callback must not be called.");
         };
 

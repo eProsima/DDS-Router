@@ -83,20 +83,15 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             break;
 
         case ParticipantType::PARTICIPANT_TYPE_INVALID:
-            // TODO: Add warning log
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
-                                                            << " is not a valid" << " participant type name.");
-            return nullptr; // Unreachable code
-            break;
+                                                            << " is not a valid participant type name.");
 
         default:
             // This should not happen as every type must be in the switch
-            utils::stsnh(
+            utils::tsnh(
                 utils::Formatter() << "Value of ParticipantType out of enumeration.");
             return nullptr; // Unreachable code
-            break;
     }
-    return nullptr; // Unreachable code
 }
 
 void ParticipantFactory::remove_participant(
@@ -105,7 +100,6 @@ void ParticipantFactory::remove_participant(
     switch (participant->type()())
     {
         default:
-
             // Rest of participants do not require specific destructor
             break;
     }
