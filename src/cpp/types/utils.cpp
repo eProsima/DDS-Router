@@ -27,6 +27,7 @@
 #include <fnmatch.h>
 #endif // if defined(_WIN32)
 
+#include <ddsrouter/exceptions/ValueNotAllowedException.hpp>
 #include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -62,12 +63,11 @@ std::string Formatter::to_string() const noexcept
     return ss_.str().c_str();
 }
 
-void stsnh(const Formatter& formatter)
+void tsnh(const Formatter& formatter)
 {
-    logError(DDSROUTER_STSNH, formatter.to_string());
+    logError(DDSROUTER_TSNH, "This Should Have Not Happened: " << formatter.to_string());
     assert(false);
-    // Other possibility:
-    // throw ValueNotAllowedException();
+    throw ValueNotAllowedException(formatter);
 }
 
 } /* namespace utils */

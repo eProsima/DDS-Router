@@ -151,6 +151,7 @@ An Address is defined by:
 * *IP version*: ``v4`` or ``v6``.
   If it is not set, it would be chosen depending on the *IP* string format.
 * *Domain Name*: Domain unique name to ask DNS server for the related IP.
+  This field is ignored if ``ip`` is specified.
 
 .. code-block:: yaml
 
@@ -166,7 +167,7 @@ An Address is defined by:
 
     ################
 
-    domain: "localhost"             # DNS call get: 127.0.0.1
+    domain: "localhost"             # DNS call return value: 127.0.0.1
     port: 33333
 
 .. _user_manual_configuration_discovery_server_guidprefix:

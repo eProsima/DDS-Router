@@ -220,7 +220,7 @@ IpType Address::default_ip(IpVersion ip_version /* = default_ip_version() */) no
     }
     else
     {
-        utils::stsnh(utils::Formatter() << "Value " << ip_version << " is not allowed.");
+        utils::tsnh(utils::Formatter() << "Value " << ip_version << " is not allowed.");
         return DEFAULT_IP_v4_;
     }
 }

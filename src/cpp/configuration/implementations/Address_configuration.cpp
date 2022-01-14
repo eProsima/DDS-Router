@@ -115,7 +115,7 @@ Address::Address(
                 }
                 else
                 {
-                    // In case it is ipv4 but was specified ipv6, not fail and show warning
+                    // In case it is ipv6 but was specified ipv4, not fail and show warning
                     if (ip_version_ != IPv6)
                     {
                         logWarning(
@@ -158,67 +158,75 @@ Address::Address(
         }
         else
         {
-            std::string domain_name = configuration[ADDRESS_DNS_TAG].as<std::string>();
-
-            // Call DNS
-            auto response = fastrtps::rtps::IPLocator::resolveNameDNS(domain_name);
-
-            if (ip_version_has_been_set)
+            try
             {
-                // Add the first valid IPv6 found
-                if (ip_version_ == IPv6)
+                std::string domain_name = configuration[ADDRESS_DNS_TAG].as<std::string>();
+
+                // Call DNS
+                auto response = fastrtps::rtps::IPLocator::resolveNameDNS(domain_name);
+
+                if (ip_version_has_been_set)
                 {
-                    if (response.second.size() > 0)
+                    // Add the first valid IPv6 found
+                    if (ip_version_ == IPv6)
                     {
-                        ip_ = response.second.begin()->data();
-                        ip_has_been_set = true;
+                        if (response.second.size() > 0)
+                        {
+                            ip_ = response.second.begin()->data();
+                            ip_has_been_set = true;
+                        }
+                        else
+                        {
+                            throw ConfigurationException(utils::Formatter() <<
+                                "DNS not found for IPv6 with domain: " << domain_name);
+                        }
                     }
                     else
                     {
-                        throw ConfigurationException(utils::Formatter() <<
-                            "DNS not found for IPv6 with domain: " << domain_name);
+                        // Getting IPv4
+                        if (response.first.size() > 0)
+                        {
+                            ip_ = response.first.begin()->data();
+                            ip_has_been_set = true;
+                        }
+                        else
+                        {
+                            throw ConfigurationException(utils::Formatter() <<
+                                "DNS not found for IPv4 with domain: " << domain_name);
+                        }
                     }
                 }
                 else
                 {
-                    // Getting IPv4
+                    // Ip version has not beed specified, so use IPv4 as default
+                    // If IPv4 has no results, get IPv6
                     if (response.first.size() > 0)
                     {
                         ip_ = response.first.begin()->data();
+                        ip_version_ = IPv4;
+
+                        ip_version_has_been_set = true;
+                        ip_has_been_set = true;
+                    }
+                    else if (response.second.size() > 0)
+                    {
+                        ip_ = response.second.begin()->data();
+                        ip_version_ = IPv6;
+
+                        ip_version_has_been_set = true;
                         ip_has_been_set = true;
                     }
                     else
                     {
                         throw ConfigurationException(utils::Formatter() <<
-                            "DNS not found for IPv4 with domain: " << domain_name);
+                            "DNS address not found: " << domain_name);
                     }
                 }
             }
-            else
+            catch (const std::exception& e)
             {
-                // Ip version has not beed specified, so use IPv4 as default
-                // If IPv4 has no results, get IPv6
-                if (response.first.size() > 0)
-                {
-                    ip_ = response.first.begin()->data();
-                    ip_version_ = IPv4;
-
-                    ip_version_has_been_set = true;
-                    ip_has_been_set = true;
-                }
-                else if (response.second.size() > 0)
-                {
-                    ip_ = response.second.begin()->data();
-                    ip_version_ = IPv6;
-
-                    ip_version_has_been_set = true;
-                    ip_has_been_set = true;
-                }
-                else
-                {
-                    throw ConfigurationException(utils::Formatter() <<
-                        "DNS address not found: " << domain_name);
-                }
+                throw ConfigurationException(utils::Formatter() <<
+                            "Error getting Domain Name: " << e.what());
             }
         }
     }
@@ -226,9 +234,10 @@ Address::Address(
     ////////////////
     // GETTING DEFAULT IP
 
-    // Check the IP Version is correctly set
+    // If ip has not been set, use default ip
     if (!ip_has_been_set)
     {
+        // If ip version has not been set, use default version
         if (!ip_version_has_been_set)
         {
             ip_version_ = Address::default_ip_version();

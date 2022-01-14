@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -252,7 +252,7 @@ TEST(AddressConfigurationTest, yaml_dns)
     //     IpType expected_address = "::1";
 
     //     RawConfiguration yaml;
-    //     yaml[ADDRESS_IP_TAG] = dns_name;
+    //     yaml[ADDRESS_DNS_TAG] = dns_name;
     //     yaml[ADDRESS_IP_VERSION_TAG] = ADDRESS_IP_VERSION_V6_TAG;
 
     //     Address address = Address(yaml);
@@ -293,7 +293,7 @@ TEST(AddressConfigurationTest, yaml_error_cases)
     // DNS fail to find network
     {
         RawConfiguration yaml;
-        yaml[ADDRESS_IP_TAG] = "thishostdoesnotexist_andmustnotexist.zzz";
+        yaml[ADDRESS_DNS_TAG] = "thishostdoesnotexist_andmustnotexist.zzz";
 
         ASSERT_THROW(new Address(yaml), ConfigurationException);
     }

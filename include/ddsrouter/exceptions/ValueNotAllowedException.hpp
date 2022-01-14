@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace ddsrouter {
 /**
  * @brief Exception thrown when not allowed value is detected.
  *
- * Most common case is when an enumeration value is has a value not contemplated in the enum definition.
+ * Most common case is when an enumeration value has a value not contemplated in the enum definition.
  */
 class ValueNotAllowedException : public Exception
 {
