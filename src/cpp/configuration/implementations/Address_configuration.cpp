@@ -41,7 +41,7 @@ Address::Address(
     // Variable to store that ip version has been manually set by user, or it should be derived from ip
     bool ip_version_has_been_set = true;
 
-    // Get IP version. This needs to go first because the DNS call needs to know the IP version
+    // Get IP version. This needs to go first because IP and DNS needs to know the IP version
     if (configuration[ADDRESS_IP_VERSION_TAG])
     {
         try
@@ -146,7 +146,7 @@ Address::Address(
     ////////////////
     // DNS
 
-    // Get IP
+    // Get IP from Domain Name calling DNS
     if (configuration[ADDRESS_DNS_TAG])
     {
         // If IP was specified, do not get domain

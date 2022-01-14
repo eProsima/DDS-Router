@@ -66,7 +66,7 @@ std::string Formatter::to_string() const noexcept
 void tsnh(
         const Formatter& formatter)
 {
-    logError(DDSROUTER_TSNH, "This Should Have Not Happened: " << formatter.to_string());
+    logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter.to_string());
     assert(false);
     throw ValueNotAllowedException(formatter);
 }

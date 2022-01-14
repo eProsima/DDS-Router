@@ -197,11 +197,11 @@ bool are_set_of_ptr_equal(
 /**
  * @brief This Should Not Happen.
  *
- * This method should be called when something that should not have happened at all happen.
+ * This method should be called when something that should not have happened at all happens.
  * This will show an error log, assert false and throw an exception.
  *
  * Do not use this method when the error could come from user or output interaction, it should only be used
- * for inconsistency inside the program or C++ weird behaviours (enumeration values out of their range).
+ * for inconsistency inside the program or C++ weird behaviours (e.g. enumeration values out of their range).
  *
  * @param formatter msg of the unexpected case.
  */
