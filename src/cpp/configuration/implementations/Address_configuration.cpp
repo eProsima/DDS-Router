@@ -101,7 +101,7 @@ Address::Address(
                     {
                         logWarning(
                             DDSROUTER_ADDRESS_CONFIGURATION,
-                            "Using ip " << ip_ << " as IPv4 even if it was specified to be IPv6.";);
+                            "Using ip " << ip_ << " as IPv4 even if it was specified to be IPv6."; );
                         ip_version_ = IPv4;
                     }
                 }
@@ -120,7 +120,7 @@ Address::Address(
                     {
                         logWarning(
                             DDSROUTER_ADDRESS_CONFIGURATION,
-                            "Using ip " << ip_ << " as IPv6 even if it was specified to be IPv4.";);
+                            "Using ip " << ip_ << " as IPv6 even if it was specified to be IPv4."; );
                         ip_version_ = IPv6;
                     }
                 }
@@ -128,7 +128,7 @@ Address::Address(
             else
             {
                 throw ConfigurationException(utils::Formatter() <<
-                        "Incorrect IP Address: " << ip_);
+                              "Incorrect IP Address: " << ip_);
             }
         }
         catch (const std::exception& e)
@@ -178,7 +178,7 @@ Address::Address(
                         else
                         {
                             throw ConfigurationException(utils::Formatter() <<
-                                "DNS not found for IPv6 with domain: " << domain_name);
+                                          "DNS not found for IPv6 with domain: " << domain_name);
                         }
                     }
                     else
@@ -192,7 +192,7 @@ Address::Address(
                         else
                         {
                             throw ConfigurationException(utils::Formatter() <<
-                                "DNS not found for IPv4 with domain: " << domain_name);
+                                          "DNS not found for IPv4 with domain: " << domain_name);
                         }
                     }
                 }
@@ -219,14 +219,14 @@ Address::Address(
                     else
                     {
                         throw ConfigurationException(utils::Formatter() <<
-                            "DNS address not found: " << domain_name);
+                                      "DNS address not found: " << domain_name);
                     }
                 }
             }
             catch (const std::exception& e)
             {
                 throw ConfigurationException(utils::Formatter() <<
-                            "Error getting Domain Name: " << e.what());
+                              "Error getting Domain Name: " << e.what());
             }
         }
     }

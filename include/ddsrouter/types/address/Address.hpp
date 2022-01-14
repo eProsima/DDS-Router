@@ -135,7 +135,8 @@ public:
     //! Default port for address when is not set: 11600
     static PortType default_port() noexcept;
     //! Default ip for address when is not set: 127.0.0.1
-    static IpType default_ip(IpVersion ip_version = default_ip_version()) noexcept;
+    static IpType default_ip(
+            IpVersion ip_version = default_ip_version()) noexcept;
     //! Default ip version for address when is not set: IPv4
     static IpVersion default_ip_version() noexcept;
     //! Default transport protocol for address when is not set: UDP

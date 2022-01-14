@@ -205,7 +205,8 @@ bool are_set_of_ptr_equal(
  *
  * @param formatter msg of the unexpected case.
  */
-void tsnh(const Formatter& formatter);
+void tsnh(
+        const Formatter& formatter);
 
 } /* namespace utils */
 } /* namespace ddsrouter */

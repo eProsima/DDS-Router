@@ -208,7 +208,8 @@ PortType Address::default_port() noexcept
     return DEFAULT_PORT_;
 }
 
-IpType Address::default_ip(IpVersion ip_version /* = default_ip_version() */) noexcept
+IpType Address::default_ip(
+        IpVersion ip_version /* = default_ip_version() */) noexcept
 {
     if (ip_version == IPv4)
     {
