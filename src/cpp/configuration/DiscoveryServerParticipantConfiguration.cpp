@@ -77,6 +77,45 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfigur
     return result;
 }
 
+std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_configuration() const
+{
+    std::map<std::string, std::string> result;
+
+    if (raw_configuration_[TLS_TAG])
+    {
+        if (!raw_configuration_[TLS_TAG].IsMap() && !raw_configuration_[TLS_TAG].IsNull())
+        {
+            throw ConfigurationException("TLS configuration must be of map yaml type or empty");
+        }
+
+        std::vector<const char*> tls_tags = {
+            TLS_CA_TAG,
+            TLS_PASSWORD_TAG,
+            TLS_PRIVATE_KEY_TAG,
+            TLS_CERT_TAG,
+            TLS_DHPARAMS_TAG
+        };
+
+        for (auto tls_tag : tls_tags)
+        {
+            if (raw_configuration_[TLS_TAG][tls_tag])
+            {
+                try
+                {
+                    result.insert({tls_tag, raw_configuration_[TLS_TAG][tls_tag].as<std::string>()});
+                }
+                catch (const std::exception& e)
+                {
+                    throw ConfigurationException(utils::Formatter() <<
+                                  "Error parsing TLS configuration for entry " << tls_tag << ": " << e.what());
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 GuidPrefix DiscoveryServerParticipantConfiguration::discovery_server_guid() const
 {
     return GuidPrefix(raw_configuration_);

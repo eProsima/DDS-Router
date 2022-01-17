@@ -19,6 +19,8 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_DISCOVERYSERVERPARTICIPANT_HPP_
 
+#include <fastdds/rtps/transport/TCPTransportDescriptor.h>
+
 #include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
 
@@ -44,6 +46,11 @@ public:
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const override;
+
+    void enable_tls(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+            std::map<std::string, std::string> tls_config,
+            bool client_only = false) const;
 };
 
 } /* namespace rpts */

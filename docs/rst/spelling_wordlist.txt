@@ -7,6 +7,7 @@ Colcon
 dataflow
 datagram
 ddsrouter
+Diffie
 Dockerfile
 entrypoint
 eProsima
@@ -24,6 +25,7 @@ microcontroller
 middleware
 multicast
 Redistributable
+Requiredness
 runtime
 scalable
 Vulcanexus

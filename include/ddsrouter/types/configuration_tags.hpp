@@ -45,6 +45,14 @@ constexpr const char* LISTENING_ADDRESSES_TAG("listening-addresses"); //! TODO: 
 constexpr const char* CONNECTION_ADDRESSES_TAG("connection-addresses"); //! TODO: add comment
 constexpr const char* COLLECTION_ADDRESSES_TAG("addresses"); //! TODO: add comment
 
+// TLS related tags
+constexpr const char* TLS_TAG("tls"); //! TLS configuration tag
+constexpr const char* TLS_CA_TAG("ca"); //! Certificate Authority Certificate
+constexpr const char* TLS_PASSWORD_TAG("password"); //! DDS-Router Password
+constexpr const char* TLS_PRIVATE_KEY_TAG("private_key"); //! DDS-Router Certificate Private Key
+constexpr const char* TLS_CERT_TAG("cert"); //! DDS-Router Certificate
+constexpr const char* TLS_DHPARAMS_TAG("dh_params"); //! Diffie-Hellman (DF) parameters
+
 // Address related tags
 constexpr const char* ADDRESS_IP_TAG("ip"); //! TODO: add comment
 constexpr const char* ADDRESS_DNS_TAG("domain"); //! TODO: add comment

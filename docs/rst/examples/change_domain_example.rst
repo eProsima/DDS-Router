@@ -79,6 +79,6 @@ Execute a ROS 2 ``demo_nodes_cpp`` *listener* in domain ``1``:
     ROS_DOMAIN_ID=1 ros2 run demo_nodes_cpp listener
 
 Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter>/resources/configurations/examples/change_domain.yaml``).
+``<path/to/ddsrouter>/share/resources/configurations/examples/change_domain.yaml``).
 Once the |ddsrouter| is running, messages from *talker* in domain 0 will be forwarded by the Router
 to the *listener* in domain 1, that will print them in ``stdout``.

@@ -198,8 +198,13 @@ endif()
 ###############################################################################
 # Install Resources
 ###############################################################################
-# Install example files
 
+# Install example files
 INSTALL(
     DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/examples/
-    DESTINATION ${DATA_INSTALL_DIR}/resources/)
+    DESTINATION ${DATA_INSTALL_DIR}/resources/configurations/examples/)
+
+# Install security files
+INSTALL(
+    DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/security/
+    DESTINATION ${DATA_INSTALL_DIR}/resources/configurations/security/)

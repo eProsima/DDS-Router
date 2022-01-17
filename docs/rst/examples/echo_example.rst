@@ -67,7 +67,7 @@ Execute a Fast DDS HelloWorld example:
     ./DDSHelloWorldExample publisher
 
 Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter>/src/ddsrouter/resources/configurations/examples/echo.yaml``).
+``<path/to/ddsrouter>/share/resources/configurations/examples/echo.yaml``).
 The expected output from the DDS Router, printed by the ``Echo Participant`` is:
 
 .. code-block:: console
@@ -87,7 +87,7 @@ Execute a ROS 2 ``demo_nodes_cpp`` *talker* in default domain ``0``:
     ros2 run demo_nodes_cpp talker
 
 Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter>/src/ddsrouter/resources/configurations/examples/echo.yaml``).
+``<path/to/ddsrouter>/share/resources/configurations/examples/echo.yaml``).
 The expected output from the DDS Router, printed by the ``Echo Participant`` is:
 
 .. code-block:: console
