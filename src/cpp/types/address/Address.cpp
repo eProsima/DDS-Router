@@ -17,8 +17,6 @@
  *
  */
 
-#include <assert.h>
-
 #include <fastrtps/utils/IPLocator.h>
 
 #include <ddsrouter/types/address/Address.hpp>
@@ -142,7 +140,8 @@ bool Address::is_valid() const noexcept
             return is_ipv6_correct(ip_);
 
         default:
-            assert(false);
+            utils::tsnh(
+                utils::Formatter() << "Ip version value out of IpVersion.");
             return false; // Unreachable code
     }
 }

@@ -20,9 +20,9 @@
 #define _DDSROUTER_EVENT_IMPL_EVENTHANDLER_IPP_
 
 #include <functional>
-#include <assert.h>
 
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -33,8 +33,8 @@ const std::function<void(Args...)> EventHandler<Args...>::DEFAULT_CALLBACK_ =
         [](Args...)
         {
             // This should never happen
-            logError(DDSROUTER_HANDLER, "This callback must not be called.");
-            assert(false);
+            utils::tsnh(
+                utils::Formatter() << "This callback must not be called.");
         };
 
 template <typename ... Args>
