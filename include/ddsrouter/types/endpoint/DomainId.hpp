@@ -57,6 +57,9 @@ public:
 
     bool is_valid() const noexcept;
 
+    bool operator ==(
+            const DomainId& other) const noexcept;
+
 protected:
 
     //! Value of Fast DDS Domain ID
@@ -67,6 +70,9 @@ protected:
 
     //! Default value for Discovery Server
     static const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_;  // 66
+
+    //! Maximum Domain Id valid
+    static const DomainIdType MAX_DOMAIN_ID_;  // 250
 };
 
 //! \c DomainId serializator

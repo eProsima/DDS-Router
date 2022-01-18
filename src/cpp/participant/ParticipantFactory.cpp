@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
@@ -36,16 +36,20 @@ namespace ddsrouter {
 // TODO: Add logs
 
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
-        ParticipantConfiguration participant_configuration,
+        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
+    // This switch needs to create different kind of elements (ParticipantConfigurations) inside some of the cases
+    // and C++ does not like it. Thus, they must be inside blocks {}, but C++ does not like it either.
+    // Thus, there must be a final tsnh line.
+
     // Create a new Participant depending on the ParticipantType specified by the configuration
-    switch (participant_configuration.type()())
+    switch (participant_configuration->type()())
     {
         case ParticipantType::VOID:
             // VoidParticipant
-            return std::make_shared<VoidParticipant>(participant_configuration.id());
+            return std::make_shared<VoidParticipant>(participant_configuration->id());
             break;
 
         case ParticipantType::ECHO:
@@ -60,30 +64,51 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         case ParticipantType::SIMPLE_RTPS:
             // Simple RTPS Participant
-            return std::make_shared<rtps::SimpleParticipant> (
-                participant_configuration,
-                payload_pool,
-                discovery_database);
-            break;
+            {
+                std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(participant_configuration);
+                if (!conf_)
+                {
+                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Type: " << participant_configuration->type());
+                }
+
+                return std::make_shared<rtps::SimpleParticipant> (
+                    conf_,
+                    payload_pool,
+                    discovery_database);
+            }
 
         case ParticipantType::LOCAL_DISCOVERY_SERVER:
             // Discovery Server RTPS Participant
-            return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
-                participant_configuration,
-                payload_pool,
-                discovery_database);
-            break;
+            {
+                std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
+                if (!conf_)
+                {
+                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Type: " << participant_configuration->type());
+                }
+
+                return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
+                    conf_,
+                    payload_pool,
+                    discovery_database);
+            }
 
         case ParticipantType::WAN:
             // Discovery Server RTPS Participant
-            return std::make_shared<rtps::WANParticipant> (
-                participant_configuration,
-                payload_pool,
-                discovery_database);
-            break;
+            {
+                std::shared_ptr<configuration::WanParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::WanParticipantConfiguration>(participant_configuration);
+                if (!conf_)
+                {
+                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Type: " << participant_configuration->type());
+                }
+
+                return std::make_shared<rtps::WANParticipant> (
+                    conf_,
+                    payload_pool,
+                    discovery_database);
+            }
 
         case ParticipantType::PARTICIPANT_TYPE_INVALID:
-            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
+            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration->type()
                                                             << " is not a valid participant type name.");
 
         default:
@@ -92,6 +117,9 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 utils::Formatter() << "Value of ParticipantType out of enumeration.");
             return nullptr; // Unreachable code
     }
+    utils::tsnh(
+        utils::Formatter() << "Value of ParticipantType out of enumeration weird version.");
+    return nullptr; // Unreachable code
 }
 
 void ParticipantFactory::remove_participant(

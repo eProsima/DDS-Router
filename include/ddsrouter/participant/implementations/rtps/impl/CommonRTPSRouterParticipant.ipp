@@ -35,7 +35,7 @@ namespace rtps {
 
 template <class ConfigurationType>
 CommonRTPSRouterParticipant<ConfigurationType>::CommonRTPSRouterParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<ConfigurationType> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, discovery_database)
@@ -124,7 +124,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
 {
-    DomainId domain = this->configuration_.domain();
+    DomainId domain = this->configuration_->domain();
     fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes_();
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
@@ -138,7 +138,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     }
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-            "New Participant " << this->configuration_.type() <<
+            "New Participant " << this->configuration_->type() <<
             " created with id " << this->id() <<
             " in domain " << domain << " with guid " << rtps_participant_->getGuid());
 }

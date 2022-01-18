@@ -23,10 +23,10 @@ namespace ddsrouter {
 namespace rtps {
 
 LocalDiscoveryServerParticipant::LocalDiscoveryServerParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<DiscoveryServerParticipantConfiguration>
+    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
         (participant_configuration, payload_pool, discovery_database)
 {
     create_participant_();

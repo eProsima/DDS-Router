@@ -13,30 +13,30 @@
 // limitations under the License.
 
 /**
- * @file ParticipantConfiguration.cpp
+ * @file WanParticipantConfiguration.cpp
  */
 
-#include <ddsrouter/configuration/WANParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/WanParticipantConfiguration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace configuration {
 
-const TransportProtocol WANParticipantConfiguration::DEFAULT_TRANSPORT_PROTOCOL_ =
-        TransportProtocol::UDP;
-
-WANParticipantConfiguration::WANParticipantConfiguration(
-        const ParticipantConfiguration& configuration)
-    : DiscoveryServerParticipantConfiguration(configuration.id(), configuration.raw_configuration())
+WanParticipantConfiguration::WanParticipantConfiguration(
+        const ParticipantId& id,
+        const GuidPrefix& discovery_server_guid_prefix,
+        const std::set<std::shared_ptr<Address>>& listening_addresses,
+        const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
+        const std::map<std::string, std::string>& tls_configuration /* = {} */,
+        const ParticipantType& type /* = ParticipantType::WAN */,
+        const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
+    : DiscoveryServerParticipantConfiguration(id, discovery_server_guid_prefix, listening_addresses, connection_addresses, tls_configuration, type, domain_id)
 {
 }
 
-TransportProtocol WANParticipantConfiguration::default_transport_protocol_() const noexcept
-{
-    return DEFAULT_TRANSPORT_PROTOCOL_;
-}
-
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

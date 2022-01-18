@@ -13,42 +13,36 @@
 // limitations under the License.
 
 /**
- * @file WANParticipantConfiguration.hpp
+ * @file WanParticipantConfiguration.hpp
  */
 
 #ifndef _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_WANPARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter/types/address/Address.hpp>
-#include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
-#include <ddsrouter/types/endpoint/DomainId.hpp>
-#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace configuration {
 
 /**
  * This class joins WAN Participant Configuration features and give methods to interact with it.
  */
-class WANParticipantConfiguration : public DiscoveryServerParticipantConfiguration
+class WanParticipantConfiguration : public DiscoveryServerParticipantConfiguration
 {
 public:
 
-    // Using parent constructors
-    using DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration;
-
-    WANParticipantConfiguration(
-            const ParticipantConfiguration& configuration);
-
-protected:
-
-    TransportProtocol default_transport_protocol_() const noexcept override;
-
-    static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_; // UDP
+    WanParticipantConfiguration(
+            const ParticipantId& id,
+            const GuidPrefix& discovery_server_guid_prefix,
+            const std::set<std::shared_ptr<Address>>& listening_addresses,
+            const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
+            const std::map<std::string, std::string>& tls_configuration = {},
+            const ParticipantType& type = ParticipantType::WAN,
+            const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 };
 
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

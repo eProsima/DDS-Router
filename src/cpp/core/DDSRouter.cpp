@@ -29,7 +29,7 @@ namespace ddsrouter {
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouter::DDSRouter(
-        const DDSRouterConfiguration& configuration)
+        const configuration::DDSRouterConfiguration& configuration)
     : payload_pool_(new CopyPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
@@ -82,7 +82,7 @@ DDSRouter::~DDSRouter()
 }
 
 ReturnCode DDSRouter::reload_configuration(
-        const DDSRouterConfiguration& new_configuration)
+        const configuration::DDSRouterConfiguration& new_configuration)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -110,9 +110,9 @@ ReturnCode DDSRouter::reload_configuration(
         // TODO refactor with discovery functionality
         // TODO add bridge creation when initial topics configuration added
         // Create new bridges for topics that does not exist yet
-        for (RealTopic topic : new_configuration.real_topics())
+        for (std::shared_ptr<RealTopic> topic : new_configuration.builtin_topics())
         {
-            discovered_topic_(topic);
+            discovered_topic_(*topic);
         }
 
         // It must change the configuration. Check every topic discovered and active if needed.
@@ -227,7 +227,7 @@ void DDSRouter::init_allowed_topics_()
 
 void DDSRouter::init_participants_()
 {
-    for (ParticipantConfiguration participant_config :
+    for (std::shared_ptr<configuration::ParticipantConfiguration> participant_config :
             configuration_.participants_configurations())
     {
         std::shared_ptr<IParticipant> new_participant;
@@ -246,7 +246,7 @@ void DDSRouter::init_participants_()
         {
             // Failed to create participant
             throw InitializationException(utils::Formatter()
-                          << "Failed to create creating Participant " << participant_config.id());
+                          << "Failed to create creating Participant " << participant_config->id());
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
@@ -269,9 +269,9 @@ void DDSRouter::init_participants_()
 
 void DDSRouter::init_bridges_()
 {
-    for (RealTopic topic : configuration_.real_topics())
+    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics())
     {
-        discovered_topic_(topic);
+        discovered_topic_(*topic);
     }
 }
 

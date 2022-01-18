@@ -19,38 +19,22 @@
 #ifndef _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 
-#include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
-
 namespace eprosima {
 namespace ddsrouter {
+namespace configuration {
 
 /**
- * TODO
+ * This class joins every DDSRouter feature configuration and includes methods
+ * to interact with this configuration.
  */
 class BaseConfiguration
 {
 public:
 
-    /**
-     * @brief Construct a new configuration
-     *
-     * @param [in] raw_configuration yaml to get the configuration
-     *
-     * @throw \c ConfigurationException in case the configuration is not a well-formed yaml
-     */
-    BaseConfiguration(
-            const RawConfiguration& raw_configuration);
-
-    RawConfiguration raw_configuration() const noexcept;
-
-protected:
-
-    RawConfiguration raw_configuration_;
-
+    virtual bool is_valid() const noexcept = 0;
 };
 
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

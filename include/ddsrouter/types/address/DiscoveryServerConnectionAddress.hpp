@@ -50,7 +50,7 @@ public:
             std::set<Address> addresses);
 
     //! Discovery Server \c GuidPrefix Port getter
-    GuidPrefix discovery_server_guid() const noexcept;
+    GuidPrefix discovery_server_guid_prefix() const noexcept;
 
     //! Addresses getter
     std::set<Address> addresses() const noexcept;

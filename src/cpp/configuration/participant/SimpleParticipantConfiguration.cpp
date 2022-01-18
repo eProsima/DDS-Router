@@ -16,26 +16,42 @@
  * @file SimpleParticipantConfiguration.cpp
  */
 
-#include <ddsrouter/configuration/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace rtps {
+namespace configuration {
+
+const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
-        const ParticipantConfiguration& configuration)
-    : ParticipantConfiguration(configuration.id(), configuration.raw_configuration())
+        const ParticipantId& id,
+        const ParticipantType& type /* = ParticipantType::SIMPLE_RTPS */,
+        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
+    : ParticipantConfiguration(id, type)
+    , domain_(domain_id)
 {
 }
 
-DomainId SimpleParticipantConfiguration::domain() const
+bool SimpleParticipantConfiguration::is_valid() const noexcept
 {
-    return DomainId(raw_configuration_);
+    return ParticipantConfiguration::is_valid() && domain_.is_valid();
 }
 
-} /* namespace rtps */
+DomainId SimpleParticipantConfiguration::domain() const noexcept
+{
+    return domain_;
+}
+
+bool SimpleParticipantConfiguration::operator ==(
+        const SimpleParticipantConfiguration& other) const noexcept
+{
+    return ParticipantConfiguration::operator==(other) &&
+        this->domain_ == other.domain_;
+}
+
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

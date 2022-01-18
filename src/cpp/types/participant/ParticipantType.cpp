@@ -76,6 +76,12 @@ bool ParticipantType::operator <(
     return this->value_ < other.value_;
 }
 
+bool ParticipantType::operator ==(
+            const ParticipantType& other) const noexcept
+{
+    return (*this)() == other();
+}
+
 ParticipantType ParticipantType::participant_type_from_name(
         std::string type) noexcept
 {

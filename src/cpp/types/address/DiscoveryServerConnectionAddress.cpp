@@ -30,7 +30,7 @@ DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
 {
 }
 
-GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid() const noexcept
+GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid_prefix() const noexcept
 {
     return discovery_server_guid_;
 }

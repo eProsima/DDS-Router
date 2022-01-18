@@ -22,58 +22,30 @@
 #include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/participant/ParticipantType.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
-namespace ddsrouter {
+namespace ddsrouter{
+namespace configuration {
 
 /**
- * This class joins every DDSRouter Participant Configuration characteristic and includes methods to interact with it.
- * Each Participant that requires specific configuration must inherit from this class.
+ * TODO
  */
 class ParticipantConfiguration : public BaseConfiguration
 {
 public:
 
     /**
-     * @brief Construct a new configuration
-     *
-     * An empty configuration is created, and the type will be set according to \c id
-     *
-     * @param [in] id of the participant that will be created with this configuration
+     * TODO
      */
     ParticipantConfiguration(
-            ParticipantId id) noexcept;
-
-    /**
-     * @brief Construct a new configuration from a \c RawConfiguration
-     *
-     * Yaml configuration must be a map or empty.
-     * The type is set in construction. If the type is not valid, it will cause an exception.
-     * The type of a participant could be set in the yaml configuration, or it could be the name of its id.
-     *
-     * @param [in] id of the participant that will be created with this configuration
-     * @param [in] raw_configuration yaml to get the configuration
-     *
-     * @throw \c ConfigurationException in case the type could not be correctly set by yaml or id,
-     * or if yaml is not well-formed
-     */
-    ParticipantConfiguration(
-            ParticipantId id,
-            const RawConfiguration& raw_configuration);
-
-    //! Copy constructor
-    ParticipantConfiguration(
-            const ParticipantConfiguration& configuration);
+            const ParticipantId& id,
+            const ParticipantType& type) noexcept;
 
     //! Participant Type associated with this configuration
     ParticipantType type() const noexcept;
 
     //! Participant Id associated with this configuration
     ParticipantId id() const noexcept;
-
-    //! Yaml Raw Configuration of this configuration object
-    RawConfiguration raw_configuration() const noexcept;
 
     /**
      * @brief Equal comparator
@@ -88,23 +60,18 @@ public:
     bool operator ==(
             const ParticipantConfiguration& other) const noexcept;
 
-protected:
+    virtual bool is_valid() const noexcept override;
 
-    /**
-     * @brief Set type
-     *
-     * Type is set by checking type tag in yaml, and if it does not exist, check if the participant name is
-     * already a type.
-     */
-    void set_type_() noexcept;
+protected:
 
     //! Participant Id associated with this configuration
     const ParticipantId id_;
 
-    //! Participant Type associated with this configuration
-    ParticipantType type_;
+    //! Participant Type of the Participant that this configuration refers.
+    const ParticipantType type_;
 };
 
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

@@ -32,7 +32,7 @@ namespace ddsrouter {
 
 template <class ConfigurationType>
 BaseParticipant<ConfigurationType>::BaseParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<ConfigurationType> participant_configuration,
         std::shared_ptr <PayloadPool> payload_pool,
         std::shared_ptr <DiscoveryDatabase> discovery_database)
     : configuration_(participant_configuration)
@@ -67,7 +67,7 @@ ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.id();
+    return configuration_->id();
 }
 
 template <class ConfigurationType>
@@ -75,7 +75,7 @@ ParticipantType BaseParticipant<ConfigurationType>::type() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.type();
+    return configuration_->type();
 }
 
 template <class ConfigurationType>
@@ -177,7 +177,7 @@ void BaseParticipant<ConfigurationType>::delete_reader_(
 template <class ConfigurationType>
 ParticipantId BaseParticipant<ConfigurationType>::id_nts_() const noexcept
 {
-    return configuration_.id();
+    return configuration_->id();
 }
 
 template <class ConfigurationType>
@@ -185,7 +185,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const BaseParticipant<ConfigurationType>& participant)
 {
-    os << "{" << participant.id() << ";" << participant.configuration_.type() << "}";
+    os << "{" << participant.id() << ";" << participant.configuration_->type() << "}";
     return os;
 }
 

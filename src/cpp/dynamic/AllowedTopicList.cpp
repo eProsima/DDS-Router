@@ -26,8 +26,8 @@ namespace ddsrouter {
 
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
-        const std::list<std::shared_ptr<FilterTopic>>& allowlist,
-        const std::list<std::shared_ptr<FilterTopic>>& blocklist) noexcept
+        const std::set<std::shared_ptr<FilterTopic>>& allowlist,
+        const std::set<std::shared_ptr<FilterTopic>>& blocklist) noexcept
 {
     allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
@@ -105,7 +105,7 @@ bool AllowedTopicList::operator ==(
 }
 
 std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(
-        const std::list<std::shared_ptr<FilterTopic>>& list) noexcept
+        const std::set<std::shared_ptr<FilterTopic>>& list) noexcept
 {
     std::set<std::shared_ptr<FilterTopic>> non_repeated_list;
 

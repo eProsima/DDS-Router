@@ -28,7 +28,7 @@ std::mutex DummyParticipant::static_mutex_;
 std::map<ParticipantId, DummyParticipant*> DummyParticipant::participants_;
 
 DummyParticipant::DummyParticipant(
-        ParticipantConfiguration participant_configuration,
+        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)

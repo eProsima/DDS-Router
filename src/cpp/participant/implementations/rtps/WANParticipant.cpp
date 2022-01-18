@@ -23,10 +23,10 @@ namespace ddsrouter {
 namespace rtps {
 
 WANParticipant::WANParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        std::shared_ptr<configuration::WanParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<WANParticipantConfiguration>
+    : DiscoveryServerParticipant<configuration::WanParticipantConfiguration>
         (participant_configuration, payload_pool, discovery_database)
 {
     create_participant_();

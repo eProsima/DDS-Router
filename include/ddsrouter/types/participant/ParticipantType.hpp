@@ -75,6 +75,10 @@ public:
     bool operator <(
             const ParticipantType& other) const noexcept;
 
+    //! Equal operator
+    bool operator ==(
+            const ParticipantType& other) const noexcept;
+
     /**
      * @brief Create a Participant Type regarding the string argument in lower case
      *
