@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -76,14 +76,15 @@ public:
     static std::shared_ptr<FilterTopic> filter_topic(const Yaml& yaml);
     static std::shared_ptr<RealTopic> real_topic(const Yaml& yaml);
 
+    static ParticipantId participant_id(const Yaml& yam);
+    static ParticipantKind participant_type(const Yaml& yam);
+    static security::TlsConfiguration tls_configuration(const Yaml& yam);
+
 };
 
 class YamlParticipantConfiguration
 {
 public:
-
-    static ParticipantId participant_id(const Yaml& yam);
-    static ParticipantKind participant_type(const Yaml& yam);
 
     static std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration_factory(const Yaml& yaml);
 

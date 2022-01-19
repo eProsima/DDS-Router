@@ -17,8 +17,9 @@
  */
 
 #include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/exception/ConfigurationException.hpp>
+#include <ddsrouter/security/tls/TlsConfiguration.hpp>
+#include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -31,8 +32,8 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<std::shared_ptr<Address>>& listening_addresses,
         const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
-        const std::map<std::string, std::string>& tls_configuration /* = {} */,
         const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
+        const security::TlsConfiguration& tls_configuration /* = {} */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
     : SimpleParticipantConfiguration(id, type, domain_id)
     , discovery_server_guid_(discovery_server_guid_prefix)
@@ -60,10 +61,10 @@ std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>
 
 bool DiscoveryServerParticipantConfiguration::tls_active() const noexcept
 {
-    return !tls_configuration_.empty();
+    return tls_configuration_.is_valid();
 }
 
-std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_configuration() const
+security::TlsConfiguration DiscoveryServerParticipantConfiguration::tls_configuration() const
 {
     return tls_configuration_;
 }

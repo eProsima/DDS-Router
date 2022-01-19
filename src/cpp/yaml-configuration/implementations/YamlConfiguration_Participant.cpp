@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter/exception/ConfigurationException.hpp>
+#include <ddsrouter/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter/yaml-configuration/YamlConfiguration.hpp>
 #include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
 
@@ -25,38 +26,12 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-ParticipantId YamlParticipantConfiguration::participant_id(const Yaml& yaml)
-{
-    if (yaml[PARTICIPANT_NAME_TAG])
-    {
-        std::string name_str = yaml[PARTICIPANT_NAME_TAG].as<std::string>();
-        return ParticipantId(name_str);
-    }
-    else
-    {
-        throw ConfigurationException("Id not specified.");
-    }
-}
-
-ParticipantKind YamlParticipantConfiguration::participant_type(const Yaml& yaml)
-{
-    if (yaml[PARTICIPANT_TYPE_TAG])
-    {
-        std::string type_str = yaml[PARTICIPANT_TYPE_TAG].as<std::string>();
-        return ParticipantKind::participant_type_from_name(type_str);
-    }
-    else
-    {
-        throw ConfigurationException("Type not specified.");
-    }
-}
-
 std::shared_ptr<configuration::ParticipantConfiguration> YamlParticipantConfiguration::participant_configuration_factory(const Yaml& yaml)
 {
     try
     {
         // Get Type. If this fails, configuration must fail
-        ParticipantKind type = participant_type(yaml);
+        ParticipantKind type = YamlElementConfiguration::participant_type(yaml);
 
         switch (type())
         {
@@ -93,7 +68,7 @@ configuration::ParticipantConfiguration YamlParticipantConfiguration::std_partic
         ParticipantKind type)
 {
     // If this fails, it should fail
-    ParticipantId id = participant_id(yaml);
+    ParticipantId id = YamlElementConfiguration::participant_id(yaml);
 
     return configuration::ParticipantConfiguration(id, type);
 }
@@ -103,7 +78,7 @@ configuration::SimpleParticipantConfiguration YamlParticipantConfiguration::simp
         ParticipantKind type)
 {
     // If this fails, it should fail
-    ParticipantId id = participant_id(yaml);
+    ParticipantId id = YamlElementConfiguration::participant_id(yaml);
 
     // If this fails, get default domain
     DomainId domain = YamlElementConfiguration::domain_id(yaml, false, false);
@@ -114,14 +89,28 @@ configuration::DiscoveryServerParticipantConfiguration YamlParticipantConfigurat
         const Yaml& yaml,
         ParticipantKind type)
 {
+    // Non required arguments boolean to check if they have been set
+    bool has_domain = false;
+    bool has_tls = false;
+
+    ParticipantId id;
+    DomainId domain;
+    GuidPrefix guid;
+    std::set<std::shared_ptr<Address>> listening_addresses;
+    std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses;
+    security::TlsConfiguration tls;
+
     // Get Participant id/name. If this fails, it should fail
-    ParticipantId id = participant_id(yaml);
+    id = YamlElementConfiguration::participant_id(yaml);
 
     // Get domain. If this fails, get default domain
-    DomainId domain = YamlElementConfiguration::domain_id(yaml, false, true);
+    if (yaml[DOMAIN_ID_TAG])
+    {
+        has_domain = true;
+        domain = YamlElementConfiguration::domain_id(yaml);
+    }
 
     // Get DS guid. If this fails it should fail
-    GuidPrefix guid;
     if (yaml[DISCOVERY_SERVER_GUID_PREFIX_TAG])
     {
         guid = YamlElementConfiguration::guid_prefix(yaml[DISCOVERY_SERVER_GUID_PREFIX_TAG]);
@@ -132,7 +121,6 @@ configuration::DiscoveryServerParticipantConfiguration YamlParticipantConfigurat
     }
 
     // Get listening addresses if present
-    std::set<std::shared_ptr<Address>> listening_addresses;
     if (yaml[LISTENING_ADDRESSES_TAG])
     {
         for (auto yaml_address : yaml[LISTENING_ADDRESSES_TAG])
@@ -143,7 +131,6 @@ configuration::DiscoveryServerParticipantConfiguration YamlParticipantConfigurat
     }
 
     // Get connection addresses if present
-    std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses;
     if (yaml[CONNECTION_ADDRESSES_TAG])
     {
         for (auto yaml_address : yaml[CONNECTION_ADDRESSES_TAG])
@@ -154,11 +141,31 @@ configuration::DiscoveryServerParticipantConfiguration YamlParticipantConfigurat
     }
 
     // TLS configuration
-    std::map<std::string, std::string> tls;
-    // TODO
+    if (yaml[TLS_TAG])
+    {
+        has_tls = true;
+        tls = YamlElementConfiguration::tls_configuration(yaml[TLS_TAG]);
+    }
 
-    return configuration::DiscoveryServerParticipantConfiguration(
-        id, guid, listening_addresses, connection_addresses, tls, type, domain);
+    if (has_tls)
+    {
+        if (has_domain)
+        {
+            return configuration::DiscoveryServerParticipantConfiguration(
+                id, guid, listening_addresses, connection_addresses, type, tls, domain);
+        }
+        else
+        {
+            return configuration::DiscoveryServerParticipantConfiguration(
+                id, guid, listening_addresses, connection_addresses, type, tls);
+        }
+    }
+    else
+    {
+        return configuration::DiscoveryServerParticipantConfiguration(
+            id, guid, listening_addresses, connection_addresses, type);
+    }
+    // TODO: cannot use domain and not TLS (ups)
 }
 
 } /* namespace yaml */

@@ -20,6 +20,7 @@
 #define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
@@ -43,8 +44,8 @@ public:
             const GuidPrefix& discovery_server_guid_prefix,
             const std::set<std::shared_ptr<Address>>& listening_addresses,
             const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
-            const std::map<std::string, std::string>& tls_configuration = {},
             const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
+            const security::TlsConfiguration& tls_configuration = security::TlsConfiguration(),
             const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
     GuidPrefix discovery_server_guid_prefix() const noexcept;
@@ -55,7 +56,7 @@ public:
 
     bool tls_active() const noexcept;
 
-    std::map<std::string, std::string> tls_configuration() const;
+    security::TlsConfiguration tls_configuration() const;
 
     virtual bool is_valid() const noexcept override;
 
@@ -67,7 +68,7 @@ protected:
     GuidPrefix discovery_server_guid_;
     std::set<std::shared_ptr<Address>> listening_addresses_;
     std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses_;
-    const std::map<std::string, std::string>& tls_configuration_;
+    const security::TlsConfiguration& tls_configuration_;
 
     static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
