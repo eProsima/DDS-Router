@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
 #define _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
 
-#include <ddsrouter/event/LogEventHandler.hpp>
+#include <ddsrouter/event/LogSevereEventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,13 +28,16 @@ namespace test {
 class TestLogHandler
 {
 public:
+
     TestLogHandler(
-        uint32_t max_severe_logs = 0);
+            uint32_t max_severe_logs = 0);
 
     ~TestLogHandler();
 
     void check_valid();
+
 protected:
+
     uint32_t max_severe_logs_;
     event::LogSevereEventHandler* log_consumer_;
 };

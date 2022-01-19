@@ -22,6 +22,7 @@ set(TEST_NAME
 set(TEST_SOURCES
         ImplementationsTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/event/LogEventHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogSevereEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp

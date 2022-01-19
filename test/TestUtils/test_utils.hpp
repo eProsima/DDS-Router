@@ -19,7 +19,6 @@
 #ifndef _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 #define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 
-#include <ddsrouter/event/LogEventHandler.hpp>
 #include <ddsrouter/types/endpoint/Guid.hpp>
 
 namespace eprosima {

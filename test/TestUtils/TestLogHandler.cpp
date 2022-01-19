@@ -27,7 +27,9 @@ namespace test {
 
 TestLogHandler::TestLogHandler(
         uint32_t max_severe_logs /* = 0 */)
-    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry){}))
+    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry)
+            {
+            }))
     , max_severe_logs_(max_severe_logs)
 {
 }
