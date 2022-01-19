@@ -14,7 +14,7 @@
 // limitations under the License.
 
 /**
- * @file ParticipantType.hpp
+ * @file ParticipantKind.hpp
  */
 
 #ifndef _DDSROUTER_TYPES_PARTICIPANTTYPE_HPP_
@@ -27,11 +27,11 @@
 namespace eprosima {
 namespace ddsrouter {
 
-using ParticipantTypeValue = uint16_t;
+using ParticipantKindValue = uint16_t;
 /**
- * @brief Object that handles the creation of ParticipantTypes from a string
+ * @brief Object that handles the creation of ParticipantKinds from a string
  */
-class ParticipantType
+class ParticipantKind
 {
 public:
 
@@ -52,32 +52,32 @@ public:
     };
 
     //! Default constructor that returns an Invalid Participant Type
-    ParticipantType() noexcept;
+    ParticipantKind() noexcept;
 
-    //! Constructor by value of the ParticipantType enum
-    ParticipantType(
-            ParticipantTypeValue value) noexcept;
+    //! Constructor by value of the ParticipantKind enum
+    ParticipantKind(
+            ParticipantKindValue value) noexcept;
 
     /**
-     * @brief Whether this ParticipantType is valid
+     * @brief Whether this ParticipantKind is valid
      *
      * @return true if valid. False otherwise
      */
     bool is_valid() const noexcept;
 
-    //! Convert this ParticipantType to string using the << operator
+    //! Convert this ParticipantKind to string using the << operator
     std::string to_string() const noexcept;
 
     //! Return the enum value of this object
-    ParticipantTypeValue operator ()() const noexcept;
+    ParticipantKindValue operator ()() const noexcept;
 
     //! Minor operator
     bool operator <(
-            const ParticipantType& other) const noexcept;
+            const ParticipantKind& other) const noexcept;
 
     //! Equal operator
     bool operator ==(
-            const ParticipantType& other) const noexcept;
+            const ParticipantKind& other) const noexcept;
 
     /**
      * @brief Create a Participant Type regarding the string argument in lower case
@@ -85,35 +85,35 @@ public:
      * @note Type name is not case sensitive
      *
      * It compares the argument \c type in lower case with any of the existing type names, and in case it
-     * matches any of them, return the ParticipantType associated with that name.
-     * It will return \c INVALID in case no existing ParticipantType name matches the argument.
+     * matches any of them, return the ParticipantKind associated with that name.
+     * It will return \c INVALID in case no existing ParticipantKind name matches the argument.
      *
      * @param [in] type : string with the name of the type to build
-     * @return ParticipantType value, \c INVALID if \c type does not refer to any existing type
+     * @return ParticipantKind value, \c INVALID if \c type does not refer to any existing type
      */
-    static ParticipantType participant_type_from_name(
+    static ParticipantKind participant_type_from_name(
             std::string type) noexcept;
 
-    static std::vector<ParticipantType> all_valid_participant_types() noexcept;
+    static std::vector<ParticipantKind> all_valid_participant_types() noexcept;
 
 protected:
 
-    //! Value that links with the enumeration ParticipantType of this object
-    ParticipantTypeValue value_;
+    //! Value that links with the enumeration ParticipantKind of this object
+    ParticipantKindValue value_;
 
-    //! Map that link a \c ParticipantType with its name to be created or deserialized
-    static const std::map<ParticipantTypeValue, std::vector<std::string>> participant_type_with_aliases_;
+    //! Map that link a \c ParticipantKind with its name to be created or deserialized
+    static const std::map<ParticipantKindValue, std::vector<std::string>> participant_type_with_aliases_;
 
     // Allow operator << to use \c participant_type_with_aliases_
     friend std::ostream& operator <<(
             std::ostream& os,
-            const ParticipantType& type);
+            const ParticipantKind& type);
 };
 
-//! \c ParticipantType to stream serializator
+//! \c ParticipantKind to stream serializator
 std::ostream& operator <<(
         std::ostream& os,
-        const ParticipantType& a);
+        const ParticipantKind& a);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */

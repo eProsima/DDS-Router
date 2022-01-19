@@ -20,7 +20,7 @@
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

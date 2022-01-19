@@ -22,6 +22,7 @@
 #define _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_
 
 #include <set>
+#include <string>
 
 namespace eprosima {
 namespace ddsrouter {

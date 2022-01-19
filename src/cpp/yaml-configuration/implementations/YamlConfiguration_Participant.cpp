@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/yaml-configuration/YamlConfiguration.hpp>
 #include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
 
@@ -38,12 +38,12 @@ ParticipantId YamlParticipantConfiguration::participant_id(const Yaml& yaml)
     }
 }
 
-ParticipantType YamlParticipantConfiguration::participant_type(const Yaml& yaml)
+ParticipantKind YamlParticipantConfiguration::participant_type(const Yaml& yaml)
 {
     if (yaml[PARTICIPANT_TYPE_TAG])
     {
         std::string type_str = yaml[PARTICIPANT_TYPE_TAG].as<std::string>();
-        return ParticipantType::participant_type_from_name(type_str);
+        return ParticipantKind::participant_type_from_name(type_str);
     }
     else
     {
@@ -56,21 +56,21 @@ std::shared_ptr<configuration::ParticipantConfiguration> YamlParticipantConfigur
     try
     {
         // Get Type. If this fails, configuration must fail
-        ParticipantType type = participant_type(yaml);
+        ParticipantKind type = participant_type(yaml);
 
         switch (type())
         {
-        case ParticipantType::ECHO:
-        case ParticipantType::DUMMY:
+        case ParticipantKind::ECHO:
+        case ParticipantKind::DUMMY:
             return std::make_shared<configuration::ParticipantConfiguration>(
                 std_participant_configuration(yaml, type));
 
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             return std::make_shared<configuration::ParticipantConfiguration>(
                 simple_participant_configuration(yaml, type));
 
-        case ParticipantType::LOCAL_DISCOVERY_SERVER:
-        case ParticipantType::WAN:
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::WAN:
             return std::make_shared<configuration::ParticipantConfiguration>(
                 discovery_server_participant_configuration(yaml, type));
 
@@ -90,7 +90,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> YamlParticipantConfigur
 
 configuration::ParticipantConfiguration YamlParticipantConfiguration::std_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type)
+        ParticipantKind type)
 {
     // If this fails, it should fail
     ParticipantId id = participant_id(yaml);
@@ -100,7 +100,7 @@ configuration::ParticipantConfiguration YamlParticipantConfiguration::std_partic
 
 configuration::SimpleParticipantConfiguration YamlParticipantConfiguration::simple_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type)
+        ParticipantKind type)
 {
     // If this fails, it should fail
     ParticipantId id = participant_id(yaml);
@@ -112,7 +112,7 @@ configuration::SimpleParticipantConfiguration YamlParticipantConfiguration::simp
 
 configuration::DiscoveryServerParticipantConfiguration YamlParticipantConfiguration::discovery_server_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type)
+        ParticipantKind type)
 {
     // Get Participant id/name. If this fails, it should fail
     ParticipantId id = participant_id(yaml);

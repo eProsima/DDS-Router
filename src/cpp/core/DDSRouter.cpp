@@ -19,8 +19,8 @@
 
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/UnsupportedException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {

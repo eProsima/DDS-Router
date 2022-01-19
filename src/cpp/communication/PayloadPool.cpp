@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter/communication/PayloadPool.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exception/UnsupportedException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {

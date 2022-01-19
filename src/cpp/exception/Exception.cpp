@@ -13,28 +13,36 @@
 // limitations under the License.
 
 /**
- * @file configuration_tags.cpp
- *
+ * @file Exception.cpp
  */
 
-#include <set>
-
-#include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/exception/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-std::set<std::string> ddsrouter_tags() noexcept
+Exception::Exception(
+        const char* message) noexcept
+    : message_(message)
 {
-    return
-        {
-            ALLOWLIST_TAG,
-            BLOCKLIST_TAG,
-            TOPIC_NAME_TAG,
-            TOPIC_TYPE_NAME_TAG
-        };
 }
 
-} /* namespace ddsrouter */
-} /* namespace eprosima */
+Exception::Exception(
+        const std::string& message)
+    : message_(message)
+{
+}
+
+Exception::Exception(
+        const utils::Formatter& formatter)
+    : message_(formatter.to_string())
+{
+}
+
+const char* Exception::what() const noexcept
+{
+    return message_.c_str();
+}
+
+} // namespace ddsrouter
+} // namespace eprosima

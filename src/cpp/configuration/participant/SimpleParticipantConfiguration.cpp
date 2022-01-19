@@ -17,7 +17,6 @@
  */
 
 #include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -28,7 +27,7 @@ const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantType& type /* = ParticipantType::SIMPLE_RTPS */,
+        const ParticipantKind& type /* = ParticipantKind::SIMPLE_RTPS */,
         const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
     : ParticipantConfiguration(id, type)
     , domain_(domain_id)

@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/exceptions/InconsistencyException.hpp>
+#include <ddsrouter/exception/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {

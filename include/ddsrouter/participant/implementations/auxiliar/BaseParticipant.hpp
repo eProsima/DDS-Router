@@ -81,7 +81,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    ParticipantType type() const noexcept override;
+    ParticipantKind type() const noexcept override;
 
     /**
      * @brief Override create_writer() IParticipant method

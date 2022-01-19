@@ -18,7 +18,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>

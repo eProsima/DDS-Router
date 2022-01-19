@@ -17,7 +17,7 @@
 #include <test_utils.hpp>
 
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/exceptions/InconsistencyException.hpp>
+#include <ddsrouter/exception/InconsistencyException.hpp>
 #include <ddsrouter/types/endpoint/Endpoint.hpp>
 #include <ddsrouter/types/endpoint/Guid.hpp>
 #include <ddsrouter/types/endpoint/QoS.hpp>

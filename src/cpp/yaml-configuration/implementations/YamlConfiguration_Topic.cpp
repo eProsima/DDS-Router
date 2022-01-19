@@ -17,8 +17,8 @@
  *
  */
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
+#include <ddsrouter/exception/UnsupportedException.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/yaml-configuration/YamlConfiguration.hpp>

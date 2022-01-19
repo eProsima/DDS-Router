@@ -21,7 +21,7 @@
 #include <vector>
 
 #include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exception/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

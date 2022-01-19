@@ -17,9 +17,8 @@
  */
 
 #include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -33,7 +32,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<std::shared_ptr<Address>>& listening_addresses,
         const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
         const std::map<std::string, std::string>& tls_configuration /* = {} */,
-        const ParticipantType& type /* = ParticipantType::LOCAL_DISCOVERY_SERVER */,
+        const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
     : SimpleParticipantConfiguration(id, type, domain_id)
     , discovery_server_guid_(discovery_server_guid_prefix)

@@ -13,22 +13,21 @@
 // limitations under the License.
 
 /**
- * @file ConfigurationException.hpp
+ * @file InitializationException.hpp
  */
 
-#ifndef _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
-#define _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#ifndef _DDSROUTER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
 
-#include <ddsrouter/exceptions/Exception.hpp>
+#include <ddsrouter/exception/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
- *  not well-formed yaml, and when a configuration creation has failed.
+ * @brief Exception thrown when there has been an error initializing any Entity or subentity.
  */
-class ConfigurationException : public Exception
+class InitializationException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;
@@ -37,5 +36,5 @@ class ConfigurationException : public Exception
 } // namespace ddsrouter
 } // namespace eprosima
 
-#endif // _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
+#endif // _DDSROUTER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
 

@@ -19,7 +19,7 @@
 
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/event/PeriodicEventHandler.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

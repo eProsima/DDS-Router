@@ -26,7 +26,7 @@
 
 #include <ddsrouter/reader/implementations/rtps/Reader.hpp>
 #include <ddsrouter/writer/implementations/rtps/Writer.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 
 namespace eprosima {

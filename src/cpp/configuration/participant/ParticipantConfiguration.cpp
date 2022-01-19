@@ -17,9 +17,8 @@
  */
 
 #include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
@@ -28,13 +27,13 @@ namespace configuration {
 
 ParticipantConfiguration::ParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantType& type) noexcept
+        const ParticipantKind& type) noexcept
     : id_(id)
     , type_(type)
 {
 }
 
-ParticipantType ParticipantConfiguration::type() const noexcept
+ParticipantKind ParticipantConfiguration::type() const noexcept
 {
     return type_;
 }

@@ -24,7 +24,7 @@
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 #include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
 

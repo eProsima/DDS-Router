@@ -21,10 +21,10 @@
 
 #include <memory>
 
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
@@ -71,7 +71,7 @@ ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 }
 
 template <class ConfigurationType>
-ParticipantType BaseParticipant<ConfigurationType>::type() const noexcept
+ParticipantKind BaseParticipant<ConfigurationType>::type() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 

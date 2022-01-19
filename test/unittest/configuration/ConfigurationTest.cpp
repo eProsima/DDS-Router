@@ -19,7 +19,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
@@ -218,12 +218,12 @@ std::string random_participant_name(
  *
  * WARNING: the max_types_available must be updated with each new type added
  */
-ParticipantType random_participant_type(
+ParticipantKind random_participant_type(
         uint16_t seed = 0)
 {
     uint16_t max_types_available = 4;
     // Avoid Invalid type
-    return ParticipantType((seed % (max_types_available - 1)) + 1);
+    return ParticipantKind((seed % (max_types_available - 1)) + 1);
 }
 
 /*

@@ -18,8 +18,8 @@
  */
 
 #include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
+#include <ddsrouter/exception/UnsupportedException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
@@ -44,25 +44,25 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     // and C++ does not like it. Thus, they must be inside blocks {}, but C++ does not like it either.
     // Thus, there must be a final tsnh line.
 
-    // Create a new Participant depending on the ParticipantType specified by the configuration
+    // Create a new Participant depending on the ParticipantKind specified by the configuration
     switch (participant_configuration->type()())
     {
-        case ParticipantType::VOID:
+        case ParticipantKind::VOID:
             // VoidParticipant
             return std::make_shared<VoidParticipant>(participant_configuration->id());
             break;
 
-        case ParticipantType::ECHO:
+        case ParticipantKind::ECHO:
             // EchoParticipant
             return std::make_shared<EchoParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
-        case ParticipantType::DUMMY:
+        case ParticipantKind::DUMMY:
             // DummyParticipant
             return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             // Simple RTPS Participant
             {
                 std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(participant_configuration);
@@ -77,7 +77,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                     discovery_database);
             }
 
-        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
             // Discovery Server RTPS Participant
             {
                 std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
@@ -92,7 +92,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                     discovery_database);
             }
 
-        case ParticipantType::WAN:
+        case ParticipantKind::WAN:
             // Discovery Server RTPS Participant
             {
                 std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
@@ -107,18 +107,18 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                     discovery_database);
             }
 
-        case ParticipantType::PARTICIPANT_TYPE_INVALID:
+        case ParticipantKind::PARTICIPANT_TYPE_INVALID:
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration->type()
                                                             << " is not a valid participant type name.");
 
         default:
             // This should not happen as every type must be in the switch
             utils::tsnh(
-                utils::Formatter() << "Value of ParticipantType out of enumeration.");
+                utils::Formatter() << "Value of ParticipantKind out of enumeration.");
             return nullptr; // Unreachable code
     }
     utils::tsnh(
-        utils::Formatter() << "Value of ParticipantType out of enumeration weird version.");
+        utils::Formatter() << "Value of ParticipantKind out of enumeration weird version.");
     return nullptr; // Unreachable code
 }
 

@@ -27,7 +27,7 @@
 #include <fnmatch.h>
 #endif // if defined(_WIN32)
 
-#include <ddsrouter/exceptions/ValueNotAllowedException.hpp>
+#include <ddsrouter/exception/ValueNotAllowedException.hpp>
 #include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/types/Log.hpp>
 

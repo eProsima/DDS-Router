@@ -18,7 +18,7 @@
 
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
 
 namespace eprosima {

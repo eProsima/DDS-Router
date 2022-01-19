@@ -18,12 +18,12 @@
 #include <ddsrouter/communication/PayloadPool.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 
 using namespace eprosima::ddsrouter;
 
@@ -42,14 +42,14 @@ void set_domain(
 
 ParticipantConfiguration get_random_participant_configuration(
         ParticipantId id,
-        ParticipantType type,
+        ParticipantKind type,
         uint32_t seed = 0)
 {
     RawConfiguration config;
 
     switch (type())
     {
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             set_domain(config, seed);
             break;
 
@@ -68,7 +68,7 @@ ParticipantConfiguration get_random_participant_configuration(
  */
 std::shared_ptr<IParticipant> create_participant(
         std::string id_str,
-        ParticipantType type)
+        ParticipantKind type)
 {
     ParticipantFactory participant_factory;
     std::shared_ptr<PayloadPool> payload_pool = std::make_shared<PayloadPool>();
@@ -92,8 +92,8 @@ std::shared_ptr<IParticipant> create_participant(
  */
 TEST(ParticipantFactoryTest, create_void_participant)
 {
-    std::shared_ptr<IParticipant> void_participant = test::create_participant("void", ParticipantType::VOID);
-    ASSERT_EQ(void_participant->type()(), ParticipantType::VOID);
+    std::shared_ptr<IParticipant> void_participant = test::create_participant("void", ParticipantKind::VOID);
+    ASSERT_EQ(void_participant->type()(), ParticipantKind::VOID);
 }
 
 /**
@@ -104,8 +104,8 @@ TEST(ParticipantFactoryTest, create_void_participant)
  */
 TEST(ParticipantFactoryTest, create_echo_participant)
 {
-    std::shared_ptr<IParticipant> echo_participant = test::create_participant("echo", ParticipantType::ECHO);
-    ASSERT_EQ(echo_participant->type()(), ParticipantType::ECHO);
+    std::shared_ptr<IParticipant> echo_participant = test::create_participant("echo", ParticipantKind::ECHO);
+    ASSERT_EQ(echo_participant->type()(), ParticipantKind::ECHO);
 }
 
 /**
@@ -116,8 +116,8 @@ TEST(ParticipantFactoryTest, create_echo_participant)
  */
 TEST(ParticipantFactoryTest, create_dummy_participant)
 {
-    std::shared_ptr<IParticipant> dummy_participant = test::create_participant("dummy", ParticipantType::DUMMY);
-    ASSERT_EQ(dummy_participant->type()(), ParticipantType::DUMMY);
+    std::shared_ptr<IParticipant> dummy_participant = test::create_participant("dummy", ParticipantKind::DUMMY);
+    ASSERT_EQ(dummy_participant->type()(), ParticipantKind::DUMMY);
 }
 
 /**
@@ -128,8 +128,8 @@ TEST(ParticipantFactoryTest, create_dummy_participant)
  */
 TEST(ParticipantFactoryTest, create_simple_participant)
 {
-    std::shared_ptr<IParticipant> simple_participant = test::create_participant("local", ParticipantType::SIMPLE_RTPS);
-    ASSERT_EQ(simple_participant->type()(), ParticipantType::SIMPLE_RTPS);
+    std::shared_ptr<IParticipant> simple_participant = test::create_participant("local", ParticipantKind::SIMPLE_RTPS);
+    ASSERT_EQ(simple_participant->type()(), ParticipantKind::SIMPLE_RTPS);
 }
 
 /**
@@ -140,7 +140,7 @@ TEST(ParticipantFactoryTest, create_simple_participant)
  */
 TEST(ParticipantFactoryTest, create_invalid_participant)
 {
-    ASSERT_THROW(test::create_participant("invalid_part", ParticipantType::VOID), ConfigurationException);
+    ASSERT_THROW(test::create_participant("invalid_part", ParticipantKind::VOID), ConfigurationException);
 }
 
 /**

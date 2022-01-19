@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter/yaml-configuration/YamlConfiguration.hpp>

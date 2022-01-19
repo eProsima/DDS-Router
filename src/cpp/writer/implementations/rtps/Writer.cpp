@@ -21,7 +21,7 @@
 #include <fastrtps/rtps/common/CacheChange.h>
 
 #include <ddsrouter/writer/implementations/rtps/Writer.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {

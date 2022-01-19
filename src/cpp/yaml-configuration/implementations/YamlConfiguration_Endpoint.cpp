@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 #include <ddsrouter/yaml-configuration/YamlConfiguration.hpp>

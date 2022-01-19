@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_EXCEPTIONS_INCONSISTENCYEXCEPTION_HPP_
 #define _DDSROUTER_EXCEPTIONS_INCONSISTENCYEXCEPTION_HPP_
 
-#include <ddsrouter/exceptions/Exception.hpp>
+#include <ddsrouter/exception/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

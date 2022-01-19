@@ -13,36 +13,28 @@
 // limitations under the License.
 
 /**
- * @file Exception.cpp
+ * @file UnsupportedException.hpp
  */
 
-#include <ddsrouter/exceptions/Exception.hpp>
+#ifndef _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+#define _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+
+#include <ddsrouter/exception/Exception.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-Exception::Exception(
-        const char* message) noexcept
-    : message_(message)
+/**
+ * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
+ */
+class UnsupportedException : public Exception
 {
-}
-
-Exception::Exception(
-        const std::string& message)
-    : message_(message)
-{
-}
-
-Exception::Exception(
-        const utils::Formatter& formatter)
-    : message_(formatter.to_string())
-{
-}
-
-const char* Exception::what() const noexcept
-{
-    return message_.c_str();
-}
+    // Use parent class constructors
+    using Exception::Exception;
+};
 
 } // namespace ddsrouter
 } // namespace eprosima
+
+#endif // _DDSROUTER_EXCEPTIONS_UNSUPPORTEDEXCEPTION_HPP_
+

@@ -83,21 +83,21 @@ class YamlParticipantConfiguration
 public:
 
     static ParticipantId participant_id(const Yaml& yam);
-    static ParticipantType participant_type(const Yaml& yam);
+    static ParticipantKind participant_type(const Yaml& yam);
 
     static std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration_factory(const Yaml& yaml);
 
     static configuration::ParticipantConfiguration std_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type);
+        ParticipantKind type);
 
     static configuration::SimpleParticipantConfiguration simple_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type);
+        ParticipantKind type);
 
     static configuration::DiscoveryServerParticipantConfiguration discovery_server_participant_configuration(
         const Yaml& yaml,
-        ParticipantType type);
+        ParticipantKind type);
 };
 
 } /* namespace yaml */

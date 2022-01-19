@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/event/FileWatcherHandler.hpp>
 
