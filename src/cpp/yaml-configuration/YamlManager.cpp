@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
 // limitations under the License.
 
 /**
- * @file RawConfiguration.cpp
+ * @file YamlManager.cpp
  *
  */
 
 #include <ddsrouter/exception/ConfigurationException.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
-#include <ddsrouter/types/utils.hpp>
+#include <ddsrouter/yaml-configuration/YamlManager.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace yaml {
 
-RawConfiguration load_configuration_from_file(
+Yaml load_file(
         const std::string& file_path)
 {
     try
@@ -33,10 +33,11 @@ RawConfiguration load_configuration_from_file(
     }
     catch (const std::exception& e)
     {
-        throw ConfigurationException(utils::Formatter() << "Error occured while loading configuration from file: "
+        throw ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
                                                         << file_path << " : " << e.what());
     }
 }
 
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

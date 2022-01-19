@@ -33,7 +33,6 @@ namespace yaml {
  * @note: It is not legal to repeat keys in a YAML
  */
 using Yaml = YAML::Node;
-using YamlType = YAML::NodeType;
 
 } /* namespace yaml */
 } /* namespace ddsrouter */
