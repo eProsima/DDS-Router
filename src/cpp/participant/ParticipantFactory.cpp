@@ -95,7 +95,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         case ParticipantType::WAN:
             // Discovery Server RTPS Participant
             {
-                std::shared_ptr<configuration::WanParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::WanParticipantConfiguration>(participant_configuration);
+                std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
                 if (!conf_)
                 {
                     throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Type: " << participant_configuration->type());

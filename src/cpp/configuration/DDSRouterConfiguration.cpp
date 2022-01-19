@@ -18,7 +18,6 @@
  */
 
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
@@ -88,13 +87,28 @@ bool DDSRouterConfiguration::is_valid() const noexcept
         }
     }
 
-    // Check Participant Configurations
+    // Check there are at least two participants
+    if (participants_configurations_.size() < 2)
+    {
+        return false;
+    }
+
+    // Check Participant Configurations AND
+    // check Participant Configuration IDs are not repeated
+    std::set<ParticipantId> ids;
     for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations_)
     {
         if (!configuration->is_valid())
         {
             return false;
         }
+        ids.insert(configuration->id());
+    }
+
+    // If the number of ids are not equal the number of configurations, is because they are repeated
+    if (ids.size() != participants_configurations_.size())
+    {
+        return false;
     }
 
     return true;

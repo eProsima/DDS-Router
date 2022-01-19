@@ -13,25 +13,30 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.cpp
+ * @file Yaml.hpp
  */
 
-#include <ddsrouter/participant/implementations/rtps/WANParticipant.hpp>
+#ifndef _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_
+#define _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_
+
+#include <yaml-cpp/yaml.h>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace rtps {
+namespace yaml {
 
-WANParticipant::WANParticipant(
-        std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
-{
-    create_participant_();
-}
+/**
+ * Configuration is in dictionary format
+ *
+ * YAML spec: https://yaml.org/spec/1.2.2/
+ *
+ * @note: It is not legal to repeat keys in a YAML
+ */
+using Yaml = YAML::Node;
+using YamlType = YAML::NodeType;
 
-} /* namespace rtps */
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_ */

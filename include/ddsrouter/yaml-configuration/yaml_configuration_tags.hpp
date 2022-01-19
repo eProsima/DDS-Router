@@ -21,8 +21,11 @@
 #ifndef _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_
 #define _DDSROUTER_TYPES_CONFIGURATIONTAGS_HPP_
 
+#include <set>
+
 namespace eprosima {
 namespace ddsrouter {
+namespace yaml {
 
 //! Retrieve a set with every tag used in the configuration of the DDSRouter or the Participants
 std::set<std::string> ddsrouter_tags() noexcept;
@@ -35,12 +38,15 @@ constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
 constexpr const char* TOPIC_KIND_TAG("keyed");      //! Kind of a topic (with or without key)
 
 constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
+constexpr const char* PARTICIPANT_NAME_TAG("name"); //! Participant Type
+constexpr const char* PARTICIPANTS_LIST_TAG("participants"); //! Participant Type
 
 // RTPS related tags
 // Simple RTPS related tags
 constexpr const char* DOMAIN_ID_TAG("domain"); //! Domain Id of the participant
 
 // Discovery Server related tags
+constexpr const char* DISCOVERY_SERVER_GUID_PREFIX_TAG("discovery-server-guid"); //! TODO: add comment
 constexpr const char* LISTENING_ADDRESSES_TAG("listening-addresses"); //! TODO: add comment
 constexpr const char* CONNECTION_ADDRESSES_TAG("connection-addresses"); //! TODO: add comment
 constexpr const char* COLLECTION_ADDRESSES_TAG("addresses"); //! TODO: add comment
@@ -71,6 +77,7 @@ constexpr const char* DISCOVERY_SERVER_GUID_TAG("guid"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO: add comment
 
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

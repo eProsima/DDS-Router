@@ -26,7 +26,7 @@
 
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -354,7 +354,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
 
     // CA certificate
-    descriptor->tls_config.verify_file = get_param(tls_config, TLS_CA_TAG);
+    // descriptor->tls_config.verify_file = get_param(tls_config, TLS_CA_TAG);
     // Perform verification of the server
     descriptor->tls_config.add_verify_mode(
         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
@@ -368,13 +368,13 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
     else
     {
         // Password
-        descriptor->tls_config.password = get_param(tls_config, TLS_PASSWORD_TAG, false);
-        // Private key
-        descriptor->tls_config.private_key_file = get_param(tls_config, TLS_PRIVATE_KEY_TAG);
-        // DDS-Router certificate
-        descriptor->tls_config.cert_chain_file = get_param(tls_config, TLS_CERT_TAG);
-        // DH
-        descriptor->tls_config.tmp_dh_file = get_param(tls_config, TLS_DHPARAMS_TAG);
+        // descriptor->tls_config.password = get_param(tls_config, TLS_PASSWORD_TAG, false);
+        // // Private key
+        // descriptor->tls_config.private_key_file = get_param(tls_config, TLS_PRIVATE_KEY_TAG);
+        // // DDS-Router certificate
+        // descriptor->tls_config.cert_chain_file = get_param(tls_config, TLS_CERT_TAG);
+        // // DH
+        // descriptor->tls_config.tmp_dh_file = get_param(tls_config, TLS_DHPARAMS_TAG);
     }
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,

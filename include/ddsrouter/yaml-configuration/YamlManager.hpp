@@ -13,25 +13,30 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.cpp
+ * @file DDSRouterConfiguration.hpp
  */
 
-#include <ddsrouter/participant/implementations/rtps/WANParticipant.hpp>
+#ifndef _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_
+#define _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_
+
+#include <ddsrouter/yaml-configuration/Yaml.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace rtps {
+namespace yaml {
 
-WANParticipant::WANParticipant(
-        std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+/**
+ * TODO
+ */
+class YAMLManager
 {
-    create_participant_();
-}
+public:
 
-} /* namespace rtps */
+    static Yaml load_file(const std::string& file_path);
+};
+
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_ */
