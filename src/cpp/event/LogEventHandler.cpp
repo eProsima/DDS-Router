@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,28 +54,11 @@ void LogEventHandler::Consume(
         const Log::Entry& entry)
 {
     {
-        std::unique_lock<std::mutex> lock(entries_mutex_);
+        std::lock_guard<std::mutex> lock(entries_mutex_);
         entries_consumed_.push_back(entry);
     }
 
     event_occurred_(entry);
-}
-
-LogSevereEventHandler::LogSevereEventHandler(
-        std::function<void(eprosima::fastdds::dds::Log::Entry)> callback,
-        Log::Kind threshold /* = Log::Kind::Warning */)
-    : LogEventHandler(callback)
-    , threshold_(threshold)
-{
-}
-
-void LogSevereEventHandler::Consume(
-        const Log::Entry& entry)
-{
-    if (entry.kind <= threshold_)
-    {
-        LogEventHandler::Consume(entry);
-    }
 }
 
 } /* namespace event */

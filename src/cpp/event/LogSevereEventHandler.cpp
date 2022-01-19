@@ -13,34 +13,33 @@
 // limitations under the License.
 
 /**
- * @file TestLogHandler.hpp
+ * @file LogEventHandler.cpp
+ *
  */
 
-#ifndef _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
-#define _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
-
-#include <ddsrouter/event/LogEventHandler.hpp>
+#include <ddsrouter/event/LogSevereEventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace test {
+namespace event {
 
-class TestLogHandler
+LogSevereEventHandler::LogSevereEventHandler(
+        std::function<void(eprosima::fastdds::dds::Log::Entry)> callback,
+        Log::Kind threshold /* = Log::Kind::Warning */)
+    : LogEventHandler(callback)
+    , threshold_(threshold)
 {
-public:
-    TestLogHandler(
-        uint32_t max_severe_logs = 0);
+}
 
-    ~TestLogHandler();
+void LogSevereEventHandler::Consume(
+        const Log::Entry& entry)
+{
+    if (entry.kind <= threshold_)
+    {
+        LogEventHandler::Consume(entry);
+    }
+}
 
-    void check_valid();
-protected:
-    uint32_t max_severe_logs_;
-    event::LogSevereEventHandler* log_consumer_;
-};
-
-} /* namespace test */
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_ */

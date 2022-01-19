@@ -104,7 +104,7 @@ public:
     bool wait_for_event(
             uint32_t n = 1) const noexcept;
 
-    //! Return the times the event has ocurred since it has started.
+    //! Return the times the event has occurred since it has started.
     uint32_t event_count() const noexcept;
 
     //! Simulate as if the event had occurred

@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@
 
 #include <atomic>
 #include <functional>
-#include <thread>
 
-#include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/event/EventHandler.hpp>
 
 namespace eprosima {
@@ -41,14 +39,15 @@ class LogEventHandler : public EventHandler<fastdds::dds::Log::Entry>, fastdds::
 {
 public:
 
-    // This class does not have
+    // This class does not have constructor without callback.
+    // This is because of the lost of the pointer once it is registered in Fast. This makes it simpler.
 
     /**
      * Construct a Log Event Handler with callback and enable it.
      *
      * Calls \c set_callback
      *
-     * @param callback callback to call every log entry consumed.
+     * @param callback callback to call every time a log entry is consumed.
      */
     LogEventHandler(
             std::function<void(eprosima::fastdds::dds::Log::Entry)> callback);
@@ -66,7 +65,7 @@ public:
 protected:
 
     /**
-     * @brief Override \c callback_set_ from \c EventHandler .
+     * @brief Override \c callback_set_nts_ from \c EventHandler .
      *
      * The first time is called, it registers the consumer into Log.
      */
@@ -78,43 +77,12 @@ protected:
     /**
      * @brief  Vector of Log entries consumed so far.
      *
-     * Guarded by \c log_mutex_ .
+     * Guarded by \c entries_mutex_ .
      */
     std::vector<Log::Entry> entries_consumed_;
 
     //! Guard access to \c entries_consumed_
     mutable std::mutex entries_mutex_;
-};
-
-/**
- * @brief This class implements a LogEventHandler object that only consumes logs that are above a threshold.
- *
- * This is useful to only consume those logs that are Warning and/or Errors.
- */
-class LogSevereEventHandler : public LogEventHandler
-{
-public:
-
-    /**
-     * Construct a sEVERE Log Event Handler with callback and enable it, setting a minimum threshold.
-     *
-     * Calls \c set_callback .
-     *
-     * @param callback callback to call every log entry consumed.
-     * @param threshold minimum log kind that will be consumed.
-     */
-    LogSevereEventHandler(
-            std::function<void(eprosima::fastdds::dds::Log::Entry)> callback,
-            const Log::Kind threshold = Log::Kind::Warning);
-
-    //! Override parent \c Consume method but only consuming logs above the \c threshold_ kind.
-    void Consume(
-            const Log::Entry& entry) override;
-
-protected:
-
-    //! Minimum Log kind accepted to consumed.
-    Log::Kind threshold_;
 };
 
 } /* namespace event */

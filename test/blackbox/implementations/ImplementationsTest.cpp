@@ -20,7 +20,6 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/event/LogEventHandler.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
