@@ -17,6 +17,7 @@
  *
  */
 
+#include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <TestLogHandler.hpp>
