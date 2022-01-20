@@ -94,7 +94,7 @@ public:
     static ParticipantKind  participant_kind_from_name(
             std::string type) noexcept;
 
-    static std::vector<ParticipantKind> all_valid_participant_types() noexcept;
+    static std::vector<ParticipantKind> all_valid_participant_kinds() noexcept;
 
 protected:
 

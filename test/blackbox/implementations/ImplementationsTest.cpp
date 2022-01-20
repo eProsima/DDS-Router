@@ -20,70 +20,171 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/exception/InitializationException.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 using namespace eprosima::ddsrouter;
 
-void set_allowed_topic(
-        RawConfiguration& configuration,
-        std::string topic_name = "__test_topic_ddsrouter__",
-        std::string topic_type = "__test_topic_type_ddsrouter__")
+struct TopicInput
 {
-    RawConfiguration topic;
-    topic[TOPIC_NAME_TAG] = topic_name;
-    topic[TOPIC_TYPE_NAME_TAG] = topic_type;
+    std::string name;
+    std::string type;
+    bool keyed;
+    bool key_set;
+};
 
-    RawConfiguration allow_list;
-    allow_list.push_back(topic);
+struct WildcardTopicInput : public TopicInput
+{
+    bool type_set;
+};
 
-    configuration[ALLOWLIST_TAG] = allow_list;
+std::set<std::shared_ptr<RealTopic>> topic_set(std::vector<TopicInput> topics)
+{
+    std::set<std::shared_ptr<RealTopic>> result;
+    for (TopicInput input : topics)
+    {
+        if (input.key_set)
+        {
+            result.insert(std::make_shared<RealTopic>(
+                input.name,
+                input.type,
+                input.keyed));
+        }
+        else
+        {
+            result.insert(std::make_shared<RealTopic>(
+                input.name,
+                input.type));
+        }
+    }
+    return result;
 }
 
-void set_domain(
-        RawConfiguration& configuration,
+std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput> topics)
+{
+    std::set<std::shared_ptr<FilterTopic>> result;
+    for (WildcardTopicInput input : topics)
+    {
+        if (input.key_set)
+        {
+            if (input.type_set)
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    input.type,
+                    true,
+                    input.keyed));
+            }
+            else
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    true,
+                    input.keyed));
+            }
+        }
+        else
+        {
+            if (input.type_set)
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    input.type,
+                    false));
+            }
+            else
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    false));
+            }
+        }
+    }
+    return result;
+}
+
+DomainId random_domain(
         uint16_t seed = 0)
 {
-    configuration[DOMAIN_ID_TAG] = seed;
+    return DomainId(static_cast<DomainIdType>(seed));
 }
 
-RawConfiguration participant_configuration(
-        ParticipantKind type,
-        uint16_t value = 0)
+GuidPrefix random_guid_prefix(
+        uint16_t seed = 0,
+        bool ros = false)
 {
-    RawConfiguration participant_configuration;
+    if (ros)
+    {
+        return GuidPrefix(true, seed);
+    }
+    else
+    {
+        return GuidPrefix(static_cast<uint32_t>(seed));
+    }
+}
 
-    RawConfiguration address;
-    address[ADDRESS_IP_TAG] = "127.0.0.1";
-    address[ADDRESS_PORT_TAG] = 11666 + value;
+Address random_address(
+        uint16_t seed = 0)
+{
+    return Address();
+}
 
-    participant_configuration[ PARTICIPANT_KIND_TAG] = type.to_string();
+std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
+        uint16_t seed = 0,
+        uint16_t size = 1,
+        bool ros = false)
+{
+    std::set<DiscoveryServerConnectionAddress> result;
 
-    switch (type())
+    for (int i=0; i<size; ++i)
+    {
+        result.insert(
+            DiscoveryServerConnectionAddress(
+                random_guid_prefix((seed * size + i) * i),
+                std::set<Address>({
+                    random_address((seed * size + i) * i),
+                    random_address((seed * size + i) * i + 1)})));
+    }
+    return result;
+}
+
+std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
+        ParticipantKind kind,
+        uint16_t seed = 0)
+{
+    ParticipantId id("Participant" + std::to_string(seed));
+
+    switch (kind())
     {
         case ParticipantKind::SIMPLE_RTPS:
-            set_domain(participant_configuration);
-            break;
+            return std::make_shared<configuration::SimpleParticipantConfiguration>(
+                id,
+                kind,
+                random_domain(seed));
 
         case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
-            break;
-
         case ParticipantKind::WAN:
-            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
-            break;
+            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+                id,
+                random_guid_prefix(seed),
+                std::set<Address>(),
+                std::set<DiscoveryServerConnectionAddress>(),
+                kind);
 
         // Add cases where Participants need specific arguments
         default:
-            break;
+            return std::make_shared<configuration::ParticipantConfiguration>(id, kind);
     }
-
-    static_cast<void>(value);
-
-    return participant_configuration;
 }
 
 /**
@@ -94,16 +195,20 @@ RawConfiguration participant_configuration(
 TEST(ImplementationsTest, solo_participant_implementation)
 {
     // For each Participant Type
-    for (ParticipantKind type : ParticipantKind::all_valid_participant_types())
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(random_participant_configuration(kind));
 
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
         // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), InitializationException);
+        ASSERT_THROW(DDSRouter router(configuration), InitializationException) << kind;
     }
 }
 
@@ -118,14 +223,18 @@ TEST(ImplementationsTest, pair_implementation)
     test::TestLogHandler test_log_handler;
 
     // For each Participant Type
-    for (ParticipantKind type : ParticipantKind::all_valid_participant_types())
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(random_participant_configuration(kind, 1));
+        participant_configurations.insert(random_participant_configuration(kind, 2));
 
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
-        configuration["participant_2"] = participant_configuration(2);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -152,17 +261,21 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     test::TestLogHandler test_log_handler;
 
     // For each Participant Type
-    for (ParticipantKind type : ParticipantKind::all_valid_participant_types())
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
+        std::set<std::shared_ptr<RealTopic>> builtin_topics = topic_set(
+            {{"rt/chatter", "std_msgs::msg::dds_::String_", false, false}});
+
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(random_participant_configuration(kind, 1));
+        participant_configurations.insert(random_participant_configuration(kind, 2));
+
         // Generate configuration
-        RawConfiguration configuration;
-
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
-        configuration["participant_2"] = participant_configuration(2);
-
-        // Set topic to active
-        set_allowed_topic(configuration);
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            builtin_topics,
+            participant_configurations);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -189,21 +302,27 @@ TEST(ImplementationsTest, all_implementations)
     test::TestLogHandler test_log_handler;
 
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        // Set topic to active
+        std::set<std::shared_ptr<RealTopic>> builtin_topics = topic_set(
+            {{"rt/chatter", "std_msgs::msg::dds_::String_", false, false}});
+
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
 
         uint16_t participant_number = 1;
 
         // For each Participant Type set it in configuration
-        for (ParticipantKind type : ParticipantKind::all_valid_participant_types())
+        for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
         {
             // Add participant
-            std::string participant_name = "participant_" + type.to_string();
-            configuration[participant_name] = participant_configuration(type, ++participant_number);
+            participant_configurations.insert(random_participant_configuration(kind, ++participant_number));
         }
 
-        // Set topic to active
-        set_allowed_topic(configuration);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);

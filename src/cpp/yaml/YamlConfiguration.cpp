@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Address_configuration.cpp
+ * @file YamlConfiguration.cpp
  *
  */
 
@@ -30,7 +30,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-bool YamlConfiguration::is_tag_present(const Yaml& yml, std::string tag)
+bool YamlConfiguration::is_tag_present(const Yaml& yml, const std::string& tag)
 {
     if (!yml.IsMap())
     {
@@ -41,7 +41,7 @@ bool YamlConfiguration::is_tag_present(const Yaml& yml, std::string tag)
     return (yml[tag]);
 }
 
-Yaml YamlConfiguration::get_value_in_tag(const Yaml& yml, std::string tag)
+Yaml YamlConfiguration::get_value_in_tag(const Yaml& yml, const std::string& tag)
 {
     if (yml[tag])
     {

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Address_configuration.cpp
+ * @file YamlConfigurationDDSRouter.cpp
  *
  */
 
@@ -25,6 +25,7 @@
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/yaml/YamlConfigurationDDSRouter.hpp>
 #include <ddsrouter/yaml/YamlConfiguration.hpp>
+#include <ddsrouter/yaml/YamlManager.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
@@ -93,7 +94,9 @@ std::shared_ptr<configuration::ParticipantConfiguration>
     YamlConfigurationDDSRouter::participants_yaml_factory_(const Yaml& yml)
 {
     // Kind required
-    ParticipantKind kind = YamlConfiguration::get<ParticipantKind>(yml);
+    ParticipantKind kind = YamlConfiguration::get<ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
+
+    logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
 
     switch (kind())
     {
@@ -103,18 +106,38 @@ std::shared_ptr<configuration::ParticipantConfiguration>
             YamlConfiguration::get<configuration::ParticipantConfiguration>(yml));
 
     case ParticipantKind::SIMPLE_RTPS:
-        return std::make_shared<configuration::ParticipantConfiguration>(
+        return std::make_shared<configuration::SimpleParticipantConfiguration>(
             YamlConfiguration::get<configuration::SimpleParticipantConfiguration>(yml));
 
     case ParticipantKind::LOCAL_DISCOVERY_SERVER:
     case ParticipantKind::WAN:
-        return std::make_shared<configuration::ParticipantConfiguration>(
+        return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             YamlConfiguration::get<configuration::DiscoveryServerParticipantConfiguration>(yml));
 
     default:
         throw ConfigurationException(
             utils::Formatter() << "Unkown or non valid Participant type:" << kind << ".");
         break;
+    }
+}
+
+configuration::DDSRouterConfiguration
+    YamlConfigurationDDSRouter::load_ddsrouter_configuration_from_file(const std::string& file_path)
+{
+    try
+    {
+        yaml::Yaml yml = yaml::YamlManager::load_file(file_path);
+
+        // Load DDS Router Configuration
+        configuration::DDSRouterConfiguration router_configuration =
+            yaml::YamlConfigurationDDSRouter::get_ddsrouter_configuration(yml);
+
+        return router_configuration;
+    }
+    catch(const std::exception& e)
+    {
+        throw ConfigurationException(
+            utils::Formatter() << "Error loading file: <" << file_path << "> : " << e.what());
     }
 }
 

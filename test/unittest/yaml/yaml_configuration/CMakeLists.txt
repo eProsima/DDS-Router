@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,31 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-########################
-# Implementations Test #
-########################
-
-set(TEST_NAME
-    YamlTest)
-
-set(TEST_SOURCES
-    YamlTest.cpp
-)
-
-set(TEST_LIST
-    test
-    test2
-    test3
-    test4
-)
-
-set(TEST_NEEDED_SOURCES
-)
-
-add_blackbox_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_NEEDED_SOURCES}"
-)

@@ -20,7 +20,7 @@
 #include <ddsrouter/yaml/YamlConfiguration.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
-#include "YamlConfigurationTestUtils.hpp"
+#include <YamlConfigurationTestUtils.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::yaml;
@@ -160,7 +160,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml);
+        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
 
         ASSERT_EQ(tp, TransportProtocol::UDP);
     }
@@ -173,7 +173,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml);
+        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
 
         ASSERT_EQ(tp, TransportProtocol::TCP);
     }
@@ -182,7 +182,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml), ConfigurationException);
+        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
     }
 
     // Incorrect tag
@@ -193,7 +193,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>("utcp"),
             ADDRESS_TRANSPORT_TAG);
 
-        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml), ConfigurationException);
+        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
     }
 }
 

@@ -52,12 +52,12 @@ ParticipantId ParticipantId::invalid() noexcept
 bool ParticipantId::is_valid_id(
         const std::string& tag) noexcept
 {
-    return !tag.empty();
+    return !tag.empty() && tag != INVALID_ID;
 }
 
 bool ParticipantId::is_valid() const noexcept
 {
-    return id_ != INVALID_ID;
+    return is_valid_id(id_);
 }
 
 std::string ParticipantId::id_name() const noexcept

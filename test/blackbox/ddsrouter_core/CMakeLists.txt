@@ -20,6 +20,7 @@ set(TEST_NAME
     TrivialTest)
 
 set(TEST_SOURCES
+    DDSTest.cpp
     TrivialTest.cpp)
 
 set(TEST_LIST

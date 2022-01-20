@@ -21,7 +21,6 @@ set(TEST_NAME ParticipantFactoryTest)
 set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DomainId_configuration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/Address_configuration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/GuidPrefix_configuration.cpp
@@ -31,7 +30,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DiscoveryServerParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/WANParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/EchoParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp

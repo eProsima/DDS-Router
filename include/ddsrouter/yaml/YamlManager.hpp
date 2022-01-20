@@ -28,7 +28,7 @@ namespace yaml {
 /**
  * TODO
  */
-class YAMLManager
+class YamlManager
 {
 public:
 

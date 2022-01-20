@@ -32,6 +32,8 @@ public:
 
     static configuration::DDSRouterConfiguration get_ddsrouter_configuration(const Yaml& yml);
 
+    static configuration::DDSRouterConfiguration load_ddsrouter_configuration_from_file(const std::string& file_path);
+
 protected:
 
     static std::shared_ptr<configuration::ParticipantConfiguration>

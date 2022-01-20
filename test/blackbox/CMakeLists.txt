@@ -70,6 +70,8 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         )
     list(APPEND TEST_SOURCES ${SOURCES_FILES})
 
+    message(STATUS "Sources: " ${TEST_SOURCES})
+
     # Add all library needed by sources
     set(EXTRA_LIBRARIES
         yaml-cpp
@@ -98,5 +100,4 @@ endfunction(add_blackbox_executable)
 
 # TODO uncomment
 # add_subdirectory(ddsrouter_core)
-# add_subdirectory(implementations)
-add_subdirectory(yaml)
+add_subdirectory(implementations)

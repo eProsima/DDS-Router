@@ -12,30 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-########################
-# Implementations Test #
-########################
-
-set(TEST_NAME
-    ImplementationsTest)
+set(TEST_NAME YamlTagsTest)
 
 set(TEST_SOURCES
-        ImplementationsTest.cpp
-    )
+    YamlTagsTest.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/yaml/yaml_configuration_tags.cpp)
 
 set(TEST_LIST
-        pair_implementation
-        pair_implementation_with_topic
-        all_implementations
-        solo_participant_implementation
+    yaml_tags)
+
+set(TEST_EXTRA_LIBRARIES
     )
 
-set(TEST_NEEDED_SOURCES
-    )
-
-add_blackbox_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_NEEDED_SOURCES}"
-    )
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")

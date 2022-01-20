@@ -17,7 +17,6 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -42,8 +41,8 @@ std::vector<std::string> random_non_valid_ids()
 {
     return
         {
-            ALLOWLIST_TAG,
-            BLOCKLIST_TAG
+            "",
+            "__invalid_ddsrouter_participant__",
         };
 }
 

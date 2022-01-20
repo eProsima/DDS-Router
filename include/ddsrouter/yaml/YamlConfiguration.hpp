@@ -33,35 +33,35 @@ public:
     static T get(const Yaml& yml);
 
     template <typename T>
-    static T get(const Yaml& yml, std::string tag);
+    static T get(const Yaml& yml, const std::string& tag);
 
     template <typename T>
-    static T get_native(const Yaml& yml);
+    static T get_scalar(const Yaml& yml);
 
     template <typename T>
-    static T get_native(const Yaml& yml, std::string tag);
+    static T get_scalar(const Yaml& yml, const std::string& tag);
 
     template <typename T>
-    static std::list<T> get_list(const Yaml& yml, std::string tag);
+    static std::list<T> get_list(const Yaml& yml, const std::string& tag);
 
     template <typename T>
     static std::list<T> get_list(const Yaml& yml);
 
     template <typename T>
-    static std::set<T> get_set(const Yaml& yml, std::string tag);
+    static std::set<T> get_set(const Yaml& yml, const std::string& tag);
 
     template <typename T>
-    static T get_enumeration(const Yaml& yml, std::map<std::string, T>enum_values);
+    static T get_enumeration(const Yaml& yml, const std::map<std::string, T>& enum_values);
 
     template <typename T>
-    static T get_enumeration(const Yaml& yml, std::string tag, std::map<std::string, T>enum_values);
+    static T get_enumeration(const Yaml& yml, const std::string& tag, const std::map<std::string, T>& enum_values);
 
     template <typename T>
     static bool is_present(const Yaml& yml);
 
-    static bool is_tag_present(const Yaml& yml, std::string tag);
+    static bool is_tag_present(const Yaml& yml, const std::string& tag);
 
-    static Yaml get_value_in_tag(const Yaml& yml, std::string tag);
+    static Yaml get_value_in_tag(const Yaml& yml, const std::string& tag);
 };
 
 } /* namespace yaml */

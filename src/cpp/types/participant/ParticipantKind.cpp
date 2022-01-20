@@ -103,7 +103,7 @@ ParticipantKind ParticipantKind:: participant_kind_from_name(
     return PARTICIPANT_KIND_INVALID;
 }
 
-std::vector<ParticipantKind> ParticipantKind::all_valid_participant_types() noexcept
+std::vector<ParticipantKind> ParticipantKind::all_valid_participant_kinds() noexcept
 {
     std::vector<ParticipantKind> result;
 

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Address_configuration.cpp
+ * @file YamlConfigurationEntity.cpp
  *
  */
 
@@ -38,7 +38,6 @@ TransportProtocol YamlConfiguration::get<TransportProtocol>(const Yaml& yml)
 {
     return get_enumeration<TransportProtocol>(
         yml,
-        ADDRESS_TRANSPORT_TAG,
         {
             {ADDRESS_TRANSPORT_TCP_TAG, TransportProtocol::TCP},
             {ADDRESS_TRANSPORT_UDP_TAG, TransportProtocol::UDP},
@@ -50,7 +49,6 @@ IpVersion YamlConfiguration::get<IpVersion>(const Yaml& yml)
 {
     return get_enumeration<IpVersion>(
         yml,
-        ADDRESS_IP_VERSION_TAG,
         {
             {ADDRESS_IP_VERSION_V4_TAG, IpVersion::IPv4},
             {ADDRESS_IP_VERSION_V6_TAG, IpVersion::IPv6},
@@ -61,22 +59,21 @@ template <>
 ParticipantId YamlConfiguration::get<ParticipantId>(const Yaml& yml)
 {
     // Participant name required
-    return ParticipantId(get_native<std::string>(yml, PARTICIPANT_NAME_TAG));
+    return ParticipantId(get_scalar<std::string>(yml));
 }
 
 template <>
 ParticipantKind YamlConfiguration::get<ParticipantKind>(const Yaml& yml)
 {
     // Participant kind required
-    std::string kind = get_native<std::string>(yml,  PARTICIPANT_KIND_TAG);
-    return ParticipantKind:: participant_kind_from_name(kind);
+    return ParticipantKind::participant_kind_from_name(get_scalar<std::string>(yml));
 }
 
 template <>
 DomainId YamlConfiguration::get<DomainId>(const Yaml& yml)
 {
     // Domain id required
-    return DomainId(get_native<DomainIdType>(yml, DOMAIN_ID_TAG));
+    return DomainId(get_scalar<DomainIdType>(yml));
 }
 
 template <>
@@ -85,7 +82,7 @@ GuidPrefix YamlConfiguration::get<GuidPrefix>(const Yaml& yml)
     // If guid exists, use it. Non mandatory.
     if (is_tag_present(yml, DISCOVERY_SERVER_GUID_TAG))
     {
-        std::string guid = get_native<std::string>(yml, DISCOVERY_SERVER_GUID_TAG);
+        std::string guid = get_scalar<std::string>(yml, DISCOVERY_SERVER_GUID_TAG);
         return GuidPrefix(guid);
     }
 
@@ -94,11 +91,11 @@ GuidPrefix YamlConfiguration::get<GuidPrefix>(const Yaml& yml)
     bool ros_id_set = is_tag_present(yml, DISCOVERY_SERVER_ID_ROS_TAG);
     if (ros_id_set)
     {
-        ros_id = get_native<bool>(yml, DISCOVERY_SERVER_ID_ROS_TAG);
+        ros_id = get_scalar<bool>(yml, DISCOVERY_SERVER_ID_ROS_TAG);
     }
 
     // Id is mandatory if guid is not present
-    uint32_t id = get_native<bool>(yml, DISCOVERY_SERVER_ID_TAG);
+    uint32_t id = get_scalar<bool>(yml, DISCOVERY_SERVER_ID_TAG);
 
     // Create GuidPrefix
     if (ros_id_set)
@@ -135,17 +132,17 @@ template <>
 RealTopic YamlConfiguration::get<RealTopic>(const Yaml& yml)
 {
     // Mandatory name
-    std::string name = get_native<std::string>(yml, TOPIC_NAME_TAG);
+    std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
 
     // Mandatory type
-    std::string type = get_native<std::string>(yml, TOPIC_TYPE_NAME_TAG);
+    std::string type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
 
     // Optional keyed
     bool keyed;
     bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
     if (keyed_set)
     {
-        keyed = get_native<bool>(yml, TOPIC_KIND_TAG);
+        keyed = get_scalar<bool>(yml, TOPIC_KIND_TAG);
     }
 
     // Create Topic
@@ -163,14 +160,14 @@ template <>
 WildcardTopic YamlConfiguration::get<WildcardTopic>(const Yaml& yml)
 {
     // Mandatory name
-    std::string name = get_native<std::string>(yml, TOPIC_NAME_TAG);
+    std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
 
     // Optional type
     std::string type;
     bool type_set = is_tag_present(yml, TOPIC_TYPE_NAME_TAG);
     if (type_set)
     {
-        type = get_native<std::string>(yml, TOPIC_TYPE_NAME_TAG);
+        type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
     }
 
     // Optional keyed
@@ -178,7 +175,7 @@ WildcardTopic YamlConfiguration::get<WildcardTopic>(const Yaml& yml)
     bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
     if (keyed_set)
     {
-        keyed = get_native<bool>(yml, TOPIC_KIND_TAG);
+        keyed = get_scalar<bool>(yml, TOPIC_KIND_TAG);
     }
 
     // Create Topic
@@ -209,8 +206,73 @@ WildcardTopic YamlConfiguration::get<WildcardTopic>(const Yaml& yml)
 template <>
 security::TlsConfiguration YamlConfiguration::get<security::TlsConfiguration>(const Yaml& yml)
 {
-    // TODO
-    return security::TlsConfiguration();
+    // Optional private key
+    std::string private_key_file;
+    bool has_private_key_file = is_tag_present(yml, TLS_PRIVATE_KEY_TAG);
+    if (has_private_key_file)
+    {
+        private_key_file = get_scalar<std::string>(yml, TLS_PRIVATE_KEY_TAG);
+    }
+
+    // Optional private key password
+    std::string private_key_file_password;
+    bool has_private_key_file_password = is_tag_present(yml, TLS_PASSWORD_TAG);
+    if (has_private_key_file_password)
+    {
+        private_key_file_password = get_scalar<std::string>(yml, TLS_PASSWORD_TAG);
+    }
+
+    // Optional certificate authority
+    std::string certificate_authority_file;
+    bool has_certificate_authority_file = is_tag_present(yml, TLS_CA_TAG);
+    if (has_certificate_authority_file)
+    {
+        certificate_authority_file = get_scalar<std::string>(yml, TLS_CA_TAG);
+    }
+
+    // Optional certificate authority
+    std::string certificate_chain_file;
+    bool has_certificate_chain_file = is_tag_present(yml, TLS_CERT_TAG);
+    if (has_certificate_chain_file)
+    {
+        certificate_chain_file = get_scalar<std::string>(yml, TLS_CERT_TAG);
+    }
+
+    // Optional certificate authority
+    std::string dh_params_file;
+    bool has_dh_params_file = is_tag_present(yml, TLS_DHPARAMS_TAG);
+    if (has_dh_params_file)
+    {
+        dh_params_file = get_scalar<std::string>(yml, TLS_DHPARAMS_TAG);
+    }
+
+    if (has_private_key_file)
+    {
+        if (has_certificate_authority_file)
+        {
+            // Both TLS configuration
+            return security::TlsConfiguration(
+                private_key_file_password,
+                private_key_file,
+                certificate_authority_file,
+                certificate_chain_file,
+                dh_params_file);
+        }
+        else
+        {
+            // Server TLS configuration
+            return security::TlsConfiguration(
+                private_key_file_password,
+                private_key_file,
+                certificate_chain_file,
+                dh_params_file);
+        }
+    }
+    else
+    {
+        // Client TLS configuration
+        return security::TlsConfiguration(certificate_authority_file);
+    }
 }
 
 } /* namespace yaml */

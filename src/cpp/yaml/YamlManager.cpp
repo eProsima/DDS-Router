@@ -24,7 +24,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-Yaml load_file(
+Yaml YamlManager::load_file(
         const std::string& file_path)
 {
     try

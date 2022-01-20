@@ -21,7 +21,7 @@ set(TEST_NAME DiscoveryDatabaseTest)
 set(TEST_SOURCES
         DiscoveryDatabaseTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/ReturnCode.cpp

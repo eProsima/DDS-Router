@@ -24,20 +24,39 @@ namespace ddsrouter {
 namespace yaml {
 
 template <typename T>
-T YamlConfiguration::get(const Yaml& yml, std::string tag)
+T YamlConfiguration::get(const Yaml& yml, const std::string& tag)
 {
-    return get<T>(get_value_in_tag(yml, tag));
+    // ATTENTION: This try catch can be avoided, it is only used to add verbose information
+    try
+    {
+        return get<T>(get_value_in_tag(yml, tag));
+    }
+    catch(const std::exception& e)
+    {
+        throw ConfigurationException(
+            utils::Formatter() <<
+            "Error getting required value of type <" << typeid(T).name() <<
+            "> in tag <" << tag <<
+            "> : [" << e.what() << "]");
+    }
 }
 
 template <typename T>
-T YamlConfiguration::get_native(const Yaml& yml, std::string tag)
+T YamlConfiguration::get_scalar(const Yaml& yml, const std::string& tag)
 {
-    return get_native<T>(get_value_in_tag(yml, tag));
+    return get_scalar<T>(get_value_in_tag(yml, tag));
 }
 
 template <typename T>
-T YamlConfiguration::get_native(const Yaml& yml)
+T YamlConfiguration::get_scalar(const Yaml& yml)
 {
+    if (!yml.IsScalar())
+    {
+        throw ConfigurationException(
+            utils::Formatter() <<
+            "Trying to read a primitive value of type <" << typeid(T).name() << "> from a non scalar yaml.");
+    }
+
     try
     {
         return yml.as<T>();
@@ -45,12 +64,13 @@ T YamlConfiguration::get_native(const Yaml& yml)
     catch(const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Incorrect format for primitive value. Erro: " << e.what());
+            utils::Formatter() <<
+            "Incorrect format for primitive value, expected <" << typeid(T).name() << ">. Error: " << e.what());
     }
 }
 
 template <typename T>
-std::list<T> YamlConfiguration::get_list(const Yaml& yml, std::string tag)
+std::list<T> YamlConfiguration::get_list(const Yaml& yml, const std::string& tag)
 {
     return get_list<T>(get_value_in_tag(yml, tag));
 }
@@ -60,7 +80,8 @@ std::list<T> YamlConfiguration::get_list(const Yaml& yml)
 {
     if (!yml.IsSequence())
     {
-        // TODO error
+        throw ConfigurationException(
+            utils::Formatter() << "Incorrect format, yaml Sequence expected.");
     }
 
     std::list<T> result;
@@ -81,16 +102,16 @@ std::list<T> YamlConfiguration::get_list(const Yaml& yml)
 }
 
 template <typename T>
-std::set<T> YamlConfiguration::get_set(const Yaml& yml, std::string tag)
+std::set<T> YamlConfiguration::get_set(const Yaml& yml, const std::string& tag)
 {
     std::list<T> elements_list = get_list<T>(yml, tag);
     return std::set<T>(elements_list.begin(), elements_list.end());
 }
 
 template <typename T>
-T YamlConfiguration::get_enumeration(const Yaml& yml, std::map<std::string, T>enum_values)
+T YamlConfiguration::get_enumeration(const Yaml& yml, const std::map<std::string, T>& enum_values)
 {
-    std::string value = get_native<std::string>(yml);
+    std::string value = get_scalar<std::string>(yml);
 
     // Find value
     auto it = enum_values.find(value);
@@ -98,7 +119,7 @@ T YamlConfiguration::get_enumeration(const Yaml& yml, std::map<std::string, T>en
     if (it == enum_values.end())
     {
         throw ConfigurationException(
-            utils::Formatter() << "Enumeration Value: " << value << " is not a valid value.");
+            utils::Formatter() << "Enumeration: " << value << " is not a valid value.");
     }
     else
     {
@@ -107,7 +128,10 @@ T YamlConfiguration::get_enumeration(const Yaml& yml, std::map<std::string, T>en
 }
 
 template <typename T>
-T YamlConfiguration::get_enumeration(const Yaml& yml, std::string tag, std::map<std::string, T>enum_values)
+T YamlConfiguration::get_enumeration(
+    const Yaml& yml,
+    const std::string& tag,
+    const std::map<std::string, T>& enum_values)
 {
     return get_enumeration<T>(get_value_in_tag(yml, tag), enum_values);
 }

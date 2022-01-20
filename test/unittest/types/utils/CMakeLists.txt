@@ -16,7 +16,7 @@ set(TEST_NAME utilsTest)
 
 set(TEST_SOURCES
         utilsTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 

@@ -23,7 +23,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
@@ -69,7 +69,7 @@ set(TEST_NAME AddressConfigurationTest)
 
 set(TEST_SOURCES
     AddressConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/Address_configuration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp

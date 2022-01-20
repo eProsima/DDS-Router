@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Address_configuration.cpp
+ * @file YamlConfigurationParticipant.cpp
  *
  */
 
@@ -39,10 +39,10 @@ template <>
 configuration::ParticipantConfiguration YamlConfiguration::get<configuration::ParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
-    ParticipantId id = get<ParticipantId>(yml);
+    ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
 
     // Kind required
-    ParticipantKind kind = get<ParticipantKind>(yml);
+    ParticipantKind kind = get<ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
 
     return configuration::ParticipantConfiguration(id, kind);
 }
@@ -51,13 +51,13 @@ template <>
 configuration::SimpleParticipantConfiguration YamlConfiguration::get<configuration::SimpleParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
-    ParticipantId id = get<ParticipantId>(yml);
+    ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
 
     // Kind required
-    ParticipantKind kind = get<ParticipantKind>(yml);
+    ParticipantKind kind = get<ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
 
     // Domain required
-    DomainId domain = get<DomainId>(yml);
+    DomainId domain = get<DomainId>(yml, DOMAIN_ID_TAG);
 
     return configuration::SimpleParticipantConfiguration(id, kind, domain);
 }
@@ -66,20 +66,20 @@ template <>
 configuration::DiscoveryServerParticipantConfiguration YamlConfiguration::get<configuration::DiscoveryServerParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
-    ParticipantId id = get<ParticipantId>(yml);
+    ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
 
     // Kind required
-    ParticipantKind kind = get<ParticipantKind>(yml);
+    ParticipantKind kind = get<ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
 
     // Guid Prefix required
-    GuidPrefix guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_TAG);
+    GuidPrefix guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG);
 
     // Domain option
     DomainId domain;
-    bool has_domain = is_present<DomainId>(yml);
+    bool has_domain = is_tag_present(yml, DOMAIN_ID_TAG);
     if (has_domain)
     {
-        domain = get<DomainId>(yml);
+        domain = get<DomainId>(yml, DOMAIN_ID_TAG);
     }
 
     // Optional listening addresses
