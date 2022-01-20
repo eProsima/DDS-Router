@@ -20,7 +20,7 @@
 #include <set>
 
 #include <ddsrouter/types/utils.hpp>
-#include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
+#include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,9 +35,9 @@ std::set<std::string> ddsrouter_tags() noexcept
             TOPIC_NAME_TAG,
             TOPIC_TYPE_NAME_TAG,
             TOPIC_KIND_TAG,
-            PARTICIPANT_TYPE_TAG,
+            PARTICIPANT_KIND_TAG,
             PARTICIPANT_NAME_TAG,
-            PARTICIPANTS_LIST_TAG,
+            COLLECTION_PARTICIPANTS_TAG,
             DOMAIN_ID_TAG,
             DISCOVERY_SERVER_GUID_PREFIX_TAG,
             LISTENING_ADDRESSES_TAG,

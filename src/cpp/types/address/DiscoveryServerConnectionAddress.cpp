@@ -58,5 +58,20 @@ bool DiscoveryServerConnectionAddress::is_valid() const noexcept
     return false;
 }
 
+bool DiscoveryServerConnectionAddress::operator <(
+        const DiscoveryServerConnectionAddress& other) const noexcept
+{
+    if (this->discovery_server_guid_prefix() == other.discovery_server_guid_prefix())
+    {
+        // Same Guid
+        return this->addresses() < other.addresses();
+    }
+    else
+    {
+        // Different guid
+        return this->discovery_server_guid_prefix() < other.discovery_server_guid_prefix();
+    }
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -42,7 +42,7 @@ public:
      */
     enum
     {
-        PARTICIPANT_TYPE_INVALID,   //! Invalid Participant Type
+       PARTICIPANT_KIND_INVALID,   //! Invalid Participant Type
         VOID,                       //! Void Participant Type
         ECHO,                       //! Echo Participant Type
         DUMMY,                      //! Dummy Participant Type
@@ -91,7 +91,7 @@ public:
      * @param [in] type : string with the name of the type to build
      * @return ParticipantKind value, \c INVALID if \c type does not refer to any existing type
      */
-    static ParticipantKind participant_type_from_name(
+    static ParticipantKind  participant_kind_from_name(
             std::string type) noexcept;
 
     static std::vector<ParticipantKind> all_valid_participant_types() noexcept;

@@ -29,12 +29,13 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         core
         dynamic
         event
-        exceptions
+        exception
         participant
         participant/implementations/auxiliar
         participant/implementations/rtps
         reader/implementations/auxiliar
         reader/implementations/rtps
+        security/tls
         types
         types/address
         types/endpoint
@@ -42,6 +43,8 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         types/topic
         writer/implementations/auxiliar
         writer/implementations/rtps
+        yaml
+        yaml/implementations
     )
 
     # Get all sources of the library except implementations and main
@@ -93,5 +96,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
 
 endfunction(add_blackbox_executable)
 
-add_subdirectory(ddsrouter_core)
-add_subdirectory(implementations)
+# TODO uncomment
+# add_subdirectory(ddsrouter_core)
+# add_subdirectory(implementations)
+add_subdirectory(yaml)

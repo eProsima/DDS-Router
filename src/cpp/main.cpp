@@ -24,7 +24,6 @@
 #include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/exception/InitializationException.hpp>
 #include <ddsrouter/types/constants.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/user_interface/arguments_configuration.hpp>

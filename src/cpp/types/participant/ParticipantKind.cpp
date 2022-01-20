@@ -30,7 +30,7 @@ namespace ddsrouter {
 
 const std::map<ParticipantKindValue, std::vector<std::string>> ParticipantKind::participant_type_with_aliases_ =
 {
-    {PARTICIPANT_TYPE_INVALID, {"invalid_participant_type"}},
+    {PARTICIPANT_KIND_INVALID, {"invalid_participant_type"}},
     {VOID, {"void"}},
     {ECHO, {"echo"}},
     {DUMMY, {"dummy"}},
@@ -46,13 +46,13 @@ ParticipantKind::ParticipantKind(
 }
 
 ParticipantKind::ParticipantKind() noexcept
-    : ParticipantKind(PARTICIPANT_TYPE_INVALID)
+    : ParticipantKind(PARTICIPANT_KIND_INVALID)
 {
 }
 
 bool ParticipantKind::is_valid() const noexcept
 {
-    return value_ != PARTICIPANT_TYPE_INVALID;
+    return value_ != PARTICIPANT_KIND_INVALID;
 }
 
 std::string ParticipantKind::to_string() const noexcept
@@ -82,7 +82,7 @@ bool ParticipantKind::operator ==(
     return (*this)() == other();
 }
 
-ParticipantKind ParticipantKind::participant_type_from_name(
+ParticipantKind ParticipantKind:: participant_kind_from_name(
         std::string type) noexcept
 {
     // Pass type name to lowercase
@@ -100,7 +100,7 @@ ParticipantKind ParticipantKind::participant_type_from_name(
             }
         }
     }
-    return PARTICIPANT_TYPE_INVALID;
+    return PARTICIPANT_KIND_INVALID;
 }
 
 std::vector<ParticipantKind> ParticipantKind::all_valid_participant_types() noexcept

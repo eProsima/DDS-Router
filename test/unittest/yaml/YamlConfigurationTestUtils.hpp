@@ -13,31 +13,44 @@
 // limitations under the License.
 
 /**
- * @file YamlManager.cpp
- *
+ * @file YamlConfigurationTestUtils.hpp
  */
 
-#include <ddsrouter/exception/ConfigurationException.hpp>
-#include <ddsrouter/yaml-configuration/YamlManager.hpp>
+#ifndef _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
+#define _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
+
+#include <ddsrouter/yaml/Yaml.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
+namespace test {
 
-Yaml load_file(
-        const std::string& file_path)
+template <typename T>
+struct YamlField
 {
-    try
+    YamlField() : present(false) {}
+    YamlField(T arg_value) : value(arg_value) , present(true) {}
+
+    bool present;
+    T value;
+};
+
+template <typename T>
+void add_field_to_yaml(
+    Yaml& yml,
+    const YamlField<T>& field,
+    const std::string& tag)
+{
+    if (field.present)
     {
-        return YAML::LoadFile(file_path);
-    }
-    catch (const std::exception& e)
-    {
-        throw ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
-                                                        << file_path << " : " << e.what());
+        yml[tag] = field.value;
     }
 }
 
+} /* namespace test */
 } /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_ */

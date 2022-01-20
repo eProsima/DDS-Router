@@ -107,7 +107,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                     discovery_database);
             }
 
-        case ParticipantKind::PARTICIPANT_TYPE_INVALID:
+        case ParticipantKind::PARTICIPANT_KIND_INVALID:
             throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration->type()
                                                             << " is not a valid participant type name.");
 

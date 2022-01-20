@@ -17,40 +17,17 @@
 ########################
 
 set(TEST_NAME
-    ImplementationsTest)
+    YamlTest)
 
 set(TEST_SOURCES
-        ImplementationsTest.cpp
-    )
-
-set(TEST_LIST
-        pair_implementation
-        pair_implementation_with_topic
-        all_implementations
-        solo_participant_implementation
-    )
-
-set(TEST_NEEDED_SOURCES
-    )
-
-add_blackbox_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_NEEDED_SOURCES}"
-    )
-
-
-
-set(TEST_NAME
-    YamlTestTest)
-
-set(TEST_SOURCES
-    YamlTestTest.cpp
+    YamlTest.cpp
 )
 
 set(TEST_LIST
     test
+    test2
+    test3
+    test4
 )
 
 set(TEST_NEEDED_SOURCES

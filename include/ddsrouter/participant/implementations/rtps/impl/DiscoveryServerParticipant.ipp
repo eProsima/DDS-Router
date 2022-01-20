@@ -27,7 +27,7 @@
 #include <ddsrouter/exception/ConfigurationException.hpp>
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 #include <ddsrouter/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter/yaml-configuration/yaml_configuration_tags.hpp>
+#include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -49,8 +49,8 @@ fastrtps::rtps::RTPSParticipantAttributes
 DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 {
     // Get Configuration information
-    std::set<std::shared_ptr<Address>> listening_addresses = this->configuration_->listening_addresses();
-    std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses = this->configuration_->connection_addresses();
+    std::set<Address> listening_addresses = this->configuration_->listening_addresses();
+    std::set<DiscoveryServerConnectionAddress> connection_addresses = this->configuration_->connection_addresses();
     GuidPrefix discovery_server_guid = this->configuration_->discovery_server_guid_prefix();
     security::TlsConfiguration tls_config =  this->configuration_->tls_configuration();
 
@@ -72,9 +72,9 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set listening addresses
-    for (std::shared_ptr<Address> address : listening_addresses)
+    for (Address address : listening_addresses)
     {
-        if (!address->is_valid())
+        if (!address.is_valid())
         {
             // Invalid address, continue with next one
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
@@ -85,17 +85,17 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         has_listening_addresses = true;
 
         // TCP Listening WAN address
-        if (address->is_tcp())
+        if (address.is_tcp())
         {
-            if (address->is_ipv4())
+            if (address.is_ipv4())
             {
                 has_listening_tcp_ipv4 = true;
 
                 std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
                         std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
 
-                descriptor->add_listener_port(address->port());
-                descriptor->set_WAN_address(address->ip());
+                descriptor->add_listener_port(address.port());
+                descriptor->set_WAN_address(address.ip());
 
                 // Enable TLS
                 if (tls_config.is_active())
@@ -112,7 +112,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
                 std::shared_ptr<eprosima::fastdds::rtps::TCPv6TransportDescriptor> descriptor =
                         std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
 
-                descriptor->add_listener_port(address->port());
+                descriptor->add_listener_port(address.port());
 
                 // Enable TLS
                 if (tls_config.is_active())
@@ -125,29 +125,29 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         }
         else
         {
-            has_udp_ipv4 = address->is_ipv4();
-            has_udp_ipv6 = !address->is_ipv4();
+            has_udp_ipv4 = address.is_ipv4();
+            has_udp_ipv6 = !address.is_ipv4();
         }
 
         // For any, UDP or TCP
         // Create Locator
         eprosima::fastrtps::rtps::Locator_t locator;
-        locator.kind = address->get_locator_kind();
+        locator.kind = address.get_locator_kind();
 
         // IP
-        if (address->is_ipv4())
+        if (address.is_ipv4())
         {
-            eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address->ip());
-            eprosima::fastrtps::rtps::IPLocator::setWan(locator, address->ip());
+            eprosima::fastrtps::rtps::IPLocator::setIPv4(locator, address.ip());
+            eprosima::fastrtps::rtps::IPLocator::setWan(locator, address.ip());
         }
         else
         {
-            eprosima::fastrtps::rtps::IPLocator::setIPv6(locator, address->ip());
+            eprosima::fastrtps::rtps::IPLocator::setIPv6(locator, address.ip());
         }
 
         // Port
-        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address->port());
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address->port());
+        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
+        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
@@ -159,27 +159,27 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set connection addresses
-    for (std::shared_ptr<DiscoveryServerConnectionAddress> connection_address : connection_addresses)
+    for (DiscoveryServerConnectionAddress connection_address : connection_addresses)
     {
-        if (!connection_address->is_valid())
+        if (!connection_address.is_valid())
         {
             // Invalid connection address, continue with next one
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Discard connection address with remote server: " << connection_address->discovery_server_guid_prefix() <<
+                    "Discard connection address with remote server: " << connection_address.discovery_server_guid_prefix() <<
                     " in Participant " << this->id() << " initialization.");
             continue;
         }
 
         // Set Server GUID
-        GuidPrefix server_prefix = connection_address->discovery_server_guid_prefix();
+        GuidPrefix server_prefix = connection_address.discovery_server_guid_prefix();
 
-        for (Address address : connection_address->addresses())
+        for (Address address : connection_address.addresses())
         {
             if (!address.is_valid())
             {
                 // Invalid ip address, continue with next one
                 logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                        "Discard connection address with remote server: " << connection_address->discovery_server_guid_prefix() <<
+                        "Discard connection address with remote server: " << connection_address.discovery_server_guid_prefix() <<
                         " due to invalid ip address " << address.ip() << " in Participant " << this->id() <<
                         " initialization.");
                 continue;

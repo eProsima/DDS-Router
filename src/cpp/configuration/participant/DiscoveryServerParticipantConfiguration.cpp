@@ -30,8 +30,8 @@ const DomainId DiscoveryServerParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66
 DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
         const ParticipantId& id,
         const GuidPrefix& discovery_server_guid_prefix,
-        const std::set<std::shared_ptr<Address>>& listening_addresses,
-        const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
+        const std::set<Address>& listening_addresses,
+        const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
         const security::TlsConfiguration& tls_configuration /* = security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
@@ -43,17 +43,30 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
 {
 }
 
+DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
+        const ParticipantId& id,
+        const GuidPrefix& discovery_server_guid_prefix,
+        const std::set<Address>& listening_addresses,
+        const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
+        const DomainId& domain_id,
+        const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
+        const security::TlsConfiguration& tls_configuration /* = security::TlsConfiguration() */)
+    : DiscoveryServerParticipantConfiguration(
+        id, discovery_server_guid_prefix, listening_addresses, connection_addresses, type, tls_configuration, domain_id)
+{
+}
+
 GuidPrefix DiscoveryServerParticipantConfiguration::discovery_server_guid_prefix() const noexcept
 {
     return discovery_server_guid_;
 }
 
-std::set<std::shared_ptr<Address>> DiscoveryServerParticipantConfiguration::listening_addresses() const noexcept
+std::set<Address> DiscoveryServerParticipantConfiguration::listening_addresses() const noexcept
 {
     return listening_addresses_;
 }
 
-std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>
+std::set<DiscoveryServerConnectionAddress>
     DiscoveryServerParticipantConfiguration::connection_addresses() const noexcept
 {
     return connection_addresses_;
@@ -72,18 +85,18 @@ security::TlsConfiguration DiscoveryServerParticipantConfiguration::tls_configur
 bool DiscoveryServerParticipantConfiguration::is_valid() const noexcept
 {
     // Check listening addresses
-    for (std::shared_ptr<Address> address : listening_addresses_)
+    for (Address address : listening_addresses_)
     {
-        if (address->is_valid())
+        if (address.is_valid())
         {
             return false;
         }
     }
 
     // Check connection addresses
-    for (std::shared_ptr<DiscoveryServerConnectionAddress> address : connection_addresses_)
+    for (DiscoveryServerConnectionAddress address : connection_addresses_)
     {
-        if (address->is_valid())
+        if (address.is_valid())
         {
             return false;
         }

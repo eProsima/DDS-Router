@@ -12,30 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file Yaml.hpp
- */
+#include <gtest_aux.hpp>
+#include <gtest/gtest.h>
 
-#ifndef _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_
-#define _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_
+// TODO
 
-#include <yaml-cpp/yaml.h>
-
-namespace eprosima {
-namespace ddsrouter {
-namespace yaml {
-
-/**
- * Configuration is in dictionary format
- *
- * YAML spec: https://yaml.org/spec/1.2.2/
- *
- * @note: It is not legal to repeat keys in a YAML
- */
-using Yaml = YAML::Node;
-
-} /* namespace yaml */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-#endif /* _DDSROUTER_YAMLCONFIGURATION_YAML_HPP_ */
+int main(
+        int argc,
+        char** argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

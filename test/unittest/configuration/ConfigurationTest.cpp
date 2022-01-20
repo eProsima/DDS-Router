@@ -261,7 +261,7 @@ RawConfiguration random_participant_configuration(
         }
     }
 
-    config[PARTICIPANT_TYPE_TAG] = random_participant_type().to_string();
+    config[ PARTICIPANT_KIND_TAG] = random_participant_type().to_string();
 
     return config;
 }

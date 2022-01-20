@@ -63,6 +63,10 @@ public:
      */
     virtual bool is_valid() const noexcept;
 
+    //! Minor operator
+    bool operator <(
+            const DiscoveryServerConnectionAddress& other) const noexcept;
+
 protected:
 
     //! Internal Discovery Server Guid Prefix object

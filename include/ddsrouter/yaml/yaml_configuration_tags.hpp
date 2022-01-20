@@ -34,13 +34,14 @@ std::set<std::string> ddsrouter_tags() noexcept;
 // Topics related tags
 constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
 constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics
+constexpr const char* BUILTIN_TAG("builtin");       //! List of builtin topics
 constexpr const char* TOPIC_NAME_TAG("name");       //! Name of a topic
 constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
 constexpr const char* TOPIC_KIND_TAG("keyed");      //! Kind of a topic (with or without key)
 
-constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
-constexpr const char* PARTICIPANT_NAME_TAG("name"); //! Participant Type
-constexpr const char* PARTICIPANTS_LIST_TAG("participants"); //! Participant Type
+constexpr const char* PARTICIPANT_KIND_TAG("kind"); //! Participant Kind
+constexpr const char* PARTICIPANT_NAME_TAG("name"); //! Participant Name
+constexpr const char* COLLECTION_PARTICIPANTS_TAG("participants"); //! TODO: add comment
 
 // RTPS related tags
 // Simple RTPS related tags

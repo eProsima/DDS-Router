@@ -12,31 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file DDSRouterConfiguration.hpp
- */
+#include <gtest_aux.hpp>
+#include <gtest/gtest.h>
 
-#ifndef _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_
-#define _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_
+// TODO
 
-#include <ddsrouter/yaml-configuration/Yaml.hpp>
-
-namespace eprosima {
-namespace ddsrouter {
-namespace yaml {
-
-/**
- * TODO
- */
-class YAMLManager
+int main(
+        int argc,
+        char** argv)
 {
-public:
-
-    static Yaml load_file(const std::string& file_path);
-};
-
-} /* namespace yaml */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-#endif /* _DDSROUTER_YAMLCONFIGURATION_YAMLMANAGER_HPP_ */
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

@@ -42,17 +42,27 @@ public:
     DiscoveryServerParticipantConfiguration(
             const ParticipantId& id,
             const GuidPrefix& discovery_server_guid_prefix,
-            const std::set<std::shared_ptr<Address>>& listening_addresses,
-            const std::set<std::shared_ptr<DiscoveryServerConnectionAddress>>& connection_addresses,
+            const std::set<Address>& listening_addresses,
+            const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
             const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
             const security::TlsConfiguration& tls_configuration = security::TlsConfiguration(),
             const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
+    // TODO
+    DiscoveryServerParticipantConfiguration(
+            const ParticipantId& id,
+            const GuidPrefix& discovery_server_guid_prefix,
+            const std::set<Address>& listening_addresses,
+            const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
+            const DomainId& domain_id,
+            const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
+            const security::TlsConfiguration& tls_configuration = security::TlsConfiguration());
+
     GuidPrefix discovery_server_guid_prefix() const noexcept;
 
-    std::set<std::shared_ptr<Address>> listening_addresses() const noexcept;
+    std::set<Address> listening_addresses() const noexcept;
 
-    std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses() const noexcept;
+    std::set<DiscoveryServerConnectionAddress> connection_addresses() const noexcept;
 
     bool tls_active() const noexcept;
 
@@ -66,8 +76,8 @@ public:
 protected:
 
     GuidPrefix discovery_server_guid_;
-    std::set<std::shared_ptr<Address>> listening_addresses_;
-    std::set<std::shared_ptr<DiscoveryServerConnectionAddress>> connection_addresses_;
+    std::set<Address> listening_addresses_;
+    std::set<DiscoveryServerConnectionAddress> connection_addresses_;
     const security::TlsConfiguration& tls_configuration_;
 
     static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66

@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include <ddsrouter/types/macros.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
@@ -207,6 +209,24 @@ bool are_set_of_ptr_equal(
  */
 void tsnh(
         const Formatter& formatter);
+
+/**
+ * @brief Convert a elements set into a shared ptr elements set.
+ */
+template <typename Parent, typename Child>
+std::set<std::shared_ptr<Parent>> convert_set_to_shared(std::set<Child> set)
+{
+    FORCE_TEMPLATE_SUBCLASS(Parent, Child);
+
+    std::set<std::shared_ptr<Parent>> result_set;
+    for (Child element : set)
+    {
+        result_set.insert(std::make_shared<Child>(element));
+    }
+    return result_set;
+}
+
+// TODO : move templates to ipp file
 
 } /* namespace utils */
 } /* namespace ddsrouter */
