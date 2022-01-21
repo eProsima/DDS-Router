@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file LogEventHandler.hpp
+ * @file LogSevereEventHandler.hpp
  */
 
 #ifndef _DDSROUTER_EVENT_LOGSEVEREEVENTHANDLER_HPP_

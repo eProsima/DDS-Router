@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file LogEventHandler.cpp
+ * @file LogSevereEventHandler.cpp
  *
  */
 
