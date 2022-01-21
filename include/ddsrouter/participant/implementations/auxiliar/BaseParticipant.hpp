@@ -49,7 +49,7 @@ public:
      *
      * Id and type are taken from the configuration.
      *
-     * @param participant_configuration Configuration for the Participant. Participant Type is taken from here.
+     * @param participant_configuration Configuration for the Participant. Participant Kind is taken from here.
      * @param payload_pool DDS Router shared PayloadPool
      * @param discovery_database DDS Router shared Discovery Database
      */
@@ -81,7 +81,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    ParticipantType type() const noexcept override;
+    ParticipantKind type() const noexcept override;
 
     /**
      * @brief Override create_writer() IParticipant method

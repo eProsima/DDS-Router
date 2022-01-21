@@ -18,7 +18,7 @@
 
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/VoidWriter.hpp>
 
 namespace eprosima {
@@ -35,9 +35,9 @@ ParticipantId VoidParticipant::id() const noexcept
     return id_;
 }
 
-ParticipantType VoidParticipant::type() const noexcept
+ParticipantKind VoidParticipant::type() const noexcept
 {
-    return ParticipantType::VOID;
+    return ParticipantKind::VOID;
 }
 
 std::shared_ptr<IWriter> VoidParticipant::create_writer(

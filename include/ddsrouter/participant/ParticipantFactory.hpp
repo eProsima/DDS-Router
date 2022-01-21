@@ -32,7 +32,7 @@ public:
     /**
      * @brief Create a participant object of the type specified in the configuration.
      *
-     * @throw ConfigurationException : in case the configuration or participant type is incorrect
+     * @throw ConfigurationException : in case the configuration or participant kind is incorrect
      *
      * @param [in] participant_configuration : Participant Configuration that will retrieve the id and type of the
      *      participant that will be created, and its Configuration.

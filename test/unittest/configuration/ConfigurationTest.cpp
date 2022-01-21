@@ -214,16 +214,16 @@ std::string random_participant_name(
 }
 
 /*
- * Random participant type
+ * Random participant kind
  *
  * WARNING: the max_types_available must be updated with each new type added
  */
-ParticipantType random_participant_type(
+ParticipantKind random_participant_kind(
         uint16_t seed = 0)
 {
     uint16_t max_types_available = 4;
     // Avoid Invalid type
-    return ParticipantType((seed % (max_types_available - 1)) + 1);
+    return ParticipantKind((seed % (max_types_available - 1)) + 1);
 }
 
 /*
@@ -261,7 +261,7 @@ RawConfiguration random_participant_configuration(
         }
     }
 
-    config[PARTICIPANT_TYPE_TAG] = random_participant_type().to_string();
+    config[PARTICIPANT_KIND_TAG] = random_participant_kind().to_string();
 
     return config;
 }
@@ -331,7 +331,7 @@ TEST(ConfigurationTest, participants_configurations)
         listening_addresses.push_back(address2);
 
         RawConfiguration participant_config;
-        participant_config["type"] = random_participant_type().to_string();
+        participant_config["type"] = random_participant_kind().to_string();
         participant_config["listening-addresses"] = listening_addresses;
 
         std::string participant_name_str = "wanParticipant";

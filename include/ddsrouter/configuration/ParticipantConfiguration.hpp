@@ -21,7 +21,7 @@
 
 #include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
@@ -66,8 +66,8 @@ public:
     ParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
-    //! Participant Type associated with this configuration
-    ParticipantType type() const noexcept;
+    //! Participant Kind associated with this configuration
+    ParticipantKind type() const noexcept;
 
     //! Participant Id associated with this configuration
     ParticipantId id() const noexcept;
@@ -101,8 +101,8 @@ protected:
     //! Participant Id associated with this configuration
     const ParticipantId id_;
 
-    //! Participant Type associated with this configuration
-    ParticipantType type_;
+    //! Participant Kind associated with this configuration
+    ParticipantKind type_;
 };
 
 } /* namespace ddsrouter */

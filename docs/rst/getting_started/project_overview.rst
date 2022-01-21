@@ -77,7 +77,7 @@ The whole application has been thought to be user-friendly, following a user-ori
 Common Use Cases
 ================
 
-The different cases where the |ddsrouter| could be applied are very varied, and would increase as new Participant Types
+The different cases where the |ddsrouter| could be applied are very varied, and would increase as new Participant Kinds
 will be added in future releases.
 These are most common use cases so far:
 

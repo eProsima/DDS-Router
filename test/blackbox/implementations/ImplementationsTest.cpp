@@ -51,7 +51,7 @@ void set_domain(
 }
 
 RawConfiguration participant_configuration(
-        ParticipantType type,
+        ParticipantKind type,
         uint16_t value = 0)
 {
     RawConfiguration participant_configuration;
@@ -60,19 +60,19 @@ RawConfiguration participant_configuration(
     address[ADDRESS_IP_TAG] = "127.0.0.1";
     address[ADDRESS_PORT_TAG] = 11666 + value;
 
-    participant_configuration[PARTICIPANT_TYPE_TAG] = type.to_string();
+    participant_configuration[PARTICIPANT_KIND_TAG] = type.to_string();
 
     switch (type())
     {
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             set_domain(participant_configuration);
             break;
 
-        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
-        case ParticipantType::WAN:
+        case ParticipantKind::WAN:
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
@@ -93,8 +93,8 @@ RawConfiguration participant_configuration(
  */
 TEST(ImplementationsTest, solo_participant_implementation)
 {
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind type : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -117,8 +117,8 @@ TEST(ImplementationsTest, pair_implementation)
 {
     test::TestLogHandler test_log_handler;
 
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind type : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -151,8 +151,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
 {
     test::TestLogHandler test_log_handler;
 
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind type : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
@@ -194,8 +194,8 @@ TEST(ImplementationsTest, all_implementations)
 
         uint16_t participant_number = 1;
 
-        // For each Participant Type set it in configuration
-        for (ParticipantType type : ParticipantType::all_valid_participant_types())
+        // For each Participant Kind set it in configuration
+        for (ParticipantKind type : ParticipantKind::all_valid_participant_kinds())
         {
             // Add participant
             std::string participant_name = "participant_" + type.to_string();

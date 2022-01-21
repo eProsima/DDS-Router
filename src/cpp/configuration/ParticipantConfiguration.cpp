@@ -19,7 +19,7 @@
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
@@ -29,7 +29,7 @@ ParticipantConfiguration::ParticipantConfiguration(
         ParticipantId id) noexcept
     : BaseConfiguration(RawConfiguration())
     , id_(id)
-    , type_(ParticipantType::PARTICIPANT_TYPE_INVALID)
+    , type_(ParticipantKind::PARTICIPANT_KIND_INVALID)
 {
     // Set type from id
     set_type_();
@@ -49,7 +49,7 @@ ParticipantConfiguration::ParticipantConfiguration(
     set_type_();
     if (!type_.is_valid())
     {
-        throw ConfigurationException("DDSRouter Participant expects a valid ParticipantType");
+        throw ConfigurationException("DDSRouter Participant expects a valid ParticipantKind");
     }
 }
 
@@ -61,20 +61,20 @@ ParticipantConfiguration::ParticipantConfiguration(
 
 void ParticipantConfiguration::set_type_() noexcept
 {
-    if (raw_configuration_[PARTICIPANT_TYPE_TAG])
+    if (raw_configuration_[PARTICIPANT_KIND_TAG])
     {
         // Get configuration type from type tag
-        type_ = ParticipantType::participant_type_from_name(
-            raw_configuration_[PARTICIPANT_TYPE_TAG].as<std::string>());
+        type_ = ParticipantKind::participant_kind_from_name(
+            raw_configuration_[PARTICIPANT_KIND_TAG].as<std::string>());
     }
     else
     {
         // Get configuration type from Id name
-        type_ = ParticipantType::participant_type_from_name(id_.id_name());
+        type_ = ParticipantKind::participant_kind_from_name(id_.id_name());
     }
 }
 
-ParticipantType ParticipantConfiguration::type() const noexcept
+ParticipantKind ParticipantConfiguration::type() const noexcept
 {
     return type_;
 }

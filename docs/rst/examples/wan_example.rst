@@ -116,7 +116,7 @@ After executing both |ddsrouter| applications in both hosts, and *talker* and *l
 the *listener* in *H*:sub:`A` will start receiving and printing data from the *talker* in *H*:sub:`B`.
 **You are communicating DDS via WAN**.
 
-Remember that the Participants in every |ddsrouter| could be configured as any :term:`Participant Type`,
+Remember that the Participants in every |ddsrouter| could be configured as any :term:`Participant Kind`,
 allowing to use local Discovery Server, connect to several domains in the same LAN, connect to several WANs, etc.
 Endless Possibilities.
 Just remember uncle Ben's words: *with great power comes great responsibility*.
