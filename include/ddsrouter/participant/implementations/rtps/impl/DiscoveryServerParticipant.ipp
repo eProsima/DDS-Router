@@ -36,7 +36,7 @@ namespace rtps {
 
 template <class ConfigurationType>
 DiscoveryServerParticipant<ConfigurationType>::DiscoveryServerParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        const ConfigurationType participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : CommonRTPSRouterParticipant<ConfigurationType>
@@ -49,9 +49,9 @@ fastrtps::rtps::RTPSParticipantAttributes
 DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 {
     // Get Configuration information
-    std::vector<Address> listening_addresses = this->configuration_.listening_addresses();
-    std::vector<DiscoveryServerConnectionAddress> connection_addresses = this->configuration_.connection_addresses();
-    GuidPrefix discovery_server_guid = this->configuration_.discovery_server_guid();
+    std::set<Address> listening_addresses = this->configuration_.listening_addresses();
+    std::set<DiscoveryServerConnectionAddress> connection_addresses = this->configuration_.connection_addresses();
+    GuidPrefix discovery_server_guid = this->configuration_.discovery_server_guid_prefix();
     std::shared_ptr<security::TlsConfiguration> tls_config =  this->configuration_.tls_configuration();
 
     // Set attributes
@@ -254,7 +254,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set Server Guid
-    params.prefix = this->configuration_.discovery_server_guid();
+    params.prefix = this->configuration_.discovery_server_guid_prefix();
 
     /////
     // Create specific descriptors if needed
@@ -315,10 +315,11 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
             "Configured Participant " << this->id() << " with server guid: " <<
-            this->configuration_.discovery_server_guid());
+            this->configuration_.discovery_server_guid_prefix());
 
     return params;
 }
+
 
 template <class ConfigurationType>
 void DiscoveryServerParticipant<ConfigurationType>::enable_tls(

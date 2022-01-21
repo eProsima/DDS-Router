@@ -58,7 +58,7 @@ public:
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSRouter(
-            const DDSRouterConfiguration& configuration);
+            const configuration::DDSRouterConfiguration& configuration);
 
     /**
      * @brief Destroy the DDSRouter object
@@ -82,7 +82,7 @@ public:
      * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
     ReturnCode reload_configuration(
-            const DDSRouterConfiguration& configuration);
+            const configuration::DDSRouterConfiguration& configuration);
 
     /**
      * @brief Start communication in DDS Router
@@ -250,7 +250,7 @@ protected:
     std::map<RealTopic, bool> current_topics_;
 
     //! DDSRouter configuration
-    DDSRouterConfiguration configuration_;
+    configuration::DDSRouterConfiguration configuration_;
 
     //! List of allowed and blocked topics
     AllowedTopicList allowed_topics_;

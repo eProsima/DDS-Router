@@ -16,7 +16,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/communication/PayloadPool.hpp>
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>

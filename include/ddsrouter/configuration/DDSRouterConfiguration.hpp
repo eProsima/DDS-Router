@@ -16,17 +16,20 @@
  * @file DDSRouterConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <set>
+#include <memory>
+
 #include <ddsrouter/configuration/BaseConfiguration.hpp>
-#include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace configuration {
 
 /**
  * This class joins every DDSRouter feature configuration and includes methods
@@ -37,79 +40,64 @@ class DDSRouterConfiguration : public BaseConfiguration
 public:
 
     /**
-     * @brief Construct a new DDSRouterConfiguration object from a yaml object
-     *
-     * @param raw_configuration represents the yaml to this object to get the configuration data. This yaml must be a
-     *  map or an empty yaml, and nothing else
-     *
-     * @throw \c ConfigurationException in case the yaml is not well formed or is not a map nor empty
+     * TODO
      */
     DDSRouterConfiguration(
-            const RawConfiguration& raw_configuration);
+            std::set<std::shared_ptr<FilterTopic>> allowlist,
+            std::set<std::shared_ptr<FilterTopic>> blocklist,
+            std::set<std::shared_ptr<RealTopic>> builtin_topics,
+            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations);
 
     /**
-     * @brief Return a list with the topics allowed in the configuration
+     * @brief Return a set with the topics allowed in the configuration
      *
      * @return List of filters to get allowed topics
      *
      * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      */
-    std::list<std::shared_ptr<FilterTopic>> allowlist() const;
+    std::set<std::shared_ptr<FilterTopic>> allowlist() const noexcept;
 
     /**
-     * @brief Return a list with the topics blocked in the configuration
+     * @brief Return a set with the topics blocked in the configuration
      *
      * @return List of filters to get blocked topics
      *
      * @throw \c ConfigurationException in case the yaml inside blocklist is not well-formed
      */
-    std::list<std::shared_ptr<FilterTopic>> blocklist() const;
+    std::set<std::shared_ptr<FilterTopic>> blocklist() const noexcept;
 
     /**
-     * @brief Return a list with the different \c ParticipantConfigurations in the yaml
+     * TODO
+     */
+    std::set<std::shared_ptr<RealTopic>> builtin_topics() const noexcept;
+
+    /**
+     * @brief Return a set with the different \c ParticipantConfigurations in the yaml
      *
      * Every tag inside the yaml that is not a key word for the DDSRouterConfiguration could be a Participant.
      * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
-     * is created and added to the list to be returned.
+     * is created and added to the set to be returned.
      * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
-     * invalid \c ParticipantKind ) will be added to the list.
+     * invalid \c ParticipantKind ) will be added to the set.
      *
      * @return List of \c ParticipantConfigurations
      *
      * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
      */
-    std::list<ParticipantConfiguration> participants_configurations() const;
+    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
 
-
-    /**
-     * @brief Return a set with the real topics included in allowedlist
-     *
-     * This method gets the allowedlist in configuration and returns only those topics that can actually
-     * be created as Real topics.
-     *
-     * @todo: This method will disappear once the dynamic module is implemented
-     *
-     * @return Set of real topics
-     *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
-     */
-    std::set<RealTopic> real_topics() const;
+    bool is_valid() const noexcept override;
 
 protected:
 
-    /**
-     * @brief Generic method to get a list of topics from a list
-     *
-     * This method collects the same functionality that share \c allowlist and \c blocklist
-     *
-     * @param [in] list_tag: tag name of the list to look for in the configuration
-     * @return List of filter topics
-     */
-    std::list<std::shared_ptr<FilterTopic>> generic_get_topic_list_(
-            const char* list_tag) const;
+    std::set<std::shared_ptr<FilterTopic>> allowlist_;
+    std::set<std::shared_ptr<FilterTopic>> blocklist_;
+    std::set<std::shared_ptr<RealTopic>> builtin_topics_;
+    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
 };
 
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_DDS_ROUTERCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_ */
