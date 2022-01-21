@@ -72,25 +72,25 @@ if(PYTHONINTERP_FOUND)
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
 
-        set(TEST_NAME "system.ddsrouter.${TEST}")
+        set(TEST_NAME "tool.application.ddsrouter.${TEST}")
 
         # CTest has issues with signals on windows. We forked the test
         # execution using an auxiliary powershell script
         if(WIN32)
            add_test(
-                    NAME system.tools.ddsrouter.${TEST}
+                    NAME ${TEST_NAME}
                     COMMAND powershell "-File" ${PWS_LAUNCHER}
                             ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            $<TARGET_FILE:ddsrouter>
+                            $<TARGET_FILE:ddsrouter-app>
                             ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                 )
         else()
             add_test(
-                    NAME system.tools.ddsrouter.${TEST}
+                    NAME ${TEST_NAME}
                     COMMAND ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            "--exe" $<TARGET_FILE:ddsrouter>
+                            "--exe" $<TARGET_FILE:ddsrouter-app>
                             "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                             "--debug"
                 )
@@ -98,7 +98,7 @@ if(PYTHONINTERP_FOUND)
 
         # Set test properties
         set_tests_properties(
-            system.tools.ddsrouter.${TEST}
+            ${TEST_NAME}
             PROPERTIES
                 ENVIRONMENT "${TEST_ENVIRONMENT}"
             )

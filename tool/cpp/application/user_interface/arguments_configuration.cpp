@@ -30,7 +30,7 @@
 #endif // if defined(_WIN32)
 
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/user_interface/arguments_configuration.hpp>
+#include "arguments_configuration.hpp"
 
 namespace eprosima {
 namespace ddsrouter {
@@ -142,7 +142,7 @@ ProcessReturnCode parse_arguments(
         // Unknown args provided
         if (parse.nonOptionsCount())
         {
-            std::cerr << "ERROR: Unknown argument " << parse.nonOption(0) << std::endl;
+            std::cerr << "ERROR: Unknown argument: " << parse.nonOption(0) << std::endl;
             option::printUsage(fwrite, stdout, usage, columns);
             return ProcessReturnCode::INCORRECT_ARGUMENT;
         }
