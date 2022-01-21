@@ -121,6 +121,58 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
 
 endfunction(add_test_executable)
 
+# Return a list of all cpp files required in order to compile test_utils.cpp
+# Arguments:
+# TEST_SOURCES -> List of source files where new sources will be added
+function(sources_for_test_utils TEST_SOURCES)
+
+    set(TEST_UTILS_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/DiscoveryServerConnectionAddress.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/DomainId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
+    )
+
+    set(NEW_TEST_SOURCES "${TEST_SOURCES};${TEST_UTILS_SOURCES}")
+
+    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
+
+endfunction()
+
+# Return a list of all cpp files required by ddsrouter library
+# Arguments:
+# TEST_SOURCES -> List of source files where new sources will be added
+function(all_library_sources TEST_SOURCES)
+
+    file(GLOB_RECURSE LIBRARY_SOURCES
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
+            "${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp"
+            "${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp"
+        )
+    set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
+    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
+
+endfunction()
+
 add_subdirectory(blackbox)
 add_subdirectory(unittest)
 

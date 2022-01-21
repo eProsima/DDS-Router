@@ -165,13 +165,14 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         {
             // Invalid connection address, continue with next one
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Discard connection address with remote server: " << connection_address.discovery_server_guid() <<
+                    "Discard connection address with remote server: " <<
+                    connection_address.discovery_server_guid_prefix() <<
                     " in Participant " << this->id() << " initialization.");
             continue;
         }
 
         // Set Server GUID
-        GuidPrefix server_prefix = connection_address.discovery_server_guid();
+        GuidPrefix server_prefix = connection_address.discovery_server_guid_prefix();
 
         for (Address address : connection_address.addresses())
         {
@@ -179,7 +180,8 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             {
                 // Invalid ip address, continue with next one
                 logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                        "Discard connection address with remote server: " << connection_address.discovery_server_guid() <<
+                        "Discard connection address with remote server: " <<
+                        connection_address.discovery_server_guid_prefix() <<
                         " due to invalid ip address " << address.ip() << " in Participant " << this->id() <<
                         " initialization.");
                 continue;

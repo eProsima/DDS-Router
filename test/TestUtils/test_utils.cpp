@@ -36,6 +36,145 @@ Guid random_guid(
     return guid;
 }
 
+std::set<std::shared_ptr<RealTopic>> topic_set(std::vector<TopicInput> topics)
+{
+    std::set<std::shared_ptr<RealTopic>> result;
+    for (TopicInput input : topics)
+    {
+        if (input.key_set)
+        {
+            result.insert(std::make_shared<RealTopic>(
+                input.name,
+                input.type,
+                input.keyed));
+        }
+        else
+        {
+            result.insert(std::make_shared<RealTopic>(
+                input.name,
+                input.type));
+        }
+    }
+    return result;
+}
+
+std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput> topics)
+{
+    std::set<std::shared_ptr<FilterTopic>> result;
+    for (WildcardTopicInput input : topics)
+    {
+        if (input.key_set)
+        {
+            if (input.type_set)
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    input.type,
+                    true,
+                    input.keyed));
+            }
+            else
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    true,
+                    input.keyed));
+            }
+        }
+        else
+        {
+            if (input.type_set)
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    input.type,
+                    false));
+            }
+            else
+            {
+                result.insert(std::make_shared<WildcardTopic>(
+                    input.name,
+                    false));
+            }
+        }
+    }
+    return result;
+}
+
+DomainId random_domain(
+        uint16_t seed /* = 0 */)
+{
+    return DomainId(static_cast<DomainIdType>(seed));
+}
+
+GuidPrefix random_guid_prefix(
+        uint16_t seed /* = 0 */,
+        bool ros /* = false */)
+{
+    if (ros)
+    {
+        return GuidPrefix(true, seed);
+    }
+    else
+    {
+        return GuidPrefix(static_cast<uint32_t>(seed));
+    }
+}
+
+Address random_address(
+        uint16_t seed /* = 0 */)
+{
+    return Address();
+}
+
+std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
+        uint16_t seed /* = 0 */,
+        uint16_t size /* = 1 */,
+        bool ros /* = false */)
+{
+    std::set<DiscoveryServerConnectionAddress> result;
+
+    for (int i=0; i<size; ++i)
+    {
+        result.insert(
+            DiscoveryServerConnectionAddress(
+                random_guid_prefix((seed * size + i) * i),
+                std::set<Address>({
+                    random_address((seed * size + i) * i),
+                    random_address((seed * size + i) * i + 1)})));
+    }
+    return result;
+}
+
+std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
+        ParticipantKind kind,
+        uint16_t seed /* = 0 */)
+{
+    ParticipantId id("Participant" + std::to_string(seed));
+
+    switch (kind())
+    {
+        case ParticipantKind::SIMPLE_RTPS:
+            return std::make_shared<configuration::SimpleParticipantConfiguration>(
+                id,
+                kind,
+                random_domain(seed));
+
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::WAN:
+            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+                id,
+                random_guid_prefix(seed),
+                std::set<Address>(),
+                std::set<DiscoveryServerConnectionAddress>(),
+                kind);
+
+        // Add cases where Participants need specific arguments
+        default:
+            return std::make_shared<configuration::ParticipantConfiguration>(id, kind);
+    }
+}
+
 } /* namespace test */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

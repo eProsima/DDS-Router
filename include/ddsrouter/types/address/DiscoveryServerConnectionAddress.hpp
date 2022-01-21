@@ -50,7 +50,7 @@ public:
             std::set<Address> addresses);
 
     //! Discovery Server \c GuidPrefix Port getter
-    GuidPrefix discovery_server_guid() const noexcept;
+    GuidPrefix discovery_server_guid_prefix() const noexcept;
 
     //! Addresses getter
     std::set<Address> addresses() const noexcept;
@@ -62,6 +62,10 @@ public:
      * Checks if it has at least one correct address.
      */
     virtual bool is_valid() const noexcept;
+
+    //! Minor operator
+    bool operator <(
+            const DiscoveryServerConnectionAddress& other) const noexcept;
 
 protected:
 

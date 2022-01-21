@@ -17,12 +17,20 @@
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
+#include <test_utils.hpp>
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
-#include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <ddsrouter/types/configuration_tags.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -76,15 +84,7 @@ RawConfiguration participant_configuration(
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
-        // Add cases where Participants need specific arguments
-        default:
-            break;
-    }
-
-    static_cast<void>(value);
-
-    return participant_configuration;
-}
+using namespace eprosima::ddsrouter;
 
 /**
  * Test that tries to create a DDSRouter with only one Participant.
@@ -96,14 +96,18 @@ TEST(ImplementationsTest, solo_participant_implementation)
     // For each Participant Kind
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(test::random_participant_configuration(kind));
 
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(kind, 1);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
         // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), InitializationException);
+        ASSERT_THROW(DDSRouter router(configuration), InitializationException) << kind;
     }
 }
 
@@ -120,16 +124,20 @@ TEST(ImplementationsTest, pair_implementation)
     // For each Participant Kind
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(test::random_participant_configuration(kind, 1));
+        participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
+<<<<<<< HEAD
         // Add two participants
         configuration["participant_1"] = participant_configuration(kind, 1);
         configuration["participant_2"] = participant_configuration(kind, 2);
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
+>>>>>>> b01029e... Refs #13530: fix tests (except implementation)
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
-
         // Start DDSRouter
         router.start();
 
@@ -151,18 +159,22 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
 {
     test::TestLogHandler test_log_handler;
 
-    // For each Participant Kind
+    // For each Participant kind
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
+        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
+            {{"rt/chatter", "std_msgs::msg::dds_::String_", false, false}});
+
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(test::random_participant_configuration(kind, 1));
+        participant_configurations.insert(test::random_participant_configuration(kind, 2));
+
         // Generate configuration
-        RawConfiguration configuration;
-
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(kind, 1);
-        configuration["participant_2"] = participant_configuration(kind, 2);
-
-        // Set topic to active
-        set_allowed_topic(configuration);
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            builtin_topics,
+            participant_configurations);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -189,8 +201,11 @@ TEST(ImplementationsTest, all_implementations)
     test::TestLogHandler test_log_handler;
 
     {
-        // Generate configuration
-        RawConfiguration configuration;
+        // Set topic to active
+        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
+            {{"rt/chatter", "std_msgs::msg::dds_::String_", false, false}});
+
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
 
         uint16_t participant_number = 1;
 
@@ -198,12 +213,15 @@ TEST(ImplementationsTest, all_implementations)
         for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
         {
             // Add participant
-            std::string participant_name = "participant_" + kind.to_string();
-            configuration[participant_name] = participant_configuration(kind, ++participant_number);
+            participant_configurations.insert(test::random_participant_configuration(kind, ++participant_number));
         }
 
-        // Set topic to active
-        set_allowed_topic(configuration);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);

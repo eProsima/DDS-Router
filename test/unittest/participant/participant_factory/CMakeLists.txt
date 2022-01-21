@@ -21,15 +21,9 @@ set(TEST_NAME ParticipantFactoryTest)
 set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DomainId_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/Address_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/GuidPrefix_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DiscoveryServerConnectionAddress_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/SimpleParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DiscoveryServerParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/WANParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
@@ -65,7 +59,9 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/EchoWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
     )
+sources_for_test_utils("${TEST_SOURCES}") # Add all requirements for use test_utils
 
 set(TEST_LIST
         create_void_participant
