@@ -21,17 +21,6 @@ set(TEST_NAME
 
 set(TEST_SOURCES
         ImplementationsTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/SimpleParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/LocalDiscoveryServerParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/rtps/WANParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp
     )
 
 set(TEST_LIST

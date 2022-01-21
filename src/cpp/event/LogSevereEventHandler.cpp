@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,29 +13,33 @@
 // limitations under the License.
 
 /**
- * @file test_utils.cpp
+ * @file LogSevereEventHandler.cpp
  *
  */
 
-#include <gtest_aux.hpp>
-#include <gtest/gtest.h>
-
-#include <test_utils.hpp>
+#include <ddsrouter/event/LogSevereEventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace test {
+namespace event {
 
-Guid random_guid(
-        uint16_t seed /* = 1 */)
+LogSevereEventHandler::LogSevereEventHandler(
+        std::function<void(eprosima::fastdds::dds::Log::Entry)> callback,
+        Log::Kind threshold /* = Log::Kind::Warning */)
+    : LogEventHandler(callback)
+    , threshold_(threshold)
 {
-    Guid guid;
-    guid.entityId.value[3] = seed;
-    guid.guidPrefix.value[0] = 0x01;
-    guid.guidPrefix.value[1] = 0x0f;
-    return guid;
 }
 
-} /* namespace test */
+void LogSevereEventHandler::Consume(
+        const Log::Entry& entry)
+{
+    if (entry.kind <= threshold_)
+    {
+        LogEventHandler::Consume(entry);
+    }
+}
+
+} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

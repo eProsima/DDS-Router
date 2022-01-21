@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,27 +13,37 @@
 // limitations under the License.
 
 /**
- * @file test_utils.cpp
+ * @file TestLogHandler.cpp
  *
  */
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <test_utils.hpp>
+#include <TestLogHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
-Guid random_guid(
-        uint16_t seed /* = 1 */)
+TestLogHandler::TestLogHandler(
+        uint32_t max_severe_logs /* = 0 */)
+    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry)
+            {
+            }))
+    , max_severe_logs_(max_severe_logs)
 {
-    Guid guid;
-    guid.entityId.value[3] = seed;
-    guid.guidPrefix.value[0] = 0x01;
-    guid.guidPrefix.value[1] = 0x0f;
-    return guid;
+}
+
+void TestLogHandler::check_valid()
+{
+    ASSERT_LE(log_consumer_->event_count(), max_severe_logs_);
+}
+
+TestLogHandler::~TestLogHandler()
+{
+    check_valid();
+    Log::Reset();
 }
 
 } /* namespace test */

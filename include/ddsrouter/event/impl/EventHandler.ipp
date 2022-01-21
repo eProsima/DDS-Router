@@ -122,6 +122,12 @@ bool EventHandler<Args...>::wait_for_event(
 }
 
 template <typename ... Args>
+uint32_t EventHandler<Args...>::event_count() const noexcept
+{
+    return number_of_events_registered_;
+}
+
+template <typename ... Args>
 void EventHandler<Args...>::simulate_event_occurred(
         Args... args) noexcept
 {

@@ -25,15 +25,24 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
     set(LIBRARY_DIRECTORIES
         communication
         configuration
+        configuration/implementations
         core
         dynamic
+        event
         exceptions
         participant
-        reader
-        writer
+        participant/implementations/auxiliar
+        participant/implementations/rtps
+        reader/implementations/auxiliar
+        reader/implementations/rtps
         types
+        types/address
         types/endpoint
-        types/topic)
+        types/participant
+        types/topic
+        writer/implementations/auxiliar
+        writer/implementations/rtps
+    )
 
     # Get all sources of the library except implementations and main
     foreach(SOURCE_DIRECTORY ${LIBRARY_DIRECTORIES})
@@ -47,6 +56,16 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         list(APPEND TEST_SOURCES ${SOURCES_FILES})
 
     endforeach()
+
+    # Source every cpp in Test utils
+
+    unset(SOURCES_FILES)
+    file(GLOB_RECURSE SOURCES_FILES
+        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.c"
+        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cpp"
+        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cxx"
+        )
+    list(APPEND TEST_SOURCES ${SOURCES_FILES})
 
     # Add all library needed by sources
     set(EXTRA_LIBRARIES
