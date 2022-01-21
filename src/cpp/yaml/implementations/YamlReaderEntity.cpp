@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file YamlConfigurationEntity.cpp
+ * @file YamlReaderEntity.cpp
  *
  */
 
@@ -26,7 +26,7 @@
 #include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/yaml/YamlConfiguration.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
@@ -34,7 +34,7 @@ namespace ddsrouter {
 namespace yaml {
 
 template <>
-TransportProtocol YamlConfiguration::get<TransportProtocol>(const Yaml& yml)
+TransportProtocol YamlReader::get<TransportProtocol>(const Yaml& yml)
 {
     return get_enumeration<TransportProtocol>(
         yml,
@@ -45,7 +45,7 @@ TransportProtocol YamlConfiguration::get<TransportProtocol>(const Yaml& yml)
 }
 
 template <>
-IpVersion YamlConfiguration::get<IpVersion>(const Yaml& yml)
+IpVersion YamlReader::get<IpVersion>(const Yaml& yml)
 {
     return get_enumeration<IpVersion>(
         yml,
@@ -56,28 +56,28 @@ IpVersion YamlConfiguration::get<IpVersion>(const Yaml& yml)
 }
 
 template <>
-ParticipantId YamlConfiguration::get<ParticipantId>(const Yaml& yml)
+ParticipantId YamlReader::get<ParticipantId>(const Yaml& yml)
 {
     // Participant name required
     return ParticipantId(get_scalar<std::string>(yml));
 }
 
 template <>
-ParticipantKind YamlConfiguration::get<ParticipantKind>(const Yaml& yml)
+ParticipantKind YamlReader::get<ParticipantKind>(const Yaml& yml)
 {
     // Participant kind required
     return ParticipantKind::participant_kind_from_name(get_scalar<std::string>(yml));
 }
 
 template <>
-DomainId YamlConfiguration::get<DomainId>(const Yaml& yml)
+DomainId YamlReader::get<DomainId>(const Yaml& yml)
 {
     // Domain id required
     return DomainId(get_scalar<DomainIdType>(yml));
 }
 
 template <>
-GuidPrefix YamlConfiguration::get<GuidPrefix>(const Yaml& yml)
+GuidPrefix YamlReader::get<GuidPrefix>(const Yaml& yml)
 {
     // If guid exists, use it. Non mandatory.
     if (is_tag_present(yml, DISCOVERY_SERVER_GUID_TAG))
@@ -109,14 +109,14 @@ GuidPrefix YamlConfiguration::get<GuidPrefix>(const Yaml& yml)
 }
 
 template <>
-Address YamlConfiguration::get<Address>(const Yaml& yml)
+Address YamlReader::get<Address>(const Yaml& yml)
 {
     // TODO
     return Address();
 }
 
 template <>
-DiscoveryServerConnectionAddress YamlConfiguration::get<DiscoveryServerConnectionAddress>(const Yaml& yml)
+DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddress>(const Yaml& yml)
 {
     // GuidPrefix required
     GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_TAG);
@@ -129,7 +129,7 @@ DiscoveryServerConnectionAddress YamlConfiguration::get<DiscoveryServerConnectio
 }
 
 template <>
-RealTopic YamlConfiguration::get<RealTopic>(const Yaml& yml)
+RealTopic YamlReader::get<RealTopic>(const Yaml& yml)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -157,7 +157,7 @@ RealTopic YamlConfiguration::get<RealTopic>(const Yaml& yml)
 }
 
 template <>
-WildcardTopic YamlConfiguration::get<WildcardTopic>(const Yaml& yml)
+WildcardTopic YamlReader::get<WildcardTopic>(const Yaml& yml)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -204,7 +204,7 @@ WildcardTopic YamlConfiguration::get<WildcardTopic>(const Yaml& yml)
 }
 
 template <>
-security::TlsConfiguration YamlConfiguration::get<security::TlsConfiguration>(const Yaml& yml)
+security::TlsConfiguration YamlReader::get<security::TlsConfiguration>(const Yaml& yml)
 {
     // Optional private key
     std::string private_key_file;

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file YamlConfigurationParticipant.cpp
+ * @file YamlReaderParticipant.cpp
  *
  */
 
@@ -28,7 +28,7 @@
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/yaml/YamlConfiguration.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
@@ -36,7 +36,7 @@ namespace ddsrouter {
 namespace yaml {
 
 template <>
-configuration::ParticipantConfiguration YamlConfiguration::get<configuration::ParticipantConfiguration>(const Yaml& yml)
+configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
@@ -48,7 +48,7 @@ configuration::ParticipantConfiguration YamlConfiguration::get<configuration::Pa
 }
 
 template <>
-configuration::SimpleParticipantConfiguration YamlConfiguration::get<configuration::SimpleParticipantConfiguration>(const Yaml& yml)
+configuration::SimpleParticipantConfiguration YamlReader::get<configuration::SimpleParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
@@ -63,7 +63,7 @@ configuration::SimpleParticipantConfiguration YamlConfiguration::get<configurati
 }
 
 template <>
-configuration::DiscoveryServerParticipantConfiguration YamlConfiguration::get<configuration::DiscoveryServerParticipantConfiguration>(const Yaml& yml)
+configuration::DiscoveryServerParticipantConfiguration YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
@@ -98,10 +98,10 @@ configuration::DiscoveryServerParticipantConfiguration YamlConfiguration::get<co
 
     // Optional TLS
     security::TlsConfiguration tls;
-    bool has_tls = is_present<security::TlsConfiguration>(yml);
+    bool has_tls = is_tag_present(yml, TLS_TAG);
     if (has_tls)
     {
-        tls = get<security::TlsConfiguration>(yml);
+        tls = get<security::TlsConfiguration>(yml, TLS_TAG);
     }
 
     if (has_domain)

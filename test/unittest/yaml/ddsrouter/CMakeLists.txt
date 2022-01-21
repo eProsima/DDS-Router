@@ -38,10 +38,10 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlConfigurationEntity.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlConfigurationParticipant.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlConfigurationDDSRouter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReaderConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
     )
 

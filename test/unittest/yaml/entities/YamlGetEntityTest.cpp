@@ -17,7 +17,7 @@
 
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/yaml/YamlConfiguration.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 #include <YamlConfigurationTestUtils.hpp>
@@ -67,42 +67,51 @@ TEST(YamlGetEntityTest, get_real_topic)
 
     // Topic Std
     {
-        Yaml yml;
+        Yaml yml_topic;
         real_topic_to_yaml(
-            yml,
+            yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
             test::YamlField<bool>());
 
-        RealTopic topic = YamlConfiguration::get<RealTopic>(yml);
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
         compare_topic(topic, name, type, false); // By default no keyed
     }
 
     // Topic with key
     {
-        Yaml yml;
+        Yaml yml_topic;
         real_topic_to_yaml(
-            yml,
+            yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
             test::YamlField<bool>(true));
 
-        RealTopic topic = YamlConfiguration::get<RealTopic>(yml);
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
         compare_topic(topic, name, type, true);
     }
 
     // Topic with no key
     {
-        Yaml yml;
+        Yaml yml_topic;
         real_topic_to_yaml(
-            yml,
+            yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
             test::YamlField<bool>(false));
 
-        RealTopic topic = YamlConfiguration::get<RealTopic>(yml);
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
         compare_topic(topic, name, type, false);
     }
@@ -111,31 +120,37 @@ TEST(YamlGetEntityTest, get_real_topic)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlConfiguration::get<RealTopic>(yml), ConfigurationException);
+        ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
     }
 
     // Topic without name
     {
-        Yaml yml;
+        Yaml yml_topic;
         real_topic_to_yaml(
-            yml,
+            yml_topic,
             test::YamlField<std::string>(),
             test::YamlField<std::string>(type),
             test::YamlField<bool>());
 
-        ASSERT_THROW(YamlConfiguration::get<RealTopic>(yml), ConfigurationException);
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
     }
 
     // Topic without type
     {
-        Yaml yml;
+        Yaml yml_topic;
         real_topic_to_yaml(
-            yml,
+            yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(),
             test::YamlField<bool>());
 
-        ASSERT_THROW(YamlConfiguration::get<RealTopic>(yml), ConfigurationException);
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
     }
 }
 
@@ -160,7 +175,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
+        TransportProtocol tp = YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
 
         ASSERT_EQ(tp, TransportProtocol::UDP);
     }
@@ -173,7 +188,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        TransportProtocol tp = YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
+        TransportProtocol tp = YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
 
         ASSERT_EQ(tp, TransportProtocol::TCP);
     }
@@ -182,7 +197,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
+        ASSERT_THROW(YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
     }
 
     // Incorrect tag
@@ -193,7 +208,7 @@ TEST(YamlGetEntityTest, get_transport_protocol)
             test::YamlField<std::string>("utcp"),
             ADDRESS_TRANSPORT_TAG);
 
-        ASSERT_THROW(YamlConfiguration::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
+        ASSERT_THROW(YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
     }
 }
 

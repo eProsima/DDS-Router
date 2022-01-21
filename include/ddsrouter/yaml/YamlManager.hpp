@@ -26,7 +26,7 @@ namespace ddsrouter {
 namespace yaml {
 
 /**
- * TODO
+ * Class that manages generic methods related with yaml load and yaml validation.
  */
 class YamlManager
 {

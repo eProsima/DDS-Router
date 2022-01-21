@@ -16,8 +16,8 @@
  * @file DDSRouterConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_YAML_YAMLCONFIGURATION_HPP_
-#define _DDSROUTER_YAML_YAMLCONFIGURATION_HPP_
+#ifndef _DDSROUTER_YAML_YAMLREADER_HPP_
+#define _DDSROUTER_YAML_YAMLREADER_HPP_
 
 #include <ddsrouter/yaml/Yaml.hpp>
 
@@ -25,15 +25,31 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-class YamlConfiguration
+/**
+ * @brief Class that encapsulates methods to get values from Yaml Node.
+ *
+ */
+class YamlReader
 {
 public:
 
     template <typename T>
-    static T get(const Yaml& yml);
+    static T get(const Yaml& yml, const std::string& tag);
 
     template <typename T>
-    static T get(const Yaml& yml, const std::string& tag);
+    static std::list<T> get_list(const Yaml& yml, const std::string& tag);
+
+    template <typename T>
+    static std::set<T> get_set(const Yaml& yml, const std::string& tag);
+
+    static bool is_tag_present(const Yaml& yml, const std::string& tag);
+
+protected:
+
+    static Yaml get_value_in_tag(const Yaml& yml, const std::string& tag);
+
+    template <typename T>
+    static T get(const Yaml& yml);
 
     template <typename T>
     static T get_scalar(const Yaml& yml);
@@ -42,26 +58,13 @@ public:
     static T get_scalar(const Yaml& yml, const std::string& tag);
 
     template <typename T>
-    static std::list<T> get_list(const Yaml& yml, const std::string& tag);
-
-    template <typename T>
     static std::list<T> get_list(const Yaml& yml);
-
-    template <typename T>
-    static std::set<T> get_set(const Yaml& yml, const std::string& tag);
 
     template <typename T>
     static T get_enumeration(const Yaml& yml, const std::map<std::string, T>& enum_values);
 
     template <typename T>
     static T get_enumeration(const Yaml& yml, const std::string& tag, const std::map<std::string, T>& enum_values);
-
-    template <typename T>
-    static bool is_present(const Yaml& yml);
-
-    static bool is_tag_present(const Yaml& yml, const std::string& tag);
-
-    static Yaml get_value_in_tag(const Yaml& yml, const std::string& tag);
 };
 
 } /* namespace yaml */
@@ -69,6 +72,6 @@ public:
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter/yaml/implementations/YamlConfiguration.ipp>
+#include <ddsrouter/yaml/implementations/YamlReader.ipp>
 
-#endif /* _DDSROUTER_YAML_YAMLCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_YAML_YAMLREADER_HPP_ */

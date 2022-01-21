@@ -31,6 +31,8 @@ namespace ddsrouter {
 #define FORCE_TEMPLATE_SUBCLASS(base, derived) \
     static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
 
+#define TYPE_NAME(x) typeid(x).name()
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 

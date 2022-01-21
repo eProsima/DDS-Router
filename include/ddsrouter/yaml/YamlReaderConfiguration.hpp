@@ -16,17 +16,21 @@
  * @file DDSRouterConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_YAML_YAMLCONFIGURATIONDDSROUTER_HPP_
-#define _DDSROUTER_YAML_YAMLCONFIGURATIONDDSROUTER_HPP_
+#ifndef _DDSROUTER_YAML_YAMLREADERCONFIGURATION_HPP_
+#define _DDSROUTER_YAML_YAMLREADERCONFIGURATION_HPP_
 
-#include <ddsrouter/yaml/Yaml.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
+#include <ddsrouter/yaml/Yaml.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-class YamlConfigurationDDSRouter
+/**
+ * @brief Class that encapsulate specific methods to get a full DDSRouter Configuration from a yaml node.
+ */
+class YamlReaderConfiguration : public YamlReader
 {
 public:
 
@@ -44,4 +48,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_YAML_YAMLCONFIGURATIONDDSROUTER_HPP_ */
+#endif /* _DDSROUTER_YAML_YAMLREADERCONFIGURATION_HPP_ */

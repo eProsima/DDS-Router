@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file YamlConfiguration.cpp
+ * @file YamlReader.cpp
  *
  */
 
@@ -23,14 +23,14 @@
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
-#include <ddsrouter/yaml/YamlConfiguration.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-bool YamlConfiguration::is_tag_present(const Yaml& yml, const std::string& tag)
+bool YamlReader::is_tag_present(const Yaml& yml, const std::string& tag)
 {
     if (!yml.IsMap())
     {
@@ -41,7 +41,7 @@ bool YamlConfiguration::is_tag_present(const Yaml& yml, const std::string& tag)
     return (yml[tag]);
 }
 
-Yaml YamlConfiguration::get_value_in_tag(const Yaml& yml, const std::string& tag)
+Yaml YamlReader::get_value_in_tag(const Yaml& yml, const std::string& tag)
 {
     if (yml[tag])
     {

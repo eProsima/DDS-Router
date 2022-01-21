@@ -29,7 +29,7 @@
 #include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/user_interface/arguments_configuration.hpp>
 #include <ddsrouter/user_interface/ProcessReturnCode.hpp>
-#include <ddsrouter/yaml/YamlConfigurationDDSRouter.hpp>
+#include <ddsrouter/yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter/yaml/YamlManager.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -88,7 +88,7 @@ int main(
 
         // Load DDS Router Configuration
         configuration::DDSRouterConfiguration router_configuration =
-            yaml::YamlConfigurationDDSRouter::load_ddsrouter_configuration_from_file(file_path);
+            yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
 
         // Create DDS Router
         DDSRouter router(router_configuration);
@@ -106,7 +106,7 @@ int main(
                     try
                     {
                         configuration::DDSRouterConfiguration router_configuration =
-                            yaml::YamlConfigurationDDSRouter::load_ddsrouter_configuration_from_file(file_path);
+                            yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                         router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
@@ -138,7 +138,7 @@ int main(
                         try
                         {
                             configuration::DDSRouterConfiguration router_configuration =
-                                yaml::YamlConfigurationDDSRouter::load_ddsrouter_configuration_from_file(file_path);
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                             router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)

@@ -17,7 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/yaml/YamlConfigurationDDSRouter.hpp>
+#include <ddsrouter/yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 #include "YamlConfigurationTestUtils.hpp"
@@ -43,7 +43,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     // Load configuration
     configuration::DDSRouterConfiguration configuration_result =
-        YamlConfigurationDDSRouter::get_ddsrouter_configuration(yml);
+        YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
     ASSERT_TRUE(configuration_result.is_valid());
@@ -91,7 +91,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Load configuration
     configuration::DDSRouterConfiguration configuration_result =
-        YamlConfigurationDDSRouter::get_ddsrouter_configuration(yml);
+        YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
     ASSERT_TRUE(configuration_result.is_valid());
