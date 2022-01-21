@@ -64,10 +64,7 @@ set(TEST_SOURCES
 sources_for_test_utils("${TEST_SOURCES}") # Add all requirements for use test_utils
 
 set(TEST_LIST
-        create_void_participant
-        create_echo_participant
-        create_dummy_participant
-        create_simple_participant
+        create_participant
         create_invalid_participant
         remove_participant
     )

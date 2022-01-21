@@ -85,51 +85,16 @@ std::shared_ptr<IParticipant> create_participant(
 } /* namespace eprosima */
 
 /**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Void participant
+ * Test \c ParticipantFactory \c create_participant method using each of the valid Participant kinds
  */
-TEST(ParticipantFactoryTest, create_void_participant)
+TEST(ParticipantFactoryTest, create_participant)
 {
-    std::shared_ptr<IParticipant> void_participant = test::create_participant(ParticipantKind::VOID);
-    ASSERT_EQ(void_participant->kind()(), ParticipantKind::VOID);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Echo participant
- */
-TEST(ParticipantFactoryTest, create_echo_participant)
-{
-    std::shared_ptr<IParticipant> echo_participant = test::create_participant(ParticipantKind::ECHO);
-    ASSERT_EQ(echo_participant->kind()(), ParticipantKind::ECHO);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Dummy participant
- */
-TEST(ParticipantFactoryTest, create_dummy_participant)
-{
-    std::shared_ptr<IParticipant> dummy_participant = test::create_participant(ParticipantKind::DUMMY);
-    ASSERT_EQ(dummy_participant->kind()(), ParticipantKind::DUMMY);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Simple RTPS participant
- */
-TEST(ParticipantFactoryTest, create_simple_participant)
-{
-    std::shared_ptr<IParticipant> simple_participant = test::create_participant(ParticipantKind::SIMPLE_RTPS);
-    ASSERT_EQ(simple_participant->kind()(), ParticipantKind::SIMPLE_RTPS);
+    // For each Participant Type
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    {
+        std::shared_ptr<IParticipant> void_participant = test::create_participant(kind);
+        ASSERT_EQ(void_participant->type(), kind) << "Failed in " << kind;
+    }
 }
 
 /**
