@@ -71,11 +71,11 @@ ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 }
 
 template <class ConfigurationType>
-ParticipantKind BaseParticipant<ConfigurationType>::type() const noexcept
+ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.type();
+    return configuration_.kind();
 }
 
 template <class ConfigurationType>
@@ -185,7 +185,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const BaseParticipant<ConfigurationType>& participant)
 {
-    os << "{" << participant.id() << ";" << participant.configuration_.type() << "}";
+    os << "{" << participant.id() << ";" << participant.configuration_.kind() << "}";
     return os;
 }
 

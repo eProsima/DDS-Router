@@ -99,7 +99,7 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 .. code-block:: yaml
 
     Participant0:     # Participant Id = Participant0
-      type: local     # Participant Kind = simple
+      kind: local     # Participant Kind = simple
       domain: 3       # DomainId = 3
 
     ################
@@ -109,18 +109,18 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 
 The first Participant `Participant0` has Participant Id *Participant0* and is configured to be of the *simple*
 Participant Kind.
-The second Participant has Participant Id *simple* and it is configured to be of the *simple* type.
-That is because the type is not required to be specified as it is get from the Participant Id.
+The second Participant has Participant Id *simple* and it is configured to be of the *simple* kind.
+That is because the kind is not required to be specified as it is get from the Participant Id.
 
 .. note::
 
     Participant Kind is not case sensitive.
-    A Participant called *Simple* would be of type ``simple``.
+    A Participant called *Simple* would be of kind ``simple``.
 
 .. note::
 
-    The Participant Id is get as Participant Kind when type is not specified.
-    If type is explicitly specified, the Participant Id is not used to get the type.
+    The Participant Id is get as Participant Kind when kind is not specified.
+    If kind is explicitly specified, the Participant Id is not used to get the kind.
 
 
 .. _user_manual_configuration_domain_id:
@@ -296,7 +296,7 @@ A complete example of all the configurations described on this page can be found
 
     Participant0:                     # Participant Id = Participant0
 
-      type: local                     # Participant Kind = local (= simple)
+      kind: local                     # Participant Kind = local (= simple)
 
       domain: 3                       # DomainId = 3
 
@@ -307,7 +307,7 @@ A complete example of all the configurations described on this page can be found
 
     ServerROS2:                       # Participant Id = ServerROS2
 
-      type: local-discovery-server    # Participant Kind = local-discovery-server
+      kind: local-discovery-server    # Participant Kind = local-discovery-server
 
       id: 1
       ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
@@ -324,7 +324,7 @@ A complete example of all the configurations described on this page can be found
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                              # Participant Id = Wan ; if type is not specified, this value is used to determine the Participant Kind
+    Wan:                              # Participant Id = Wan ; if kind is not specified, this value is used to determine the Participant Kind
 
       id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 

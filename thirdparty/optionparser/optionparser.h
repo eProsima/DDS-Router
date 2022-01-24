@@ -66,7 +66,7 @@
  *     <li> Test for presence of a switch in the argument vector:
  *      @code if ( options[QUIET] ) ... @endcode
  *     <li> Evaluate --enable-foo/--disable-foo pair where the last one used wins:
- *     @code if ( options[FOO].last()->type() == DISABLE ) ... @endcode
+ *     @code if ( options[FOO].last()->kind() == DISABLE ) ... @endcode
  *     <li> Cumulative option (-v verbose, -vv more verbose, -vvv even more verbose):
  *     @code int verbosity = options[VERBOSE].count(); @endcode
  *     <li> Iterate over all --file=&lt;fname> arguments:
@@ -435,7 +435,7 @@ struct Descriptor
  * @li Test for presence of a switch in the argument vector:
  *      @code if ( options[QUIET] ) ... @endcode
  * @li Evaluate --enable-foo/--disable-foo pair where the last one used wins:
- *     @code if ( options[FOO].last()->type() == DISABLE ) ... @endcode
+ *     @code if ( options[FOO].last()->kind() == DISABLE ) ... @endcode
  * @li Cumulative option (-v verbose, -vv more verbose, -vvv even more verbose):
  *     @code int verbosity = options[VERBOSE].count(); @endcode
  * @li Iterate over all --file=&lt;fname> arguments:
@@ -519,7 +519,7 @@ public:
      * is invalid (unused).
      *
      * Because this method (and last(), too) can be used even on unused Options with desc==0, you can (provided
-     * you arrange your types properly) switch on type() without testing validity first.
+     * you arrange your types properly) switch on kind() without testing validity first.
      * @code
      * enum OptionType { UNUSED=0, DISABLED=0, ENABLED=1 };
      * enum OptionIndex { FOO };
@@ -528,14 +528,14 @@ public:
      *   { FOO, DISABLED, "", "disable-foo", Arg::None, 0 },
      *   { 0, 0, 0, 0, 0, 0 } };
      * ...
-     * switch(options[FOO].last()->type()) // no validity check required!
+     * switch(options[FOO].last()->kind()) // no validity check required!
      * {
      *   case ENABLED: ...
      *   case DISABLED: ...  // UNUSED==DISABLED !
      * }
      * @endcode
      */
-    int type() const
+    int kind() const
     {
         return desc == 0 ? 0 : desc->type;
     }
@@ -641,7 +641,7 @@ public:
      * @par Tip:
      * If you have options with opposite meanings (e.g. @c --enable-foo and @c --disable-foo), you
      * can assign them the same Descriptor::index to get them into the same list. Distinguish them by
-     * Descriptor::type and all you have to do is check <code> last()->type() </code> to get
+     * Descriptor::type and all you have to do is check <code> last()->kind() </code> to get
      * the state listed last on the command line.
      */
     Option* last()

@@ -76,7 +76,7 @@ public:
      *
      * @return List of \c ParticipantConfigurations
      *
-     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No type)
+     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
      */
     std::list<ParticipantConfiguration> participants_configurations() const;
 

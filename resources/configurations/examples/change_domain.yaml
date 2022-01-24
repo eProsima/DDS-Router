@@ -17,7 +17,7 @@ allowlist:
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
 SimpleParticipant_domain0:                                                  # 3
-  type: local                                                               # 4
+  kind: local                                                               # 4
   domain: 0                                                                 # 5
 
 ##################################
@@ -25,7 +25,7 @@ SimpleParticipant_domain0:                                                  # 3
 # This Participant will print in stdout every message received by the other Participants
 
 SimpleParticipant_domain1:                                                  # 6
-  type: local                                                               # 7
+  kind: local                                                               # 7
   domain: 1                                                                 # 8
 
 

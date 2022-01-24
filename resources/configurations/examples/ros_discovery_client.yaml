@@ -15,7 +15,7 @@ allowlist:
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
 SimpleROS2:                                                       # 2
-  type: local                                                     # 3
+  kind: local                                                     # 3
   domain: 0                                                       # 4
 
 ##################################
@@ -23,7 +23,7 @@ SimpleROS2:                                                       # 2
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as Super Client
 
 ClientROS2:                                                       # 5
-  type: local-discovery-server                                    # 6
+  kind: local-discovery-server                                    # 6
   ros-discovery-server: true                                      # 7
   id: 2                                                           # 8
   connection-addresses:                                           # 9

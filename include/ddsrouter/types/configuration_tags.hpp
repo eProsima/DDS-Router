@@ -36,7 +36,7 @@ constexpr const char* TOPIC_KIND_TAG("keyed");      //! Kind of a topic (with or
 
 // TODO: Change type for kind and change configuration files. Add it when configuration changes and tag
 // <participants> exist
-constexpr const char* PARTICIPANT_KIND_TAG("type"); //! Participant Kind
+constexpr const char* PARTICIPANT_KIND_TAG("kind"); //! Participant Kind
 
 // RTPS related tags
 // Simple RTPS related tags

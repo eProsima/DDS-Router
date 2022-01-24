@@ -221,9 +221,9 @@ std::string random_participant_name(
 ParticipantKind random_participant_kind(
         uint16_t seed = 0)
 {
-    uint16_t max_types_available = 4;
     // Avoid Invalid type
-    return ParticipantKind((seed % (max_types_available - 1)) + 1);
+    auto kinds = ParticipantKind::all_valid_participant_kinds();
+    return kinds[seed % kinds.size()];
 }
 
 /*
@@ -299,6 +299,8 @@ TEST(ConfigurationTest, constructor)
  *  Other tags that are not participant valid ids
  *  One Participant Configuration
  *  Many Participant Configurations
+ *
+ * TODO: Change yaml tags for their proper external tags (constexpr)
  */
 TEST(ConfigurationTest, participants_configurations)
 {
@@ -331,7 +333,7 @@ TEST(ConfigurationTest, participants_configurations)
         listening_addresses.push_back(address2);
 
         RawConfiguration participant_config;
-        participant_config["type"] = random_participant_kind().to_string();
+        participant_config[PARTICIPANT_KIND_TAG] = random_participant_kind().to_string();
         participant_config["listening-addresses"] = listening_addresses;
 
         std::string participant_name_str = "wanParticipant";

@@ -35,7 +35,7 @@ ParticipantId VoidParticipant::id() const noexcept
     return id_;
 }
 
-ParticipantKind VoidParticipant::type() const noexcept
+ParticipantKind VoidParticipant::kind() const noexcept
 {
     return ParticipantKind::VOID;
 }

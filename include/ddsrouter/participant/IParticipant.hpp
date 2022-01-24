@@ -60,7 +60,7 @@ public:
      *
      * @return This Participant kind
      */
-    virtual ParticipantKind type() const noexcept = 0;
+    virtual ParticipantKind kind() const noexcept = 0;
 
     /**
      * @brief Return a new Writer

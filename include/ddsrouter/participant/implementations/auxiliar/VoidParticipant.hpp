@@ -43,8 +43,8 @@ public:
     //! Override id() IParticipant method
     ParticipantId id() const noexcept override;
 
-    //! Override type() IParticipant method
-    ParticipantKind type() const noexcept override;
+    //! Override kind() IParticipant method
+    ParticipantKind kind() const noexcept override;
 
     //! Override create_writer() IParticipant method
     std::shared_ptr<IWriter> create_writer(

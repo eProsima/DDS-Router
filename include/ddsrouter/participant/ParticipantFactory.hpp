@@ -30,11 +30,11 @@ class ParticipantFactory
 public:
 
     /**
-     * @brief Create a participant object of the type specified in the configuration.
+     * @brief Create a participant object of the kind specified in the configuration.
      *
      * @throw ConfigurationException : in case the configuration or participant kind is incorrect
      *
-     * @param [in] participant_configuration : Participant Configuration that will retrieve the id and type of the
+     * @param [in] participant_configuration : Participant Configuration that will retrieve the id and kind of the
      *      participant that will be created, and its Configuration.
      * @param [in] payload : Common Payload pool to create the Participant
      * @param [in] discovery_database : Common Discovery Database to create the Participant

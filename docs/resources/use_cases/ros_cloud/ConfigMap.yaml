@@ -9,7 +9,7 @@ data:
         type: "std_msgs::msg::dds_::String_"
 
     LocalDiscoveryServer:
-      type: local-discovery-server
+      kind: local-discovery-server
       ros-discovery-server: true
       id: 1
       listening-addresses:
@@ -18,7 +18,7 @@ data:
           transport: "udp"
 
     CloudWAN:
-      type: wan
+      kind: wan
       id: 2
       listening-addresses:
         - ip: "2.2.2.2" # Public IP exposed by the k8s cluster to reach the cloud DDS-Router

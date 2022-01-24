@@ -53,9 +53,9 @@ This id is the name of the tag that contains the Participant configuration.
     If the id is repeated, the yaml will be bad formed and the |ddsrouter| execution will fail when configured.
 
 Each Participant Kind is associated with one or several names or aliases that represent it.
-In order to use a Participant of a specific type, use ``type`` tag in the yaml configuration file, or set the
-Participant Id as the alias of the type.
-If the type is not any of the valid aliases, the Participant will not be created and the
+In order to use a Participant of a specific kind, use ``kind`` tag in the yaml configuration file, or set the
+Participant Id as the alias of the kind.
+If the kind is not any of the valid aliases, the Participant will not be created and the
 execution will fail.
 
 .. note::
@@ -68,12 +68,12 @@ Below are some examples on how to configure a Participant:
 .. code-block:: yaml
 
     participant_1:     # New Participant with Id: 'participant_1'
-      type: simple     # 'participant_1' will be created of type 'simple'
+      kind: simple     # 'participant_1' will be created of kind 'simple'
       extra_configuration: ...
 
 .. code-block:: yaml
 
-    simple:     # New Participant with Id: 'simple' and Type: 'simple'
+    simple:     # New Participant with Id: 'simple' and Kind: 'simple'
       extra_configuration: ...
 
 .. _user_manual_participant_participant_kinds:

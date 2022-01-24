@@ -5,7 +5,7 @@
 allowlist:
 
 participant_1:
-  type: "void"
+  kind: "void"
 
 participant_2:
-  type: "void"
+  kind: "void"

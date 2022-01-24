@@ -41,7 +41,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
-    switch (participant_configuration.type()())
+    switch (participant_configuration.kind()())
     {
         case ParticipantKind::VOID:
             // VoidParticipant
@@ -83,11 +83,11 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             break;
 
         case ParticipantKind::PARTICIPANT_KIND_INVALID:
-            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
+            throw ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration.kind()
                                                             << " is not a valid participant kind name.");
 
         default:
-            // This should not happen as every type must be in the switch
+            // This should not happen as every kind must be in the switch
             utils::tsnh(
                 utils::Formatter() << "Value of ParticipantKind out of enumeration.");
             return nullptr; // Unreachable code
@@ -97,7 +97,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 void ParticipantFactory::remove_participant(
         std::shared_ptr<IParticipant> participant)
 {
-    switch (participant->type()())
+    switch (participant->kind()())
     {
         default:
             // Rest of participants do not require specific destructor
