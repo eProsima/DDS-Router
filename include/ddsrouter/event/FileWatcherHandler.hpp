@@ -25,7 +25,6 @@
 #include <FileWatch.hpp>
 
 #include <ddsrouter/event/EventHandler.hpp>
-#include <ddsrouter/library/ddsrouter_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -37,7 +36,7 @@ namespace event {
  *
  * @warning Because of the FileWatcher implementation, each callback is called twice.
  */
-class DDSROUTER_DllAPI FileWatcherHandler : public EventHandler<std::string>
+class FileWatcherHandler : public EventHandler<std::string>
 {
 public:
 

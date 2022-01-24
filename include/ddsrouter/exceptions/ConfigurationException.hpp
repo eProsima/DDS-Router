@@ -20,7 +20,6 @@
 #define _DDSROUTER_EXCEPTIONS_CONFIGURATIONEXCEPTION_HPP_
 
 #include <ddsrouter/exceptions/Exception.hpp>
-#include <ddsrouter/library/ddsrouter_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,7 +28,7 @@ namespace ddsrouter {
  * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
  *  not well-formed yaml, and when a configuration creation has failed.
  */
-class DDSROUTER_DllAPI ConfigurationException : public Exception
+class ConfigurationException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

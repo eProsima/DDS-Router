@@ -25,14 +25,12 @@
 
 #include <ddsrouter/event/EventHandler.hpp>
 
-#include <ddsrouter/library/ddsrouter_dll.h>
-
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
 //! Available data types for SignalHandler class
-enum DDSROUTER_DllAPI Signals
+enum Signals
 {
     SIGNAL_SIGINT = SIGINT, //! SIGINT = ^C
 };
@@ -52,7 +50,7 @@ enum DDSROUTER_DllAPI Signals
  * that only share the same templatization.
  */
 template <int SigNum>
-class DDSROUTER_DllAPI SignalHandler : public EventHandler<int>
+class SignalHandler : public EventHandler<int>
 {
 public:
 
