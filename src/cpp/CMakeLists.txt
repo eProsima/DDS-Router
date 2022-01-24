@@ -129,7 +129,7 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
     )
 
 # Install config.h header
-install(FILES ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/config.h
+install(FILES ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}
     COMPONENT headers
     )

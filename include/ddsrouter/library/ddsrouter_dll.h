@@ -15,7 +15,7 @@
 #ifndef _EPROSIMA_DDSROUTER_DLL_HPP_
 #define _EPROSIMA_DDSROUTER_DLL_HPP_
 
-#include "config.h"
+#include <ddsrouter/library/config.h>
 
 // normalize macros
 #if !defined(DDSROUTER_DYN_LINK) && !defined(DDSROUTER_STATIC_LINK) \
