@@ -24,12 +24,13 @@ namespace ddsrouter {
 namespace security {
 
 TlsConfiguration::TlsConfiguration()
-    :kind_(TLS_INVALID)
+    : kind_(TLS_INVALID)
 {
 }
 
-TlsConfiguration::TlsConfiguration(TlsConfigurationKind kind)
-    :kind_(kind)
+TlsConfiguration::TlsConfiguration(
+        TlsConfigurationKind kind)
+    : kind_(kind)
 {
 }
 

@@ -36,11 +36,11 @@ class TlsConfigurationBoth : public TlsConfigurationServer, public TlsConfigurat
 public:
 
     TlsConfigurationBoth(
-        const std::string& certificate_authority_file,
-        const std::string& private_key_file_password,
-        const std::string& private_key_file,
-        const std::string& certificate_chain_file,
-        const std::string& dh_params_file);
+            const std::string& certificate_authority_file,
+            const std::string& private_key_file_password,
+            const std::string& private_key_file,
+            const std::string& certificate_chain_file,
+            const std::string& dh_params_file);
 
     virtual bool is_valid() const noexcept override;
 

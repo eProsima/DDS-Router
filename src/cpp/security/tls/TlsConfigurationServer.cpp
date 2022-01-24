@@ -39,8 +39,8 @@ TlsConfigurationServer::TlsConfigurationServer(
 bool TlsConfigurationServer::is_valid() const noexcept
 {
     return private_key_file_ != "" &&
-        certificate_chain_file_ != "" &&
-        dh_params_file_ != "";
+           certificate_chain_file_ != "" &&
+           dh_params_file_ != "";
 }
 
 bool TlsConfigurationServer::is_active() const noexcept

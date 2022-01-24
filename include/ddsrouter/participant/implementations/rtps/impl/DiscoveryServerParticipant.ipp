@@ -333,14 +333,14 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         if (!tls_configuration->can_be_client())
         {
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "TLS Configuration must be Client but has been configured as server.");
+                    "TLS Configuration must be Client but has been configured as server.");
             // TODO throw exception
             return;
         }
     }
 
     std::shared_ptr<security::TlsConfigurationBoth> tls_configuration_ =
-        std::dynamic_pointer_cast<security::TlsConfigurationBoth>(tls_configuration);
+            std::dynamic_pointer_cast<security::TlsConfigurationBoth>(tls_configuration);
 
     // Apply security ON
     descriptor->apply_security = true;

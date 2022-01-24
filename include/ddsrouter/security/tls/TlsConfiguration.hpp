@@ -55,7 +55,9 @@ public:
     virtual TlsConfigurationKind tls_kind() const noexcept;
 
 protected:
-    TlsConfiguration(TlsConfigurationKind kind);
+
+    TlsConfiguration(
+            TlsConfigurationKind kind);
 
     TlsConfigurationKind kind_;
 };

@@ -35,7 +35,7 @@ class TlsConfigurationClient : virtual public TlsConfiguration
 public:
 
     TlsConfigurationClient(
-        const std::string& certificate_authority_file);
+            const std::string& certificate_authority_file);
 
     virtual bool is_valid() const noexcept override;
 
