@@ -162,12 +162,21 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
 
         case ParticipantKind::LOCAL_DISCOVERY_SERVER:
         case ParticipantKind::WAN:
-            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-                id,
-                random_guid_prefix(seed),
-                std::set<Address>(),
-                std::set<DiscoveryServerConnectionAddress>(),
-                kind);
+
+            {
+                // TODO get random values
+                DiscoveryServerConnectionAddress connection_address = DiscoveryServerConnectionAddress(
+                        GuidPrefix(),
+                        std::set<Address>({Address()})
+                    );
+
+                return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+                    id,
+                    random_guid_prefix(seed),
+                    std::set<Address>(),
+                    std::set<DiscoveryServerConnectionAddress>({connection_address}),
+                    kind);
+            }
 
         // Add cases where Participants need specific arguments
         default:

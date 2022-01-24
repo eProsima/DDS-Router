@@ -33,7 +33,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
-        const security::TlsConfiguration& tls_configuration /* = security::TlsConfiguration() */,
+        std::shared_ptr<security::TlsConfiguration> tls_configuration /* = security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
     : SimpleParticipantConfiguration(id, type, domain_id)
     , discovery_server_guid_(discovery_server_guid_prefix)
@@ -50,7 +50,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const DomainId& domain_id,
         const ParticipantKind& type /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
-        const security::TlsConfiguration& tls_configuration /* = security::TlsConfiguration() */)
+        std::shared_ptr<security::TlsConfiguration> tls_configuration /* = security::TlsConfiguration() */)
     : DiscoveryServerParticipantConfiguration(
         id, discovery_server_guid_prefix, listening_addresses, connection_addresses, type, tls_configuration, domain_id)
 {
@@ -74,10 +74,10 @@ std::set<DiscoveryServerConnectionAddress>
 
 bool DiscoveryServerParticipantConfiguration::tls_active() const noexcept
 {
-    return tls_configuration_.is_valid();
+    return tls_configuration_->is_active();
 }
 
-security::TlsConfiguration DiscoveryServerParticipantConfiguration::tls_configuration() const
+std::shared_ptr<security::TlsConfiguration> DiscoveryServerParticipantConfiguration::tls_configuration() const
 {
     return tls_configuration_;
 }
@@ -107,6 +107,10 @@ bool DiscoveryServerParticipantConfiguration::is_valid() const noexcept
 
     // TODO
     // Check TLS
+    if (!tls_configuration_->is_valid())
+    {
+        return false;
+    }
 
     return SimpleParticipantConfiguration::is_valid() &&
         discovery_server_guid_.is_valid();

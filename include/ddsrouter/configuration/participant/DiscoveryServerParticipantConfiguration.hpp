@@ -45,7 +45,8 @@ public:
             const std::set<Address>& listening_addresses,
             const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
             const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
-            const security::TlsConfiguration& tls_configuration = security::TlsConfiguration(),
+            std::shared_ptr<security::TlsConfiguration> tls_configuration =
+                std::make_shared<security::TlsConfiguration>(),
             const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
     // TODO
@@ -56,7 +57,8 @@ public:
             const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
             const DomainId& domain_id,
             const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
-            const security::TlsConfiguration& tls_configuration = security::TlsConfiguration());
+            std::shared_ptr<security::TlsConfiguration> tls_configuration =
+                std::make_shared<security::TlsConfiguration>());
 
     GuidPrefix discovery_server_guid_prefix() const noexcept;
 
@@ -66,7 +68,7 @@ public:
 
     bool tls_active() const noexcept;
 
-    security::TlsConfiguration tls_configuration() const;
+    std::shared_ptr<security::TlsConfiguration> tls_configuration() const;
 
     virtual bool is_valid() const noexcept override;
 
@@ -78,7 +80,7 @@ protected:
     GuidPrefix discovery_server_guid_;
     std::set<Address> listening_addresses_;
     std::set<DiscoveryServerConnectionAddress> connection_addresses_;
-    const security::TlsConfiguration& tls_configuration_;
+    std::shared_ptr<security::TlsConfiguration> tls_configuration_;
 
     static const DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
