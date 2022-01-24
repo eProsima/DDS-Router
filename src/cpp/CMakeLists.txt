@@ -41,13 +41,31 @@ set(${PROJECT_NAME}_SOURCES
 # Compile library
 ###############################################################################
 # Configure config file
-configure_file(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/config.h.in
-${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/config.h)
+configure_file(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/library/config.h.in
+    ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h)
 
 # Create library
 add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SOURCES})
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+# Define Public API
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC
+        DDSROUTER_SOURCE
+    )
+
+if(MSVC)
+    target_compile_definitions(${PROJECT_NAME}
+        INTERFACE
+            _CRT_DECLARE_NONSTDC_NAMES=0
+        PRIVATE
+            EPROSIMA_USER_DLL_EXPORT
+            WIN32_WINNT=0x0603
+            _CRT_DECLARE_NONSTDC_NAMES=0
+        )
+endif(MSVC)
+
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
