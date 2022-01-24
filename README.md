@@ -37,3 +37,187 @@ Following are some of the key features of *eProsima DDS Router*:
   topic specified by the user.
 
 ![eProsima DDS Router overall architecture](docs/rst/figures/ddsrouter_cloud_white_background.png)
+
+
+## Documentation
+
+You can access the documentation online, which is hosted on [Read the Docs](https://eprosima-dds-router.readthedocs.io).
+
+* [Introduction](https://eprosima-dds-router.readthedocs.io/en/latest/rst/formalia/titlepage.html)
+* [Getting Started](https://eprosima-dds-router.readthedocs.io/en/latest/rst/getting_started/project_overview.html)
+* [User Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/user_manual/user_interface.html)
+* [Examples](https://eprosima-dds-router.readthedocs.io/en/latest/rst/examples/echo_example.html)
+* [Use Cases](https://eprosima-dds-router.readthedocs.io/en/latest/rst/use_cases/ros_cloud.html)
+* [Developer Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html)
+* [Release Notes](https://eprosima-dds-router.readthedocs.io/en/latest/rst/notes/notes.html)
+
+
+## Installation Guide
+
+The instructions for installing the *DDS Router* application from sources and its required dependencies on a Linux
+environment are provided below. These installation instructions are a summarized version of the complete
+[installation guide](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html) available online, which also includes the [required steps](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/windows.html) for installing *DDS Router* on a Windows platform.
+
+### Requirements
+
+*eProsima DDS Router* requires the following tools to be installed in the system:
+* [CMake](https://cmake.org/), [g++](https://gcc.gnu.org/), [pip](https://pypi.org/project/pip/), [wget](https://www.gnu.org/software/wget/) and [git](https://git-scm.com/)
+* [Colcon](https://colcon.readthedocs.io/en/released/) [optional, not required for CMake-only installation]
+* [Gtest](https://github.com/google/googletest) [for test only]
+
+#### CMake, g++, pip, wget and git
+
+These packages provide the tools required to install DDS Router and its dependencies from command line. Install
+[CMake](https://cmake.org/), [g++](https://gcc.gnu.org/), [pip](https://pypi.org/project/pip/), [wget](https://www.gnu.org/software/wget/) and [git](https://git-scm.com/) using the package manager of the appropriate Linux distribution. For
+example, on Ubuntu use the command:
+
+```batch
+sudo apt install cmake g++ pip wget git
+```
+
+#### Colcon
+
+[colcon](https://colcon.readthedocs.io/en/released/) is a command line tool based on [CMake](https://cmake.org/) aimed at building sets of software packages. Install the ROS 2 development tools ([colcon](https://colcon.readthedocs.io/en/released/) and [vcstool](https://pypi.org/project/vcstool/)) by executing the following command:
+
+```batch
+pip3 install -U colcon-common-extensions vcstool
+```
+
+If this fails due to an Environment Error, add the `--user` flag to the `pip3` installation command.
+
+#### Gtest
+
+[Gtest](https://github.com/google/googletest) is a unit testing library for C++. By default, *DDS Router* does not
+compile tests. It is possible to activate them with the opportune [CMake options](https://colcon.readthedocs.io/en/released/reference/verb/build.html#cmake-options) when calling [colcon](https://colcon.readthedocs.io/en/released/) or
+[CMake](https://cmake.org/). For a detailed description of the Gtest installation process, please refer to the
+[Gtest Installation Guide](https://github.com/google/googletest).
+
+### Dependencies
+
+#### Asio and TinyXML2 libraries
+
+Asio is a cross-platform C++ library for network and low-level I/O programming, which provides a consistent asynchronous model. TinyXML2 is a simple, small and efficient C++ XML parser. Install these libraries using the package manager of
+the appropriate Linux distribution. For example, on Ubuntu use the command:
+
+```batch
+sudo apt install libasio-dev libtinyxml2-dev
+```
+
+#### OpenSSL
+
+[OpenSSL](https://www.openssl.org/) is a robust toolkit for the TLS and SSL protocols and a general-purpose cryptography library. Install OpenSSL using the package manager of the appropriate Linux distribution. For example, on Ubuntu use the command:
+
+```batch
+sudo apt install libssl-dev
+```
+
+#### eProsima dependencies
+
+If it already exists in the system an installation of *Fast DDS* library with version greater than *2.4.0*, just source
+this library when building the *DDS Router* application by using the command:
+
+```batch
+source <fastdds-installation-path>/install/setup.bash
+```
+
+In other case, just download *Fast DDS* project from sources and build it together with *DDS Router* using colcon as it
+is explained in the following section.
+
+### Colcon installation
+
+1. Create a `DDS-Router` directory and download the `.repos` file that will be used to install *DDS Router* and its dependencies:
+
+```batch
+mkdir -p ~/DDS-Router/src
+cd ~/DDS-Router
+wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+vcs import src < ddsrouter.repos
+```
+
+2. Build the packages:
+
+```batch
+colcon build
+```
+
+### CMake installation
+
+This section explains how to compile *DDS Router* with [CMake](https://cmake.org/), either locally or globally.
+
+#### Local installation
+
+1. Create a `DDS-Router` directory where to download and build *DDS Router* and its dependencies:
+
+```batch
+mkdir ~/DDS-Router
+```
+
+2. Clone the following dependencies and compile them using [CMake](https://cmake.org/).
+    * [Foonathan memory](https://github.com/foonathan/memory)
+    ```batch
+    cd ~/DDS-Router
+    git clone https://github.com/eProsima/foonathan_memory_vendor.git
+    mkdir foonathan_memory_vendor/build
+    cd foonathan_memory_vendor/build
+    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DBUILD_SHARED_LIBS=ON
+    cmake --build . --target install
+    ```
+
+    * [Fast CDR](https://github.com/eProsima/Fast-CDR)
+    ```batch
+    cd ~/DDS-Router
+    git clone https://github.com/eProsima/Fast-CDR.git
+    mkdir Fast-CDR/build
+    cd Fast-CDR/build
+    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install
+    cmake --build . --target install
+    ```
+
+    * [Fast DDS](https://github.com/eProsima/Fast-DDS)
+    ```batch
+    cd ~/DDS-Router
+    git clone https://github.com/eProsima/Fast-DDS.git
+    mkdir Fast-DDS/build
+    cd Fast-DDS/build
+    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+    cmake --build . --target install
+    ```
+
+3. Once all dependencies are installed, install *DDS Router*:
+
+```batch
+cd ~/DDS-Router
+git clone https://github.com/eProsima/DDS-Router.git
+mkdir DDS-Router/build
+cd DDS-Router/build
+cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+cmake --build . --target install
+```
+
+#### Global installation
+
+To install *DDS Router* system-wide instead of locally, remove all the flags that appear in the configuration steps of `Fast-CDR`, `Fast-DDS`, and `DDS-Router`, and change the first in the configuration step of `foonathan_memory_vendor` to
+the following:
+
+```batch
+-DCMAKE_INSTALL_PREFIX=/usr/local/ -DBUILD_SHARED_LIBS=ON
+```
+
+---
+**Note**
+
+By default, *DDS Router* does not compile tests. However, they can be activated by downloading and installing
+[Gtest](https://github.com/google/googletest) and building with CMake option `-DBUILD_TESTS=ON`.
+
+---
+
+### Run an application
+
+To run the *DDS Router* application, source the *Fast DDS* library and execute the executable file that has been
+installed in `<install-path>/ddsrouter/bin/ddsrouter`:
+
+```batch
+# If built has been done using colcon, all projects could be sourced as follows:
+source <install-path>/setup.bash
+./<install-path>/ddsrouter/bin/ddsrouter
+```
