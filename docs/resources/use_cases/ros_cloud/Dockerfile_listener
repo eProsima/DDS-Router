@@ -1,8 +1,11 @@
 FROM ros:galactic
 
+SHELL ["/bin/bash", "-c"]
+
 # Install demo-nodes-cpp
 RUN source /opt/ros/$ROS_DISTRO/setup.bash && \
     apt update && \
+    apt install -y ros-$ROS_DISTRO-rmw-fastrtps-cpp && \
     apt install -y ros-$ROS_DISTRO-demo-nodes-cpp
 
 # Set Fast DDS as middleware
