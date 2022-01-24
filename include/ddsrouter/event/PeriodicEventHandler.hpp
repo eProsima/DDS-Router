@@ -25,6 +25,7 @@
 
 #include <ddsrouter/types/Time.hpp>
 #include <ddsrouter/event/EventHandler.hpp>
+#include <ddsrouter/library/ddsrouter_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -36,7 +37,7 @@ namespace event {
  *
  * The callback is repeated indefinitely until the object is destroyed.
  */
-class PeriodicEventHandler : public EventHandler<>
+class DDSROUTER_DllAPI PeriodicEventHandler : public EventHandler<>
 {
 public:
 

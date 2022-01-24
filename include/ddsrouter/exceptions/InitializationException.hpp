@@ -20,6 +20,7 @@
 #define _DDSROUTER_EXCEPTIONS_INITIALIZATIONEXCEPTION_HPP_
 
 #include <ddsrouter/exceptions/Exception.hpp>
+#include <ddsrouter/library/ddsrouter_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -27,7 +28,7 @@ namespace ddsrouter {
 /**
  * @brief Exception thrown when there has been an error initializing any Entity or subentity.
  */
-class InitializationException : public Exception
+class DDSROUTER_DllAPI InitializationException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

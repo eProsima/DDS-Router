@@ -21,6 +21,8 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <ddsrouter/library/ddsrouter_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 
@@ -42,7 +44,7 @@ using RawConfigurationType = YAML::NodeType;
  *
  * @throw \c ConfigurationException in case the file does not exist or it is not a valid yaml
  */
-RawConfiguration load_configuration_from_file(
+RawConfiguration DDSROUTER_DllAPI load_configuration_from_file(
         const std::string& file_path);
 
 // TODO: add way to compare equality and not identity of yaml
