@@ -35,6 +35,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         participant/implementations/rtps
         reader/implementations/auxiliar
         reader/implementations/rtps
+        security/tls
         types
         types/address
         types/endpoint

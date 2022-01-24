@@ -20,6 +20,7 @@
 #define _DDSROUTER_CONFIGURATION_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
@@ -45,7 +46,7 @@ public:
 
     std::vector<DiscoveryServerConnectionAddress> connection_addresses() const;
 
-    std::map<std::string, std::string> tls_configuration() const;
+    security::TlsConfiguration tls_configuration() const;
 
     GuidPrefix discovery_server_guid() const;
 

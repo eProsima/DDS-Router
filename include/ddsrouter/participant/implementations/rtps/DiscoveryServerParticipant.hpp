@@ -23,6 +23,7 @@
 
 #include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <ddsrouter/security/tls/TlsConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -49,8 +50,8 @@ public:
 
     void enable_tls(
             std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
-            std::map<std::string, std::string> tls_config,
-            bool client_only = false) const;
+            security::TlsConfiguration tls_configuration,
+            bool client_only = false) const noexcept;
 };
 
 } /* namespace rpts */
