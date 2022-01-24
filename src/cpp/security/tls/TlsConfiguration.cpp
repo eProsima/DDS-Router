@@ -40,17 +40,13 @@ TlsConfiguration::TlsConfiguration(
 }
 
 TlsConfiguration::TlsConfiguration()
-    : kind(TLS_INVALID)
+    : TlsConfiguration(TLS_INVALID, "", "", "", "", "")
 {
 }
 
 TlsConfiguration::TlsConfiguration(
         std::string certificate_authority_file)
-    : kind(TLS_SERVER)
-    , private_key_file_password(private_key_file_password)
-    , private_key_file(private_key_file)
-    , certificate_chain_file(certificate_chain_file)
-    , dh_params_file(dh_params_file)
+    : TlsConfiguration(TLS_CLIENT, "", "", certificate_authority_file, "", "")
 {
 }
 
@@ -59,11 +55,7 @@ TlsConfiguration::TlsConfiguration(
         std::string private_key_file,
         std::string certificate_chain_file,
         std::string dh_params_file)
-    : kind(TLS_SERVER)
-    , private_key_file_password(private_key_file_password)
-    , private_key_file(private_key_file)
-    , certificate_chain_file(certificate_chain_file)
-    , dh_params_file(dh_params_file)
+    : TlsConfiguration(TLS_SERVER, private_key_file_password, private_key_file, "", certificate_chain_file, dh_params_file)
 {
 }
 
@@ -73,13 +65,7 @@ TlsConfiguration::TlsConfiguration(
         std::string certificate_authority_file,
         std::string certificate_chain_file,
         std::string dh_params_file)
-    : TlsConfiguration(
-        TLS_BOTH,
-        private_key_file_password,
-        private_key_file,
-        certificate_authority_file,
-        certificate_chain_file,
-        dh_params_file)
+    : TlsConfiguration(TLS_BOTH, private_key_file_password, private_key_file, certificate_authority_file, certificate_chain_file, dh_params_file)
 {
 }
 
