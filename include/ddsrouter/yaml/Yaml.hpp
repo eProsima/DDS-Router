@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,27 +13,29 @@
 // limitations under the License.
 
 /**
- * @file macros.hpp
- *
- * This file contains constant values common for the whole project
+ * @file Yaml.hpp
  */
 
-#ifndef _DDSROUTER_TYPES_MACROS_HPP_
-#define _DDSROUTER_TYPES_MACROS_HPP_
+#ifndef _DDSROUTER_YAML_YAML_HPP_
+#define _DDSROUTER_YAML_YAML_HPP_
 
-#include <type_traits>
+#include <yaml-cpp/yaml.h>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace yaml {
 
-#define STRINGIFY(x) #x
+/**
+ * Configuration is in dictionary format
+ *
+ * YAML spec: https://yaml.org/spec/1.2.2/
+ *
+ * @note: It is not legal to repeat keys in a YAML
+ */
+using Yaml = YAML::Node;
 
-#define FORCE_TEMPLATE_SUBCLASS(base, derived) \
-    static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
-
-#define TYPE_NAME(x) typeid(x).name()
-
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_TYPES_MACROS_HPP_ */
+#endif /* _DDSROUTER_YAML_YAML_HPP_ */

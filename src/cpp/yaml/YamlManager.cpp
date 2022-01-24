@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,27 +13,31 @@
 // limitations under the License.
 
 /**
- * @file macros.hpp
+ * @file YamlManager.cpp
  *
- * This file contains constant values common for the whole project
  */
 
-#ifndef _DDSROUTER_TYPES_MACROS_HPP_
-#define _DDSROUTER_TYPES_MACROS_HPP_
-
-#include <type_traits>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/yaml/YamlManager.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace yaml {
 
-#define STRINGIFY(x) #x
+Yaml YamlManager::load_file(
+        const std::string& file_path)
+{
+    try
+    {
+        return YAML::LoadFile(file_path);
+    }
+    catch (const std::exception& e)
+    {
+        throw ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
+                                                        << file_path << " : " << e.what());
+    }
+}
 
-#define FORCE_TEMPLATE_SUBCLASS(base, derived) \
-    static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
-
-#define TYPE_NAME(x) typeid(x).name()
-
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTER_TYPES_MACROS_HPP_ */
