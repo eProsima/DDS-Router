@@ -13,49 +13,46 @@
 // limitations under the License.
 
 /**
- * @file TlsConfiguration.cpp
+ * @file TlsConfigurationClient.cpp
  *
  */
 
-#include <ddsrouter/security/tls/TlsConfiguration.hpp>
+#include <ddsrouter/security/tls/TlsConfigurationClient.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace security {
 
-TlsConfiguration::TlsConfiguration()
-    :kind_(TLS_INVALID)
+TlsConfigurationClient::TlsConfigurationClient(
+        const std::string& certificate_authority_file)
+    : TlsConfiguration(TLS_CLIENT)
+    , certificate_authority_file_(certificate_authority_file)
 {
 }
 
-TlsConfiguration::TlsConfiguration(TlsConfigurationKind kind)
-    :kind_(kind)
+bool TlsConfigurationClient::is_valid() const noexcept
 {
+    return certificate_authority_file_ != "";
 }
 
-bool TlsConfiguration::is_valid() const noexcept
+bool TlsConfigurationClient::is_active() const noexcept
 {
     return true;
 }
 
-bool TlsConfiguration::is_active() const noexcept
+bool TlsConfigurationClient::can_be_client() const noexcept
+{
+    return true;
+}
+
+bool TlsConfigurationClient::can_be_server() const noexcept
 {
     return false;
 }
 
-bool TlsConfiguration::can_be_client() const noexcept
+std::string TlsConfigurationClient::certificate_authority_file() const noexcept
 {
-    return false;
-}
-
-bool TlsConfiguration::can_be_server() const noexcept
-{
-    return false;
-}
-
-TlsConfigurationKind TlsConfiguration::tls_kind() const noexcept
-{
-    return kind_;
+    return certificate_authority_file_;
 }
 
 } /* namespace security */

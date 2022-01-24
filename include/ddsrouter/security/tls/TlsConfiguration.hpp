@@ -42,44 +42,22 @@ class TlsConfiguration
 {
 public:
 
-    TlsConfiguration(
-        TlsConfigurationKind kind,
-        std::string private_key_file_password,
-        std::string private_key_file,
-        std::string certificate_authority_file,
-        std::string certificate_chain_file,
-        std::string dh_params_file);
-
     TlsConfiguration();
 
-    TlsConfiguration(
-        std::string certificate_authority_file);
+    virtual bool is_valid() const noexcept;
 
-    TlsConfiguration(
-        std::string private_key_file_password,
-        std::string private_key_file,
-        std::string certificate_chain_file,
-        std::string dh_params_file);
+    virtual bool is_active() const noexcept;
 
-    TlsConfiguration(
-        std::string private_key_file_password,
-        std::string private_key_file,
-        std::string certificate_authority_file,
-        std::string certificate_chain_file,
-        std::string dh_params_file);
+    virtual bool can_be_client() const noexcept;
 
-    bool is_valid() const noexcept;
+    virtual bool can_be_server() const noexcept;
 
-    bool is_active() const noexcept;
+    virtual TlsConfigurationKind tls_kind() const noexcept;
 
-    bool tls_kind() const noexcept;
+protected:
+    TlsConfiguration(TlsConfigurationKind kind);
 
-    TlsConfigurationKind kind;
-    std::string private_key_file_password;
-    std::string private_key_file;
-    std::string certificate_authority_file;
-    std::string certificate_chain_file;
-    std::string dh_params_file;
+    TlsConfigurationKind kind_;
 };
 
 } /* namespace security */

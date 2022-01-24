@@ -50,7 +50,7 @@ public:
 
     void enable_tls(
             std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
-            security::TlsConfiguration tls_configuration,
+            std::shared_ptr<security::TlsConfiguration> tls_configuration,
             bool client_only = false) const noexcept;
 };
 

@@ -46,7 +46,7 @@ public:
 
     std::vector<DiscoveryServerConnectionAddress> connection_addresses() const;
 
-    security::TlsConfiguration tls_configuration() const;
+    std::shared_ptr<security::TlsConfiguration> tls_configuration() const;
 
     GuidPrefix discovery_server_guid() const;
 

@@ -20,6 +20,7 @@
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/security/tls/TlsConfigurationBoth.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -77,7 +78,7 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfigur
     return result;
 }
 
-security::TlsConfiguration DiscoveryServerParticipantConfiguration::tls_configuration() const
+std::shared_ptr<security::TlsConfiguration> DiscoveryServerParticipantConfiguration::tls_configuration() const
 {
     // ATTENTION: This will change in posterior PR
     std::string private_key_file_password;
@@ -117,11 +118,15 @@ security::TlsConfiguration DiscoveryServerParticipantConfiguration::tls_configur
             }
         }
     }
+    else
+    {
+        return std::make_shared<security::TlsConfiguration>();
+    }
 
-    return security::TlsConfiguration(
+    return std::make_shared<security::TlsConfigurationBoth>(
+        certificate_authority_file,
         private_key_file_password,
         private_key_file,
-        certificate_authority_file,
         certificate_chain_file,
         dh_params_file);
 }
