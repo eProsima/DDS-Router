@@ -122,8 +122,10 @@ DDS-Router deployment
 The cloud router is launched from within a Docker image, which uses as configuration file the one hosted in
 the previously set up ConfigMap. This Docker image needs to be built and made available to the |k8s| cluster for using
 |ddsrouter|, which can be accomplished by providing the following
-:download:`Dockerfile <../../resources/use_cases/ros_cloud/Dockerfile_ddsrouter>`. Assuming the name of the generated
-Docker image is ``ddsrouter:main``, the cloud router will then be deployed with the following settings:
+:download:`Dockerfile <../../resources/use_cases/ros_cloud/Dockerfile_ddsrouter>`. If willing to see log messages in
+``STDOUT``, use :download:`Dockerfile <../../resources/use_cases/ros_cloud/Dockerfile_ddsrouter_logon>` instead.
+Assuming the name of the generated Docker image is ``ddsrouter:main``, the cloud router will then be deployed with the
+following settings:
 
 .. literalinclude:: ../../resources/use_cases/ros_cloud/ddsrouter.yaml
     :language: yaml
