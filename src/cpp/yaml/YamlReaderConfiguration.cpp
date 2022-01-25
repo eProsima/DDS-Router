@@ -108,6 +108,7 @@ std::shared_ptr<configuration::ParticipantConfiguration>
 
     switch (kind())
     {
+    case ParticipantKind::VOID:
     case ParticipantKind::ECHO:
     case ParticipantKind::DUMMY:
         return std::make_shared<configuration::ParticipantConfiguration>(
@@ -124,7 +125,7 @@ std::shared_ptr<configuration::ParticipantConfiguration>
 
     default:
         throw ConfigurationException(
-            utils::Formatter() << "Unkown or non valid Participant type:" << kind << ".");
+            utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
         break;
     }
 }
