@@ -25,10 +25,12 @@
 #include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
+#include <ddsrouter/types/utils.hpp>
 #include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
@@ -56,6 +58,20 @@ IpVersion YamlReader::get<IpVersion>(const Yaml& yml)
             {ADDRESS_IP_VERSION_V4_TAG, IpVersion::IPv4},
             {ADDRESS_IP_VERSION_V6_TAG, IpVersion::IPv6},
         });
+}
+
+template <>
+PortType YamlReader::get<PortType>(const Yaml& yml)
+{
+    // Domain id required
+    return PortType(get_scalar<PortType>(yml));
+}
+
+template <>
+IpType YamlReader::get<IpType>(const Yaml& yml)
+{
+    // Domain id required
+    return IpType(get_scalar<IpType>(yml));
 }
 
 template <>
@@ -114,8 +130,129 @@ GuidPrefix YamlReader::get<GuidPrefix>(const Yaml& yml)
 template <>
 Address YamlReader::get<Address>(const Yaml& yml)
 {
-    // TODO
-    return Address();
+    // Optional get IP version
+    IpVersion ip_version;
+    bool ip_version_set = is_tag_present(yml, ADDRESS_IP_VERSION_TAG);
+    if (ip_version_set)
+    {
+        // Get IP Version from enumeration
+        ip_version = get<IpVersion>(yml, ADDRESS_IP_VERSION_TAG);
+    }
+
+    // Optional get IP
+    IpType ip;
+    bool ip_set = is_tag_present(yml, ADDRESS_IP_TAG);
+    if (ip_set)
+    {
+        ip = get<IpType>(yml, ADDRESS_IP_TAG);
+    }
+
+    // Optional get Domain tag for DNS
+    std::string domain_name;
+    bool domain_name_set = is_tag_present(yml, ADDRESS_DNS_TAG);
+    if (ip_set)
+    {
+        domain_name = get<std::string>(yml, ADDRESS_DNS_TAG);
+    }
+
+    // If IP and domain_name set, warning that domain_name will not be used
+    // If only domain_name set, get DNS response
+    // If neither set, get default
+    if (ip_set && domain_name_set)
+    {
+        logWarning(DDSROUTER_YAML,
+            "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set");
+    }
+    else if (domain_name_set)
+    {
+        // Get DNS response
+        auto dns_response = fastrtps::rtps::IPLocator::resolveNameDNS(domain_name);
+
+        // If ip version set, get that ip version, otherwise get the ipv4, if ipv4 is empty get the other
+        if (ip_version_set)
+        {
+            if (ip_version == IPv4)
+            {
+                if (dns_response.first.empty())
+                {
+                    throw ConfigurationException(
+                        utils::Formatter() << "Could not resolve IPv4 for domain name <" <<
+                        domain_name << ">.");
+                }
+                else
+                {
+                    ip = dns_response.first.begin()->data();
+                }
+            }
+            else
+            {
+                // Assuming: IPv6
+                if (dns_response.second.empty())
+                {
+                    throw ConfigurationException(
+                        utils::Formatter() << "Could not resolve IPv6 for domain name <" <<
+                        domain_name << ">.");
+                }
+                else
+                {
+                    ip = dns_response.second.begin()->data();
+                }
+            }
+        }
+        else
+        {
+            if (!dns_response.first.empty())
+            {
+                ip = dns_response.first.begin()->data();
+                ip_version = IPv4;
+            }
+            else if (!dns_response.second.empty())
+            {
+                ip = dns_response.second.begin()->data();
+                ip_version = IPv6;
+            }
+            else
+            {
+                throw ConfigurationException(
+                    utils::Formatter() << "Could not resolve domain name <" <<
+                    domain_name << ">.");
+            }
+        }
+    }
+
+    // Optional get port
+    PortType port;
+    bool port_set = is_tag_present(yml, ADDRESS_PORT_TAG);
+    if (port_set)
+    {
+        port = get<PortType>(yml, ADDRESS_PORT_TAG);
+    }
+    else
+    {
+        port = Address::default_port();
+    }
+
+    // Optional get Transport protocol
+    TransportProtocol tp;
+    bool tp_set = is_tag_present(yml, ADDRESS_TRANSPORT_TAG);
+    if (tp_set)
+    {
+        tp = get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
+    }
+    else
+    {
+        tp = Address::default_transport_protocol();
+    }
+
+    // Construct Address object
+    if (ip_version_set)
+    {
+        return Address(ip, port, ip_version, tp);
+    }
+    else
+    {
+        return Address(ip, port, tp);
+    }
 }
 
 template <>
