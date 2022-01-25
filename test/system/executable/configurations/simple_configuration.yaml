@@ -11,7 +11,7 @@ allowlist:
     keyed: true
 
 echo:
-  type: echo
+  kind: echo
 
 simple:
   domain: 0

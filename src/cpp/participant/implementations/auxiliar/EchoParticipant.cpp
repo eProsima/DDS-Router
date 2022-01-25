@@ -19,7 +19,7 @@
 #include <ddsrouter/participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/VoidReader.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/EchoWriter.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -33,7 +33,7 @@ one domain to the other, allowing different DDS domains to interact with each ot
 Simple Participant Domain 0
 ---------------------------
 
-This Participant is configured with a name, a type and the Domain Id, which is ``0`` in this case.
+This Participant is configured with a name, a kind and the Domain Id, which is ``0`` in this case.
 
 .. literalinclude:: ../../resources/examples/change_domain.yaml
     :language: yaml
@@ -43,7 +43,7 @@ This Participant is configured with a name, a type and the Domain Id, which is `
 Simple Participant Domain 1
 ---------------------------
 
-This Participant is configured with a name, a type and the Domain Id, which is ``1`` in this case.
+This Participant is configured with a name, a kind and the Domain Id, which is ``1`` in this case.
 
 .. literalinclude:: ../../resources/examples/change_domain.yaml
     :language: yaml

@@ -40,25 +40,25 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
-    // Create a new Participant depending on the ParticipantType specified by the configuration
-    switch (participant_configuration.type()())
+    // Create a new Participant depending on the ParticipantKind specified by the configuration
+    switch (participant_configuration.kind()())
     {
-        case ParticipantType::VOID:
+        case ParticipantKind::VOID:
             // VoidParticipant
             return std::make_shared<VoidParticipant>(participant_configuration.id());
             break;
 
-        case ParticipantType::ECHO:
+        case ParticipantKind::ECHO:
             // EchoParticipant
             return std::make_shared<EchoParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
-        case ParticipantType::DUMMY:
+        case ParticipantKind::DUMMY:
             // DummyParticipant
             return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
             break;
 
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             // Simple RTPS Participant
             return std::make_shared<rtps::SimpleParticipant> (
                 participant_configuration,
@@ -66,7 +66,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
             break;
 
-        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
             // Discovery Server RTPS Participant
             return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
                 participant_configuration,
@@ -74,7 +74,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
             break;
 
-        case ParticipantType::WAN:
+        case ParticipantKind::WAN:
             // Discovery Server RTPS Participant
             return std::make_shared<rtps::WANParticipant> (
                 participant_configuration,
@@ -82,14 +82,14 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
             break;
 
-        case ParticipantType::PARTICIPANT_TYPE_INVALID:
-            throw ConfigurationException(utils::Formatter() << "Type: " << participant_configuration.type()
-                                                            << " is not a valid participant type name.");
+        case ParticipantKind::PARTICIPANT_KIND_INVALID:
+            throw ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration.kind()
+                                                            << " is not a valid participant kind name.");
 
         default:
-            // This should not happen as every type must be in the switch
+            // This should not happen as every kind must be in the switch
             utils::tsnh(
-                utils::Formatter() << "Value of ParticipantType out of enumeration.");
+                utils::Formatter() << "Value of ParticipantKind out of enumeration.");
             return nullptr; // Unreachable code
     }
 }
@@ -97,7 +97,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 void ParticipantFactory::remove_participant(
         std::shared_ptr<IParticipant> participant)
 {
-    switch (participant->type()())
+    switch (participant->kind()())
     {
         default:
             // Rest of participants do not require specific destructor

@@ -21,7 +21,7 @@
 
 #include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
@@ -38,7 +38,7 @@ public:
     /**
      * @brief Construct a new configuration
      *
-     * An empty configuration is created, and the type will be set according to \c id
+     * An empty configuration is created, and the kind will be set according to \c id
      *
      * @param [in] id of the participant that will be created with this configuration
      */
@@ -49,13 +49,13 @@ public:
      * @brief Construct a new configuration from a \c RawConfiguration
      *
      * Yaml configuration must be a map or empty.
-     * The type is set in construction. If the type is not valid, it will cause an exception.
-     * The type of a participant could be set in the yaml configuration, or it could be the name of its id.
+     * The kind is set in construction. If the kind is not valid, it will cause an exception.
+     * The kind of a participant could be set in the yaml configuration, or it could be the name of its id.
      *
      * @param [in] id of the participant that will be created with this configuration
      * @param [in] raw_configuration yaml to get the configuration
      *
-     * @throw \c ConfigurationException in case the type could not be correctly set by yaml or id,
+     * @throw \c ConfigurationException in case the kind could not be correctly set by yaml or id,
      * or if yaml is not well-formed
      */
     ParticipantConfiguration(
@@ -66,8 +66,8 @@ public:
     ParticipantConfiguration(
             const ParticipantConfiguration& configuration);
 
-    //! Participant Type associated with this configuration
-    ParticipantType type() const noexcept;
+    //! Participant Kind associated with this configuration
+    ParticipantKind kind() const noexcept;
 
     //! Participant Id associated with this configuration
     ParticipantId id() const noexcept;
@@ -91,18 +91,18 @@ public:
 protected:
 
     /**
-     * @brief Set type
+     * @brief Set kind
      *
-     * Type is set by checking type tag in yaml, and if it does not exist, check if the participant name is
-     * already a type.
+     * Type is set by checking kind tag in yaml, and if it does not exist, check if the participant name is
+     * already a kind.
      */
-    void set_type_() noexcept;
+    void set_kind_() noexcept;
 
     //! Participant Id associated with this configuration
     const ParticipantId id_;
 
-    //! Participant Type associated with this configuration
-    ParticipantType type_;
+    //! Participant Kind associated with this configuration
+    ParticipantKind kind_;
 };
 
 } /* namespace ddsrouter */

@@ -6,11 +6,11 @@ allowlist:
     keyed: true
 
 SimpleParticipant:
-  type: local
+  kind: local
   domain: 0
 
 ClientWAN:
-  type: wan
+  kind: wan
   id: 1
   connection-addresses:
     - id: 0

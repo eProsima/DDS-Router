@@ -6,16 +6,16 @@
 # Simple participant for local communication
 
   # --------------------
-  # TYPE
+  # KIND
   # --------------------
 
-    # Set Type to create this type of participant
+    # Set Kind to create this kind of participant
 
-    type: "local"
+    kind: local
 
     ## Or
 
-    type: "simple"
+    kind: simple
 
   # --------------------
   # DOMAIN

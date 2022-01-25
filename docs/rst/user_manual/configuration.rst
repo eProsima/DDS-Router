@@ -77,11 +77,11 @@ At the yaml base level, along with ``allowlist`` tag, there will be the Particip
 together with their specific configuration.
 Each Participant is identified by a unique :term:`Participant Id` that will be the yaml *key*.
 The yaml *value* for this *key* is the configuration for this specific Participant.
-There could be any number of Participants, and Participant types could be repeated.
+There could be any number of Participants, and Participant kinds could be repeated.
 
 Each Participant has its specific configuration.
-Please, refer to :ref:`user_manual_participant_participant_types` in order to see each of the
-:term:`Participant Types<Participant Type>` requirements.
+Please, refer to :ref:`user_manual_participant_participant_kinds` in order to see each of the
+:term:`Participant Kinds<Participant Kind>` requirements.
 
 .. warning::
 
@@ -99,28 +99,28 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 .. code-block:: yaml
 
     Participant0:     # Participant Id = Participant0
-      type: local     # Participant Type = simple
+      kind: local     # Participant Kind = simple
       domain: 3       # DomainId = 3
 
     ################
 
-    simple:           # Participant Id = simple ; Participant Type = simple
+    simple:           # Participant Id = simple ; Participant Kind = simple
       domain: 6       # DomainId = 6
 
 The first Participant `Participant0` has Participant Id *Participant0* and is configured to be of the *simple*
-Participant Type.
-The second Participant has Participant Id *simple* and it is configured to be of the *simple* type.
-That is because the type is not required to be specified as it is get from the Participant Id.
+Participant Kind.
+The second Participant has Participant Id *simple* and it is configured to be of the *simple* kind.
+That is because the kind is not required to be specified as it is get from the Participant Id.
 
 .. note::
 
-    Participant Type is not case sensitive.
-    A Participant called *Simple* would be of type ``simple``.
+    Participant Kind is not case sensitive.
+    A Participant called *Simple* would be of kind ``simple``.
 
 .. note::
 
-    The Participant Id is get as Participant Type when type is not specified.
-    If type is explicitly specified, the Participant Id is not used to get the type.
+    The Participant Id is get as Participant Kind when kind is not specified.
+    If kind is explicitly specified, the Participant Id is not used to get the kind.
 
 
 .. _user_manual_configuration_domain_id:
@@ -147,7 +147,7 @@ An Address is defined by:
 * *IP*: IP of the host (public IP in case of WAN communication).
 * *Port*: Port where the Participant is listening.
 * *Transport Protocol*: ``UDP`` or ``TCP``.
-  If it is not set, it would be chosen by default depending on the Participant Type.
+  If it is not set, it would be chosen by default depending on the Participant Kind.
 * *IP version*: ``v4`` or ``v6``.
   If it is not set, it would be chosen depending on the *IP* string format.
 * *Domain Name*: Domain unique name to ask DNS server for the related IP.
@@ -296,7 +296,7 @@ A complete example of all the configurations described on this page can be found
 
     Participant0:                     # Participant Id = Participant0
 
-      type: local                     # Participant Type = local (= simple)
+      kind: local                     # Participant Kind = local (= simple)
 
       domain: 3                       # DomainId = 3
 
@@ -307,7 +307,7 @@ A complete example of all the configurations described on this page can be found
 
     ServerROS2:                       # Participant Id = ServerROS2
 
-      type: local-discovery-server    # Participant Type = local-discovery-server
+      kind: local-discovery-server    # Participant Kind = local-discovery-server
 
       id: 1
       ros-discovery-server: true      # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
@@ -324,7 +324,7 @@ A complete example of all the configurations described on this page can be found
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-    Wan:                              # Participant Id = Wan ; if type is not specified, this value is used to determine the Participant Type
+    Wan:                              # Participant Id = Wan ; if kind is not specified, this value is used to determine the Participant Kind
 
       id: 2                           # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 

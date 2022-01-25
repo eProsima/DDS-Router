@@ -34,7 +34,7 @@ constexpr const char* TOPIC_NAME_TAG("name");       //! Name of a topic
 constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
 constexpr const char* TOPIC_KIND_TAG("keyed");      //! Kind of a topic (with or without key)
 
-constexpr const char* PARTICIPANT_TYPE_TAG("type"); //! Participant Type
+constexpr const char* PARTICIPANT_KIND_TAG("kind"); //! Participant Kind
 
 // RTPS related tags
 // Simple RTPS related tags

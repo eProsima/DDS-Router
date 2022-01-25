@@ -15,7 +15,7 @@ allowlist:
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
 SimpleROS2:                                        # 2
-  type: local                                      # 3
+  kind: local                                      # 3
   domain: 0                                        # 4
 
 ##################################
@@ -23,7 +23,7 @@ SimpleROS2:                                        # 2
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
 
 ServerROS2:                                        # 5
-  type: local-discovery-server                     # 6
+  kind: local-discovery-server                     # 6
   ros-discovery-server: true                       # 7
   id: 1                                            # 8
   listening-addresses:                             # 9
@@ -45,14 +45,14 @@ ServerROS2:                                        # 5
 
 # 2: New Participant with name <SimpleROS2>.
 
-# 3: Type of SimpleROS2: <local>.
+# 3: Kind of SimpleROS2: <local>.
 # LAN UDP communication with default simple multicast discovery.
 # Remember that every ROS 2 Node relays the middleware communication to DDS, as a standard Participant.
 
 # 5: New Participant with name <ServerROS2>.
 
-# 6: Type of ServerROS2: <local-discovery-server>.
-# This type of Participant uses Discovery Server as discovery protocol.
+# 6: Kind of ServerROS2: <local-discovery-server>.
+# This kind of Participant uses Discovery Server as discovery protocol.
 
 # 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41> for ServerROS2.
 

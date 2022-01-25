@@ -17,7 +17,7 @@ allowlist:
 # This participant will subscribe to topics in allowlist in specific domain and listen every message published there
 
 SimpleParticipant:                                                    # 3
-  type: local                                                         # 4
+  kind: local                                                         # 4
   domain: 0                                                           # 5
 
 ##################################
@@ -25,7 +25,7 @@ SimpleParticipant:                                                    # 3
 # This Participant will print in stdout every message received by the other Participants
 
 EchoParticipant:                                                      # 6
-  type: echo                                                          # 7
+  kind: echo                                                          # 7
 
 
 ##################################
@@ -41,12 +41,12 @@ EchoParticipant:                                                      # 6
 
 # 3: New Participant with name <SimpleParticipant>.
 
-# 4: Type of SimpleParticipant: <local>.
+# 4: Kind of SimpleParticipant: <local>.
 # LAN UDP communication with default simple multicast discovery.
 
 # 5: SimpleParticipant will use DDS Domain ID <0>.
 
 # 6: New Participant with name <EchoParticipant>.
 
-# 7: Type of EchoParticipant: <echo>.
+# 7: Kind of EchoParticipant: <echo>.
 # Prints in stdout every message received by the router, together with the source GUID, timestamp and Topic.

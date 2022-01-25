@@ -6,7 +6,7 @@
 Simple Participant
 ##################
 
-This type of :term:`Participant` refers to a Simple DDS :term:`DomainParticipant`.
+This kind of :term:`Participant` refers to a Simple DDS :term:`DomainParticipant`.
 This Participant will discover all Participants deployed in its own local network in the same domain via multicast
 communication,and will communicate with those that share publication or subscription topics.
 
@@ -39,5 +39,5 @@ Configuration Example
 .. code-block:: yaml
 
     simple_participant:         # Participant Id = simple_participant
-      type: simple
+      kind: simple
       domain: 2                 # Domain Id = 2
