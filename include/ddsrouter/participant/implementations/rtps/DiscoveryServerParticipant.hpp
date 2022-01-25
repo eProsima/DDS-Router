@@ -52,6 +52,14 @@ public:
             std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
             std::shared_ptr<security::TlsConfiguration> tls_configuration,
             bool client = false);
+
+    static void enable_tls_client(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+            std::shared_ptr<security::TlsConfiguration> tls_configuration);
+
+    static void enable_tls_server(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+            std::shared_ptr<security::TlsConfiguration> tls_configuration);
 };
 
 } /* namespace rpts */
