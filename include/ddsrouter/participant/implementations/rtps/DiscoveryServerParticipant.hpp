@@ -48,10 +48,10 @@ public:
 
     virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const override;
 
-    void enable_tls(
+    static void enable_tls(
             std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
             std::shared_ptr<security::TlsConfiguration> tls_configuration,
-            bool client_only = false) const noexcept;
+            bool client = false);
 };
 
 } /* namespace rpts */

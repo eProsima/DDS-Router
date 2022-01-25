@@ -324,24 +324,8 @@ template <class ConfigurationType>
 void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
         std::shared_ptr<security::TlsConfiguration> tls_configuration,
-        bool client_only) const noexcept
+        bool client /* = false */)
 {
-    // TODO: redo it correctly
-
-    if (client_only)
-    {
-        if (!tls_configuration->can_be_client())
-        {
-            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "TLS Configuration must be Client but has been configured as server.");
-            // TODO throw exception
-            return;
-        }
-    }
-
-    std::shared_ptr<security::TlsConfigurationBoth> tls_configuration_ =
-            std::dynamic_pointer_cast<security::TlsConfigurationBoth>(tls_configuration);
-
     // Apply security ON
     descriptor->apply_security = true;
 
@@ -353,33 +337,57 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
     descriptor->tls_config.add_option(
         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
 
-    // CA certificate
-    descriptor->tls_config.verify_file = tls_configuration_->certificate_authority_file();
-
     // Perform verification of the server
     descriptor->tls_config.add_verify_mode(
         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
 
-    if (client_only)
+    if (client)
     {
-        // Fail verification if the server has no certificate
-        descriptor->tls_config.add_verify_mode(
-            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_FAIL_IF_NO_PEER_CERT);
+        if (!tls_configuration->can_be_client())
+        {
+            logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                    "TLS Configuration expected a Client configuration.");
+            throw ConfigurationException("TLS Configuration expected a Client configuration.");
+        }
+        else
+        {
+            std::shared_ptr<security::TlsConfigurationClient> tls_configuration_ =
+                    std::dynamic_pointer_cast<security::TlsConfigurationClient>(tls_configuration);
+
+            // Fail verification if the server has no certificate
+            descriptor->tls_config.add_verify_mode(
+                eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_FAIL_IF_NO_PEER_CERT);
+
+            // CA certificate
+            descriptor->tls_config.verify_file = tls_configuration_->certificate_authority_file();
+        }
     }
     else
     {
-        // Password
-        descriptor->tls_config.password = tls_configuration_->private_key_file_password();
-        // Private key
-        descriptor->tls_config.private_key_file = tls_configuration_->private_key_file();
-        // DDS-Router certificate
-        descriptor->tls_config.cert_chain_file = tls_configuration_->certificate_chain_file();
-        // DH
-        descriptor->tls_config.tmp_dh_file = tls_configuration_->dh_params_file();
+        if (!tls_configuration->can_be_client())
+        {
+            logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                    "TLS Configuration expected a Server configuration.");
+            throw ConfigurationException("TLS Configuration expected a Server configuration.");
+        }
+        else
+        {
+            std::shared_ptr<security::TlsConfigurationServer> tls_configuration_ =
+                    std::dynamic_pointer_cast<security::TlsConfigurationServer>(tls_configuration);
+
+            // Password
+            descriptor->tls_config.password = tls_configuration_->private_key_file_password();
+            // Private key
+            descriptor->tls_config.private_key_file = tls_configuration_->private_key_file();
+            // DDS-Router certificate
+            descriptor->tls_config.cert_chain_file = tls_configuration_->certificate_chain_file();
+            // DH
+            descriptor->tls_config.tmp_dh_file = tls_configuration_->dh_params_file();
+        }
     }
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-            "TLS configured for Participant " << this->id() << ".");
+            "TLS configured.");
 }
 
 } /* namespace rtps */
