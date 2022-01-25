@@ -32,6 +32,19 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 ###############################################################################
+# Check C++ version
+###############################################################################
+# Check C++11
+include(CheckCXXCompilerFlag)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
+        CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    check_cxx_compiler_flag(-std=c++11 SUPPORTS_CXX11)
+    if(NOT SUPPORTS_CXX11)
+        message(FATAL_ERROR "Compiler doesn't support C++11")
+    endif()
+endif()
+
+###############################################################################
 # Version
 ###############################################################################
 set(PRODUCT_MAJOR_VERSION 0)
@@ -69,6 +82,11 @@ set(BIN_INSTALL_DIR bin/ CACHE PATH "Installation directory for binaries")
 set(INCLUDE_INSTALL_DIR include/ CACHE PATH "Installation directory for C++ headers")
 set(LIB_INSTALL_DIR lib/ CACHE PATH "Installation directory for libraries")
 set(DATA_INSTALL_DIR share/ CACHE PATH "Installation directory for data")
+if(WIN32)
+    set(LICENSE_INSTALL_DIR . CACHE PATH "Installation directory for licenses")
+else()
+    set(LICENSE_INSTALL_DIR ${DATA_INSTALL_DIR}/${PROJECT_NAME} CACHE PATH "Installation directory for licenses")
+endif()
 
 ###############################################################################
 # Load external eProsima projects.
@@ -112,43 +130,26 @@ if (CODE_COVERAGE)
 endif()
 
 ###############################################################################
+# Default shared libraries
+###############################################################################
+# Global flag to cause add_library() to create shared libraries if on.
+# If set to true, this will cause all libraries to be built shared
+# unless the library was explicitly added as a static library.
+option(BUILD_SHARED_LIBS "Create shared libraries by default" ON)
+
+###############################################################################
+# Compile library.
+###############################################################################
+add_subdirectory(src/cpp)
+
+###############################################################################
 # Compile application
 ###############################################################################
+option(COMPILE_TOOLS "Compile and install tools" ON)
 
-# Project sources
-file(GLOB_RECURSE SOURCES_FILES
-        "src/**/*.c"
-        "src/**/*.cpp"
-        "src/**/*.cxx"
-    )
-
-# Project headers
-file(GLOB_RECURSE HEADERS_FILES
-        "include/**/*.h"
-        "include/**/*.hpp"
-        "include/**/*.hxx"
-    )
-
-add_executable(${PROJECT_NAME}
-        ${SOURCES_FILES}
-        ${HEADERS_FILES}
-    )
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/types>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}>)
-
-target_link_libraries(${PROJECT_NAME}
-    fastrtps
-    fastcdr
-    yaml-cpp
-    $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
-    )
-
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+if (COMPILE_TOOLS)
+    add_subdirectory(tool)
+endif()
 
 ###############################################################################
 # Test
@@ -213,3 +214,21 @@ INSTALL(
 INSTALL(
     DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/security/
     DESTINATION ${DATA_INSTALL_DIR}/resources/configurations/security/)
+
+###############################################################################
+# Packaging
+###############################################################################
+# Install license
+install(FILES ${PROJECT_SOURCE_DIR}/LICENSE
+    DESTINATION ${LICENSE_INSTALL_DIR}
+    COMPONENT licenses
+    )
+set(CPACK_COMPONENT_LICENSES_HIDDEN 1)
+
+set(CPACK_COMPONENTS_ALL headers)
+
+if(MSVC OR MSVC_IDE)
+set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} libraries_${MSVC_ARCH})
+endif()
+
+include(${PROJECT_SOURCE_DIR}/cmake/packaging/eProsimaPackaging.cmake)

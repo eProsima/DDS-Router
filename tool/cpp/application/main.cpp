@@ -28,8 +28,9 @@
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/Time.hpp>
-#include <ddsrouter/user_interface/arguments_configuration.hpp>
-#include <ddsrouter/user_interface/ProcessReturnCode.hpp>
+
+#include "user_interface/arguments_configuration.hpp"
+#include "user_interface/ProcessReturnCode.hpp"
 
 using namespace eprosima::ddsrouter;
 

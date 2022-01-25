@@ -80,7 +80,7 @@ if(PYTHONINTERP_FOUND)
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
 
-            set(TEST_NAME "system.tools.ddsrouter.${TEST}")
+            set(TEST_NAME "tool.application.ddsrouter.${TEST}")
 
             # CTest has issues with signals on windows. We forked the test
             # execution using an auxiliary powershell script and using only sigint

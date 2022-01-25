@@ -28,6 +28,11 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - ``Release`` |br|
           ``Debug``
         - ``Release``
+    *   - :class:`COMPILE_TOOLS`
+        - Build the *DDS Router* application tool `ddsrouter`.
+        - ``OFF`` |br|
+          ``ON``
+        - ``ON``
     *   - :class:`BUILD_TESTS`
         - Build the *DDS Router* application and documentation |br|
           tests. Setting :class:`BUILD_TESTS` to ``ON`` sets |br|

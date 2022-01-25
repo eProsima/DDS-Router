@@ -27,6 +27,7 @@
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
+#include <ddsrouter/library/ddsrouter_dll.h>
 #include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/participant/ParticipantFactory.hpp>
@@ -39,7 +40,7 @@ namespace ddsrouter {
 /**
  * TODO
  */
-class DDSRouter
+class DDSROUTER_DllAPI DDSRouter
 {
 public:
 
