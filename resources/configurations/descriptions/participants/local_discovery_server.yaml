@@ -6,20 +6,20 @@
 # Simple participant for local communication
 
   # --------------------
-  # TYPE
+  # KIND
   # --------------------
 
-    # Set Type to create this type of participant
+    # Set kind to create this kind of participant
 
-    type: "local-discovery-server"
-
-    ## Or
-
-    type: "ds"
+    kind: local-discovery-server
 
     ## Or
 
-    type: "local-ds"
+    kind: ds
+
+    ## Or
+
+    kind: local-ds
 
   # --------------------
   # GUID PREFIX

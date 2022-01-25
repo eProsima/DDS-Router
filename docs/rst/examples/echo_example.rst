@@ -34,7 +34,7 @@ and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` wi
 Simple Participant
 ------------------
 
-This Participant is configured with a name, a type and the Domain Id, which is ``0`` in this case.
+This Participant is configured with a name, a kind and the Domain Id, which is ``0`` in this case.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
@@ -44,7 +44,7 @@ This Participant is configured with a name, a type and the Domain Id, which is `
 Echo Participant
 ----------------
 
-This Participant does not require further configuration than name and type.
+This Participant does not require further configuration than name and kind.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml

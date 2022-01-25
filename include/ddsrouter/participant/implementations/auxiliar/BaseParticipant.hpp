@@ -47,9 +47,9 @@ public:
     /**
      * @brief Generic constructor for a Participant
      *
-     * Id and type are taken from the configuration.
+     * Id and kind are taken from the configuration.
      *
-     * @param participant_configuration Configuration for the Participant. Participant Type is taken from here.
+     * @param participant_configuration Configuration for the Participant. Participant Kind is taken from here.
      * @param payload_pool DDS Router shared PayloadPool
      * @param discovery_database DDS Router shared Discovery Database
      */
@@ -75,13 +75,13 @@ public:
     ParticipantId id() const noexcept override;
 
     /**
-     * @brief Override type() IParticipant method
+     * @brief Override kind() IParticipant method
      *
-     * It gets the type from the configuration.
+     * It gets the kind from the configuration.
      *
      * Thread safe with mutex \c mutex_ .
      */
-    ParticipantType type() const noexcept override;
+    ParticipantKind kind() const noexcept override;
 
     /**
      * @brief Override create_writer() IParticipant method
@@ -210,7 +210,7 @@ protected:
  * @brief \c BaseParticipant to stream serialization
  *
  * This method is merely a to_string of a BaseParticipant definition.
- * It serialize the Id and type
+ * It serialize the Id and kind
  */
 template <class ConfigurationType>
 std::ostream& operator <<(

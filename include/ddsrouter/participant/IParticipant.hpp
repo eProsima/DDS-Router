@@ -24,7 +24,7 @@
 #include <ddsrouter/reader/IReader.hpp>
 #include <ddsrouter/types/endpoint/Endpoint.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 
@@ -38,11 +38,11 @@ namespace ddsrouter {
  * It also works as a factory for Writers and Readers.
  *
  * Every Participant is associated to a \c ParticipantId that uniquely identifies it.
- * Every Participant is associated with a \c ParticipantType depending on its implementation.
+ * Every Participant is associated with a \c ParticipantKind depending on its implementation.
  *
  * @note In order to implement new Participants, create a subclass of this Interface and implement every method.
  * @note Also it is needed to add the creation of the Participant in the \c ParticipantFactory and a new type of
- * @note \c ParticipantType .
+ * @note \c ParticipantKind .
  */
 class IParticipant
 {
@@ -56,11 +56,11 @@ public:
     virtual ParticipantId id() const noexcept = 0;
 
     /**
-     * @brief Return the Participant type
+     * @brief Return the Participant kind
      *
-     * @return This Participant type
+     * @return This Participant kind
      */
-    virtual ParticipantType type() const noexcept = 0;
+    virtual ParticipantKind kind() const noexcept = 0;
 
     /**
      * @brief Return a new Writer

@@ -137,7 +137,7 @@ User *A* should set its *listening-addresses* as follows:
 .. code-block:: yaml
 
     WANServerParticipant_userA:
-      type: "wan"
+      kind: wan
 
       id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
@@ -150,7 +150,7 @@ User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
 .. code-block:: yaml
 
     WANClientParticipant_userB:
-      type: "wan"
+      kind: wan
 
       id: 3                               # Must be different than A one
       connection-addresses:
@@ -185,7 +185,7 @@ User *A* should set its *listening-addresses* as follows:
 .. code-block:: yaml
 
     WANServerParticipant_userA:
-      type: "wan"
+      kind: wan
 
       id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
@@ -200,7 +200,7 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
 .. code-block:: yaml
 
     WANClientParticipant_userB:
-      type: "wan"
+      kind: wan
 
       id: 3                               # Must be different than A one
       listening-addresses:
@@ -225,7 +225,7 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
 .. code-block:: yaml
 
     TLS_Server:
-      type: "wan"
+      kind: wan
 
       id: 0
       listening-addresses:
@@ -243,7 +243,7 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
 .. code-block:: yaml
 
     TLS_Client:
-      type: "wan"
+      kind: wan
 
       id: 1
       connection-addresses:

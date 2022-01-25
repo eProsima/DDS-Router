@@ -34,7 +34,7 @@ one domain to the other, allowing different DDS domains to interact to each othe
 Simple Participant
 ------------------
 
-This Participant is configured by a name, a type and the Domain Id, in this case ``0``.
+This Participant is configured by a name, a kind and the Domain Id, in this case ``0``.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
@@ -44,7 +44,7 @@ This Participant is configured by a name, a type and the Domain Id, in this case
 Discovery Server Participant
 ----------------------------
 
-This Participant is configured by a name, a type and a listening addresses where
+This Participant is configured by a name, a kind and a listening addresses where
 Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml

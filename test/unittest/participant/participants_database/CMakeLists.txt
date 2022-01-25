@@ -25,7 +25,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/ParticipantsDatabase.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantType.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
     )

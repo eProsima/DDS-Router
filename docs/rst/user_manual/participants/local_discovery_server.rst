@@ -6,7 +6,7 @@
 Local Discovery Server Participant
 ##################################
 
-This type of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant`.
+This kind of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant`.
 This Participant will work as discovery broker for those Participants that connect to it (clients or servers).
 It could also connect to one or multiple Discovery Servers to create a Discovery Server Network.
 
@@ -59,7 +59,7 @@ Discovery Server GuidPrefix.
 
     local_discovery_server_participant:           # Participant Id = local_discovery_server_participant
 
-      type: "discovery-server"
+      kind: discovery-server
 
       id: 2
       ros-discovery-server: true                  # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41

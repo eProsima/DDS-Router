@@ -72,11 +72,11 @@ public:
      * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
      * is created and added to the list to be returned.
      * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
-     * invalid \c ParticipantType ) will be added to the list.
+     * invalid \c ParticipantKind ) will be added to the list.
      *
      * @return List of \c ParticipantConfigurations
      *
-     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No type)
+     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
      */
     std::list<ParticipantConfiguration> participants_configurations() const;
 

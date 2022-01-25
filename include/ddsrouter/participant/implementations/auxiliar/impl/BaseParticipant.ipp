@@ -24,7 +24,7 @@
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/types/participant/ParticipantType.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
@@ -71,11 +71,11 @@ ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 }
 
 template <class ConfigurationType>
-ParticipantType BaseParticipant<ConfigurationType>::type() const noexcept
+ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.type();
+    return configuration_.kind();
 }
 
 template <class ConfigurationType>
@@ -185,7 +185,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const BaseParticipant<ConfigurationType>& participant)
 {
-    os << "{" << participant.id() << ";" << participant.configuration_.type() << "}";
+    os << "{" << participant.id() << ";" << participant.configuration_.kind() << "}";
     return os;
 }
 
