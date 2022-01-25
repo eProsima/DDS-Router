@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _DDSROUTER_CONFIG_H_
-#define _DDSROUTER_CONFIG_H_
+#ifndef _DDSROUTER_LIBRARY_CONFIG_H_
+#define _DDSROUTER_LIBRARY_CONFIG_H_
 
 #ifndef DDSROUTER_VERSION_MAJOR
 #define DDSROUTER_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
@@ -28,4 +28,4 @@
 #define DDSROUTER_VERSION_STR "@PROJECT_VERSION@"
 #endif // ifndef DDSROUTER_VERSION_STR
 
-#endif // ifndef _DDSROUTER_CONFIG_H_
+#endif // ifndef _DDSROUTER_LIBRARY_CONFIG_H_

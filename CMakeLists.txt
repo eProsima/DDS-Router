@@ -34,7 +34,7 @@ endif()
 ###############################################################################
 # Check C++ version
 ###############################################################################
-#Check C++11
+# Check C++11
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
         CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -43,7 +43,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
         message(FATAL_ERROR "Compiler doesn't support C++11")
     endif()
 endif()
-
 
 ###############################################################################
 # Version

@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _EPROSIMA_DDSROUTER_DLL_HPP_
-#define _EPROSIMA_DDSROUTER_DLL_HPP_
+#ifndef _EPROSIMA_LIBRARY_DDSROUTERDLL_H_
+#define _EPROSIMA_LIBRARY_DDSROUTERDLL_H_
 
 #include <ddsrouter/library/config.h>
 
@@ -73,4 +73,4 @@
 #include "eProsima_auto_link.h"
 #endif // auto-linking disabled
 
-#endif // _EPROSIMA_DDSROUTER_DLL_HPP_
+#endif // _EPROSIMA_LIBRARY_DDSROUTERDLL_H_

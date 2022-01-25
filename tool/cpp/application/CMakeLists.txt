@@ -19,6 +19,7 @@
 ###############################################################################
 # CMake Check
 ###############################################################################
+# Check C++11
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
         CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -40,19 +41,6 @@ project(ddsrouter-app)
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 ###############################################################################
-# Check C++ version
-###############################################################################
-#Check C++11
-include(CheckCXXCompilerFlag)
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
-        CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    check_cxx_compiler_flag(-std=c++11 SUPPORTS_CXX11)
-    if(NOT SUPPORTS_CXX11)
-        message(FATAL_ERROR "Compiler doesn't support C++11")
-    endif()
-endif()
-
-###############################################################################
 # Find requirements
 ###############################################################################
 if(NOT fastcdr_FOUND)
@@ -68,8 +56,6 @@ if(NOT ddsrouter_FOUND)
     find_package(ddsrouter REQUIRED)
 endif()
 
-
-
 ###############################################################################
 # Compile
 ###############################################################################
@@ -82,12 +68,6 @@ set(EXECUTABLE_SOURCES
     )
 
 add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_SOURCES})
-
-# TODO: check if needed
-# target_compile_definitions(${EXECUTABLE_NAME} PRIVATE
-#     $<$<AND:$<NOT:$<BOOL:${WIN32}>>,$<STREQUAL:"${CMAKE_BUILD_TYPE}","Debug">>:__DEBUG>
-#     $<$<BOOL:${INTERNAL_DEBUG}>:__INTERNALDEBUG> # Internal debug activated.
-# )
 
 target_link_libraries(${PROJECT_NAME}
         fastrtps

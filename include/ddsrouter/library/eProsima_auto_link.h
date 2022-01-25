@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
    Expected defines.
    - EPROSIMA_LIB_NAME
    - DDSROUTER_VERSION_MAJOR
-   - DDSROUTER_VERSION_MINOT
+   - DDSROUTER_VERSION_MINOR
  */
+
+#ifndef _EPROSIMA_LIBRARY_EPROSIMAAUTOLINK_H_
+#define _EPROSIMA_LIBRARY_EPROSIMAAUTOLINK_H_
 
 #if defined(_MSC_VER)
     #define EPROSIMA_STRINGIZE(X) EPROSIMA_DO_STRINGIZE(X)
@@ -64,3 +67,5 @@
 #ifdef EPROSIMA_LIB_DEBUG_TAG
 #undef EPROSIMA_LIB_DEBUG_TAG
 #endif // ifdef EPROSIMA_LIB_DEBUG_TAG
+
+#endif // _EPROSIMA_LIBRARY_EPROSIMAAUTOLINK_H_
