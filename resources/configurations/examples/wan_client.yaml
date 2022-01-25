@@ -54,14 +54,14 @@ WANClient:                                                        # 6
 
 # 3: New Participant with name <SimpleParticipant>.
 
-# 4: Type of SimpleParticipant: <local>.
+# 4: Kind of SimpleParticipant: <local>.
 # LAN UDP communication with default simple multicast discovery.
 
 # 5: SimpleParticipant will use DDS Domain ID <1>.
 
 # 6: New Participant with name <WANClient>.
 
-# 7: Type of WANClient: <wan>.
+# 7: Kind of WANClient: <wan>.
 # WAN communication with another DDS Router.
 
 # 8: Set the Discovery Server GuidPrefix to <01.0f.02.00.00.00.00.00.00.00.ca.fe> for WANClient.

@@ -6,9 +6,9 @@
 # Echo participant
 
   # --------------------
-  # TYPE
+  # KIND
   # --------------------
 
-    # Set Type to create this type of participant
+    # Set Kind to create this kind of participant
 
     kind: echo

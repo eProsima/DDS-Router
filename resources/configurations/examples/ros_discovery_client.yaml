@@ -48,7 +48,7 @@ ClientROS2:                                                       # 5
 
 # 2: New Participant with name <SimpleROS2>.
 
-# 3: Type of SimpleROS2: <local>.
+# 3: Kind of SimpleROS2: <local>.
 # LAN UDP communication with default simple multicast discovery.
 # Remember that every ROS 2 Node relays the middleware communication to DDS, as a standard Participant.
 
@@ -56,7 +56,7 @@ ClientROS2:                                                       # 5
 
 # 5: New Participant with name <ClientROS2>.
 
-# 6: Type of ClientROS2: <local-discovery-server>.
+# 6: Kind of ClientROS2: <local-discovery-server>.
 # If not listening address are set for this Participant, it acts as SuperClient of Discovery Server Discovery Protocol.
 
 # 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41>.

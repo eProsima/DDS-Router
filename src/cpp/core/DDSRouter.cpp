@@ -250,7 +250,7 @@ void DDSRouter::init_participants_()
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-                                                           << " and type " << new_participant->kind() << ".");
+                                                           << " and kind " << new_participant->kind() << ".");
 
         // Add this participant to the database
         participants_database_->add_participant_(

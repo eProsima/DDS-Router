@@ -59,7 +59,7 @@ Discovery Server GuidPrefix.
 
     local_discovery_server_participant:           # Participant Id = local_discovery_server_participant
 
-      tkind: discovery-server
+      kind: discovery-server
 
       id: 2
       ros-discovery-server: true                  # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41

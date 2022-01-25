@@ -49,14 +49,14 @@ WANServer:                                                        # 6
 
 # 3: New Participant with name <SimpleParticipant>.
 
-# 4: Type of SimpleParticipant: <local>.
+# 4: Kind of SimpleParticipant: <local>.
 # LAN UDP communication with default simple multicast discovery.
 
 # 5: SimpleParticipant will use DDS Domain ID <0>.
 
 # 6: New Participant with name <WANServer>.
 
-# 7: Type of WANServer: <wan>.
+# 7: Kind of WANServer: <wan>.
 # WAN communication with another DDS Router.
 
 # 8: Set this Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe> for WANServer.

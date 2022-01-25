@@ -43,7 +43,7 @@ ParticipantConfiguration::ParticipantConfiguration(
 {
     if (!raw_configuration_.IsMap() && !raw_configuration_.IsNull())
     {
-        throw ConfigurationException("DDSRouter Participant expects a map as base yaml kind or an empty yaml");
+        throw ConfigurationException("DDSRouter Participant expects a map as base yaml or an empty yaml");
     }
 
     set_kind_();
