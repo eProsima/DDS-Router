@@ -5,11 +5,11 @@ allowlist:
     type: "std_msgs::msg::dds_::String_"
 
 SimpleParticipant:
-  type: local
+  kind: local
   domain: 0
 
 LocalWAN:
-  type: wan
+  kind: wan
   id: 3
   listening-addresses:  # Needed for UDP communication
     - ip: "3.3.3.3"  # LAN public IP

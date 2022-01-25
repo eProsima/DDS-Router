@@ -1,6 +1,6 @@
 
 void0:
-  type: void
+  kind: void
 
 void1:
-  type: void
+  kind: void

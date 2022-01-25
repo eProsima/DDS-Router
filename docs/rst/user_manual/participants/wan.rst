@@ -67,7 +67,7 @@ Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` trans
 
     wan_participant:             # Participant Id = wan_participant
 
-      type: "wan"
+      kind: wan
 
       id: 2                                       # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 

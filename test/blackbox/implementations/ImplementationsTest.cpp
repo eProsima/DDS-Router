@@ -51,7 +51,7 @@ void set_domain(
 }
 
 RawConfiguration participant_configuration(
-        ParticipantType type,
+        ParticipantKind kind,
         uint16_t value = 0)
 {
     RawConfiguration participant_configuration;
@@ -60,19 +60,19 @@ RawConfiguration participant_configuration(
     address[ADDRESS_IP_TAG] = "127.0.0.1";
     address[ADDRESS_PORT_TAG] = 11666 + value;
 
-    participant_configuration[PARTICIPANT_TYPE_TAG] = type.to_string();
+    participant_configuration[PARTICIPANT_KIND_TAG] = kind.to_string();
 
-    switch (type())
+    switch (kind())
     {
-        case ParticipantType::SIMPLE_RTPS:
+        case ParticipantKind::SIMPLE_RTPS:
             set_domain(participant_configuration);
             break;
 
-        case ParticipantType::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
-        case ParticipantType::WAN:
+        case ParticipantKind::WAN:
             participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
             break;
 
@@ -93,14 +93,14 @@ RawConfiguration participant_configuration(
  */
 TEST(ImplementationsTest, solo_participant_implementation)
 {
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
 
         // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
+        configuration["participant_1"] = participant_configuration(kind, 1);
 
         // Create DDSRouter entity
         ASSERT_THROW(DDSRouter router(configuration), InitializationException);
@@ -108,7 +108,7 @@ TEST(ImplementationsTest, solo_participant_implementation)
 }
 
 /**
- * Test that creates a DDSRouter with a Pair of Participants of same type.
+ * Test that creates a DDSRouter with a Pair of Participants of same kind.
  * It creates a DDSRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
  *
  * This test will fail if it crashes.
@@ -117,15 +117,15 @@ TEST(ImplementationsTest, pair_implementation)
 {
     test::TestLogHandler test_log_handler;
 
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
 
         // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
-        configuration["participant_2"] = participant_configuration(2);
+        configuration["participant_1"] = participant_configuration(kind, 1);
+        configuration["participant_2"] = participant_configuration(kind, 2);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -141,7 +141,7 @@ TEST(ImplementationsTest, pair_implementation)
 }
 
 /**
- * Test that creates a DDSRouter with a Pair of Participants of same type.
+ * Test that creates a DDSRouter with a Pair of Participants of same kind.
  * It creates a DDSRouter with two Participants of same kind, starts it with an active topic,
  * then stops it and finally destroys it.
  *
@@ -151,15 +151,15 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
 {
     test::TestLogHandler test_log_handler;
 
-    // For each Participant Type
-    for (ParticipantType type : ParticipantType::all_valid_participant_types())
+    // For each Participant Kind
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
         // Generate configuration
         RawConfiguration configuration;
 
         // Add two participants
-        configuration["participant_1"] = participant_configuration(1);
-        configuration["participant_2"] = participant_configuration(2);
+        configuration["participant_1"] = participant_configuration(kind, 1);
+        configuration["participant_2"] = participant_configuration(kind, 2);
 
         // Set topic to active
         set_allowed_topic(configuration);
@@ -178,7 +178,7 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
 }
 
 /**
- * Test that creates a DDSRouter with several Participants, one of each type
+ * Test that creates a DDSRouter with several Participants, one of each kind
  * It creates a DDSRouter with a Participant of each kind,
  * starts it with an active topic, then stops it and finally destroys it.
  *
@@ -194,12 +194,12 @@ TEST(ImplementationsTest, all_implementations)
 
         uint16_t participant_number = 1;
 
-        // For each Participant Type set it in configuration
-        for (ParticipantType type : ParticipantType::all_valid_participant_types())
+        // For each Participant Kind set it in configuration
+        for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
         {
             // Add participant
-            std::string participant_name = "participant_" + type.to_string();
-            configuration[participant_name] = participant_configuration(type, ++participant_number);
+            std::string participant_name = "participant_" + kind.to_string();
+            configuration[participant_name] = participant_configuration(kind, ++participant_number);
         }
 
         // Set topic to active

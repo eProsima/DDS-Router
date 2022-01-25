@@ -32,11 +32,11 @@ Participant nomenclature
 
         This term is explained :ref:`here <user_manual_participant_participant_id>`.
 
-    Participant Type
+    Participant Kind
         Element that identifies a Participant kind.
-        It can be set as a `string` that references an alias of an existing Participant Type.
+        It can be set as a `string` that references an alias of an existing Participant Kind.
 
-        This term is explained :ref:`here <user_manual_participant_participant_type>`.
+        This term is explained :ref:`here <user_manual_participant_participant_kind>`.
 
 
 DDS nomenclature

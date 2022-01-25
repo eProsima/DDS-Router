@@ -10,9 +10,9 @@ allowlist:
     keyed: true
 
 participant_0:
-  type: "local"
+  kind: local
   domain: 0
 
 participant_1:
-  type: "local"
+  kind: local
   domain: 1

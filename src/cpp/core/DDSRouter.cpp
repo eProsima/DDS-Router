@@ -242,7 +242,7 @@ void DDSRouter::init_participants_()
 
         // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||
-                !new_participant->type().is_valid())
+                !new_participant->kind().is_valid())
         {
             // Failed to create participant
             throw InitializationException(utils::Formatter()
@@ -250,7 +250,7 @@ void DDSRouter::init_participants_()
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-                                                           << " and type " << new_participant->type() << ".");
+                                                           << " and kind " << new_participant->kind() << ".");
 
         // Add this participant to the database
         participants_database_->add_participant_(

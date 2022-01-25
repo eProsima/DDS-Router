@@ -7,7 +7,7 @@ allowlist:
     type: "trivial_type"
 
 participant_1:
-  type: "dummy"
+  kind: dummy
 
 participant_2:
-  type: "dummy"
+  kind: dummy

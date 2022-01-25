@@ -138,7 +138,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     }
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-            "New Participant " << this->configuration_.type() <<
+            "New Participant " << this->configuration_.kind() <<
             " created with id " << this->id() <<
             " in domain " << domain << " with guid " << rtps_participant_->getGuid());
 }
