@@ -29,7 +29,7 @@ These options allow the developer to enable/disable certain *DDS Router* setting
           ``Debug``
         - ``Release``
     *   - :class:`COMPILE_TOOLS`
-        - Build the *DDS Router* tool application `ddsrouter-app`.
+        - Build the *DDS Router* application tool `ddsrouter`.
         - ``OFF`` |br|
           ``ON``
         - ``ON``

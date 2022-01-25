@@ -15,30 +15,8 @@
 ###############################################################################
 # COMPILE AND INSTALL TOOL EXECUTABLE
 ###############################################################################
-
-###############################################################################
-# CMake Check
-###############################################################################
-# Check C++11
-include(CheckCXXCompilerFlag)
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
-        CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    check_cxx_compiler_flag(-std=c++11 SUPPORTS_CXX11)
-    if(NOT SUPPORTS_CXX11)
-        message(FATAL_ERROR "Compiler doesn't support C++11")
-    endif()
-endif()
-cmake_minimum_required(VERSION 3.5)
-
-if(NOT CMAKE_VERSION VERSION_LESS 3.0)
-    cmake_policy(SET CMP0048 NEW)
-endif()
-
-###############################################################################
-# Set Executable project and name
-###############################################################################
-project(ddsrouter-app)
-set(EXECUTABLE_NAME ${PROJECT_NAME})
+set(EXECUTABLE_TARGET ddsrouter-tool)
+set(EXECUTABLE_NAME ddsrouter)
 
 ###############################################################################
 # Find requirements
@@ -67,9 +45,9 @@ set(EXECUTABLE_SOURCES
         "user_interface/arguments_configuration.cpp"
     )
 
-add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_SOURCES})
+add_executable(${EXECUTABLE_TARGET} ${EXECUTABLE_SOURCES})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${EXECUTABLE_TARGET}
         fastrtps
         fastcdr
         ddsrouter
@@ -77,5 +55,7 @@ target_link_libraries(${PROJECT_NAME}
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
-install(TARGETS ${EXECUTABLE_NAME}
-    RUNTIME DESTINATION ${BIN_INSTALL_DIR}/app)
+install(TARGETS ${EXECUTABLE_TARGET}
+    RUNTIME DESTINATION ${BIN_INSTALL_DIR})
+
+set_target_properties(${EXECUTABLE_TARGET} PROPERTIES OUTPUT_NAME "${EXECUTABLE_NAME}")

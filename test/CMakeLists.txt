@@ -125,6 +125,6 @@ add_subdirectory(blackbox)
 add_subdirectory(unittest)
 
 # If tool active, compile tool tests
-if (${COMPILE_TOOLS})
+if (COMPILE_TOOLS)
     add_subdirectory(tool)
 endif()

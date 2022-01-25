@@ -82,7 +82,7 @@ if(PYTHONINTERP_FOUND)
                     COMMAND powershell "-File" ${PWS_LAUNCHER}
                             ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            $<TARGET_FILE:ddsrouter-app>
+                            $<TARGET_FILE:ddsrouter-tool>
                             ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                 )
         else()
@@ -90,7 +90,7 @@ if(PYTHONINTERP_FOUND)
                     NAME ${TEST_NAME}
                     COMMAND ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            "--exe" $<TARGET_FILE:ddsrouter-app>
+                            "--exe" $<TARGET_FILE:ddsrouter-tool>
                             "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                             "--debug"
                 )
