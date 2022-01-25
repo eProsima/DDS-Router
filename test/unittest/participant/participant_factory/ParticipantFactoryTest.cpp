@@ -32,37 +32,6 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
-// TODO: refactor these tests so they test with kind in id and with kind in Configuration
-// TODO: add these functions in a common utils test
-void set_domain(
-        RawConfiguration& configuration,
-        uint16_t seed = 0)
-{
-    configuration[DOMAIN_ID_TAG] = seed;
-}
-
-ParticipantConfiguration get_random_participant_configuration(
-        ParticipantId id,
-        ParticipantKind kind,
-        uint32_t seed = 0)
-{
-    RawConfiguration config;
-
-    switch (kind())
-    {
-        case ParticipantKind::SIMPLE_RTPS:
-            set_domain(config, seed);
-            break;
-
-        // Add configurations por Participant Kinds that require configuration arguments
-
-        default:
-            break;
-    }
-
-    return ParticipantConfiguration(id, config);
-}
-
 /*
  * Generate all required objects for participant creation,
  * and then create a participant from an id string
@@ -93,7 +62,7 @@ TEST(ParticipantFactoryTest, create_participant)
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
         std::shared_ptr<IParticipant> void_participant = test::create_participant(kind);
-        ASSERT_EQ(void_participant->type(), kind) << "Failed in " << kind;
+        ASSERT_EQ(void_participant->kind(), kind) << "Failed in " << kind;
     }
 }
 

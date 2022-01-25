@@ -27,15 +27,15 @@ namespace configuration {
 
 ParticipantConfiguration::ParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& type) noexcept
+        const ParticipantKind& kind) noexcept
     : id_(id)
-    , type_(type)
+    , kind_(kind)
 {
 }
 
-ParticipantKind ParticipantConfiguration::type() const noexcept
+ParticipantKind ParticipantConfiguration::kind() const noexcept
 {
-    return type_;
+    return kind_;
 }
 
 ParticipantId ParticipantConfiguration::id() const noexcept
@@ -45,13 +45,13 @@ ParticipantId ParticipantConfiguration::id() const noexcept
 
 bool ParticipantConfiguration::is_valid() const noexcept
 {
-    return id_.is_valid() && type_.is_valid();
+    return id_.is_valid() && kind_.is_valid();
 }
 
 bool ParticipantConfiguration::operator ==(
         const ParticipantConfiguration& other) const noexcept
 {
-    return this->id() == other.id() && this->type() == other.type();
+    return this->id() == other.id() && this->kind() == other.kind();
 }
 
 } /* namespace configuration */

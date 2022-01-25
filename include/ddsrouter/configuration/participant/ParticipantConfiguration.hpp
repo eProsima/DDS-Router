@@ -39,10 +39,10 @@ public:
      */
     ParticipantConfiguration(
             const ParticipantId& id,
-            const ParticipantKind& type) noexcept;
+            const ParticipantKind& kind) noexcept;
 
-    //! Participant Type associated with this configuration
-    ParticipantKind type() const noexcept;
+    //! Participant Kind associated with this configuration
+    ParticipantKind kind() const noexcept;
 
     //! Participant Id associated with this configuration
     ParticipantId id() const noexcept;
@@ -67,8 +67,8 @@ protected:
     //! Participant Id associated with this configuration
     const ParticipantId id_;
 
-    //! Participant Type of the Participant that this configuration refers.
-    const ParticipantKind type_;
+    //! Participant Kind of the Participant that this configuration refers.
+    const ParticipantKind kind_;
 };
 
 } /* namespace configuration */

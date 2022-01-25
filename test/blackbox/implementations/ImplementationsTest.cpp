@@ -36,56 +36,6 @@
 
 using namespace eprosima::ddsrouter;
 
-void set_allowed_topic(
-        RawConfiguration& configuration,
-        std::string topic_name = "__test_topic_ddsrouter__",
-        std::string topic_type = "__test_topic_type_ddsrouter__")
-{
-    RawConfiguration topic;
-    topic[TOPIC_NAME_TAG] = topic_name;
-    topic[TOPIC_TYPE_NAME_TAG] = topic_type;
-
-    RawConfiguration allow_list;
-    allow_list.push_back(topic);
-
-    configuration[ALLOWLIST_TAG] = allow_list;
-}
-
-void set_domain(
-        RawConfiguration& configuration,
-        uint16_t seed = 0)
-{
-    configuration[DOMAIN_ID_TAG] = seed;
-}
-
-RawConfiguration participant_configuration(
-        ParticipantKind kind,
-        uint16_t value = 0)
-{
-    RawConfiguration participant_configuration;
-
-    RawConfiguration address;
-    address[ADDRESS_IP_TAG] = "127.0.0.1";
-    address[ADDRESS_PORT_TAG] = 11666 + value;
-
-    participant_configuration[PARTICIPANT_KIND_TAG] = kind.to_string();
-
-    switch (kind())
-    {
-        case ParticipantKind::SIMPLE_RTPS:
-            set_domain(participant_configuration);
-            break;
-
-        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
-            break;
-
-        case ParticipantKind::WAN:
-            participant_configuration[LISTENING_ADDRESSES_TAG].push_back(address); // TODO: make it from method
-            break;
-
-using namespace eprosima::ddsrouter;
-
 /**
  * Test that tries to create a DDSRouter with only one Participant.
  *
@@ -128,13 +78,12 @@ TEST(ImplementationsTest, pair_implementation)
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
         participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
-<<<<<<< HEAD
-        // Add two participants
-        configuration["participant_1"] = participant_configuration(kind, 1);
-        configuration["participant_2"] = participant_configuration(kind, 2);
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<RealTopic>>(),
             participant_configurations);
->>>>>>> b01029e... Refs #13530: fix tests (except implementation)
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
