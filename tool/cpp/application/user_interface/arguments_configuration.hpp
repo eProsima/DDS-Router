@@ -25,7 +25,8 @@
 #include <optionparser.h>
 
 #include <ddsrouter/types/Time.hpp>
-#include <ddsrouter/user_interface/ProcessReturnCode.hpp>
+
+#include "ProcessReturnCode.hpp"
 
 namespace eprosima {
 namespace ddsrouter {

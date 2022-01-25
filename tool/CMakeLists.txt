@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,4 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(executable)
+# At this point, we can be sure the library will be compiled.
+# Force DDSRouter as found.
+# If this is not done, a dependency loop will be created.
+set(ddsrouter_FOUND TRUE)
+
+add_subdirectory(cpp/application)
