@@ -70,7 +70,7 @@ public:
 
     std::shared_ptr<security::TlsConfiguration> tls_configuration() const;
 
-    virtual bool is_valid() const noexcept override;
+    virtual bool is_valid(utils::Formatter& error_msg) const noexcept override;
 
     bool operator ==(
             const DiscoveryServerParticipantConfiguration& other) const noexcept;

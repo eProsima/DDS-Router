@@ -73,5 +73,18 @@ bool DiscoveryServerConnectionAddress::operator <(
     }
 }
 
+std::ostream& operator <<(
+        std::ostream& output,
+        const DiscoveryServerConnectionAddress& address)
+{
+    output << "{{" << address.discovery_server_guid_prefix() << "}[";
+    for (auto a : address.addresses())
+    {
+        output << a << ",";
+    }
+    output << "]}";
+    return output;
+}
+
 } /* namespace ddsrouter */
 } /* namespace eprosima */

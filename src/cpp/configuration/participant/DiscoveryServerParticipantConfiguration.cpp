@@ -82,13 +82,20 @@ std::shared_ptr<security::TlsConfiguration> DiscoveryServerParticipantConfigurat
     return tls_configuration_;
 }
 
-bool DiscoveryServerParticipantConfiguration::is_valid() const noexcept
+bool DiscoveryServerParticipantConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
 {
+    // Check parent class validity
+    if (!SimpleParticipantConfiguration::is_valid(error_msg))
+    {
+        return false;
+    }
+
     // Check listening addresses
     for (Address address : listening_addresses_)
     {
-        if (address.is_valid())
+        if (!address.is_valid())
         {
+            error_msg << "Incorrect address " << address << " in listening addresses.";
             return false;
         }
     }
@@ -96,24 +103,45 @@ bool DiscoveryServerParticipantConfiguration::is_valid() const noexcept
     // Check connection addresses
     for (DiscoveryServerConnectionAddress address : connection_addresses_)
     {
-        if (address.is_valid())
+        if (!address.is_valid())
         {
+            error_msg << "Incorrect address " << address << " in connection addresses.";
             return false;
         }
     }
 
-    // TODO
-    // More logic could be added, for example connection or listening is required
-
-    // TODO
-    // Check TLS
-    if (!tls_configuration_->is_valid())
+    // Check exist at least one address
+    if (listening_addresses_.empty() && connection_addresses_.empty())
     {
+        error_msg << "No listening or connection address specified.";
         return false;
     }
 
-    return SimpleParticipantConfiguration::is_valid() &&
-        discovery_server_guid_.is_valid();
+    // Check TLS
+
+    if (!tls_configuration_)
+    {
+        logError(DDSROUTER_CONFIGURATION, "Invalid ptr in tls configurations.");
+        error_msg << "nullptr TlsConfiguration in participant configuration.";
+        return false;
+    }
+
+    if (!tls_configuration_->is_valid())
+    {
+        error_msg << "Incorrect TLS Configuration.";
+        return false;
+    }
+
+    // TODO decide how to check this
+    // Check TLS is correctly set as Server or Client
+
+    if (!discovery_server_guid_.is_valid())
+    {
+        error_msg << "Non valid Participant Guid Prefix " << discovery_server_guid_ << ".";
+        return false;
+    }
+
+    return true;
 }
 
 bool DiscoveryServerParticipantConfiguration::operator ==(

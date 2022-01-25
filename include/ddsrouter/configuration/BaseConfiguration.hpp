@@ -19,6 +19,8 @@
 #ifndef _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 
+#include <ddsrouter/types/utils.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace configuration {
@@ -31,7 +33,7 @@ class BaseConfiguration
 {
 public:
 
-    virtual bool is_valid() const noexcept = 0;
+    virtual bool is_valid(utils::Formatter& error_msg) const noexcept = 0;
 };
 
 } /* namespace configuration */

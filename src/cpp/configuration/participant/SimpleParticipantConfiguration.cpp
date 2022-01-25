@@ -34,9 +34,20 @@ SimpleParticipantConfiguration::SimpleParticipantConfiguration(
 {
 }
 
-bool SimpleParticipantConfiguration::is_valid() const noexcept
+bool SimpleParticipantConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
 {
-    return ParticipantConfiguration::is_valid() && domain_.is_valid();
+    if (!ParticipantConfiguration::is_valid(error_msg))
+    {
+        return false;
+    }
+
+    if (!domain_.is_valid())
+    {
+        error_msg << "Incorrect domain " << domain_ << ".";
+        return false;
+    }
+
+    return true;
 }
 
 DomainId SimpleParticipantConfiguration::domain() const noexcept

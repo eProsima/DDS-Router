@@ -43,9 +43,21 @@ ParticipantId ParticipantConfiguration::id() const noexcept
     return id_;
 }
 
-bool ParticipantConfiguration::is_valid() const noexcept
+bool ParticipantConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
 {
-    return id_.is_valid() && kind_.is_valid();
+    if (!id_.is_valid())
+    {
+        error_msg << "Non valid Participant Id " << id_ << ".";
+        return false;
+    }
+
+    if (!kind_.is_valid())
+    {
+        error_msg << "Non valid Participant kind " << kind_ << ".";
+        return false;
+    }
+
+    return true;
 }
 
 bool ParticipantConfiguration::operator ==(
