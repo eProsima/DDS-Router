@@ -30,7 +30,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-bool YamlReader::is_tag_present(const Yaml& yml, const std::string& tag)
+bool YamlReader::is_tag_present(const Yaml& yml, const TagType& tag)
 {
     if (!yml.IsMap())
     {
@@ -41,7 +41,7 @@ bool YamlReader::is_tag_present(const Yaml& yml, const std::string& tag)
     return (yml[tag]);
 }
 
-Yaml YamlReader::get_value_in_tag(const Yaml& yml, const std::string& tag)
+Yaml YamlReader::get_value_in_tag(const Yaml& yml, const TagType& tag)
 {
     if (yml[tag])
     {

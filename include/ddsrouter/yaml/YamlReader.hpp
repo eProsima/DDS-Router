@@ -25,6 +25,14 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
+enum YamlReaderVersion
+{
+    V_0_1,
+    V_0_2,
+};
+
+using TagType = std::string;
+
 /**
  * @brief Class that encapsulates methods to get values from Yaml Node.
  *
@@ -33,38 +41,38 @@ class YamlReader
 {
 public:
 
-    template <typename T>
-    static T get(const Yaml& yml, const std::string& tag);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static T get(const Yaml& yml, const TagType& tag);
 
-    template <typename T>
-    static std::list<T> get_list(const Yaml& yml, const std::string& tag);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static std::list<T> get_list(const Yaml& yml, const TagType& tag);
 
-    template <typename T>
-    static std::set<T> get_set(const Yaml& yml, const std::string& tag);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static std::set<T> get_set(const Yaml& yml, const TagType& tag);
 
-    static bool is_tag_present(const Yaml& yml, const std::string& tag);
+    static bool is_tag_present(const Yaml& yml, const TagType& tag);
 
 protected:
 
-    static Yaml get_value_in_tag(const Yaml& yml, const std::string& tag);
+    static Yaml get_value_in_tag(const Yaml& yml, const TagType& tag);
 
-    template <typename T>
+    template <typename T, YamlReaderVersion V = V_0_2>
     static T get(const Yaml& yml);
 
-    template <typename T>
+    template <typename T, YamlReaderVersion V = V_0_2>
     static T get_scalar(const Yaml& yml);
 
-    template <typename T>
-    static T get_scalar(const Yaml& yml, const std::string& tag);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static T get_scalar(const Yaml& yml, const TagType& tag);
 
-    template <typename T>
+    template <typename T, YamlReaderVersion V = V_0_2>
     static std::list<T> get_list(const Yaml& yml);
 
-    template <typename T>
-    static T get_enumeration(const Yaml& yml, const std::map<std::string, T>& enum_values);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static T get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_values);
 
-    template <typename T>
-    static T get_enumeration(const Yaml& yml, const std::string& tag, const std::map<std::string, T>& enum_values);
+    template <typename T, YamlReaderVersion V = V_0_2>
+    static T get_enumeration(const Yaml& yml, const TagType& tag, const std::map<TagType, T>& enum_values);
 };
 
 } /* namespace yaml */
