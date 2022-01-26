@@ -20,6 +20,7 @@
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
+#include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/types/Log.hpp>
@@ -381,6 +382,8 @@ private:
  */
 TEST(DDSTest, simple_initialization)
 {
+    test::TestLogHandler test_log_handler; // Check there are no warning or errors
+
     // Load configuration
     RawConfiguration router_configuration =
             load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
@@ -396,6 +399,8 @@ TEST(DDSTest, simple_initialization)
  */
 TEST(DDSTest, end_to_end_communication)
 {
+    test::TestLogHandler test_log_handler; // Check there are no warning or errors
+
     uint32_t samples_sent = 0;
 
     HelloWorld msg;
@@ -446,6 +451,8 @@ TEST(DDSTest, end_to_end_communication)
  */
 TEST(DDSTest, end_to_end_communication_keyed)
 {
+    test::TestLogHandler test_log_handler; // Check there are no warning or errors
+
     uint32_t samples_sent = 0;
 
     HelloWorld msg;
@@ -495,10 +502,6 @@ int main(
         int argc,
         char** argv)
 {
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

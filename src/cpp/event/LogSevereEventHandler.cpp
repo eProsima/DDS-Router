@@ -29,6 +29,11 @@ LogSevereEventHandler::LogSevereEventHandler(
     : LogEventHandler(callback)
     , threshold_(threshold)
 {
+    // If verbosity is currently lower than needed, increase it
+    if (fastdds::dds::Log::GetVerbosity() < threshold_)
+    {
+        fastdds::dds::Log::SetVerbosity(threshold_);
+    }
 }
 
 void LogSevereEventHandler::Consume(
