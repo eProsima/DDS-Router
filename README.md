@@ -56,7 +56,8 @@ You can access the documentation online, which is hosted on [Read the Docs](http
 
 The instructions for installing the *DDS Router* application from sources and its required dependencies on a Linux
 environment are provided below. These installation instructions are a summarized version of the complete
-[installation guide](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html) available online, which also includes the [required steps](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/windows.html) for installing *DDS Router* on a Windows platform.
+[installation guide](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html) available online. Instructions for installing *DDS Router* on a Windows platform can be found
+[here](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/windows.html).
 
 ### Requirements
 
@@ -96,7 +97,8 @@ compile tests. It is possible to activate them with the opportune [CMake options
 
 #### Asio and TinyXML2 libraries
 
-Asio is a cross-platform C++ library for network and low-level I/O programming, which provides a consistent asynchronous model. TinyXML2 is a simple, small and efficient C++ XML parser. Install these libraries using the package manager of
+Asio is a cross-platform C++ library for network and low-level I/O programming, which provides a consistent asynchronous
+model. TinyXML2 is a simple, small and efficient C++ XML parser. Install these libraries using the package manager of
 the appropriate Linux distribution. For example, on Ubuntu use the command:
 
 ```batch
@@ -105,10 +107,23 @@ sudo apt install libasio-dev libtinyxml2-dev
 
 #### OpenSSL
 
-[OpenSSL](https://www.openssl.org/) is a robust toolkit for the TLS and SSL protocols and a general-purpose cryptography library. Install OpenSSL using the package manager of the appropriate Linux distribution. For example, on Ubuntu use the command:
+[OpenSSL](https://www.openssl.org/) is a robust toolkit for the TLS and SSL protocols and a general-purpose cryptography
+library. Install OpenSSL using the package manager of the appropriate Linux distribution. For example, on Ubuntu use the
+command:
 
 ```batch
 sudo apt install libssl-dev
+```
+
+#### yaml-cpp
+
+[yaml-cpp](https://github.com/jbeder/yaml-cpp) is a [YAML](http://www.yaml.org/) parser and emitter in C++ matching the
+[YAML 1.2 spec](http://www.yaml.org/spec/1.2/spec.html), and is used by *DDS Router* application to parse the provided
+configuration files. Install yaml-cpp using the package manager of the appropriate Linux distribution. For example, on
+Ubuntu use the command:
+
+```batch
+sudo apt install libyaml-cpp-dev
 ```
 
 #### eProsima dependencies
@@ -140,84 +155,25 @@ vcs import src < ddsrouter.repos
 colcon build
 ```
 
-### CMake installation
-
-This section explains how to compile *DDS Router* with [CMake](https://cmake.org/), either locally or globally.
-
-#### Local installation
-
-1. Create a `DDS-Router` directory where to download and build *DDS Router* and its dependencies:
-
-```batch
-mkdir ~/DDS-Router
-```
-
-2. Clone the following dependencies and compile them using [CMake](https://cmake.org/).
-    * [Foonathan memory](https://github.com/foonathan/memory)
-    ```batch
-    cd ~/DDS-Router
-    git clone https://github.com/eProsima/foonathan_memory_vendor.git
-    mkdir foonathan_memory_vendor/build
-    cd foonathan_memory_vendor/build
-    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DBUILD_SHARED_LIBS=ON
-    cmake --build . --target install
-    ```
-
-    * [Fast CDR](https://github.com/eProsima/Fast-CDR)
-    ```batch
-    cd ~/DDS-Router
-    git clone https://github.com/eProsima/Fast-CDR.git
-    mkdir Fast-CDR/build
-    cd Fast-CDR/build
-    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install
-    cmake --build . --target install
-    ```
-
-    * [Fast DDS](https://github.com/eProsima/Fast-DDS)
-    ```batch
-    cd ~/DDS-Router
-    git clone https://github.com/eProsima/Fast-DDS.git
-    mkdir Fast-DDS/build
-    cd Fast-DDS/build
-    cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
-    cmake --build . --target install
-    ```
-
-3. Once all dependencies are installed, install *DDS Router*:
-
-```batch
-cd ~/DDS-Router
-git clone https://github.com/eProsima/DDS-Router.git
-mkdir DDS-Router/build
-cd DDS-Router/build
-cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
-cmake --build . --target install
-```
-
-#### Global installation
-
-To install *DDS Router* system-wide instead of locally, remove all the flags that appear in the configuration steps of `Fast-CDR`, `Fast-DDS`, and `DDS-Router`, and change the first in the configuration step of `foonathan_memory_vendor` to
-the following:
-
-```batch
--DCMAKE_INSTALL_PREFIX=/usr/local/ -DBUILD_SHARED_LIBS=ON
-```
-
----
-**Note**
-
-By default, *DDS Router* does not compile tests. However, they can be activated by downloading and installing
-[Gtest](https://github.com/google/googletest) and building with CMake option `-DBUILD_TESTS=ON`.
-
----
-
 ### Run an application
 
-To run the *DDS Router* application, source the *Fast DDS* library and execute the executable file that has been
+To run the *DDS Router* application, source the installation environment and execute the executable file that has been
 installed in `<install-path>/ddsrouter/bin/ddsrouter`:
 
 ```batch
-# If built has been done using colcon, all projects could be sourced as follows:
+# Source installation
 source <install-path>/setup.bash
+
+# Execute DDS Router
 ./<install-path>/ddsrouter/bin/ddsrouter
+```
+
+### Testing
+
+By default, *DDS Router* does not compile tests. However, they can be activated by downloading and installing
+[Gtest](https://github.com/google/googletest) and building with CMake option `-DBUILD_TESTS=ON`. Once done, tests
+can be run with the following command:
+
+```batch
+colcon test
 ```

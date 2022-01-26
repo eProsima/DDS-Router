@@ -101,6 +101,7 @@ Dependencies
 
 * :ref:`asiotinyxml2_sl`
 * :ref:`openssl_sl`
+* :ref:`yaml_cpp`
 * :ref:`eprosima_dependencies`
 
 .. _asiotinyxml2_sl:
@@ -130,6 +131,20 @@ For example, on Ubuntu use the command:
 .. code-block:: bash
 
    sudo apt install libssl-dev
+
+.. _yaml_cpp:
+
+yaml-cpp
+^^^^^^^^
+
+yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec, and is used by *DDS Router* application to
+parse the provided configuration files.
+Install yaml-cpp using the package manager of the appropriate Linux distribution.
+For example, on Ubuntu use the command:
+
+.. code-block:: bash
+
+   sudo apt install libyaml-cpp-dev
 
 .. _eprosima_dependencies:
 
