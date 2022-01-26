@@ -141,7 +141,11 @@ ReturnCode Reader::take_(
     data->source_guid = received_change->writerGUID;
 
     // Store it in DDSRouter PayloadPool
-    payload_pool_->get_payload(received_change->serializedPayload, data->payload);
+    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
+    payload_pool_->get_payload(
+        received_change->serializedPayload,
+        payload_owner,
+        data->payload);
 
     logDebug(DDSROUTER_RTPS_READER_LISTENER,
             "Data transmiting to track from Reader " << *this << " with payload " <<

@@ -15,7 +15,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/communication/CopyPayloadPool.hpp>
 #include <ddsrouter/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
@@ -71,7 +71,7 @@ std::shared_ptr<IParticipant> create_participant(
         ParticipantType type)
 {
     ParticipantFactory participant_factory;
-    std::shared_ptr<PayloadPool> payload_pool = std::make_shared<PayloadPool>();
+    std::shared_ptr<PayloadPool> payload_pool = std::make_shared<CopyPayloadPool>();
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
     ParticipantId id(id_str);
     ParticipantConfiguration participant_configuration =

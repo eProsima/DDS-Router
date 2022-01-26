@@ -19,6 +19,8 @@
 #ifndef _DDSROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
 #define _DDSROUTER_COMMUNICATION_PAYLOADPOOL_HPP_
 
+#include <atomic>
+
 #include <fastdds/rtps/common/CacheChange.h>
 #include <fastdds/rtps/common/SerializedPayload.h>
 #include <fastdds/rtps/history/IPayloadPool.h>
@@ -115,7 +117,7 @@ public:
      */
     virtual bool get_payload(
             uint32_t size,
-            Payload& payload);
+            Payload& payload) = 0;
 
     /**
      * @brief Increment reference to \c src_payload and reference it from \c target_payload .
@@ -128,7 +130,8 @@ public:
      */
     virtual bool get_payload(
             const Payload& src_payload,
-            Payload& target_payload);
+            IPayloadPool*& data_owner,
+            Payload& target_payload) = 0;
 
     /**
      * @brief Decreases reference to the \c payload .
@@ -141,20 +144,7 @@ public:
      * @return \c false if something went wrong
      */
     virtual bool release_payload(
-            Payload& payload);
-
-    /**
-     * @brief Store in \c target_cache_change the \c srd_data payload and set this as owner.
-     *
-     * @param [in] srd_data          Serialized payload received
-     * @param [in,out] target_cache_change  Cache change to assign the payload to
-     *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
-     */
-    virtual bool get_payload(
-            Payload& srd_data,
-            fastrtps::rtps::CacheChange_t& target_cache_change);
+            Payload& payload) = 0;
 
 protected:
 
@@ -168,37 +158,8 @@ protected:
     void add_reserved_payload_();
     void add_release_payload_();
 
-    uint64_t reserve_count_;
-    uint64_t release_count_;
-};
-
-/**
- * @brief Dummy PayloadPool class to use while efficient one is implemented.
- *
- * This class does not handle references, but copies the payload data in each method required.
- */
-class CopyPayloadPool : public PayloadPool
-{
-
-    using PayloadPool::PayloadPool;
-
-    bool release_payload(
-            fastrtps::rtps::CacheChange_t& cache_change) override;
-
-    bool get_payload(
-            uint32_t size,
-            Payload& payload) override;
-
-    bool get_payload(
-            const Payload& src_payload,
-            Payload& target_payload) override;
-
-    bool release_payload(
-            Payload& payload) override;
-
-    bool get_payload(
-            Payload& data,
-            fastrtps::rtps::CacheChange_t& cache_change) override;
+    std::atomic<uint64_t> reserve_count_;
+    std::atomic<uint64_t> release_count_;
 };
 
 } /* namespace ddsrouter */

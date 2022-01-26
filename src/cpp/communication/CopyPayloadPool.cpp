@@ -17,32 +17,11 @@
  *
  */
 
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/communication/CopyPayloadPool.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-
-bool CopyPayloadPool::release_payload(
-        fastrtps::rtps::CacheChange_t& cache_change)
-{
-    if (cache_change.payload_owner() == this)
-    {
-        if (release_payload(cache_change.serializedPayload))
-        {
-            cache_change.payload_owner(nullptr);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
 
 bool CopyPayloadPool::get_payload(
         uint32_t size,
@@ -56,8 +35,12 @@ bool CopyPayloadPool::get_payload(
 
 bool CopyPayloadPool::get_payload(
         const Payload& src_payload,
+        IPayloadPool*& data_owner,
         Payload& target_payload)
 {
+    // As this class copies always the data, it does not matter the owner of this data
+    static_cast<void>(data_owner);
+
     if (!get_payload(src_payload.length, target_payload))
     {
         return false;
@@ -71,18 +54,6 @@ bool CopyPayloadPool::release_payload(
         Payload& payload)
 {
     return release_(payload);
-}
-
-bool CopyPayloadPool::get_payload(
-        Payload& src_payload,
-        eprosima::fastrtps::rtps::CacheChange_t& target_cache_change)
-{
-    if (!get_payload(src_payload, target_cache_change.serializedPayload))
-    {
-        return false;
-    }
-    target_cache_change.payload_owner(this);
-    return true;
 }
 
 } /* namespace ddsrouter */

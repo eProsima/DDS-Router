@@ -17,6 +17,7 @@
  *
  */
 
+#include <ddsrouter/communication/CopyPayloadPool.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>

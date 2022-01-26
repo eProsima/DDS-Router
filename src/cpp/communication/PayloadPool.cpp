@@ -48,12 +48,22 @@ PayloadPool::~PayloadPool()
     }
 }
 
+/////
+// FAST DDS PART
+
 bool PayloadPool::get_payload(
         uint32_t size,
         eprosima::fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (get_payload(size, cache_change.serializedPayload))
+    {
+        cache_change.payload_owner(this);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool PayloadPool::get_payload(
@@ -61,47 +71,40 @@ bool PayloadPool::get_payload(
         IPayloadPool*& data_owner,
         eprosima::fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (get_payload(data, data_owner, cache_change.serializedPayload))
+    {
+        cache_change.payload_owner(this);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool PayloadPool::release_payload(
-        eprosima::fastrtps::rtps::CacheChange_t& cache_change)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::release_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        uint32_t size,
-        Payload& payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        const Payload& src_payload,
-        Payload& target_payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
-}
-
-bool PayloadPool::release_payload(
-        Payload& payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::release_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        fastrtps::rtps::SerializedPayload_t& data,
         fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (cache_change.payload_owner() == this)
+    {
+        if (release_payload(cache_change.serializedPayload))
+        {
+            cache_change.payload_owner(nullptr);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
 }
+
+/////
+// INTERNAL PART
 
 void PayloadPool::add_reserved_payload_()
 {

@@ -21,6 +21,7 @@ set(TEST_NAME ParticipantFactoryTest)
 set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/communication/CopyPayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DomainId_configuration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/Address_configuration.cpp
