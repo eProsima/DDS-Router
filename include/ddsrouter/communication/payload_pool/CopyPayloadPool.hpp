@@ -31,6 +31,7 @@ namespace ddsrouter {
  */
 class CopyPayloadPool : public PayloadPool
 {
+public:
     using PayloadPool::PayloadPool;
 
     bool get_payload(

@@ -112,7 +112,7 @@ ReturnCode Reader::take_(
     }
 
     // Check that the data is consistent
-    if (!(received_change->serializedPayload.length > 0))
+    if (!(received_change->serializedPayload.max_size > 0))
     {
         logWarning(DDSROUTER_RTPS_READER_LISTENER,
                 "Error taking data with length " << received_change->serializedPayload.length << ".");

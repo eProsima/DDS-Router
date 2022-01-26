@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file PayloadPool.cpp
+ * @file CopyPayloadPool.cpp
  *
  */
 
@@ -28,7 +28,7 @@ bool CopyPayloadPool::get_payload(
         Payload& payload)
 {
     reserve_(size, payload);
-    payload.length = size;
+    payload.max_size = size;
 
     return true;
 }
@@ -41,11 +41,13 @@ bool CopyPayloadPool::get_payload(
     // As this class copies always the data, it does not matter the owner of this data
     static_cast<void>(data_owner);
 
-    if (!get_payload(src_payload.length, target_payload))
+    if (!get_payload(src_payload.max_size, target_payload))
     {
         return false;
     }
     std::memcpy(target_payload.data, src_payload.data, src_payload.length);
+    target_payload.length = src_payload.length;
+    target_payload.max_size = src_payload.max_size;
 
     return true;
 }

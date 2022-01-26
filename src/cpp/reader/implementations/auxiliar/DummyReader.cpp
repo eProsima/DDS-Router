@@ -64,6 +64,7 @@ ReturnCode DummyReader::take_(
     {
         data->payload.data[i] = next_data_to_send.payload[i];
     }
+    data->payload.length = data->payload.max_size;
 
     return ReturnCode::RETCODE_OK;
 }

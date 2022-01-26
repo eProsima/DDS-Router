@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/communication/payload_pool/CopyPayloadPool.hpp>
+#include <ddsrouter/communication/payload_pool/MapPayloadPool.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
@@ -31,7 +31,7 @@ namespace ddsrouter {
 
 DDSRouter::DDSRouter(
         const DDSRouterConfiguration& configuration)
-    : payload_pool_(new CopyPayloadPool())
+    : payload_pool_(new MapPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
     , allowed_topics_()
