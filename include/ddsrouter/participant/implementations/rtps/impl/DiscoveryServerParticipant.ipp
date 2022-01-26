@@ -25,7 +25,6 @@
 #include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/exceptions/ValueNotAllowedException.hpp>
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 #include <ddsrouter/security/tls/TlsConfigurationBoth.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
@@ -352,7 +351,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         }
         else
         {
-            enable_tls_client(descriptor, tls_configuration);
+            enable_tls_client(descriptor, tls_configuration, true);
         }
     }
     else
@@ -371,7 +370,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
             // In case it could also be client, add tls config
             if (tls_configuration->can_be_client())
             {
-                enable_tls_client(descriptor, tls_configuration);
+                enable_tls_client(descriptor, tls_configuration, false);
             }
         }
     }
@@ -383,7 +382,8 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
 template <class ConfigurationType>
 void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
-        std::shared_ptr<security::TlsConfiguration> tls_configuration)
+        std::shared_ptr<security::TlsConfiguration> tls_configuration,
+        bool only_client)
 {
     std::shared_ptr<security::TlsConfigurationClient> tls_configuration_ =
             std::dynamic_pointer_cast<security::TlsConfigurationClient>(tls_configuration);

@@ -36,7 +36,7 @@ enum TlsConfigurationKind
 /**
  * This class joins data to configure TLS
  *
- * TODO: do it right with proper class methods and logic.
+ * TODO: comment
  */
 class TlsConfiguration
 {
