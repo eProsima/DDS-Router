@@ -38,12 +38,12 @@ PayloadPool::~PayloadPool()
     }
     else if (reserve_count_ != release_count_)
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Removing PayloadPool with " << (reserve_count_ - release_count_) <<
-                " messages without released.");
+        logWarning(DDSROUTER_PAYLOADPOOL,
+                "From " << reserve_count_ << " payloads reserved only " << release_count_ << " has been released.");
     }
     else
     {
-        logDebug(DDSROUTER_PAYLOADPOOL,
+        logInfo(DDSROUTER_PAYLOADPOOL,
                 "Removing PayloadPool correctly after reserve: " << reserve_count_ << " payloads.");
     }
 }
@@ -62,6 +62,7 @@ bool PayloadPool::get_payload(
     }
     else
     {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while creating payload.")
         return false;
     }
 }
@@ -78,6 +79,7 @@ bool PayloadPool::get_payload(
     }
     else
     {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while referencing payload.")
         return false;
     }
 }
@@ -94,11 +96,13 @@ bool PayloadPool::release_payload(
         }
         else
         {
+            logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while releasing payload.")
             return false;
         }
     }
     else
     {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Trying to remove a cache change in an incorrect pool.")
         return false;
     }
 }

@@ -43,6 +43,7 @@ Reader::Reader(
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant,
         reader_att,
+        payload_pool_,
         rtps_history_,
         this);
 
@@ -118,7 +119,6 @@ ReturnCode Reader::take_(
 
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
-        rtps_reader_->releaseCache(received_change);
 
         return ReturnCode::RETCODE_ERROR;
     }
@@ -131,7 +131,6 @@ ReturnCode Reader::take_(
 
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
-        rtps_reader_->releaseCache(received_change);
 
         return ReturnCode::RETCODE_ERROR;
     }
@@ -153,7 +152,6 @@ ReturnCode Reader::take_(
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
-    rtps_reader_->releaseCache(received_change);
 
     return ReturnCode::RETCODE_OK;
 }
