@@ -20,6 +20,7 @@
 #include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
+#include <ddsrouter/security/tls/TlsConfigurationBoth.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -77,9 +78,14 @@ std::vector<DiscoveryServerConnectionAddress> DiscoveryServerParticipantConfigur
     return result;
 }
 
-std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_configuration() const
+std::shared_ptr<security::TlsConfiguration> DiscoveryServerParticipantConfiguration::tls_configuration() const
 {
-    std::map<std::string, std::string> result;
+    // ATTENTION: This will change in posterior PR
+    std::string private_key_file_password;
+    std::string private_key_file;
+    std::string certificate_authority_file;
+    std::string certificate_chain_file;
+    std::string dh_params_file;
 
     if (raw_configuration_[TLS_TAG])
     {
@@ -88,32 +94,41 @@ std::map<std::string, std::string> DiscoveryServerParticipantConfiguration::tls_
             throw ConfigurationException("TLS configuration must be of map yaml type or empty");
         }
 
-        std::vector<const char*> tls_tags = {
-            TLS_CA_TAG,
-            TLS_PASSWORD_TAG,
-            TLS_PRIVATE_KEY_TAG,
-            TLS_CERT_TAG,
-            TLS_DHPARAMS_TAG
+        std::vector<std::pair<const char*, std::string*>> tls_tags = {
+            {TLS_CA_TAG, &certificate_authority_file},
+            {TLS_PASSWORD_TAG, &private_key_file_password},
+            {TLS_PRIVATE_KEY_TAG, &private_key_file},
+            {TLS_CERT_TAG, &certificate_chain_file},
+            {TLS_DHPARAMS_TAG, &dh_params_file},
         };
 
         for (auto tls_tag : tls_tags)
         {
-            if (raw_configuration_[TLS_TAG][tls_tag])
+            if (raw_configuration_[TLS_TAG][tls_tag.first])
             {
                 try
                 {
-                    result.insert({tls_tag, raw_configuration_[TLS_TAG][tls_tag].as<std::string>()});
+                    (*tls_tag.second) = raw_configuration_[TLS_TAG][tls_tag.first].as<std::string>();
                 }
                 catch (const std::exception& e)
                 {
                     throw ConfigurationException(utils::Formatter() <<
-                                  "Error parsing TLS configuration for entry " << tls_tag << ": " << e.what());
+                                  "Error parsing TLS configuration for entry " << tls_tag.first << ": " << e.what());
                 }
             }
         }
     }
+    else
+    {
+        return std::make_shared<security::TlsConfiguration>();
+    }
 
-    return result;
+    return std::make_shared<security::TlsConfigurationBoth>(
+        certificate_authority_file,
+        private_key_file_password,
+        private_key_file,
+        certificate_chain_file,
+        dh_params_file);
 }
 
 GuidPrefix DiscoveryServerParticipantConfiguration::discovery_server_guid() const
