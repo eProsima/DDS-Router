@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
 #include <ddsrouter/types/Log.hpp>
 

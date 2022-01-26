@@ -22,7 +22,7 @@
 #include <ddsrouter/types/Data.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
 
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/reader/IReader.hpp>
 #include <ddsrouter/types/endpoint/Endpoint.hpp>

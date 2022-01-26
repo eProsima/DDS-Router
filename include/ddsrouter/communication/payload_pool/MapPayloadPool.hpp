@@ -13,25 +13,39 @@
 // limitations under the License.
 
 /**
- * @file CopyPayloadPool.hpp
+ * @file MapPayloadPool.hpp
  */
 
-#ifndef _DDSROUTER_COMMUNICATION_COPYPAYLOADPOOL_HPP_
-#define _DDSROUTER_COMMUNICATION_COPYPAYLOADPOOL_HPP_
+#ifndef _DDSROUTER_COMMUNICATION_MAPPAYLOADPOOL_HPP_
+#define _DDSROUTER_COMMUNICATION_MAPPAYLOADPOOL_HPP_
 
-#include <ddsrouter/communication/PayloadPool.hpp>
+#include <atomic>
+
+#include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 
-/**
- * @brief Dummy PayloadPool class to use while efficient one is implemented.
- *
- * This class does not handle references, but copies the payload data in each method required.
- */
-class CopyPayloadPool : public PayloadPool
+struct PayloadNode
 {
+    std::atomic<uint32_t> ref_counter{ 0 };
+    uint32_t data_size = 0;
+}
+
+/**
+ * @brief PayloadPool class to efficiently reuse those pointers get from this pool.
+ *
+ * It implements zero copy data transmission for payloads get from this pool.
+ *
+ * It does not handle limit of pools or sizes.
+ */
+class MapPayloadPool : public PayloadPool
+{
+
     using PayloadPool::PayloadPool;
+
+    bool release_payload(
+            fastrtps::rtps::CacheChange_t& cache_change) override;
 
     bool get_payload(
             uint32_t size,
@@ -39,14 +53,22 @@ class CopyPayloadPool : public PayloadPool
 
     bool get_payload(
             const Payload& src_payload,
-            IPayloadPool*& data_owner,
             Payload& target_payload) override;
 
     bool release_payload(
             Payload& payload) override;
+
+    bool get_payload(
+            Payload& data,
+            fastrtps::rtps::CacheChange_t& cache_change) override;
+
+protected:
+
+    std::map<*PayloadUnit, PayloadNode> loaned_payloads_;
+
 };
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_COMMUNICATION_COPYPAYLOADPOOL_HPP_ */
+#endif /* _DDSROUTER_COMMUNICATION_MAPPAYLOADPOOL_HPP_ */
