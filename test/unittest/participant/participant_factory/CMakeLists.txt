@@ -44,6 +44,10 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationBoth.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationClient.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationServer.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/address/DiscoveryServerConnectionAddress.cpp
