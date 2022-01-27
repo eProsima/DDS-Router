@@ -81,7 +81,7 @@ bool DDSRouterConfiguration::is_valid(
             return false;
         }
 
-        // TODO: check that the configuration is of type required
+        // Check that the configuration is of type required
         if (!check_correct_configuration_object_(configuration))
         {
             error_msg << "Participant " << configuration->id() << " is not of correct Configuration class. ";

@@ -70,7 +70,7 @@ public:
 protected:
 
     //! Internal Discovery Server Guid Prefix object
-    GuidPrefix discovery_server_guid_;
+    GuidPrefix discovery_server_guid_prefix_;
 
     //! Internal Addresses object
     std::set<Address> addresses_;

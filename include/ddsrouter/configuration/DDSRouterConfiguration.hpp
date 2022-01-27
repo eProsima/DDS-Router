@@ -60,12 +60,13 @@ public:
     bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-    void reload(const DDSRouterReloadConfiguration& new_configuration);
+    void reload(
+            const DDSRouterReloadConfiguration& new_configuration);
 
 protected:
 
     static bool check_correct_configuration_object_(
-        const std::shared_ptr<ParticipantConfiguration> configuration);
+            const std::shared_ptr<ParticipantConfiguration> configuration);
 
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
 };

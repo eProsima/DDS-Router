@@ -47,8 +47,8 @@ DDSRouter::DDSRouter(
     if (!configuration_.is_valid(error_msg))
     {
         throw ConfigurationException(
-            utils::Formatter() <<
-            "Configuration for DDS Router is invalid: " << error_msg);
+                  utils::Formatter() <<
+                      "Configuration for DDS Router is invalid: " << error_msg);
     }
 
     // Init topic allowed
@@ -96,11 +96,11 @@ ReturnCode DDSRouter::reload_configuration(
 {
     // Check that the configuration is correct
     utils::Formatter error_msg;
-    if (new_configuration.is_valid(error_msg))
+    if (!new_configuration.is_valid(error_msg))
     {
         throw ConfigurationException(
-            utils::Formatter() <<
-            "Configuration for Reload DDS Router is invalid: " << error_msg);
+                  utils::Formatter() <<
+                      "Configuration for Reload DDS Router is invalid: " << error_msg);
     }
 
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -155,7 +155,7 @@ ReturnCode DDSRouter::reload_configuration(
             }
         }
 
-        configuration_ .reload(new_configuration);
+        configuration_.reload(new_configuration);
 
         return ReturnCode::RETCODE_OK;
     }

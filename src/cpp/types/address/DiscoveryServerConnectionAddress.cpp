@@ -25,14 +25,14 @@ namespace ddsrouter {
 DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
         GuidPrefix discovery_server_guid,
         std::set<Address> addresses)
-    : discovery_server_guid_(discovery_server_guid)
+    : discovery_server_guid_prefix_(discovery_server_guid)
     , addresses_(addresses)
 {
 }
 
 GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid_prefix() const noexcept
 {
-    return discovery_server_guid_;
+    return discovery_server_guid_prefix_;
 }
 
 std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
@@ -42,7 +42,7 @@ std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
 
 bool DiscoveryServerConnectionAddress::is_valid() const noexcept
 {
-    if (!discovery_server_guid_.is_valid())
+    if (!discovery_server_guid_prefix_.is_valid())
     {
         return false;
     }
