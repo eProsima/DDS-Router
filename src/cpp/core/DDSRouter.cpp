@@ -20,6 +20,7 @@
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -40,6 +41,15 @@ DDSRouter::DDSRouter(
     , enabled_(false)
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
+
+    // Check that the configuration is correct
+    utils::Formatter error_msg;
+    if (!configuration_.is_valid(error_msg))
+    {
+        throw ConfigurationException(
+            utils::Formatter() <<
+            "Configuration for DDS Router is invalid: " << error_msg);
+    }
 
     // Init topic allowed
     init_allowed_topics_();
@@ -82,8 +92,17 @@ DDSRouter::~DDSRouter()
 }
 
 ReturnCode DDSRouter::reload_configuration(
-        const configuration::DDSRouterConfiguration& new_configuration)
+        const configuration::DDSRouterReloadConfiguration& new_configuration)
 {
+    // Check that the configuration is correct
+    utils::Formatter error_msg;
+    if (new_configuration.is_valid(error_msg))
+    {
+        throw ConfigurationException(
+            utils::Formatter() <<
+            "Configuration for Reload DDS Router is invalid: " << error_msg);
+    }
+
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
@@ -136,7 +155,7 @@ ReturnCode DDSRouter::reload_configuration(
             }
         }
 
-        configuration_ = new_configuration;
+        configuration_ .reload(new_configuration);
 
         return ReturnCode::RETCODE_OK;
     }

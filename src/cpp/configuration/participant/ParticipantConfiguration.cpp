@@ -48,13 +48,13 @@ bool ParticipantConfiguration::is_valid(
 {
     if (!id_.is_valid())
     {
-        error_msg << "Non valid Participant Id " << id_ << ".";
+        error_msg << "Non valid Participant Id " << id_ << ". ";
         return false;
     }
 
     if (!kind_.is_valid())
     {
-        error_msg << "Non valid Participant kind " << kind_ << ".";
+        error_msg << "Non valid Participant kind " << kind_ << ". ";
         return false;
     }
 

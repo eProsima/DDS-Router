@@ -63,6 +63,14 @@ std::string Formatter::to_string() const noexcept
     return ss_.str().c_str();
 }
 
+std::ostream& operator <<(
+        std::ostream& os,
+        const Formatter& f)
+{
+    os << f.to_string();
+    return os;
+}
+
 void tsnh(
         const Formatter& formatter)
 {

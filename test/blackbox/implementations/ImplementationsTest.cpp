@@ -26,6 +26,7 @@
 #include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
@@ -57,7 +58,7 @@ TEST(ImplementationsTest, solo_participant_implementation)
             participant_configurations);
 
         // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), InitializationException) << kind;
+        ASSERT_THROW(DDSRouter router(configuration), ConfigurationException) << kind;
     }
 }
 
@@ -156,13 +157,13 @@ TEST(ImplementationsTest, all_implementations)
 
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
 
-        uint16_t participant_number = 1;
+        uint16_t participant_number = 0;
 
         // For each Participant Kind set it in configuration
         for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
         {
             // Add participant
-            participant_configurations.insert(test::random_participant_configuration(kind, ++participant_number));
+            participant_configurations.insert(test::random_participant_configuration(kind, participant_number++));
         }
 
         // Generate configuration

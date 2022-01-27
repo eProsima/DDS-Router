@@ -78,7 +78,7 @@ public:
 
 protected:
 
-    GuidPrefix discovery_server_guid_;
+    GuidPrefix discovery_server_guid_prefix_;
     std::set<Address> listening_addresses_;
     std::set<DiscoveryServerConnectionAddress> connection_addresses_;
     std::shared_ptr<security::TlsConfiguration> tls_configuration_;

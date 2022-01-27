@@ -25,6 +25,7 @@
 
 #include <ddsrouter/communication/Bridge.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter/dynamic/AllowedTopicList.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/library/ddsrouter_dll.h>
@@ -82,7 +83,7 @@ public:
      * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
     ReturnCode reload_configuration(
-            const configuration::DDSRouterConfiguration& configuration);
+            const configuration::DDSRouterReloadConfiguration& configuration);
 
     /**
      * @brief Start communication in DDS Router

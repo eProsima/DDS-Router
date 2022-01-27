@@ -18,7 +18,11 @@
  */
 
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 
@@ -31,26 +35,9 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<FilterTopic>> blocklist,
         std::set<std::shared_ptr<RealTopic>> builtin_topics,
         std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations)
-    : allowlist_(allowlist)
-    , blocklist_(blocklist)
-    , builtin_topics_(builtin_topics)
+    : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations_(participants_configurations)
 {
-}
-
-std::set<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::allowlist() const noexcept
-{
-    return allowlist_;
-}
-
-std::set<std::shared_ptr<FilterTopic>> DDSRouterConfiguration::blocklist() const noexcept
-{
-    return blocklist_;
-}
-
-std::set<std::shared_ptr<RealTopic>> DDSRouterConfiguration::builtin_topics() const noexcept
-{
-    return builtin_topics_;
 }
 
 std::set<std::shared_ptr<ParticipantConfiguration>> DDSRouterConfiguration::participants_configurations() const noexcept
@@ -62,60 +49,15 @@ bool DDSRouterConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
     // Check Allow list topics
-    for (std::shared_ptr<FilterTopic> topic : allowlist_)
+    if (!DDSRouterReloadConfiguration::is_valid(error_msg))
     {
-        if (!topic)
-        {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in allowlist topics.");
-            error_msg << "nullptr Filter Topic in allowlist.";
-            return false;
-        }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Filter Topic " << topic << " in allowlist.";
-            return false;
-        }
-    }
-
-    // Check Block list topics
-    for (std::shared_ptr<FilterTopic> topic : blocklist_)
-    {
-        if (!topic)
-        {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in blocklist topics.");
-            error_msg << "nullptr Filter Topic in blocklist.";
-            return false;
-        }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Filter Topic " << topic << " in blocklist.";
-            return false;
-        }
-    }
-
-    // Check Builtin list topics
-    for (std::shared_ptr<RealTopic> topic : builtin_topics_)
-    {
-        if (!topic)
-        {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in builtin topics.");
-            error_msg << "nullptr Topic in builtin.";
-            return false;
-        }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Topic " << topic << " in Builtin list.";
-            return false;
-        }
+        return false;
     }
 
     // Check there are at least two participants
     if (participants_configurations_.size() < 2)
     {
-        error_msg << "There must be at least 2 participants.";
+        error_msg << "There must be at least 2 participants. ";
         return false;
     }
 
@@ -124,29 +66,70 @@ bool DDSRouterConfiguration::is_valid(
     std::set<ParticipantId> ids;
     for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations_)
     {
+        // Check configuration is not null
         if (!configuration)
         {
             logError(DDSROUTER_CONFIGURATION, "Invalid ptr in participant configurations.");
-            error_msg << "nullptr ParticipantConfiguration in participant configurations.";
+            error_msg << "nullptr ParticipantConfiguration in participant configurations. ";
             return false;
         }
 
+        // Check configuration is valid
         if (!configuration->is_valid(error_msg))
         {
-            error_msg << "Error in Participant " << configuration->id() << ".";
+            error_msg << "Error in Participant " << configuration->id() << ". ";
             return false;
         }
+
+        // TODO: check that the configuration is of type required
+        if (!check_correct_configuration_object_(configuration))
+        {
+            error_msg << "Participant " << configuration->id() << " is not of correct Configuration class. ";
+            return false;
+        }
+
+        // Store every id in a set to see if there are repetitions
         ids.insert(configuration->id());
     }
 
     // If the number of ids are not equal the number of configurations, is because they are repeated
     if (ids.size() != participants_configurations_.size())
     {
-        error_msg << "Participant ids are not unique.";
+        error_msg << "Participant ids are not unique. ";
         return false;
     }
 
     return true;
+}
+
+void DDSRouterConfiguration::reload(const DDSRouterReloadConfiguration& new_configuration)
+{
+    this->allowlist_ = new_configuration.allowlist();
+    this->blocklist_ = new_configuration.blocklist();
+    this->builtin_topics_ = new_configuration.builtin_topics();
+}
+
+template <typename T>
+bool check_correct_configuration_object_by_type_(const std::shared_ptr<ParticipantConfiguration> configuration)
+{
+    return nullptr != std::dynamic_pointer_cast<T>(configuration);
+}
+
+bool DDSRouterConfiguration::check_correct_configuration_object_(
+    const std::shared_ptr<ParticipantConfiguration> configuration)
+{
+    switch (configuration->kind()())
+    {
+    case ParticipantKind::SIMPLE_RTPS:
+        return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
+
+    case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+    case ParticipantKind::WAN:
+        return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
+
+    default:
+        return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
+    }
 }
 
 } /* namespace configuration */

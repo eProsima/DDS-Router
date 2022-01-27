@@ -40,27 +40,20 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
-    // This switch needs to create different kind of elements (ParticipantConfigurations) inside some of the cases
-    // and C++ does not like it. Thus, they must be inside blocks {}, but C++ does not like it either.
-    // Thus, there must be a final tsnh line.
-
     // Create a new Participant depending on the ParticipantKind specified by the configuration
     switch (participant_configuration->kind()())
     {
         case ParticipantKind::VOID:
             // VoidParticipant
             return std::make_shared<VoidParticipant>(participant_configuration->id());
-            break;
 
         case ParticipantKind::ECHO:
             // EchoParticipant
             return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, discovery_database);
-            break;
 
         case ParticipantKind::DUMMY:
             // DummyParticipant
             return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, discovery_database);
-            break;
 
         case ParticipantKind::SIMPLE_RTPS:
             // Simple RTPS Participant
@@ -129,9 +122,6 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 utils::Formatter() << "Value of ParticipantKind out of enumeration.");
             return nullptr; // Unreachable code
     }
-    utils::tsnh(
-        utils::Formatter() << "Value of ParticipantKind out of enumeration weird version.");
-    return nullptr; // Unreachable code
 }
 
 void ParticipantFactory::remove_participant(

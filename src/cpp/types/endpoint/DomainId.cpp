@@ -24,7 +24,7 @@ namespace ddsrouter {
 
 const DomainIdType DomainId::DEFAULT_DOMAIN_ID_ = 0;
 const DomainIdType DomainId::DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_ = 66;
-const DomainIdType DomainId::MAX_DOMAIN_ID_ = 250;
+const DomainIdType DomainId::MAX_DOMAIN_ID_ = 230;
 
 DomainId::DomainId (
         bool discovery_server /*= false*/) noexcept

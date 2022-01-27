@@ -27,9 +27,9 @@ const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& type /* = ParticipantKind::SIMPLE_RTPS */,
+        const ParticipantKind& kind /* = ParticipantKind::SIMPLE_RTPS */,
         const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
-    : ParticipantConfiguration(id, type)
+    : ParticipantConfiguration(id, kind)
     , domain_(domain_id)
 {
 }
@@ -44,7 +44,7 @@ bool SimpleParticipantConfiguration::is_valid(
 
     if (!domain_.is_valid())
     {
-        error_msg << "Incorrect domain " << domain_ << ".";
+        error_msg << "Incorrect domain " << domain_ << ". ";
         return false;
     }
 

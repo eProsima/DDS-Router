@@ -36,7 +36,7 @@ public:
     //! TODO
     SimpleParticipantConfiguration(
             const ParticipantId& id,
-            const ParticipantKind& type = ParticipantKind::SIMPLE_RTPS,
+            const ParticipantKind& kind = ParticipantKind::SIMPLE_RTPS,
             const DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
 
     /**

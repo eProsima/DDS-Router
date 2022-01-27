@@ -13,16 +13,16 @@
 // limitations under the License.
 
 /**
- * @file DDSRouterConfiguration.hpp
+ * @file DDSRouterReloadConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_DDSROUTERRELOADCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_DDSROUTERRELOADCONFIGURATION_HPP_
 
 #include <memory>
 #include <set>
 
-#include <ddsrouter/configuration/DDSRouterReloadConfiguration.hpp>
+#include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/topic/FilterTopic.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
@@ -35,43 +35,49 @@ namespace configuration {
  * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-class DDSRouterConfiguration : public DDSRouterReloadConfiguration
+class DDSRouterReloadConfiguration : public BaseConfiguration
 {
 public:
 
     /**
      * TODO
      */
-    DDSRouterConfiguration(
+    DDSRouterReloadConfiguration(
             std::set<std::shared_ptr<FilterTopic>> allowlist,
             std::set<std::shared_ptr<FilterTopic>> blocklist,
-            std::set<std::shared_ptr<RealTopic>> builtin_topics,
-            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations);
+            std::set<std::shared_ptr<RealTopic>> builtin_topics);
 
     /**
-     * @brief Return a set with the different \c ParticipantConfigurations in the yaml
+     * @brief Return a set with the topics allowed in the configuration
      *
-     * Every participant configuration is an object of the specific class set in \c ParticipantKind .
-     *
-     * @return List of \c ParticipantConfigurations
+     * @return Set of filters to get allowed topics
      */
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
+    std::set<std::shared_ptr<FilterTopic>> allowlist() const noexcept;
+
+    /**
+     * @brief Return a set with the topics blocked in the configuration
+     *
+     * @return Set of filters to get blocked topics
+     */
+    std::set<std::shared_ptr<FilterTopic>> blocklist() const noexcept;
+
+    /**
+     * TODO
+     */
+    std::set<std::shared_ptr<RealTopic>> builtin_topics() const noexcept;
 
     bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-    void reload(const DDSRouterReloadConfiguration& new_configuration);
-
 protected:
 
-    static bool check_correct_configuration_object_(
-        const std::shared_ptr<ParticipantConfiguration> configuration);
-
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
+    std::set<std::shared_ptr<FilterTopic>> allowlist_;
+    std::set<std::shared_ptr<FilterTopic>> blocklist_;
+    std::set<std::shared_ptr<RealTopic>> builtin_topics_;
 };
 
 } /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_DDSROUTERRELOADCONFIGURATION_HPP_ */
