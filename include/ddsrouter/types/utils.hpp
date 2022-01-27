@@ -75,6 +75,11 @@ protected:
     std::stringstream ss_;
 };
 
+//! \c Formatter to stream serializator
+std::ostream& operator <<(
+        std::ostream& os,
+        const Formatter& f);
+
 template <typename T, bool Ptr = false>
 std::ostream& element_to_stream(
         std::ostream& os,

@@ -25,6 +25,7 @@
 #include <fastrtps/rtps/RTPSDomain.h>
 
 #include <ddsrouter/reader/implementations/rtps/Reader.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
 #include <ddsrouter/writer/implementations/rtps/Writer.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
@@ -35,7 +36,7 @@ namespace rtps {
 
 template <class ConfigurationType>
 CommonRTPSRouterParticipant<ConfigurationType>::CommonRTPSRouterParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        const ConfigurationType participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, discovery_database)

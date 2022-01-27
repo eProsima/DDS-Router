@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_BASEPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/BaseReader.hpp>
 #include <ddsrouter/types/macros.hpp>
@@ -40,7 +40,7 @@ class BaseParticipant : public IParticipant
 {
 
     // Force ConfigurationType to be subclass of ParticipantConfiguration
-    FORCE_TEMPLATE_SUBCLASS(ParticipantConfiguration, ConfigurationType);
+    FORCE_TEMPLATE_SUBCLASS(configuration::ParticipantConfiguration, ConfigurationType);
 
 public:
 
@@ -54,7 +54,7 @@ public:
      * @param discovery_database DDS Router shared Discovery Database
      */
     BaseParticipant(
-            const ParticipantConfiguration& participant_configuration,
+            const ConfigurationType participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 

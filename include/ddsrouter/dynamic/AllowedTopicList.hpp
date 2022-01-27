@@ -19,7 +19,6 @@
 #ifndef _DDSROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
 #define _DDSROUTER_TOPIC_ALLOWEDTOPICLIST_HPP_
 
-#include <list>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -50,8 +49,8 @@ public:
 
     //! Constructor by initialization lists
     AllowedTopicList(
-            const std::list<std::shared_ptr<FilterTopic>>& allowlist,
-            const std::list<std::shared_ptr<FilterTopic>>& blocklist) noexcept;
+            const std::set<std::shared_ptr<FilterTopic>>& allowlist,
+            const std::set<std::shared_ptr<FilterTopic>>& blocklist) noexcept;
 
     //! Copy constructor. It copies internal lists.
     AllowedTopicList& operator =(
@@ -102,7 +101,7 @@ protected:
      * @return Set of topics without redundancy
      */
     static std::set<std::shared_ptr<FilterTopic>> get_topic_list_without_repetition_(
-            const std::list<std::shared_ptr<FilterTopic>>& list) noexcept;
+            const std::set<std::shared_ptr<FilterTopic>>& list) noexcept;
 
     //! List of topics that are not allowed
     std::set<std::shared_ptr<FilterTopic>> blocklist_;

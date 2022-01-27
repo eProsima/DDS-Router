@@ -50,7 +50,7 @@ public:
             std::set<Address> addresses);
 
     //! Discovery Server \c GuidPrefix Port getter
-    GuidPrefix discovery_server_guid() const noexcept;
+    GuidPrefix discovery_server_guid_prefix() const noexcept;
 
     //! Addresses getter
     std::set<Address> addresses() const noexcept;
@@ -63,27 +63,14 @@ public:
      */
     virtual bool is_valid() const noexcept;
 
-    /////
-    // YAML methods
-
-    /**
-     * @brief Construct a new DiscoveryServer connection address from yaml object
-     *
-     * @param configuration : configuration where this address must be set (tags will be looked up in this same level)
-     * @param default_transport : default transport protocol in case it is not set in yaml
-     */
-    DiscoveryServerConnectionAddress(
-            const RawConfiguration& configuration,
-            TransportProtocol default_transport = Address::default_transport_protocol());
-
-    //! Dump this object in \c configuration variable at \c configuration yaml base level.
-    RawConfiguration dump(
-            RawConfiguration& configuration) const;               // TODO: Once implemented add noexcept
+    //! Minor operator
+    bool operator <(
+            const DiscoveryServerConnectionAddress& other) const noexcept;
 
 protected:
 
     //! Internal Discovery Server Guid Prefix object
-    GuidPrefix discovery_server_guid_;
+    GuidPrefix discovery_server_guid_prefix_;
 
     //! Internal Addresses object
     std::set<Address> addresses_;

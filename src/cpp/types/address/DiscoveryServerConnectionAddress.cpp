@@ -25,14 +25,14 @@ namespace ddsrouter {
 DiscoveryServerConnectionAddress::DiscoveryServerConnectionAddress(
         GuidPrefix discovery_server_guid,
         std::set<Address> addresses)
-    : discovery_server_guid_(discovery_server_guid)
+    : discovery_server_guid_prefix_(discovery_server_guid)
     , addresses_(addresses)
 {
 }
 
-GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid() const noexcept
+GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid_prefix() const noexcept
 {
-    return discovery_server_guid_;
+    return discovery_server_guid_prefix_;
 }
 
 std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
@@ -42,7 +42,7 @@ std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
 
 bool DiscoveryServerConnectionAddress::is_valid() const noexcept
 {
-    if (!discovery_server_guid_.is_valid())
+    if (!discovery_server_guid_prefix_.is_valid())
     {
         return false;
     }
@@ -56,6 +56,34 @@ bool DiscoveryServerConnectionAddress::is_valid() const noexcept
     }
 
     return false;
+}
+
+bool DiscoveryServerConnectionAddress::operator <(
+        const DiscoveryServerConnectionAddress& other) const noexcept
+{
+    if (this->discovery_server_guid_prefix() == other.discovery_server_guid_prefix())
+    {
+        // Same Guid
+        return this->addresses() < other.addresses();
+    }
+    else
+    {
+        // Different guid
+        return this->discovery_server_guid_prefix() < other.discovery_server_guid_prefix();
+    }
+}
+
+std::ostream& operator <<(
+        std::ostream& output,
+        const DiscoveryServerConnectionAddress& address)
+{
+    output << "{{" << address.discovery_server_guid_prefix() << "}[";
+    for (auto a : address.addresses())
+    {
+        output << a << ",";
+    }
+    output << "]}";
+    return output;
 }
 
 } /* namespace ddsrouter */

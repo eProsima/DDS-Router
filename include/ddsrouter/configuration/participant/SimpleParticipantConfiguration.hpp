@@ -16,15 +16,15 @@
  * @file SimpleParticipantConfiguration.hpp
  */
 
-#ifndef _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_
-#define _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_
+#ifndef _DDSROUTER_CONFIGURATION_PARTICIPANT_SIMPLEPARTICIPANTCONFIGURATION_HPP_
+#define _DDSROUTER_CONFIGURATION_PARTICIPANT_SIMPLEPARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/types/endpoint/DomainId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace rtps {
+namespace configuration {
 
 /**
  * This class joins Simple Participant Configuration features and give methods to interact with it.
@@ -33,12 +33,11 @@ class SimpleParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
-    //! Using parent constructors
-    using ParticipantConfiguration::ParticipantConfiguration;
-
-    //! Copy constructor from superclass. Needed by \c ParticipantFactory .
+    //! TODO
     SimpleParticipantConfiguration(
-            const ParticipantConfiguration& configuration);
+            const ParticipantId& id,
+            const ParticipantKind& kind = ParticipantKind::SIMPLE_RTPS,
+            const DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
 
     /**
      * @brief Return domain set in the configuration
@@ -47,11 +46,23 @@ public:
      *
      * @return DomainId
      */
-    DomainId domain() const;
+    DomainId domain() const noexcept;
+
+    bool operator ==(
+            const SimpleParticipantConfiguration& other) const noexcept;
+
+    virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
+
+protected:
+
+    DomainId domain_;
+
+    static const DomainId DEFAULT_DOMAIN_ID_; // 0
 };
 
-} /* namespace rtps */
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTER_CONFIGURATION_SIMPLEPARTICIPANTCONFIGURATION_HPP_ */
+#endif /* _DDSROUTER_CONFIGURATION_PARTICIPANT_SIMPLEPARTICIPANTCONFIGURATION_HPP_ */

@@ -19,7 +19,7 @@
 #ifndef _DATABROKER_PARTICIPANT_IMPLEMENTATIONS_AUX_DUMMYPARTICIPANT_HPP_
 #define _DATABROKER_PARTICIPANT_IMPLEMENTATIONS_AUX_DUMMYPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <ddsrouter/reader/implementations/auxiliar/DummyReader.hpp>
 #include <ddsrouter/writer/implementations/auxiliar/DummyWriter.hpp>
@@ -36,7 +36,7 @@ namespace ddsrouter {
  *
  * This Participant is used for Testing, as it could mock a DDS real network.
  */
-class DummyParticipant : public BaseParticipant<ParticipantConfiguration>
+class DummyParticipant : public BaseParticipant<configuration::ParticipantConfiguration>
 {
 public:
 
@@ -48,7 +48,7 @@ public:
      * the DDSRouter.
      */
     DummyParticipant(
-            ParticipantConfiguration participant_configuration,
+            const configuration::ParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
