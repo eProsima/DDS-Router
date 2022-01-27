@@ -133,6 +133,7 @@ Dependencies
 
 * :ref:`windows_sources_asiotinyxml2`
 * :ref:`windows_sources_openssl`
+* :ref:`windows_sources_yamlcpp`
 * :ref:`windows_sources_eprosima_dependencies`
 
 .. _windows_sources_asiotinyxml2:
@@ -171,6 +172,22 @@ For example:
 .. code-block:: bash
 
    OPENSSL_ROOT_DIR=C:\Program Files\OpenSSL-Win64
+
+.. _windows_sources_yamlcpp:
+
+yaml-cpp
+^^^^^^^^
+
+yaml-cpp is a YAML parser and emitter in C++ matching the YAML 1.2 spec, and is used by *DDS Router* application to
+parse the provided configuration files.
+From an administrative shell with *PowerShell*, execute the following commands in order to download and install yaml-cpp
+for Windows:
+
+.. code-block:: bash
+
+   git clone --branch yaml-cpp-0.7.0 https://github.com/jbeder/yaml-cpp
+   cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\yamlcpp' -B build\yamlcpp yaml-cpp
+   cmake --build build\yamlcpp --target install    # If building in Debug mode, add --config Debug
 
 .. _windows_sources_eprosima_dependencies:
 
