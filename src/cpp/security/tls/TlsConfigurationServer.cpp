@@ -38,6 +38,7 @@ TlsConfigurationServer::TlsConfigurationServer(
 
 bool TlsConfigurationServer::is_valid() const noexcept
 {
+    // TODO check it is a correct file
     return private_key_file_ != "" &&
            certificate_chain_file_ != "" &&
            dh_params_file_ != "";

@@ -32,7 +32,7 @@ namespace ddsrouter {
 
 template <class ConfigurationType>
 BaseParticipant<ConfigurationType>::BaseParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        const ConfigurationType participant_configuration,
         std::shared_ptr <PayloadPool> payload_pool,
         std::shared_ptr <DiscoveryDatabase> discovery_database)
     : configuration_(participant_configuration)

@@ -32,13 +32,13 @@ using pair_topic_type = std::pair<std::string, std::string>;
  * TODO: Add regex when implemented
  */
 void add_topic_to_list(
-        std::list<std::shared_ptr<FilterTopic>>& list,
+        std::set<std::shared_ptr<FilterTopic>>& list,
         pair_topic_type topic_name,
         bool wildcard = true)
 {
     if (wildcard)
     {
-        list.push_back(
+        list.insert(
             std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
     }
 }
@@ -49,7 +49,7 @@ void add_topic_to_list(
  * TODO: Add regex when implemented
  */
 void add_topics_to_list(
-        std::list<std::shared_ptr<FilterTopic>>& list,
+        std::set<std::shared_ptr<FilterTopic>>& list,
         std::vector<pair_topic_type> topic_names,
         bool wildcard = true)
 {
@@ -57,7 +57,7 @@ void add_topics_to_list(
     {
         for (pair_topic_type topic_name : topic_names)
         {
-            list.push_back(
+            list.insert(
                 std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
         }
     }
@@ -75,8 +75,8 @@ void generic_test(
         const std::vector<pair_topic_type>& real_topics_negative)
 {
     // Create AllowedTopicList object
-    std::list<std::shared_ptr<FilterTopic>> allowlist;
-    std::list<std::shared_ptr<FilterTopic>> blocklist;
+    std::set<std::shared_ptr<FilterTopic>> allowlist;
+    std::set<std::shared_ptr<FilterTopic>> blocklist;
 
     add_topics_to_list(allowlist, allowlist_topics);
     add_topics_to_list(blocklist, blocklist_topics);

@@ -21,8 +21,6 @@
 
 #include <fastrtps/types/TypesBase.h>
 
-#include <ddsrouter/types/RawConfiguration.hpp>
-
 namespace eprosima {
 namespace ddsrouter {
 
@@ -57,16 +55,10 @@ public:
     //! Return Fast DDS value for Domain ID
     DomainIdType domain_id() const noexcept;
 
-    /////
-    // YAML methods
+    bool is_valid() const noexcept;
 
-    //! Constructor from yaml
-    DomainId (
-            const RawConfiguration& configuration);
-
-    //! Dump this object in \c configuration variable at \c configuration yaml base level.
-    RawConfiguration dump(
-            RawConfiguration& configuration) const;               // add noexcept when implemented
+    bool operator ==(
+            const DomainId& other) const noexcept;
 
 protected:
 
@@ -78,6 +70,9 @@ protected:
 
     //! Default value for Discovery Server
     static const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_;  // 66
+
+    //! Maximum Domain Id valid
+    static const DomainIdType MAX_DOMAIN_ID_;  // 250
 };
 
 //! \c DomainId serializator

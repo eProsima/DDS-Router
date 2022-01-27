@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_WANPARTICIPANT_HPP_
 #define _DDSROUTER_PARTICIPANT_IMPLEMENTATIONS_AUX_WANPARTICIPANT_HPP_
 
-#include <ddsrouter/configuration/WANParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
@@ -30,12 +30,12 @@ namespace rtps {
  * TODO
  */
 class WANParticipant
-    : public DiscoveryServerParticipant<WANParticipantConfiguration>
+    : public DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
 {
 public:
 
     WANParticipant(
-            const ParticipantConfiguration& participant_configuration,
+            const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 };

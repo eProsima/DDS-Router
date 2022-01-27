@@ -20,7 +20,6 @@
 #define _DDSROUTER_TYPES_GUIDPREFIX_HPP_
 
 #include <fastdds/rtps/common/GuidPrefix_t.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -89,17 +88,6 @@ public:
      * To be valid, the GuidPrefix must not be unknown
      */
     bool is_valid() const noexcept;
-
-    /////
-    // YAML methods
-
-    //! Constructor from yaml
-    GuidPrefix(
-            const RawConfiguration& configuration);
-
-    //! Dump this object in \c configuration variable at \c configuration yaml base level.
-    RawConfiguration dump(
-            RawConfiguration& configuration) const;               // TODO: Once implemented add noexcept
 
 protected:
 

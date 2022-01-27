@@ -27,7 +27,7 @@ namespace ddsrouter {
 /**
  * Concrete Participant that prints in stdout each message that arrives.
  */
-class EchoParticipant : public BaseParticipant<ParticipantConfiguration>
+class EchoParticipant : public BaseParticipant<configuration::ParticipantConfiguration>
 {
 public:
 

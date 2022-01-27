@@ -21,52 +21,8 @@
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
 function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
 
-    # All directories in project with library files
-    set(LIBRARY_DIRECTORIES
-        communication
-        configuration
-        configuration/implementations
-        core
-        dynamic
-        event
-        exceptions
-        participant
-        participant/implementations/auxiliar
-        participant/implementations/rtps
-        reader/implementations/auxiliar
-        reader/implementations/rtps
-        security/tls
-        types
-        types/address
-        types/endpoint
-        types/participant
-        types/topic
-        writer/implementations/auxiliar
-        writer/implementations/rtps
-    )
-
-    # Get all sources of the library except implementations and main
-    foreach(SOURCE_DIRECTORY ${LIBRARY_DIRECTORIES})
-
-        unset(SOURCES_FILES)
-        file(GLOB_RECURSE SOURCES_FILES
-            "${PROJECT_SOURCE_DIR}/src/cpp/${SOURCE_DIRECTORY}/*.c"
-            "${PROJECT_SOURCE_DIR}/src/cpp/${SOURCE_DIRECTORY}/*.cpp"
-            "${PROJECT_SOURCE_DIR}/src/cpp/${SOURCE_DIRECTORY}/*.cxx"
-            )
-        list(APPEND TEST_SOURCES ${SOURCES_FILES})
-
-    endforeach()
-
-    # Source every cpp in Test utils
-
-    unset(SOURCES_FILES)
-    file(GLOB_RECURSE SOURCES_FILES
-        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.c"
-        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cpp"
-        "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cxx"
-        )
-    list(APPEND TEST_SOURCES ${SOURCES_FILES})
+    # Add all cpp files to sources
+    all_library_sources("${TEST_SOURCES}")
 
     # Add all library needed by sources
     set(EXTRA_LIBRARIES
@@ -94,5 +50,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
 
 endfunction(add_blackbox_executable)
 
-add_subdirectory(ddsrouter_core)
+# TODO(annapurna) uncomment when yaml module is ready or redo without yaml (best option)
+# add_subdirectory(ddsrouter_core)
+
 add_subdirectory(implementations)

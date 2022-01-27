@@ -28,8 +28,8 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
     )
+sources_for_test_utils("${TEST_SOURCES}") # Add all requirements for use test_utils
 
 set(TEST_LIST
     topic_exists

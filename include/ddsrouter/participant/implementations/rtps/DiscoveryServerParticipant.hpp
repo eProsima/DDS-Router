@@ -21,7 +21,7 @@
 
 #include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
-#include <ddsrouter/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter/participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
 #include <ddsrouter/security/tls/TlsConfiguration.hpp>
 
@@ -39,10 +39,10 @@ class DiscoveryServerParticipant
 public:
 
     // Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
-    FORCE_TEMPLATE_SUBCLASS(DiscoveryServerParticipantConfiguration, ConfigurationType);
+    FORCE_TEMPLATE_SUBCLASS(configuration::DiscoveryServerParticipantConfiguration, ConfigurationType);
 
     DiscoveryServerParticipant(
-            const ParticipantConfiguration& participant_configuration,
+            const ConfigurationType participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 

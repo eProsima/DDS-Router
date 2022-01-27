@@ -20,7 +20,6 @@
 #include <set>
 #include <sstream>
 
-#include <ddsrouter/types/configuration_tags.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -53,15 +52,12 @@ ParticipantId ParticipantId::invalid() noexcept
 bool ParticipantId::is_valid_id(
         const std::string& tag) noexcept
 {
-    return
-        (tag != ALLOWLIST_TAG) &&
-        (tag != BLOCKLIST_TAG) &&
-        (tag != INVALID_ID);
+    return !tag.empty() && tag != INVALID_ID;
 }
 
 bool ParticipantId::is_valid() const noexcept
 {
-    return id_ != INVALID_ID;
+    return is_valid_id(id_);
 }
 
 std::string ParticipantId::id_name() const noexcept

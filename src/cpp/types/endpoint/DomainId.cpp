@@ -24,6 +24,7 @@ namespace ddsrouter {
 
 const DomainIdType DomainId::DEFAULT_DOMAIN_ID_ = 0;
 const DomainIdType DomainId::DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_ = 66;
+const DomainIdType DomainId::MAX_DOMAIN_ID_ = 230;
 
 DomainId::DomainId (
         bool discovery_server /*= false*/) noexcept
@@ -50,6 +51,17 @@ DomainIdType DomainId::operator ()() const noexcept
 DomainIdType DomainId::domain_id() const noexcept
 {
     return domain_id_;
+}
+
+bool DomainId::is_valid() const noexcept
+{
+    return domain_id_ <= MAX_DOMAIN_ID_;
+}
+
+bool DomainId::operator ==(
+        const DomainId& other) const noexcept
+{
+    return this->domain_id() == other.domain_id();
 }
 
 std::ostream& operator <<(
