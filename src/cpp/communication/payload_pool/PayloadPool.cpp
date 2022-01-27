@@ -107,6 +107,11 @@ bool PayloadPool::release_payload(
     }
 }
 
+bool PayloadPool::is_clean() const noexcept
+{
+    return reserve_count_ == release_count_;
+}
+
 /////
 // INTERNAL PART
 

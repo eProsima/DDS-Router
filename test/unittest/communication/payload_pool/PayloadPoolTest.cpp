@@ -239,6 +239,31 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
 }
 
 /**
+ * Test clean method
+ *
+ * STEPS:
+ *  start clean
+ *  reserve and not clean
+ *  release and clean
+ */
+TEST(PayloadPoolTest, is_clean)
+{
+    test::MockPayloadPool pool;
+
+    // start clean
+    ASSERT_TRUE(pool.is_clean());
+
+    // reserve and not clean
+    eprosima::fastrtps::rtps::CacheChange_t cc;
+    pool.reserve_(sizeof(PayloadUnit), cc.serializedPayload);
+    ASSERT_FALSE(pool.is_clean());
+
+    // release and clean
+    pool.release_(cc.serializedPayload);
+    ASSERT_TRUE(pool.is_clean());
+}
+
+/**
  * Test get_payload cache_change fails if the child class fails
  */
 TEST(PayloadPoolTest, get_payload_negative)

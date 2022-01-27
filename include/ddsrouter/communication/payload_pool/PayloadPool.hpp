@@ -193,6 +193,9 @@ public:
     virtual bool release_payload(
             Payload& payload) = 0;
 
+    //! Wether every payload get has been released.
+    virtual bool is_clean() const noexcept;
+
 protected:
 
     /**

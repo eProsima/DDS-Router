@@ -29,16 +29,11 @@ MapPayloadPool::~MapPayloadPool()
 {
     if (reserved_payloads_.size() > 0)
     {
-        logWarning(
+        logError(
             DDSROUTER_PAYLOADPOOL,
             "Removing MapPayloadPool with still " << reserved_payloads_.size() << " payloads referenced.");
 
-        while (!reserved_payloads_.empty())
-        {
-            auto data_still_in_pool = reserved_payloads_.begin();
-            reserved_payloads_.erase(data_still_in_pool);
-            free(data_still_in_pool->first);
-        }
+        // Data could not be erased because they will be erased once the Payload is destroyed
     }
 }
 
