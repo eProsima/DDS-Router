@@ -53,7 +53,7 @@ public:
      *
      * Every participant configuration is an object of the specific class set in \c ParticipantKind .
      *
-     * @return List of \c ParticipantConfigurations
+     * @return Set of \c ParticipantConfigurations
      */
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
 

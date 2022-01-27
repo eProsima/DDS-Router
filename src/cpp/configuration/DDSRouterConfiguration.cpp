@@ -102,7 +102,8 @@ bool DDSRouterConfiguration::is_valid(
     return true;
 }
 
-void DDSRouterConfiguration::reload(const DDSRouterReloadConfiguration& new_configuration)
+void DDSRouterConfiguration::reload(
+        const DDSRouterReloadConfiguration& new_configuration)
 {
     this->allowlist_ = new_configuration.allowlist();
     this->blocklist_ = new_configuration.blocklist();
@@ -110,25 +111,26 @@ void DDSRouterConfiguration::reload(const DDSRouterReloadConfiguration& new_conf
 }
 
 template <typename T>
-bool check_correct_configuration_object_by_type_(const std::shared_ptr<ParticipantConfiguration> configuration)
+bool check_correct_configuration_object_by_type_(
+        const std::shared_ptr<ParticipantConfiguration> configuration)
 {
     return nullptr != std::dynamic_pointer_cast<T>(configuration);
 }
 
 bool DDSRouterConfiguration::check_correct_configuration_object_(
-    const std::shared_ptr<ParticipantConfiguration> configuration)
+        const std::shared_ptr<ParticipantConfiguration> configuration)
 {
     switch (configuration->kind()())
     {
-    case ParticipantKind::SIMPLE_RTPS:
-        return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
+        case ParticipantKind::SIMPLE_RTPS:
+            return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
 
-    case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-    case ParticipantKind::WAN:
-        return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::WAN:
+            return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
 
-    default:
-        return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
+        default:
+            return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
     }
 }
 
