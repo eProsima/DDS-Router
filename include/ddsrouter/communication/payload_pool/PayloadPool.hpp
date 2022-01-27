@@ -33,13 +33,13 @@ namespace ddsrouter {
 /**
  * Pool to store and release payloads.
  *
- * A Payload is a blind pointer to a string of bytes.
- * Ideally, any payload will be copied to disk just once, and moved the reference from one element to another.
- * When a payload has not more references to it, it will be erased from the pool.
+ * A Payload is an object with a blind pointer to a string of bytes and extra info (size, length, etc.).
+ * Ideally, any payload data will be copied just once, and move the reference from one element to another.
+ * When a payload data has not more references to it, it will be erased.
  *
  * This Pool will be called to store a new message that a Reader receives (ideally it will be called just one
  * per message received).
- * Then this payload will be moved to the Track. As the payload is already in the pool, there will be no copy.
+ * Then, this payload will be moved to the Track. As the payload is already in the pool, there will be no copy.
  * Finally, the payload will be moved to every Writer that has to send the data (ideally without copy).
  */
 class PayloadPool : public fastrtps::rtps::IPayloadPool
@@ -56,15 +56,23 @@ public:
     // FAST DDS PART
 
     /**
-     * @brief Reserve in \c cache_change a new payload of size.
+     * @brief Reserve in \c cache_change a new payload of max size \c size .
      *
-     * @note This method reserves new memory.
+     * It sets values to the serialized payload inside \c cache_change .
+     * This method calls \c get_payload for the serialized payload.
+     * The \c cache_change owner is set to \c this .
+     *
+     * @warning length value in \c payload is not modified.
+     *
+     * @note This method may reserve new memory.
      *
      * @param [in] size : Size in bytes of the payload that will be reserved
      * @param [out] cache_change : the cache change which SerializedPayload will be set
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre Fields @c cache_change must not have the serialized payload initialized.
      */
     bool get_payload(
             uint32_t size,
@@ -73,15 +81,26 @@ public:
     /**
      * @brief Store in \c cache_change the \c data payload.
      *
-     * @note This method reserves new memory in case \c data_owner is a different PayloadPool than the one for
-     * \c data . Otherwise, it just increase the reference
+     * This method set \c cache_change serialized payload to the same data in \c data .
+     * This method should reuse \c data and not copy it in case the owner of \c data is \c this .
+     * It sets values to the serialized payload inside \c cache_change .
+     *
+     * This method calls \c get_payload for the serialized payload.
+     * The \c cache_change owner is set to \c this .
+     *
+     * @note This method may reserve new memory in case the owner is not \c this .
      *
      * @param [in,out] data          Serialized payload received
-     * @param [in,out] data_owner    Payload pool owning incoming data
+     * @param [in,out] data_owner    Payload pool owning incoming data \c data
      * @param [in,out] cache_change  Cache change to assign the payload to
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * @warning @c data_owner can only be changed from @c nullptr to @c this. If a value different from
+     * @c nullptr is received it should be left unchanged.
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre Fields @c cache_change must not have the serialized payload initialized.
      */
     bool get_payload(
             fastrtps::rtps::SerializedPayload_t& data,
@@ -89,14 +108,19 @@ public:
             fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
     /**
-     * @brief Decreases reference to the payload inside \c cache_change .
+     * @brief Release the data from the serialized payload inside \c cache_change .
      *
-     * @note If this is the las reference for a Payload, it will release it.
+     * @note This method must only release the actual memory of a data in case nobody is referencing it anymore.
      *
-     * @param [in,out] cache_change  Cache change to release the payload to
+     * This method calls \c release_payload for the serialized payload.
+     * The \c cache_change owner is set to \c nullptr .
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * @param [in,out] cache_change  Cache change to release the payload from
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre @c cache_change serialized payload must have been initialized from this pool.
      */
     bool release_payload(
             fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
@@ -105,28 +129,45 @@ public:
     // DDSROUTER PART
 
     /**
-     * @brief Reserve a new payload of size.
+     * @brief Reserve a new data in \c payload of size \c size.
      *
-     * @note This method reserves new memory.
+     * It sets value \c max_size and \c data of \c payload .
+     *
+     * @note This method may reserve new memory.
+     *
+     * @warning length value in \c payload is not modified.
      *
      * @param [in] size : Size in bytes of the payload that will be reserved
      * @param [out] payload : the SerializedPayload that will be set
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre Fields @c payload must not have been initialized.
      */
     virtual bool get_payload(
             uint32_t size,
             Payload& payload) = 0;
 
     /**
-     * @brief Increment reference to \c src_payload and reference it from \c target_payload .
+     * @brief Store in \c target_payload the data from \c src_payload .
      *
-     * @param [in] src_payload : the SerializedPayload with the data to be referenced
-     * @param [out] target_payload : the SerializedPayload that will be set
+     * This method set \c target_payload fields \c max_size , \c lenght and \c data .
+     * This method "should" reuse data in \c src_payload and not copy it in case \c data_owner is \c this .
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * @note This method may reserve new memory in case the owner is not \c this .
+     *
+     * @param [in,out] src_payload     Payload to move to target
+     * @param [in,out] data_owner      Payload pool owning incoming data \c src_payload
+     * @param [in,out] target_payload  Payload to assign the payload to
+     *
+     * @warning @c data_owner can only be changed from @c nullptr to @c this. If a value different from
+     * @c nullptr is received it must be left unchanged.
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre Fields @c target_payload must not have been initialized.
      */
     virtual bool get_payload(
             const Payload& src_payload,
@@ -134,31 +175,63 @@ public:
             Payload& target_payload) = 0;
 
     /**
-     * @brief Decreases reference to the \c payload .
+     * @brief Release the data from the \c payload .
      *
-     * @note If this is the las reference for a Payload, it will release it.
+     * @note This method must only release the actual memory of a data in case nobody is referencing it anymore.
      *
-     * @param [in,out] payload Payload to release
+     * @note This method should use method \c reserve_ to reserve new memory.
      *
-     * @return \c true if everything ok
-     * @return \c false if something went wrong
+     * Reset the \c payload info.
+     *
+     * @param [in,out] payload Payload to release data from
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     *
+     * @pre @c payload must have been initialized from this pool.
      */
     virtual bool release_payload(
             Payload& payload) = 0;
 
 protected:
 
-    bool reserve_(
+    /**
+     * @brief Reserve a new space of memory for new data.
+     *
+     * It increases \c reserve_count_ .
+     *
+     * @param size size of memory chunk to reserve
+     * @param payload object where introduce the new data pointer
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     */
+    virtual bool reserve_(
             uint32_t size,
             Payload& payload);
 
-    bool release_(
+    /**
+     * @brief Free a memory space.
+     *
+     * It increases \c release_count_ .
+     *
+     * @param payload object to free the data from
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     */
+    virtual bool release_(
             Payload& payload);
 
+    //! Increase \c reserve_count_
     void add_reserved_payload_();
+
+    //! Increase \c release_count_ . Show a warning if there are more releases than reserves.
     void add_release_payload_();
 
+    //! Count the number of reserved data from this pool
     std::atomic<uint64_t> reserve_count_;
+    //! Count the number of released data from this pool
     std::atomic<uint64_t> release_count_;
 };
 

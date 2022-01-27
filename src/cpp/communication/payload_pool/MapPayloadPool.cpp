@@ -33,9 +33,11 @@ MapPayloadPool::~MapPayloadPool()
             DDSROUTER_PAYLOADPOOL,
             "Removing MapPayloadPool with still " << reserved_payloads_.size() << " payloads referenced.");
 
-        for (auto data : reserved_payloads_)
+        while (!reserved_payloads_.empty())
         {
-            free(data.first);
+            auto data_still_in_pool = reserved_payloads_.begin();
+            reserved_payloads_.erase(data_still_in_pool);
+            free(data_still_in_pool->first);
         }
     }
 }

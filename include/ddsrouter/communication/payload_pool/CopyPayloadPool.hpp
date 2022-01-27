@@ -25,24 +25,28 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief Dummy PayloadPool class to use while efficient one is implemented.
+ * @brief Dummy PayloadPool class to use while efficient one not implemented.
  *
  * This class does not handle references, but copies the payload data in each method required.
+ * This class does not manage whether the data has been created from this pool before releasing it.
  */
 class CopyPayloadPool : public PayloadPool
 {
 public:
     using PayloadPool::PayloadPool;
 
+    //! Reserve a new memory space
     bool get_payload(
             uint32_t size,
             Payload& payload) override;
 
+    //! Reserve a new memory space and copy the data from \c src_payload to \c target_payload
     bool get_payload(
             const Payload& src_payload,
             IPayloadPool*& data_owner,
             Payload& target_payload) override;
 
+    //! Release data in \c payload
     bool release_payload(
             Payload& payload) override;
 };
