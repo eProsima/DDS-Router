@@ -22,7 +22,6 @@
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/Log.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/utils.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -78,7 +77,7 @@ TEST(TrivialTest, trivial_dummy_initialization)
 TEST(TrivialTest, trivial_communication)
 {
     // Load configuration
-    RawConfiguration router_configuration =
+    configuration::DDSRouterConfiguration router_configuration =
             load_configuration_from_file("../resources/configurations/trivial/trivial_test_dummy_configuration.yaml");
 
     // Create DDSRouter entity

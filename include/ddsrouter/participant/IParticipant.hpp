@@ -25,7 +25,6 @@
 #include <ddsrouter/types/endpoint/Endpoint.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/types/participant/ParticipantKind.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/writer/IWriter.hpp>
 
 namespace eprosima {

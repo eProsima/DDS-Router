@@ -61,10 +61,12 @@ bool RealTopic::is_real_topic(
     return true;
 }
 
-bool RealTopic::is_valid()
+bool RealTopic::is_valid() const noexcept
 {
     // Only with one of them invalid, the topic is invalid
-    return topic_name_ != INVALID_TOPIC_NAME && topic_type_ != INVALID_TOPIC_TYPE;
+    return topic_name_ != INVALID_TOPIC_NAME &&
+           topic_type_ != INVALID_TOPIC_TYPE &&
+           is_real_topic(topic_name_, topic_type_);
 }
 
 } /* namespace ddsrouter */

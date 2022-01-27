@@ -32,6 +32,7 @@ TlsConfigurationClient::TlsConfigurationClient(
 
 bool TlsConfigurationClient::is_valid() const noexcept
 {
+    // TODO check it is a correct file
     return certificate_authority_file_ != "";
 }
 

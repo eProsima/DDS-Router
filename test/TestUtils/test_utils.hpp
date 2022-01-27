@@ -20,6 +20,15 @@
 #define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 
 #include <ddsrouter/types/endpoint/Guid.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/types/topic/FilterTopic.hpp>
+#include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,6 +44,44 @@ namespace test {
  */
 Guid random_guid(
         uint16_t seed = 1);
+
+struct TopicInput
+{
+    std::string name;
+    std::string type;
+    bool keyed;
+    bool key_set;
+};
+
+struct WildcardTopicInput : public TopicInput
+{
+    bool type_set;
+};
+
+std::set<std::shared_ptr<RealTopic>> topic_set(
+        std::vector<TopicInput> topics);
+
+std::set<std::shared_ptr<FilterTopic>> topic_set(
+        std::vector<WildcardTopicInput> topics);
+
+DomainId random_domain(
+        uint16_t seed = 0);
+
+GuidPrefix random_guid_prefix(
+        uint16_t seed = 0,
+        bool ros = false);
+
+Address random_address(
+        uint16_t seed = 0);
+
+std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
+        uint16_t seed = 0,
+        uint16_t size = 1,
+        bool ros = false);
+
+std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
+        ParticipantKind kind,
+        uint16_t seed = 0);
 
 } /* namespace test */
 } /* namespace ddsrouter */

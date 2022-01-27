@@ -75,6 +75,10 @@ public:
     bool operator <(
             const ParticipantKind& other) const noexcept;
 
+    //! Equal operator
+    bool operator ==(
+            const ParticipantKind& other) const noexcept;
+
     /**
      * @brief Create a Participant Kind regarding the string argument in lower case
      *

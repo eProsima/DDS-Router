@@ -68,6 +68,8 @@ struct Topic
     bool operator <(
             const Topic& other) const;
 
+    virtual bool is_valid() const noexcept;
+
 protected:
 
     //! Topic name

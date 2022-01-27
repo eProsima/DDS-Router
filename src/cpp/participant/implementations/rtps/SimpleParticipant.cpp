@@ -28,10 +28,10 @@ namespace ddsrouter {
 namespace rtps {
 
 SimpleParticipant::SimpleParticipant(
-        const ParticipantConfiguration& participant_configuration,
+        const configuration::SimpleParticipantConfiguration participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<SimpleParticipantConfiguration>
+    : CommonRTPSRouterParticipant<configuration::SimpleParticipantConfiguration>
         (participant_configuration, payload_pool, discovery_database)
 {
     create_participant_();

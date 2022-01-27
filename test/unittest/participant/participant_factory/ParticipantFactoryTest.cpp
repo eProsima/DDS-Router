@@ -14,9 +14,10 @@
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
+#include <test_utils.hpp>
 
 #include <ddsrouter/communication/payload_pool/MapPayloadPool.hpp>
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
@@ -31,51 +32,18 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
-// TODO: refactor these tests so they test with kind in id and with kind in Configuration
-// TODO: add these functions in a common utils test
-void set_domain(
-        RawConfiguration& configuration,
-        uint16_t seed = 0)
-{
-    configuration[DOMAIN_ID_TAG] = seed;
-}
-
-ParticipantConfiguration get_random_participant_configuration(
-        ParticipantId id,
-        ParticipantKind kind,
-        uint32_t seed = 0)
-{
-    RawConfiguration config;
-
-    switch (kind())
-    {
-        case ParticipantKind::SIMPLE_RTPS:
-            set_domain(config, seed);
-            break;
-
-        // Add configurations por Participant Kinds that require configuration arguments
-
-        default:
-            break;
-    }
-
-    return ParticipantConfiguration(id, config);
-}
-
 /*
  * Generate all required objects for participant creation,
  * and then create a participant from an id string
  */
 std::shared_ptr<IParticipant> create_participant(
-        std::string id_str,
         ParticipantKind kind)
 {
     ParticipantFactory participant_factory;
     std::shared_ptr<PayloadPool> payload_pool = std::make_shared<MapPayloadPool>();
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
-    ParticipantId id(id_str);
-    ParticipantConfiguration participant_configuration =
-            get_random_participant_configuration(id, kind);
+    std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration =
+            random_participant_configuration(kind);
 
     return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database);
 }
@@ -85,51 +53,16 @@ std::shared_ptr<IParticipant> create_participant(
 } /* namespace eprosima */
 
 /**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Void participant
+ * Test \c ParticipantFactory \c create_participant method using each of the valid Participant kinds
  */
-TEST(ParticipantFactoryTest, create_void_participant)
+TEST(ParticipantFactoryTest, create_participant)
 {
-    std::shared_ptr<IParticipant> void_participant = test::create_participant("void", ParticipantKind::VOID);
-    ASSERT_EQ(void_participant->kind()(), ParticipantKind::VOID);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Echo participant
- */
-TEST(ParticipantFactoryTest, create_echo_participant)
-{
-    std::shared_ptr<IParticipant> echo_participant = test::create_participant("echo", ParticipantKind::ECHO);
-    ASSERT_EQ(echo_participant->kind()(), ParticipantKind::ECHO);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Dummy participant
- */
-TEST(ParticipantFactoryTest, create_dummy_participant)
-{
-    std::shared_ptr<IParticipant> dummy_participant = test::create_participant("dummy", ParticipantKind::DUMMY);
-    ASSERT_EQ(dummy_participant->kind()(), ParticipantKind::DUMMY);
-}
-
-/**
- * Test \c ParticipantFactory \c create_participant method
- *
- * CASES:
- *  Simple RTPS participant
- */
-TEST(ParticipantFactoryTest, create_simple_participant)
-{
-    std::shared_ptr<IParticipant> simple_participant = test::create_participant("local", ParticipantKind::SIMPLE_RTPS);
-    ASSERT_EQ(simple_participant->kind()(), ParticipantKind::SIMPLE_RTPS);
+    // For each Participant Type
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    {
+        std::shared_ptr<IParticipant> void_participant = test::create_participant(kind);
+        ASSERT_EQ(void_participant->kind(), kind) << "Failed in " << kind;
+    }
 }
 
 /**
@@ -140,7 +73,7 @@ TEST(ParticipantFactoryTest, create_simple_participant)
  */
 TEST(ParticipantFactoryTest, create_invalid_participant)
 {
-    ASSERT_THROW(test::create_participant("invalid_part", ParticipantKind::VOID), ConfigurationException);
+    ASSERT_THROW(test::create_participant(ParticipantKind::PARTICIPANT_KIND_INVALID), ConfigurationException);
 }
 
 /**

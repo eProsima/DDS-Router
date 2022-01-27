@@ -47,7 +47,7 @@ struct RealTopic : public Topic
             const std::string& topic_name,
             const std::string& type_name) noexcept;
 
-    bool is_valid();
+    bool is_valid() const noexcept override;
 
 protected:
 

@@ -42,8 +42,8 @@ std::vector<std::string> random_non_valid_ids()
 {
     return
         {
-            ALLOWLIST_TAG,
-            BLOCKLIST_TAG
+            "",
+            "__invalid_ddsrouter_participant__",
         };
 }
 

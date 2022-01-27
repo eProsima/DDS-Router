@@ -91,6 +91,11 @@ bool Topic::operator <(
     }
 }
 
+bool Topic::is_valid() const noexcept
+{
+    return true;
+}
+
 std::ostream& operator <<(
         std::ostream& os,
         const Topic& a)

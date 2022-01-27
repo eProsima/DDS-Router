@@ -19,7 +19,7 @@
 #ifndef _DDSROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 #define _DDSROUTER_PARTICIPANT_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 
-#include <ddsrouter/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter/participant/IParticipant.hpp>
 
 namespace eprosima {
@@ -41,7 +41,7 @@ public:
      * @return new Participant
      */
     std::shared_ptr<IParticipant> create_participant(
-            ParticipantConfiguration participant_configuration,
+            std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 

@@ -19,38 +19,24 @@
 #ifndef _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_BASECONFIGURATION_HPP_
 
-#include <ddsrouter/types/participant/ParticipantId.hpp>
-#include <ddsrouter/types/participant/ParticipantKind.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
+#include <ddsrouter/types/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace configuration {
 
 /**
- * TODO
+ * This is an Interface class that force every configuration in ddsrouter to have a \c is_valid method.
  */
 class BaseConfiguration
 {
 public:
 
-    /**
-     * @brief Construct a new configuration
-     *
-     * @param [in] raw_configuration yaml to get the configuration
-     *
-     * @throw \c ConfigurationException in case the configuration is not a well-formed yaml
-     */
-    BaseConfiguration(
-            const RawConfiguration& raw_configuration);
-
-    RawConfiguration raw_configuration() const noexcept;
-
-protected:
-
-    RawConfiguration raw_configuration_;
-
+    virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept = 0;
 };
 
+} /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
