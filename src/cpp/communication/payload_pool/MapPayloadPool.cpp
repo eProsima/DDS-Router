@@ -122,7 +122,7 @@ bool MapPayloadPool::release_payload(
     // In case it was the last reference, release payload
     if (payload_it->second == 0)
     {
-        if(!release_(payload))
+        if (!release_(payload))
         {
             return false;
         }

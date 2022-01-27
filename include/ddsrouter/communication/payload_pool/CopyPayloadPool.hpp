@@ -33,6 +33,7 @@ namespace ddsrouter {
 class CopyPayloadPool : public PayloadPool
 {
 public:
+
     using PayloadPool::PayloadPool;
 
     //! Reserve a new memory space
