@@ -42,7 +42,7 @@ namespace ddsrouter {
  * Then, this payload will be moved to the Track. As the payload is already in the pool, there will be no copy.
  * Finally, the payload will be moved to every Writer that has to send the data (ideally without copy).
  */
-class PayloadPool : public fastrtps::rtps::IPayloadPool
+class PayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
 {
 public:
 
@@ -76,7 +76,7 @@ public:
      */
     bool get_payload(
             uint32_t size,
-            fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
     /**
      * @brief Store in \c cache_change the \c data payload.
@@ -103,9 +103,9 @@ public:
      * @pre Fields @c cache_change must not have the serialized payload initialized.
      */
     bool get_payload(
-            fastrtps::rtps::SerializedPayload_t& data,
+            eprosima::fastrtps::rtps::SerializedPayload_t& data,
             IPayloadPool*& data_owner,
-            fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
     /**
      * @brief Release the data from the serialized payload inside \c cache_change .
@@ -123,7 +123,7 @@ public:
      * @pre @c cache_change serialized payload must have been initialized from this pool.
      */
     bool release_payload(
-            fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
+            eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
     /////
     // DDSROUTER PART
@@ -157,9 +157,9 @@ public:
      *
      * @note This method may reserve new memory in case the owner is not \c this .
      *
-     * @param [in,out] src_payload     Payload to move to target
+     * @param [in] src_payload     Payload to move to target
      * @param [in,out] data_owner      Payload pool owning incoming data \c src_payload
-     * @param [in,out] target_payload  Payload to assign the payload to
+     * @param [out] target_payload  Payload to assign the payload to
      *
      * @warning @c data_owner can only be changed from @c nullptr to @c this. If a value different from
      * @c nullptr is received it must be left unchanged.
@@ -219,6 +219,8 @@ protected:
      *
      * @return true if everything ok
      * @return false if something went wrong
+     *
+     * @throw \c IncosistencyException if more releases than reserves has been done
      */
     virtual bool release_(
             Payload& payload);

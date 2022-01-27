@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -102,8 +102,8 @@ bool PayloadPool::release_payload(
     }
     else
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Trying to remove a cache change in an incorrect pool.")
-        return false;
+        logError(DDSROUTER_PAYLOADPOOL, "Trying to remove a cache change in an incorrect pool.")
+        throw InconsistencyException("Trying to remove a cache change in an incorrect pool.");
     }
 }
 
@@ -122,6 +122,7 @@ void PayloadPool::add_release_payload_()
     {
         logError(DDSROUTER_PAYLOADPOOL,
                 "Inconsistent PayloadPool, releasing more payloads than reserved.");
+        throw InconsistencyException("Inconsistent PayloadPool, releasing more payloads than reserved.");
     }
 }
 
