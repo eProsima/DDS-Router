@@ -26,8 +26,7 @@ namespace ddsrouter {
 namespace configuration {
 
 /**
- * This class joins every DDSRouter feature configuration and includes methods
- * to interact with this configuration.
+ * This is an Interface class that force every configuration in ddsrouter to have a \c is_valid method.
  */
 class BaseConfiguration
 {

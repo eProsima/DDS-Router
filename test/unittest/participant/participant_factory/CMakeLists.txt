@@ -21,11 +21,7 @@ set(TEST_NAME ParticipantFactoryTest)
 set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/EchoParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
@@ -37,29 +33,11 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/DummyReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/rtps/Reader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationBoth.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationClient.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationServer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/DiscoveryServerConnectionAddress.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/DomainId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/BaseWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/DummyWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/EchoWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/rtps/Writer.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
     )
 sources_for_test_utils("${TEST_SOURCES}") # Add all requirements for use test_utils
 

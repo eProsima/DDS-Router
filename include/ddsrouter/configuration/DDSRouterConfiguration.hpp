@@ -19,8 +19,8 @@
 #ifndef _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
 #define _DDSROUTER_CONFIGURATION_DDSROUTERCONFIGURATION_HPP_
 
-#include <set>
 #include <memory>
+#include <set>
 
 #include <ddsrouter/configuration/BaseConfiguration.hpp>
 #include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
@@ -51,18 +51,14 @@ public:
     /**
      * @brief Return a set with the topics allowed in the configuration
      *
-     * @return List of filters to get allowed topics
-     *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
+     * @return Set of filters to get allowed topics
      */
     std::set<std::shared_ptr<FilterTopic>> allowlist() const noexcept;
 
     /**
      * @brief Return a set with the topics blocked in the configuration
      *
-     * @return List of filters to get blocked topics
-     *
-     * @throw \c ConfigurationException in case the yaml inside blocklist is not well-formed
+     * @return Set of filters to get blocked topics
      */
     std::set<std::shared_ptr<FilterTopic>> blocklist() const noexcept;
 
@@ -74,15 +70,9 @@ public:
     /**
      * @brief Return a set with the different \c ParticipantConfigurations in the yaml
      *
-     * Every tag inside the yaml that is not a key word for the DDSRouterConfiguration could be a Participant.
-     * This tag is taken as the \c ParticipantId of this Participant, and a new \c ParticipantConfiguration
-     * is created and added to the set to be returned.
-     * In case a non valid configuration is found, an invalid \c ParticipantConfiguration (configuration with
-     * invalid \c ParticipantKind ) will be added to the set.
+     * Every participant configuration is an object of the specific class set in \c ParticipantKind .
      *
      * @return List of \c ParticipantConfigurations
-     *
-     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
      */
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
 

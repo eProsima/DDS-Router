@@ -32,7 +32,7 @@ namespace ddsrouter {
 namespace configuration {
 
 /**
- * This class joins Discovery Server Participant Configuration features and give methods to interact with it.
+ * This class joins Discovery Server Participant Configuration features and gives methods to interact with it.
  */
 class DiscoveryServerParticipantConfiguration : public SimpleParticipantConfiguration
 {
@@ -44,7 +44,7 @@ public:
             const GuidPrefix& discovery_server_guid_prefix,
             const std::set<Address>& listening_addresses,
             const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
-            const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
+            const ParticipantKind& kind = ParticipantKind::LOCAL_DISCOVERY_SERVER,
             std::shared_ptr<security::TlsConfiguration> tls_configuration =
                 std::make_shared<security::TlsConfiguration>(),
             const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
@@ -56,7 +56,7 @@ public:
             const std::set<Address>& listening_addresses,
             const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
             const DomainId& domain_id,
-            const ParticipantKind& type = ParticipantKind::LOCAL_DISCOVERY_SERVER,
+            const ParticipantKind& kind = ParticipantKind::LOCAL_DISCOVERY_SERVER,
             std::shared_ptr<security::TlsConfiguration> tls_configuration =
                 std::make_shared<security::TlsConfiguration>());
 

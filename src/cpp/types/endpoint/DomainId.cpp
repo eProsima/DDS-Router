@@ -55,7 +55,7 @@ DomainIdType DomainId::domain_id() const noexcept
 
 bool DomainId::is_valid() const noexcept
 {
-    return domain_id_ < MAX_DOMAIN_ID_;
+    return domain_id_ <= MAX_DOMAIN_ID_;
 }
 
 bool DomainId::operator ==(
