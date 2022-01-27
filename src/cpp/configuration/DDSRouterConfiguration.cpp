@@ -58,7 +58,8 @@ std::set<std::shared_ptr<ParticipantConfiguration>> DDSRouterConfiguration::part
     return participants_configurations_;
 }
 
-bool DDSRouterConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
+bool DDSRouterConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
 {
     // Check Allow list topics
     for (std::shared_ptr<FilterTopic> topic : allowlist_)

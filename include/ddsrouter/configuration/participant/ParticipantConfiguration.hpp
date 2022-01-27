@@ -24,7 +24,7 @@
 #include <ddsrouter/types/participant/ParticipantKind.hpp>
 
 namespace eprosima {
-namespace ddsrouter{
+namespace ddsrouter {
 namespace configuration {
 
 /**
@@ -60,7 +60,8 @@ public:
     bool operator ==(
             const ParticipantConfiguration& other) const noexcept;
 
-    virtual bool is_valid(utils::Formatter& error_msg) const noexcept override;
+    virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
 protected:
 

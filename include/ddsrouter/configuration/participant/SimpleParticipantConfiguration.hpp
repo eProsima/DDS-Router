@@ -51,7 +51,8 @@ public:
     bool operator ==(
             const SimpleParticipantConfiguration& other) const noexcept;
 
-    virtual bool is_valid(utils::Formatter& error_msg) const noexcept override;
+    virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
 protected:
 

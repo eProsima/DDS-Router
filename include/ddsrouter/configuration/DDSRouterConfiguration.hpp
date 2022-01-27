@@ -76,7 +76,8 @@ public:
      */
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
 
-    bool is_valid(utils::Formatter& error_msg) const noexcept override;
+    bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
 protected:
 

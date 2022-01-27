@@ -64,48 +64,60 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         case ParticipantKind::SIMPLE_RTPS:
             // Simple RTPS Participant
+        {
+            std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
             {
-                std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(participant_configuration);
-                if (!conf_)
-                {
-                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " << participant_configuration->kind());
-                }
-
-                return std::make_shared<rtps::SimpleParticipant> (
-                    (*conf_),
-                    payload_pool,
-                    discovery_database);
+                throw ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
+                                participant_configuration->kind());
             }
+
+            return std::make_shared<rtps::SimpleParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
 
         case ParticipantKind::LOCAL_DISCOVERY_SERVER:
             // Discovery Server RTPS Participant
+        {
+            std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
             {
-                std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
-                if (!conf_)
-                {
-                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " << participant_configuration->kind());
-                }
-
-                return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
-                    (*conf_),
-                    payload_pool,
-                    discovery_database);
+                throw ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
+                                participant_configuration->kind());
             }
+
+            return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
 
         case ParticipantKind::WAN:
             // Discovery Server RTPS Participant
+        {
+            std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
             {
-                std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ = std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(participant_configuration);
-                if (!conf_)
-                {
-                    throw ConfigurationException(utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " << participant_configuration->kind());
-                }
-
-                return std::make_shared<rtps::WANParticipant> (
-                    (*conf_),
-                    payload_pool,
-                    discovery_database);
+                throw ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
+                                participant_configuration->kind());
             }
+
+            return std::make_shared<rtps::WANParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
 
         case ParticipantKind::PARTICIPANT_KIND_INVALID:
             throw ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind()

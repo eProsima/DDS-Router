@@ -32,7 +32,8 @@ class BaseConfiguration
 {
 public:
 
-    virtual bool is_valid(utils::Formatter& error_msg) const noexcept = 0;
+    virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept = 0;
 };
 
 } /* namespace configuration */

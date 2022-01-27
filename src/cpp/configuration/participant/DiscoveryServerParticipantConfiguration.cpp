@@ -67,7 +67,7 @@ std::set<Address> DiscoveryServerParticipantConfiguration::listening_addresses()
 }
 
 std::set<DiscoveryServerConnectionAddress>
-    DiscoveryServerParticipantConfiguration::connection_addresses() const noexcept
+DiscoveryServerParticipantConfiguration::connection_addresses() const noexcept
 {
     return connection_addresses_;
 }
@@ -82,7 +82,8 @@ std::shared_ptr<security::TlsConfiguration> DiscoveryServerParticipantConfigurat
     return tls_configuration_;
 }
 
-bool DiscoveryServerParticipantConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
+bool DiscoveryServerParticipantConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
 {
     // Check parent class validity
     if (!SimpleParticipantConfiguration::is_valid(error_msg))

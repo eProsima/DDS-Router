@@ -36,7 +36,8 @@ Guid random_guid(
     return guid;
 }
 
-std::set<std::shared_ptr<RealTopic>> topic_set(std::vector<TopicInput> topics)
+std::set<std::shared_ptr<RealTopic>> topic_set(
+        std::vector<TopicInput> topics)
 {
     std::set<std::shared_ptr<RealTopic>> result;
     for (TopicInput input : topics)
@@ -44,21 +45,22 @@ std::set<std::shared_ptr<RealTopic>> topic_set(std::vector<TopicInput> topics)
         if (input.key_set)
         {
             result.insert(std::make_shared<RealTopic>(
-                input.name,
-                input.type,
-                input.keyed));
+                        input.name,
+                        input.type,
+                        input.keyed));
         }
         else
         {
             result.insert(std::make_shared<RealTopic>(
-                input.name,
-                input.type));
+                        input.name,
+                        input.type));
         }
     }
     return result;
 }
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput> topics)
+std::set<std::shared_ptr<FilterTopic>> topic_set(
+        std::vector<WildcardTopicInput> topics)
 {
     std::set<std::shared_ptr<FilterTopic>> result;
     for (WildcardTopicInput input : topics)
@@ -68,17 +70,17 @@ std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput>
             if (input.type_set)
             {
                 result.insert(std::make_shared<WildcardTopic>(
-                    input.name,
-                    input.type,
-                    true,
-                    input.keyed));
+                            input.name,
+                            input.type,
+                            true,
+                            input.keyed));
             }
             else
             {
                 result.insert(std::make_shared<WildcardTopic>(
-                    input.name,
-                    true,
-                    input.keyed));
+                            input.name,
+                            true,
+                            input.keyed));
             }
         }
         else
@@ -86,15 +88,15 @@ std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput>
             if (input.type_set)
             {
                 result.insert(std::make_shared<WildcardTopic>(
-                    input.name,
-                    input.type,
-                    false));
+                            input.name,
+                            input.type,
+                            false));
             }
             else
             {
                 result.insert(std::make_shared<WildcardTopic>(
-                    input.name,
-                    false));
+                            input.name,
+                            false));
             }
         }
     }
@@ -134,14 +136,14 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
 {
     std::set<DiscoveryServerConnectionAddress> result;
 
-    for (int i=0; i<size; ++i)
+    for (int i = 0; i < size; ++i)
     {
         result.insert(
             DiscoveryServerConnectionAddress(
                 random_guid_prefix((seed * size + i) * i),
                 std::set<Address>({
-                    random_address((seed * size + i) * i),
-                    random_address((seed * size + i) * i + 1)})));
+                        random_address((seed * size + i) * i),
+                        random_address((seed * size + i) * i + 1)})));
     }
     return result;
 }
@@ -163,20 +165,20 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
         case ParticipantKind::LOCAL_DISCOVERY_SERVER:
         case ParticipantKind::WAN:
 
-            {
-                // TODO get random values
-                DiscoveryServerConnectionAddress connection_address = DiscoveryServerConnectionAddress(
-                        GuidPrefix(),
-                        std::set<Address>({Address()})
-                    );
+        {
+            // TODO get random values
+            DiscoveryServerConnectionAddress connection_address = DiscoveryServerConnectionAddress(
+                GuidPrefix(),
+                std::set<Address>({Address()})
+                );
 
-                return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-                    id,
-                    random_guid_prefix(seed),
-                    std::set<Address>(),
-                    std::set<DiscoveryServerConnectionAddress>({connection_address}),
-                    kind);
-            }
+            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+                id,
+                random_guid_prefix(seed),
+                std::set<Address>(),
+                std::set<DiscoveryServerConnectionAddress>({connection_address}),
+                kind);
+        }
 
         // Add cases where Participants need specific arguments
         default:

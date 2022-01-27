@@ -34,7 +34,8 @@ SimpleParticipantConfiguration::SimpleParticipantConfiguration(
 {
 }
 
-bool SimpleParticipantConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
+bool SimpleParticipantConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
 {
     if (!ParticipantConfiguration::is_valid(error_msg))
     {
@@ -58,8 +59,9 @@ DomainId SimpleParticipantConfiguration::domain() const noexcept
 bool SimpleParticipantConfiguration::operator ==(
         const SimpleParticipantConfiguration& other) const noexcept
 {
-    return ParticipantConfiguration::operator==(other) &&
-        this->domain_ == other.domain_;
+    return ParticipantConfiguration::operator ==(
+        other) &&
+           this->domain_ == other.domain_;
 }
 
 } /* namespace configuration */

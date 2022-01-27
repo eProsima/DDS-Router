@@ -322,7 +322,6 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     return params;
 }
 
-
 template <class ConfigurationType>
 void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,

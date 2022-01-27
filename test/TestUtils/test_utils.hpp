@@ -58,9 +58,11 @@ struct WildcardTopicInput : public TopicInput
     bool type_set;
 };
 
-std::set<std::shared_ptr<RealTopic>> topic_set(std::vector<TopicInput> topics);
+std::set<std::shared_ptr<RealTopic>> topic_set(
+        std::vector<TopicInput> topics);
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(std::vector<WildcardTopicInput> topics);
+std::set<std::shared_ptr<FilterTopic>> topic_set(
+        std::vector<WildcardTopicInput> topics);
 
 DomainId random_domain(
         uint16_t seed = 0);
