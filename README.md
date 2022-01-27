@@ -56,7 +56,7 @@ You can access the documentation online, which is hosted on [Read the Docs](http
 
 The instructions for installing the *DDS Router* application from sources and its required dependencies on a Linux
 environment are provided below. These installation instructions are a summarized version of the complete
-[installation guide](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html) available online. Instructions for installing *DDS Router* on a Windows platform can be found
+[installation guide](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html) available online. Instructions for installing *DDS Router* on a **Windows** platform can be found
 [here](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/windows.html).
 
 ### Requirements
@@ -72,7 +72,7 @@ These packages provide the tools required to install DDS Router and its dependen
 [CMake](https://cmake.org/), [g++](https://gcc.gnu.org/), [pip](https://pypi.org/project/pip/), [wget](https://www.gnu.org/software/wget/) and [git](https://git-scm.com/) using the package manager of the appropriate Linux distribution. For
 example, on Ubuntu use the command:
 
-```batch
+```bash
 sudo apt install cmake g++ pip wget git
 ```
 
@@ -80,7 +80,7 @@ sudo apt install cmake g++ pip wget git
 
 [colcon](https://colcon.readthedocs.io/en/released/) is a command line tool based on [CMake](https://cmake.org/) aimed at building sets of software packages. Install the ROS 2 development tools ([colcon](https://colcon.readthedocs.io/en/released/) and [vcstool](https://pypi.org/project/vcstool/)) by executing the following command:
 
-```batch
+```bash
 pip3 install -U colcon-common-extensions vcstool
 ```
 
@@ -101,7 +101,7 @@ Asio is a cross-platform C++ library for network and low-level I/O programming, 
 model. TinyXML2 is a simple, small and efficient C++ XML parser. Install these libraries using the package manager of
 the appropriate Linux distribution. For example, on Ubuntu use the command:
 
-```batch
+```bash
 sudo apt install libasio-dev libtinyxml2-dev
 ```
 
@@ -111,7 +111,7 @@ sudo apt install libasio-dev libtinyxml2-dev
 library. Install OpenSSL using the package manager of the appropriate Linux distribution. For example, on Ubuntu use the
 command:
 
-```batch
+```bash
 sudo apt install libssl-dev
 ```
 
@@ -122,7 +122,7 @@ sudo apt install libssl-dev
 configuration files. Install yaml-cpp using the package manager of the appropriate Linux distribution. For example, on
 Ubuntu use the command:
 
-```batch
+```bash
 sudo apt install libyaml-cpp-dev
 ```
 
@@ -131,7 +131,7 @@ sudo apt install libyaml-cpp-dev
 If it already exists in the system an installation of *Fast DDS* library with version greater than *2.4.0*, just source
 this library when building the *DDS Router* application by using the command:
 
-```batch
+```bash
 source <fastdds-installation-path>/install/setup.bash
 ```
 
@@ -142,7 +142,7 @@ is explained in the following section.
 
 1. Create a `DDS-Router` directory and download the `.repos` file that will be used to install *DDS Router* and its dependencies:
 
-```batch
+```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
 wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
@@ -151,7 +151,7 @@ vcs import src < ddsrouter.repos
 
 2. Build the packages:
 
-```batch
+```bash
 colcon build
 ```
 
@@ -160,7 +160,7 @@ colcon build
 To run the *DDS Router* application, source the installation environment and execute the executable file that has been
 installed in `<install-path>/ddsrouter/bin/ddsrouter`:
 
-```batch
+```bash
 # Source installation
 source <install-path>/setup.bash
 
@@ -174,6 +174,6 @@ By default, *DDS Router* does not compile tests. However, they can be activated 
 [Gtest](https://github.com/google/googletest) and building with CMake option `-DBUILD_TESTS=ON`. Once done, tests
 can be run with the following command:
 
-```batch
-colcon test
+```bash
+colcon test --packages-select ddsrouter --event-handler=console_direct+
 ```

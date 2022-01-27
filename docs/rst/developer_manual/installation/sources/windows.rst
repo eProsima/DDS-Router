@@ -187,7 +187,7 @@ for Windows:
 
    git clone --branch yaml-cpp-0.7.0 https://github.com/jbeder/yaml-cpp
    cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\yamlcpp' -B build\yamlcpp yaml-cpp
-   cmake --build build\yamlcpp --target install
+   cmake --build build\yamlcpp --target install    # If building in Debug mode, add --config Debug
 
 .. _windows_sources_eprosima_dependencies:
 
