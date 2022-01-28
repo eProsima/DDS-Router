@@ -68,6 +68,10 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
         }
+        else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::REMOVED_PARTICIPANT)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " removed.");
+        }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " dropped.");
@@ -91,6 +95,10 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
         }
+        else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
+        }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
@@ -113,6 +121,10 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+        }
+        else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
+        {
+            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
         }
         else
         {

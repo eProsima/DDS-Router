@@ -47,7 +47,7 @@ TEST(TrivialTest, trivial_void_initialization)
 {
     // Load configuration
     RawConfiguration router_configuration =
-            load_configuration_from_file("resources/trivial_test_void_configuration.yaml");
+            load_configuration_from_file("resources/configurations/trivial_test_void_configuration.yaml");
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
@@ -62,7 +62,7 @@ TEST(TrivialTest, trivial_dummy_initialization)
 {
     // Load configuration
     RawConfiguration router_configuration =
-            load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
+            load_configuration_from_file("resources/configurations/trivial_test_dummy_configuration.yaml");
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
@@ -79,7 +79,7 @@ TEST(TrivialTest, trivial_communication)
 {
     // Load configuration
     RawConfiguration router_configuration =
-            load_configuration_from_file("resources/trivial_test_dummy_configuration.yaml");
+            load_configuration_from_file("resources/configurations/trivial_test_dummy_configuration.yaml");
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);

@@ -121,17 +121,8 @@ public:
         }
 
         // CREATE THE TOPIC
-        if (keyed_)
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-        }
-        else
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-
-        }
+        std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
+        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -255,17 +246,8 @@ public:
         }
 
         // CREATE THE TOPIC
-        if (keyed_)
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-        }
-        else
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-
-        }
+        std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
+        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -377,24 +359,10 @@ private:
 };
 
 /**
- * Test whole DDSRouter initialization by initializing two SimpleParticipants
+ * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
+ * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
  */
-TEST(DDSTest, simple_initialization)
-{
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-
-    // Let test finish without failing
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains
- */
-TEST(DDSTest, end_to_end_communication)
+void test_local_communication(std::string config_path, bool keyed = false)
 {
     uint32_t samples_sent = 0;
 
@@ -407,23 +375,23 @@ TEST(DDSTest, end_to_end_communication)
     std::mutex reception_cv_mtx;
 
     // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher;
+    HelloWorldPublisher publisher(keyed);
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber;
+    HelloWorldSubscriber subscriber(keyed);
     ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
 
     // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
     RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+            load_configuration_from_file(config_path);
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
     router.start();
 
     // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
 
     // Start publishing
     while (samples_sent < SAMPLES_TO_SEND)
@@ -442,14 +410,16 @@ TEST(DDSTest, end_to_end_communication)
 }
 
 /**
- * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains
+ * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
+ * This is accomplished by connecting two WAN Participants belonging to different DDS Router instances. These router
+ * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
  */
-TEST(DDSTest, end_to_end_communication_keyed)
+void test_WAN_communication(std::string server_config_path, std::string client_config_path, bool keyed = false)
 {
     uint32_t samples_sent = 0;
 
     HelloWorld msg;
-    msg.message("HelloWorldKeyed");
+    msg.message("HelloWorld");
 
     //! Condition variable used to synchronize data flow
     std::condition_variable reception_cv;
@@ -457,23 +427,33 @@ TEST(DDSTest, end_to_end_communication_keyed)
     std::mutex reception_cv_mtx;
 
     // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(true);
+    HelloWorldPublisher publisher(keyed);
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(true);
+    HelloWorldSubscriber subscriber(keyed);
     ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
 
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+    // Load configuration containing a Simple Participant in domain 0 and a WAN Participant configured as server
+    // (possibly also as client)
+    RawConfiguration server_router_configuration =
+            load_configuration_from_file(server_config_path);
 
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
+    // Load configuration containing a Simple Participant in domain 1 and a WAN Participant configured as client
+    // (possibly also as server)
+    RawConfiguration client_router_configuration =
+            load_configuration_from_file(client_config_path);
+
+    // Create DDSRouter entity whose WAN Participant is configured as server
+    DDSRouter server_router(server_router_configuration);
+    server_router.start();
+
+    // Create DDSRouter entity whose WAN Participant is configured as client
+    DDSRouter client_router(client_router_configuration);
+    client_router.start();
 
     // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(5));
 
     // Start publishing
     while (samples_sent < SAMPLES_TO_SEND)
@@ -488,7 +468,127 @@ TEST(DDSTest, end_to_end_communication_keyed)
                 });
     }
 
-    router.stop();
+    client_router.stop();
+    server_router.stop();
+}
+
+/**
+ * Test communication between WAN participants by running \c test_WAN_communication for different configurations.
+ * Different combinations of server/client configurations are tested.
+ *
+ * CASES:
+ *  server <-> client
+ *  server <-> server-client
+ *  server-client <-> server-client
+ */
+void test_WAN_communication_all(std::string dir_path, bool basic_only=false)
+{
+    // server <-> client
+    test_WAN_communication(dir_path + "server.yaml", dir_path + "client.yaml");
+
+    // server <-> server-client
+    test_WAN_communication(dir_path + "server.yaml", dir_path + "server-client-A.yaml");
+
+    // This test is disabled for TCPv6 and TLSv6, as an underlying middleware issue resulting in no matching exists
+    if (!basic_only)
+    {
+        // server-client <-> server-client
+        test_WAN_communication(dir_path + "server-client-B.yaml", dir_path + "server-client-A.yaml");
+    }
+}
+
+/**
+ * Test whole DDSRouter initialization by initializing two Simple Participants
+ */
+TEST(DDSTest, simple_initialization)
+{
+    // Load configuration
+    RawConfiguration router_configuration =
+            load_configuration_from_file("resources/configurations/dds_test_simple_configuration.yaml");
+
+    // Create DDSRouter entity
+    DDSRouter router(router_configuration);
+
+    // Let test finish without failing
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ */
+TEST(DDSTest, end_to_end_local_communication)
+{
+    test_local_communication("resources/configurations/dds_test_simple_configuration.yaml");
+}
+
+/**
+ * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ */
+TEST(DDSTest, end_to_end_local_communication_keyed)
+{
+    test_local_communication("resources/configurations/dds_test_simple_configuration.yaml", true);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through UDPv4.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_UDPv4)
+{
+    test_WAN_communication_all("resources/configurations/WAN/UDP/IPv4/");
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through UDPv6.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_UDPv6)
+{
+    test_WAN_communication_all("resources/configurations/WAN/UDP/IPv6/");
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TCPv4.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_TCPv4)
+{
+    test_WAN_communication_all("resources/configurations/WAN/TCP/IPv4/");
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TCPv6.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_TCPv6)
+{
+    test_WAN_communication_all("resources/configurations/WAN/TCP/IPv6/", true);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TLSv4.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_TLSv4)
+{
+    test_WAN_communication_all("resources/configurations/WAN/TLS/IPv4/");
+    // test_WAN_communication("resources/configurations/WAN/TLS/IPv4/server-client-B.yaml", "resources/configurations/WAN/TLS/IPv4/server-client-A.yaml");
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TLSv6.
+ */
+TEST(DDSTest, end_to_end_WAN_communication_TLSv6)
+{
+    test_WAN_communication_all("resources/configurations/WAN/TLS/IPv6/", true);
 }
 
 int main(
