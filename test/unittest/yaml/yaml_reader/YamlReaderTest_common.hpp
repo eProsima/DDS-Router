@@ -12,46 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file YamlReader.cpp
- *
- */
+#include <gtest_aux.hpp>
+#include <gtest/gtest.h>
 
 #include <ddsrouter/yaml/YamlReader.hpp>
-#include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
+namespace test {
 
-bool YamlReader::is_tag_present(
-        const Yaml& yml,
-        const TagType& tag)
+class MockYamlReader : public YamlReader
 {
-    if (!yml.IsMap())
-    {
-        throw ConfigurationException(
-                  utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
-    }
+public:
 
-    return (yml[tag]);
-}
+    // Make protected methods from parent public
 
-Yaml YamlReader::get_value_in_tag(
-        const Yaml& yml,
-        const TagType& tag)
-{
-    if (is_tag_present(yml, tag))
-    {
-        return yml[tag];
-    }
-    else
-    {
-        throw ConfigurationException(
-                  utils::Formatter() << "Required tag not found: <" << tag << ">.");
-    }
-}
+    using YamlReader::get_value_in_tag;
 
+    using YamlReader::get;
+
+    using YamlReader::get_scalar;
+
+    using YamlReader::get_list;
+
+    using YamlReader::get_enumeration;
+};
+
+} /* namespace test */
 } /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
