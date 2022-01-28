@@ -362,7 +362,9 @@ private:
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
  * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
  */
-void test_local_communication(std::string config_path, bool keyed = false)
+void test_local_communication(
+        std::string config_path,
+        bool keyed = false)
 {
     uint32_t samples_sent = 0;
 
@@ -414,7 +416,10 @@ void test_local_communication(std::string config_path, bool keyed = false)
  * This is accomplished by connecting two WAN Participants belonging to different DDS Router instances. These router
  * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
  */
-void test_WAN_communication(std::string server_config_path, std::string client_config_path, bool keyed = false)
+void test_WAN_communication(
+        std::string server_config_path,
+        std::string client_config_path,
+        bool keyed = false)
 {
     uint32_t samples_sent = 0;
 
@@ -481,7 +486,9 @@ void test_WAN_communication(std::string server_config_path, std::string client_c
  *  server <-> server-client
  *  server-client <-> server-client
  */
-void test_WAN_communication_all(std::string dir_path, bool basic_only=false)
+void test_WAN_communication_all(
+        std::string dir_path,
+        bool basic_only = false)
 {
     // server <-> client
     test_WAN_communication(dir_path + "server.yaml", dir_path + "client.yaml");
