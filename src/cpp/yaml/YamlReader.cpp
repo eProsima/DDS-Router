@@ -43,7 +43,7 @@ bool YamlReader::is_tag_present(const Yaml& yml, const TagType& tag)
 
 Yaml YamlReader::get_value_in_tag(const Yaml& yml, const TagType& tag)
 {
-    if (yml[tag])
+    if (is_tag_present(yml, tag))
     {
         return yml[tag];
     }

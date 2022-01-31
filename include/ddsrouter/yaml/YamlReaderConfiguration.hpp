@@ -28,7 +28,7 @@ namespace ddsrouter {
 namespace yaml {
 
 /**
- * @brief Class that encapsulate specific methods to get a full DDSRouter Configuration from a yaml node.
+ * @brief Class that encapsulates specific methods to get a full DDSRouter Configuration from a yaml node.
  *
  * TODO: Add version configuration so it could load different versions
  */

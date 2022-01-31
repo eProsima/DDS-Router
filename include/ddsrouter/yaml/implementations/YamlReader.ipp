@@ -44,7 +44,7 @@ T YamlReader::get(const Yaml& yml, const TagType& tag)
     }
 
     utils::tsnh(utils::Formatter() << "Impossible to arrive to this point.");
-    return get<T, V>(yml); // Unrecheable code
+    return get<T, V>(yml); // Unreachable code
 }
 
 template <typename T, YamlReaderVersion V>
@@ -116,6 +116,15 @@ std::set<T> YamlReader::get_set(const Yaml& yml, const TagType& tag)
 }
 
 template <typename T, YamlReaderVersion V>
+T YamlReader::get_enumeration(
+    const Yaml& yml,
+    const TagType& tag,
+    const std::map<TagType, T>& enum_values)
+{
+    return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
+}
+
+template <typename T, YamlReaderVersion V>
 T YamlReader::get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_values)
 {
     TagType value = get_scalar<TagType>(yml);
@@ -132,15 +141,6 @@ T YamlReader::get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_
     {
         return it->second;
     }
-}
-
-template <typename T, YamlReaderVersion V>
-T YamlReader::get_enumeration(
-    const Yaml& yml,
-    const TagType& tag,
-    const std::map<TagType, T>& enum_values)
-{
-    return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
 }
 
 } /* namespace yaml */

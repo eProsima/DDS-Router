@@ -371,7 +371,7 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         certificate_authority_file = get_scalar<std::string>(yml, TLS_CA_TAG);
     }
 
-    // Optional certificate authority
+    // Optional certificate chain
     std::string certificate_chain_file;
     bool has_certificate_chain_file = is_tag_present(yml, TLS_CERT_TAG);
     if (has_certificate_chain_file)
@@ -379,7 +379,7 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         certificate_chain_file = get_scalar<std::string>(yml, TLS_CERT_TAG);
     }
 
-    // Optional certificate authority
+    // Optional dh params
     std::string dh_params_file;
     bool has_dh_params_file = is_tag_present(yml, TLS_DHPARAMS_TAG);
     if (has_dh_params_file)
@@ -387,7 +387,7 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         dh_params_file = get_scalar<std::string>(yml, TLS_DHPARAMS_TAG);
     }
 
-    if (has_private_key_file)
+    if (has_private_key_file && has_certificate_chain_file && has_dh_params_file)
     {
         if (has_certificate_authority_file)
         {
