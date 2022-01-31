@@ -30,6 +30,7 @@ class TestLogHandler
 public:
 
     TestLogHandler(
+            Log::Kind threshold = Log::Kind::Warning,
             uint32_t max_severe_logs = 0);
 
     ~TestLogHandler();

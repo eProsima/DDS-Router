@@ -26,7 +26,7 @@ ServerClientWAN_B:
           port: 11777
           transport: "tcp"
   tls:
-    ca: "resources/configurations/WAN/TLS/security/ca.crt"
-    private_key: "resources/configurations/WAN/TLS/security/ddsrouter.key"
-    cert: "resources/configurations/WAN/TLS/security/ddsrouter.crt"
-    dh_params: "resources/configurations/WAN/TLS/security/dh_params.pem"
+    ca: "../../resources/configurations/dds/WAN/TLS/security/ca.crt"
+    private_key: "../../resources/configurations/dds/WAN/TLS/security/ddsrouter.key"
+    cert: "../../resources/configurations/dds/WAN/TLS/security/ddsrouter.crt"
+    dh_params: "../../resources/configurations/dds/WAN/TLS/security/dh_params.pem"

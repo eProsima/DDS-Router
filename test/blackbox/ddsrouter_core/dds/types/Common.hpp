@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/**
+ * @file Common.hpp
+ */
+
+#ifndef _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_
+#define _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_
+
 #include <atomic>
 #include <condition_variable>
 #include <iostream>
 #include <mutex>
-#include <thread>
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
-
-#include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/types/Log.hpp>
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
@@ -40,12 +43,8 @@
 #include <fastrtps/attributes/PublisherAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
 
-#include "HelloWorldPubSubTypes.h"
-#include "HelloWorldKeyedPubSubTypes.h"
-
-using namespace eprosima::ddsrouter;
-
-constexpr const uint32_t SAMPLES_TO_SEND = 10;
+#include "HelloWorld/HelloWorldPubSubTypes.h"
+#include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
 
 /**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
@@ -358,254 +357,4 @@ private:
     listener_;
 };
 
-/**
- * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
- * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
- */
-void test_local_communication(
-        std::string config_path,
-        bool keyed = false)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(keyed);
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(keyed);
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file(config_path);
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    router.stop();
-}
-
-/**
- * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
- * This is accomplished by connecting two WAN Participants belonging to different DDS Router instances. These router
- * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
- */
-void test_WAN_communication(
-        std::string server_config_path,
-        std::string client_config_path,
-        bool keyed = false)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(keyed);
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(keyed);
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing a Simple Participant in domain 0 and a WAN Participant configured as server
-    // (possibly also as client)
-    RawConfiguration server_router_configuration =
-            load_configuration_from_file(server_config_path);
-
-    // Load configuration containing a Simple Participant in domain 1 and a WAN Participant configured as client
-    // (possibly also as server)
-    RawConfiguration client_router_configuration =
-            load_configuration_from_file(client_config_path);
-
-    // Create DDSRouter entity whose WAN Participant is configured as server
-    DDSRouter server_router(server_router_configuration);
-    server_router.start();
-
-    // Create DDSRouter entity whose WAN Participant is configured as client
-    DDSRouter client_router(client_router_configuration);
-    client_router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(5));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    client_router.stop();
-    server_router.stop();
-}
-
-/**
- * Test communication between WAN participants by running \c test_WAN_communication for different configurations.
- * Different combinations of server/client configurations are tested.
- *
- * CASES:
- *  server <-> client
- *  server <-> server-client
- *  server-client <-> server-client
- */
-void test_WAN_communication_all(
-        std::string dir_path,
-        bool basic_only = false)
-{
-    // server <-> client
-    test_WAN_communication(dir_path + "server.yaml", dir_path + "client.yaml");
-
-    // server <-> server-client
-    test_WAN_communication(dir_path + "server.yaml", dir_path + "server-client-A.yaml");
-
-    // This test is disabled for TCPv6 and TLSv6, as an underlying middleware issue resulting in no matching exists
-    if (!basic_only)
-    {
-        // server-client <-> server-client
-        test_WAN_communication(dir_path + "server-client-B.yaml", dir_path + "server-client-A.yaml");
-    }
-}
-
-/**
- * Test whole DDSRouter initialization by initializing two Simple Participants
- */
-TEST(DDSTest, simple_initialization)
-{
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/configurations/dds_test_simple_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-
-    // Let test finish without failing
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- */
-TEST(DDSTest, end_to_end_local_communication)
-{
-    test_local_communication("resources/configurations/dds_test_simple_configuration.yaml");
-}
-
-/**
- * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- */
-TEST(DDSTest, end_to_end_local_communication_keyed)
-{
-    test_local_communication("resources/configurations/dds_test_simple_configuration.yaml", true);
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through UDPv4.
- */
-TEST(DDSTest, end_to_end_WAN_communication_UDPv4)
-{
-    test_WAN_communication_all("resources/configurations/WAN/UDP/IPv4/");
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through UDPv6.
- */
-TEST(DDSTest, end_to_end_WAN_communication_UDPv6)
-{
-    test_WAN_communication_all("resources/configurations/WAN/UDP/IPv6/");
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TCPv4.
- */
-TEST(DDSTest, end_to_end_WAN_communication_TCPv4)
-{
-    test_WAN_communication_all("resources/configurations/WAN/TCP/IPv4/");
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TCPv6.
- */
-TEST(DDSTest, end_to_end_WAN_communication_TCPv6)
-{
-    test_WAN_communication_all("resources/configurations/WAN/TCP/IPv6/", true);
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TLSv4.
- */
-TEST(DDSTest, end_to_end_WAN_communication_TLSv4)
-{
-    test_WAN_communication_all("resources/configurations/WAN/TLS/IPv4/");
-    // test_WAN_communication("resources/configurations/WAN/TLS/IPv4/server-client-B.yaml", "resources/configurations/WAN/TLS/IPv4/server-client-A.yaml");
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TLSv6.
- */
-TEST(DDSTest, end_to_end_WAN_communication_TLSv6)
-{
-    test_WAN_communication_all("resources/configurations/WAN/TLS/IPv6/", true);
-}
-
-int main(
-        int argc,
-        char** argv)
-{
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+#endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_ */

@@ -1,6 +1,6 @@
 
 # This YAML configures the DDS Router for the DDS communication test.
-# It is composed of a Simple Participant and a WAN Participant configured as client with TLSv6 transport.
+# It is composed of a Simple Participant and a WAN Participant configured as client with TLSv4 transport.
 
 allowlist:
   - name: "HelloWorldTopic"
@@ -16,9 +16,9 @@ ClientWAN:
   connection-addresses:
     - id: 0
       addresses:
-        - ip: "::1"
-          ip-version: "v6"
+        - ip: "127.0.0.1"
+          ip-version: "v4"
           port: 11666
           transport: "tcp"
   tls:
-    ca: "resources/configurations/WAN/TLS/security/ca.crt"
+    ca: "../../resources/configurations/dds/WAN/TLS/security/ca.crt"
