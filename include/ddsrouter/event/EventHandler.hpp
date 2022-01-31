@@ -19,6 +19,7 @@
 #ifndef _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 #define _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 
+#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <mutex>
