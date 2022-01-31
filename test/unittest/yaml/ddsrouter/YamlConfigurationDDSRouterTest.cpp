@@ -46,7 +46,8 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
         YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
-    ASSERT_TRUE(configuration_result.is_valid());
+    utils::Formatter error_msg;
+    ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
     ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<eprosima::ddsrouter::FilterTopic>>());
@@ -61,7 +62,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->type(), ParticipantKind::ECHO);
+        ASSERT_EQ(participant->kind(), ParticipantKind::ECHO);
     }
 }
 
@@ -94,7 +95,8 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
         YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
-    ASSERT_TRUE(configuration_result.is_valid());
+    utils::Formatter error_msg;
+    ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
     ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<eprosima::ddsrouter::FilterTopic>>());
@@ -116,7 +118,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->type(), ParticipantKind::SIMPLE_RTPS);
+        ASSERT_EQ(participant->kind(), ParticipantKind::SIMPLE_RTPS);
     }
 }
 
