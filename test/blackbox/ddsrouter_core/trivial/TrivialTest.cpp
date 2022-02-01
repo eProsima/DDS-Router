@@ -22,6 +22,8 @@
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/Log.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/utils.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -39,17 +41,64 @@ std::vector<PayloadUnit> random_payload(
     return payload;
 }
 
+configuration::DDSRouterConfiguration void_configuration()
+{
+    return configuration::DDSRouterConfiguration(
+        std::set<std::shared_ptr<FilterTopic>>(),
+        std::set<std::shared_ptr<FilterTopic>>(),
+        std::set<std::shared_ptr<RealTopic>>(),
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
+    {
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid1"),
+            ParticipantKind::VOID
+            ),
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid2"),
+            ParticipantKind::VOID
+            )
+    }
+            ));
+}
+
+/**
+ * @brief Create a \c DDSRouterConfiguration with 2 dummy participants and one builtin topic
+ *
+ * @return configuration::DDSRouterConfiguration
+ */
+configuration::DDSRouterConfiguration simple_configuration(
+        const std::string& participant_1_name = "Participant1",
+        const std::string& participant_2_name = "Participant2",
+        const std::string& topic_name = "topic_dummy",
+        const std::string& topic_type = "type_dummy")
+{
+    return configuration::DDSRouterConfiguration(
+        std::set<std::shared_ptr<FilterTopic>>(),
+        std::set<std::shared_ptr<FilterTopic>>(),
+        std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
+    {
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId(participant_1_name),
+            ParticipantKind::DUMMY
+            ),
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId(participant_2_name),
+            ParticipantKind::DUMMY
+            )
+    }
+            ));
+}
+
 /**
  * Test Whole DDSRouter initialization by initializing two VoidParticipants
  */
 TEST(TrivialTest, trivial_void_initialization)
 {
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("../resources/configurations/trivial/trivial_test_void_configuration.yaml");
-
     // Create DDSRouter entity
-    DDSRouter router(router_configuration);
+    DDSRouter router(void_configuration());
+    router.start();
+    router.stop();
 
     // Let test finish without failing
 }
@@ -59,12 +108,10 @@ TEST(TrivialTest, trivial_void_initialization)
  */
 TEST(TrivialTest, trivial_dummy_initialization)
 {
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("../resources/configurations/trivial/trivial_test_dummy_configuration.yaml");
-
     // Create DDSRouter entity
-    DDSRouter router(router_configuration);
+    DDSRouter router(simple_configuration());
+    router.start();
+    router.stop();
 
     // Let test finish without failing
 }
@@ -76,17 +123,15 @@ TEST(TrivialTest, trivial_dummy_initialization)
  */
 TEST(TrivialTest, trivial_communication)
 {
-    // Load configuration
-    configuration::DDSRouterConfiguration router_configuration =
-            load_configuration_from_file("../resources/configurations/trivial/trivial_test_dummy_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
+    DDSRouter router(simple_configuration());
     router.start();
 
-    DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("participant_1"));
-    DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("participant_2"));
-    RealTopic topic("trivial_topic", "trivial_type");
+    DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("Participant1"));
+    DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("Participant2"));
+    ASSERT_NE(participant_1, nullptr);
+    ASSERT_NE(participant_2, nullptr);
+
+    RealTopic topic("topic_dummy", "type_dummy");
     Guid guid = test::random_guid();
     std::vector<PayloadUnit> payload = random_payload(3);
 

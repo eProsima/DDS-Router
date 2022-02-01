@@ -28,8 +28,7 @@ set(TEST_LIST
     trivial_communication)
 
 set(TEST_NEEDED_SOURCES
-    ../resources/configurations/trivial/trivial_test_dummy_configuration.yaml
-    ../resources/configurations/trivial/trivial_test_void_configuration.yaml)
+    )
 
 add_blackbox_executable(
     "${TEST_NAME}"
