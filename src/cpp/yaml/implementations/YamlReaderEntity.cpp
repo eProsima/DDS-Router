@@ -159,7 +159,7 @@ Address YamlReader::get<Address>(
     // Optional get Domain tag for DNS
     std::string domain_name;
     bool domain_name_set = is_tag_present(yml, ADDRESS_DNS_TAG);
-    if (ip_set)
+    if (domain_name_set)
     {
         domain_name = get<std::string>(yml, ADDRESS_DNS_TAG);
     }
@@ -176,6 +176,18 @@ Address YamlReader::get<Address>(
     {
         throw ConfigurationException(utils::Formatter() <<
                       "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
+    }
+    else if (!ip_set && !domain_name_set)
+    {
+        // There is no IP or DNS name, so ip must be taken from default values
+        if (ip_version_set)
+        {
+            ip = Address::default_ip(ip_version);
+        }
+        else
+        {
+            ip = Address::default_ip();
+        }
     }
 
     // Optional get port

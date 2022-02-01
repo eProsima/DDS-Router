@@ -20,7 +20,7 @@
 #include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
-#include "../YamlConfigurationTestUtils.hpp"
+#include "../../YamlConfigurationTestUtils.hpp"
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::yaml;
@@ -151,64 +151,6 @@ TEST(YamlGetEntityTest, get_real_topic)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
-    }
-}
-
-/**
- * Test read RealTopic from yaml
- *
- * POSITIVE CASES:
- * - UDP
- * - TCP
- *
- * NEGATIVE CASES:
- * - Empty
- * - Incorrect tag
- */
-TEST(YamlGetEntityTest, get_transport_protocol)
-{
-    // UDP
-    {
-        Yaml yml;
-        test::add_field_to_yaml(
-            yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
-            ADDRESS_TRANSPORT_TAG);
-
-        TransportProtocol tp = YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
-
-        ASSERT_EQ(tp, TransportProtocol::UDP);
-    }
-
-    // TCP
-    {
-        Yaml yml;
-        test::add_field_to_yaml(
-            yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
-            ADDRESS_TRANSPORT_TAG);
-
-        TransportProtocol tp = YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG);
-
-        ASSERT_EQ(tp, TransportProtocol::TCP);
-    }
-
-    // Empty
-    {
-        Yaml yml;
-
-        ASSERT_THROW(YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
-    }
-
-    // Incorrect tag
-    {
-        Yaml yml;
-        test::add_field_to_yaml(
-            yml,
-            test::YamlField<std::string>("utcp"),
-            ADDRESS_TRANSPORT_TAG);
-
-        ASSERT_THROW(YamlReader::get<TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), ConfigurationException);
     }
 }
 

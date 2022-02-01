@@ -28,13 +28,13 @@ bool YamlReader::is_tag_present(
         const Yaml& yml,
         const TagType& tag)
 {
-    if (!yml.IsMap())
+    if (!yml.IsMap() && !yml.IsNull())
     {
         throw ConfigurationException(
                   utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
     }
 
-    return (yml[tag]);
+    return yml[tag];
 }
 
 Yaml YamlReader::get_value_in_tag(

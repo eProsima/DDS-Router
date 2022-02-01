@@ -16,5 +16,29 @@
 # Yaml GetEntities Test #
 #########################
 
-add_subdirectory(address)
-add_subdirectory(topic)
+set(TEST_NAME YamlGetEntityTopicTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
+        YamlGetEntityTopicTest.cpp
+    )
+sources_for_test_utils("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_real_topic
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
