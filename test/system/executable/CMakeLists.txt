@@ -26,6 +26,12 @@ if(PYTHONINTERP_FOUND)
         simple_configuration
     )
 
+    # Whether one or other signal in test
+    set(SIGNAL_CONFIGURATIONS
+        "--sigterm"
+        ""
+    )
+
     foreach(TEST_CONFIGURATION ${TEST_CONFIGURATIONS})
         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configurations/${TEST_CONFIGURATION}.yaml
             ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST_CONFIGURATION}.yaml
@@ -71,38 +77,42 @@ if(PYTHONINTERP_FOUND)
 
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
+        foreach(SIGNAL_ARG IN LISTS SIGNAL_CONFIGURATIONS)
 
-        set(TEST_NAME "system.ddsrouter.${TEST}")
+            set(TEST_NAME "system.tools.ddsrouter.${TEST}.${SIGNAL_ARG}")
 
-        # CTest has issues with signals on windows. We forked the test
-        # execution using an auxiliary powershell script
-        if(WIN32)
-           add_test(
-                    NAME system.tools.ddsrouter.${TEST}
-                    COMMAND powershell "-File" ${PWS_LAUNCHER}
-                            ${PYTHON_EXECUTABLE}
-                            ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            $<TARGET_FILE:ddsrouter>
-                            ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
-                )
-        else()
+            # CTest has issues with signals on windows. We forked the test
+            # execution using an auxiliary powershell script
+            if(WIN32)
             add_test(
-                    NAME system.tools.ddsrouter.${TEST}
-                    COMMAND ${PYTHON_EXECUTABLE}
-                            ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            "--exe" $<TARGET_FILE:ddsrouter>
-                            "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
-                            "--debug"
+                        NAME ${TEST_NAME}
+                        COMMAND powershell "-File" ${PWS_LAUNCHER}
+                                ${PYTHON_EXECUTABLE}
+                                ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
+                                $<TARGET_FILE:ddsrouter>
+                                ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
+                                ${SIGNAL_ARG}
+                    )
+            else()
+                add_test(
+                        NAME ${TEST_NAME}
+                        COMMAND ${PYTHON_EXECUTABLE}
+                                ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
+                                "--exe" $<TARGET_FILE:ddsrouter>
+                                "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
+                                "--debug"
+                                ${SIGNAL_ARG}
+                    )
+            endif()
+
+            # Set test properties
+            set_tests_properties(
+                ${TEST_NAME}
+                PROPERTIES
+                    ENVIRONMENT "${TEST_ENVIRONMENT}"
                 )
-        endif()
 
-        # Set test properties
-        set_tests_properties(
-            system.tools.ddsrouter.${TEST}
-            PROPERTIES
-                ENVIRONMENT "${TEST_ENVIRONMENT}"
-            )
-
+        endforeach()
     endforeach()
 
     unset(TEST_ENVIRONMENT)
