@@ -33,7 +33,8 @@ namespace ddsrouter {
 namespace yaml {
 
 configuration::DDSRouterConfiguration
-    YamlReaderConfiguration::get_ddsrouter_configuration(const Yaml& yml)
+YamlReaderConfiguration::get_ddsrouter_configuration(
+        const Yaml& yml)
 {
     try
     {
@@ -70,12 +71,12 @@ configuration::DDSRouterConfiguration
         auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
 
         // Check it is a list
-        if(!participants_configurations_yml.IsSequence())
+        if (!participants_configurations_yml.IsSequence())
         {
             throw ConfigurationException(
-                utils::Formatter() <<
-                "Participant configurations must be specified in an array under tag: " <<
-                COLLECTION_PARTICIPANTS_TAG);
+                      utils::Formatter() <<
+                          "Participant configurations must be specified in an array under tag: " <<
+                          COLLECTION_PARTICIPANTS_TAG);
         }
 
         for (auto conf : participants_configurations_yml)
@@ -91,15 +92,16 @@ configuration::DDSRouterConfiguration
             builtin_topics,
             participants_configurations);
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error loading DDS Router configuration:\n " << e.what());
+                  utils::Formatter() << "Error loading DDS Router configuration:\n " << e.what());
     }
 }
 
 std::shared_ptr<configuration::ParticipantConfiguration>
-    YamlReaderConfiguration::participants_yaml_factory_(const Yaml& yml)
+YamlReaderConfiguration::participants_yaml_factory_(
+        const Yaml& yml)
 {
     // Kind required
     ParticipantKind kind = YamlReader::get<ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
@@ -108,30 +110,31 @@ std::shared_ptr<configuration::ParticipantConfiguration>
 
     switch (kind())
     {
-    case ParticipantKind::VOID:
-    case ParticipantKind::ECHO:
-    case ParticipantKind::DUMMY:
-        return std::make_shared<configuration::ParticipantConfiguration>(
-            YamlReader::get<configuration::ParticipantConfiguration>(yml));
+        case ParticipantKind::VOID:
+        case ParticipantKind::ECHO:
+        case ParticipantKind::DUMMY:
+            return std::make_shared<configuration::ParticipantConfiguration>(
+                YamlReader::get<configuration::ParticipantConfiguration>(yml));
 
-    case ParticipantKind::SIMPLE_RTPS:
-        return std::make_shared<configuration::SimpleParticipantConfiguration>(
-            YamlReader::get<configuration::SimpleParticipantConfiguration>(yml));
+        case ParticipantKind::SIMPLE_RTPS:
+            return std::make_shared<configuration::SimpleParticipantConfiguration>(
+                YamlReader::get<configuration::SimpleParticipantConfiguration>(yml));
 
-    case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-    case ParticipantKind::WAN:
-        return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml));
+        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::WAN:
+            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml));
 
-    default:
-        throw ConfigurationException(
-            utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
-        break;
+        default:
+            throw ConfigurationException(
+                      utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
+            break;
     }
 }
 
 configuration::DDSRouterConfiguration
-    YamlReaderConfiguration::load_ddsrouter_configuration_from_file(const std::string& file_path)
+YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+        const std::string& file_path)
 {
     try
     {
@@ -139,15 +142,15 @@ configuration::DDSRouterConfiguration
 
         // Load DDS Router Configuration
         configuration::DDSRouterConfiguration router_configuration =
-            yaml::YamlReaderConfiguration::get_ddsrouter_configuration(yml);
+                yaml::YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
         return router_configuration;
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
-            "> :\n " << e.what());
+                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
+                      "> :\n " << e.what());
     }
 }
 

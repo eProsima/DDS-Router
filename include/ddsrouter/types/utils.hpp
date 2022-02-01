@@ -219,7 +219,8 @@ void tsnh(
  * @brief Convert a elements set into a shared ptr elements set.
  */
 template <typename Parent, typename Child>
-std::set<std::shared_ptr<Parent>> convert_set_to_shared(std::set<Child> set)
+std::set<std::shared_ptr<Parent>> convert_set_to_shared(
+        std::set<Child> set)
 {
     FORCE_TEMPLATE_SUBCLASS(Parent, Child);
 

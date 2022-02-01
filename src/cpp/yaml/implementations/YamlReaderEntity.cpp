@@ -39,64 +39,72 @@ namespace ddsrouter {
 namespace yaml {
 
 template <>
-TransportProtocol YamlReader::get<TransportProtocol>(const Yaml& yml)
+TransportProtocol YamlReader::get<TransportProtocol>(
+        const Yaml& yml)
 {
     return get_enumeration<TransportProtocol>(
         yml,
-        {
-            {ADDRESS_TRANSPORT_TCP_TAG, TransportProtocol::TCP},
-            {ADDRESS_TRANSPORT_UDP_TAG, TransportProtocol::UDP},
-        });
+                {
+                    {ADDRESS_TRANSPORT_TCP_TAG, TransportProtocol::TCP},
+                    {ADDRESS_TRANSPORT_UDP_TAG, TransportProtocol::UDP},
+                });
 }
 
 template <>
-IpVersion YamlReader::get<IpVersion>(const Yaml& yml)
+IpVersion YamlReader::get<IpVersion>(
+        const Yaml& yml)
 {
     return get_enumeration<IpVersion>(
         yml,
-        {
-            {ADDRESS_IP_VERSION_V4_TAG, IpVersion::IPv4},
-            {ADDRESS_IP_VERSION_V6_TAG, IpVersion::IPv6},
-        });
+                {
+                    {ADDRESS_IP_VERSION_V4_TAG, IpVersion::IPv4},
+                    {ADDRESS_IP_VERSION_V6_TAG, IpVersion::IPv6},
+                });
 }
 
 template <>
-PortType YamlReader::get<PortType>(const Yaml& yml)
+PortType YamlReader::get<PortType>(
+        const Yaml& yml)
 {
     // Domain id required
     return PortType(get_scalar<PortType>(yml));
 }
 
 template <>
-IpType YamlReader::get<IpType>(const Yaml& yml)
+IpType YamlReader::get<IpType>(
+        const Yaml& yml)
 {
     // Domain id required
     return IpType(get_scalar<IpType>(yml));
 }
 
 template <>
-ParticipantId YamlReader::get<ParticipantId>(const Yaml& yml)
+ParticipantId YamlReader::get<ParticipantId>(
+        const Yaml& yml)
 {
     // Participant name required
     return ParticipantId(get_scalar<std::string>(yml));
 }
 
 template <>
-ParticipantKind YamlReader::get<ParticipantKind>(const Yaml& yml)
+ParticipantKind YamlReader::get<ParticipantKind>(
+        const Yaml& yml)
 {
     // Participant kind required
     return ParticipantKind::participant_kind_from_name(get_scalar<std::string>(yml));
 }
 
 template <>
-DomainId YamlReader::get<DomainId>(const Yaml& yml)
+DomainId YamlReader::get<DomainId>(
+        const Yaml& yml)
 {
     // Domain id required
     return DomainId(get_scalar<DomainIdType>(yml));
 }
 
 template <>
-GuidPrefix YamlReader::get<GuidPrefix>(const Yaml& yml)
+GuidPrefix YamlReader::get<GuidPrefix>(
+        const Yaml& yml)
 {
     // If guid exists, use it. Non mandatory.
     if (is_tag_present(yml, DISCOVERY_SERVER_GUID_TAG))
@@ -128,7 +136,8 @@ GuidPrefix YamlReader::get<GuidPrefix>(const Yaml& yml)
 }
 
 template <>
-Address YamlReader::get<Address>(const Yaml& yml)
+Address YamlReader::get<Address>(
+        const Yaml& yml)
 {
     // Optional get IP version
     IpVersion ip_version;
@@ -161,7 +170,7 @@ Address YamlReader::get<Address>(const Yaml& yml)
     if (ip_set && domain_name_set)
     {
         logWarning(DDSROUTER_YAML,
-            "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set");
+                "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set");
     }
     else if (domain_name_set)
     {
@@ -176,8 +185,8 @@ Address YamlReader::get<Address>(const Yaml& yml)
                 if (dns_response.first.empty())
                 {
                     throw ConfigurationException(
-                        utils::Formatter() << "Could not resolve IPv4 for domain name <" <<
-                        domain_name << ">.");
+                              utils::Formatter() << "Could not resolve IPv4 for domain name <" <<
+                                  domain_name << ">.");
                 }
                 else
                 {
@@ -190,8 +199,8 @@ Address YamlReader::get<Address>(const Yaml& yml)
                 if (dns_response.second.empty())
                 {
                     throw ConfigurationException(
-                        utils::Formatter() << "Could not resolve IPv6 for domain name <" <<
-                        domain_name << ">.");
+                              utils::Formatter() << "Could not resolve IPv6 for domain name <" <<
+                                  domain_name << ">.");
                 }
                 else
                 {
@@ -214,8 +223,8 @@ Address YamlReader::get<Address>(const Yaml& yml)
             else
             {
                 throw ConfigurationException(
-                    utils::Formatter() << "Could not resolve domain name <" <<
-                    domain_name << ">.");
+                          utils::Formatter() << "Could not resolve domain name <" <<
+                              domain_name << ">.");
             }
         }
     }
@@ -256,7 +265,8 @@ Address YamlReader::get<Address>(const Yaml& yml)
 }
 
 template <>
-DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddress>(const Yaml& yml)
+DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddress>(
+        const Yaml& yml)
 {
     // GuidPrefix required
     GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_TAG);
@@ -269,7 +279,8 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
 }
 
 template <>
-RealTopic YamlReader::get<RealTopic>(const Yaml& yml)
+RealTopic YamlReader::get<RealTopic>(
+        const Yaml& yml)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -297,7 +308,8 @@ RealTopic YamlReader::get<RealTopic>(const Yaml& yml)
 }
 
 template <>
-WildcardTopic YamlReader::get<WildcardTopic>(const Yaml& yml)
+WildcardTopic YamlReader::get<WildcardTopic>(
+        const Yaml& yml)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -345,7 +357,7 @@ WildcardTopic YamlReader::get<WildcardTopic>(const Yaml& yml)
 
 template <>
 std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<security::TlsConfiguration>>(
-    const Yaml& yml)
+        const Yaml& yml)
 {
     // Optional private key
     std::string private_key_file;

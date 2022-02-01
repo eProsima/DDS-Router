@@ -89,7 +89,7 @@ int main(
 
         // Load DDS Router Configuration
         configuration::DDSRouterConfiguration router_configuration =
-            yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
 
         // Create DDS Router
         DDSRouter router(router_configuration);
@@ -107,7 +107,7 @@ int main(
                     try
                     {
                         configuration::DDSRouterConfiguration router_configuration =
-                            yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                         router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
@@ -139,7 +139,7 @@ int main(
                         try
                         {
                             configuration::DDSRouterConfiguration router_configuration =
-                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                             router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)

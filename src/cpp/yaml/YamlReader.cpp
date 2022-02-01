@@ -30,18 +30,22 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-bool YamlReader::is_tag_present(const Yaml& yml, const TagType& tag)
+bool YamlReader::is_tag_present(
+        const Yaml& yml,
+        const TagType& tag)
 {
     if (!yml.IsMap())
     {
         throw ConfigurationException(
-            utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
+                  utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
     }
 
     return (yml[tag]);
 }
 
-Yaml YamlReader::get_value_in_tag(const Yaml& yml, const TagType& tag)
+Yaml YamlReader::get_value_in_tag(
+        const Yaml& yml,
+        const TagType& tag)
 {
     if (is_tag_present(yml, tag))
     {
@@ -50,7 +54,7 @@ Yaml YamlReader::get_value_in_tag(const Yaml& yml, const TagType& tag)
     else
     {
         throw ConfigurationException(
-            utils::Formatter() << "Required tag not found: <" << tag << ">.");
+                  utils::Formatter() << "Required tag not found: <" << tag << ">.");
     }
 }
 

@@ -31,7 +31,8 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 {
-    const char* yml_str = R"(
+    const char* yml_str =
+            R"(
             participants:
               - name: "P1"
                 kind: "echo"
@@ -43,7 +44,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     // Load configuration
     configuration::DDSRouterConfiguration configuration_result =
-        YamlReaderConfiguration::get_ddsrouter_configuration(yml);
+            YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
     utils::Formatter error_msg;
@@ -56,7 +57,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     // Check Participant configurations
     std::set<std::shared_ptr<eprosima::ddsrouter::configuration::ParticipantConfiguration>>
-        participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations();
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
@@ -72,7 +73,8 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
  */
 TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 {
-    const char* yml_str = R"(
+    const char* yml_str =
+            R"(
             builtin:
               - name: "rt/chatter"
                 type: "std_msgs::msg::dds_::String_"
@@ -92,7 +94,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Load configuration
     configuration::DDSRouterConfiguration configuration_result =
-        YamlReaderConfiguration::get_ddsrouter_configuration(yml);
+            YamlReaderConfiguration::get_ddsrouter_configuration(yml);
 
     // Check is valid
     utils::Formatter error_msg;
@@ -112,7 +114,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Check Participant configurations
     std::set<std::shared_ptr<eprosima::ddsrouter::configuration::ParticipantConfiguration>>
-        participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations();
 
     ASSERT_EQ(participant_configurations.size(), 3);
 

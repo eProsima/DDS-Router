@@ -29,8 +29,17 @@ namespace test {
 template <typename T>
 struct YamlField
 {
-    YamlField() : present(false) {}
-    YamlField(T arg_value) : value(arg_value) , present(true) {}
+    YamlField()
+        : present(false)
+    {
+    }
+
+    YamlField(
+            T arg_value)
+        : value(arg_value)
+        , present(true)
+    {
+    }
 
     bool present;
     T value;
@@ -38,9 +47,9 @@ struct YamlField
 
 template <typename T>
 void add_field_to_yaml(
-    Yaml& yml,
-    const YamlField<T>& field,
-    const std::string& tag)
+        Yaml& yml,
+        const YamlField<T>& field,
+        const std::string& tag)
 {
     if (field.present)
     {

@@ -26,10 +26,10 @@ using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::yaml;
 
 void real_topic_to_yaml(
-    Yaml& yml,
-    const test::YamlField<std::string>& name,
-    const test::YamlField<std::string>& type,
-    const test::YamlField<bool>& keyed)
+        Yaml& yml,
+        const test::YamlField<std::string>& name,
+        const test::YamlField<std::string>& type,
+        const test::YamlField<bool>& keyed)
 {
     test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
     test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
@@ -37,10 +37,10 @@ void real_topic_to_yaml(
 }
 
 void compare_topic(
-    RealTopic topic,
-    std::string name,
-    std::string type,
-    bool keyed)
+        RealTopic topic,
+        std::string name,
+        std::string type,
+        bool keyed)
 {
     ASSERT_EQ(topic.topic_name(), name);
     ASSERT_EQ(topic.topic_type(), type);

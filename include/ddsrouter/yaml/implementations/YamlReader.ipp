@@ -28,19 +28,21 @@ namespace ddsrouter {
 namespace yaml {
 
 template <typename T, YamlReaderVersion V>
-T YamlReader::get(const Yaml& yml, const TagType& tag)
+T YamlReader::get(
+        const Yaml& yml,
+        const TagType& tag)
 {
     // ATTENTION: This try catch can be avoided, it is only used to add verbose information
     try
     {
         return get<T, V>(get_value_in_tag(yml, tag));
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() <<
-            "Error getting required value of type <" << TYPE_NAME(T) <<
-            "> in tag <" << tag << "> :\n " << e.what());
+                  utils::Formatter() <<
+                      "Error getting required value of type <" << TYPE_NAME(T) <<
+                      "> in tag <" << tag << "> :\n " << e.what());
     }
 
     utils::tsnh(utils::Formatter() << "Impossible to arrive to this point.");
@@ -48,62 +50,68 @@ T YamlReader::get(const Yaml& yml, const TagType& tag)
 }
 
 template <typename T, YamlReaderVersion V>
-T YamlReader::get_scalar(const Yaml& yml, const TagType& tag)
+T YamlReader::get_scalar(
+        const Yaml& yml,
+        const TagType& tag)
 {
     try
     {
         return get_scalar<T, V>(get_value_in_tag(yml, tag));
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error reading yaml scalar under tag <" << tag << "> :\n " << e.what());
+                  utils::Formatter() << "Error reading yaml scalar under tag <" << tag << "> :\n " << e.what());
     }
 }
 
 template <typename T, YamlReaderVersion V>
-T YamlReader::get_scalar(const Yaml& yml)
+T YamlReader::get_scalar(
+        const Yaml& yml)
 {
     if (!yml.IsScalar())
     {
         throw ConfigurationException(
-            utils::Formatter() <<
-            "Trying to read a primitive value of type <" << TYPE_NAME(T) << "> from a non scalar yaml.");
+                  utils::Formatter() <<
+                      "Trying to read a primitive value of type <" << TYPE_NAME(T) << "> from a non scalar yaml.");
     }
 
     try
     {
         return yml.as<T>();
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() <<
-            "Incorrect format for primitive value, expected <" << TYPE_NAME(T) << ">:\n " << e.what());
+                  utils::Formatter() <<
+                      "Incorrect format for primitive value, expected <" << TYPE_NAME(T) << ">:\n " << e.what());
     }
 }
 
 template <typename T, YamlReaderVersion V>
-std::list<T> YamlReader::get_list(const Yaml& yml, const TagType& tag)
+std::list<T> YamlReader::get_list(
+        const Yaml& yml,
+        const TagType& tag)
 {
     try
     {
         return get_list<T, V>(get_value_in_tag(yml, tag));
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error reading yaml list under tag <" << tag << "> :\n " << e.what());
+                  utils::Formatter() << "Error reading yaml list under tag <" << tag << "> :\n " << e.what());
     }
 }
 
 template <typename T, YamlReaderVersion V>
-std::list<T> YamlReader::get_list(const Yaml& yml)
+std::list<T> YamlReader::get_list(
+        const Yaml& yml)
 {
     if (!yml.IsSequence())
     {
         throw ConfigurationException(
-            utils::Formatter() << "Incorrect format, yaml Sequence expected.");
+                  utils::Formatter() << "Incorrect format, yaml Sequence expected.");
     }
 
     std::list<T> result;
@@ -115,17 +123,20 @@ std::list<T> YamlReader::get_list(const Yaml& yml)
             result.push_back(get<T, V>(element));
         }
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error reading yaml sequence of type <" << TYPE_NAME(T) << "> :\n " << e.what());
+                  utils::Formatter() << "Error reading yaml sequence of type <" << TYPE_NAME(T) << "> :\n " <<
+                            e.what());
     }
 
     return result;
 }
 
 template <typename T, YamlReaderVersion V>
-std::set<T> YamlReader::get_set(const Yaml& yml, const TagType& tag)
+std::set<T> YamlReader::get_set(
+        const Yaml& yml,
+        const TagType& tag)
 {
     std::list<T> elements_list = get_list<T, V>(yml, tag);
     return std::set<T>(elements_list.begin(), elements_list.end());
@@ -133,23 +144,25 @@ std::set<T> YamlReader::get_set(const Yaml& yml, const TagType& tag)
 
 template <typename T, YamlReaderVersion V>
 T YamlReader::get_enumeration(
-    const Yaml& yml,
-    const TagType& tag,
-    const std::map<TagType, T>& enum_values)
+        const Yaml& yml,
+        const TagType& tag,
+        const std::map<TagType, T>& enum_values)
 {
     try
     {
         return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
     }
-    catch(const std::exception& e)
+    catch (const std::exception& e)
     {
         throw ConfigurationException(
-            utils::Formatter() << "Error reading enumeration value under tag <" << tag << "> :\n " << e.what());
+                  utils::Formatter() << "Error reading enumeration value under tag <" << tag << "> :\n " << e.what());
     }
 }
 
 template <typename T, YamlReaderVersion V>
-T YamlReader::get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_values)
+T YamlReader::get_enumeration(
+        const Yaml& yml,
+        const std::map<TagType, T>& enum_values)
 {
     TagType value = get_scalar<TagType>(yml);
 
@@ -159,7 +172,7 @@ T YamlReader::get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_
     if (it == enum_values.end())
     {
         throw ConfigurationException(
-            utils::Formatter() << "Value <" << value << "> is not valid in enumeration <" << TYPE_NAME(T) << ".");
+                  utils::Formatter() << "Value <" << value << "> is not valid in enumeration <" << TYPE_NAME(T) << ".");
     }
     else
     {

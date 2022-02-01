@@ -32,7 +32,8 @@ class YamlManager
 {
 public:
 
-    static Yaml load_file(const std::string& file_path);
+    static Yaml load_file(
+            const std::string& file_path);
 };
 
 } /* namespace yaml */

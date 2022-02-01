@@ -36,7 +36,8 @@ namespace ddsrouter {
 namespace yaml {
 
 template <>
-configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(const Yaml& yml)
+configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(
+        const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
@@ -48,7 +49,8 @@ configuration::ParticipantConfiguration YamlReader::get<configuration::Participa
 }
 
 template <>
-configuration::SimpleParticipantConfiguration YamlReader::get<configuration::SimpleParticipantConfiguration>(const Yaml& yml)
+configuration::SimpleParticipantConfiguration YamlReader::get<configuration::SimpleParticipantConfiguration>(
+        const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);
@@ -63,7 +65,8 @@ configuration::SimpleParticipantConfiguration YamlReader::get<configuration::Sim
 }
 
 template <>
-configuration::DiscoveryServerParticipantConfiguration YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(const Yaml& yml)
+configuration::DiscoveryServerParticipantConfiguration YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(
+        const Yaml& yml)
 {
     // Id required
     ParticipantId id = get<ParticipantId>(yml, PARTICIPANT_NAME_TAG);

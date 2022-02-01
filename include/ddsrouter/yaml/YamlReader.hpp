@@ -42,37 +42,57 @@ class YamlReader
 public:
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get(const Yaml& yml, const TagType& tag);
+    static T get(
+            const Yaml& yml,
+            const TagType& tag);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static std::list<T> get_list(const Yaml& yml, const TagType& tag);
+    static std::list<T> get_list(
+            const Yaml& yml,
+            const TagType& tag);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static std::set<T> get_set(const Yaml& yml, const TagType& tag);
+    static std::set<T> get_set(
+            const Yaml& yml,
+            const TagType& tag);
 
-    static bool is_tag_present(const Yaml& yml, const TagType& tag);
+    static bool is_tag_present(
+            const Yaml& yml,
+            const TagType& tag);
 
 protected:
 
-    static Yaml get_value_in_tag(const Yaml& yml, const TagType& tag);
+    static Yaml get_value_in_tag(
+            const Yaml& yml,
+            const TagType& tag);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get(const Yaml& yml);
+    static T get(
+            const Yaml& yml);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get_scalar(const Yaml& yml);
+    static T get_scalar(
+            const Yaml& yml);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get_scalar(const Yaml& yml, const TagType& tag);
+    static T get_scalar(
+            const Yaml& yml,
+            const TagType& tag);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static std::list<T> get_list(const Yaml& yml);
+    static std::list<T> get_list(
+            const Yaml& yml);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get_enumeration(const Yaml& yml, const std::map<TagType, T>& enum_values);
+    static T get_enumeration(
+            const Yaml& yml,
+            const std::map<TagType, T>& enum_values);
 
     template <typename T, YamlReaderVersion V = V_0_2>
-    static T get_enumeration(const Yaml& yml, const TagType& tag, const std::map<TagType, T>& enum_values);
+    static T get_enumeration(
+            const Yaml& yml,
+            const TagType& tag,
+            const std::map<TagType, T>& enum_values);
 };
 
 } /* namespace yaml */
