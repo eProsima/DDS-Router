@@ -30,7 +30,6 @@ using namespace eprosima::ddsrouter::yaml;
  *
  * POSITIVE CASES:
  * - empty
- * - without ip version with ip ipv6
  * - with ip version ipv6
  */
 TEST(YamlGetEntityAddressTest, get_address_defaults)
@@ -43,36 +42,7 @@ TEST(YamlGetEntityAddressTest, get_address_defaults)
         yml["address"] = yml_address;
 
         // Get Address from Yaml
-        Address result = YamlReader::get<Address>(yml, "address");
-
-        // Check result
-        ASSERT_EQ(Address::default_ip(), result.ip());
-        ASSERT_EQ(Address::default_port(), result.port());
-        ASSERT_EQ(Address::default_transport_protocol(), result.transport_protocol());
-        ASSERT_EQ(Address::default_ip_version(), result.ip_version());
-    }
-
-    // without ip version with ip ipv6
-    {
-        Yaml yml_address;
-
-        // Add IP version
-        test::add_field_to_yaml(
-            yml_address,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
-            ADDRESS_IP_VERSION_TAG);
-
-        Yaml yml;
-        yml["address"] = yml_address;
-
-        // Get Address from Yaml
-        Address result = YamlReader::get<Address>(yml, "address");
-
-        // Check result
-        ASSERT_EQ(Address::default_ip(IPv6), result.ip());
-        ASSERT_EQ(Address::default_port(), result.port());
-        ASSERT_EQ(Address::default_transport_protocol(), result.transport_protocol());
-        ASSERT_EQ(IpVersion::IPv6, result.ip_version());
+        ASSERT_THROW(YamlReader::get<Address>(yml, "address"), ConfigurationException);
     }
 
     // with ip version ipv6
