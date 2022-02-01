@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#########################
-# Yaml GetEntities Test #
-#########################
+################################
+# Yaml GetEntities Adress Test #
+################################
 
 set(TEST_NAME YamlGetEntityAddressTest)
 
@@ -34,6 +34,38 @@ set(TEST_LIST
         get_address_ip
         get_address_domain
         get_address_defaults
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+################################################
+# Yaml GetEntities DiscoveryServerAddress Test #
+################################################
+
+set(TEST_NAME YamlGetEntityDiscoveryServerAddressTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
+        YamlGetEntityDiscoveryServerAddressTest.cpp
+    )
+sources_for_test_utils("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_ds_address
+        get_ds_address_negative
     )
 
 set(TEST_EXTRA_LIBRARIES

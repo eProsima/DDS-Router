@@ -19,6 +19,10 @@
 #ifndef _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
 #define _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
 
+#include <sstream>
+
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/yaml/Yaml.hpp>
 
 namespace eprosima {
@@ -54,6 +58,64 @@ void add_field_to_yaml(
     if (field.present)
     {
         yml[tag] = field.value;
+    }
+}
+
+void guid_prefix_to_yaml(
+        Yaml& yml,
+        const GuidPrefix& guid_prefix)
+{
+    std::stringstream ss;
+    ss << guid_prefix;
+
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<std::string>(ss.str()),
+        DISCOVERY_SERVER_GUID_TAG);
+}
+
+void address_to_yaml(
+        Yaml& yml,
+        const Address& address)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<IpType>(address.ip()),
+        ADDRESS_IP_TAG);
+
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<PortType>(address.port()),
+        ADDRESS_PORT_TAG);
+
+    if (address.transport_protocol() == UDP)
+    {
+        test::add_field_to_yaml(
+            yml,
+            test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
+            ADDRESS_TRANSPORT_TAG);
+    }
+    else if (address.transport_protocol() == TCP)
+    {
+        test::add_field_to_yaml(
+            yml,
+            test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
+            ADDRESS_TRANSPORT_TAG);
+    }
+
+    if (address.ip_version() == IPv4)
+    {
+        test::add_field_to_yaml(
+            yml,
+            test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
+            ADDRESS_IP_VERSION_TAG);
+    }
+    else if (address.ip_version() == IPv6)
+    {
+        test::add_field_to_yaml(
+            yml,
+            test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
+            ADDRESS_IP_VERSION_TAG);
     }
 }
 

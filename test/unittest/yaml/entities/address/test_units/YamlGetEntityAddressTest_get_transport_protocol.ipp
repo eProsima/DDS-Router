@@ -16,7 +16,6 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter/types/address/Address.hpp>
-#include <ddsrouter/types/topic/RealTopic.hpp>
 #include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 

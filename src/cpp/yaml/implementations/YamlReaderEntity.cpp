@@ -244,7 +244,7 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
         const Yaml& yml)
 {
     // GuidPrefix required
-    GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_TAG);
+    GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG);
 
     // Addresses required
     std::set<Address> addresses = get_set<Address>(yml, COLLECTION_ADDRESSES_TAG);

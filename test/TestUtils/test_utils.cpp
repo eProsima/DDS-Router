@@ -126,7 +126,7 @@ GuidPrefix random_guid_prefix(
 Address random_address(
         uint16_t seed /* = 0 */)
 {
-    return Address();
+    return Address("127.0.0.1", seed, UDP);
 }
 
 std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
