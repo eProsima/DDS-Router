@@ -17,6 +17,7 @@
  *
  */
 
+#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/event/FileWatcherHandler.hpp>
 #include <ddsrouter/event/PeriodicEventHandler.hpp>
@@ -24,15 +25,15 @@
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/constants.hpp>
-#include <ddsrouter/types/RawConfiguration.hpp>
 #include <ddsrouter/types/ReturnCode.hpp>
 #include <ddsrouter/types/Time.hpp>
+#include <ddsrouter/yaml/YamlReaderConfiguration.hpp>
+#include <ddsrouter/yaml/YamlManager.hpp>
 
 #include "user_interface/arguments_configuration.hpp"
 #include "user_interface/ProcessReturnCode.hpp"
 
 using namespace eprosima::ddsrouter;
-
 
 int main(
         int argc,
@@ -87,8 +88,8 @@ int main(
         // DDS Router Initialization
 
         // Load DDS Router Configuration
-        RawConfiguration router_configuration = load_configuration_from_file(file_path);
-
+        configuration::DDSRouterConfiguration router_configuration =
+                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
 
         // Create DDS Router
         DDSRouter router(router_configuration);
@@ -105,7 +106,8 @@ int main(
                     logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
                     try
                     {
-                        RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                        configuration::DDSRouterConfiguration router_configuration =
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                         router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
@@ -136,7 +138,8 @@ int main(
                         logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
                         try
                         {
-                            RawConfiguration router_configuration = load_configuration_from_file(file_path);
+                            configuration::DDSRouterConfiguration router_configuration =
+                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                             router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)
@@ -173,13 +176,15 @@ int main(
     {
         logError(DDSROUTER_ERROR,
                 "Error Loading DDS Router Configuration from file " << file_path <<
-                ". Error message: " << e.what());
+                ". Error message:\n " <<
+                e.what());
         return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
     catch (const InitializationException& e)
     {
         logError(DDSROUTER_ERROR,
-                "Error Initializing DDS Router. Error message: " << e.what());
+                "Error Initializing DDS Router. Error message:\n " <<
+                e.what());
         return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
 

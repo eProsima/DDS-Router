@@ -12,7 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(trivial)
+set(TEST_NAME YamlTagsTest)
 
-# TODO: Add subdirectory when ready
-# add_subdirectory(dds)
+set(TEST_SOURCES
+    YamlTagsTest.cpp
+    ${PROJECT_SOURCE_DIR}/src/cpp/yaml/yaml_configuration_tags.cpp)
+
+set(TEST_LIST
+    yaml_tags)
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")

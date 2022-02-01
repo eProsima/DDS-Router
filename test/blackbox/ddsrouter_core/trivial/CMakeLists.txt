@@ -12,7 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(trivial)
+################
+# Trivial Test #
+################
 
-# TODO: Add subdirectory when ready
-# add_subdirectory(dds)
+set(TEST_NAME
+    TrivialTest)
+
+set(TEST_SOURCES
+    TrivialTest.cpp)
+
+set(TEST_LIST
+    trivial_void_initialization
+    trivial_dummy_initialization
+    trivial_communication)
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}")

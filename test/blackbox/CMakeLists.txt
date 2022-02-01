@@ -50,7 +50,5 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
 
 endfunction(add_blackbox_executable)
 
-# TODO(annapurna) uncomment when yaml module is ready or redo without yaml (best option)
-# add_subdirectory(ddsrouter_core)
-
+add_subdirectory(ddsrouter_core)
 add_subdirectory(implementations)

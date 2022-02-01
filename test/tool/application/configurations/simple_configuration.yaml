@@ -1,6 +1,9 @@
 
-echo:
-  kind: echo
+participants:
 
-simple:
-  domain: 0
+  - name: echo
+    kind: echo
+
+  - name: simple
+    kind: simple
+    domain: 0
