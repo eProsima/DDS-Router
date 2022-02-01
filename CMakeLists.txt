@@ -145,8 +145,7 @@ add_subdirectory(src/cpp)
 ###############################################################################
 # Compile application
 ###############################################################################
-# TODO(annapurna): change to default ON when library is ready
-option(COMPILE_TOOLS "Compile and install tools" OFF)
+option(COMPILE_TOOLS "Compile and install tools" ON)
 
 if (COMPILE_TOOLS)
     add_subdirectory(tool)

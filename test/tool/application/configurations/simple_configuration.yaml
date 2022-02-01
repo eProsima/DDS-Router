@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 # 1 Echo Participant
 # 1 Simple Participant in domain 0
 # 2 topics, one with key and one without
@@ -12,6 +13,13 @@ allowlist:
 
 echo:
   kind: echo
+=======
+participants:
+>>>>>>> bef4df7... Yaml module [13576] (#129)
 
-simple:
-  domain: 0
+  - name: echo
+    kind: echo
+
+  - name: simple
+    kind: simple
+    domain: 0

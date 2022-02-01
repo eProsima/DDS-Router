@@ -1,6 +1,8 @@
 
-void0:
-  kind: void
+participants:
 
-void1:
-  kind: void
+  - name: void0
+    kind: void
+
+  - name: void1
+    kind: void
