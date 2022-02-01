@@ -78,21 +78,13 @@ int main(
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
-        // First of all, create signal handler so SIGINT does not break the program while initializing
-        // Signal handler
-        std::unique_ptr<event::SignalHandler<event::SIGNAL_SIGINT>> signal_handler_sigint =
-                std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>();
-        std::unique_ptr<event::SignalHandler<event::SIGNAL_SIGTERM>> signal_handler_sigterm =
-                std::make_unique<event::SignalHandler<event::SIGNAL_SIGTERM>>();
-
+        // First of all, create signal handler so SIGINT and SIGTERM does not break the program while initializing
         event::MultipleEventHandler signal_handlers;
-        // std::unique_ptr<event::MultipleEventHandler> signal_handlers =
-                // std::make_unique<event::MultipleEventHandler>();
 
-        signal_handlers.register_event_handler<int>(
-            std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>());
-        // signal_handlers->register_event_handler<>(signal_handler_sigint);
-        // signal_handlers->register_event_handler<>(signal_handler_sigterm);
+        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
+            std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
+        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
+            std::make_unique<event::SignalHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization
@@ -164,7 +156,7 @@ int main(
         router.start();
 
         // Wait until signal arrives
-        signal_handler_sigint->wait_for_event();
+        signal_handlers.wait_for_event();
 
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)

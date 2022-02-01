@@ -59,6 +59,7 @@ template <int SigNum>
 SignalHandler<SigNum>::~SignalHandler()
 {
     unset_callback();
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler destroyed for signal: " << SigNum << ".");
 }
 
 template <int SigNum>

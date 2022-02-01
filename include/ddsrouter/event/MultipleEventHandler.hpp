@@ -40,12 +40,14 @@ public:
 
     MultipleEventHandler();
 
-    template <typename ... Args>
-    void register_event_handler(std::unique_ptr<EventHandler<Args...>> handler) noexcept;
+    ~MultipleEventHandler();
+
+    template <typename T, typename ... Args>
+    void register_event_handler(std::unique_ptr<T> handler) noexcept;
 
 protected:
 
-    std::list<std::unique_ptr<EventHandler>> handlers_registered_;
+    std::list<std::unique_ptr<IEventHandler>> handlers_registered_;
 };
 
 } /* namespace event */

@@ -24,9 +24,18 @@
 #include <functional>
 #include <mutex>
 
+#include <ddsrouter/types/Log.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
+
+class IBaseEventHandler
+{
+public:
+    virtual ~IBaseEventHandler()
+    {}
+};
 
 /**
  * This class is an interface for any class that implements a handler of any kind of event.
@@ -56,7 +65,7 @@ namespace event {
  * - WARNING: always implement destructor in childs and call \c unset_callback
  */
 template <typename ... Args>
-class EventHandler
+class EventHandler : public IBaseEventHandler
 {
 public:
 
@@ -140,6 +149,16 @@ protected:
      * It is already guarded by \c event_mutex_ .
      */
     virtual void callback_set_nts_() noexcept;
+
+    /**
+     * Protected method to overwrite in child classes if specific functionality is required
+     * when callback was set and it change to a new one.
+     *
+     * If it is not overwritten, it does nothing.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_change_nts_() noexcept;
 
     /**
      * Protected method to overwrite in child classes if specific functionality is required

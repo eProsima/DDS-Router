@@ -34,10 +34,23 @@ MultipleEventHandler::MultipleEventHandler()
     : MultipleEventHandler([]()
     {
         // Default callback when it is not set
-        logDebug(DDSROUTER_SIGNALHANDLER,
+        logDebug(DDSROUTER_MULTIPLEEVENTHANDLER,
             "Event received in MultipleEventHandler.");
     })
 {
+}
+
+MultipleEventHandler::~MultipleEventHandler()
+{
+    // Destroy every object inside before this is destroyed, so in case a callback arise,
+    // it does not call a deleted object
+    for (std::unique_ptr<IEventHandler>& event : handlers_registered_)
+    {
+        event.reset();
+    }
+
+    logDebug(DDSROUTER_MULTIPLEEVENTHANDLER,
+            "MultipleEventHandler has been destroyed.");
 }
 
 } /* namespace event */

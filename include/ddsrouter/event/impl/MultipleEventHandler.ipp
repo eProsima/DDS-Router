@@ -20,26 +20,27 @@
 #define _DDSROUTER_EVENT_IMPL_MULTIPLEEVENTHANDLER_IPP_
 
 #include <functional>
+#include <memory>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-template <typename ... Args>
-void MultipleEventHandler::register_event_handler(std::unique_ptr<EventHandler<Args...>> handler) noexcept
+template <typename T, typename ... Args>
+void MultipleEventHandler::register_event_handler(std::unique_ptr<T> handler) noexcept
 {
+    // Set new callback to handler so every time even occurred, it calls to this event
     std::function<void(Args...)> new_callback =
             [this]
                 (Args... args)
             {
-                // static_cast<void> (args);
                 this->event_occurred_();
             };
     handler->set_callback(new_callback);
 
+    // Store handler. It will be destroyed once this is destroyed
     handlers_registered_.push_back(std::move(handler));
 }
-
 
 } /* namespace event */
 } /* namespace ddsrouter */
