@@ -30,9 +30,20 @@ namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
+/**
+ * @brief Parent class for EventHandler
+ *
+ * \c EventHandler class is a template, and so there is no common parent class for every EventHandler object.
+ * This class represents this common parent class without template, so it could be created a common
+ * interface of every kind of EventHandler .
+ *
+ * This class does not implement nor define any method or variable required. It is merely an auxiliar
+ * class for container of EventHandlers.
+ */
 class IBaseEventHandler
 {
 public:
+    //! This virtual destructor is required so objects could be destroyed from its common interface.
     virtual ~IBaseEventHandler()
     {}
 };
@@ -53,6 +64,8 @@ public:
  * EventHandler object is disabled.
  *
  * It is a template regarding the arguments that the Event Handler needs in its callback.
+ *
+ * It inherits from \c IBaseEventHandler so every \c EventHandler specialization has a common interface.
  *
  * Inherit:
  * In order to create child classes, be aware of:

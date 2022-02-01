@@ -44,10 +44,13 @@ MultipleEventHandler::~MultipleEventHandler()
 {
     // Destroy every object inside before this is destroyed, so in case a callback arise,
     // it does not call a deleted object
-    for (std::unique_ptr<IEventHandler>& event : handlers_registered_)
+    for (std::unique_ptr<IBaseEventHandler>& event : handlers_registered_)
     {
         event.reset();
     }
+
+    // At this point the callback is not recheable, but it should be unset before destroying the object
+    unset_callback();
 
     logDebug(DDSROUTER_MULTIPLEEVENTHANDLER,
             "MultipleEventHandler has been destroyed.");
