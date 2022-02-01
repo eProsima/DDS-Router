@@ -31,6 +31,7 @@ namespace ddsrouter {
 #define FORCE_TEMPLATE_SUBCLASS(base, derived) \
     static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
 
+// TODO: probably in the future is needed to create a utils method that transforms this name to a human reasonable name
 #define TYPE_NAME(x) typeid(x).name()
 
 } /* namespace ddsrouter */

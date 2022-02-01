@@ -50,7 +50,15 @@ T YamlReader::get(const Yaml& yml, const TagType& tag)
 template <typename T, YamlReaderVersion V>
 T YamlReader::get_scalar(const Yaml& yml, const TagType& tag)
 {
-    return get_scalar<T, V>(get_value_in_tag(yml, tag));
+    try
+    {
+        return get_scalar<T, V>(get_value_in_tag(yml, tag));
+    }
+    catch(const std::exception& e)
+    {
+        throw ConfigurationException(
+            utils::Formatter() << "Error reading yaml scalar under tag <" << tag << "> :\n " << e.what());
+    }
 }
 
 template <typename T, YamlReaderVersion V>
@@ -78,7 +86,15 @@ T YamlReader::get_scalar(const Yaml& yml)
 template <typename T, YamlReaderVersion V>
 std::list<T> YamlReader::get_list(const Yaml& yml, const TagType& tag)
 {
-    return get_list<T, V>(get_value_in_tag(yml, tag));
+    try
+    {
+        return get_list<T, V>(get_value_in_tag(yml, tag));
+    }
+    catch(const std::exception& e)
+    {
+        throw ConfigurationException(
+            utils::Formatter() << "Error reading yaml list under tag <" << tag << "> :\n " << e.what());
+    }
 }
 
 template <typename T, YamlReaderVersion V>
@@ -121,7 +137,15 @@ T YamlReader::get_enumeration(
     const TagType& tag,
     const std::map<TagType, T>& enum_values)
 {
-    return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
+    try
+    {
+        return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
+    }
+    catch(const std::exception& e)
+    {
+        throw ConfigurationException(
+            utils::Formatter() << "Error reading enumeration value under tag <" << tag << "> :\n " << e.what());
+    }
 }
 
 template <typename T, YamlReaderVersion V>
