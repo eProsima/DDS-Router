@@ -25,7 +25,6 @@ RUN mkdir resources && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos && \
     mkdir src && \
     vcs import src < ddsrouter.repos && \
-    cd src/fastdds && git checkout hotfix/tcp-close-timeout && cd ../.. && \
     colcon build --event-handlers=console_direct+
 
 COPY ./run.bash /
