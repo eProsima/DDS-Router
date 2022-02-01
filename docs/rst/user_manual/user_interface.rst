@@ -181,6 +181,17 @@ The configuration file will be automatically reloaded according to the specified
 Close Application
 -----------------
 
-In order to stop a |ddsrouter| application, just send an interruption ``SIGINT | ^C`` signal *(signal value 2)* to the
-process.
+In order to stop a |ddsrouter| application, use one of the following OS signals:
 
+SIGINT
+^^^^^^
+
+Send an interruption ``SIGINT | ^C`` signal *(signal value 2)* to the process.
+Press ``Ctrl + C`` in the terminal where the process is running.
+
+SIGTERM
+^^^^^^^
+
+Send an interruption ``SIGTERM`` signal *(signal value 15)* to the process.
+Write command ``kill <pid>`` in a different terminal, where ``<pid>`` is the id of the process running the |ddsrouter|.
+Use ``ps`` or ``top`` arguments to check the process ids.
