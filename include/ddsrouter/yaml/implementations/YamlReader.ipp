@@ -127,7 +127,7 @@ std::list<T> YamlReader::get_list(
     {
         throw ConfigurationException(
                   utils::Formatter() << "Error reading yaml sequence of type <" << TYPE_NAME(T) << "> :\n " <<
-                            e.what());
+                      e.what());
     }
 
     return result;
