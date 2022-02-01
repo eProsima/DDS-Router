@@ -170,63 +170,12 @@ Address YamlReader::get<Address>(
     if (ip_set && domain_name_set)
     {
         logWarning(DDSROUTER_YAML,
-                "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set");
+                "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set.");
     }
-    else if (domain_name_set)
+    else if (!ip_set && !domain_name_set)
     {
-        // Get DNS response
-        auto dns_response = fastrtps::rtps::IPLocator::resolveNameDNS(domain_name);
-
-        // If ip version set, get that ip version, otherwise get the ipv4, if ipv4 is empty get the other
-        if (ip_version_set)
-        {
-            if (ip_version == IPv4)
-            {
-                if (dns_response.first.empty())
-                {
-                    throw ConfigurationException(
-                              utils::Formatter() << "Could not resolve IPv4 for domain name <" <<
-                                  domain_name << ">.");
-                }
-                else
-                {
-                    ip = dns_response.first.begin()->data();
-                }
-            }
-            else
-            {
-                // Assuming: IPv6
-                if (dns_response.second.empty())
-                {
-                    throw ConfigurationException(
-                              utils::Formatter() << "Could not resolve IPv6 for domain name <" <<
-                                  domain_name << ">.");
-                }
-                else
-                {
-                    ip = dns_response.second.begin()->data();
-                }
-            }
-        }
-        else
-        {
-            if (!dns_response.first.empty())
-            {
-                ip = dns_response.first.begin()->data();
-                ip_version = IPv4;
-            }
-            else if (!dns_response.second.empty())
-            {
-                ip = dns_response.second.begin()->data();
-                ip_version = IPv6;
-            }
-            else
-            {
-                throw ConfigurationException(
-                          utils::Formatter() << "Could not resolve domain name <" <<
-                              domain_name << ">.");
-            }
-        }
+        throw ConfigurationException(utils::Formatter() <<
+            "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
     }
 
     // Optional get port
@@ -254,13 +203,27 @@ Address YamlReader::get<Address>(
     }
 
     // Construct Address object
-    if (ip_version_set)
+    if (domain_name_set)
     {
-        return Address(ip, port, ip_version, tp);
+        if (ip_version_set)
+        {
+            return Address(port, ip_version, domain_name, tp);
+        }
+        else
+        {
+            return Address(port, domain_name, tp);
+        }
     }
     else
     {
-        return Address(ip, port, tp);
+        if (ip_version_set)
+        {
+            return Address(ip, port, ip_version, tp);
+        }
+        else
+        {
+            return Address(ip, port, tp);
+        }
     }
 }
 
