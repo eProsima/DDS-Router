@@ -29,15 +29,6 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::Return;
 
-// This operator must be declared in global namespace so GMock is able to find it
-std::ostream& operator <<(
-        std::ostream& os,
-        const eprosima::ddsrouter::Payload& payload)
-{
-    eprosima::ddsrouter::operator<<(os, payload);
-    return os;
-}
-
 namespace eprosima {
 namespace ddsrouter {
 namespace test {
