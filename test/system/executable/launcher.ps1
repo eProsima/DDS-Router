@@ -21,7 +21,7 @@ Param(
     [ValidateNotNullOrEmpty()]
     [String]
     # test_config_file
-    $test_config_file,
+    $test_config_file
 )
 
 $test = Start-Process -Passthru -Wait `
