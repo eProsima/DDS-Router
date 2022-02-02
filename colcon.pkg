@@ -1,0 +1,5 @@
+{
+    "name": "ddsrouter",
+    "type": "cmake",
+    "build-dependencies": ["fastcdr", "fastrtps", "FOONATHAN_MEMORY", "foonathan_memory_vendor", "googletest-distribution"]
+}

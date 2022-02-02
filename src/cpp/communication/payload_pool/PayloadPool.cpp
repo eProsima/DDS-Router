@@ -154,6 +154,11 @@ bool PayloadPool::release_(
 {
     payload.empty();
 
+    if (payload.data != nullptr)
+    {
+        return false;
+    }
+
     add_release_payload_();
 
     return true;

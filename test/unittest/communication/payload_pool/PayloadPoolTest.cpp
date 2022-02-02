@@ -12,15 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtest_aux.hpp>
 
 #include <fastdds/rtps/common/CacheChange.h>
 
 #include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
 #include <ddsrouter/exceptions/InconsistencyException.hpp>
+#include <ddsrouter/types/Data.hpp>
 
 using namespace eprosima::ddsrouter;
+
+// Using for gmock
+using ::testing::_;
+using ::testing::Invoke;
+using ::testing::Return;
+using ::testing::Throw;
+using ::testing::AnyNumber;
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const eprosima::ddsrouter::Payload& payload)
+{
+    eprosima::ddsrouter::operator<<(os, payload);
+    return os;
+}
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,55 +51,55 @@ namespace test {
 class MockPayloadPool : public PayloadPool
 {
 public:
+
     using PayloadPool::PayloadPool;
 
-    bool get_payload(
-            uint32_t size,
-            Payload& payload) override
-    {
-        return false;
-    }
-
-    bool get_payload(
-            const Payload& src_payload,
-            IPayloadPool*& data_owner,
-            Payload& target_payload) override
-    {
-        return false;
-    }
-
-    // These are required in order to use father methods overloaded here
-    using PayloadPool::release_payload;
     using PayloadPool::get_payload;
+    using PayloadPool::release_payload;
+    using PayloadPool::reserve_;
+    using PayloadPool::release_;
+    using PayloadPool::reserve_count_;
+    using PayloadPool::release_count_;
 
-    bool release_payload(
-            Payload& payload) override
-    {
-        return false;
-    }
 
-    bool reserve_(
-            uint32_t size,
-            Payload& payload) override
-    {
-        return PayloadPool::reserve_(size, payload);
-    }
+    // MOCK_METHOD2(get_payload, bool(
+    //             uint32_t size,
+    //             Payload& payload));
 
-    bool release_(
-            Payload& payload) override
-    {
-        return PayloadPool::release_(payload);
-    }
+    // MOCK_METHOD3(get_payload, bool(
+    //             const Payload& src_payload,
+    //             IPayloadPool*& data_owner,
+    //             Payload& target_payload));
 
-    uint64_t reserve_count()
-    {
-        return reserve_count_.load();
-    }
+    // MOCK_METHOD1(release_payload, bool(
+    //             Payload& target_payload));
 
-    uint64_t release_count()
-    {
-        return release_count_.load();
-    }
+    MOCK_METHOD(
+        bool,
+        get_payload,
+        (uint32_t size, eprosima::ddsrouter::Payload& target_payload),
+        (override));
+
+    MOCK_METHOD(
+        bool,
+        get_payload,
+        (const Payload& src_payload, IPayloadPool*& data_owner, eprosima::ddsrouter::Payload& target_payload),
+        (override));
+
+    MOCK_METHOD(
+        bool,
+        release_payload,
+        (eprosima::ddsrouter::Payload& target_payload),
+        (override));
+
+    // bool get_payload(
+    //         uint32_t size,
+    //         Payload& payload){ return false;}
+
+    // bool get_payload(
+    //         const Payload& src_payload,
+    //         IPayloadPool*& data_owner,
+    //         Payload& target_payload){return false;}
 };
 
 } /* namespace test */
@@ -205,34 +222,34 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     // store 5 values
     for (int i=0; i<5; ++i)
     {
-        ASSERT_EQ(pool.reserve_count(), i);
+        ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
     }
-    ASSERT_EQ(pool.reserve_count(), 5);
+    ASSERT_EQ(pool.reserve_count_, 5);
 
     // release 4 values
     for (int i=0; i<4; ++i)
     {
-        ASSERT_EQ(pool.release_count(), i);
+        ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
     }
-    ASSERT_EQ(pool.release_count(), 4);
+    ASSERT_EQ(pool.release_count_, 4);
 
     // store 5 values
     for (int i=5; i<10; ++i)
     {
-        ASSERT_EQ(pool.reserve_count(), i);
+        ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
     }
-    ASSERT_EQ(pool.reserve_count(), 10);
+    ASSERT_EQ(pool.reserve_count_, 10);
 
     // release 6 values
     for (int i=4; i<10; ++i)
     {
-        ASSERT_EQ(pool.release_count(), i);
+        ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
     }
-    ASSERT_EQ(pool.release_count(), 10);
+    ASSERT_EQ(pool.release_count_, 10);
 
     // release more values than reserved
     ASSERT_THROW(pool.release_(payloads[10]), InconsistencyException);
@@ -265,30 +282,43 @@ TEST(PayloadPoolTest, is_clean)
 
 /**
  * Test get_payload cache_change fails if the child class fails
+ *
+ * CASES:
+ * - get_payload for payload goes ok
+ * - get_payload for payload fails
  */
-TEST(PayloadPoolTest, get_payload_negative)
+TEST(PayloadPoolTest, get_payload_cache_change)
 {
-    test::MockPayloadPool pool;
-    eprosima::fastrtps::rtps::CacheChange_t cc;
+    // get_payload for payload goes ok
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
 
-    ASSERT_FALSE(pool.get_payload(sizeof(PayloadUnit), cc));
+        EXPECT_CALL(pool, get_payload(_, _)).Times(1).WillOnce(Return(true));
+
+        EXPECT_TRUE(pool.get_payload(sizeof(PayloadUnit), cc));
+
+        // Destroy payload correctly or process will be killed
+        pool.release_payload(cc);
+        cc.payload_owner(nullptr);
+    }
 }
 
-/**
- * Test get_payload copy cache_change fails if the child class fails
- */
-TEST(PayloadPoolTest, get_payload_from_src_negative)
-{
-    eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockPayloadPool(); // Requires to be ptr to pass it to get_payload
-    eprosima::fastrtps::rtps::CacheChange_t source;
-    eprosima::fastrtps::rtps::CacheChange_t target;
+// /**
+//  * Test get_payload copy cache_change fails if the child class fails
+//  */
+// TEST(PayloadPoolTest, get_payload_from_src_cache_change)
+// {
+//     eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockPayloadPool(); // Requires to be ptr to pass it to get_payload
+//     eprosima::fastrtps::rtps::CacheChange_t source;
+//     eprosima::fastrtps::rtps::CacheChange_t target;
 
-    ASSERT_FALSE(
-        pool->get_payload(
-            source.serializedPayload,
-            pool,
-            target));
-}
+//     ASSERT_FALSE(
+//         pool->get_payload(
+//             source.serializedPayload,
+//             pool,
+//             target));
+// }
 
 /**
  * Test release_payload cache_change method using MockPayloadPool when inside get_payload method fails
@@ -297,30 +327,30 @@ TEST(PayloadPoolTest, get_payload_from_src_negative)
  *  different ownership
  *  this ownership
  */
-TEST(PayloadPoolTest, release_payload_negative)
+TEST(PayloadPoolTest, release_payload_cache_change)
 {
-    // different ownership
-    {
-        test::MockPayloadPool pool;
-        eprosima::fastrtps::rtps::CacheChange_t cc;
+    // // different ownership
+    // {
+    //     test::MockPayloadPool pool;
+    //     eprosima::fastrtps::rtps::CacheChange_t cc;
 
-        cc.payload_owner(nullptr);
+    //     cc.payload_owner(nullptr);
 
-        ASSERT_THROW(pool.release_payload(cc), InconsistencyException);
-    }
+    //     ASSERT_THROW(pool.release_payload(cc), InconsistencyException);
+    // }
 
-    // this ownership
-    {
-        test::MockPayloadPool pool;
-        eprosima::fastrtps::rtps::CacheChange_t cc;
+    // // this ownership
+    // {
+    //     test::MockPayloadPool pool;
+    //     eprosima::fastrtps::rtps::CacheChange_t cc;
 
-        cc.payload_owner(&pool);
+    //     cc.payload_owner(&pool);
 
-        ASSERT_FALSE(pool.release_payload(cc));
+    //     ASSERT_FALSE(pool.release_payload(cc));
 
-        // As the method fails, the ownership must be set to nullptr before destroying the change
-        cc.payload_owner(nullptr);
-    }
+    //     // As the method fails, the ownership must be set to nullptr before destroying the change
+    //     cc.payload_owner(nullptr);
+    // }
 }
 
 int main(

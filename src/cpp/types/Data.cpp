@@ -32,9 +32,31 @@ std::ostream& operator <<(
     return os;
 }
 
+// std::ostream& operator <<(
+//         std::ostream& os,
+//         const Payload& payload)
+// {
+//     os << "Payload{";
+
+//     for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
+//     {
+//         os << payload.data[i] << " ";
+//     }
+
+//     // Avoid printing extra space after last byte
+//     if (payload.length > 0)
+//     {
+//         os << payload.data[payload.length - 1];
+//     }
+
+//     os << "}";
+
+//     return os;
+// }
+
 std::ostream& operator <<(
         std::ostream& os,
-        const Payload& payload)
+        const eprosima::fastrtps::rtps::SerializedPayload_t& payload)
 {
     os << "Payload{";
 
