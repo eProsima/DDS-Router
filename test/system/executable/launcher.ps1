@@ -23,8 +23,7 @@ Param(
     # test_config_file
     $test_config_file,
 
-    [Parameter(Position=4, Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
+    [Parameter(Position=4, Mandatory=$false)]
     [String]
     # signal_arg
     $signal_arg
