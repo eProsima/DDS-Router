@@ -40,6 +40,7 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 add_unittest_executable(
@@ -58,7 +59,6 @@ set(TEST_NAME MapPayloadPoolTest)
 set(TEST_SOURCES
         MapPayloadPoolTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/CopyPayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/MapPayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
@@ -78,6 +78,7 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 add_unittest_executable(
