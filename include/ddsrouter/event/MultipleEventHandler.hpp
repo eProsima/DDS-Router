@@ -96,7 +96,7 @@ protected:
      * Each of this handlers belong to this object and cannot and wont be used from outside.
      * Each handler callback is redirected to this object callback.
      *
-     * It must be pf class \c IBaseEventHandler because \c Eventhandler works with static polymorphism (template)
+     * It must be of class \c IBaseEventHandler because \c Eventhandler works with static polymorphism (template)
      * and thus there is no common interface to collect them.
      */
     std::list<std::unique_ptr<IBaseEventHandler>> handlers_registered_;

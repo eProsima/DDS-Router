@@ -21,7 +21,7 @@ Param(
     [ValidateNotNullOrEmpty()]
     [String]
     # test_config_file
-    $test_config_file
+    $test_config_file,
 
     [Parameter(Position=4, Mandatory=$true)]
     [ValidateNotNullOrEmpty()]

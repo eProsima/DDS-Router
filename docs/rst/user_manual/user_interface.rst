@@ -194,4 +194,4 @@ SIGTERM
 
 Send an interruption ``SIGTERM`` signal *(signal value 15)* to the process.
 Write command ``kill <pid>`` in a different terminal, where ``<pid>`` is the id of the process running the |ddsrouter|.
-Use ``ps`` or ``top`` arguments to check the process ids.
+Use ``ps`` or ``top`` programs to check the process ids.
