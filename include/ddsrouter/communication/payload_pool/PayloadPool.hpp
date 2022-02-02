@@ -120,7 +120,7 @@ public:
      * @return true if everything ok
      * @return false if something went wrong
      *
-     * @pre @c cache_change serialized payload must have been initialized from this pool.
+     * @throw IncosistencyException if cache change owner is other than this
      */
     bool release_payload(
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented

@@ -23,8 +23,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/PayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
     )
 
@@ -55,37 +53,36 @@ add_unittest_executable(
 # Map PayloadPool Test #
 ########################
 
-# set(TEST_NAME MapPayloadPoolTest)
+set(TEST_NAME MapPayloadPoolTest)
 
-# set(TEST_SOURCES
-#         MapPayloadPoolTest.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/PayloadPool.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/CopyPayloadPool.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/MapPayloadPool.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
-#         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-#     )
+set(TEST_SOURCES
+        MapPayloadPoolTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/CopyPayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/MapPayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
+    )
 
-# set(TEST_LIST
-#         get_payload
-#         get_payload_from_src
-#         get_payload_from_src_no_owner
-#         get_payload_from_src_negative
-#         release_payload
-#         release_payload_negative
-#         destruction
-#     )
+set(TEST_LIST
+        get_payload
+        get_payload_from_src
+        get_payload_from_src_no_owner
+        get_payload_from_src_negative
+        release_payload
+        release_payload_negative
+    )
 
-# set(TEST_EXTRA_LIBRARIES
-#         fastcdr
-#         fastrtps
-#         yaml-cpp
-#     )
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+    )
 
-# add_unittest_executable(
-#         "${TEST_NAME}"
-#         "${TEST_SOURCES}"
-#         "${TEST_LIST}"
-#         "${TEST_EXTRA_LIBRARIES}"
-#     )
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )

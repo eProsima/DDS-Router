@@ -69,24 +69,37 @@ public:
 /**
  * Test get_payload method for new changes
  *
- * Get N different pointers
+ * CASES:
+ *  Get N different pointers
+ *  fail reserve memory
  */
 TEST(MapPayloadPoolTest, get_payload)
 {
-    test::MockMapPayloadPool pool;
-    std::vector<Payload> payloads(TEST_NUMBER);
-
-    for (int i=0; i<TEST_NUMBER; i++)
+    // Get N different pointers
     {
-        pool.get_payload(DEFAULT_SIZE, payloads[i]);
+        test::MockMapPayloadPool pool;
+        std::vector<Payload> payloads(TEST_NUMBER);
 
-        ASSERT_EQ(payloads[i].max_size, DEFAULT_SIZE);
-        ASSERT_EQ(pool.pointers_stored(), i+1);
-        ASSERT_EQ(pool.reference_count(payloads[i]), 1);
+        for (int i=0; i<TEST_NUMBER; i++)
+        {
+            pool.get_payload(DEFAULT_SIZE, payloads[i]);
+
+            ASSERT_EQ(payloads[i].max_size, DEFAULT_SIZE);
+            ASSERT_EQ(pool.pointers_stored(), i+1);
+            ASSERT_EQ(pool.reference_count(payloads[i]), 1);
+        }
+
+        // END : Clean all remaining payloads
+        pool.clean_all(payloads);
     }
 
-    // END : Clean all remaining payloads
-    pool.clean_all(payloads);
+    // fail reserve memory
+    {
+        test::MockMapPayloadPool pool;
+        Payload payload;
+
+        ASSERT_FALSE(pool.get_payload(0, payload));
+    }
 }
 
 /**
@@ -214,25 +227,46 @@ TEST(MapPayloadPoolTest, get_payload_from_src_no_owner)
 /**
  * Check negative cases for get_payload from source
  *
- * The source says the owner is the same pool, but is not
+ * CASES:
+ *  The source says the owner is the same pool, but is not
+ *  Source has size 0 and different owner
  */
 TEST(MapPayloadPoolTest, get_payload_from_src_negative)
 {
-    eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
-    test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
-    test::MockMapPayloadPool pool_aux;
+    // The source says the owner is the same pool, but is not
+    {
+        eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
+        test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
+        test::MockMapPayloadPool pool_aux;
 
-    Payload payload_src;
-    Payload payload_target;
+        Payload payload_src;
+        Payload payload_target;
 
-    // Get payload for source
-    pool_aux.get_payload(DEFAULT_SIZE, payload_src);
+        // Get payload for source
+        pool_aux.get_payload(DEFAULT_SIZE, payload_src);
 
-    // In a different pool, try to source it as if it was from same pool
-    ASSERT_THROW(pool_->get_payload(payload_src, pool, payload_target), InconsistencyException);
+        // In a different pool, try to source it as if it was from same pool
+        ASSERT_THROW(pool_->get_payload(payload_src, pool, payload_target), InconsistencyException);
 
-    // END : release payload
-    pool_aux.release_payload(payload_src);
+        // END : release payload
+        pool_aux.release_payload(payload_src);
+    }
+
+    // Source has size 0 and different owner
+    {
+        eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
+        test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
+        eprosima::fastrtps::rtps::IPayloadPool* pool_aux; // nullptr
+
+        Payload payload_src;
+        Payload payload_target;
+
+        ASSERT_FALSE(
+            pool_->get_payload(
+                payload_src,
+                pool_aux,
+                payload_target));
+    }
 }
 
 /**

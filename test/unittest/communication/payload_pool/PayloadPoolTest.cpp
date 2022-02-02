@@ -28,9 +28,8 @@ using namespace eprosima::ddsrouter;
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::Return;
-using ::testing::Throw;
-using ::testing::AnyNumber;
 
+// This operator must be declared in global namespace so GMock is able to find it
 std::ostream& operator <<(
         std::ostream& os,
         const eprosima::ddsrouter::Payload& payload)
@@ -52,8 +51,8 @@ class MockPayloadPool : public PayloadPool
 {
 public:
 
+    // Using parent methods and variables as public
     using PayloadPool::PayloadPool;
-
     using PayloadPool::get_payload;
     using PayloadPool::release_payload;
     using PayloadPool::reserve_;
@@ -61,19 +60,7 @@ public:
     using PayloadPool::reserve_count_;
     using PayloadPool::release_count_;
 
-
-    // MOCK_METHOD2(get_payload, bool(
-    //             uint32_t size,
-    //             Payload& payload));
-
-    // MOCK_METHOD3(get_payload, bool(
-    //             const Payload& src_payload,
-    //             IPayloadPool*& data_owner,
-    //             Payload& target_payload));
-
-    // MOCK_METHOD1(release_payload, bool(
-    //             Payload& target_payload));
-
+    // Mock this virtual methods not implemented in parent class
     MOCK_METHOD(
         bool,
         get_payload,
@@ -83,7 +70,11 @@ public:
     MOCK_METHOD(
         bool,
         get_payload,
-        (const Payload& src_payload, IPayloadPool*& data_owner, eprosima::ddsrouter::Payload& target_payload),
+        (
+            const Payload& src_payload,
+            eprosima::fastrtps::rtps::IPayloadPool*& data_owner,
+            eprosima::ddsrouter::Payload& target_payload
+        ),
         (override));
 
     MOCK_METHOD(
@@ -91,15 +82,6 @@ public:
         release_payload,
         (eprosima::ddsrouter::Payload& target_payload),
         (override));
-
-    // bool get_payload(
-    //         uint32_t size,
-    //         Payload& payload){ return false;}
-
-    // bool get_payload(
-    //         const Payload& src_payload,
-    //         IPayloadPool*& data_owner,
-    //         Payload& target_payload){return false;}
 };
 
 } /* namespace test */
@@ -298,59 +280,105 @@ TEST(PayloadPoolTest, get_payload_cache_change)
 
         EXPECT_TRUE(pool.get_payload(sizeof(PayloadUnit), cc));
 
-        // Destroy payload correctly or process will be killed
-        pool.release_payload(cc);
+        // Clean cache change correctly so process dont break
         cc.payload_owner(nullptr);
+    }
+
+    // get_payload for payload goes ok
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
+
+        EXPECT_CALL(pool, get_payload(_, _)).Times(1).WillOnce(Return(false));
+
+        EXPECT_FALSE(pool.get_payload(sizeof(PayloadUnit), cc));
     }
 }
 
-// /**
-//  * Test get_payload copy cache_change fails if the child class fails
-//  */
-// TEST(PayloadPoolTest, get_payload_from_src_cache_change)
-// {
-//     eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockPayloadPool(); // Requires to be ptr to pass it to get_payload
-//     eprosima::fastrtps::rtps::CacheChange_t source;
-//     eprosima::fastrtps::rtps::CacheChange_t target;
+/**
+ * Test get_payload cache_change with source fails if the child class fails
+ *
+ * CASES:
+ * - get_payload for payload goes ok
+ * - get_payload for payload fails
+ */
+TEST(PayloadPoolTest, get_payload_from_src_cache_change)
+{
+    // get_payload for payload goes ok
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t target;
+        Payload source;
+        eprosima::fastrtps::rtps::IPayloadPool* aux_pool;
 
-//     ASSERT_FALSE(
-//         pool->get_payload(
-//             source.serializedPayload,
-//             pool,
-//             target));
-// }
+        EXPECT_CALL(pool, get_payload(_, _, _)).Times(1).WillOnce(Return(true));
+
+        EXPECT_TRUE(pool.get_payload(source, aux_pool, target));
+
+        // Clean cache change correctly so process dont break
+        target.payload_owner(nullptr);
+    }
+
+    // get_payload for payload goes ok
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t target;
+        Payload source;
+        eprosima::fastrtps::rtps::IPayloadPool* aux_pool;
+
+        EXPECT_CALL(pool, get_payload(_, _, _)).Times(1).WillOnce(Return(false));
+
+        EXPECT_FALSE(pool.get_payload(source, aux_pool, target));
+    }
+}
 
 /**
  * Test release_payload cache_change method using MockPayloadPool when inside get_payload method fails
  *
  * CASES:
  *  different ownership
- *  this ownership
+ *  this ownership release ok
+ *  this ownership release fail
  */
 TEST(PayloadPoolTest, release_payload_cache_change)
 {
-    // // different ownership
-    // {
-    //     test::MockPayloadPool pool;
-    //     eprosima::fastrtps::rtps::CacheChange_t cc;
+    // different ownership
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
+        cc.payload_owner(nullptr);
 
-    //     cc.payload_owner(nullptr);
+        EXPECT_THROW(pool.release_payload(cc), InconsistencyException);
+    }
 
-    //     ASSERT_THROW(pool.release_payload(cc), InconsistencyException);
-    // }
+    // this ownership release ok
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
 
-    // // this ownership
-    // {
-    //     test::MockPayloadPool pool;
-    //     eprosima::fastrtps::rtps::CacheChange_t cc;
+        // ownership must be this pool
+        cc.payload_owner(&pool);
 
-    //     cc.payload_owner(&pool);
+        EXPECT_CALL(pool, release_payload(_)).Times(1).WillOnce(Return(true));
 
-    //     ASSERT_FALSE(pool.release_payload(cc));
+        EXPECT_TRUE(pool.release_payload(cc));
+    }
 
-    //     // As the method fails, the ownership must be set to nullptr before destroying the change
-    //     cc.payload_owner(nullptr);
-    // }
+    // this ownership release fail
+    {
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
+
+        // ownership must be this pool
+        cc.payload_owner(&pool);
+
+        EXPECT_CALL(pool, release_payload(_)).Times(1).WillOnce(Return(false));
+
+        EXPECT_FALSE(pool.release_payload(cc));
+
+        // Clean cache change correctly so process dont break
+        cc.payload_owner(nullptr);
+    }
 }
 
 int main(
