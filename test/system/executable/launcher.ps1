@@ -22,12 +22,6 @@ Param(
     [String]
     # test_config_file
     $test_config_file,
-
-    [Parameter(Position=4, Mandatory=$true)]
-    [ValidateNotNullOrEmpty()]
-    [String]
-    # signal_arg
-    $signal_arg
 )
 
 $test = Start-Process -Passthru -Wait `
@@ -37,7 +31,7 @@ $test = Start-Process -Passthru -Wait `
         "--exe", $tool_path,
         "--config-file", $test_config_file,
         "--debug",
-        "--signal", $signal_arg) `
+        "--signal", "sigint") `
     -WindowStyle Hidden
 
 if( $test.ExitCode -ne 0 )

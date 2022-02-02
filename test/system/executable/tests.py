@@ -138,6 +138,8 @@ def test_ddsrouter_closure(ddsrouter, configuration_file, use_sigint=True):
     Parameters:
     ddsrouter (path): Path to ddsrouter binary executable
     configuration_file (path): Path to ddsrouter yaml configuration file
+    use_sigint (bool): Whether sigint must be used to kill process
+        in case it is false, SIGTERM is used
 
     Returns:
     0 if okay, otherwise the return code of the command executed
@@ -270,4 +272,4 @@ if __name__ == '__main__':
         test_ddsrouter_closure(
             args.exe,           # Path to executable
             args.config_file,   # Configuration file
-            use_sigterm))  # Whether use sigint or not
+            not use_sigterm))   # Whether use sigint or not
