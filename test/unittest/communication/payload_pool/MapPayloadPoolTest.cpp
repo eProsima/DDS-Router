@@ -37,6 +37,7 @@ namespace test {
 class MockMapPayloadPool : public MapPayloadPool
 {
 public:
+
     using MapPayloadPool::MapPayloadPool;
 
     uint64_t pointers_stored()
@@ -44,18 +45,21 @@ public:
         return reserved_payloads_.size();
     }
 
-    uint64_t reference_count(const Payload& payload)
+    uint64_t reference_count(
+            const Payload& payload)
     {
         return reserved_payloads_[payload.data];
     }
 
-    void clean_all(std::vector<Payload>& payloads)
+    void clean_all(
+            std::vector<Payload>& payloads)
     {
         for (Payload& payload : payloads)
         {
             release_payload(payload);
         }
     }
+
 };
 
 } /* namespace test */
@@ -80,12 +84,12 @@ TEST(MapPayloadPoolTest, get_payload)
         test::MockMapPayloadPool pool;
         std::vector<Payload> payloads(TEST_NUMBER);
 
-        for (int i=0; i<TEST_NUMBER; i++)
+        for (int i = 0; i < TEST_NUMBER; i++)
         {
             pool.get_payload(DEFAULT_SIZE, payloads[i]);
 
             ASSERT_EQ(payloads[i].max_size, DEFAULT_SIZE);
-            ASSERT_EQ(pool.pointers_stored(), i+1);
+            ASSERT_EQ(pool.pointers_stored(), i + 1);
             ASSERT_EQ(pool.reference_count(payloads[i]), 1);
         }
 
@@ -200,7 +204,7 @@ TEST(MapPayloadPoolTest, get_payload_from_src_no_owner)
     eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
     test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
     eprosima::fastrtps::rtps::IPayloadPool* pool_aux = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
-    test::MockMapPayloadPool* pool_aux_ = static_cast<test::MockMapPayloadPool*>(pool_aux);;
+    test::MockMapPayloadPool* pool_aux_ = static_cast<test::MockMapPayloadPool*>(pool_aux);
 
     Payload payload_src;
     Payload payload_target;
@@ -289,31 +293,31 @@ TEST(MapPayloadPoolTest, release_payload)
     pool_->get_payload(DEFAULT_SIZE, payloads[0]);
 
     // get N-1 payloads from first
-    for (int i=1; i<TEST_NUMBER; i++)
+    for (int i = 1; i < TEST_NUMBER; i++)
     {
         pool_->get_payload(payloads[0], pool, payloads[i]);
-        ASSERT_EQ(pool_->reference_count(payloads[0]), i+1) << i;
+        ASSERT_EQ(pool_->reference_count(payloads[0]), i + 1) << i;
     }
 
     // release N-2 payloads
-    for (int i=2; i<TEST_NUMBER; i++)
+    for (int i = 2; i < TEST_NUMBER; i++)
     {
         ASSERT_TRUE(pool_->release_payload(payloads[i]));
-        ASSERT_EQ(pool_->reference_count(payloads[0]), TEST_NUMBER+1-i) << i;
+        ASSERT_EQ(pool_->reference_count(payloads[0]), TEST_NUMBER + 1 - i) << i;
     }
 
     // get N-2 more payloads from first
-    for (int i=2; i<TEST_NUMBER; i++)
+    for (int i = 2; i < TEST_NUMBER; i++)
     {
         pool_->get_payload(payloads[0], pool, payloads[i]);
-        ASSERT_EQ(pool_->reference_count(payloads[0]), i+1) << i;
+        ASSERT_EQ(pool_->reference_count(payloads[0]), i + 1) << i;
     }
 
     // release N payloads
-    for (int i=1; i<TEST_NUMBER; i++)
+    for (int i = 1; i < TEST_NUMBER; i++)
     {
         ASSERT_TRUE(pool_->release_payload(payloads[i]));
-        ASSERT_EQ(pool_->reference_count(payloads[0]), TEST_NUMBER-i) << i;
+        ASSERT_EQ(pool_->reference_count(payloads[0]), TEST_NUMBER - i) << i;
     }
     // Removing last payload because if not the reference count cannot be done
     ASSERT_TRUE(pool_->release_payload(payloads[0]));

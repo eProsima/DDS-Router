@@ -63,7 +63,7 @@ public:
         get_payload,
         (
             const Payload& src_payload,
-            eprosima::fastrtps::rtps::IPayloadPool*& data_owner,
+            eprosima::fastrtps::rtps::IPayloadPool*&data_owner,
             eprosima::ddsrouter::Payload& target_payload
         ),
         (override));
@@ -121,7 +121,7 @@ TEST(PayloadPoolTest, reserve)
 
         // This would (maybe) fail with SEG FAULT if the data has not been correctly set
         payload.data[0] = 4u;
-        payload.data[0x1000] = 5u;
+        payload.data[0x1000-1] = 5u;
     }
 
     // 0 size
@@ -193,7 +193,7 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     std::vector<Payload> payloads(11);
 
     // store 5 values
-    for (int i=0; i<5; ++i)
+    for (int i = 0; i < 5; ++i)
     {
         ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
@@ -201,7 +201,7 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     ASSERT_EQ(pool.reserve_count_, 5);
 
     // release 4 values
-    for (int i=0; i<4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
@@ -209,7 +209,7 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     ASSERT_EQ(pool.release_count_, 4);
 
     // store 5 values
-    for (int i=5; i<10; ++i)
+    for (int i = 5; i < 10; ++i)
     {
         ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
@@ -217,7 +217,7 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     ASSERT_EQ(pool.reserve_count_, 10);
 
     // release 6 values
-    for (int i=4; i<10; ++i)
+    for (int i = 4; i < 10; ++i)
     {
         ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
