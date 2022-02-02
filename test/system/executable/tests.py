@@ -26,7 +26,7 @@ Arguments:
 
     Run test in Debug mode          : -d | --debug
 
-    Use SIGTERM instead of SIGINT   : -s | --sigterm
+    Use SIGINT or                   : -s | --signal sigint|sigterm
 """
 
 import argparse
@@ -39,7 +39,7 @@ import time
 
 DESCRIPTION = """Script to execute DDS Router executable test"""
 USAGE = ('python3 tests.py -e <path/to/ddsrouter-executable>'
-         ' -c config_file_path [-d]')
+         ' -c config_file_path --signal sigint [-d]')
 
 # Sleep time to let process init and finish
 SLEEP_TIME = 1
@@ -117,9 +117,10 @@ def parse_options():
     )
     parser.add_argument(
         '-s',
-        '--sigterm',
-        action='store_true',
-        help='Use SIGTERM to kill process instead of SIGINT.'
+        '--signal',
+        type=str,
+        required=True,
+        help='Use SIGINT or SIGTERM to kill process.'
     )
     return parser.parse_args()
 
@@ -256,8 +257,17 @@ if __name__ == '__main__':
             'executable permissions.')
         sys.exit(1)
 
+    if args.signal is None:
+        logger.error(
+            'Must specify signal to kill process.')
+        sys.exit(1)
+
+    use_sigterm = False
+    if "sigterm" in args.signal:
+        use_sigterm = True
+
     sys.exit(
         test_ddsrouter_closure(
             args.exe,           # Path to executable
             args.config_file,   # Configuration file
-            not args.sigterm))  # Whether use sigint or not
+            use_sigterm))  # Whether use sigint or not

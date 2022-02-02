@@ -27,16 +27,10 @@ if(PYTHONINTERP_FOUND)
     )
 
     # Whether one or other signal in test
-    set(TEST_ARGS
-        ""
-        "--sigterm"
-    )
-    set(TEST_ARGS_NAME
+    set(SIGNAL_TEST_ARGS
         "sigint"
         "sigterm"
     )
-    list(LENGTH TEST_ARGS ARGS_LEN_)
-    math(EXPR ARGS_LEN "${ARGS_LEN_} - 1")
 
     foreach(TEST_CONFIGURATION ${TEST_CONFIGURATIONS})
         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/configurations/${TEST_CONFIGURATION}.yaml
@@ -83,12 +77,9 @@ if(PYTHONINTERP_FOUND)
 
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
-        foreach(ARG_INDEX RANGE ${ARGS_LEN})
+        foreach(SIGNAL_ARG IN LISTS SIGNAL_TEST_ARGS)
 
-            list(GET TEST_ARGS ${ARG_INDEX} TEST_ARG)
-            list(GET TEST_ARGS_NAME ${ARG_INDEX} TEST_ARG_NAME)
-
-            set(TEST_NAME "system.tools.ddsrouter.${TEST}.${TEST_ARG_NAME}")
+            set(TEST_NAME "system.tools.ddsrouter.${TEST}.${SIGNAL_ARG}")
 
             # CTest has issues with signals on windows. We forked the test
             # execution using an auxiliary powershell script
@@ -100,7 +91,7 @@ if(PYTHONINTERP_FOUND)
                                 ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
                                 $<TARGET_FILE:ddsrouter>
                                 ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
-                                ${TEST_ARG}
+                                ${SIGNAL_ARG}
                     )
             else()
                 add_test(
@@ -110,7 +101,7 @@ if(PYTHONINTERP_FOUND)
                                 "--exe" $<TARGET_FILE:ddsrouter>
                                 "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                                 "--debug"
-                                ${TEST_ARG}
+                                "--signal" ${SIGNAL_ARG}
                     )
             endif()
 
