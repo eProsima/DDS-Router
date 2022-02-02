@@ -32,11 +32,11 @@ MultipleEventHandler::MultipleEventHandler(
 
 MultipleEventHandler::MultipleEventHandler()
     : MultipleEventHandler([]()
-    {
-        // Default callback when it is not set
-        logDebug(DDSROUTER_MULTIPLEEVENTHANDLER,
-            "Event received in MultipleEventHandler.");
-    })
+            {
+                // Default callback when it is not set
+                logDebug(DDSROUTER_MULTIPLEEVENTHANDLER,
+                "Event received in MultipleEventHandler.");
+            })
 {
 }
 

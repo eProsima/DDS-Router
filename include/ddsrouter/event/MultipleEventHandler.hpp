@@ -86,7 +86,8 @@ public:
      * @param handler pointer and ownership for the handler
      */
     template <typename T, typename ... Args>
-    void register_event_handler(std::unique_ptr<T> handler) noexcept;
+    void register_event_handler(
+            std::unique_ptr<T> handler) noexcept;
 
 protected:
 

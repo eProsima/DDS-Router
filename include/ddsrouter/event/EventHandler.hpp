@@ -43,9 +43,12 @@ namespace event {
 class IBaseEventHandler
 {
 public:
+
     //! This virtual destructor is required so objects could be destroyed from its common interface.
     virtual ~IBaseEventHandler()
-    {}
+    {
+    }
+
 };
 
 /**

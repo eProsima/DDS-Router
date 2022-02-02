@@ -27,7 +27,8 @@ namespace ddsrouter {
 namespace event {
 
 template <typename T, typename ... Args>
-void MultipleEventHandler::register_event_handler(std::unique_ptr<T> handler) noexcept
+void MultipleEventHandler::register_event_handler(
+        std::unique_ptr<T> handler) noexcept
 {
     // Set new callback to handler so every time even occurred, it calls to this event
     std::function<void(Args...)> new_callback =
