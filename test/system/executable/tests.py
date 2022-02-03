@@ -26,7 +26,7 @@ Arguments:
 
     Run test in Debug mode          : -d | --debug
 
-    Use SIGINT or                   : -s | --signal sigint|sigterm
+    Use SIGINT or SIGTERM           : -s | --signal sigint|sigterm
 """
 
 import argparse
@@ -36,6 +36,7 @@ import signal
 import subprocess
 import sys
 import time
+from enum import Enum
 
 DESCRIPTION = """Script to execute DDS Router executable test"""
 USAGE = ('python3 tests.py -e <path/to/ddsrouter-executable>'
@@ -73,13 +74,31 @@ def file_exist_and_have_permissions(file_path):
 
 
 def is_linux():
-    """Return whether the script is running in a Linux environment"""
+    """Return whether the script is running in a Linux environment."""
     return os.name == 'posix'
 
 
 def is_windows():
-    """Return whether the script is running in a Windows environment"""
+    """Return whether the script is running in a Windows environment."""
     return os.name == 'nt'
+
+
+class KillingSignalType(Enum):
+    """Enumeration for signals used to kill subprocesses."""
+
+    KST_SIGINT = 2
+    KST_SIGTERM = 15
+
+
+def check_terminate_signal(st):
+    """Return signal that must be used to kill process otherwise."""
+    if st == 'sigterm':
+        return KillingSignalType.KST_SIGTERM
+    elif st == 'sigint':
+        return KillingSignalType.KST_SIGINT
+    else:
+        raise argparse.ArgumentTypeError(
+            f'Invalid value: {st}. It must be <sigint> or <sigterm>')
 
 
 def parse_options():
@@ -118,14 +137,14 @@ def parse_options():
     parser.add_argument(
         '-s',
         '--signal',
-        type=str,
+        type=check_terminate_signal,
         required=True,
-        help='Use SIGINT or SIGTERM to kill process.'
+        help='<sigint>|<sigterm>: Use SIGINT or SIGTERM to kill process.'
     )
     return parser.parse_args()
 
 
-def test_ddsrouter_closure(ddsrouter, configuration_file, use_sigint=True):
+def test_ddsrouter_closure(ddsrouter, configuration_file, killing_signal):
     """
     Test that ddsrouter command closes correctly.
 
@@ -138,8 +157,7 @@ def test_ddsrouter_closure(ddsrouter, configuration_file, use_sigint=True):
     Parameters:
     ddsrouter (path): Path to ddsrouter binary executable
     configuration_file (path): Path to ddsrouter yaml configuration file
-    use_sigint (bool): Whether sigint must be used to kill process
-        in case it is false, SIGTERM is used
+    use_sigint (KillingSignalType): Signal to kill subprocesses
 
     Returns:
     0 if okay, otherwise the return code of the command executed
@@ -175,23 +193,22 @@ def test_ddsrouter_closure(ddsrouter, configuration_file, use_sigint=True):
     if is_windows():
         signal.signal(signal.SIGINT, signal_handler)
 
-    # send SIGINT to process and wait for processing
+    # send signal to process and wait for it to be killed
     lease = 0
     while True:
 
-        if use_sigint:
-            # Use SIGINT
-            if is_linux():
-                proc.send_signal(signal.SIGINT)
-            elif is_windows():
-                proc.send_signal(signal.CTRL_C_EVENT)
-        else:
+        if killing_signal == KillingSignalType.KST_SIGTERM:
             # Use SIGTERM instead
             if is_linux():
                 proc.send_signal(signal.SIGTERM)
             elif is_windows():
-                # TODO: check if this is handled by the same handler as SIGTERM
                 proc.send_signal(signal.CTRL_BREAK_EVENT)
+        else:
+            # Use SIGINT (use by default if not SIGTERM)
+            if is_linux():
+                proc.send_signal(signal.SIGINT)
+            elif is_windows():
+                proc.send_signal(signal.CTRL_C_EVENT)
 
         time.sleep(SLEEP_TIME)
         lease += 1
@@ -259,17 +276,8 @@ if __name__ == '__main__':
             'executable permissions.')
         sys.exit(1)
 
-    if args.signal is None:
-        logger.error(
-            'Must specify signal to kill process.')
-        sys.exit(1)
-
-    use_sigterm = False
-    if "sigterm" in args.signal:
-        use_sigterm = True
-
     sys.exit(
         test_ddsrouter_closure(
             args.exe,           # Path to executable
             args.config_file,   # Configuration file
-            not use_sigterm))   # Whether use sigint or not
+            args.signal))       # Signal to kill subprocess
