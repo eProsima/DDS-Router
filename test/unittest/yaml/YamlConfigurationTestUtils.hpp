@@ -78,6 +78,16 @@ void guid_prefix_to_yaml(
         DISCOVERY_SERVER_GUID_TAG);
 }
 
+void discovery_server_guid_prefix_to_yaml(
+        Yaml& yml,
+        const GuidPrefix& guid_prefix)
+{
+    Yaml yml_guid;
+    guid_prefix_to_yaml(yml_guid, guid_prefix);
+
+    yml[DISCOVERY_SERVER_GUID_PREFIX_TAG] = yml_guid;
+}
+
 void address_to_yaml(
         Yaml& yml,
         const Address& address)

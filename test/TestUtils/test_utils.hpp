@@ -34,6 +34,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
+constexpr const int TEST_NUMBER_ITERATIONS = 5;
+
 /**
  * @brief Create a \c Guid with some of its bits determined by the input
  *

@@ -142,6 +142,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
             ConfigurationException);
     }
 }
+
 int main(
         int argc,
         char** argv)
