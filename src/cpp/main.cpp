@@ -19,6 +19,7 @@
 
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/event/FileWatcherHandler.hpp>
+#include <ddsrouter/event/MultipleEventHandler.hpp>
 #include <ddsrouter/event/PeriodicEventHandler.hpp>
 #include <ddsrouter/event/SignalHandler.hpp>
 #include <ddsrouter/exceptions/ConfigurationException.hpp>
@@ -65,7 +66,6 @@ int main(
     if (activate_debug)
     {
         // Activate log
-        Log::SetVerbosity(Log::Kind::Info);
 
         // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
         // in non debug or with LOG_NO_INFO=ON.
@@ -77,10 +77,13 @@ int main(
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
-        // First of all, create signal handler so SIGINT does not break the program while initializing
-        // Signal handler
-        std::unique_ptr<event::SignalHandler<event::SIGNAL_SIGINT>> signal_handler =
-                std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>();
+        // First of all, create signal handler so SIGINT and SIGTERM does not break the program while initializing
+        event::MultipleEventHandler signal_handlers;
+
+        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
+            std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
+        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
+            std::make_unique<event::SignalHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization
@@ -152,7 +155,7 @@ int main(
         router.start();
 
         // Wait until signal arrives
-        signal_handler->wait_for_event();
+        signal_handlers.wait_for_event();
 
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)

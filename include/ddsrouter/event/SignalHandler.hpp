@@ -32,7 +32,8 @@ namespace event {
 //! Available data types for SignalHandler class
 enum Signals
 {
-    SIGNAL_SIGINT = SIGINT, //! SIGINT = ^C
+    SIGNAL_SIGINT   = SIGINT,   //! SIGINT = ^C
+    SIGNAL_SIGTERM  = SIGTERM,  //! SIGTERM = kill
 };
 
 /**

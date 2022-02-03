@@ -52,17 +52,27 @@ void EventHandler<Args...>::set_callback(
 {
     std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
+    bool was_callback_set_before;
+
     {
         // Setting callback
         // Wait mutex must be taken because this variable is used in wait_for_event() wait
         std::lock_guard<std::mutex> lock(wait_mutex_);
-        is_callback_set_.store(true);
+        was_callback_set_before = is_callback_set_.exchange(true);
     }
 
     callback_ = callback;
 
     // Call child methods in case they should do something when handler is enabled or change callback
-    callback_set_nts_();
+    if (was_callback_set_before)
+    {
+        logDebug(DDSROUTER_EVENTHANDLER, "Setting new callback to an EventHandler that already had one.");
+        callback_change_nts_();
+    }
+    else
+    {
+        callback_set_nts_();
+    }
 }
 
 template <typename ... Args>
@@ -178,6 +188,12 @@ void EventHandler<Args...>::awake_all_waiting_threads_nts_() noexcept
 
 template <typename ... Args>
 void EventHandler<Args...>::callback_set_nts_() noexcept
+{
+    // Do nothing. Implement it in child classes if needed.
+}
+
+template <typename ... Args>
+void EventHandler<Args...>::callback_change_nts_() noexcept
 {
     // Do nothing. Implement it in child classes if needed.
 }

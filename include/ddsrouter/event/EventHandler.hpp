@@ -19,13 +19,37 @@
 #ifndef _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 #define _DDSROUTER_EVENT_EVENTHANDLER_HPP_
 
+#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <mutex>
 
+#include <ddsrouter/types/Log.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
+
+/**
+ * @brief Parent class for EventHandler
+ *
+ * \c EventHandler class is a template, and so there is no common parent class for every EventHandler object.
+ * This class represents this common parent class without template, so it could be created a common
+ * interface of every kind of EventHandler .
+ *
+ * This class does not implement nor define any method or variable required. It is merely an auxiliar
+ * class for container of EventHandlers.
+ */
+class IBaseEventHandler
+{
+public:
+
+    //! This virtual destructor is required so objects could be destroyed from its common interface.
+    virtual ~IBaseEventHandler()
+    {
+    }
+
+};
 
 /**
  * This class is an interface for any class that implements a handler of any kind of event.
@@ -44,6 +68,8 @@ namespace event {
  *
  * It is a template regarding the arguments that the Event Handler needs in its callback.
  *
+ * It inherits from \c IBaseEventHandler so every \c EventHandler specialization has a common interface.
+ *
  * Inherit:
  * In order to create child classes, be aware of:
  * - While EventHandler is disabled (unset callback) the event should not repeat.
@@ -55,7 +81,7 @@ namespace event {
  * - WARNING: always implement destructor in childs and call \c unset_callback
  */
 template <typename ... Args>
-class EventHandler
+class EventHandler : public IBaseEventHandler
 {
 public:
 
@@ -139,6 +165,16 @@ protected:
      * It is already guarded by \c event_mutex_ .
      */
     virtual void callback_set_nts_() noexcept;
+
+    /**
+     * Protected method to overwrite in child classes if specific functionality is required
+     * when callback was set and it change to a new one.
+     *
+     * If it is not overwritten, it does nothing.
+     *
+     * It is already guarded by \c event_mutex_ .
+     */
+    virtual void callback_change_nts_() noexcept;
 
     /**
      * Protected method to overwrite in child classes if specific functionality is required
