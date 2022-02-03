@@ -186,6 +186,32 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
     }
 }
 
+ParticipantId random_participant_id(uint16_t seed /* = 0 */)
+{
+    std::vector<std::string> names = {
+        "participant",
+        "PART_1",
+        "echo",
+        "Barro_p",
+    };
+
+    return ParticipantId(names[seed % names.size()] + std::to_string(seed));
+}
+
+ParticipantKind random_participant_kind(bool valid /* = true */, uint16_t seed /* = 0 */)
+{
+    std::vector<eprosima::ddsrouter::ParticipantKind> kinds = ParticipantKind::all_valid_participant_kinds();
+    if (valid)
+    {
+        return kinds[seed % kinds.size()];
+    }
+    else
+    {
+        kinds.push_back(ParticipantKind::PARTICIPANT_KIND_INVALID);
+        return kinds[seed % kinds.size()];
+    }
+}
+
 } /* namespace test */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

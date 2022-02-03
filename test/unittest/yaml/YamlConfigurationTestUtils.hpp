@@ -23,7 +23,10 @@
 
 #include <ddsrouter/types/endpoint/GuidPrefix.hpp>
 #include <ddsrouter/types/address/Address.hpp>
+#include <ddsrouter/types/participant/ParticipantKind.hpp>
+#include <ddsrouter/types/participant/ParticipantId.hpp>
 #include <ddsrouter/yaml/Yaml.hpp>
+#include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -117,6 +120,26 @@ void address_to_yaml(
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
+}
+
+void participantid_to_yaml(
+        Yaml& yml,
+        const ParticipantId& id)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<std::string>(id.id_name()),
+        PARTICIPANT_NAME_TAG);
+}
+
+void participantkind_to_yaml(
+        Yaml& yml,
+        const ParticipantKind& kind)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<std::string>(kind.to_string()),
+        PARTICIPANT_KIND_TAG);
 }
 
 } /* namespace test */

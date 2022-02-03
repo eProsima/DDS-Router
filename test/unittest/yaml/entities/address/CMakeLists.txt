@@ -21,7 +21,6 @@ set(TEST_NAME YamlGetEntityAddressTest)
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
         YamlGetEntityAddressTest.cpp
     )
 sources_for_test_utils("${TEST_SOURCES}")
@@ -58,7 +57,6 @@ set(TEST_NAME YamlGetEntityDiscoveryServerAddressTest)
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
         YamlGetEntityDiscoveryServerAddressTest.cpp
     )
 sources_for_test_utils("${TEST_SOURCES}")

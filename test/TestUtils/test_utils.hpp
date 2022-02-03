@@ -83,6 +83,10 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
         ParticipantKind kind,
         uint16_t seed = 0);
 
+ParticipantId random_participant_id(uint16_t seed = 0);
+
+ParticipantKind random_participant_kind(bool valid = true, uint16_t seed = 0);
+
 } /* namespace test */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
