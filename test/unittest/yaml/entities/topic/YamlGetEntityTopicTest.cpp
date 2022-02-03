@@ -17,6 +17,7 @@
 
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/topic/RealTopic.hpp>
+#include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
@@ -25,7 +26,13 @@
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::yaml;
 
-void real_topic_to_yaml(
+namespace eprosima {
+namespace ddsrouter {
+namespace yaml {
+namespace test {
+
+// Add a topic into a yaml by using name, type and key tags
+void topic_to_yaml(
         Yaml& yml,
         const test::YamlField<std::string>& name,
         const test::YamlField<std::string>& type,
@@ -36,6 +43,7 @@ void real_topic_to_yaml(
     test::add_field_to_yaml(yml, keyed, TOPIC_KIND_TAG);
 }
 
+// Check the values of a real topic are the expected ones
 void compare_topic(
         RealTopic topic,
         std::string name,
@@ -46,6 +54,25 @@ void compare_topic(
     ASSERT_EQ(topic.topic_type(), type);
     ASSERT_EQ(topic.topic_with_key(), keyed);
 }
+
+// Check the values of a wildcard topic are the expected ones
+void compare_wildcard_topic(
+        WildcardTopic topic,
+        std::string name,
+        std::string type,
+        bool key_set,
+        bool keyed)
+{
+    ASSERT_EQ(topic.topic_name(), name);
+    ASSERT_EQ(topic.topic_type(), type);
+    ASSERT_EQ(topic.has_keyed_set(), key_set);
+    ASSERT_EQ(topic.topic_with_key(), keyed);
+}
+
+} /* namespace test */
+} /* namespace yaml */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
 
 /**
  * Test read RealTopic from yaml
@@ -60,7 +87,7 @@ void compare_topic(
  * - Topic without name
  * - Topic without type
  */
-TEST(YamlGetEntityTest, get_real_topic)
+TEST(YamlGetEntityTopicTest, get_real_topic)
 {
     std::string name = "topic_name";
     std::string type = "topic_type";
@@ -68,7 +95,7 @@ TEST(YamlGetEntityTest, get_real_topic)
     // Topic Std
     {
         Yaml yml_topic;
-        real_topic_to_yaml(
+        test::topic_to_yaml(
             yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
@@ -79,13 +106,13 @@ TEST(YamlGetEntityTest, get_real_topic)
 
         RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
-        compare_topic(topic, name, type, false); // By default no keyed
+        test::compare_topic(topic, name, type, false); // By default no keyed
     }
 
     // Topic with key
     {
         Yaml yml_topic;
-        real_topic_to_yaml(
+        test::topic_to_yaml(
             yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
@@ -96,13 +123,13 @@ TEST(YamlGetEntityTest, get_real_topic)
 
         RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
-        compare_topic(topic, name, type, true);
+        test::compare_topic(topic, name, type, true);
     }
 
     // Topic with no key
     {
         Yaml yml_topic;
-        real_topic_to_yaml(
+        test::topic_to_yaml(
             yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
@@ -113,12 +140,14 @@ TEST(YamlGetEntityTest, get_real_topic)
 
         RealTopic topic = YamlReader::get<RealTopic>(yml, "topic");
 
-        compare_topic(topic, name, type, false);
+        test::compare_topic(topic, name, type, false);
     }
 
-    // Topic without name
+    // Empty
     {
+        Yaml yml_topic;
         Yaml yml;
+        yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
     }
@@ -126,7 +155,7 @@ TEST(YamlGetEntityTest, get_real_topic)
     // Topic without name
     {
         Yaml yml_topic;
-        real_topic_to_yaml(
+        test::topic_to_yaml(
             yml_topic,
             test::YamlField<std::string>(),
             test::YamlField<std::string>(type),
@@ -141,7 +170,7 @@ TEST(YamlGetEntityTest, get_real_topic)
     // Topic without type
     {
         Yaml yml_topic;
-        real_topic_to_yaml(
+        test::topic_to_yaml(
             yml_topic,
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(),
@@ -151,6 +180,126 @@ TEST(YamlGetEntityTest, get_real_topic)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<RealTopic>(yml, "topic"), ConfigurationException);
+    }
+}
+
+/**
+ * Test read correct WildcardTopic from yaml
+ *
+ * POSITIVE CASES:
+ * - Topic Std
+ * - Topic without type
+ * - Topic with key
+ * - Topic with no key
+ */
+TEST(YamlGetEntityTopicTest, get_wildcard_topic)
+{
+    std::string name = "topic_name";
+    std::string type = "topic_type";
+
+    // Topic Std
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>());
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
+
+        test::compare_wildcard_topic(topic, name, type, false, false); // By default no keyed
+    }
+
+    // Topic without type
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(),
+            test::YamlField<bool>());
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
+
+        test::compare_wildcard_topic(topic, name, "*", false, false); // By default no keyed
+    }
+
+    // Topic with key
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>(true));
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
+
+        test::compare_wildcard_topic(topic, name, type, true, true);
+    }
+
+    // Topic with no key
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>(false));
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
+
+        test::compare_wildcard_topic(topic, name, type, true, false);
+    }
+}
+
+/**
+ * Test read correct WildcardTopic from yaml
+ *
+ * NEGATIVE CASES:
+ * - empty
+ * - without name
+ */
+TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
+{
+    std::string name = "topic_name";
+    std::string type = "topic_type";
+
+    // empty
+    {
+        Yaml yml_topic;
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        ASSERT_THROW(YamlReader::get<WildcardTopic>(yml, "topic"), ConfigurationException);
+    }
+
+    // Topic without type
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>());
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        ASSERT_THROW(YamlReader::get<WildcardTopic>(yml, "topic"), ConfigurationException);
     }
 }
 

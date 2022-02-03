@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#########################
-# Yaml GetEntities Test #
-#########################
+###############################
+# Yaml GetEntities Topic Test #
+###############################
 
 set(TEST_NAME YamlGetEntityTopicTest)
 
@@ -28,6 +28,8 @@ sources_for_test_utils("${TEST_SOURCES}")
 
 set(TEST_LIST
         get_real_topic
+        get_wildcard_topic
+        get_wildcard_topic_negative
     )
 
 set(TEST_EXTRA_LIBRARIES
