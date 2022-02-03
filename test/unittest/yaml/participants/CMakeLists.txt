@@ -12,16 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-###########################################
-# Yaml GetConfigurations Participant Test #
-###########################################
+#################################################
+# Yaml GetConfigurations CommonParticipant Test #
+#################################################
 
-set(TEST_NAME YamlGetParticipantConfigurationTest)
+set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
-        YamlGetParticipantConfigurationTest.cpp
+        YamlGetCommonParticipantConfigurationTest.cpp
+    )
+all_library_sources("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_participant
+        get_participant_negative
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+#################################################
+# Yaml GetConfigurations SimpleParticipant Test #
+#################################################
+
+set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        YamlGetSimpleParticipantConfigurationTest.cpp
     )
 all_library_sources("${TEST_SOURCES}")
 

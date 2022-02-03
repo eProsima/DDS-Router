@@ -25,6 +25,7 @@
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/participant/ParticipantKind.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
+#include <ddsrouter/types/endpoint/DomainId.hpp>
 #include <ddsrouter/yaml/Yaml.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
@@ -140,6 +141,16 @@ void participantkind_to_yaml(
         yml,
         test::YamlField<std::string>(kind.to_string()),
         PARTICIPANT_KIND_TAG);
+}
+
+void domain_to_yaml(
+        Yaml& yml,
+        const DomainId& domain)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<DomainIdType>(domain.domain_id()),
+        DOMAIN_ID_TAG);
 }
 
 } /* namespace test */

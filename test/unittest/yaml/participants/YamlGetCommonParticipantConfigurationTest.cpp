@@ -32,7 +32,7 @@ using namespace eprosima::ddsrouter::yaml;
  *
  * Try random ids with random types
  */
-TEST(YamlGetParticipantConfigurationTest, get_participant)
+TEST(YamlGetCommonParticipantConfigurationTest, get_participant)
 {
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
@@ -68,7 +68,7 @@ TEST(YamlGetParticipantConfigurationTest, get_participant)
  * - no id
  * - no type
  */
-TEST(YamlGetParticipantConfigurationTest, get_participant_negative)
+TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
 {
     // empty
     {
@@ -91,7 +91,7 @@ TEST(YamlGetParticipantConfigurationTest, get_participant_negative)
         Yaml yml_participant;
         yaml::test::participantkind_to_yaml(
             yml_participant,
-            eprosima::ddsrouter::test::random_participant_kind());
+            ParticipantKind(ParticipantKind::ECHO));
         yml["participant"] = yml_participant;
 
         // Read Yaml
