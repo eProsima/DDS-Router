@@ -121,7 +121,7 @@ TEST(PayloadPoolTest, reserve)
 
         // This would (maybe) fail with SEG FAULT if the data has not been correctly set
         payload.data[0] = 4u;
-        payload.data[0x1000-1] = 5u;
+        payload.data[0x1000 - 1] = 5u;
     }
 
     // 0 size

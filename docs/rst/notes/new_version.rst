@@ -13,6 +13,10 @@ Next release will include the following **Configuration features**:
 * Support DNS by given Domain Name in configuration instead of an IP address.
 * Support keyed topics.
 
+This release includes the following **Routing features**:
+
+* Zero-Copy data transmission between internal Participants.
+
 Next release will include the following **User Interface features**:
 
 * Allow to close the Router application gently with ``SIGTERM`` (``kill``) as with ``SIGINT`` (``^C``).
