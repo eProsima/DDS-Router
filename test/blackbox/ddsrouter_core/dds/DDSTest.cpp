@@ -21,6 +21,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -46,6 +47,42 @@
 using namespace eprosima::ddsrouter;
 
 constexpr const uint32_t SAMPLES_TO_SEND = 10;
+
+configuration::DDSRouterConfiguration dds_test_simple_configuration()
+{
+    std::set<std::shared_ptr<FilterTopic>> allowlist;   // empty
+    std::set<std::shared_ptr<FilterTopic>> blocklist;   // empty
+
+    // Two topics, one keyed and other not
+    std::set<std::shared_ptr<RealTopic>> builtin_topics(
+        {
+            std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorld"),
+            std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
+        });
+
+    // Two simple participants
+    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
+        {
+            std::make_shared<configuration::SimpleParticipantConfiguration>(
+                    ParticipantId("participant_0"),
+                    ParticipantKind(ParticipantKind::SIMPLE_RTPS),
+                    DomainId(0u)
+                ),
+            std::make_shared<configuration::SimpleParticipantConfiguration>(
+                    ParticipantId("participant_1"),
+                    ParticipantKind(ParticipantKind::SIMPLE_RTPS),
+                    DomainId(1u)
+                ),
+        }
+    );
+
+    return configuration::DDSRouterConfiguration(
+        allowlist,
+        blocklist,
+        builtin_topics,
+        participants_configurations
+    );
+}
 
 /**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
@@ -382,8 +419,7 @@ private:
 TEST(DDSTest, simple_initialization)
 {
     // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
@@ -415,8 +451,7 @@ TEST(DDSTest, end_to_end_communication)
     ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
 
     // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);
@@ -465,8 +500,7 @@ TEST(DDSTest, end_to_end_communication_keyed)
     ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
 
     // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
+    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
 
     // Create DDSRouter entity
     DDSRouter router(router_configuration);

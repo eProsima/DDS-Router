@@ -13,6 +13,4 @@
 # limitations under the License.
 
 add_subdirectory(trivial)
-
-# TODO: Add subdirectory when ready
-# add_subdirectory(dds)
+add_subdirectory(dds)
