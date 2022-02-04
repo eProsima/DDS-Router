@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <condition_variable>
-#include <mutex>
+#include <atomic>
 #include <thread>
 
 #include <gtest_aux.hpp>
@@ -24,41 +23,37 @@
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
-#include "../types/Common.hpp"
+#include <test_participants.hpp>
 
 using namespace eprosima::ddsrouter;
 
-constexpr const uint32_t SAMPLES_TO_SEND = 10;
+constexpr const uint32_t SAMPLES_TO_RECEIVE = 10;
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
  * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
  */
+template <class MsgStruct>
 void test_local_communication(
-        std::string config_path,
-        bool keyed = false)
+        std::string config_path)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
     test::TestLogHandler test_log_handler(Log::Kind::Error);
 
     uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
 
-    HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
+    MsgStruct msg;
+    msg.message("Testing DDS-Router Blackbox Local...");
 
     // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(keyed);
+    HelloWorldPublisher<MsgStruct> publisher(msg.isKeyDefined());
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(keyed);
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
+    HelloWorldSubscriber<MsgStruct> subscriber(msg.isKeyDefined());
+    ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
     RawConfiguration router_configuration =
@@ -68,20 +63,12 @@ void test_local_communication(
     DDSRouter router(router_configuration);
     router.start();
 
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
     // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
+    while (samples_received.load() < SAMPLES_TO_RECEIVE)
     {
-        subscriber.data_received(false);
         msg.index(++samples_sent);
         publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
 
     router.stop();
@@ -108,7 +95,7 @@ TEST(DDSTestLocal, simple_initialization)
  */
 TEST(DDSTestLocal, end_to_end_local_communication)
 {
-    test_local_communication("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
+    test_local_communication<HelloWorld>("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
 }
 
 /**
@@ -117,7 +104,7 @@ TEST(DDSTestLocal, end_to_end_local_communication)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
-    test_local_communication("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml", true);
+    test_local_communication<HelloWorldKeyed>("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
 }
 
 

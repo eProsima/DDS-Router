@@ -13,16 +13,14 @@
 // limitations under the License.
 
 /**
- * @file Common.hpp
+ * @file test_participants.hpp
  */
 
-#ifndef _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_
-#define _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_
+#ifndef _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_
+#define _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_
 
 #include <atomic>
-#include <condition_variable>
 #include <iostream>
-#include <mutex>
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -50,6 +48,7 @@
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
+template <class MsgStruct>
 class HelloWorldPublisher
 {
 public:
@@ -141,17 +140,19 @@ public:
 
     //! Publish a sample
     void publish(
-            HelloWorld msg)
+            MsgStruct msg)
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
-        writer_->write(&hello_);
-        std::cout << "Message " << hello_.message() << " " << hello_.index() << " SENT" << std::endl;
+        if (writer_->write(&hello_))
+        {
+            std::cout << "Message " << hello_.message() << " " << hello_.index() << " SENT" << std::endl;
+        }
     }
 
 private:
 
-    HelloWorld hello_;
+    MsgStruct hello_;
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
 
@@ -168,6 +169,7 @@ private:
  * Class used to group into a single working unit a Subscriber with a DataReader, its listener, and a TypeSupport member
  * corresponding to the HelloWorld datatype
  */
+template <class MsgStruct>
 class HelloWorldSubscriber
 {
 public:
@@ -179,7 +181,6 @@ public:
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
-        , data_received_(false)
     {
     }
 
@@ -206,12 +207,11 @@ public:
     //! Initialize the subscriber
     bool init(
             uint32_t domain,
-            HelloWorld* msg_should_receive,
-            std::condition_variable* reception_cv,
-            std::mutex* reception_cv_mtx)
+            MsgStruct* msg_should_receive,
+            std::atomic<uint32_t>* samples_received)
     {
         // INITIALIZE THE LISTENER
-        listener_.init(this, msg_should_receive, reception_cv, reception_cv_mtx);
+        listener_.init(msg_should_receive, samples_received);
 
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
@@ -264,17 +264,6 @@ public:
         return true;
     }
 
-    bool data_received()
-    {
-        return data_received_;
-    }
-
-    void data_received(
-            bool new_value)
-    {
-        data_received_ = new_value;
-    }
-
 private:
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
@@ -287,9 +276,6 @@ private:
 
     bool keyed_;
 
-    //! Attribute set to true when new data is received
-    std::atomic<bool> data_received_;
-
     /**
      * Class handling dataflow events
      */
@@ -299,15 +285,11 @@ private:
 
         //! Initialize the listener
         void init(
-                HelloWorldSubscriber* subscriber,
-                HelloWorld* msg_should_receive,
-                std::condition_variable* reception_cv,
-                std::mutex* reception_cv_mtx)
+                MsgStruct* msg_should_receive,
+                std::atomic<uint32_t>* samples_received)
         {
-            subscriber_ = subscriber;
             msg_should_receive_ = msg_should_receive;
-            reception_cv_ = reception_cv;
-            reception_cv_mtx_ = reception_cv_mtx;
+            samples_received_ = samples_received;
         }
 
         //! Callback executed when a new sample is received
@@ -322,15 +304,10 @@ private:
                 {
                     std::cout << "Message " << msg_received_.message() << " " << msg_received_.index() << " RECEIVED" <<
                         std::endl;
-                    if (msg_received_.index() == msg_should_receive_->index() &&
-                            msg_received_.message() == msg_should_receive_->message())
+                    if (msg_received_.message() == msg_should_receive_->message())
                     {
                         success = true;
-                        {
-                            std::lock_guard<std::mutex> lk(*reception_cv_mtx_);
-                            subscriber_->data_received(true);
-                        }
-                        reception_cv_->notify_one();
+                        (*samples_received_)++;
                     }
                 }
             }
@@ -339,22 +316,16 @@ private:
 
     private:
 
-        //! Reference to the subscriber object owning this listener
-        HelloWorldSubscriber* subscriber_;
-
         //! Placeholder where received data is stored
-        HelloWorld msg_received_;
+        MsgStruct msg_received_;
 
         //! Reference to the sample sent by the publisher
-        HelloWorld* msg_should_receive_;
+        MsgStruct* msg_should_receive_;
 
-        //! Reference to condition variable used to synchronize data flow
-        std::condition_variable* reception_cv_;
-
-        //! Reference to mutex managing access to attribute \c data_received_
-        std::mutex* reception_cv_mtx_;
+        //! Reference to received messages counter
+        std::atomic<uint32_t>* samples_received_;
     }
     listener_;
 };
 
-#endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_COMMON_HPP_ */
+#endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_ */

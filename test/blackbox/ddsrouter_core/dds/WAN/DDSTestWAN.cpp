@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <condition_variable>
+#include <atomic>
 #include <mutex>
 #include <thread>
 
@@ -24,11 +24,11 @@
 #include <ddsrouter/types/Log.hpp>
 #include <ddsrouter/types/RawConfiguration.hpp>
 
-#include "../types/Common.hpp"
+#include <test_participants.hpp>
 
 using namespace eprosima::ddsrouter;
 
-constexpr const uint32_t SAMPLES_TO_SEND = 10;
+constexpr const uint32_t SAMPLES_TO_RECEIVE = 10;
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
@@ -37,8 +37,7 @@ constexpr const uint32_t SAMPLES_TO_SEND = 10;
  */
 void test_WAN_communication(
         std::string server_config_path,
-        std::string client_config_path,
-        uint16_t sleep_for = 1)
+        std::string client_config_path)
 {
     // Check there are no warnings/errors
     // TODO: Uncomment when having no listening addresses is no longer considered an error by the middleware
@@ -46,22 +45,18 @@ void test_WAN_communication(
     // test::TestLogHandler test_log_handler(Log::Kind::Error);
 
     uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
 
     HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
+    msg.message("Testing DDS-Router Blackbox WAN...");
 
     // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher;
+    HelloWorldPublisher<HelloWorld> publisher;
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber;
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
+    HelloWorldSubscriber<HelloWorld> subscriber;
+    ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Load configuration containing a Simple Participant in domain 0 and a WAN Participant configured as server
     // (possibly also as client)
@@ -81,20 +76,12 @@ void test_WAN_communication(
     DDSRouter client_router(client_router_configuration);
     client_router.start();
 
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(sleep_for));
-
     // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
+    while (samples_received.load() < SAMPLES_TO_RECEIVE)
     {
-        subscriber.data_received(false);
         msg.index(++samples_sent);
         publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
 
     client_router.stop();
@@ -112,14 +99,13 @@ void test_WAN_communication(
  */
 void test_WAN_communication_all(
         std::string dir_path,
-        bool basic_only = false,
-        uint16_t sleep_for = 1)
+        bool basic_only = false)
 {
     // server <-> client
-    test_WAN_communication(dir_path + "server.yaml", dir_path + "client.yaml", sleep_for);
+    test_WAN_communication(dir_path + "server.yaml", dir_path + "client.yaml");
 
     // server <-> server-client
-    test_WAN_communication(dir_path + "server.yaml", dir_path + "server-client-A.yaml", sleep_for);
+    test_WAN_communication(dir_path + "server.yaml", dir_path + "server-client-A.yaml");
 
     // This test is disabled for TCPv6 and TLSv6, as an underlying middleware issue resulting in no matching for this
     // scenario exists.
@@ -127,7 +113,7 @@ void test_WAN_communication_all(
     if (!basic_only)
     {
         // server-client <-> server-client
-        test_WAN_communication(dir_path + "server-client-B.yaml", dir_path + "server-client-A.yaml", sleep_for);
+        test_WAN_communication(dir_path + "server-client-B.yaml", dir_path + "server-client-A.yaml");
     }
 }
 
@@ -178,7 +164,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
  */
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 {
-    test_WAN_communication_all("../../resources/configurations/dds/WAN/TLS/IPv4/", false, 5);
+    test_WAN_communication_all("../../resources/configurations/dds/WAN/TLS/IPv4/", false);
 }
 
 /**
@@ -188,7 +174,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
  */
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 {
-    test_WAN_communication_all("../../resources/configurations/dds/WAN/TLS/IPv6/", true, 5);
+    test_WAN_communication_all("../../resources/configurations/dds/WAN/TLS/IPv6/", true);
 }
 
 int main(
