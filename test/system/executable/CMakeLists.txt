@@ -24,6 +24,8 @@ if(PYTHONINTERP_FOUND)
     set(TEST_CONFIGURATIONS
         void_configuration
         simple_configuration
+        ds_configuration
+        complex_configuration
     )
 
     # Whether one or other signal in test

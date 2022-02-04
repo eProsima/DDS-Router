@@ -1,4 +1,15 @@
 
+# 1 Echo Participant
+# 1 Simple Participant in domain 0
+# 2 topics, one with key and one without
+
+allowlist:
+  - name: "HelloWorldTopic"
+    type: "HelloWorld"
+  - name: "HelloWorldTopic"
+    type: "HelloWorldKeyed"
+    keyed: true
+
 echo:
   type: echo
 
