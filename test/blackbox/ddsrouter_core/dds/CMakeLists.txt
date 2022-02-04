@@ -32,7 +32,7 @@ set(TEST_LIST
     end_to_end_communication_keyed)
 
 set(TEST_NEEDED_SOURCES
-    resources/dds_test_simple_configuration.yaml)
+    )
 
 set(TEST_EXTRA_HEADERS
     types/HelloWorld
