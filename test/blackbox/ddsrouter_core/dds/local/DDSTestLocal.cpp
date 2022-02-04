@@ -104,7 +104,8 @@ TEST(DDSTestLocal, end_to_end_local_communication)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
-    test_local_communication<HelloWorldKeyed>("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
+    test_local_communication<HelloWorldKeyed>(
+        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
 }
 
 
