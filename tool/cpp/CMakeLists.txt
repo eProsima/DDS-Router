@@ -12,9 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# At this point, we can be sure the library will be compiled.
-# Force DDSRouter as found.
-# If this is not done, a dependency loop will be created.
-set(ddsrouter_FOUND TRUE)
-
-add_subdirectory(cpp)
+add_subdirectory(router)
+add_subdirectory(discovery)
