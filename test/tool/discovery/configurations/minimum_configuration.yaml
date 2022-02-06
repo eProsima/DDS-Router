@@ -1,0 +1,6 @@
+
+discovery-server-guid:
+  id: 0
+
+listening-addresses:
+  - domain: "localhost"

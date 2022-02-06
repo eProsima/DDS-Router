@@ -22,16 +22,8 @@ if(PYTHONINTERP_FOUND)
 
     # Name of files to test
     set(TEST_CONFIGURATIONS
-        void_configuration
-        simple_configuration
-        ds_configuration
-        complex_configuration
-    )
-
-    # Whether one or other signal in test
-    set(SIGNAL_TEST_ARGS
-        "sigint"
-        "sigterm"
+        minimum_configuration
+        complete_configuration
     )
 
     foreach(TEST_CONFIGURATION ${TEST_CONFIGURATIONS})
@@ -80,50 +72,36 @@ if(PYTHONINTERP_FOUND)
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
 
-        set(TEST_NAME "tool.application.ddsrouter.${TEST}")
+        set(TEST_NAME "tool.discovery.${TEST}")
 
         # CTest has issues with signals on windows. We forked the test
-        # execution using an auxiliary powershell script and using only sigint
+        # execution using an auxiliary powershell script
         if(WIN32)
-            add_test(
+           add_test(
                     NAME ${TEST_NAME}
                     COMMAND powershell "-File" ${PWS_LAUNCHER}
                             ${PYTHON_EXECUTABLE}
                             ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                            $<TARGET_FILE:ddsrouter-tool>
+                            $<TARGET_FILE:discovery-tool>
                             ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                 )
-
-            # Set test properties
-            set_tests_properties(
-                ${TEST_NAME}
-                PROPERTIES
-                    ENVIRONMENT "${TEST_ENVIRONMENT}"
-                )
-
         else()
-
-            foreach(SIGNAL_ARG IN LISTS SIGNAL_TEST_ARGS)
-
-                set(TEST_NAME "${TEST_NAME}.${SIGNAL_ARG}")
-                add_test(
-                        NAME ${TEST_NAME}
-                        COMMAND ${PYTHON_EXECUTABLE}
-                                ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
-                                "--exe" $<TARGET_FILE:ddsrouter-tool>
-                                "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
-                                "--debug"
-                                "--signal" ${SIGNAL_ARG}
-                    )
-
-                # Set test properties
-                set_tests_properties(
-                    ${TEST_NAME}
-                    PROPERTIES
-                        ENVIRONMENT "${TEST_ENVIRONMENT}"
-                    )
-                endforeach()
+            add_test(
+                    NAME ${TEST_NAME}
+                    COMMAND ${PYTHON_EXECUTABLE}
+                            ${CMAKE_CURRENT_SOURCE_DIR}/tests.py
+                            "--exe" $<TARGET_FILE:discovery-tool>
+                            "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
+                            "--debug"
+                )
         endif()
+
+        # Set test properties
+        set_tests_properties(
+            ${TEST_NAME}
+            PROPERTIES
+                ENVIRONMENT "${TEST_ENVIRONMENT}"
+            )
 
     endforeach()
 

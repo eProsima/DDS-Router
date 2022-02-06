@@ -1,0 +1,21 @@
+
+domain: 77
+
+discovery-server-guid:
+  ros-discovery-server: true
+  id: 0
+
+connection-addresses:
+  - discovery-server-guid:
+      id: 1
+    addresses:
+      - ip: "8.8.8.8"
+        port: 12000
+        transport: tcp
+
+listening-addresses:
+  - domain: "localhost"
+    port: 11899
+  - domain: "localhost"
+    port: 11900
+    transport: tcp
