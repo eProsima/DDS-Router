@@ -1,0 +1,15 @@
+
+discovery-server-guid:
+  ros-discovery-server: true
+  id: 0
+
+connection-addresses:
+  - discovery-server-guid:
+      id: 1
+    addresses:
+      - domain: "localhost"
+        port: 12000
+
+listening-addresses:
+  - domain: "localhost"
+    port: 11899

@@ -49,9 +49,7 @@ YamlReaderDiscoveryConfiguration::get_discovery_configuration(
         // Check it has listening addresses
         if (discovery_participant_.listening_addresses().size() < 1)
         {
-            throw ConfigurationException(
-                  utils::Formatter() << "Error loading DiscoveryTool configuration:\n " <<
-                    "DiscoveryTool must have listening addresses.");
+            throw ConfigurationException("DiscoveryTool must have listening addresses.");
         }
 
         /////
