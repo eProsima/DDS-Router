@@ -75,9 +75,16 @@ set(TEST_EXTRA_HEADERS
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
 
+set(TEST_XFAIL_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)
+
 add_blackbox_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
     "${TEST_NEEDED_SOURCES}"
-    "${TEST_EXTRA_HEADERS}")
+    "${TEST_EXTRA_HEADERS}"
+    "${TEST_XFAIL_FILES}")
+
+# Set flaky tests as xfail
+# add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)

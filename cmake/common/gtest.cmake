@@ -194,7 +194,7 @@ macro(add_gtest)
 endmacro()
 
 macro(add_xfail_label LIST_FILE)
-    if(GTEST_INDIVIDUAL AND EXISTS ${LIST_FILE})
+    if(EXISTS ${LIST_FILE})
         file(STRINGS ${LIST_FILE} TEST_LIST)
         foreach(XFAIL_TEST ${TEST_LIST})
             set_property(TEST ${XFAIL_TEST} PROPERTY LABELS xfail)
