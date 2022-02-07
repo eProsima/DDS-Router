@@ -169,19 +169,19 @@ public:
     static TransportProtocol default_transport_protocol() noexcept;
 
     /**
-     * @brief Return the IP that refers the \c domain name given with IP version specified in \c ip_version
+     * @brief Return the IP corresponding to the \c domain name given with IP version specified in \c ip_version
      *
      * Make a DNS call to get the IP related with \c domain
      *
      * @param domain domain name of the ip to look for
-     * @param ip_version version of the ip to find (by default the Address ip-version default (IPv4))
+     * @param ip_version version of the ip to find
      * @return IpType IP related with \c domain name
      *
-     * @throw DNSException in case there could not be retrieve an IP for this domain
+     * @throw DNSException in case an IP for this domain could not be retrieved
      */
     static IpType resolve_dns(
-        DomainType domain,
-        IpVersion ip_version);
+            DomainType domain,
+            IpVersion ip_version);
 
     /**
      * @brief Return the IP that refers the \c domain name given
@@ -190,19 +190,20 @@ public:
      *
      * @param domain domain name of the ip to look for
      * @return IpType IP related with \c domain name
+     * by default the Address ip-version default (IPv4)
      *
      * @throw DNSException in case there could not be retrieve an IP for this domain
      */
     static std::pair<IpType, IpVersion> resolve_dns(
-        DomainType domain);
+            DomainType domain);
 
 protected:
 
     //! Internal IP object
     IpType ip_;
-    //! Internal IP object
+    //! Domain Name which this Address has been created (in case it is created with ip, it does not have)
     DomainType domain_;
-    //! Whether this Address has been initialized with domain or no
+    //! Whether this Address has been initialized with domain or not
     bool has_domain_;
     //! Whether the domain has been valid on DNS call
     bool has_valid_domain_;

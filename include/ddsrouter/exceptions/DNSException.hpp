@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 
 /**
- * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
- *  not well-formed yaml, and when a configuration creation has failed.
+ * @brief Exception thrown when fail trying to get IP from Domain Name via DNS call.
  */
 class DNSException : public Exception
 {
