@@ -28,7 +28,7 @@
 using namespace eprosima::ddsrouter;
 
 constexpr const uint32_t SAMPLES_TO_RECEIVE = 5;
-constexpr const uint32_t MILISECONDS_PUBLISH_LOOP = 100;
+constexpr const uint32_t MILLISECONDS_PUBLISH_LOOP = 100;
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
@@ -69,7 +69,7 @@ void test_local_communication(
     {
         msg.index(++samples_sent);
         publisher.publish(msg);
-        std::this_thread::sleep_for(std::chrono::milliseconds(MILISECONDS_PUBLISH_LOOP));
+        std::this_thread::sleep_for(std::chrono::milliseconds(MILLISECONDS_PUBLISH_LOOP));
     }
 
     router.stop();

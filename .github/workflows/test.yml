@@ -155,7 +155,7 @@ jobs:
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
-              --label-exclude xfail
+              --label-exclude xfail \
               --timeout 60
 
       - name: Generate coverage report
