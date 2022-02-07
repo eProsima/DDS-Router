@@ -18,7 +18,6 @@
 # TEST_SOURCES -> sources for the test
 # TEST_LIST -> test cases implemented in the Test .cpp
 # ARGV4 -> extra headers needed for the test (fifth optional argument)
-# ARGV5 -> flaky test list file (sixth optional argument)
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
 function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
 
@@ -91,11 +90,6 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         "${EXTRA_LIBRARIES}"
         "${ARGV4}"  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
-
-    # add xfails to flaky tests in XFAIL list files
-    foreach(FLAKY_TEST ${ARGV5})
-        add_xfail_label(${FLAKY_TEST})
-    endforeach()
 
 endfunction(add_blackbox_executable)
 
