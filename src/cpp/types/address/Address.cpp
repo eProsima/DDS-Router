@@ -19,6 +19,7 @@
 
 #include <fastrtps/utils/IPLocator.h>
 
+#include <ddsrouter/exceptions/DNSException.hpp>
 #include <ddsrouter/types/address/Address.hpp>
 #include <ddsrouter/types/utils.hpp>
 
@@ -45,7 +46,35 @@ Address::Address(
     , port_(port)
     , ip_version_(ip_version)
     , transport_protocol_(transport_protocol)
+    , domain_()
+    , has_domain_(false)
+    , has_valid_domain_(false)
 {
+}
+
+Address::Address(
+        const PortType& port,
+        const IpVersion& ip_version,
+        const DomainType& domain,
+        const TransportProtocol& transport_protocol) noexcept
+    : ip_()
+    , port_(port)
+    , ip_version_(ip_version)
+    , transport_protocol_(transport_protocol)
+    , domain_(domain)
+    , has_domain_(true)
+    , has_valid_domain_(false)
+{
+    try
+    {
+        ip_ = Address::resolve_dns(domain_, ip_version_);
+        has_valid_domain_ = true;
+    }
+    catch (const DNSException& e)
+    {
+        logWarning(
+            DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
+    }
 }
 
 Address::Address(
@@ -57,6 +86,31 @@ Address::Address(
     if (is_ipv6_correct(ip_))
     {
         ip_version_ = IPv6;
+    }
+}
+
+Address::Address(
+        const PortType& port,
+        const DomainType& domain,
+        const TransportProtocol& transport_protocol) noexcept
+    : ip_()
+    , port_(port)
+    , transport_protocol_(transport_protocol)
+    , domain_(domain)
+    , has_domain_(true)
+    , has_valid_domain_(false)
+{
+    try
+    {
+        auto dns_respone = Address::resolve_dns(domain_);
+        ip_ = dns_respone.first;
+        ip_version_ = dns_respone.second;
+        has_valid_domain_ = true;
+    }
+    catch (const DNSException& e)
+    {
+        logWarning(
+            DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
     }
 }
 
@@ -130,6 +184,11 @@ LocatorType Address::get_locator_kind() noexcept
 
 bool Address::is_valid() const noexcept
 {
+    if (has_domain_ && !has_valid_domain_)
+    {
+        return false;
+    }
+
     // TODO check port and maybe UDP/TCP specific rules
     switch (ip_version_)
     {
@@ -235,11 +294,100 @@ TransportProtocol Address::default_transport_protocol() noexcept
     return DEFAULT_TRANSPORT_PROTOCOL_;
 }
 
+IpType Address::resolve_dns(
+        DomainType domain,
+        IpVersion ip_version)
+{
+    std::pair<std::set<std::string>, std::set<std::string>> dns_response =
+            fastrtps::rtps::IPLocator::resolveNameDNS(domain);
+
+    if (ip_version == IPv4)
+    {
+        if (dns_response.first.empty())
+        {
+            throw DNSException(
+                      utils::Formatter() << "Could not resolve IPv4 for domain name <" << domain << ">.");
+        }
+        else
+        {
+            logInfo(
+                DDSROUTER_ADDRESS,
+                "Getting first IPv4: " << dns_response.first.begin()->data() <<
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.first.size() << " valid IPs.");
+            return dns_response.first.begin()->data();
+        }
+    }
+    else
+    {
+        if (dns_response.second.empty())
+        {
+            throw DNSException(
+                      utils::Formatter() << "Could not resolve IPv6 for domain name <" << domain << ">.");
+        }
+        else
+        {
+            logInfo(
+                DDSROUTER_ADDRESS,
+                "Getting first IPv6: " << dns_response.second.begin()->data() <<
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.second.size() << " valid IPs.");
+            return dns_response.second.begin()->data();
+        }
+    }
+}
+
+std::pair<IpType, IpVersion> Address::resolve_dns(
+        DomainType domain)
+{
+    std::pair<std::set<std::string>, std::set<std::string>> dns_response =
+            fastrtps::rtps::IPLocator::resolveNameDNS(domain);
+
+    if (dns_response.first.empty())
+    {
+        if (dns_response.second.empty())
+        {
+            throw DNSException(
+                      utils::Formatter() <<
+                          "Could not resolve IP for IPv4 nor IPv6 for domain name <" << domain << ">.");
+        }
+        else
+        {
+            logInfo(
+                DDSROUTER_ADDRESS,
+                "Getting first IPv6: " << dns_response.second.begin()->data() <<
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.second.size() << " valid IPs.");
+            return {dns_response.second.begin()->data(), IPv6};
+        }
+    }
+    else
+    {
+        logInfo(
+            DDSROUTER_ADDRESS,
+            "Getting first IPv4: " << dns_response.first.begin()->data() <<
+                " for Domain name: " << domain <<
+                " from DNS response from " << (dns_response.first.size() + dns_response.second.size()) <<
+                " valid IPs.");
+        return {dns_response.first.begin()->data(), IPv4};
+    }
+}
+
 std::ostream& operator <<(
         std::ostream& output,
         const Address& address)
 {
-    output << "{" << address.ip() << ";" << address.port() << ";";
+    output << "{";
+
+    if (address.has_domain_)
+    {
+        output << address.domain_ << "(" << address.ip() << ");";
+    }
+    else
+    {
+        output << address.ip() << ";";
+    }
+    output << address.port() << ";";
 
     if (address.is_udp())
     {
