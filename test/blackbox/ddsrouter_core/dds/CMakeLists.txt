@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-add_subdirectory(trivial)
-add_subdirectory(dds)
+add_subdirectory(local)
+add_subdirectory(WAN)

@@ -27,10 +27,11 @@ namespace ddsrouter {
 namespace test {
 
 TestLogHandler::TestLogHandler(
+        Log::Kind threshold, /* Log::Kind::Warning */
         uint32_t max_severe_logs /* = 0 */)
     : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry)
             {
-            }))
+            }, threshold))
     , max_severe_logs_(max_severe_logs)
 {
 }

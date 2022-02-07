@@ -63,7 +63,7 @@ public:
      *
      * If any writer or reader still exists, removes it and shows a warning
      */
-    ~BaseParticipant();
+    virtual ~BaseParticipant();
 
     /**
      * @brief Override id() IParticipant method

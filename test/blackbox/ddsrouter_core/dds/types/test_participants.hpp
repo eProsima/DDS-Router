@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/**
+ * @file test_participants.hpp
+ */
+
+#ifndef _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_
+#define _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_
+
 #include <atomic>
-#include <condition_variable>
 #include <iostream>
-#include <mutex>
-#include <thread>
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
-
-#include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/types/Log.hpp>
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
@@ -40,17 +41,14 @@
 #include <fastrtps/attributes/PublisherAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
 
-#include "HelloWorldPubSubTypes.h"
-#include "HelloWorldKeyedPubSubTypes.h"
-
-using namespace eprosima::ddsrouter;
-
-constexpr const uint32_t SAMPLES_TO_SEND = 10;
+#include "HelloWorld/HelloWorldPubSubTypes.h"
+#include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
 
 /**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
+template <class MsgStruct>
 class HelloWorldPublisher
 {
 public:
@@ -121,17 +119,8 @@ public:
         }
 
         // CREATE THE TOPIC
-        if (keyed_)
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-        }
-        else
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-
-        }
+        std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
+        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -151,17 +140,19 @@ public:
 
     //! Publish a sample
     void publish(
-            HelloWorld msg)
+            MsgStruct msg)
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
-        writer_->write(&hello_);
-        std::cout << "Message " << hello_.message() << " " << hello_.index() << " SENT" << std::endl;
+        if (writer_->write(&hello_))
+        {
+            std::cout << "Message " << hello_.message() << " " << hello_.index() << " SENT" << std::endl;
+        }
     }
 
 private:
 
-    HelloWorld hello_;
+    MsgStruct hello_;
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
 
@@ -178,6 +169,7 @@ private:
  * Class used to group into a single working unit a Subscriber with a DataReader, its listener, and a TypeSupport member
  * corresponding to the HelloWorld datatype
  */
+template <class MsgStruct>
 class HelloWorldSubscriber
 {
 public:
@@ -189,7 +181,6 @@ public:
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
-        , data_received_(false)
     {
     }
 
@@ -216,12 +207,11 @@ public:
     //! Initialize the subscriber
     bool init(
             uint32_t domain,
-            HelloWorld* msg_should_receive,
-            std::condition_variable* reception_cv,
-            std::mutex* reception_cv_mtx)
+            MsgStruct* msg_should_receive,
+            std::atomic<uint32_t>* samples_received)
     {
         // INITIALIZE THE LISTENER
-        listener_.init(this, msg_should_receive, reception_cv, reception_cv_mtx);
+        listener_.init(msg_should_receive, samples_received);
 
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
@@ -255,17 +245,8 @@ public:
         }
 
         // CREATE THE TOPIC
-        if (keyed_)
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorldKeyed",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-        }
-        else
-        {
-            topic_ = participant_->create_topic("HelloWorldTopic", "HelloWorld",
-                            eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
-
-        }
+        std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
+        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -283,17 +264,6 @@ public:
         return true;
     }
 
-    bool data_received()
-    {
-        return data_received_;
-    }
-
-    void data_received(
-            bool new_value)
-    {
-        data_received_ = new_value;
-    }
-
 private:
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
@@ -306,9 +276,6 @@ private:
 
     bool keyed_;
 
-    //! Attribute set to true when new data is received
-    std::atomic<bool> data_received_;
-
     /**
      * Class handling dataflow events
      */
@@ -318,15 +285,11 @@ private:
 
         //! Initialize the listener
         void init(
-                HelloWorldSubscriber* subscriber,
-                HelloWorld* msg_should_receive,
-                std::condition_variable* reception_cv,
-                std::mutex* reception_cv_mtx)
+                MsgStruct* msg_should_receive,
+                std::atomic<uint32_t>* samples_received)
         {
-            subscriber_ = subscriber;
             msg_should_receive_ = msg_should_receive;
-            reception_cv_ = reception_cv;
-            reception_cv_mtx_ = reception_cv_mtx;
+            samples_received_ = samples_received;
         }
 
         //! Callback executed when a new sample is received
@@ -341,15 +304,10 @@ private:
                 {
                     std::cout << "Message " << msg_received_.message() << " " << msg_received_.index() << " RECEIVED" <<
                         std::endl;
-                    if (msg_received_.index() == msg_should_receive_->index() &&
-                            msg_received_.message() == msg_should_receive_->message())
+                    if (msg_received_.message() == msg_should_receive_->message())
                     {
                         success = true;
-                        {
-                            std::lock_guard<std::mutex> lk(*reception_cv_mtx_);
-                            subscriber_->data_received(true);
-                        }
-                        reception_cv_->notify_one();
+                        (*samples_received_)++;
                     }
                 }
             }
@@ -358,147 +316,16 @@ private:
 
     private:
 
-        //! Reference to the subscriber object owning this listener
-        HelloWorldSubscriber* subscriber_;
-
         //! Placeholder where received data is stored
-        HelloWorld msg_received_;
+        MsgStruct msg_received_;
 
         //! Reference to the sample sent by the publisher
-        HelloWorld* msg_should_receive_;
+        MsgStruct* msg_should_receive_;
 
-        //! Reference to condition variable used to synchronize data flow
-        std::condition_variable* reception_cv_;
-
-        //! Reference to mutex managing access to attribute \c data_received_
-        std::mutex* reception_cv_mtx_;
+        //! Reference to received messages counter
+        std::atomic<uint32_t>* samples_received_;
     }
     listener_;
 };
 
-/**
- * Test whole DDSRouter initialization by initializing two SimpleParticipants
- */
-TEST(DDSTest, simple_initialization)
-{
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-
-    // Let test finish without failing
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains
- */
-TEST(DDSTest, end_to_end_communication)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher;
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber;
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    router.stop();
-}
-
-/**
- * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains
- */
-TEST(DDSTest, end_to_end_communication_keyed)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorldKeyed");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(true);
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(true);
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file("resources/dds_test_simple_configuration.yaml");
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    router.stop();
-}
-
-int main(
-        int argc,
-        char** argv)
-{
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+#endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_ */

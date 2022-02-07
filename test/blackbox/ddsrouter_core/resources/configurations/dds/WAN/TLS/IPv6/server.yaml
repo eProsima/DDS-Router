@@ -1,0 +1,25 @@
+
+# This YAML configures the DDS Router for the DDS communication test.
+# It is composed of a Simple Participant and a WAN Participant configured as server with TLSv6 transport.
+
+allowlist:
+  - name: "HelloWorldTopic"
+    type: "HelloWorld"
+
+participant_0:
+  type: "local"
+  domain: 0
+
+ServerWAN:
+  type: "wan"
+  id: 0
+  listening-addresses:
+    - ip: "::1"
+      ip-version: "v6"
+      port: 11666
+      transport: "tcp"
+  tls:
+    ca: "../../resources/configurations/dds/WAN/TLS/security/ca.crt"
+    private_key: "../../resources/configurations/dds/WAN/TLS/security/ddsrouter.key"
+    cert: "../../resources/configurations/dds/WAN/TLS/security/ddsrouter.crt"
+    dh_params: "../../resources/configurations/dds/WAN/TLS/security/dh_params.pem"
