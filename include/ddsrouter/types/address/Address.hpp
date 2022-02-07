@@ -31,6 +31,8 @@ namespace ddsrouter {
 using LocatorType = uint32_t;
 // Data Type for IP
 using IpType = std::string;
+// Data Type for Domain name (DNS)
+using DomainType = std::string;
 // Data Type for Port
 using PortType = uint16_t;
 
@@ -74,6 +76,20 @@ public:
             const TransportProtocol& transport_protocol) noexcept;
 
     /**
+     * @brief Construct a new Address object using a DNS call to get IP from \c domain
+     *
+     * @param port address port
+     * @param ip_version ip version (4 or 6)
+     * @param domain address domain name to call DNS
+     * @param transport_protocol transport protocol (UDP or TCP)
+     */
+    Address(
+            const PortType& port,
+            const IpVersion& ip_version,
+            const DomainType& domain,
+            const TransportProtocol& transport_protocol) noexcept;
+
+    /**
      * @brief Construct Address and get IP version from IP format
      *
      * If the IP is a string with format IPv4, version will be set to IPv4.
@@ -83,6 +99,18 @@ public:
     Address(
             const IpType& ip,
             const PortType& port,
+            const TransportProtocol& transport_protocol) noexcept;
+
+    /**
+     * @brief Construct a new Address object using a DNS call to get IP from \c domain without specifying the IP version
+     *
+     * @param port address port
+     * @param domain address domain name to call DNS
+     * @param transport_protocol transport protocol (UDP or TCP)
+     */
+    Address(
+            const PortType& port,
+            const DomainType& domain,
             const TransportProtocol& transport_protocol) noexcept;
 
     //! Construct a default IP by default values (set in this class)
@@ -140,10 +168,48 @@ public:
     //! Default transport protocol for address when is not set: UDP
     static TransportProtocol default_transport_protocol() noexcept;
 
+    /**
+     * @brief Return the IP corresponding to the \c domain name given with IP version specified in \c ip_version
+     *
+     * Make a DNS call to get the IP related with \c domain
+     *
+     * @param domain domain name of the ip to look for
+     * @param ip_version version of the ip to find
+     *
+     * @return IpType IP related with \c domain name
+     *
+     * @throw DNSException in case an IP for this domain could not be retrieved
+     */
+    static IpType resolve_dns(
+            DomainType domain,
+            IpVersion ip_version);
+
+    /**
+     * @brief Return the IP corresponding to the \c domain name given
+     *
+     * Make a DNS call to get the IP related with \c domain .
+     * Get the IP found in default IP Version (IPv4) if present. If not, find IPv6.
+     *
+     * @param domain domain name of the ip to look for
+     *
+     * @return IpType IP related with \c domain name.
+     * @return IpVersion version of the IP found.
+     *
+     * @throw DNSException in case an IP for this domain could not be retrieved
+     */
+    static std::pair<IpType, IpVersion> resolve_dns(
+            DomainType domain);
+
 protected:
 
     //! Internal IP object
     IpType ip_;
+    //! Domain Name with which this Address has been created (in case it is created with ip, it is not used)
+    DomainType domain_;
+    //! Whether this Address has been initialized with domain or not
+    bool has_domain_;
+    //! Whether the domain has been valid on DNS call
+    bool has_valid_domain_;
     //! Internal Port object
     PortType port_;
     //! Internal Ip version object
@@ -161,6 +227,11 @@ protected:
     static const IpVersion DEFAULT_IP_VERSION_;                  // IPv4
     //! Default Transport protocol
     static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_;  // UDP
+
+    // Allow operator << to use domain info
+    friend std::ostream& operator <<(
+            std::ostream& output,
+            const Address& address);
 };
 
 //! \c Address to stream serializator
