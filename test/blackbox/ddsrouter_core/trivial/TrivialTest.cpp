@@ -113,10 +113,6 @@ int main(
         int argc,
         char** argv)
 {
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
