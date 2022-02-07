@@ -175,7 +175,7 @@ Address YamlReader::get<Address>(
     else if (!ip_set && !domain_name_set)
     {
         throw ConfigurationException(utils::Formatter() <<
-            "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
+                      "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
     }
 
     // Optional get port

@@ -70,7 +70,7 @@ Address::Address(
         ip_ = Address::resolve_dns(domain_, ip_version_);
         has_valid_domain_ = true;
     }
-    catch(const DNSException& e)
+    catch (const DNSException& e)
     {
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
@@ -107,7 +107,7 @@ Address::Address(
         ip_version_ = dns_respone.second;
         has_valid_domain_ = true;
     }
-    catch(const DNSException& e)
+    catch (const DNSException& e)
     {
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
@@ -295,26 +295,26 @@ TransportProtocol Address::default_transport_protocol() noexcept
 }
 
 IpType Address::resolve_dns(
-    DomainType domain,
-    IpVersion ip_version)
+        DomainType domain,
+        IpVersion ip_version)
 {
     std::pair<std::set<std::string>, std::set<std::string>> dns_response =
-        fastrtps::rtps::IPLocator::resolveNameDNS(domain);
+            fastrtps::rtps::IPLocator::resolveNameDNS(domain);
 
     if (ip_version == IPv4)
     {
         if (dns_response.first.empty())
         {
             throw DNSException(
-                        utils::Formatter() << "Could not resolve IPv4 for domain name <" << domain << ">.");
+                      utils::Formatter() << "Could not resolve IPv4 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
                 "Getting first IPv4: " << dns_response.first.begin()->data() <<
-                " for Domain name: " << domain <<
-                " from DNS response from " << dns_response.first.size() << " valid IPs.");
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.first.size() << " valid IPs.");
             return dns_response.first.begin()->data();
         }
     }
@@ -323,15 +323,15 @@ IpType Address::resolve_dns(
         if (dns_response.second.empty())
         {
             throw DNSException(
-                        utils::Formatter() << "Could not resolve IPv6 for domain name <" << domain << ">.");
+                      utils::Formatter() << "Could not resolve IPv6 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
                 "Getting first IPv6: " << dns_response.second.begin()->data() <<
-                " for Domain name: " << domain <<
-                " from DNS response from " << dns_response.second.size() << " valid IPs.");
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.second.size() << " valid IPs.");
             return dns_response.second.begin()->data();
         }
     }
@@ -341,23 +341,23 @@ std::pair<IpType, IpVersion> Address::resolve_dns(
         DomainType domain)
 {
     std::pair<std::set<std::string>, std::set<std::string>> dns_response =
-        fastrtps::rtps::IPLocator::resolveNameDNS(domain);
+            fastrtps::rtps::IPLocator::resolveNameDNS(domain);
 
     if (dns_response.first.empty())
     {
         if (dns_response.second.empty())
         {
             throw DNSException(
-                        utils::Formatter() <<
-                        "Could not resolve IP for IPv4 nor IPv6 for domain name <" << domain << ">.");
+                      utils::Formatter() <<
+                          "Could not resolve IP for IPv4 nor IPv6 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
                 "Getting first IPv6: " << dns_response.second.begin()->data() <<
-                " for Domain name: " << domain <<
-                " from DNS response from " << dns_response.second.size() << " valid IPs.");
+                    " for Domain name: " << domain <<
+                    " from DNS response from " << dns_response.second.size() << " valid IPs.");
             return {dns_response.second.begin()->data(), IPv6};
         }
     }
@@ -366,8 +366,9 @@ std::pair<IpType, IpVersion> Address::resolve_dns(
         logInfo(
             DDSROUTER_ADDRESS,
             "Getting first IPv4: " << dns_response.first.begin()->data() <<
-            " for Domain name: " << domain <<
-            " from DNS response from " << (dns_response.first.size() + dns_response.second.size()) << " valid IPs.");
+                " for Domain name: " << domain <<
+                " from DNS response from " << (dns_response.first.size() + dns_response.second.size()) <<
+                " valid IPs.");
         return {dns_response.first.begin()->data(), IPv4};
     }
 }
