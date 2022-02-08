@@ -98,6 +98,7 @@
    :hidden:
 
    /rst/notes/notes
+   /rst/notes/new_version
 
 
 .. _index_appendix:

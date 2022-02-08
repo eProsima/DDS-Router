@@ -17,6 +17,7 @@ fastcdr
 fastrtps
 github
 Gtest
+gMock
 guid
 guid
 IPv
