@@ -43,6 +43,7 @@ Reader::Reader(
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant,
         reader_att,
+        payload_pool_,
         rtps_history_,
         this);
 
@@ -111,14 +112,13 @@ ReturnCode Reader::take_(
     }
 
     // Check that the data is consistent
-    if (!(received_change->serializedPayload.length > 0))
+    if (!(received_change->serializedPayload.max_size > 0))
     {
         logWarning(DDSROUTER_RTPS_READER_LISTENER,
                 "Error taking data with length " << received_change->serializedPayload.length << ".");
 
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
-        rtps_reader_->releaseCache(received_change);
 
         return ReturnCode::RETCODE_ERROR;
     }
@@ -131,7 +131,6 @@ ReturnCode Reader::take_(
 
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
-        rtps_reader_->releaseCache(received_change);
 
         return ReturnCode::RETCODE_ERROR;
     }
@@ -141,7 +140,11 @@ ReturnCode Reader::take_(
     data->source_guid = received_change->writerGUID;
 
     // Store it in DDSRouter PayloadPool
-    payload_pool_->get_payload(received_change->serializedPayload, data->payload);
+    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
+    payload_pool_->get_payload(
+        received_change->serializedPayload,
+        payload_owner,
+        data->payload);
 
     logDebug(DDSROUTER_RTPS_READER_LISTENER,
             "Data transmiting to track from Reader " << *this << " with payload " <<
@@ -149,7 +152,6 @@ ReturnCode Reader::take_(
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
-    rtps_reader_->releaseCache(received_change);
 
     return ReturnCode::RETCODE_OK;
 }

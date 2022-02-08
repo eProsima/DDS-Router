@@ -29,6 +29,8 @@ Configuring the |ddsrouter| to have 4 different Participants, each of them confi
 will create internally 4 Participants.
 All the data that arrives to one of the Participants will be forwarded through the others, allowing all the machines
 to connect to each other independently of their different configurations.
+This data transmission will be accomplished without copying the data, as all participants will share the pointer
+to the allocated data, successfully achieving a **zero-copy** communication mechanism.
 
 .. figure:: /rst/figures/ddsrouter_overview.png
 

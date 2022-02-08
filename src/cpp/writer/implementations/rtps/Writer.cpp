@@ -43,7 +43,12 @@ Writer::Writer(
 
     // Create Writer
     fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
-    rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(rtps_participant, writer_att, rtps_history_, nullptr);
+    rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+        rtps_participant,
+        writer_att,
+        payload_pool_,
+        rtps_history_,
+        nullptr);
 
     if (!rtps_writer_)
     {
@@ -82,7 +87,6 @@ Writer::~Writer()
     // Delete History
     if (rtps_history_)
     {
-        // Deleting history correctly releases payloads in the Payload Pool
         delete rtps_history_;
     }
 
@@ -97,10 +101,7 @@ ReturnCode Writer::write_(
     uint32_t data_size = data->payload.length;
 
     // Take new Change from history
-    fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change([data_size]() -> uint32_t
-                    {
-                        return data_size;
-                    }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+    fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
     // TODO : Set method to remove old changes in order to get a new one
     // In case it fails, remove old changes from history and try again
@@ -120,7 +121,8 @@ ReturnCode Writer::write_(
     }
 
     // Get the Payload (copying it)
-    if (!payload_pool_->get_payload(data->payload, (*new_change)))
+    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
+    if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
     {
         logError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
         return ReturnCode::RETCODE_ERROR;

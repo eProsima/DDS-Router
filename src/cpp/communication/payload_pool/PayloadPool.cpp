@@ -17,8 +17,8 @@
  *
  */
 
-#include <ddsrouter/communication/PayloadPool.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/communication/payload_pool/PayloadPool.hpp>
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -38,22 +38,33 @@ PayloadPool::~PayloadPool()
     }
     else if (reserve_count_ != release_count_)
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Removing PayloadPool with " << (reserve_count_ - release_count_) <<
-                " messages without released.");
+        logWarning(DDSROUTER_PAYLOADPOOL,
+                "From " << reserve_count_ << " payloads reserved only " << release_count_ << " has been released.");
     }
     else
     {
-        logDebug(DDSROUTER_PAYLOADPOOL,
+        logInfo(DDSROUTER_PAYLOADPOOL,
                 "Removing PayloadPool correctly after reserve: " << reserve_count_ << " payloads.");
     }
 }
+
+/////
+// FAST DDS PART
 
 bool PayloadPool::get_payload(
         uint32_t size,
         eprosima::fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (get_payload(size, cache_change.serializedPayload))
+    {
+        cache_change.payload_owner(this);
+        return true;
+    }
+    else
+    {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while creating payload.")
+        return false;
+    }
 }
 
 bool PayloadPool::get_payload(
@@ -61,47 +72,48 @@ bool PayloadPool::get_payload(
         IPayloadPool*& data_owner,
         eprosima::fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (get_payload(data, data_owner, cache_change.serializedPayload))
+    {
+        cache_change.payload_owner(this);
+        return true;
+    }
+    else
+    {
+        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while referencing payload.")
+        return false;
+    }
 }
 
 bool PayloadPool::release_payload(
-        eprosima::fastrtps::rtps::CacheChange_t& cache_change)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::release_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        uint32_t size,
-        Payload& payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        const Payload& src_payload,
-        Payload& target_payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
-}
-
-bool PayloadPool::release_payload(
-        Payload& payload)
-{
-    // TODO
-    throw UnsupportedException("PayloadPool::release_payload not supported yet");
-}
-
-bool PayloadPool::get_payload(
-        fastrtps::rtps::SerializedPayload_t& data,
         fastrtps::rtps::CacheChange_t& cache_change)
 {
-    // TODO
-    throw UnsupportedException("PayloadPool::get_payload not supported yet");
+    if (cache_change.payload_owner() == this)
+    {
+        if (release_payload(cache_change.serializedPayload))
+        {
+            cache_change.payload_owner(nullptr);
+            return true;
+        }
+        else
+        {
+            logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while releasing payload.")
+            return false;
+        }
+    }
+    else
+    {
+        logError(DDSROUTER_PAYLOADPOOL, "Trying to remove a cache change in an incorrect pool.")
+        throw InconsistencyException("Trying to remove a cache change in an incorrect pool.");
+    }
 }
+
+bool PayloadPool::is_clean() const noexcept
+{
+    return reserve_count_ == release_count_;
+}
+
+/////
+// INTERNAL PART
 
 void PayloadPool::add_reserved_payload_()
 {
@@ -115,6 +127,7 @@ void PayloadPool::add_release_payload_()
     {
         logError(DDSROUTER_PAYLOADPOOL,
                 "Inconsistent PayloadPool, releasing more payloads than reserved.");
+        throw InconsistencyException("Inconsistent PayloadPool, releasing more payloads than reserved.");
     }
 }
 
@@ -140,6 +153,11 @@ bool PayloadPool::release_(
         Payload& payload)
 {
     payload.empty();
+
+    if (payload.data != nullptr)
+    {
+        return false;
+    }
 
     add_release_payload_();
 
