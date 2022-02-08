@@ -74,11 +74,6 @@ int main(
         // Change it when Log Module is independent and with more extensive API.
         // Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
-    else
-    {
-        // TODO: Check if we want this
-        Log::SetVerbosity(Log::Kind::Warning);
-    }
 
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
