@@ -41,9 +41,8 @@ void test_WAN_communication(
         std::string client_config_path)
 {
     // Check there are no warnings/errors
-    // TODO: Uncomment when having no listening addresses is no longer considered an error by the middleware
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
-    // test::TestLogHandler test_log_handler(Log::Kind::Error);
+    test::TestLogHandler test_log_handler(Log::Kind::Error);
 
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);

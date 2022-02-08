@@ -39,8 +39,7 @@ void test_local_communication(
         std::string config_path)
 {
     // Check there are no warnings/errors
-    // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
-    test::TestLogHandler test_log_handler(Log::Kind::Error);
+    test::TestLogHandler test_log_handler(Log::Kind::Warning);
 
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);
