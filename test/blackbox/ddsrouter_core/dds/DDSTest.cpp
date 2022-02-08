@@ -55,33 +55,33 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration()
 
     // Two topics, one keyed and other not
     std::set<std::shared_ptr<RealTopic>> builtin_topics(
-        {
-            std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorld"),
-            std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
-        });
+    {
+        std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorld"),
+        std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
+    });
 
     // Two simple participants
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-        {
-            std::make_shared<configuration::SimpleParticipantConfiguration>(
-                    ParticipantId("participant_0"),
-                    ParticipantKind(ParticipantKind::SIMPLE_RTPS),
-                    DomainId(0u)
-                ),
-            std::make_shared<configuration::SimpleParticipantConfiguration>(
-                    ParticipantId("participant_1"),
-                    ParticipantKind(ParticipantKind::SIMPLE_RTPS),
-                    DomainId(1u)
-                ),
-        }
-    );
+    {
+        std::make_shared<configuration::SimpleParticipantConfiguration>(
+            ParticipantId("participant_0"),
+            ParticipantKind(ParticipantKind::SIMPLE_RTPS),
+            DomainId(0u)
+            ),
+        std::make_shared<configuration::SimpleParticipantConfiguration>(
+            ParticipantId("participant_1"),
+            ParticipantKind(ParticipantKind::SIMPLE_RTPS),
+            DomainId(1u)
+            ),
+    }
+        );
 
     return configuration::DDSRouterConfiguration(
         allowlist,
         blocklist,
         builtin_topics,
         participants_configurations
-    );
+        );
 }
 
 /**
