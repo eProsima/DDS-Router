@@ -83,14 +83,22 @@ Install the ROS 2 development tools (colcon_ and vcstool_) by executing the foll
 Gtest
 ^^^^^
 
-Gtest is a unit testing library for C++.
+Gtest_ is a unit testing library for C++.
 By default, |ddsrouter| does not compile tests.
 It is possible to activate them with the opportune
 `CMake options <https://colcon.readthedocs.io/en/released/reference/verb/build.html#cmake-options>`_
 when calling colcon_ or CMake_.
 For more details, please refer to the :ref:`cmake_options` section.
-For a detailed description of the Gtest installation process, please refer to the
+For a detailed description of the Gtest_ installation process, please refer to the
 `Gtest Installation Guide <https://github.com/google/googletest>`_.
+
+It is also possible to clone the Gtest_ Github repository into the |ddsrouter| workspace and compile it with colcon_
+as a dependency package.
+Use the following command to download the code:
+
+.. code-block:: bash
+
+    git clone --branch release-1.10.0 https://github.com/google/googletest src/googletest-distribution
 
 .. _dependencies:
 

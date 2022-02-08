@@ -16,6 +16,7 @@ include_directories("TestUtils")
 
 include(${PROJECT_SOURCE_DIR}/cmake/common/gtest.cmake)
 check_gtest()
+check_gmock()
 
 if(WIN32)
 
@@ -94,6 +95,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
 
     target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE
         ${GTEST_INCLUDE_DIRS}
+        ${GMOCK_INCLUDE_DIRS}
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}/include
@@ -101,7 +103,11 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         ${ARGV5}  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
-    target_link_libraries(${TEST_EXECUTABLE_NAME} PUBLIC ${GTEST_LIBRARIES} ${TEST_EXTRA_LIBRARIES})
+    target_link_libraries(
+        ${TEST_EXECUTABLE_NAME} PUBLIC
+            ${GTEST_LIBRARIES}
+            ${GMOCK_LIBRARIES}
+            ${TEST_EXTRA_LIBRARIES})
 
     get_win32_path_dependencies(${TEST_EXECUTABLE_NAME} TEST_FRIENDLY_PATH)
 
