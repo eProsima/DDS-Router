@@ -78,11 +78,3 @@ This release includes the following **Examples**:
 This release includes the following **Documentation features**:
 
 * This same documentation.
-
-..
-    This toctree is needed so new_version file are linked from somewhere. It won't be visible.
-
-.. toctree::
-    :hidden:
-
-    new_version

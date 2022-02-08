@@ -47,15 +47,10 @@ std::ostream& operator <<(
         std::ostream& os,
         const eprosima::fastrtps::rtps::octet& octet);
 
-// //! \c SerializedPayload_t to stream serializator
-// std::ostream& operator <<(
-//         std::ostream& os,
-//         const Payload& payload);
-
 //! \c SerializedPayload_t to stream serializator
 std::ostream& operator <<(
         std::ostream& os,
-        const eprosima::fastrtps::rtps::SerializedPayload_t& payload);
+        const Payload& payload);
 
 } /* namespace ddsrouter */
 } /* namespace eprosima */
