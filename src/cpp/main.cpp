@@ -66,6 +66,7 @@ int main(
     if (activate_debug)
     {
         // Activate log
+        Log::SetVerbosity(Log::Kind::Info);
 
         // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
         // in non debug or with LOG_NO_INFO=ON.
