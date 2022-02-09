@@ -6,7 +6,7 @@
 Version v0.2.0
 ##############
 
-Next release will include the following **Configuration features**:
+This release includes the following **Configuration features**:
 
 * Support TLS configuration and communication.
 * Support IPv6 communication via UDP, TCP and TLS.
@@ -17,11 +17,11 @@ This release includes the following **Routing features**:
 
 * Zero-Copy data transmission between internal Participants.
 
-Next release will include the following **User Interface features**:
+This release includes the following **User Interface features**:
 
 * Allow to close the Router application gently with ``SIGTERM`` (``kill``) as with ``SIGINT`` (``^C``).
 
-Next release will include the following **Continuous-Integration features**:
+This release includes the following **Continuous-Integration features**:
 
 * Add communication tests for UDP, TCP and TLS WAN cases.
 * Extend tool test with more complex configurations.
@@ -29,11 +29,12 @@ Next release will include the following **Continuous-Integration features**:
 * Implement a new class to check that no warning or error logs are produced during test executions.
 * Add gMock to test libraries.
 
-Next release will fix the following **major bugs**:
+This release fixes the following **major bugs**:
 
 * Fix GUID creation when explicit guid is provided.
+* Show error when participant ids are duplicated.
 
-Next release will fix the following **minor bugs**:
+This release fixes the following **minor bugs**:
 
 * Change ``YAML`` example configurations to ``YAML`` format (instead of ``JSON``) fixing
   an issue when blank lines were missing at the end of the file.
