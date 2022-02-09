@@ -104,8 +104,10 @@ protected:
      *
      * @param [in] id: Id of the new Participant
      * @param [in] participant: Pointer to the new Participant
+     *
+     * @return True if the Participant was added, False if it was updated (already existed in the database).
      */
-    void add_participant_(
+    bool add_participant_(
             ParticipantId id,
             std::shared_ptr<IParticipant> participant) noexcept;
 

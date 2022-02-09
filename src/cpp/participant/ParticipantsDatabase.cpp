@@ -72,24 +72,28 @@ size_t ParticipantsDatabase::size() const noexcept
     return participants_.size();
 }
 
-void ParticipantsDatabase::add_participant_(
+bool ParticipantsDatabase::add_participant_(
         ParticipantId id,
         std::shared_ptr<IParticipant> participant) noexcept
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+    bool ret;
     // TODO: this find is only to check if it exists, decide if needed
     auto it = participants_.find(id);
 
     if (it != participants_.end())
     {
-        logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a duplicated Participant " << id);
+        logInfo(DDSROUTER_PARTICIPANT_DATABASE, "Updating a Participant " << id);
+        ret = false;
     }
     else
     {
         logInfo(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a new Participant " << id);
+        ret = true;
     }
 
     participants_[id] = participant;
+    return ret;
 }
 
 std::shared_ptr<IParticipant> ParticipantsDatabase::pop_(

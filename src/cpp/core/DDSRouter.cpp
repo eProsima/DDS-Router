@@ -20,7 +20,7 @@
 #include <ddsrouter/communication/payload_pool/MapPayloadPool.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -254,9 +254,15 @@ void DDSRouter::init_participants_()
                                                            << " and type " << new_participant->type() << ".");
 
         // Add this participant to the database
-        participants_database_->add_participant_(
+        if (!participants_database_->add_participant_(
             new_participant->id(),
-            new_participant);
+            new_participant))
+        {
+            // Duplicated Ids
+            logError(DDSROUTER, "Participant Ids must be unique.");
+            throw ConfigurationException(utils::Formatter()
+                      << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
+        }
     }
 
     // If DDS Router has not two or more Participants configured, it should fail
