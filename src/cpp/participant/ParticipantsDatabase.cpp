@@ -83,7 +83,7 @@ void ParticipantsDatabase::add_participant_(
     if (it != participants_.end())
     {
         throw InconsistencyException(
-            utils::Formatter() << "Participant with Id " << id << " already in database.");
+                  utils::Formatter() << "Participant with Id " << id << " already in database.");
     }
     else
     {

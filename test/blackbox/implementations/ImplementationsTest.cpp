@@ -227,7 +227,8 @@ TEST(ImplementationsTest, all_implementations)
  */
 TEST(ImplementationsTest, duplicated_ids)
 {
-    const char *yaml_str = R"(
+    const char* yaml_str =
+            R"(
         participant_1:
             type: simple
             domain: 0

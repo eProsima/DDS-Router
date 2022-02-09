@@ -261,10 +261,10 @@ void DDSRouter::init_participants_()
                 new_participant->id(),
                 new_participant);
         }
-        catch(const InconsistencyException& e)
+        catch (const InconsistencyException& e)
         {
             throw ConfigurationException(utils::Formatter()
-                      << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
+                          << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
         }
     }
 
