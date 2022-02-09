@@ -8,8 +8,8 @@ Version v0.2.0
 
 This release includes the following **Configuration features**:
 
-* Support TLS configuration and communication.
-* Support IPv6 communication via UDP, TCP and TLS.
+* Support TLS over TCP configuration and communication.
+* Support IPv6 communication via UDP, TCP and TLS over TCP.
 * Support DNS by given Domain Name in configuration instead of an IP address.
 * Support keyed topics.
 
@@ -19,13 +19,13 @@ This release includes the following **Routing features**:
 
 This release includes the following **User Interface features**:
 
-* Allow to close the Router application gently with ``SIGTERM`` (``kill``) as with ``SIGINT`` (``^C``).
+* Shutdown the DDS Router application gracefully sending ``SIGTERM`` (``kill``) or ``SIGINT`` (``^C``) signals.
 
 This release includes the following **Continuous-Integration features**:
 
-* Add communication tests for UDP, TCP and TLS WAN cases.
+* Add communication tests for UDP, TCP and TLS over TCP WAN cases.
 * Extend tool test with more complex configurations.
-* Erase Flaky tests from CI required passing tests.
+* Remove Flaky tests from CI required passing tests.
 * Implement a new class to check that no warning or error logs are produced during test executions.
 * Add gMock to test libraries.
 
