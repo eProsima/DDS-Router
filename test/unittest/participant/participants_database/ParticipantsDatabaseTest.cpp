@@ -17,6 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/types/participant/ParticipantId.hpp>
@@ -60,7 +61,7 @@ public:
     void add_participant(
             ParticipantId id,
             std::shared_ptr<IParticipant> participant,
-            std::size_t expected_size) noexcept
+            std::size_t expected_size)
     {
         add_participant_(id, participant);
         // Verify correct insertion
@@ -97,10 +98,9 @@ TEST(ParticipantsDatabaseTest, add_participant)
     std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
     // Insert participant
     participants_database->add_participant(participant->id(), participant, 1);
-    // Reinsert to assure there is no error when inserting duplicates, only a warning is printed
-    participants_database->add_participant(participant->id(), participant, 1);
 
-    // Verifications already included in \c add_participant
+    // Reinsert and check it throws an error
+    ASSERT_THROW(participants_database->add_participant(participant->id(), participant, 1), InconsistencyException);
 }
 
 /**

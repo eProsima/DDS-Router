@@ -20,6 +20,7 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter/core/DDSRouter.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
 #include <ddsrouter/participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <ddsrouter/types/configuration_tags.hpp>
@@ -216,6 +217,34 @@ TEST(ImplementationsTest, all_implementations)
 
         // Let DDSRouter object destroy for the next iteration
     }
+}
+
+/**
+ * Test that creates a DDSRouter with 3 simple configurations, 2 of them with same id, fails
+ *
+ * There is no easy way to test this case as the yaml will be ill-formed with two keys.
+ * Thus, it must be implemented from a yaml in string format.
+ */
+TEST(ImplementationsTest, duplicated_ids)
+{
+    const char* yaml_str =
+            R"(
+        participant_1:
+            type: simple
+            domain: 0
+
+        participant_2:
+            type: simple
+            domain: 1
+
+        participant_2:
+            type: simple
+            domain: 2
+        )";
+
+    RawConfiguration configuration(yaml_str);
+
+    ASSERT_THROW(DDSRouter ddsrouter(configuration), ConfigurationException);
 }
 
 int main(

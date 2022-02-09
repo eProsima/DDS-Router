@@ -17,6 +17,7 @@
  *
  */
 
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/participant/ParticipantsDatabase.hpp>
 #include <ddsrouter/types/Log.hpp>
 
@@ -74,15 +75,15 @@ size_t ParticipantsDatabase::size() const noexcept
 
 void ParticipantsDatabase::add_participant_(
         ParticipantId id,
-        std::shared_ptr<IParticipant> participant) noexcept
+        std::shared_ptr<IParticipant> participant)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
-    // TODO: this find is only to check if it exists, decide if needed
-    auto it = participants_.find(id);
 
+    auto it = participants_.find(id);
     if (it != participants_.end())
     {
-        logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Inserting a duplicated Participant " << id);
+        throw InconsistencyException(
+                  utils::Formatter() << "Participant with Id " << id << " already in database.");
     }
     else
     {

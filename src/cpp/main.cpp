@@ -188,5 +188,8 @@ int main(
 
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router execution correctly.");
 
+    // Force print every log before closing
+    Log::Flush();
+
     return ui::ProcessReturnCode::SUCCESS;
 }

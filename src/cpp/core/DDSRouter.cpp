@@ -20,8 +20,9 @@
 #include <ddsrouter/communication/payload_pool/MapPayloadPool.hpp>
 #include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter/core/DDSRouter.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
+#include <ddsrouter/exceptions/ConfigurationException.hpp>
 #include <ddsrouter/exceptions/InitializationException.hpp>
+#include <ddsrouter/exceptions/InconsistencyException.hpp>
 #include <ddsrouter/types/Log.hpp>
 
 namespace eprosima {
@@ -253,10 +254,18 @@ void DDSRouter::init_participants_()
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
                                                            << " and type " << new_participant->type() << ".");
 
-        // Add this participant to the database
-        participants_database_->add_participant_(
-            new_participant->id(),
-            new_participant);
+        // Add this participant to the database. If it is repeated it will cause an exception
+        try
+        {
+            participants_database_->add_participant_(
+                new_participant->id(),
+                new_participant);
+        }
+        catch (const InconsistencyException& e)
+        {
+            throw ConfigurationException(utils::Formatter()
+                          << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
+        }
     }
 
     // If DDS Router has not two or more Participants configured, it should fail
