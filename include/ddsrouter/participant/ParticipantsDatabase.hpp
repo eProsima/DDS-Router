@@ -105,11 +105,11 @@ protected:
      * @param [in] id: Id of the new Participant
      * @param [in] participant: Pointer to the new Participant
      *
-     * @return True if the Participant was added, False if it was updated (already existed in the database).
+     * @throw \c IncosistentException if participant already exist (duplicated ids)
      */
-    bool add_participant_(
+    void add_participant_(
             ParticipantId id,
-            std::shared_ptr<IParticipant> participant) noexcept;
+            std::shared_ptr<IParticipant> participant);
 
     //! Database variable to store participants pointers indexed by their ids
     std::map<ParticipantId, std::shared_ptr<IParticipant>> participants_;
