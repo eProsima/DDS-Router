@@ -3,78 +3,46 @@
 .. _release_notes:
 
 ##############
-Version v0.1.0
+Version v0.2.0
 ##############
-
-This is the first release of eProsima |ddsrouter|.
-
-This release includes several **features** regarding the routing of DDS data, the |ddsrouter| configuration,
-the user interaction
-with the |ddsrouter|, and the different DDS configurations that the application is able to reproduce.
-
-This release includes the following **User Interface features**:
-
-* Application executable.
-* Application executable arguments.
-* Signal handler to close the application.
-* FileWatcher thread to watch and reload the configuration file.
-* Periodic timer to force reload configuration.
-* Application run-time user logs.
-* Application run-time debug logs.
-* Error handling:
-
-    * Error log and exit program when reading configuration fails.
-    * Error log and exit program when initializing Participants fails.
-    * Error log and continuing execution when execution error occurs.
-
 
 This release includes the following **Configuration features**:
 
-* Allow to execute the application with a *YAML* configuration file.
-* Support for initial topics in allowlist.
-* Support for block topic filters.
-* Different Participant configurations:
-
-    * Domain Id.
-    * Discovery Server GuidPrefix.
-    * Listening addresses.
-    * Connection addresses.
-
+* Support TLS over TCP configuration and communication.
+* Support IPv6 communication via UDP, TCP and TLS over TCP.
+* Support DNS by given Domain Name in configuration instead of an IP address.
+* Support keyed topics.
 
 This release includes the following **Routing features**:
 
-* Support for routing Topics specified in allowlist regarding Topic name and Topic Type name.
-* Support for connecting to new Topics in run-time (by reloading configuration).
-* Support for disabling a Topic in run-time.
-* Support for enabling a Topic that has been disabled in run-time.
-* Route messages of each Participant to all the other Participants.
-* Agnostic to topic data types.
+* Zero-Copy data transmission between internal Participants.
 
+This release includes the following **User Interface features**:
 
-This release includes the following **DDS features**:
+* Shutdown the DDS Router application gracefully sending ``SIGTERM`` (``kill``) or ``SIGINT`` (``^C``) signals.
 
-* Allow UDP, TCP and SHM transport communication.
-* Allow dynamic discovery of new entities.
-* Using |efastdds| RTPS layer for discovery, publication and subscription.
+This release includes the following **Continuous-Integration features**:
 
+* Add communication tests for UDP, TCP and TLS over TCP WAN cases.
+* Extend tool test with more complex configurations.
+* Remove Flaky tests from CI required passing tests.
+* Implement a new class to check that no warning or error logs are produced during test executions.
+* Add gMock to test libraries.
 
-This release includes the following **Participant features**:
+This release fixes the following **major bugs**:
 
-* **Echo Participant**.
-* **Simple Participant**, able to connect to a Simple Discovery UDP DDS network.
-* **Local Discovery Server Participant**, able to connect to a local Discovery Server as Client or Server.
-* **WAN Participant**, able to connect to a WAN Discovery Server network as Client or Server.
+* Fix GUID creation when explicit guid is provided.
+* Show error when participant ids are duplicated.
 
+This release fixes the following **minor bugs**:
 
-This release includes the following **Examples**:
+* Change ``YAML`` example configurations to ``YAML`` format (instead of ``JSON``) fixing
+  an issue when blank lines were missing at the end of the file.
+* Normalize the error and process exit when failure.
+* Fix documentation typos.
 
-* **Echo Example**, to monitor a local simple network.
-* **Domain Change Example**, to connect two different domains.
-* **ROS 2 Discovery Server Example**, to connect a regular DDS network with a Discovery Server network using
-  ROS 2 configuration.
-* **WAN Example**, to connect two DDS networks in different LANs.
+#################
+Previous Versions
+#################
 
-
-This release includes the following **Documentation features**:
-
-* This same documentation.
+.. include:: previous_versions/v0.1.0.rst
