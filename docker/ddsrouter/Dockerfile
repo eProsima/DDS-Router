@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
 # Download and build DDS-Router
 COPY ./colcon.meta /ddsrouter
 RUN mkdir resources && \
-    wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos && \
+    wget https://raw.githubusercontent.com/eProsima/DDS-Router/v0.2.0/ddsrouter.repos && \
     mkdir src && \
     vcs import src < ddsrouter.repos && \
     colcon build --event-handlers=console_direct+
