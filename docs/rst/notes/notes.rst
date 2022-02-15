@@ -41,6 +41,12 @@ This release fixes the following **minor bugs**:
 * Normalize the error and process exit when failure.
 * Fix documentation typos.
 
+###################
+Forthcoming Version
+###################
+
+.. include:: forthcoming_version.rst
+
 #################
 Previous Versions
 #################
