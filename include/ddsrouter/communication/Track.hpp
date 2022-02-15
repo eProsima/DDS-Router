@@ -133,12 +133,8 @@ protected:
      *
      * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.
-     *
-     * Not Thread safe, call with \c transmit_mutex_ locked
      */
-    void transmit_nts_() noexcept;
-
-protected:
+    void transmit_() noexcept;
 
     /**
      * @brief Id of the Participant of the Reader
@@ -193,20 +189,25 @@ protected:
     std::atomic<bool> is_data_available_;
 
     /**
-     * Thread that will manage the transmision of the data
+     * Condition variable to wait for new data available or track termination.
+     */
+    std::condition_variable data_available_condition_variable_;
+
+    /**
+     * Mutex to handle access to condition variable \c data_available_condition_variable_ .
+     * Mutex to manage access to variable \c is_data_available_ .
+     */
+    std::mutex data_available_mutex_;
+
+    /**
+     * Thread that will manage the transmission of the data
      */
     std::thread transmit_thread_;
 
     /**
-     * Condition variable to wait for new data available or track termination.
+     * Mutex to guard while the Track is sending a message.
      */
-    std::condition_variable transmit_condition_variable_;
-
-    /**
-     * Mutex to handle access to condition variable \c transmit_condition_variable_ .
-     * Mutex to manage access to variable \c is_data_available_ .
-     */
-    std::mutex transmit_mutex_;
+    std::mutex on_transmition_mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

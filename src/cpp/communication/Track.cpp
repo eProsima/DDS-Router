@@ -60,7 +60,7 @@ Track::~Track()
 {
     logDebug(DDSROUTER_TRACK, "Destroying Track " << *this << ".");
 
-    // Disable reader
+    // Disable reader and writers
     disable();
 
     // Unset callback on the Reader (this is needed as Reader will live longer than Track)
@@ -69,11 +69,11 @@ Track::~Track()
     // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
     {
         // Set exit status and call transmit thread to awake and terminate. Then wait for it.
-        std::lock_guard<std::mutex> lock(transmit_mutex_);
+        std::lock_guard<std::mutex> lock(data_available_mutex_);
         exit_.store(true); // This is not needed to be guarded as it is atomic
     }
 
-    transmit_condition_variable_.notify_all();
+    data_available_condition_variable_.notify_all();
     transmit_thread_.join();
 
     logDebug(DDSROUTER_TRACK, "Track " << *this << " destroyed.");
@@ -87,13 +87,13 @@ void Track::enable() noexcept
     {
         logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
 
-        // Enable writers
+        // Enabling writers
         for (auto& writer_it : writers_)
         {
             writer_it.second->enable();
         }
 
-        // Enable reader
+        // Enabling reader
         reader_->enable();
 
         enabled_ = true;
@@ -108,21 +108,27 @@ void Track::disable() noexcept
     {
         logInfo(DDSROUTER_TRACK, "Disabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
 
-        // Disabling Writer
-        for (auto& writer_it : writers_)
+        // Do disable before stop in the mutex so the Track is forced to stop in next iteration
+        enabled_ = false;
         {
-            writer_it.second->disable();
+            // Stop if there is a transmission in course till the data is sent
+            std::unique_lock<std::mutex> lock(on_transmition_mutex_);
         }
 
         // Disabling Reader
         reader_->disable();
 
-        enabled_ = false;
+        // Disabling Writers
+        for (auto& writer_it : writers_)
+        {
+            writer_it.second->disable();
+        }
     }
 }
 
 void Track::no_more_data_available_() noexcept
 {
+    std::lock_guard<std::mutex> lock(data_available_mutex_);
     logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
     is_data_available_.store(false);
 }
@@ -142,11 +148,11 @@ void Track::data_available() noexcept
         // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
         {
             // Set data available to true and notify transmit thread
-            std::lock_guard<std::mutex> lock(transmit_mutex_);
+            std::lock_guard<std::mutex> lock(data_available_mutex_);
             is_data_available_.store(true);
         }
 
-        transmit_condition_variable_.notify_one();
+        data_available_condition_variable_.notify_one();
     }
 }
 
@@ -155,29 +161,36 @@ void Track::transmit_thread_function_() noexcept
     while (!exit_)
     {
         // Wait in Condition Variable till there is data to send or it must exit
-        std::unique_lock<std::mutex> lock(transmit_mutex_);
-        transmit_condition_variable_.wait(
-            lock,
-            [this]
-            {
-                return this->is_data_available_ || this->exit_;
-            });
-
-        // Once thread awakes, it has the mutex locked for next nts methods
-
-        // Avoid start transmitting if it was awake to terminate
-        if (should_transmit_nts_())
         {
-            // If it was awake because new data arrived, transmit it
-            transmit_nts_();
+            std::unique_lock<std::mutex> lock(data_available_mutex_);
+            data_available_condition_variable_.wait(
+                lock,
+                [this]
+                {
+                    return this->is_data_available_ || this->exit_;
+                });
         }
+
+        // Once thread awakes, transmit without any mutex guarded
+        transmit_();
     }
 }
 
-void Track::transmit_nts_() noexcept
+void Track::transmit_() noexcept
 {
-    while (should_transmit_nts_())
+    // Loop that ends if it should stop transmitting (should_transmit_nts_).
+    // Called inside the loop so it is protected by a mutex that is freed in every iteration.
+    while (true)
     {
+        // Lock Mutex on_transmition while a data is being transmitted
+        std::unique_lock<std::mutex> lock(on_transmition_mutex_);
+
+        // If it must not keep transmitting, stop loop
+        if (!should_transmit_nts_())
+        {
+            break;
+        }
+
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         ReturnCode ret = reader_->take(data);
