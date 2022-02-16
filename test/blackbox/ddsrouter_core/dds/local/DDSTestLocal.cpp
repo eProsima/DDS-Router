@@ -27,8 +27,9 @@
 
 using namespace eprosima::ddsrouter;
 
-constexpr const uint32_t SAMPLES_TO_RECEIVE = 5;
-constexpr const uint32_t MILLISECONDS_PUBLISH_LOOP = 100;
+constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
+constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
+constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
@@ -36,7 +37,10 @@ constexpr const uint32_t MILLISECONDS_PUBLISH_LOOP = 100;
  */
 template <class MsgStruct>
 void test_local_communication(
-        std::string config_path)
+        std::string config_path,
+        uint32_t samples_to_receive=DEFAULT_SAMPLES_TO_RECEIVE,
+        uint32_t time_between_samples=DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+        uint32_t msg_size=DEFAULT_MESSAGE_SIZE)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
@@ -45,8 +49,16 @@ void test_local_communication(
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);
 
+    // Create a message with size specified by repeating the same string
     MsgStruct msg;
-    msg.message("Testing DDS-Router Blackbox Local...");
+    std::string msg_str;
+
+    // First, add as many
+    for (uint32_t i=0; i<msg_size; i++)
+    {
+        msg_str += "Testing DDSRouter Blackbox Local Communication ...";
+    }
+    msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
     HelloWorldPublisher<MsgStruct> publisher(msg.isKeyDefined());
@@ -65,11 +77,16 @@ void test_local_communication(
     router.start();
 
     // Start publishing
-    while (samples_received.load() < SAMPLES_TO_RECEIVE)
+    while (samples_received.load() < samples_to_receive)
     {
         msg.index(++samples_sent);
         publisher.publish(msg);
-        std::this_thread::sleep_for(std::chrono::milliseconds(MILLISECONDS_PUBLISH_LOOP));
+
+        // If time is 0 do not wait
+        if (time_between_samples > 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+        }
     }
 
     router.stop();
@@ -109,6 +126,54 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
         "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
 }
 
+/**
+ * Test high frequency communication in HelloWorldKeyed topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ *
+ * PARAMETERS:
+ * - Frequency: max
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
+{
+    test_local_communication<HelloWorld>(
+        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
+        1000,   // wait for 1000 samples received
+        0);     // send it without waiting from one sample to the other
+}
+
+/**
+ * Test high frequency communication in HelloWorldKeyed topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ *
+ * PARAMETERS:
+ * - Sample size: 5K
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_high_size)
+{
+    test_local_communication<HelloWorld>(
+        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
+        DEFAULT_SAMPLES_TO_RECEIVE,
+        DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+        1000); // 50K message size
+}
+
+/**
+ * Test high throughput communication in HelloWorldKeyed topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ *
+ * PARAMETERS:
+ * - Frequency: 1ms
+ * - Sample size: 50K
+ * -> Throughput: 100MBps
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
+{
+    test_local_communication<HelloWorld>(
+        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
+        500,
+        1,
+        1000); // 5K message size
+}
 
 int main(
         int argc,
