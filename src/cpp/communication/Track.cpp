@@ -137,6 +137,10 @@ void Track::no_more_data_available_() noexcept
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
         data_available_status_.store(DataAvailableStatus::NO_MORE_DATA);
     }
+    // If it is NEW_DATA_ARRIVED is that the Listener has notified new data AFTER Track has received a NO_DATA
+    // from the Reader. Very unlikely timing, but possible.
+    // In this occasion, it must not be set as NO_MORE_DATA because THERE IS data.
+    // If it is NO_MORE_DATA it does not need to be changed (however it should never happen)
 }
 
 bool Track::should_transmit_() noexcept
@@ -165,7 +169,7 @@ void Track::data_available_() noexcept
 bool Track::is_data_available_() const noexcept
 {
     return data_available_status_ == DataAvailableStatus::NEW_DATA_ARRIVED ||
-        data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA;
+           data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA;
 }
 
 void Track::transmit_thread_function_() noexcept
