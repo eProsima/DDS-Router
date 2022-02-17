@@ -38,12 +38,12 @@ Track::Track(
     , payload_pool_(payload_pool)
     , enabled_(false)
     , exit_(false)
-    , is_data_available_(false)
+    , data_available_status_(NO_MORE_DATA)
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
     // Set this track to on_data_available lambda call
-    reader_->set_on_data_available_callback(std::bind(&Track::data_available, this));
+    reader_->set_on_data_available_callback(std::bind(&Track::data_available_, this));
 
     // Activate transmit thread even without being enabled
     transmit_thread_ = std::thread(&Track::transmit_thread_function_, this);
@@ -129,16 +129,22 @@ void Track::disable() noexcept
 void Track::no_more_data_available_() noexcept
 {
     std::lock_guard<std::mutex> lock(data_available_mutex_);
-    logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
-    is_data_available_.store(false);
+
+    // It mat occure that within the process of set data_available_status, the actual status had changed
+    // Thus, it must take care that it is only set to NO_DATA when it comes from transmitting data
+    if (data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA)
+    {
+        logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
+        data_available_status_.store(DataAvailableStatus::NO_MORE_DATA);
+    }
 }
 
-bool Track::should_transmit_nts_() noexcept
+bool Track::should_transmit_() noexcept
 {
-    return !exit_ && enabled_ && this->is_data_available_;
+    return !exit_ && enabled_ && this->is_data_available_();
 }
 
-void Track::data_available() noexcept
+void Track::data_available_() noexcept
 {
     // Only hear callback if it is enabled
     if (enabled_)
@@ -149,11 +155,17 @@ void Track::data_available() noexcept
         {
             // Set data available to true and notify transmit thread
             std::lock_guard<std::mutex> lock(data_available_mutex_);
-            is_data_available_.store(true);
+            data_available_status_.store(DataAvailableStatus::NEW_DATA_ARRIVED);
         }
 
         data_available_condition_variable_.notify_one();
     }
+}
+
+bool Track::is_data_available_() const noexcept
+{
+    return data_available_status_ == DataAvailableStatus::NEW_DATA_ARRIVED ||
+        data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA;
 }
 
 void Track::transmit_thread_function_() noexcept
@@ -167,7 +179,7 @@ void Track::transmit_thread_function_() noexcept
                 lock,
                 [this]
                 {
-                    return this->is_data_available_ || this->exit_;
+                    return this->is_data_available_() || this->exit_;
                 });
         }
 
@@ -183,13 +195,17 @@ void Track::transmit_() noexcept
     while (true)
     {
         // Lock Mutex on_transmition while a data is being transmitted
+        // This prevents the Track to be disabled (and disable writers and readers) while sending a data
         std::unique_lock<std::mutex> lock(on_transmition_mutex_);
 
         // If it must not keep transmitting, stop loop
-        if (!should_transmit_nts_())
+        if (!should_transmit_())
         {
             break;
         }
+
+        // It starts transmitting, so it sets the data available status as transmitting
+        data_available_status_ = TRANSMITTING_DATA;
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();

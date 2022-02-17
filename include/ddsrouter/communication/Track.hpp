@@ -95,6 +95,27 @@ public:
 
 protected:
 
+    /*
+     * WORKAROUND:
+     * A problem has been found in the actual use of Track whithin FastDDS Readers:
+     * the on_data_available callback is called with the Reader mutex taken, so it may occur a deadlock while
+     * reading a data and receiving it at the same time from different threads, and this is a scenario that
+     * could must happen with this design.
+     *
+     * In order to avoid this deadlock, there is a DataAvailableStatus enumeration setting the actual status
+     * of the data having into account the Listener(listen) update and the Track(read) update.
+     *
+     * The main point is to not have any mutex taken while take method is called in the Reader, but a mutex could
+     * be used to guard the access to the actual Track data available status.
+     */
+    //! Status of the data available in the Track's Reader
+    enum DataAvailableStatus
+    {
+        NEW_DATA_ARRIVED,   //! Listener has announced that new data has arrived
+        TRANSMITTING_DATA,  //! Track has announced that is taking data from the Reader
+        NO_MORE_DATA,       //! Track has announced that Reader has no more data, and Listener has not notified new data
+    };
+
     /**
      * Callback that will be called by the reader in case there is available data to be forwarded.
      *
@@ -103,19 +124,36 @@ protected:
      * This method will set the variable \c is_data_available_ to true and awake the transmit thread.
      * If Track is disabled, the callback will be lost.
      */
-    void data_available() noexcept;
+    void data_available_() noexcept;
+
+    /**
+     * @brief Whether there is data waiting to be taken in the Reader
+     *
+     * The times there is data is when \c data_available_status_ is set as \c NEW_DATA_ARRIVED or \c TRANSMITTING_DATA
+     *
+     * @return true if there is available data
+     * @return false otherwise
+     */
+    bool is_data_available_() const noexcept;
 
     /**
      * Callback that will be called when there is no more data available to be forwarded.
+     *
+     * @note: this method is called from the Track after receiving a NO_DATA from Reader. But during the time to
+     * set \c data_available_status_ the Listener could notify new data (it is not possible to guard this
+     * behaviour as no shared mutex could be locked in transmit and listen because of FastDDS Reader mutex taken
+     * while \c on_data_available callback). If this happens, it should not be set as NO_DATA, but as new data.
+     * If this happends, the transmit thread will stop transmit loop, it will arrive to wait and it will automatically
+     * exit it as there is actual data to be sent, so there is no case where it gets stopped with new data available.
      */
     void no_more_data_available_() noexcept;
 
     /**
      * Whether this Track is enabled
      *
-     * Not Thread safe, call with \c transmit_mutex_ locked
+     * This method does not lock a mutex as it only acces atomic values to read them.
      */
-    bool should_transmit_nts_() noexcept;
+    bool should_transmit_() noexcept;
 
     /**
      * Main function of Track.
@@ -182,11 +220,16 @@ protected:
     std::atomic<bool> exit_;
 
     /**
-     * Whether there is currently data available to take from the reader.
+     * Current status of the data available
+     *
+     * There are 3 states:
+     * \c NEW_DATA_ARRIVED  : Reader Listener has notified that there are new data
+     * \c TRANSMITTING_DATA : Track is currently taking data, so there may or may not be data available
+     * \c NO_MORE_DATA      : Track has received a NO_DATA from Reader
      *
      * This variable is protected by \c available_data_mutex_
      */
-    std::atomic<bool> is_data_available_;
+    std::atomic<DataAvailableStatus> data_available_status_;
 
     /**
      * Condition variable to wait for new data available or track termination.
