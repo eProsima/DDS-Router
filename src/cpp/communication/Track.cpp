@@ -70,7 +70,7 @@ Track::~Track()
     {
         // Set exit status and call transmit thread to awake and terminate. Then wait for it.
         std::lock_guard<std::mutex> lock(data_available_mutex_);
-        exit_.store(true); // This is not needed to be guarded as it is atomic
+        exit_.store(true);
     }
 
     data_available_condition_variable_.notify_all();
@@ -112,7 +112,7 @@ void Track::disable() noexcept
         enabled_ = false;
         {
             // Stop if there is a transmission in course till the data is sent
-            std::unique_lock<std::mutex> lock(on_transmition_mutex_);
+            std::unique_lock<std::mutex> lock(on_transmission_mutex_);
         }
 
         // Disabling Reader
@@ -130,7 +130,7 @@ void Track::no_more_data_available_() noexcept
 {
     std::lock_guard<std::mutex> lock(data_available_mutex_);
 
-    // It mat occure that within the process of set data_available_status, the actual status had changed
+    // It may occur that within the process of set data_available_status, the actual status had changed
     // Thus, it must take care that it is only set to NO_DATA when it comes from transmitting data
     if (data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA)
     {
@@ -188,7 +188,10 @@ void Track::transmit_thread_function_() noexcept
         }
 
         // Once thread awakes, transmit without any mutex guarded
-        transmit_();
+        if (!this->exit_)
+        {
+            transmit_();
+        }
     }
 }
 
@@ -200,7 +203,7 @@ void Track::transmit_() noexcept
     {
         // Lock Mutex on_transmition while a data is being transmitted
         // This prevents the Track to be disabled (and disable writers and readers) while sending a data
-        std::unique_lock<std::mutex> lock(on_transmition_mutex_);
+        std::unique_lock<std::mutex> lock(on_transmission_mutex_);
 
         // If it must not keep transmitting, stop loop
         if (!should_transmit_())
@@ -218,6 +221,13 @@ void Track::transmit_() noexcept
         if (ret == ReturnCode::RETCODE_NO_DATA)
         {
             // There is no more data, so finish loop and wait again for new data
+            no_more_data_available_();
+            break;
+        }
+        else if (ret == ReturnCode::RETCODE_NOT_ENABLED)
+        {
+            // This may not happen because the Reader is only disabled from here, however
+            // it is better to cut it and set as no more data is available.
             no_more_data_available_();
             break;
         }

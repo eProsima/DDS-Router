@@ -97,13 +97,13 @@ protected:
 
     /*
      * WORKAROUND:
-     * A problem has been found in the actual use of Track whithin FastDDS Readers:
+     * A problem has been found in the use of Track within FastDDS Readers:
      * the on_data_available callback is called with the Reader mutex taken, so it may occur a deadlock while
      * reading a data and receiving it at the same time from different threads, and this is a scenario that
-     * could must happen with this design.
+     * could happen with this design.
      *
-     * In order to avoid this deadlock, there is a DataAvailableStatus enumeration setting the actual status
-     * of the data having into account the Listener(listen) update and the Track(read) update.
+     * In order to avoid this deadlock, there is a DataAvailableStatus enumeration setting the status
+     * of the data taking into account the Listener(listen) update and the Track(read) update.
      *
      * The main point is to not have any mutex taken while take method is called in the Reader, but a mutex could
      * be used to guard the access to the actual Track data available status.
@@ -143,7 +143,7 @@ protected:
      * set \c data_available_status_ the Listener could notify new data (it is not possible to guard this
      * behaviour as no shared mutex could be locked in transmit and listen because of FastDDS Reader mutex taken
      * while \c on_data_available callback). If this happens, it should not be set as NO_DATA, but as new data.
-     * If this happends, the transmit thread will stop transmit loop, it will arrive to wait and it will automatically
+     * If this happens, the transmit thread will stop transmit loop, it will arrive to wait and it will automatically
      * exit it as there is actual data to be sent, so there is no case where it gets stopped with new data available.
      */
     void no_more_data_available_() noexcept;
@@ -250,7 +250,7 @@ protected:
     /**
      * Mutex to guard while the Track is sending a message.
      */
-    std::mutex on_transmition_mutex_;
+    std::mutex on_transmission_mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

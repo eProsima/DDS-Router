@@ -132,7 +132,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
-            eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         writer_ = publisher_->create_datawriter(topic_, wqos);
 
         if (writer_ == nullptr)
@@ -149,11 +149,7 @@ public:
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
-        if (!writer_->write(&hello_))
-        {
-            // Error sending message
-            ASSERT_TRUE(false);
-        }
+        ASSERT_TRUE(writer_->write(&hello_));
     }
 
 private:
@@ -263,7 +259,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataReaderQos rqos =  eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
         rqos.endpoint().history_memory_policy =
-            eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
 
         if (reader_ == nullptr)
