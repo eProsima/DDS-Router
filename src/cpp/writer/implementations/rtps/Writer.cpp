@@ -143,6 +143,8 @@ ReturnCode Writer::write_(
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
+    att.memoryPolicy =
+            eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
     return att;
 }
 

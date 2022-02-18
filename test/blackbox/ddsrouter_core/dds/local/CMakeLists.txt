@@ -29,7 +29,10 @@ set(TEST_SOURCES
 set(TEST_LIST
     simple_initialization
     end_to_end_local_communication
-    end_to_end_local_communication_keyed)
+    end_to_end_local_communication_keyed
+    end_to_end_local_communication_high_frequency
+    end_to_end_local_communication_high_size
+    end_to_end_local_communication_high_throughput)
 
 set(TEST_NEEDED_SOURCES
     ../../resources/configurations/dds/local/dds_test_simple_configuration.yaml)

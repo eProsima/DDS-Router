@@ -171,6 +171,8 @@ bool Reader::come_from_this_participant_(
 fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
+    att.memoryPolicy =
+            eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
     return att;
 }
 
