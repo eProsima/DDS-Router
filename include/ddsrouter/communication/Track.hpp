@@ -112,7 +112,7 @@ protected:
     enum DataAvailableStatus
     {
         NEW_DATA_ARRIVED,   //! Listener has announced that new data has arrived
-        TRANSMITTING_DATA,  //! Track has announced that is taking data from the Reader
+        TRANSMITTING_DATA,  //! Track is taking data from the Reader, so it could or could not be data
         NO_MORE_DATA,       //! Track has announced that Reader has no more data, and Listener has not notified new data
     };
 
@@ -121,7 +121,7 @@ protected:
      *
      * This method is sent to the Reader so it could call it when there is new data.
      *
-     * This method will set the variable \c is_data_available_ to true and awake the transmit thread.
+     * This method will set the variable \c data_available_status_ to \c NEW_DATA_ARRIVED and awake the transmit thread.
      * If Track is disabled, the callback will be lost.
      */
     void data_available_() noexcept;
@@ -227,7 +227,7 @@ protected:
      * \c TRANSMITTING_DATA : Track is currently taking data, so there may or may not be data available
      * \c NO_MORE_DATA      : Track has received a NO_DATA from Reader
      *
-     * This variable is protected by \c available_data_mutex_
+     * This variable is protected by \c data_available_mutex_
      */
     std::atomic<DataAvailableStatus> data_available_status_;
 
@@ -238,7 +238,7 @@ protected:
 
     /**
      * Mutex to handle access to condition variable \c data_available_condition_variable_ .
-     * Mutex to manage access to variable \c is_data_available_ .
+     * Mutex to manage access to variable \c data_available_status_ .
      */
     std::mutex data_available_mutex_;
 
