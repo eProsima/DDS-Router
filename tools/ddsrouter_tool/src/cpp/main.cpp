@@ -80,7 +80,14 @@ int main(
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
-        // First of all, create signal handler so SIGINT and SIGTERM does not break the program while initializing
+        // First of all, block signals SIGINT and SIGTERM in this thread so they are only handled in dedicated threads
+        sigset_t set;
+        sigemptyset(&set);
+        sigaddset(&set, SIGINT);
+        sigaddset(&set, SIGTERM);
+        sigprocmask(SIG_BLOCK, &set, NULL);
+
+        // Create signal handlers
         event::MultipleEventHandler signal_handlers;
 
         signal_handlers.register_event_handler<event::EventHandler<int>, int>(
