@@ -19,8 +19,10 @@
 #ifndef _DDSROUTEREVENT_SIGNALHANDLER_HPP_
 #define _DDSROUTEREVENT_SIGNALHANDLER_HPP_
 
+#include <atomic>
 #include <csignal>
 #include <functional>
+#include <pthread.h>
 #include <string>
 
 #include <ddsrouter_event/EventHandler.hpp>
@@ -120,6 +122,10 @@ protected:
     //! Unset for while process the signal handler routine.
     static void unset_signal_handler_() noexcept;
 
+    //! Routine performed by dedicated signal handling thread
+    static void* signal_handler_thread_routine_(
+            void*) noexcept;
+
     /**
      * @brief List of active \c SignalHandlers
      *
@@ -130,6 +136,12 @@ protected:
 
     //! Guards access to variable \c active_handlers_
     static std::mutex active_handlers_mutex_;
+
+    //! Handle of thread dedicated to listening for signal arrival
+    static pthread_t signal_handler_thread_;
+
+    //! Flag used to terminate \c signal_handler_thread_
+    static std::atomic<bool> signal_handler_active_;
 };
 
 } /* namespace event */
