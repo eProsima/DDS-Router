@@ -20,7 +20,6 @@ set(TEST_NAME ConfigurationTest)
 
 set(TEST_SOURCES
         ConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp

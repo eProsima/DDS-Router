@@ -20,6 +20,7 @@
 #define _DDSROUTER_COMMUNICATION_MAPPAYLOADPOOL_HPP_
 
 #include <atomic>
+#include <map>
 #include <mutex>
 
 #include <ddsrouter/communication/payload_pool/PayloadPool.hpp>

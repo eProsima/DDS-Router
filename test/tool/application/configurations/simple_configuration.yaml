@@ -1,21 +1,16 @@
 
-<<<<<<< HEAD
 # 1 Echo Participant
 # 1 Simple Participant in domain 0
 # 2 topics, one with key and one without
 
-allowlist:
-  - name: "HelloWorldTopic"
-    type: "HelloWorld"
-  - name: "HelloWorldTopic"
-    type: "HelloWorldKeyed"
+builtin:
+  - name: "rt/chatter"
+    type: "std_msgs::msg::dds_::String_"
+  - name: "rt/chatter/key"
+    type: "std_msgs::msg::dds_::String_"
     keyed: true
 
-echo:
-  kind: echo
-=======
 participants:
->>>>>>> bef4df7... Yaml module [13576] (#129)
 
   - name: echo
     kind: echo

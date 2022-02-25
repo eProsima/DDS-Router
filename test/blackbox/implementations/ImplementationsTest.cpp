@@ -195,24 +195,23 @@ TEST(ImplementationsTest, all_implementations)
  */
 TEST(ImplementationsTest, duplicated_ids)
 {
-    const char* yaml_str =
-            R"(
-        participant_1:
-            type: simple
-            domain: 0
+    // For each Participant Kind
+    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    {
+        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        participant_configurations.insert(test::random_participant_configuration(kind, 0));
+        participant_configurations.insert(test::random_participant_configuration(kind, 0));
 
-        participant_2:
-            type: simple
-            domain: 1
+        // Generate configuration
+        configuration::DDSRouterConfiguration configuration(
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<RealTopic>>(),
+            participant_configurations);
 
-        participant_2:
-            type: simple
-            domain: 2
-        )";
-
-    RawConfiguration configuration(yaml_str);
-
-    ASSERT_THROW(DDSRouter ddsrouter(configuration), ConfigurationException);
+        // Create DDSRouter entity
+        ASSERT_THROW(DDSRouter router(configuration), ConfigurationException) << kind;
+    }
 }
 
 int main(
