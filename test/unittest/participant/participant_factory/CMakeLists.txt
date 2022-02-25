@@ -22,15 +22,9 @@ set(TEST_SOURCES
         ParticipantFactoryTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/PayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/communication/payload_pool/MapPayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/BaseConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DomainId_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/Address_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/GuidPrefix_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/implementations/DiscoveryServerConnectionAddress_configuration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/SimpleParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DiscoveryServerParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/WANParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/DiscoveryDatabase.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/DummyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/EchoParticipant.cpp
