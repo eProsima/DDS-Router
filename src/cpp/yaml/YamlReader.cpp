@@ -34,7 +34,9 @@ bool YamlReader::is_tag_present(
                   utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
     }
 
-    return yml[tag];
+    // Explicit conversion to avoid windows format warning
+    // This method performace is the same as only retrieving bool
+    return (yml[tag]) ? true : false;
 }
 
 Yaml YamlReader::get_value_in_tag(

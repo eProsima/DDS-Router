@@ -34,6 +34,9 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
+// TODO: most of the methods from this test_utils that generate random types are not very "random".
+// They must be refactored to generate real random values.
+
 constexpr const int TEST_NUMBER_ITERATIONS = 5;
 
 /**

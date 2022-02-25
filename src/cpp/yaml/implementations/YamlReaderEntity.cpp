@@ -177,18 +177,6 @@ Address YamlReader::get<Address>(
         throw ConfigurationException(utils::Formatter() <<
                       "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
     }
-    else if (!ip_set && !domain_name_set)
-    {
-        // There is no IP or DNS name, so ip must be taken from default values
-        if (ip_version_set)
-        {
-            ip = Address::default_ip(ip_version);
-        }
-        else
-        {
-            ip = Address::default_ip();
-        }
-    }
 
     // Optional get port
     PortType port;
