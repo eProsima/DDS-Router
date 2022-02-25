@@ -122,7 +122,7 @@ GuidPrefix YamlReader::get<GuidPrefix>(
     }
 
     // Id is mandatory if guid is not present
-    uint32_t id = get_scalar<bool>(yml, DISCOVERY_SERVER_ID_TAG);
+    uint32_t id = get_scalar<uint32_t>(yml, DISCOVERY_SERVER_ID_TAG);
 
     // Create GuidPrefix
     if (ros_id_set)
