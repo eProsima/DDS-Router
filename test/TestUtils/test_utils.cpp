@@ -186,7 +186,8 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
     }
 }
 
-ParticipantId random_participant_id(uint16_t seed /* = 0 */)
+ParticipantId random_participant_id(
+        uint16_t seed /* = 0 */)
 {
     std::vector<std::string> names = {
         "participant",
@@ -198,7 +199,9 @@ ParticipantId random_participant_id(uint16_t seed /* = 0 */)
     return ParticipantId(names[seed % names.size()] + std::to_string(seed));
 }
 
-ParticipantKind random_participant_kind(bool valid /* = true */, uint16_t seed /* = 0 */)
+ParticipantKind random_participant_kind(
+        bool valid /* = true */,
+        uint16_t seed /* = 0 */)
 {
     std::vector<eprosima::ddsrouter::ParticipantKind> kinds = ParticipantKind::all_valid_participant_kinds();
     if (valid)

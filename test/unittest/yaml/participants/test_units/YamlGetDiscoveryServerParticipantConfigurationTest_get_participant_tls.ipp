@@ -60,7 +60,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_tls)
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_TRUE(result.tls_active());
@@ -86,7 +86,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_tls)
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -110,7 +110,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_tls)
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

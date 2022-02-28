@@ -84,7 +84,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         // Get random address and add it to yaml
         Yaml yml_addresses;
         std::vector<Address> addresses;
-        for (int i=0; i<TEST_ADDRESSES_NUMBER; i++)
+        for (int i = 0; i < TEST_ADDRESSES_NUMBER; i++)
         {
             // Create new address and add it to already created addresses and to yaml
             Yaml yml_address;

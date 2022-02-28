@@ -77,7 +77,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(1, result.connection_addresses().size());
@@ -101,7 +101,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Add addresses
         std::vector<Address> addresses;
-        for (int i=0; i<eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+        for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {
             // Create new address
             Address address = eprosima::ddsrouter::test::random_address(i);
@@ -125,7 +125,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(1, result.connection_addresses().size());
@@ -154,7 +154,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         std::vector<GuidPrefix> connection_guids;
 
         // Add connections
-        for (int i=0; i<eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+        for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {
             Yaml yml_connection_address;
             Yaml yml_addresses;
@@ -182,7 +182,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(connection_guids.size(), result.connection_addresses().size());
@@ -191,7 +191,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         {
             ASSERT_NE(
                 std::find(connection_guids.begin(), connection_guids.end(), connection.discovery_server_guid_prefix())
-                ,connection_guids.end());
+                , connection_guids.end());
             ASSERT_EQ(1, connection.addresses().size());
         }
     }
@@ -229,7 +229,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -263,7 +263,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -302,7 +302,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -337,7 +337,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

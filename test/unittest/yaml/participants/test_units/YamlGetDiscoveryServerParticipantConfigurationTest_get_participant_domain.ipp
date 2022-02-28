@@ -59,7 +59,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(domain, result.domain());
@@ -83,7 +83,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

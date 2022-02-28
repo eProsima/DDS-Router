@@ -36,7 +36,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant)
 {
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        for (int i=0; i<TEST_ITERATION_MAX; i++)
+        for (int i = 0; i < TEST_ITERATION_MAX; i++)
         {
             ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
 
@@ -51,7 +51,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant)
 
             // Read Yaml
             configuration::ParticipantConfiguration result =
-                YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant");
+                    YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant");
 
             // Check result
             ASSERT_EQ(id, result.id());
@@ -80,7 +80,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::ParticipantConfiguration result =
-                YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -97,7 +97,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::ParticipantConfiguration result =
-                YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -114,7 +114,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::ParticipantConfiguration result =
-                YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::ParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

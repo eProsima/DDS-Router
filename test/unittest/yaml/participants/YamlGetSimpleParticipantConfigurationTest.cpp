@@ -37,10 +37,10 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 {
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        for (int i=0; i<TEST_ITERATION_MAX; i++)
+        for (int i = 0; i < TEST_ITERATION_MAX; i++)
         {
             ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
-            for (int j=0; j<TEST_ITERATION_MAX; j++)
+            for (int j = 0; j < TEST_ITERATION_MAX; j++)
             {
                 DomainId domain = eprosima::ddsrouter::test::random_domain(j);
 
@@ -56,7 +56,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 
                 // Read Yaml
                 configuration::SimpleParticipantConfiguration result =
-                    YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant");
+                        YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant");
 
                 // Check result
                 ASSERT_EQ(id, result.id());
@@ -92,7 +92,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::SimpleParticipantConfiguration result =
-                YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -108,7 +108,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::SimpleParticipantConfiguration result =
-                YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -123,7 +123,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::SimpleParticipantConfiguration result =
-                YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -138,7 +138,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             configuration::SimpleParticipantConfiguration result =
-                YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::SimpleParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

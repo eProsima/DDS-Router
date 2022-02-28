@@ -67,7 +67,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
 {
     // int
     {
-        for (int i=1; i<0x1000; i*=2)
+        for (int i = 1; i < 0x1000; i *= 2)
         {
             ASSERT_EQ(test::MockYamlReader::get_scalar<int>(Yaml(i)), i) << i;
             ASSERT_EQ(test::MockYamlReader::get_scalar<int>(Yaml(-i)), -i) << -i;
@@ -76,7 +76,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
 
     // uint
     {
-        for (unsigned int i=1; i<0x1000; i*=2)
+        for (unsigned int i = 1; i < 0x1000; i *= 2)
         {
             ASSERT_EQ(test::MockYamlReader::get_scalar<unsigned int>(Yaml(i)), i) << i;
         }
@@ -84,7 +84,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
 
     // uint16
     {
-        for (uint16_t i=1; i<0x1000; i*=2)
+        for (uint16_t i = 1; i < 0x1000; i *= 2)
         {
             ASSERT_EQ(test::MockYamlReader::get_scalar<uint16_t>(Yaml(i)), i) << i;
         }
@@ -92,7 +92,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
 
     // int64
     {
-        for (int64_t i=1; i<0x1000; i*=2)
+        for (int64_t i = 1; i < 0x1000; i *= 2)
         {
             ASSERT_EQ(test::MockYamlReader::get_scalar<int64_t>(Yaml(i)), i) << i;
             ASSERT_EQ(test::MockYamlReader::get_scalar<int64_t>(Yaml(-i)), -i) << -i;
@@ -131,11 +131,11 @@ TEST(YamlReaderScalarTest, get_scalar_string)
     // long string
     {
         std::string st =
-            "This text is pretty long, but will be "
-            "concatenated into just a single string. "
-            "The disadvantage is that you have to quote "
-            "each part, and newlines must be literal as "
-            "usual.";
+                "This text is pretty long, but will be "
+                "concatenated into just a single string. "
+                "The disadvantage is that you have to quote "
+                "each part, and newlines must be literal as "
+                "usual.";
 
         ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml(st)), st);
     }

@@ -65,7 +65,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(1, result.listening_addresses().size());
@@ -85,7 +85,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 
         // Add addresses
         std::vector<Address> addresses;
-        for (int i=0; i<eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+        for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {
             // Create new address
             Address address = eprosima::ddsrouter::test::random_address(i);
@@ -102,7 +102,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 
         // Get configuration object from yaml
         configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
         // Check result
         ASSERT_EQ(addresses.size(), result.listening_addresses().size()) << yml;
@@ -138,7 +138,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -163,7 +163,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

@@ -51,7 +51,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -67,7 +67,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -82,7 +82,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 
@@ -97,7 +97,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
             ConfigurationException);
     }
 }

@@ -253,9 +253,9 @@ bool Address::operator ==(
         const Address& other) const noexcept
 {
     return this->ip() == other.ip() &&
-        this->port() == other.port() &&
-        this->transport_protocol() == other.transport_protocol() &&
-        this->is_valid() == other.is_valid();
+           this->port() == other.port() &&
+           this->transport_protocol() == other.transport_protocol() &&
+           this->is_valid() == other.is_valid();
 }
 
 bool Address::is_ipv4_correct(

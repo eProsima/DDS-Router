@@ -36,10 +36,10 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
 {
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
     {
-        for (int i=0; i<eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+        for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {
             ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
-            for (int j=0; j<eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; j++)
+            for (int j = 0; j < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; j++)
             {
                 GuidPrefix guid = eprosima::ddsrouter::test::random_guid_prefix(j);
 
@@ -55,7 +55,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
 
                 // Read Yaml
                 configuration::DiscoveryServerParticipantConfiguration result =
-                    YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                        YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
 
                 // Check result
                 ASSERT_EQ(id, result.id());
