@@ -74,7 +74,7 @@ const option::Descriptor usage[] = {
         optionIndex::RELOAD_TIME,
         0,
         "r",
-        "reload",
+        "reload-time",
         Arg::Numeric,
         "  -r \t--reload-time\t  \t" \
         "Time period in seconds to reload configuration file. " \
