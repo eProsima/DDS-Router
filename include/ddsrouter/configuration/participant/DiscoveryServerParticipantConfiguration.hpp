@@ -76,6 +76,8 @@ public:
     bool operator ==(
             const DiscoveryServerParticipantConfiguration& other) const noexcept;
 
+    static DomainId default_domain_id() noexcept;
+
 protected:
 
     GuidPrefix discovery_server_guid_prefix_;

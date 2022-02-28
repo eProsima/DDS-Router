@@ -150,6 +150,10 @@ public:
     bool operator <(
             const Address& other) const noexcept;
 
+    //! Equal operator
+    bool operator ==(
+            const Address& other) const noexcept;
+
     //! Whether string \c ip has correct IPv4 format.
     static bool is_ipv4_correct(
             const IpType& ip) noexcept;

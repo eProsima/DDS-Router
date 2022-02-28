@@ -29,6 +29,11 @@ LogSevereEventHandler::LogSevereEventHandler(
     : LogEventHandler(callback)
     , threshold_(threshold)
 {
+    // If threshold is lower than default log level (ERROR) set the filter lower
+    if (threshold > Log::Kind::Error)
+    {
+        Log::SetVerbosity(threshold);
+    }
 }
 
 void LogSevereEventHandler::Consume(

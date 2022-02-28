@@ -173,6 +173,11 @@ bool DiscoveryServerParticipantConfiguration::operator ==(
     return false;
 }
 
+DomainId DiscoveryServerParticipantConfiguration::default_domain_id() noexcept
+{
+    return DEFAULT_DS_DOMAIN_ID_;
+}
+
 } /* namespace configuration */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

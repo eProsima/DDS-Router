@@ -14,7 +14,7 @@ participants:
 
   - name: local-ds
     kind: local-discovery-server
-    discovery-server-configuration:
+    discovery-server-guid:
       id: 0
     listening-addresses:
       - ip: "127.0.0.1"
@@ -22,10 +22,10 @@ participants:
 
   - name: wan
     kind: wan
-    discovery-server-configuration:
+    discovery-server-guid:
       id: 1
     connection-addresses:
-      - discovery-server-configuration:
+      - discovery-server-guid:
           id: 2
         addresses:
         - ip: "127.0.0.1"
