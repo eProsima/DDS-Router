@@ -33,6 +33,7 @@ set(TEST_LIST
         get_address_ip
         get_address_domain
         get_address_defaults
+        ip_and_domain
     )
 
 set(TEST_EXTRA_LIBRARIES

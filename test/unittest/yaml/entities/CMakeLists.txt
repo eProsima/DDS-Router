@@ -17,4 +17,5 @@
 #########################
 
 add_subdirectory(address)
+add_subdirectory(guid)
 add_subdirectory(topic)

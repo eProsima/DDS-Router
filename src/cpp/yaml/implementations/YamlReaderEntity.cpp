@@ -171,6 +171,7 @@ Address YamlReader::get<Address>(
     {
         logWarning(DDSROUTER_YAML,
                 "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set.");
+        domain_name_set = false;
     }
     else if (!ip_set && !domain_name_set)
     {

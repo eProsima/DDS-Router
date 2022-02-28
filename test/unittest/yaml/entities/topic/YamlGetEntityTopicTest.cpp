@@ -191,6 +191,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
  * - Topic without type
  * - Topic with key
  * - Topic with no key
+ * - Topic with key without type
  */
 TEST(YamlGetEntityTopicTest, get_wildcard_topic)
 {
@@ -263,6 +264,23 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
 
         test::compare_wildcard_topic(topic, name, type, true, false);
+    }
+
+    // Topic with key without type
+    {
+        Yaml yml_topic;
+        test::topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(),
+            test::YamlField<bool>(true));
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        WildcardTopic topic = YamlReader::get<WildcardTopic>(yml, "topic");
+
+        test::compare_wildcard_topic(topic, name, "*", true, true);
     }
 }
 
