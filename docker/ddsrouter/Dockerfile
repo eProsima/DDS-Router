@@ -25,8 +25,8 @@ RUN mkdir resources && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/v0.2.0/ddsrouter.repos && \
     mkdir src && \
     vcs import src < ddsrouter.repos && \
-    # Include track deadlock fix
-    cd src/ddsrouter && git checkout 016105978bde17c8d03255dac10ca4de642e1cf8 && cd ../.. && \
+    # Include track deadlock and parse reload-time fixes
+    cd src/ddsrouter && git checkout ebddc4447d565717e00e08e1d6de8df57b4e7147 && cd ../.. && \
     colcon build --event-handlers=console_direct+
 
 COPY ./run.bash /
