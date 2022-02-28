@@ -31,6 +31,7 @@ public:
 
     TestLogHandler(
             Log::Kind threshold = Log::Kind::Warning,
+            uint32_t expected_severe_logs = 0,
             uint32_t max_severe_logs = 0);
 
     ~TestLogHandler();
@@ -40,6 +41,7 @@ public:
 protected:
 
     uint32_t max_severe_logs_;
+    uint32_t expected_severe_logs_;
     event::LogSevereEventHandler* log_consumer_;
 };
 

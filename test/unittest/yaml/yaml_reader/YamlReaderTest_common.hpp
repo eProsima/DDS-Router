@@ -12,45 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file TestLogHandler.cpp
- *
- */
-
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <TestLogHandler.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
+namespace yaml {
 namespace test {
 
-TestLogHandler::TestLogHandler(
-        Log::Kind threshold, /* Log::Kind::Warning */
-        uint32_t expected_severe_logs /* = 0 */,
-        uint32_t max_severe_logs /* = 0 */)
-    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry)
-            {
-            }, threshold))
-    , expected_severe_logs_(expected_severe_logs)
-    , max_severe_logs_(std::max(max_severe_logs, expected_severe_logs)) // Use max to avoid forcing set both args
+class MockYamlReader : public YamlReader
 {
-}
+public:
 
-void TestLogHandler::check_valid()
-{
-    ASSERT_GE(log_consumer_->event_count(), expected_severe_logs_);
-    ASSERT_LE(log_consumer_->event_count(), max_severe_logs_);
-}
+    // Make protected methods from parent public
 
-TestLogHandler::~TestLogHandler()
-{
-    Log::Flush();
-    check_valid();
-    Log::Reset();
-}
+    using YamlReader::get_value_in_tag;
+
+    using YamlReader::get;
+
+    using YamlReader::get_scalar;
+
+    using YamlReader::get_list;
+
+    using YamlReader::get_enumeration;
+};
 
 } /* namespace test */
+} /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

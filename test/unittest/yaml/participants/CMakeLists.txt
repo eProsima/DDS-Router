@@ -11,3 +11,100 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+#################################################
+# Yaml GetConfigurations CommonParticipant Test #
+#################################################
+
+set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        YamlGetCommonParticipantConfigurationTest.cpp
+    )
+all_library_sources("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_participant
+        get_participant_negative
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+#################################################
+# Yaml GetConfigurations SimpleParticipant Test #
+#################################################
+
+set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        YamlGetSimpleParticipantConfigurationTest.cpp
+    )
+all_library_sources("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_participant
+        get_participant_negative
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+##########################################################
+# Yaml GetConfigurations DiscoveryServerParticipant Test #
+##########################################################
+
+set(TEST_NAME YamlGetDiscoveryServerParticipantConfigurationTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
+        YamlGetDiscoveryServerParticipantConfigurationTest.cpp
+    )
+all_library_sources("${TEST_SOURCES}")
+
+set(TEST_LIST
+        get_participant_minimum
+        get_participant_domain
+        get_participant_listening_addresses
+        get_participant_connection_addresses
+        get_participant_tls
+        get_participant_negative
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        yaml-cpp
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")

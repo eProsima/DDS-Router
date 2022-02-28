@@ -1,0 +1,271 @@
+// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <gtest_aux.hpp>
+#include <gtest/gtest.h>
+
+#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
+#include <ddsrouter/yaml/YamlReader.hpp>
+#include <ddsrouter/yaml/yaml_configuration_tags.hpp>
+
+#include "../../YamlConfigurationTestUtils.hpp"
+
+using namespace eprosima::ddsrouter;
+using namespace eprosima::ddsrouter::yaml;
+
+/**
+ * Test read GuidPrefix from yaml with explicit guid
+ *
+ * POSITIVE CASES:
+ * - std GuidPrefix
+ * - str guidprefix and id
+ *
+ * NEGATIVE CASES:
+ * - empty
+ * - incorrect format (not string)
+ * - incorrect guid
+ */
+TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
+{
+    // std GuidPrefix
+    {
+        std::string st = "01.0f.00.00.00.00.00.00.00.00.ff.ff";
+
+        Yaml yml_gp;
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<std::string>(st),
+            DISCOVERY_SERVER_GUID_TAG);
+
+        Yaml yml;
+        yml["guid_prefix"] = yml_gp;
+
+        GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+        ASSERT_EQ(gp_result, GuidPrefix(st));
+    }
+
+    // str guidprefix and id
+    {
+        std::string st = "01.0f.00.00.00.00.00.00.00.00.ff.ff";
+
+        Yaml yml_gp;
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<std::string>(st),
+            DISCOVERY_SERVER_GUID_TAG);
+
+        // This field must be skipped
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<uint32_t>(0),
+            DISCOVERY_SERVER_ID_TAG);
+
+        Yaml yml;
+        yml["guid_prefix"] = yml_gp;
+
+        GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+        ASSERT_EQ(gp_result, GuidPrefix(st));
+    }
+
+    // empty
+    {
+        Yaml yml_gp;
+        Yaml yml;
+        yml["guid_prefix"] = yml_gp;
+
+        ASSERT_THROW(YamlReader::get<GuidPrefix>(yml, "guid_prefix"), ConfigurationException);
+    }
+
+    // TODO: this tests requires to modify fastrtps GuidPrefix >> operator so it returns a non valid guid
+    // incorrect format (not string)
+    // {
+    //     Yaml yml_gp;
+    //     test::add_field_to_yaml(
+    //         yml_gp,
+    //         test::YamlField<bool>(false),
+    //         DISCOVERY_SERVER_GUID_TAG);
+
+    //     Yaml yml;
+    //     yml["guid_prefix"] = yml_gp;
+
+    //     // bool to str in yamlcpp does not cause an error
+    //     GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+    //     ASSERT_FALSE(gp_result.is_valid()) << gp_result;
+    // }
+
+    // // incorrect guid
+    // {
+    //     std::string st = "ffff";
+
+    //     Yaml yml_gp;
+    //     test::add_field_to_yaml(
+    //         yml_gp,
+    //         test::YamlField<std::string>(st),
+    //         DISCOVERY_SERVER_GUID_TAG);
+
+    //     Yaml yml;
+    //     yml["guid_prefix"] = yml_gp;
+
+    //     // incorrect guid does not cause an error
+    //     GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+    //     ASSERT_FALSE(gp_result.is_valid());
+    // }
+}
+
+/**
+ * Test read GuidPrefix from yaml given an id
+ *
+ * POSITIVE CASES:
+ * - std ids
+ *
+ * NEGATIVE CASES:
+ * - incorrect format (str instead of int)
+ */
+TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
+{
+    // std ids
+    {
+        std::vector<uint32_t> ids = {0, 2, 12, 234};
+
+        for (uint32_t id : ids)
+        {
+            Yaml yml_gp;
+            test::add_field_to_yaml(
+                yml_gp,
+                test::YamlField<uint32_t>(id),
+                DISCOVERY_SERVER_ID_TAG);
+
+            Yaml yml;
+            yml["guid_prefix"] = yml_gp;
+
+            GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+            ASSERT_EQ(gp_result, GuidPrefix(id));
+        }
+    }
+
+    // incorrect format (str instead of int)
+    {
+        Yaml yml_gp;
+
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
+            DISCOVERY_SERVER_ID_TAG);
+
+        Yaml yml;
+        yml["guid_prefix"] = yml_gp;
+
+        ASSERT_THROW(YamlReader::get<GuidPrefix>(yml, "guid_prefix"), ConfigurationException);
+    }
+}
+
+/**
+ * Test read GuidPrefix from yaml with id and using ros
+ *
+ * POSITIVE CASES:
+ * - std ids with ros
+ * - std ids without ros
+ *
+ * NEGATIVE CASES:
+ * - incorrect format (str instead of bool)
+ */
+TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
+{
+    // std ids with ros
+    {
+        std::vector<uint32_t> ids = {0, 2, 12, 234};
+
+        for (uint32_t id : ids)
+        {
+            Yaml yml_gp;
+
+            test::add_field_to_yaml(
+                yml_gp,
+                test::YamlField<uint32_t>(id),
+                DISCOVERY_SERVER_ID_TAG);
+
+            test::add_field_to_yaml(
+                yml_gp,
+                test::YamlField<bool>(true),
+                DISCOVERY_SERVER_ID_ROS_TAG);
+
+            Yaml yml;
+            yml["guid_prefix"] = yml_gp;
+
+            GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+            ASSERT_EQ(gp_result, GuidPrefix(true, id));
+        }
+    }
+
+    // std ids without ros
+    {
+        std::vector<uint32_t> ids = {0, 2, 12, 234};
+
+        for (uint32_t id : ids)
+        {
+            Yaml yml_gp;
+
+            test::add_field_to_yaml(
+                yml_gp,
+                test::YamlField<uint32_t>(id),
+                DISCOVERY_SERVER_ID_TAG);
+
+            test::add_field_to_yaml(
+                yml_gp,
+                test::YamlField<bool>(false),
+                DISCOVERY_SERVER_ID_ROS_TAG);
+
+            Yaml yml;
+            yml["guid_prefix"] = yml_gp;
+
+            GuidPrefix gp_result = YamlReader::get<GuidPrefix>(yml, "guid_prefix");
+
+            ASSERT_EQ(gp_result, GuidPrefix(false, id));
+        }
+    }
+
+    // incorrect format (str instead of int)
+    {
+        Yaml yml_gp;
+
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<uint32_t>(0),
+            DISCOVERY_SERVER_ID_TAG);
+
+        test::add_field_to_yaml(
+            yml_gp,
+            test::YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
+            DISCOVERY_SERVER_ID_ROS_TAG);
+
+        Yaml yml;
+        yml["guid_prefix"] = yml_gp;
+
+        ASSERT_THROW(YamlReader::get<GuidPrefix>(yml, "guid_prefix"), ConfigurationException);
+    }
+}
+
+int main(
+        int argc,
+        char** argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#########################
-# Yaml GetEntities Test #
-#########################
+##############
+# Yaml Tests #
+##############
 
 add_subdirectory(ddsrouter)
 add_subdirectory(participants)
 add_subdirectory(entities)
 add_subdirectory(yaml_tags)
 add_subdirectory(yaml_configuration)
+add_subdirectory(yaml_reader)

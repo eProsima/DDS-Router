@@ -17,12 +17,6 @@
  *
  */
 
-#include <ddsrouter/types/address/Address.hpp>
-#include <ddsrouter/types/address/DiscoveryServerConnectionAddress.hpp>
-#include <ddsrouter/types/endpoint/DomainId.hpp>
-#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
-#include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
 #include <ddsrouter/yaml/YamlReader.hpp>
 #include <ddsrouter/yaml/yaml_configuration_tags.hpp>
 
@@ -34,13 +28,15 @@ bool YamlReader::is_tag_present(
         const Yaml& yml,
         const TagType& tag)
 {
-    if (!yml.IsMap())
+    if (!yml.IsMap() && !yml.IsNull())
     {
         throw ConfigurationException(
                   utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
     }
 
-    return (yml[tag]);
+    // Explicit conversion to avoid windows format warning
+    // This method performace is the same as only retrieving bool
+    return (yml[tag]) ? true : false;
 }
 
 Yaml YamlReader::get_value_in_tag(

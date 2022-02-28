@@ -122,7 +122,7 @@ GuidPrefix YamlReader::get<GuidPrefix>(
     }
 
     // Id is mandatory if guid is not present
-    uint32_t id = get_scalar<bool>(yml, DISCOVERY_SERVER_ID_TAG);
+    uint32_t id = get_scalar<uint32_t>(yml, DISCOVERY_SERVER_ID_TAG);
 
     // Create GuidPrefix
     if (ros_id_set)
@@ -159,7 +159,7 @@ Address YamlReader::get<Address>(
     // Optional get Domain tag for DNS
     std::string domain_name;
     bool domain_name_set = is_tag_present(yml, ADDRESS_DNS_TAG);
-    if (ip_set)
+    if (domain_name_set)
     {
         domain_name = get<std::string>(yml, ADDRESS_DNS_TAG);
     }
@@ -171,6 +171,7 @@ Address YamlReader::get<Address>(
     {
         logWarning(DDSROUTER_YAML,
                 "Tag <" << ADDRESS_DNS_TAG << "> will not be used as <" << ADDRESS_IP_TAG << "> is set.");
+        domain_name_set = false;
     }
     else if (!ip_set && !domain_name_set)
     {
@@ -232,7 +233,7 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
         const Yaml& yml)
 {
     // GuidPrefix required
-    GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_TAG);
+    GuidPrefix server_guid = get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG);
 
     // Addresses required
     std::set<Address> addresses = get_set<Address>(yml, COLLECTION_ADDRESSES_TAG);

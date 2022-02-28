@@ -136,6 +136,8 @@ function(sources_for_test_utils TEST_SOURCES)
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogEventHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogSevereEventHandler.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationBoth.cpp
@@ -157,6 +159,7 @@ function(sources_for_test_utils TEST_SOURCES)
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
     )
 
     set(NEW_TEST_SOURCES "${TEST_SOURCES};${TEST_UTILS_SOURCES}")

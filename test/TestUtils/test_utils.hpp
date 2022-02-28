@@ -34,6 +34,11 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
+// TODO: most of the methods from this test_utils that generate random types are not very "random".
+// They must be refactored to generate real random values.
+
+constexpr const int TEST_NUMBER_ITERATIONS = 5;
+
 /**
  * @brief Create a \c Guid with some of its bits determined by the input
  *
@@ -81,6 +86,13 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
 
 std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
         ParticipantKind kind,
+        uint16_t seed = 0);
+
+ParticipantId random_participant_id(
+        uint16_t seed = 0);
+
+ParticipantKind random_participant_kind(
+        bool valid = true,
         uint16_t seed = 0);
 
 } /* namespace test */
