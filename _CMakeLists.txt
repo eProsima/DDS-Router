@@ -44,6 +44,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
     endif()
 endif()
 
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "IS_TOP_LEVEL: ${IS_TOP_LEVEL}")
+
+# include(${PROJECT_SOURCE_DIR}/cmake/packaging/eProsimaPackaging.cmake)
+# include(${PROJECT_SOURCE_DIR}/cmake/packaging/versionReader.cmake)
+
 ###############################################################################
 # Version
 ###############################################################################
@@ -214,6 +220,13 @@ INSTALL(
 INSTALL(
     DIRECTORY ${PROJECT_SOURCE_DIR}/resources/configurations/security/
     DESTINATION ${DATA_INSTALL_DIR}/resources/configurations/security/)
+
+
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+message(STATUS "IS_TOP_LEVEL: ${IS_TOP_LEVEL}")
+
+# include(${PROJECT_SOURCE_DIR}/cmake/packaging/eProsimaPackaging.cmake)
+# include(${PROJECT_SOURCE_DIR}/cmake/packaging/versionReader.cmake)
 
 ###############################################################################
 # Packaging
