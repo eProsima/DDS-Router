@@ -8,7 +8,7 @@
   </description>
   <maintainer email="RaulSanchezMateos@eprosima.com">Raul Sánchez-Mateos</maintainer>
   <maintainer email="javierparis@eprosima.com">Javier París</maintainer>
-  <maintainer email="juanlopez@eprosima.com ">Juan López</maintainer>
+  <maintainer email="juanlopez@eprosima.com">Juan López</maintainer>
   <license file="LICENSE">Apache 2.0</license>
 
   <url type="website">https://www.eprosima.com/</url>
@@ -20,7 +20,7 @@
   <depend>yamlcpp</depend>
   <depend>fastrtps</depend>
   <depend>ddsrouter_utils</depend>
-  <depend>ddsrouter</depend>
+  <depend>ddsrouter_core</depend>
 
   <doc_depend>doxygen</doc_depend>
 

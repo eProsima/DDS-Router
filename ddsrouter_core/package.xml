@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ddsrouter</name>
+  <name>ddsrouter_core</name>
   <version>0.0.2</version>
   <description>
      *eprosima DDS Router* C++ library to communicate isolated DDS networks between each other. Use in isolated machines an WAN scenarios.
   </description>
   <maintainer email="RaulSanchezMateos@eprosima.com">Raul Sánchez-Mateos</maintainer>
   <maintainer email="javierparis@eprosima.com">Javier París</maintainer>
-  <maintainer email="juanlopez@eprosima.com ">Juan López</maintainer>
+  <maintainer email="juanlopez@eprosima.com">Juan López</maintainer>
   <license file="LICENSE">Apache 2.0</license>
 
   <url type="website">https://www.eprosima.com/</url>
