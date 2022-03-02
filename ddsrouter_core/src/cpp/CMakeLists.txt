@@ -27,6 +27,7 @@ if(MSVC)
     file(GLOB_RECURSE HEADERS_FILES
             ${PROJECT_SOURCE_DIR}/include/**/*.h
             ${PROJECT_SOURCE_DIR}/include/**/*.hpp
+            ${PROJECT_SOURCE_DIR}/include/**/*.ipp
         )
 endif()
 
@@ -78,10 +79,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     )
 
 target_link_libraries(${PROJECT_NAME}
-        fastrtps
-        fastcdr
-        yaml-cpp
-        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+        ${SUBMODULE_PROJECT_DEPENDENCIES}
     )
 
 if(MSVC OR MSVC_IDE)
@@ -128,6 +126,7 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"
+        PATTERN "*.ipp"
     )
 
 # Install config.h header

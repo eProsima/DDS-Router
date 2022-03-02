@@ -66,11 +66,11 @@ endif()
 ###############################################################################
 # Project
 ###############################################################################
-project(ddsrouter_utils LANGUAGES CXX)
+project(${SUBMODULE_PROJECT_NAME} LANGUAGES CXX)
 # NOTE: this is required to be before using ${PROJECT_SOURCE_DIR}
 
 # Set variables to configure project
-set(DESCRIPTION_SUMMARY "C++ library for generic useful methods and classes for DDS Router.")
+set(DESCRIPTION_SUMMARY ${SUBMODULE_PROJECT_SUMMARY})
 
 ###############################################################################
 # Load CMake modules
@@ -118,10 +118,17 @@ endif()
 ###############################################################################
 # Load external projects.
 ###############################################################################
-foreach(DEPENDENCY ${SUBMODULE_PROJECT_DEPENDENCIES})
+foreach(DEPENDENCY ${SUBMODULE_PROJECT_FIND_PACKAGES})
+    message(STATUS "Looking for project ${PROJECT_NAME} dependency ${DEPENDENCY}.")
     find_package("${DEPENDENCY}" REQUIRED)
 endforeach()
 
+# include thirdparty header-only projects
+foreach(THIRDPARTY_HEADERONLY_DEPENDENCY ${SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES})
+    message(STATUS
+        "Looking for project ${PROJECT_NAME} thirdparty headeronly thirdparty/${THIRDPARTY_HEADERONLY_DEPENDENCY}.")
+    include_directories(thirdparty/${THIRDPARTY_HEADERONLY_DEPENDENCY})
+endforeach()
 
 ###############################################################################
 # Code coverage

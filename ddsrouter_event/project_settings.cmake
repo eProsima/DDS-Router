@@ -16,8 +16,20 @@
 # Set settings for project ddsrouter_event
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME ddsrouter_event)
+set(SUBMODULE_PROJECT_NAME
+    ddsrouter_event)
 
-set(SUBMODULE_PROJECT_SUMMARY "C++ library for generic event classes for DDS Router.")
+set(SUBMODULE_PROJECT_SUMMARY
+    "C++ library for generic event classes for DDS Router.")
 
-set(SUBMODULE_PROJECT_DEPENDENCIES ddstouter_utils)
+set(SUBMODULE_PROJECT_FIND_PACKAGES
+    ddsrouter_utils)
+
+set(SUBMODULE_PROJECT_DEPENDENCIES
+    ${SUBMODULE_PROJECT_FIND_PACKAGES})
+
+set(SUBMODULE_PROJECT_MACROS
+    DDSROUTEREVENT)
+
+set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES
+    filewatch)

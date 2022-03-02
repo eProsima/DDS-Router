@@ -29,6 +29,7 @@ namespace ddsrouter {
 namespace utils {
 
 using Log = eprosima::fastdds::dds::Log;
+using LogConsumer = eprosima::fastdds::dds::LogConsumer;
 
 /**
  * @brief Log level only for debugging purpose (entities creation and destruction, unexpected behaviour, etc.)
