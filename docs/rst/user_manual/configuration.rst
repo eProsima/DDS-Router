@@ -126,14 +126,14 @@ In this way, the initialization phase mentioned above is omitted and the applica
 Examples of usage
 -----------------
 
-The following is an example of how to use the allowlist, blocklist and builtin-topics configurations to setup the
-|ddsrouter| filtering rules.
+The following is an example of how to use the ``allowlist``, ``blocklist`` and ``builtin-topics`` configurations to
+setup the |ddsrouter| filtering rules.
 
 Dynamic topic discovery example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2 topic for
-``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
+This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2
+topic for ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
 topics in the DDS network are expected to be dynamically discovered.
 Additionally, a rule is defined to block only the ``HelloWorldTopic`` topic.
 
