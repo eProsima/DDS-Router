@@ -2,6 +2,12 @@
 
 .. _release_notes:
 
+###################
+Forthcoming Version
+###################
+
+.. include:: forthcoming_version.rst
+
 ##############
 Version v0.2.0
 ##############
@@ -40,12 +46,6 @@ This release fixes the following **minor bugs**:
   an issue when blank lines were missing at the end of the file.
 * Normalize the error and process exit when failure.
 * Fix documentation typos.
-
-###################
-Forthcoming Version
-###################
-
-.. include:: forthcoming_version.rst
 
 #################
 Previous Versions

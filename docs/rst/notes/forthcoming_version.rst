@@ -12,4 +12,4 @@ Next release will fix the following **minor bugs**:
 
 Next release includes the following changes in the **documentation**:
 
-* DDS Router execution from a pre-built Docker image.
+* DDS Router execution from a provided Docker image.
