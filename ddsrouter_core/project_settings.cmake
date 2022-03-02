@@ -16,8 +16,20 @@
 # Set settings for project ddsrouter_core
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME ddsrouter_core)
+set(SUBMODULE_PROJECT_NAME
+    ddsrouter_core)
 
-set(SUBMODULE_PROJECT_SUMMARY "C++ library implementing DDS Router.")
+set(SUBMODULE_PROJECT_SUMMARY
+    "C++ library to construct and run a DDS Router.")
 
-set(SUBMODULE_PROJECT_DEPENDENCIES fastrtps ddstouter_utils)
+set(SUBMODULE_PROJECT_FIND_PACKAGES
+    fastrtps
+    ddsrouter_utils)
+
+set(SUBMODULE_PROJECT_DEPENDENCIES
+    ${SUBMODULE_PROJECT_FIND_PACKAGES})
+
+set(SUBMODULE_PROJECT_MACROS
+    DDSROUTERCORE)
+
+# set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )

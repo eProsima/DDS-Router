@@ -28,6 +28,9 @@ if(MSVC)
             ${PROJECT_SOURCE_DIR}/include/**/*.h
             ${PROJECT_SOURCE_DIR}/include/**/*.hpp
             ${PROJECT_SOURCE_DIR}/include/**/*.ipp
+            ${PROJECT_SOURCE_DIR}/src/cpp/**/*.h
+            ${PROJECT_SOURCE_DIR}/src/cpp/**/*.hpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/**/*.ipp
         )
 endif()
 
@@ -75,6 +78,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp>
         $<INSTALL_INTERFACE:include>
     )
 

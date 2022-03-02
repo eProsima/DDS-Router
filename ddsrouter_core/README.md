@@ -1,1 +1,1 @@
-# eProsima DDS Router Library
+# eProsima DDS Router Core Library
