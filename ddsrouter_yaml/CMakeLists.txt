@@ -116,9 +116,12 @@ else()
 endif()
 
 ###############################################################################
-# Load external eProsima projects.
+# Load external projects.
 ###############################################################################
-find_package(fastrtps REQUIRED)
+foreach(DEPENDENCY ${SUBMODULE_PROJECT_DEPENDENCIES})
+    find_package("${DEPENDENCY}" REQUIRED)
+endforeach()
+
 
 ###############################################################################
 # Code coverage
