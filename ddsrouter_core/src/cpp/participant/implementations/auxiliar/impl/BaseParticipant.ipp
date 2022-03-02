@@ -81,13 +81,13 @@ types::ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 
 template <class ConfigurationType>
 std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
-        RealTopic topic)
+        types::RealTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
     if (writers_.find(topic) != writers_.end())
     {
-        throw InitializationException(
+        throw utils::InitializationException(
                   utils::Formatter() <<
                       "Error creating writer for topic " << topic << " in participant " << id() <<
                       ". Writer already exists.");
@@ -105,13 +105,13 @@ std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
 
 template <class ConfigurationType>
 std::shared_ptr<IReader> BaseParticipant<ConfigurationType>::create_reader(
-        RealTopic topic)
+        types::RealTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
     if (readers_.find(topic) != readers_.end())
     {
-        throw InitializationException(
+        throw utils::InitializationException(
                   utils::Formatter() <<
                       "Error creating Reader for topic " << topic << " in participant " << id() <<
                       ". Reader already exists.");

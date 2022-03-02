@@ -16,8 +16,8 @@
  * @file DomainId.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DDSTYPES_HPP_
-#define _DDSROUTERCORE_TYPES_DDSTYPES_HPP_
+#ifndef _DDSROUTERCORE_TYPES_DDS_DOMAINID_HPP_
+#define _DDSROUTERCORE_TYPES_DDS_DOMAINID_HPP_
 
 #include <fastrtps/types/TypesBase.h>
 
@@ -87,4 +87,4 @@ std::ostream& operator <<(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_DDSTYPES_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_DDS_DOMAINID_HPP_ */

@@ -16,8 +16,8 @@
  * @file QoS.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_QOS_HPP_
-#define _DDSROUTERCORE_TYPES_QOS_HPP_
+#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
+#define _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
 
 #include <fastdds/rtps/common/Types.h>
 
@@ -88,4 +88,4 @@ std::ostream& operator <<(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_QOS_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_ */

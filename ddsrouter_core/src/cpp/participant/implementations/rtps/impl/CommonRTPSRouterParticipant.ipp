@@ -149,7 +149,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params, this);
     if (!rtps_participant_)
     {
-        throw InitializationException(
+        throw utils::InitializationException(
                   utils::Formatter() << "Error creating RTPS Participant " << this->id());
     }
 

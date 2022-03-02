@@ -120,7 +120,7 @@ protected:
     mutable std::shared_timed_mutex mutex_;
 
     // DDSRouter must be friend class so it can call add_participant_
-    friend class DDSRouter;
+    friend class DDSRouterImpl;
 };
 
 } /* namespace core */

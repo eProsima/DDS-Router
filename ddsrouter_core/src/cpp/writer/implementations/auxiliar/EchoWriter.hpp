@@ -47,7 +47,7 @@ protected:
      * @param data : data to print
      * @return RETCODE_OK always
      */
-    virtual ReturnCode write_(
+    virtual utils::ReturnCode write_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     // Specific enable/disable do not need to be implemented

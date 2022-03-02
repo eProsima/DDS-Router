@@ -13,47 +13,37 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file Guid.cpp
+ *
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-#define _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-
-#include <fastrtps/rtps/common/Guid.h>
-
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddsrouter_core/types/dds/Guid.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Unique Id of every Endpoint
-class Guid : public fastrtps::rtps::GUID_t
+Guid& Guid::operator = (
+        const fastrtps::rtps::GUID_t& other) noexcept
 {
-public:
+    this->guidPrefix = other.guidPrefix;
+    this->entityId = other.entityId;
+    return *this;
+}
 
-    //! Using parent constructors
-    using fastrtps::rtps::GUID_t::GUID_t;
+bool Guid::is_valid() const noexcept
+{
+    return guid_prefix().is_valid() &&
+           entityId != eprosima::fastrtps::rtps::EntityId_t::unknown();
+}
 
-    //! Equal operator (inherited from GUID_t)
-    Guid& operator = (
-            const fastrtps::rtps::GUID_t& other) noexcept;
-
-    /**
-     * Whether the guid is a valid one
-     *
-     * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
-     */
-    bool is_valid() const noexcept;
-
-    //! Return GuidPrefix from this Guid
-    GuidPrefix guid_prefix() const noexcept;
-};
+GuidPrefix Guid::guid_prefix() const noexcept
+{
+    return GuidPrefix(guidPrefix);
+}
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERCORE_TYPES_DDS_GUID_HPP_ */

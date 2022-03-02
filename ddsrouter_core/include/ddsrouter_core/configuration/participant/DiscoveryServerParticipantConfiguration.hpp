@@ -46,9 +46,9 @@ public:
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
             const types::ParticipantKind& kind = types::ParticipantKind::LOCAL_DISCOVERY_SERVER,
-            std::shared_ptr<security::TlsConfiguration> tls_configuration =
-            std::make_shared<security::TlsConfiguration>(),
-            const DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
+            std::shared_ptr<types::security::TlsConfiguration> tls_configuration =
+            std::make_shared<types::security::TlsConfiguration>(),
+            const types::DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
     // TODO
     DiscoveryServerParticipantConfiguration(
@@ -56,10 +56,10 @@ public:
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
-            const DomainId& domain_id,
+            const types::DomainId& domain_id,
             const types::ParticipantKind& kind = types::ParticipantKind::LOCAL_DISCOVERY_SERVER,
-            std::shared_ptr<security::TlsConfiguration> tls_configuration =
-            std::make_shared<security::TlsConfiguration>());
+            std::shared_ptr<types::security::TlsConfiguration> tls_configuration =
+            std::make_shared<types::security::TlsConfiguration>());
 
     types::GuidPrefix discovery_server_guid_prefix() const noexcept;
 

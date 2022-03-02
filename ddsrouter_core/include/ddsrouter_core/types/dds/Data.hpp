@@ -16,8 +16,8 @@
  * @file Data.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DATA_HPP_
-#define _DDSROUTERCORE_TYPES_DATA_HPP_
+#ifndef _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
+#define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
 
@@ -59,4 +59,4 @@ std::ostream& operator <<(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_DATA_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_DDS_DATA_HPP_ */

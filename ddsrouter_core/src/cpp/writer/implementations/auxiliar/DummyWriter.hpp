@@ -22,9 +22,7 @@
 #include <condition_variable>
 #include <mutex>
 
-#include <ddsrouter_utils/types/Time.hpp>
-
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_utils/Time.hpp>
 
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 #include <writer/IWriter.hpp>
@@ -84,7 +82,7 @@ protected:
      * @param data : data to simulate publication
      * @return RETCODE_OK always
      */
-    ReturnCode write_(
+    utils::ReturnCode write_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     //! Stores the data that should have been published

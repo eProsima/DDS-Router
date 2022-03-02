@@ -21,7 +21,7 @@
 
 #include <string>
 
-#include <ddsrouter_core/security/tls/TlsConfiguration.hpp>
+#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -70,8 +70,8 @@ protected:
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    ReturnCode take_(
-            std::unique_ptr<DataReceived>& data) noexcept override;
+    utils::ReturnCode take_(
+            std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     //! Stores the data that must be retrieved with \c take() method
     std::queue<DummyDataReceived> data_to_send_;

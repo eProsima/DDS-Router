@@ -25,6 +25,7 @@
 #include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 #include <ddsrouter_core/types/security/tls/TlsConfigurationBoth.hpp>
 
@@ -351,7 +352,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         {
             logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                     "TLS Configuration expected a Client configuration.");
-            throw ConfigurationException("TLS Configuration expected a Client configuration.");
+            throw utils::ConfigurationException("TLS Configuration expected a Client configuration.");
         }
         else
         {
@@ -364,7 +365,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
         {
             logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                     "TLS Configuration expected a Server configuration.");
-            throw ConfigurationException("TLS Configuration expected a Server configuration.");
+            throw utils::ConfigurationException("TLS Configuration expected a Server configuration.");
         }
         else
         {

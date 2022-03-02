@@ -80,7 +80,7 @@ public:
      * @return true if everything OK
      * @return false if something went wrong
      *
-     * @throw InconsistencyException if \c data_owner is \c this but the data in \c src_payload is not from this pool.
+     * @throw utils::InconsistencyException if \c data_owner is \c this but the data in \c src_payload is not from this pool.
      */
     bool get_payload(
             const types::Payload& src_payload,
@@ -98,7 +98,7 @@ public:
      * @return true if everything OK
      * @return false if something went wrong
      *
-     * @throw InconsistencyException if the data in \c payload is not from this pool.
+     * @throw utils::InconsistencyException if the data in \c payload is not from this pool.
      */
     bool release_payload(
             types::Payload& payload) override;
@@ -106,7 +106,7 @@ public:
 protected:
 
     //! Store every data reserved and the number of payloads that currently reference it.
-    std::map<PayloadUnit*, uint32_t> reserved_payloads_;
+    std::map<types::PayloadUnit*, uint32_t> reserved_payloads_;
 
     //! Guards access to \c reserved_payloads_
     std::mutex reserved_payloads_mutex_;

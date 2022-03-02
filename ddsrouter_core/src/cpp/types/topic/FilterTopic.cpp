@@ -13,47 +13,33 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file FilterTopic.cpp
+ *
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-#define _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-
-#include <fastrtps/rtps/common/Guid.h>
-
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddsrouter_core/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Unique Id of every Endpoint
-class Guid : public fastrtps::rtps::GUID_t
+FilterTopic::FilterTopic(
+        const std::string& topic_name,
+        const std::string& topic_type,
+        bool has_keyed_set, /* = false */
+        bool topic_with_key /* = false */) noexcept
+    : Topic(topic_name, topic_type, topic_with_key)
+    , has_keyed_set_(has_keyed_set)
 {
-public:
+}
 
-    //! Using parent constructors
-    using fastrtps::rtps::GUID_t::GUID_t;
-
-    //! Equal operator (inherited from GUID_t)
-    Guid& operator = (
-            const fastrtps::rtps::GUID_t& other) noexcept;
-
-    /**
-     * Whether the guid is a valid one
-     *
-     * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
-     */
-    bool is_valid() const noexcept;
-
-    //! Return GuidPrefix from this Guid
-    GuidPrefix guid_prefix() const noexcept;
-};
+bool FilterTopic::has_keyed_set() const
+{
+    return has_keyed_set_;
+}
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERCORE_TYPES_DDS_GUID_HPP_ */

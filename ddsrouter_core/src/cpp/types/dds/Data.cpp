@@ -13,47 +13,50 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file Data.cpp
+ *
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-#define _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
+#include <sstream>
 
-#include <fastrtps/rtps/common/Guid.h>
-
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddsrouter_core/types/dds/Data.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Unique Id of every Endpoint
-class Guid : public fastrtps::rtps::GUID_t
+std::ostream& operator <<(
+        std::ostream& os,
+        const eprosima::fastrtps::rtps::octet& octet)
 {
-public:
+    os << std::hex << std::setfill('0') << std::setw(2) << static_cast<uint16_t>(octet) << std::dec;
+    return os;
+}
 
-    //! Using parent constructors
-    using fastrtps::rtps::GUID_t::GUID_t;
+std::ostream& operator <<(
+        std::ostream& os,
+        const Payload& payload)
+{
+    os << "Payload{";
 
-    //! Equal operator (inherited from GUID_t)
-    Guid& operator = (
-            const fastrtps::rtps::GUID_t& other) noexcept;
+    for (int i = 0; (payload.length != 0) && (i < (payload.length - 1)); ++i)
+    {
+        os << payload.data[i] << " ";
+    }
 
-    /**
-     * Whether the guid is a valid one
-     *
-     * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
-     */
-    bool is_valid() const noexcept;
+    // Avoid printing extra space after last byte
+    if (payload.length > 0)
+    {
+        os << payload.data[payload.length - 1];
+    }
 
-    //! Return GuidPrefix from this Guid
-    GuidPrefix guid_prefix() const noexcept;
-};
+    os << "}";
+
+    return os;
+}
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERCORE_TYPES_DDS_GUID_HPP_ */

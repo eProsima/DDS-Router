@@ -17,18 +17,22 @@
  *
  */
 
-#include <ddsrouter/communication/payload_pool/MapPayloadPool.hpp>
-#include <ddsrouter/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter/core/DDSRouterImpl.hpp>
-#include <ddsrouter/exceptions/UnsupportedException.hpp>
-#include <ddsrouter/exceptions/ConfigurationException.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
-#include <ddsrouter/exceptions/InconsistencyException.hpp>
-#include <ddsrouter/types/Log.hpp>
+#include <ddsrouter_utils/exception/UnsupportedException.hpp>
+#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <ddsrouter_utils/Log.hpp>
+
+#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
+
+#include <core/DDSRouterImpl.hpp>
+#include <efficiency/MapPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
+
+using namespace eprosima::ddsrouter::core::types;
 
 // TODO: Use initial topics to start execution and start bridges
 
@@ -49,7 +53,7 @@ DDSRouterImpl::DDSRouterImpl(
     utils::Formatter error_msg;
     if (!configuration_.is_valid(error_msg))
     {
-        throw ConfigurationException(
+        throw utils::ConfigurationException(
                   utils::Formatter() <<
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
@@ -94,14 +98,14 @@ DDSRouterImpl::~DDSRouterImpl()
     logDebug(DDSROUTER, "DDS Router destroyed.");
 }
 
-ReturnCode DDSRouterImpl::reload_configuration(
+utils::ReturnCode DDSRouterImpl::reload_configuration(
         const configuration::DDSRouterReloadConfiguration& new_configuration)
 {
     // Check that the configuration is correct
     utils::Formatter error_msg;
     if (!new_configuration.is_valid(error_msg))
     {
-        throw ConfigurationException(
+        throw utils::ConfigurationException(
                   utils::Formatter() <<
                       "Configuration for Reload DDS Router is invalid: " << error_msg);
     }
@@ -121,7 +125,7 @@ ReturnCode DDSRouterImpl::reload_configuration(
         if (new_allowed_topic_list == allowed_topics_)
         {
             logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
-            return ReturnCode::RETCODE_NO_DATA;
+            return utils::ReturnCode::RETCODE_NO_DATA;
         }
 
         // Set new Allowed list
@@ -160,22 +164,22 @@ ReturnCode DDSRouterImpl::reload_configuration(
 
         configuration_.reload(new_configuration);
 
-        return ReturnCode::RETCODE_OK;
+        return utils::ReturnCode::RETCODE_OK;
     }
     else
     {
-        return ReturnCode::RETCODE_NOT_ENABLED;
+        return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
 }
 
-ReturnCode DDSRouterImpl::start() noexcept
+utils::ReturnCode DDSRouterImpl::start() noexcept
 {
-    ReturnCode ret = start_();
-    if (ret == ReturnCode::RETCODE_OK)
+    utils::ReturnCode ret = start_();
+    if (ret == utils::ReturnCode::RETCODE_OK)
     {
         logUser(DDSROUTER, "Starting DDS Router.");
     }
-    else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
+    else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
         logUser(DDSROUTER, "Trying to start an enabled DDS Router.");
     }
@@ -183,14 +187,14 @@ ReturnCode DDSRouterImpl::start() noexcept
     return ret;
 }
 
-ReturnCode DDSRouterImpl::stop() noexcept
+utils::ReturnCode DDSRouterImpl::stop() noexcept
 {
-    ReturnCode ret = stop_();
-    if (ret == ReturnCode::RETCODE_OK)
+    utils::ReturnCode ret = stop_();
+    if (ret == utils::ReturnCode::RETCODE_OK)
     {
         logUser(DDSROUTER, "Stopping DDS Router.");
     }
-    else if (ret == ReturnCode::RETCODE_PRECONDITION_NOT_MET)
+    else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
         logUser(DDSROUTER, "Trying to stop a not enabled DDS Router.");
     }
@@ -198,7 +202,7 @@ ReturnCode DDSRouterImpl::stop() noexcept
     return ret;
 }
 
-ReturnCode DDSRouterImpl::start_() noexcept
+utils::ReturnCode DDSRouterImpl::start_() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -209,16 +213,16 @@ ReturnCode DDSRouterImpl::start_() noexcept
         logInfo(DDSROUTER, "Starting DDS Router.");
 
         activate_all_topics_();
-        return ReturnCode::RETCODE_OK;
+        return utils::ReturnCode::RETCODE_OK;
     }
     else
     {
         logInfo(DDSROUTER, "Trying to start an already enabled DDS Router.");
-        return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
+        return utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }
 
-ReturnCode DDSRouterImpl::stop_() noexcept
+utils::ReturnCode DDSRouterImpl::stop_() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -229,12 +233,12 @@ ReturnCode DDSRouterImpl::stop_() noexcept
         logInfo(DDSROUTER, "Stopping DDS Router.");
 
         deactivate_all_topics_();
-        return ReturnCode::RETCODE_OK;
+        return utils::ReturnCode::RETCODE_OK;
     }
     else
     {
         logInfo(DDSROUTER, "Trying to stop a disabled DDS Router.");
-        return ReturnCode::RETCODE_PRECONDITION_NOT_MET;
+        return utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET;
     }
 }
 
@@ -267,7 +271,7 @@ void DDSRouterImpl::init_participants_()
                 !new_participant->kind().is_valid())
         {
             // Failed to create participant
-            throw InitializationException(utils::Formatter()
+            throw utils::InitializationException(utils::Formatter()
                           << "Failed to create creating Participant " << participant_config->id());
         }
 
@@ -281,9 +285,9 @@ void DDSRouterImpl::init_participants_()
                 new_participant->id(),
                 new_participant);
         }
-        catch (const InconsistencyException& e)
+        catch (const utils::InconsistencyException& e)
         {
-            throw ConfigurationException(utils::Formatter()
+            throw utils::ConfigurationException(utils::Formatter()
                           << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
         }
     }
@@ -292,7 +296,7 @@ void DDSRouterImpl::init_participants_()
     if (participants_database_->size() < 2)
     {
         logError(DDSROUTER, "At least two Participants are required to initialize a DDS Router.");
-        throw InitializationException(utils::Formatter()
+        throw utils::InitializationException(utils::Formatter()
                       << "DDS Router requires at least 2 Participants to start.");
     }
 }
@@ -342,7 +346,7 @@ void DDSRouterImpl::create_new_bridge(
     {
         bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, enabled);
     }
-    catch (const InitializationException& e)
+    catch (const utils::InitializationException& e)
     {
         logError(DDSROUTER,
                 "Error creating Bridge for topic " << topic <<

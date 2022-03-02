@@ -16,8 +16,8 @@
  * @file GuidPrefix.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_GUIDPREFIX_HPP_
-#define _DDSROUTERCORE_TYPES_GUIDPREFIX_HPP_
+#ifndef _DDSROUTERCORE_TYPES_DDS_GUIDPREFIX_HPP_
+#define _DDSROUTERCORE_TYPES_DDS_GUIDPREFIX_HPP_
 
 #include <fastdds/rtps/common/GuidPrefix_t.hpp>
 
@@ -105,4 +105,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_GUIDPREFIX_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_DDS_GUIDPREFIX_HPP_ */

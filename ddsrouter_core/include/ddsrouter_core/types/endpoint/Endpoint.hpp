@@ -16,11 +16,11 @@
  * @file Endpoint.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_HPP_
-#define _DDSROUTERCORE_TYPES_ENDPOINT_HPP_
+#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
+#define _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/QoS.hpp>
+#include <ddsrouter_core/types/endpoint/QoS.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
 namespace eprosima {
@@ -132,4 +132,4 @@ std::ostream& operator <<(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_ */

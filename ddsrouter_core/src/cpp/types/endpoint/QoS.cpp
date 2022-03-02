@@ -13,47 +13,56 @@
 // limitations under the License.
 
 /**
- * @file Guid.hpp
+ * @file QoS.cpp
+ *
  */
 
-#ifndef _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-#define _DDSROUTERCORE_TYPES_DDS_GUID_HPP_
-
-#include <fastrtps/rtps/common/Guid.h>
-
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddsrouter_core/types/endpoint/QoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Unique Id of every Endpoint
-class Guid : public fastrtps::rtps::GUID_t
+QoS::QoS() noexcept
+    : durability_(DurabilityKind::VOLATILE)
+    , reliability_(ReliabilityKind::BEST_EFFORT)
 {
-public:
+}
 
-    //! Using parent constructors
-    using fastrtps::rtps::GUID_t::GUID_t;
+QoS::QoS(
+        DurabilityKind durability,
+        ReliabilityKind reliability) noexcept
+    : durability_(durability)
+    , reliability_(reliability)
+{
+}
 
-    //! Equal operator (inherited from GUID_t)
-    Guid& operator = (
-            const fastrtps::rtps::GUID_t& other) noexcept;
+DurabilityKind QoS::durability() const noexcept
+{
+    return durability_;
+}
 
-    /**
-     * Whether the guid is a valid one
-     *
-     * To be valid, the GuidPrefix and the EntityId must not be invalid / unknown
-     */
-    bool is_valid() const noexcept;
+ReliabilityKind QoS::reliability() const noexcept
+{
+    return reliability_;
+}
 
-    //! Return GuidPrefix from this Guid
-    GuidPrefix guid_prefix() const noexcept;
-};
+bool QoS::operator ==(
+        const QoS& other) const noexcept
+{
+    return durability_ == other.durability_ && reliability_ == other.reliability_;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const QoS& qos)
+{
+    os << "QoS{" << qos.durability_ << ";" << qos.reliability_ << "}";
+    return os;
+}
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERCORE_TYPES_DDS_GUID_HPP_ */
