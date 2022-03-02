@@ -16,8 +16,20 @@
 # Set settings for project ddsrouter_yaml
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME ddsrouter_yaml)
+set(SUBMODULE_PROJECT_NAME
+    ddsrouter_yaml)
 
-set(SUBMODULE_PROJECT_SUMMARY "C++ library for confgure a DDS Router from YAML.")
+set(SUBMODULE_PROJECT_SUMMARY
+    "C++ library to create a DDS Router configuration from a YAML.")
 
-set(SUBMODULE_PROJECT_DEPENDENCIES yamlcpp ddsrouter_utils ddsrouter_core)
+set(SUBMODULE_PROJECT_FIND_PACKAGES
+    ddsrouter_utils
+    ddsrouter_core)
+
+set(SUBMODULE_PROJECT_DEPENDENCIES
+    ${SUBMODULE_PROJECT_FIND_PACKAGES})
+
+set(SUBMODULE_PROJECT_MACROS
+    DDSROUTERYAML)
+
+# set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )
