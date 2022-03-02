@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome2",
+    "definitions": {
+        "BaseObject": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "allowed": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Topic"
+                    }
+                },
+                "blocked": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Topic"
+                    }
+                },
+                "builtin": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Topic"
+                    }
+                }
+            },
+            "required": [
+                "Topic"
+            ],
+            "title": "BaseObject"
+        },
+        "Topic": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "keyed": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "Topic"
+        }
+    }
+}

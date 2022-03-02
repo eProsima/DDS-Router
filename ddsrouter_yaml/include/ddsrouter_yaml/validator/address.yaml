@@ -1,0 +1,7 @@
+address:
+
+  - ip: "127.0.0.1"
+    domain: localhost
+    port: 11667
+    transport: tcp
+    ip-version: ipv4

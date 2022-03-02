@@ -1,0 +1,12 @@
+{
+  "participants": [
+    {
+      "name": "participant0",
+      "kind": "echo"
+    },
+    {
+      "name": "participant0",
+      "kind": "simple"
+    }
+  ]
+}

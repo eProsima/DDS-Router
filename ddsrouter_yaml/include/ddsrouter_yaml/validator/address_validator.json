@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome8",
+    "definitions": {
+        "Welcome8": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                }
+            },
+            "required": [
+                "address"
+            ],
+            "title": "Welcome8"
+        },
+        "Address": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string",
+                    "anyOf": [
+                        { "format": "ipv4" },
+                        { "format": "ipv6" }
+                    ]
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "transport": {
+                    "type": "string",
+                    "enum": ["tcp", "udp"]
+                },
+                "ip-version": {
+                    "type": "string",
+                    "enum": ["ipv4", "ipv6"]
+                }
+            },
+
+            "anyOf": [
+                { "required": ["domain"] },
+                { "required": ["ip"] }
+            ],
+
+            "title": "Address"
+        }
+    }
+}

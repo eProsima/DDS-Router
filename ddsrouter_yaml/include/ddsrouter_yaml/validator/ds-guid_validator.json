@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Welcome6",
+    "definitions": {
+        "Welcome6": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "discovery-server-guid": {
+                    "$ref": "#/definitions/DiscoveryServerGUID"
+                }
+            },
+            "required": [
+                "discovery-server-guid"
+            ],
+            "title": "Welcome6"
+        },
+        "DiscoveryServerGUID": {
+            "type": "object",
+            "properties": {
+                "guid": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ros-discovery-server": {
+                    "type": "boolean"
+                }
+            },
+
+            "anyOf": [
+                { "required": ["guid"] },
+                { "required": ["id"] }
+            ],
+
+            "title": "DiscoveryServerGUID"
+        }
+    }
+}

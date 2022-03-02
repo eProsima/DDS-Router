@@ -1,0 +1,7 @@
+{
+  "discovery-server-guid": {
+    "guid": "01.0f.00.00.00.00.00.00.00.00.ca.fe",
+    "id": 0,
+    "ros-discovery-server": true
+  }
+}
