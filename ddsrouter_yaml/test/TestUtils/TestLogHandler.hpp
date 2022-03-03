@@ -19,7 +19,9 @@
 #ifndef _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
 #define _DDSROUTER_TEST_TESTUTILS_TESTLOGHANDLER_HPP_
 
-#include <ddsrouter/event/LogSevereEventHandler.hpp>
+#include <memory>
+
+#include <ddsrouter_event/LogSevereEventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,7 +32,7 @@ class TestLogHandler
 public:
 
     TestLogHandler(
-            Log::Kind threshold = Log::Kind::Warning,
+            utils::Log::Kind threshold = utils::Log::Kind::Warning,
             uint32_t expected_severe_logs = 0,
             uint32_t max_severe_logs = 0);
 
@@ -42,6 +44,13 @@ protected:
 
     uint32_t max_severe_logs_;
     uint32_t expected_severe_logs_;
+
+    /**
+     * @brief Pointer to the event handler log consumer
+     *
+     * @attention: this must be a raw pointer as Fast takes ownership of the consumer.
+     */
+
     event::LogSevereEventHandler* log_consumer_;
 };
 

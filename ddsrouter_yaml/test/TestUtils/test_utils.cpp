@@ -26,6 +26,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
+using namespace eprosima::ddsrouter::core::types;
+
 Guid random_guid(
         uint16_t seed /* = 1 */)
 {
@@ -148,7 +150,7 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
     return result;
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
+std::shared_ptr<core::configuration::ParticipantConfiguration> random_participant_configuration(
         ParticipantKind kind,
         uint16_t seed /* = 0 */)
 {
@@ -157,7 +159,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
     switch (kind())
     {
         case ParticipantKind::SIMPLE_RTPS:
-            return std::make_shared<configuration::SimpleParticipantConfiguration>(
+            return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,
                 random_domain(seed));
@@ -172,7 +174,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
                 std::set<Address>({Address()})
                 );
 
-            return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
+            return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 id,
                 random_guid_prefix(seed),
                 std::set<Address>(),
@@ -182,7 +184,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> random_participant_conf
 
         // Add cases where Participants need specific arguments
         default:
-            return std::make_shared<configuration::ParticipantConfiguration>(id, kind);
+            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind);
     }
 }
 
@@ -203,7 +205,7 @@ ParticipantKind random_participant_kind(
         bool valid /* = true */,
         uint16_t seed /* = 0 */)
 {
-    std::vector<eprosima::ddsrouter::ParticipantKind> kinds = ParticipantKind::all_valid_participant_kinds();
+    std::vector<ParticipantKind> kinds = ParticipantKind::all_valid_participant_kinds();
     if (valid)
     {
         return kinds[seed % kinds.size()];

@@ -19,8 +19,6 @@
 
 #include <set>
 
-#include <ddsrouter_utils/utils.hpp>
-
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {

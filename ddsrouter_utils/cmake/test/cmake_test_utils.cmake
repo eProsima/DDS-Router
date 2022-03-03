@@ -85,7 +85,7 @@ function(all_library_sources TEST_SOURCES)
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
-            "${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp"
+            "${PROJECT_SOURCE_DIR}/test/TestUtils/**/*.cpp"
         )
     set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
     set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)

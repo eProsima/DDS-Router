@@ -19,20 +19,22 @@
 #ifndef _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 #define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 
-#include <ddsrouter/types/endpoint/Guid.hpp>
-#include <ddsrouter/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter/exceptions/InitializationException.hpp>
-#include <ddsrouter/types/endpoint/DomainId.hpp>
-#include <ddsrouter/types/endpoint/GuidPrefix.hpp>
-#include <ddsrouter/types/topic/FilterTopic.hpp>
-#include <ddsrouter/types/topic/RealTopic.hpp>
-#include <ddsrouter/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/types/dds/DomainId.hpp>
+#include <ddsrouter_core/types/dds/Guid.hpp>
+#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddsrouter_core/types/topic/FilterTopic.hpp>
+#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace test {
+
+using namespace eprosima::ddsrouter::core::types;
 
 // TODO: most of the methods from this test_utils that generate random types are not very "random".
 // They must be refactored to generate real random values.
@@ -84,7 +86,7 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
         uint16_t size = 1,
         bool ros = false);
 
-std::shared_ptr<configuration::ParticipantConfiguration> random_participant_configuration(
+std::shared_ptr<core::configuration::ParticipantConfiguration> random_participant_configuration(
         ParticipantKind kind,
         uint16_t seed = 0);
 

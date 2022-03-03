@@ -27,12 +27,13 @@ namespace ddsrouter {
 namespace test {
 
 TestLogHandler::TestLogHandler(
-        Log::Kind threshold, /* Log::Kind::Warning */
+        utils::Log::Kind threshold, /* Log::Kind::Warning */
         uint32_t expected_severe_logs /* = 0 */,
         uint32_t max_severe_logs /* = 0 */)
-    : log_consumer_(new event::LogSevereEventHandler([](eprosima::fastdds::dds::Log::Entry entry)
-            {
-            }, threshold))
+    : log_consumer_(
+        new event::LogSevereEventHandler(
+            [](utils::Log::Entry entry){},
+            threshold))
     , expected_severe_logs_(expected_severe_logs)
     , max_severe_logs_(std::max(max_severe_logs, expected_severe_logs)) // Use max to avoid forcing set both args
 {
@@ -46,9 +47,9 @@ void TestLogHandler::check_valid()
 
 TestLogHandler::~TestLogHandler()
 {
-    Log::Flush();
+    utils::Log::Flush();
     check_valid();
-    Log::Reset();
+    utils::Log::Reset();
 }
 
 } /* namespace test */
