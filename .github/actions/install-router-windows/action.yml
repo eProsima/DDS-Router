@@ -1,0 +1,16 @@
+name: Install DDS Router
+description: Install and setup DDS Router for linking and building application in Windows
+inputs:
+  cmake_build_type:
+    description: 'Specifies the build type on single-configuration generators'
+    required: true
+    default: 'Release'
+runs:
+  using: composite
+  steps:
+
+    - uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+      with:
+        cmake_build_type: ${{ inputs.cmake_build_type }}
+        subpackage: ddsrouter_utils
+        subpackage_dir: ddsrouter_utils

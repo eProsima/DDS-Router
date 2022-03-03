@@ -48,15 +48,17 @@ jobs:
           cmake_build_type: "Release"
 
       - name: Install DDS Router
-        shell: pwsh
-        run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-            -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
-          cmake --build build\ddsrouter --config Release --target install
+        uses: ./DDS-Router/.github/actions/install-router-windows
+        with:
+          cmake_build_type: "Release"
 
       - name: Run tests
         shell: pwsh
-        run: ctest -C Release --test-dir build\ddsrouter -V --timeout 60 --label-exclude xfail
+        run: ctest -C Release --test-dir build\ddsrouter_utils -V --timeout 60 --label-exclude xfail &&
+             ctest -C Release --test-dir build\ddsrouter_event -V --timeout 60 --label-exclude xfail &&
+             ctest -C Release --test-dir build\ddsrouter_core -V --timeout 60 --label-exclude xfail &&
+             ctest -C Release --test-dir build\ddsrouter_yaml -V --timeout 60 --label-exclude xfail &&
+             ctest -C Release --test-dir build\ddsrouter_tool -V --timeout 60 --label-exclude xfail &&
 
   windows-build-test-debug:
     runs-on: windows-latest
@@ -99,15 +101,17 @@ jobs:
           cmake_build_type: "Debug"
 
       - name: Install DDS Router
-        shell: pwsh
-        run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-          -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
-          cmake --build build\ddsrouter --config Debug --target install
+        uses: ./DDS-Router/.github/actions/install-router-windows
+        with:
+          cmake_build_type: "Release"
 
       - name: Run tests
         shell: pwsh
-        run: ctest -C Debug --test-dir build\ddsrouter -V --timeout 60 --label-exclude xfail
+        run: ctest -C Debug --test-dir build\ddsrouter_utils -V --timeout 60 --label-exclude xfail &&
+             ctest -C Debug --test-dir build\ddsrouter_event -V --timeout 60 --label-exclude xfail &&
+             ctest -C Debug --test-dir build\ddsrouter_core -V --timeout 60 --label-exclude xfail &&
+             ctest -C Debug --test-dir build\ddsrouter_yaml -V --timeout 60 --label-exclude xfail &&
+             ctest -C Debug --test-dir build\ddsrouter_tool -V --timeout 60 --label-exclude xfail &&
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
@@ -151,7 +155,7 @@ jobs:
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select ddsrouter \
+            --packages-select-regex ddsrouter \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
@@ -250,7 +254,7 @@ jobs:
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select ddsrouter \
+            --packages-select-regex ddsrouter \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
