@@ -18,5 +18,4 @@ include(${PROJECT_SOURCE_DIR}/cmake/test/cmake_test_utils.cmake)
 test_requirements()
 
 # Add subdirectory with tests
-# add_subdirectory(unittest)
-# This package has not tests yet!
+add_subdirectory(application)
