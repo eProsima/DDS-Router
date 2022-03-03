@@ -22,13 +22,13 @@
 #include <functional>
 #include <string>
 
-#include <FileWatch.hpp>
-
 #include <ddsrouter_event/EventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
+
+class FileWatcher;
 
 /**
  * It implements the functionality to watch over a specific file and raise a callback
@@ -108,7 +108,7 @@ protected:
     std::string file_path_;
 
     //! File Watcher object
-    std::unique_ptr<filewatch::FileWatch<std::string>> file_watch_handler_;
+    std::unique_ptr<FileWatcher> file_watch_handler_;
 
     //! Whether the file_watcher has already been started
     std::atomic<bool> filewatcher_started_;

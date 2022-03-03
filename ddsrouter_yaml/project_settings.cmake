@@ -23,6 +23,7 @@ set(SUBMODULE_PROJECT_SUMMARY
     "C++ library to create a DDS Router configuration from a YAML.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
+    yaml-cpp
     ddsrouter_utils
     ddsrouter_core)
 

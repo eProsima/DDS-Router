@@ -22,6 +22,8 @@
 #include <ddsrouter_utils/Formatter.hpp>
 #include <ddsrouter_event/FileWatcherHandler.hpp>
 
+#include <FileWatcher.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
@@ -56,13 +58,13 @@ void FileWatcherHandler::start_filewatcher_nts_()
 
     try
     {
-        file_watch_handler_ = std::make_unique<filewatch::FileWatch<std::string>>(
+        file_watch_handler_ = std::make_unique<FileWatcher>(
             file_path_,
-            [this](const std::string& path, const filewatch::Event change_type)
+            [this](const std::string& path, const FileWatchEvent change_type)
             {
                 switch (change_type)
                 {
-                    case filewatch::Event::modified:
+                    case FileWatchEvent::modified:
                         logInfo(DDSROUTER_FILEWATCHER, "File: " << path << " modified.");
                         event_occurred_(path);
                         break;

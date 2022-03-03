@@ -53,13 +53,13 @@ endif()
 ###############################################################################
 # Check C++ version
 ###############################################################################
-# Check C++11
+# Check C++17
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG OR
         CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    check_cxx_compiler_flag(-std=c++11 SUPPORTS_CXX11)
-    if(NOT SUPPORTS_CXX11)
-        message(FATAL_ERROR "Compiler doesn't support C++11")
+    check_cxx_compiler_flag(-std=c++17 SUPPORTS_CXX17)
+    if(NOT SUPPORTS_CXX17)
+        message(FATAL_ERROR "Compiler doesn't support C++17")
     endif()
 endif()
 
