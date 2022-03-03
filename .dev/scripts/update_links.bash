@@ -30,8 +30,13 @@
 #
 
 WORKSPACE_DIR=$(pwd)
-SUBDIRECTORIES_RELATIVE="ddsrouter_utils ddsrouter_event ddsrouter_core ddsrouter_yaml tools/ddsrouter_tool"
+LIBRARY_SUBDIRECTORIES_RELATIVE="ddsrouter_utils ddsrouter_event ddsrouter_core ddsrouter_yaml"
+APP_SUBDIRECTORIES_RELATIVE="tools/ddsrouter_tool"
 FORCE_UPDATE=false
+UNLINK_ARG=false
+
+LIBRARY_CMAKE_NAME="library_CMakeLists.txt"
+APP_CMAKE_NAME="app_CMakeLists.txt"
 
 # Parse arguments
 POSITIONAL=()
@@ -44,15 +49,23 @@ do
         shift # pass argument
         shift # pass value
         ;;
-        -d|--dir)
-        SUBDIRECTORIES_UPDATE="$2"
+        -l|--library-dir)
+        LIBRARY_SUBDIRECTORIES_RELATIVE="$2"
         shift # past argument
         shift # past value
+        ;;
+        -a|--app-dir)
+        APP_SUBDIRECTORIES_RELATIVE="$2"
+        shift # past argument
+        shift # past value
+        ;;
+        -u|--unlink)
+        UNLINK_ARG=true
+        shift # past argument
         ;;
         -f|--force)
         FORCE_UPDATE=true
         shift # past argument
-        shift # past value
         ;;
         *)    # unknown option
         POSITIONAL+=("$1") # save it in an array for later
@@ -62,24 +75,69 @@ do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
-# download fast
+function update_link () {
+
+    local FORCE_ARG=""
+    if [ "${FORCE_UPDATE}" == true ]
+    then
+        FORCE_ARG="--force"
+    fi
+
+    local LINK_ARG=""
+    if [ "${UNLINK_ARG}" == false ]
+    then
+        LINK_ARG="--link"
+    fi
+
+    local CMAKE_SPECIAL_FILE="${2}"
+
+    for SUBDIR_RELATIVE in ${1}
+    do
+        echo "------------------------------------"
+        echo "Updating subdirectory ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}"
+
+        # Previously remove every already existing file if force is set
+        if [ "${FORCE_UPDATE}" == true ]
+        then
+
+            # Move to .common dir to get relative paths for every file to remove
+            local CURRENT_PWD=$(pwd)
+            cd ${WORKSPACE_DIR}/.common
+            local EVERY_FILE=$(find . -type f)
+            cd ${CURRENT_PWD}
+
+            # For every file found, remove it in subdirectory
+            for FILE_IN_SUBDIRECTORY in ${EVERY_FILE}
+            do
+                # echo "Removing file ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/${FILE_IN_SUBDIRECTORY}"
+                rm -f ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/${FILE_IN_SUBDIRECTORY}
+
+                # Remove file for src/cpp CMake special file
+                rm -f ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/src/cpp/CMakeLists.txt
+
+            done
+        fi
+
+        # Create hard links from any document in .common file in every dir in subdir variable
+        cp --archive ${LINK_ARG} ${FORCE_ARG} ${WORKSPACE_DIR}/.common/* ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}
+
+        # Create link for src/cpp CMake special file
+        cp --archive ${LINK_ARG} --force ${WORKSPACE_DIR}/.common/src/cpp/${CMAKE_SPECIAL_FILE} ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/src/cpp/CMakeLists.txt
+        rm ${FORCE_ARG} ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/src/cpp/${LIBRARY_CMAKE_NAME}
+        rm ${FORCE_ARG} ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}/src/cpp/${APP_CMAKE_NAME}
+
+    done
+}
+
+# Executing script
 echo
 echo "------------------------------------"
 echo "Updating links script running"
 echo "Workspace: ${WORKSPACE_DIR}"
-echo "Subdirectories to update: ${SUBDIRECTORIES_RELATIVE}"
+echo "Subdirectories libraries to update: ${LIBRARY_SUBDIRECTORIES_RELATIVE}"
+echo "Subdirectories apps to update: ${APP_SUBDIRECTORIES_RELATIVE}"
 echo "Force update: ${FORCE_UPDATE}"
+echo "Unlink files: ${UNLINK_ARG}"
 
-for SUBDIR_RELATIVE in ${SUBDIRECTORIES_RELATIVE}
-do
-    echo "------------------------------------"
-    echo "Updating subdirectory ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}"
-
-    # Create hard links from any document in .common file in every dir in subdir variable
-    if [ "${FORCE_UPDATE}" == true ]
-    then
-        cp --archive --link --force ${WORKSPACE_DIR}/.common/* ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}
-    else
-        cp --archive --link ${WORKSPACE_DIR}/.common/* ${WORKSPACE_DIR}/${SUBDIR_RELATIVE}
-    fi
-done
+update_link "${LIBRARY_SUBDIRECTORIES_RELATIVE}" ${LIBRARY_CMAKE_NAME}
+update_link "${APP_SUBDIRECTORIES_RELATIVE}" ${APP_CMAKE_NAME}

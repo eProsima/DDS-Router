@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_directories("TestUtils")
+macro(test_requirements)
 
-include(${PROJECT_SOURCE_DIR}/cmake/common/gtest.cmake)
-check_gtest()
-check_gmock()
+    include_directories("TestUtils")
 
-if(WIN32)
+    include(${PROJECT_SOURCE_DIR}/cmake/common/gtest.cmake)
+    check_gtest()
+    check_gmock()
+
+    if(WIN32)
 
     # populates out_var with the value that the PATH environment variable should have
     # in order to cover all target dependencies required for a ctest.
@@ -66,13 +68,31 @@ if(WIN32)
 
     endfunction(get_win32_path_dependencies)
 
-else(WIN32)
-    # dummy
-    function(get_win32_path_dependencies)
-    endfunction(get_win32_path_dependencies)
-endif(WIN32)
+    else(WIN32)
+        # dummy
+        function(get_win32_path_dependencies)
+        endfunction(get_win32_path_dependencies)
+    endif(WIN32)
 
-# Create an executable for a test
+endmacro()
+
+# Return a list of all cpp files required by ddsrouter library
+# Arguments:
+# TEST_SOURCES -> List of source files where new sources will be added
+function(all_library_sources TEST_SOURCES)
+
+    file(GLOB_RECURSE LIBRARY_SOURCES
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
+            "${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp"
+        )
+    set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
+    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
+
+endfunction()
+
+# Create an executable for a unit test
 # Arguments:
 # TEST_EXECUTABLE_NAME -> name of the test executable
 # TEST_SOURCES -> sources for the test
@@ -127,68 +147,21 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
 
 endfunction(add_test_executable)
 
-# Return a list of all cpp files required in order to compile test_utils.cpp
+# Create an executable for a unittest
 # Arguments:
-# TEST_SOURCES -> List of source files where new sources will be added
-function(sources_for_test_utils TEST_SOURCES)
+# TEST_NAME -> test name (name of the class of the test in Test .cpp)
+# TEST_SOURCES -> sources for the test
+# TEST_LIST -> test cases implemented in the Test .cpp
+# TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
+# Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
+function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIBRARIES)
 
-    set(TEST_UTILS_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/SimpleParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/participant/DiscoveryServerParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/event/LogSevereEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exceptions/Exception.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationBoth.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationClient.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/security/tls/TlsConfigurationServer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/Data.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/Address.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/address/DiscoveryServerConnectionAddress.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/DomainId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Guid.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/GuidPrefix.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/utils.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
+    add_test_executable(
+        "unittest_${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_NAME}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
 
-    set(NEW_TEST_SOURCES "${TEST_SOURCES};${TEST_UTILS_SOURCES}")
-
-    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
-
-endfunction()
-
-# Return a list of all cpp files required by ddsrouter library
-# Arguments:
-# TEST_SOURCES -> List of source files where new sources will be added
-function(all_library_sources TEST_SOURCES)
-
-    file(GLOB_RECURSE LIBRARY_SOURCES
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
-            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
-            "${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp"
-            "${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp"
-        )
-    set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
-    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
-
-endfunction()
-
-add_subdirectory(blackbox)
-add_subdirectory(unittest)
-
-# If tool active, compile tool tests
-if (COMPILE_TOOLS)
-    add_subdirectory(tool)
-endif()
+endfunction(add_unittest_executable)
