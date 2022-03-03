@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -109,8 +110,30 @@ std::ostream& operator <<(
         std::ostream& os,
         const Endpoint& endpoint)
 {
+    std::string kind_str;
+    switch (endpoint.kind_)
+    {
+        case EndpointKind::ENDPOINT_KIND_INVALID:
+            kind_str = "ENDPOINT_KIND_INVALID";
+            break;
+
+        case EndpointKind::WRITER:
+            kind_str = "Writer";
+            break;
+
+        case EndpointKind::READER:
+            kind_str = "Reader";
+            break;
+
+        default:
+            utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind.");
+            break;
+    }
+
+    std::string active_str = endpoint.active_ ? "Active" : "Inactive";
+
     os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.qos_ << ";" <<
-        endpoint.kind_ << ";" << endpoint.active_ << "}";
+        kind_str << ";" << active_str << "}";
     return os;
 }
 

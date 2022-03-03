@@ -25,6 +25,7 @@
 #include <fastrtps/rtps/RTPSDomain.h>
 
 #include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
@@ -84,28 +85,88 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
 }
 
 template <class ConfigurationType>
+template<class DiscoveryInfoKind>
+types::Endpoint CommonRTPSRouterParticipant<ConfigurationType>::create_endpoint_from_info_(
+        DiscoveryInfoKind& info)
+{
+    // Parse GUID
+    types::Guid info_guid;
+    info_guid = info.info.guid();
+
+    // Parse QoS
+    types::DurabilityKind info_durability_kind = info.info.m_qos.m_durability.durabilityKind();
+    types::ReliabilityKind info_reliability_kind;
+    if (info.info.m_qos.m_reliability.kind == fastdds::dds::BEST_EFFORT_RELIABILITY_QOS)
+    {
+        info_reliability_kind = fastrtps::rtps::BEST_EFFORT;
+    }
+    else if (info.info.m_qos.m_reliability.kind == fastdds::dds::RELIABLE_RELIABILITY_QOS)
+    {
+        info_reliability_kind = fastrtps::rtps::RELIABLE;
+    }
+    else
+    {
+        utils::tsnh(
+            utils::Formatter() <<
+                "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
+    }
+    types::QoS info_qos(info_durability_kind, info_reliability_kind);
+
+    // Parse Topic
+    types::RealTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()),
+            info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY);
+
+    // Create Endpoint
+    if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
+    {
+        return types::Endpoint(types::EndpointKind::READER, info_guid, info_qos, info_topic);
+    }
+    else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
+    {
+        return types::Endpoint(types::EndpointKind::WRITER, info_guid, info_qos, info_topic);
+    }
+    else
+    {
+        utils::tsnh(utils::Formatter() << "Invalid DiscoveryInfoKind for Endpoint creation.");
+        return types::Endpoint();
+    }
+}
+
+template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ReaderDiscoveryInfo&& info)
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
+        types::Endpoint info_reader = create_endpoint_from_info_<fastrtps::rtps::ReaderDiscoveryInfo>(info);
+
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
+
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::INSERT, info_reader));
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
+
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
+
+            info_reader.active(false);
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
+
+            info_reader.active(false);
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
         }
     }
 }
@@ -117,22 +178,34 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 {
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
+        types::Endpoint info_writer = create_endpoint_from_info_<fastrtps::rtps::WriterDiscoveryInfo>(info);
+
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
+
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::INSERT, info_writer));
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
+
+            info_writer.active(false);
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
+
+            info_writer.active(false);
+            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
         }
     }
 }

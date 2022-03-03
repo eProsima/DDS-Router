@@ -28,6 +28,26 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
+DiscoveryDatabase::DiscoveryDatabase() noexcept
+    : exit_(false)
+{
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Creating queue processing thread.");
+    queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
+}
+
+DiscoveryDatabase::~DiscoveryDatabase()
+{
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Destroying Discovery Database.");
+    {
+        std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+        exit_.store(true);
+    }
+    entities_to_process_cv_.notify_one();
+
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
+    queue_processing_thread_.join();
+}
+
 bool DiscoveryDatabase::topic_exists(
         const RealTopic& topic) const noexcept
 {
@@ -85,6 +105,11 @@ bool DiscoveryDatabase::add_endpoint(
 
         logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
 
+        for (auto discovered_endpoint_callback : discovered_endpoint_callbacks_)
+        {
+            discovered_endpoint_callback(new_endpoint);
+        }
+
         return true;
     }
 }
@@ -106,6 +131,7 @@ bool DiscoveryDatabase::update_endpoint(
     {
         // Modify entry
         it->second = new_endpoint;
+        // It is assumed a topic cannot change, otherwise further actions may be taken
 
         logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
 
@@ -148,6 +174,70 @@ Endpoint DiscoveryDatabase::get_endpoint(
     }
 
     return it->second;
+}
+
+void DiscoveryDatabase::add_endpoint_discovered_callback(
+        std::function<void(Endpoint)> endpoint_discovered_callback) noexcept
+{
+    discovered_endpoint_callbacks_.push_back(endpoint_discovered_callback);
+}
+
+void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
+{
+    while (true)
+    {
+        std::unique_lock<std::mutex> lock(entities_to_process_cv_mutex_);
+        entities_to_process_cv_.wait(
+            lock,
+            [&]
+            {
+                return !entities_to_process_.BothEmpty() || exit_.load();
+            });
+
+        if (exit_.load())
+        {
+            break;
+        }
+        else
+        {
+            process_queue_();
+        }
+    }
+}
+
+void DiscoveryDatabase::push_item_to_queue(
+        std::tuple<DatabaseOperation, Endpoint> item) noexcept
+{
+    entities_to_process_.Push(item);
+    entities_to_process_cv_.notify_one();
+}
+
+void DiscoveryDatabase::process_queue_() noexcept
+{
+    entities_to_process_.Swap();
+    while (!entities_to_process_.Empty())
+    {
+        std::tuple<DatabaseOperation, Endpoint> queue_item = entities_to_process_.Front();
+        DatabaseOperation db_operation = std::get<0>(queue_item);
+        Endpoint entity = std::get<1>(queue_item);
+        try
+        {
+            if (db_operation == DatabaseOperation::INSERT)
+            {
+                add_endpoint(entity);
+            }
+            else if (db_operation == DatabaseOperation::UPDATE)
+            {
+                update_endpoint(entity);
+            }
+        }
+        catch (const utils::InconsistencyException& e)
+        {
+            logError(DDSROUTER_DISCOVERY_DATABASE,
+                    "Error processing database operations queue:" << e.what() << ".");
+        }
+        entities_to_process_.Pop();
+    }
 }
 
 } /* namespace core */

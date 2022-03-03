@@ -161,7 +161,7 @@ protected:
     // INTERNAL AUXILIAR METHODS
 
     /**
-     * @brief Method called every time a new discovery endpoint has been discovered/updated
+     * @brief Method called every time a new endpoint has been discovered/updated
      *
      * This method is called with the topic of a new/updated \c Endpoint discovered.
      * If the DDSRouterImpl is enabled, the new Bridge is created and enabled.
@@ -172,6 +172,16 @@ protected:
      */
     void discovered_topic_(
             const types::RealTopic& topic) noexcept;
+
+    /**
+     * @brief Method called every time a new endpoint has been discovered/updated
+     *
+     * This method calls \c discovered_topic_ with the topic of \c endpoint as parameter.
+     *
+     * @param [in] endpoint : endpoint discovered
+     */
+    void discovered_endpoint_(
+            const types::Endpoint& endpoint) noexcept;
 
     /**
      * @brief Create a new \c Bridge object
