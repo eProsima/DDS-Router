@@ -72,7 +72,7 @@ bool DiscoveryDatabase::endpoint_exists(
     return entities_.find(guid) != entities_.end();
 }
 
-bool DiscoveryDatabase::add_endpoint(
+bool DiscoveryDatabase::add_endpoint_(
         const Endpoint& new_endpoint)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
@@ -114,7 +114,7 @@ bool DiscoveryDatabase::add_endpoint(
     }
 }
 
-bool DiscoveryDatabase::update_endpoint(
+bool DiscoveryDatabase::update_endpoint_(
         const Endpoint& new_endpoint)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
@@ -139,7 +139,7 @@ bool DiscoveryDatabase::update_endpoint(
     }
 }
 
-utils::ReturnCode DiscoveryDatabase::erase_endpoint(
+utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
         const Guid& guid_of_endpoint_to_erase)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
@@ -157,6 +157,24 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint(
     {
         return utils::ReturnCode::RETCODE_OK;
     }
+}
+
+void DiscoveryDatabase::add_endpoint(
+        const Endpoint& new_endpoint) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::ADD, new_endpoint));
+}
+
+void DiscoveryDatabase::update_endpoint(
+        const Endpoint& new_endpoint) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::UPDATE, new_endpoint));
+}
+
+void DiscoveryDatabase::erase_endpoint(
+        const Endpoint& endpoint_to_erase) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::ERASE, endpoint_to_erase));
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
@@ -205,7 +223,7 @@ void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
     }
 }
 
-void DiscoveryDatabase::push_item_to_queue(
+void DiscoveryDatabase::push_item_to_queue_(
         std::tuple<DatabaseOperation, Endpoint> item) noexcept
 {
     entities_to_process_.Push(item);
@@ -222,13 +240,17 @@ void DiscoveryDatabase::process_queue_() noexcept
         Endpoint entity = std::get<1>(queue_item);
         try
         {
-            if (db_operation == DatabaseOperation::INSERT)
+            if (db_operation == DatabaseOperation::ADD)
             {
-                add_endpoint(entity);
+                add_endpoint_(entity);
             }
             else if (db_operation == DatabaseOperation::UPDATE)
             {
-                update_endpoint(entity);
+                update_endpoint_(entity);
+            }
+            else if (db_operation == DatabaseOperation::ERASE)
+            {
+                erase_endpoint_(entity.guid());
             }
         }
         catch (const utils::InconsistencyException& e)

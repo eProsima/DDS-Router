@@ -42,8 +42,9 @@ namespace core {
 //! Operations to perform on a DiscoveryDatabase
 enum DatabaseOperation
 {
-    INSERT,
-    UPDATE
+    ADD,
+    UPDATE,
+    ERASE
 };
 
 /**
@@ -84,31 +85,25 @@ public:
      * @brief Add a new endpoint to the database.
      *
      * @param [in] new_endpoint: new endpoint to store
-     * @return true if the endpoint has been added
-     * @throw \c InconsistencyException in case an endpoint with the same guid already exists and is active
      */
-    bool add_endpoint(
-            const types::Endpoint& new_endpoint);
+    void add_endpoint(
+            const types::Endpoint& new_endpoint) noexcept;
 
     /**
      * @brief Update an entry of the database by replacing the stored endpoint by a new one.
      *
      * @param [in] new_endpoint: new endpoint to store
-     * @return true if the endpoint has been updated
-     * @throw \c InconsistencyException in case there is no entry associated to this endpoint
      */
-    bool update_endpoint(
-            const types::Endpoint& new_endpoint);
+    void update_endpoint(
+            const types::Endpoint& new_endpoint) noexcept;
 
     /**
      * @brief Erase an endpoint inside the database
      *
-     * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
-     * @return \c RETCODE_OK if correctly erased
-     * @throw \c InconsistencyException in case there is no entry associated to this guid
+     * @param [in] endpoint_to_erase endpoint that will be erased
      */
-    utils::ReturnCode erase_endpoint(
-            const types::Guid& guid_of_endpoint_to_erase);
+    void erase_endpoint(
+            const types::Endpoint& endpoint_to_erase) noexcept;
 
     /**
      * @brief Get the endpoint object with this guid
@@ -128,15 +123,51 @@ public:
     void add_endpoint_discovered_callback(
             std::function<void(types::Endpoint)> endpoint_discovered_callback) noexcept;
 
+protected:
+
+    /**
+     * @brief Add a new endpoint to the database.
+     *
+     * @param [in] new_endpoint: new endpoint to store
+     * @return true if the endpoint has been added
+     * @throw \c InconsistencyException in case an endpoint with the same guid already exists and is active
+     */
+    bool add_endpoint_(
+            const types::Endpoint& new_endpoint);
+
+    /**
+     * @brief Update an entry of the database by replacing the stored endpoint by a new one.
+     *
+     * @param [in] new_endpoint: new endpoint to store
+     * @return true if the endpoint has been updated
+     * @throw \c InconsistencyException in case there is no entry associated to this endpoint
+     */
+    bool update_endpoint_(
+            const types::Endpoint& new_endpoint);
+
+    /**
+     * @brief Erase an endpoint inside the database
+     *
+     * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
+     * @return \c RETCODE_OK if correctly erased
+     * @throw \c InconsistencyException in case there is no entry associated to this guid
+     */
+    utils::ReturnCode erase_endpoint_(
+            const types::Guid& guid_of_endpoint_to_erase);
+
+    //! Routine performed by dedicated thread performing database operations
+    void queue_processing_thread_routine_() noexcept;
+
     /**
      * @brief Add new operation to the queue \c entities_to_process_
      *
      * @param [in] item: operation to add
      */
-    void push_item_to_queue(
+    void push_item_to_queue_(
             std::tuple<DatabaseOperation, types::Endpoint> item) noexcept;
 
-protected:
+    //! Process queue storing database operations
+    void process_queue_() noexcept;
 
     //! Database of endpoints indexed by guid
     std::map<types::Guid, types::Endpoint> entities_;
@@ -149,12 +180,6 @@ protected:
 
     //! Queue storing database operations to be performed in a dedicated thread
     fastrtps::DBQueue<std::tuple<DatabaseOperation, types::Endpoint>> entities_to_process_;
-
-    //! Routine performed by dedicated thread performing database operations
-    void queue_processing_thread_routine_() noexcept;
-
-    //! Process queue storing database operations
-    void process_queue_() noexcept;
 
     //! Handle of thread dedicated to performing database operations
     std::thread queue_processing_thread_;

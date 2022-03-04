@@ -146,27 +146,27 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
             logInfo(DDSROUTER_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
 
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::INSERT, info_reader));
+            this->discovery_database_->add_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
 
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
+            this->discovery_database_->update_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
 
             info_reader.active(false);
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
+            this->discovery_database_->update_endpoint(info_reader);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
 
             info_reader.active(false);
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_reader));
+            this->discovery_database_->update_endpoint(info_reader);
         }
     }
 }
@@ -185,27 +185,27 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
             logInfo(DDSROUTER_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
 
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::INSERT, info_writer));
+            this->discovery_database_->add_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
 
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
+            this->discovery_database_->update_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
 
             info_writer.active(false);
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
+            this->discovery_database_->update_endpoint(info_writer);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
 
             info_writer.active(false);
-            this->discovery_database_->push_item_to_queue(std::make_tuple(DatabaseOperation::UPDATE, info_writer));
+            this->discovery_database_->update_endpoint(info_writer);
         }
     }
 }
