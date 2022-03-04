@@ -28,7 +28,7 @@ namespace utils {
 /**
  * @brief Exception to warn that a method or class is not implemented yet or not supported for the moment.
  */
-class UnsupportedException : public Exception
+class DDSROUTERUTILS_DllAPI UnsupportedException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

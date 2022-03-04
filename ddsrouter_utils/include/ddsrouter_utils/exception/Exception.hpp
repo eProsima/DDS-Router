@@ -32,7 +32,7 @@ namespace utils {
  * @brief Base class for all exceptions thrown by the eProsima DDSRouter library.
  *
  */
-class Exception : public std::exception
+class DDSROUTERUTILS_DllAPI Exception : public std::exception
 {
 
 public:

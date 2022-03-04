@@ -30,7 +30,7 @@ namespace utils {
  *
  * Most common case is when an enumeration value has a value not contemplated in the enum definition.
  */
-class ValueNotAllowedException : public Exception
+class DDSROUTERUTILS_DllAPI ValueNotAllowedException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

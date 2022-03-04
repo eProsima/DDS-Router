@@ -28,7 +28,7 @@ namespace utils {
 /**
  * @brief Exception thrown when fail trying to get IP from Domain Name via DNS call.
  */
-class DNSException : public Exception
+class DDSROUTERUTILS_DllAPI DNSException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

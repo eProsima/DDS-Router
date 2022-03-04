@@ -21,6 +21,8 @@
 
 #include <fastrtps/types/TypesBase.h>
 
+#include <ddsrouter_utils/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
@@ -30,7 +32,7 @@ namespace utils {
  *
  * It uses the fastdds ReturnCode_t
  */
-class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
+class DDSROUTERUTILS_DllAPI ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
 public:
 
@@ -56,7 +58,7 @@ protected:
 };
 
 //! \c ReturnCode to stream serializator
-std::ostream& operator <<(
+DDSROUTERUTILS_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const ReturnCode& code);
 

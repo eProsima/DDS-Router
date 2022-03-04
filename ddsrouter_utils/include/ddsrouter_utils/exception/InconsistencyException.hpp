@@ -34,7 +34,7 @@ namespace utils {
  * 4. Delete an element whose subelements have not been correctly deleted.
  * etc.
  */
-class InconsistencyException : public Exception
+class DDSROUTERUTILS_DllAPI InconsistencyException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

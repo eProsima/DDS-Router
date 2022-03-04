@@ -24,6 +24,8 @@
 #include <sstream>
 #include <string>
 
+#include <ddsrouter_utils/library/library_dll.h>
+
 // Fast use of Formatter call, maybe simpler to the user
 #define STR_ENTRY eprosima::ddsrouter::utils::Formatter()
 
@@ -39,7 +41,7 @@ namespace utils {
  * concatenated in a single string. For example:
  * Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
  */
-class Formatter
+class DDSROUTERUTILS_DllAPI Formatter
 {
 public:
 
@@ -61,7 +63,7 @@ protected:
 };
 
 //! \c Formatter to stream serializator
-std::ostream& operator <<(
+DDSROUTERUTILS_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Formatter& f);
 

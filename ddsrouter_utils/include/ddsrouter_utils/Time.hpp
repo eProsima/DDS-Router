@@ -20,6 +20,7 @@
 #define _DDSROUTERUTILS_TIME_HPP_
 
 #include <chrono>
+#include <ddsrouter_utils/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -38,7 +39,7 @@ using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
  *
  * @return Timestamp refering to the moment it is called
  */
-inline Timestamp now() noexcept
+DDSROUTERUTILS_DllAPI inline Timestamp now() noexcept
 {
     return std::chrono::system_clock::now();
 }
