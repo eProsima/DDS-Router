@@ -21,16 +21,61 @@
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_core/types/RawConfiguration.hpp>
 
 #include <test_participants.hpp>
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+namespace eprosima {
+namespace ddsrouter {
+namespace core {
+namespace test {
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
+
+/**
+ * @brief Create a simple configuration for a DDS Router
+ *
+ * Create a configuration with 2 topics, onw with key and other without
+ * Create 2 simple participants with domains 0 and 1
+ *
+ * @return configuration::DDSRouterConfiguration
+ */
+configuration::DDSRouterConfiguration dds_test_simple_configuration()
+{
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
+    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+
+    // Two topics, one keyed and other not
+    std::set<std::shared_ptr<types::RealTopic>> builtin_topics(
+    {
+        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
+        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
+    });
+
+    // Two simple participants
+    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
+    {
+        std::make_shared<configuration::SimpleParticipantConfiguration>(
+            types::ParticipantId("participant_0"),
+            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+            types::DomainId(0u)
+            ),
+        std::make_shared<configuration::SimpleParticipantConfiguration>(
+            types::ParticipantId("participant_1"),
+            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+            types::DomainId(1u)
+            ),
+    }
+        );
+
+    return configuration::DDSRouterConfiguration(
+        allowlist,
+        blocklist,
+        builtin_topics,
+        participants_configurations
+        );
+}
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
@@ -38,14 +83,14 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  */
 template <class MsgStruct>
 void test_local_communication(
-        std::string config_path,
+        configuration::DDSRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
-    test::TestLogHandler test_log_handler(Log::Kind::Error);
+    eprosima::ddsrouter::test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);
@@ -62,19 +107,15 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    HelloWorldPublisher<MsgStruct> publisher(msg.isKeyDefined());
+    DummyDDSPublisher<MsgStruct> publisher(msg.isKeyDefined());
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber<MsgStruct> subscriber(msg.isKeyDefined());
+    DummyDDSSubscriber<MsgStruct> subscriber(msg.isKeyDefined());
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    RawConfiguration router_configuration =
-            load_configuration_from_file(config_path);
-
     // Create DDSRouter entity
-    DDSRouter router(router_configuration);
+    DDSRouter router(ddsrouter_configuration);
     router.start();
 
     // Start publishing
@@ -93,20 +134,13 @@ void test_local_communication(
     router.stop();
 }
 
-/**
- * Test whole DDSRouter initialization by initializing two Simple Participants
- */
-TEST(DDSTestLocal, simple_initialization)
-{
-    // Load configuration
-    RawConfiguration router_configuration =
-            load_configuration_from_file("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
+} /* namespace test */
+} /* namespace core */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
 
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-
-    // Let test finish without failing
-}
+using namespace eprosima::ddsrouter::core;
+using namespace eprosima::ddsrouter::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
@@ -114,7 +148,8 @@ TEST(DDSTestLocal, simple_initialization)
  */
 TEST(DDSTestLocal, end_to_end_local_communication)
 {
-    test_local_communication<HelloWorld>("../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration());
 }
 
 /**
@@ -123,8 +158,8 @@ TEST(DDSTestLocal, end_to_end_local_communication)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
-    test_local_communication<HelloWorldKeyed>(
-        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml");
+    test::test_local_communication<HelloWorldKeyed>(
+        test::dds_test_simple_configuration());
 }
 
 /**
@@ -136,8 +171,8 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
 {
-    test_local_communication<HelloWorld>(
-        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(),
         1000,   // wait for 1000 samples received
         0);     // send it without waiting from one sample to the other
 }
@@ -151,10 +186,10 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_size)
 {
-    test_local_communication<HelloWorld>(
-        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
-        DEFAULT_SAMPLES_TO_RECEIVE,
-        DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(),
+        test::DEFAULT_SAMPLES_TO_RECEIVE,
+        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         10000); // 500K message size
 }
 
@@ -169,8 +204,8 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_size)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
 {
-    test_local_communication<HelloWorld>(
-        "../../resources/configurations/dds/local/dds_test_simple_configuration.yaml",
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(),
         500,
         1,
         1000); // 50K message size
