@@ -39,6 +39,7 @@ Next release will fix the following **major bugs**:
 Next release will fix the following **minor bugs**:
 
 * Fix parsing of *reload-time* executable argument.
+* Handle signals in dedicated threads to prevent hangs when terminating execution.
 
 Next release will include the following **Documentation features**:
 
