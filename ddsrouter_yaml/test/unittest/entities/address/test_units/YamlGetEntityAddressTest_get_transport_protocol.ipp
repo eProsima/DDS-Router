@@ -67,7 +67,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml,
+                ADDRESS_TRANSPORT_TAG),
+                utils::ConfigurationException);
     }
 
     // Incorrect tag
@@ -78,7 +80,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             test::YamlField<std::string>("utcp"),
             ADDRESS_TRANSPORT_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml,
+                ADDRESS_TRANSPORT_TAG),
+                utils::ConfigurationException);
     }
 
     // Incorrect format
@@ -89,6 +93,8 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             test::YamlField<uint32_t>(17),
             ADDRESS_TRANSPORT_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::TransportProtocol>(yml,
+                ADDRESS_TRANSPORT_TAG),
+                utils::ConfigurationException);
     }
 }

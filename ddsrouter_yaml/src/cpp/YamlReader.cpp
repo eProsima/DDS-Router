@@ -46,8 +46,8 @@ using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
 /************************
- * GENERIC              *
- ************************/
+* GENERIC              *
+************************/
 
 bool YamlReader::is_tag_present(
         const Yaml& yml,
@@ -80,8 +80,8 @@ Yaml YamlReader::get_value_in_tag(
 }
 
 /************************
- * ENTITIES             *
- ************************/
+* ENTITIES             *
+************************/
 
 template <>
 TransportProtocol YamlReader::get<TransportProtocol>(
@@ -440,14 +440,14 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         else
         {
             throw utils::ConfigurationException(
-                "TLS Configuration is set and does not fit with Client or Server parameters.");
+                      "TLS Configuration is set and does not fit with Client or Server parameters.");
         }
     }
 }
 
 /************************
- * PARTICIPANTS         *
- ************************/
+* PARTICIPANTS         *
+************************/
 
 template <>
 configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(

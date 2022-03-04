@@ -55,7 +55,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
 
                 // Read Yaml
                 core::configuration::DiscoveryServerParticipantConfiguration result =
-                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml,
+                                "participant");
 
                 // Check result
                 ASSERT_EQ(id, result.id());
@@ -66,7 +67,9 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                 ASSERT_EQ(0, result.connection_addresses().size());
                 ASSERT_EQ(0, result.listening_addresses().size());
                 ASSERT_FALSE(result.tls_active());
-                ASSERT_EQ(core::configuration::DiscoveryServerParticipantConfiguration::default_domain_id(), result.domain());
+                ASSERT_EQ(
+                    core::configuration::DiscoveryServerParticipantConfiguration::default_domain_id(),
+                    result.domain());
             }
         }
     }

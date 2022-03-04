@@ -32,7 +32,9 @@ TestLogHandler::TestLogHandler(
         uint32_t max_severe_logs /* = 0 */)
     : log_consumer_(
         new event::LogSevereEventHandler(
-            [](utils::Log::Entry entry){},
+            [](utils::Log::Entry entry)
+            {
+            },
             threshold))
     , expected_severe_logs_(expected_severe_logs)
     , max_severe_logs_(std::max(max_severe_logs, expected_severe_logs)) // Use max to avoid forcing set both args

@@ -114,7 +114,7 @@ TEST(YamlConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-        participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations();
 
     ASSERT_EQ(participant_configurations.size(), 3);
 

@@ -59,6 +59,7 @@ TEST(YamlGetEntityAddressTest, get_ip)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+                utils::ConfigurationException);
     }
 }

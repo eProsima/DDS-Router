@@ -35,7 +35,7 @@ Yaml YamlManager::load_file(
     catch (const std::exception& e)
     {
         throw utils::ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
-                                                        << file_path << " : " << e.what());
+                                                               << file_path << " : " << e.what());
     }
 }
 

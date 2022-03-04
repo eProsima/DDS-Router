@@ -62,7 +62,8 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         yml["ds-address"] = yml_ds_address;
 
         // Create object DiscoveryServerAddress from yaml
-        core::types::DiscoveryServerConnectionAddress result = YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address");
+        core::types::DiscoveryServerConnectionAddress result =
+                YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address");
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());
@@ -102,7 +103,8 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         yml["ds-address"] = yml_ds_address;
 
         // Create object DiscoveryServerAddress from yaml
-        core::types::DiscoveryServerConnectionAddress result = YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address");
+        core::types::DiscoveryServerConnectionAddress result =
+                YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address");
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());

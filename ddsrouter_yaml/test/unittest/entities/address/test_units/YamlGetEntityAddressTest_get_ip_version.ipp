@@ -68,7 +68,8 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+                utils::ConfigurationException);
     }
 
     // Incorrect value name
@@ -79,7 +80,8 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>("v7"),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+                utils::ConfigurationException);
     }
 
     // Incorrect format
@@ -90,6 +92,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<uint32_t>(17),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+                utils::ConfigurationException);
     }
 }

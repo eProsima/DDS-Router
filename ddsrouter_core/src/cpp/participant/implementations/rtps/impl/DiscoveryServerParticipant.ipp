@@ -53,7 +53,8 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 {
     // Get Configuration information
     std::set<types::Address> listening_addresses = this->configuration_.listening_addresses();
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses = this->configuration_.connection_addresses();
+    std::set<types::DiscoveryServerConnectionAddress> connection_addresses =
+            this->configuration_.connection_addresses();
     types::GuidPrefix discovery_server_guid_prefix = this->configuration_.discovery_server_guid_prefix();
     std::shared_ptr<types::security::TlsConfiguration> tls_config =  this->configuration_.tls_configuration();
 

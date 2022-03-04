@@ -120,7 +120,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         case ParticipantKind::PARTICIPANT_KIND_INVALID:
             throw utils::ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind()
-                                                            << " is not a valid participant kind name.");
+                                                                   << " is not a valid participant kind name.");
 
         default:
             // This should not happen as every kind must be in the switch

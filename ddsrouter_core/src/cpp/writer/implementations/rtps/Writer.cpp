@@ -55,7 +55,8 @@ Writer::Writer(
 
     if (!rtps_writer_)
     {
-        throw utils::InitializationException(utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
+        throw utils::InitializationException(
+                  utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
                       participant_id << " in topic " << topic << ".");
     }
 

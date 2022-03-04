@@ -52,7 +52,8 @@ Reader::Reader(
 
     if (!rtps_reader_)
     {
-        throw utils::InitializationException(utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
+        throw utils::InitializationException(
+                  utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
                       participant_id << " in topic " << topic << ".");
     }
 
