@@ -1,0 +1,22 @@
+
+# This YAML configures the DDS Router for the DDS communication test.
+# It is composed of a Simple Participant and a WAN Participant configured as client with UDPv6 transport.
+
+allowlist:
+  - name: "HelloWorldTopic"
+    type: "HelloWorld"
+
+participant_1:
+  type: "local"
+  domain: 1
+
+ClientWAN:
+  type: "wan"
+  id: 1
+  connection-addresses:
+    - id: 0
+      addresses:
+        - ip: "::1"
+          ip-version: "v6"
+          port: 11666
+          transport: "udp"

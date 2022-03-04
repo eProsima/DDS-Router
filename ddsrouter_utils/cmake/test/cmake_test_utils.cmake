@@ -76,7 +76,7 @@ macro(test_requirements)
 
 endmacro()
 
-# Return a list of all cpp files required by ddsrouter library
+# Return a list of all cpp and hpp files required by ddsrouter library
 # Arguments:
 # TEST_SOURCES -> List of source files where new sources will be added
 function(all_library_sources TEST_SOURCES)
@@ -85,7 +85,26 @@ function(all_library_sources TEST_SOURCES)
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.c"
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cpp"
             "${PROJECT_SOURCE_DIR}/src/cpp/**/*.cxx"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.h"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hpp"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hxx"
             "${PROJECT_SOURCE_DIR}/test/TestUtils/**/*.cpp"
+            "${PROJECT_SOURCE_DIR}/test/TestUtils/*.cpp"
+        )
+    set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
+    set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
+
+endfunction()
+
+# Return a list of all hpp files required by ddsrouter library
+# Arguments:
+# TEST_SOURCES -> List of source files where new sources will be added
+function(all_header_sources TEST_SOURCES)
+
+    file(GLOB_RECURSE LIBRARY_SOURCES
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.h"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hpp"
+            "${PROJECT_SOURCE_DIR}/src/cpp/**/*.hxx"
         )
     set(NEW_TEST_SOURCES "${TEST_SOURCES};${LIBRARY_SOURCES}")
     set(TEST_SOURCES ${NEW_TEST_SOURCES} PARENT_SCOPE)
@@ -120,6 +139,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         ${PROJECT_BINARY_DIR}/include
         ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
+        ${PROJECT_SOURCE_DIR}/src/cpp
         ${ARGV5}  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
@@ -165,3 +185,38 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIB
     )
 
 endfunction(add_unittest_executable)
+
+# Create an executable for a blackbox
+# Arguments:
+# TEST_NAME -> test name (it will add "_Test" after name)
+# TEST_SOURCES -> sources for the test
+# TEST_LIST -> test cases implemented in the Test .cpp
+# ARGV4 -> extra headers needed for the test (fifth optional argument)
+# Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
+function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SOURCES)
+
+    # Add all cpp files to sources
+    all_library_sources("${TEST_SOURCES}")
+
+    # Add all library needed by sources
+    set(EXTRA_LIBRARIES
+        ${SUBMODULE_PROJECT_DEPENDENCIES})
+
+    # Store file sources needed
+    foreach(NEEDED_SOURCE ${TEST_NEEDED_SOURCES})
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${NEEDED_SOURCE}
+            ${CMAKE_CURRENT_BINARY_DIR}/${NEEDED_SOURCE}
+            COPYONLY)
+    endforeach()
+
+    # Create test executable
+    add_test_executable(
+        "blackbox_${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_NAME}"
+        "${TEST_LIST}"
+        "${EXTRA_LIBRARIES}"
+        "${ARGV4}"  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
+    )
+
+endfunction(add_blackbox_executable)

@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include custom test cmake functions
-include(${PROJECT_SOURCE_DIR}/cmake/test/cmake_test_utils.cmake)
-# Set test requirements
-test_requirements()
+################
+# Trivial Test #
+################
 
-# Add subdirectory with tests
-add_subdirectory(unittest)
-add_subdirectory(blackbox)
+set(TEST_NAME
+    TrivialTest)
+
+set(TEST_SOURCES
+    TrivialTest.cpp)
+
+set(TEST_LIST
+    trivial_void_initialization
+    trivial_dummy_initialization
+    trivial_communication)
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}")

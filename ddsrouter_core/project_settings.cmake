@@ -24,7 +24,8 @@ set(SUBMODULE_PROJECT_SUMMARY
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
     fastrtps
-    ddsrouter_utils)
+    ddsrouter_utils
+    ddsrouter_event)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES
     ${SUBMODULE_PROJECT_FIND_PACKAGES})

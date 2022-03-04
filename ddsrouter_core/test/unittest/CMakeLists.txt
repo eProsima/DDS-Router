@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include custom test cmake functions
-include(${PROJECT_SOURCE_DIR}/cmake/test/cmake_test_utils.cmake)
-# Set test requirements
-test_requirements()
-
-# Add subdirectory with tests
-add_subdirectory(unittest)
-add_subdirectory(blackbox)
+# TODO(annapurna) redo this tests using new configuration
+# add_subdirectory(configuration)
+add_subdirectory(core)
+add_subdirectory(dynamic)
+add_subdirectory(efficiency)
+add_subdirectory(types)
