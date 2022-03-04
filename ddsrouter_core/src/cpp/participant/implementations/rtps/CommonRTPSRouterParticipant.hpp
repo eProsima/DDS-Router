@@ -57,15 +57,15 @@ public:
 
     virtual void onParticipantDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
-            fastrtps::rtps::ParticipantDiscoveryInfo&& info);
+            fastrtps::rtps::ParticipantDiscoveryInfo&& info) override;
 
     virtual void onReaderDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
-            fastrtps::rtps::ReaderDiscoveryInfo&& info);
+            fastrtps::rtps::ReaderDiscoveryInfo&& info) override;
 
     virtual void onWriterDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
-            fastrtps::rtps::WriterDiscoveryInfo&& info);
+            fastrtps::rtps::WriterDiscoveryInfo&& info) override;
 
 protected:
 

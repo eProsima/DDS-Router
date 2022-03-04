@@ -23,7 +23,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template <typename T, bool Ptr = false>
+template <typename T, bool Ptr /* = false */>
 std::ostream& element_to_stream(
         std::ostream& os,
         T element)
@@ -40,7 +40,7 @@ std::ostream& element_to_stream(
     return os;
 }
 
-template <typename T, bool Ptr = false>
+template <typename T, bool Ptr /* = false */>
 std::ostream& container_to_stream(
         std::ostream& os,
         std::vector<T> list,
@@ -66,7 +66,7 @@ std::ostream& container_to_stream(
     return os;
 }
 
-template <typename T, bool Ptr = false>
+template <typename T, bool Ptr /* = false */>
 std::ostream& container_to_stream(
         std::ostream& os,
         std::set<T> list,
