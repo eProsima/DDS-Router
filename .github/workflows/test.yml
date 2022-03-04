@@ -103,7 +103,7 @@ jobs:
       - name: Install DDS Router
         uses: ./DDS-Router/.github/actions/install-router-windows
         with:
-          cmake_build_type: "Release"
+          cmake_build_type: "Debug"
 
       - name: Run tests
         shell: pwsh
