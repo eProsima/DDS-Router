@@ -166,6 +166,8 @@ jobs:
         run: |
           cp src/DDS-Router/codecov.yml .
           mkdir coverage-report
+          mkdir build/ddsrouter
+          cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
           --root src/DDS-Router/ \
           --object-directory build/ddsrouter \
@@ -174,6 +176,8 @@ jobs:
           --exclude='.*docs/.*' \
           --exclude='.*test/.*' \
           --exclude='.*github/.*' \
+          --exclude='.*common/.*' \
+          --exclude='.*dev/.*' \
           --exclude='.*thirdparty/.*' \
           --exclude='.*resources/.*' \
           --exclude-unreachable-branches
@@ -196,13 +200,13 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: Documentation HTML
-          path: install/ddsrouter/docs/ddsrouter_docs/sphinx/html/
+          path: install/ddsrouter_docs/docs/ddsrouter_docs/sphinx/html/
 
       - name: Upload spelling errors
         uses: actions/upload-artifact@v1
         with:
           name: spelling_errors.txt
-          path: build/ddsrouter/docs/test/spelling/output.txt
+          path: build/ddsrouter_docs/docs/test/spelling/output.txt
         continue-on-error: true
 
       - name: Upload Logs
@@ -290,6 +294,8 @@ jobs:
 
       - name: Run clang-tidy
         run: |
+          mkdir build/ddsrouter
+          cp --recursive build/ddsrouter_* build/ddsrouter
           cd build/ddsrouter
           run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
 
