@@ -57,10 +57,10 @@ bool QoS::operator ==(
 
 std::ostream& operator <<(
         std::ostream& os,
-        const QoS& qos)
+        const DurabilityKind& kind)
 {
     std::string durability_str;
-    switch (qos.durability_)
+    switch (kind)
     {
         case DurabilityKind::VOLATILE:
             durability_str = "VOLATILE";
@@ -83,8 +83,15 @@ std::ostream& operator <<(
             break;
     }
 
+    return os << durability_str;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const ReliabilityKind& kind)
+{
     std::string reliability_str;
-    switch (qos.reliability_)
+    switch (kind)
     {
         case ReliabilityKind::RELIABLE:
             reliability_str = "RELIABLE";
@@ -99,7 +106,14 @@ std::ostream& operator <<(
             break;
     }
 
-    os << "QoS{" << durability_str << ";" << reliability_str << "}";
+    return os << reliability_str;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const QoS& qos)
+{
+    os << "QoS{" << qos.durability_ << ";" << qos.reliability_ << "}";
     return os;
 }
 
