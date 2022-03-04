@@ -133,9 +133,14 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         PATTERN "*.ipp"
     )
 
-# Install config.h header
-install(FILES ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}/library
+# Install config headers
+install(
+    FILES
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/eProsima_auto_link.h.h
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/library_dll.h.h
+    DESTINATION
+        ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}/library
     COMPONENT headers
     )
 
