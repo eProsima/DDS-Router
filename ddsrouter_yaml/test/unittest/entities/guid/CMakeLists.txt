@@ -19,7 +19,6 @@
 set(TEST_NAME YamlGetEntityGuidPrefixTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/implementations/YamlReaderEntity.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp

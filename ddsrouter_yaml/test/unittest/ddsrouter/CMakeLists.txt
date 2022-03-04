@@ -20,8 +20,6 @@ set(TEST_NAME YamlConfigurationDDSRouterTest)
 
 set(TEST_SOURCES
         YamlConfigurationDDSRouterTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/implementations/YamlReaderEntity.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/implementations/YamlReaderParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp

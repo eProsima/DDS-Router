@@ -19,7 +19,6 @@
 set(TEST_NAME YamlGetEntityTopicTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml/implementations/YamlReaderEntity.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml/YamlManager.cpp
         YamlGetEntityTopicTest.cpp
