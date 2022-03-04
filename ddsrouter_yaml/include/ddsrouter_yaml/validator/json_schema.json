@@ -1,0 +1,275 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/BaseObject",
+    "definitions": {
+        "BaseObject": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "allowlist": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TopicFilter"
+                    }
+                },
+                "blocklist": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TopicFilter"
+                    }
+                },
+                "builtin-topics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TopicBuiltins"
+                    }
+                },
+                "participants": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": {
+                        "$ref": "#/definitions/Participant"
+                    },
+                    "uniqueKeys": [
+                        "/name"
+                    ]
+                }
+            },
+            "required": [
+                "participants"
+            ],
+            "title": "BaseObject"
+        },
+        "TopicFilter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "keyed": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "TopicFilter"
+        },
+        "TopicBuiltins": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "keyed": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "title": "TopicBuiltins"
+        },
+        "Participant": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "void",
+                        "echo",
+                        "dummy",
+                        "local", "simple",
+                        "discovery-server", "ds", "local-ds", "local-discovery-server",
+                        "wan", "router"
+                    ]
+                },
+                "domain": {
+                    "type": "integer"
+                },
+                "discovery-server-guid": {
+                    "$ref": "#/definitions/DiscoveryServerGUID"
+                },
+                "listening-addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                },
+                "connection-addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ConnectionAddress"
+                    }
+                }
+            },
+            "required": [
+                "kind",
+                "name"
+            ],
+            "allOf": [
+                {
+                    "if": {
+                        "properties": { "kind": { "const": "echo" } }
+                    },
+                    "then": {
+                        "properties": {
+                            "domain": { "not": { } },
+                            "discovery-server-guid": { "not": { } },
+                            "listening-addresses": { "not": { } },
+                            "connection-addresses": { "not": { } }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "enum": ["local", "simple"]
+                            }
+                        }
+                    },
+                    "then": {
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "discovery-server-guid": { "not": { } }
+                                }
+                            },
+                            {
+                                "required": [ "domain" ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "enum": [
+                                    "discovery-server", "ds", "local-ds", "local-discovery-server",
+                                    "wan", "router"
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "domain": { "not": { } }
+                                }
+                            },
+                            {
+                                "required": [ "discovery-server-guid" ]
+                            },
+                            {
+                                "anyOf": [
+                                    { "required": ["listening-addresses"] },
+                                    { "required": ["connection-addresses"] }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "title": "Participant"
+        },
+        "DiscoveryServerGUID": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "guid": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ros-discovery-server": {
+                    "type": "boolean"
+                }
+            },
+            "anyOf": [
+                { "required": ["guid"] },
+                { "required": ["id"] }
+            ],
+            "title": "DiscoveryServerGUID"
+        },
+        "ConnectionAddress": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "discovery-server-guid": {
+                    "$ref": "#/definitions/DiscoveryServerGUID"
+                },
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                }
+            },
+            "required": [
+                "addresses",
+                "discovery-server-guid"
+            ],
+            "title": "ConnectionAddress"
+        },
+        "Address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "ip": {
+                    "type": "string",
+                    "anyOf": [
+                        { "format": "ipv4" },
+                        { "format": "ipv6" }
+                    ]
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 65535
+                },
+                "transport": {
+                    "type": "string",
+                    "enum": ["tcp", "udp"]
+                },
+                "ip-version": {
+                    "type": "string",
+                    "enum": ["ipv4", "ipv6"]
+                }
+            },
+            "allOf": [
+                {
+                    "anyOf": [
+                        { "required": ["domain"] },
+                        { "required": ["ip"] }
+                    ]
+                },
+                {
+                    "required": ["port"]
+                }
+            ],
+            "title": "Address"
+        }
+    }
+}
