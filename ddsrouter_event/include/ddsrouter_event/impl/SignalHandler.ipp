@@ -21,7 +21,6 @@
 #define _DDSROUTEREVENT_IMPL_SIGNALHANDLER_IPP_
 
 #include <algorithm>
-#include <pthread.h>
 
 #include <ddsrouter_utils/Log.hpp>
 
@@ -33,13 +32,22 @@ template <int SigNum>
 std::vector<SignalHandler<SigNum>*> SignalHandler<SigNum>::active_handlers_;
 
 template <int SigNum>
-std::mutex SignalHandler<SigNum>::active_handlers_mutex_;
+std::recursive_mutex SignalHandler<SigNum>::active_handlers_mutex_;
 
 template <int SigNum>
-pthread_t SignalHandler<SigNum>::signal_handler_thread_;
+std::thread SignalHandler<SigNum>::signal_handler_thread_;
 
 template <int SigNum>
 std::atomic<bool> SignalHandler<SigNum>::signal_handler_active_(false);
+
+template <int SigNum>
+std::atomic<bool> SignalHandler<SigNum>::signal_received_(false);
+
+template <int SigNum>
+std::condition_variable SignalHandler<SigNum>::signal_received_cv_;
+
+template <int SigNum>
+std::mutex SignalHandler<SigNum>::signal_received_cv_mutex_;
 
 template <int SigNum>
 SignalHandler<SigNum>::SignalHandler() noexcept
@@ -63,6 +71,7 @@ SignalHandler<SigNum>::SignalHandler(
 template <int SigNum>
 SignalHandler<SigNum>::~SignalHandler()
 {
+    std::lock_guard<std::recursive_mutex> lock(active_handlers_mutex_);
     unset_callback();
     logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler destroyed for signal: " << SigNum << ".");
 }
@@ -82,7 +91,7 @@ void SignalHandler<SigNum>::callback_unset_nts_() noexcept
 template <int SigNum>
 void SignalHandler<SigNum>::add_to_active_handlers_() noexcept
 {
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
             "Add signal handler to signal " << SigNum << ".");
@@ -99,7 +108,7 @@ void SignalHandler<SigNum>::add_to_active_handlers_() noexcept
 template <int SigNum>
 void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
 {
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
             "Erase signal handler from signal " << SigNum << ".");
@@ -117,7 +126,7 @@ template <int SigNum>
 void SignalHandler<SigNum>::signal_handler_routine_(
         int signum) noexcept
 {
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(active_handlers_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
             "Received signal " << signum << ".");
@@ -137,31 +146,35 @@ void SignalHandler<SigNum>::signal_handler_routine_(
 }
 
 template <int SigNum>
-void* SignalHandler<SigNum>::signal_handler_thread_routine_(
-        void*) noexcept
+void SignalHandler<SigNum>::signal_handler_thread_routine_() noexcept
 {
-    // Listen only for signal of interest
-    sigset_t set;
-    sigemptyset(&set);
-    sigaddset(&set, SigNum);
+    signal(SigNum, [](int)
+            {
+                signal_received_.store(true);
+                signal_received_cv_.notify_one();
+            });
 
-    int sig;
     signal_handler_active_.store(true);
     while (true)
     {
-        // Block thread until signal is received
-        sig = sigwaitinfo(&set, NULL);
+        std::unique_lock<std::mutex> lock(signal_received_cv_mutex_);
+        signal_received_cv_.wait(
+            lock,
+            []
+            {
+                return signal_received_.load() || !signal_handler_active_.load();
+            });
 
-        if (!signal_handler_active_.load())
+        if (signal_received_.load())
+        {
+            signal_received_.store(false);
+            signal_handler_routine_(SigNum);
+        }
+        else
         {
             break;
         }
-        else if (sig == SigNum)
-        {
-            signal_handler_routine_(SigNum);
-        }
     }
-    return NULL;
 }
 
 template <int SigNum>
@@ -170,11 +183,7 @@ void SignalHandler<SigNum>::set_signal_handler_() noexcept
     logInfo(DDSROUTER_SIGNALHANDLER,
             "Set signal handler for signal " << SigNum << ".");
 
-    if (pthread_create(&signal_handler_thread_, NULL, signal_handler_thread_routine_, NULL))
-    {
-        logError(DDSROUTER_SIGNALHANDLER,
-                "Error creating thread for handling signal " << SigNum << ".");
-    }
+    signal_handler_thread_ = std::thread(signal_handler_thread_routine_);
 }
 
 template <int SigNum>
@@ -185,14 +194,9 @@ void SignalHandler<SigNum>::unset_signal_handler_() noexcept
 
     signal_handler_active_.store(false);
 
-    // Send signal to listener thread so it wakes from wait state
-    pthread_kill(signal_handler_thread_, SigNum);
+    signal_received_cv_.notify_one();
 
-    if (pthread_join(signal_handler_thread_, NULL))
-    {
-        logError(DDSROUTER_SIGNALHANDLER,
-                "Error joining thread for handling signal " << SigNum << ".");
-    }
+    signal_handler_thread_.join();
 }
 
 } /* namespace event */

@@ -20,10 +20,12 @@
 #define _DDSROUTEREVENT_SIGNALHANDLER_HPP_
 
 #include <atomic>
+#include <condition_variable>
 #include <csignal>
 #include <functional>
-#include <pthread.h>
+#include <mutex>
 #include <string>
+#include <thread>
 
 #include <ddsrouter_event/EventHandler.hpp>
 
@@ -123,8 +125,7 @@ protected:
     static void unset_signal_handler_() noexcept;
 
     //! Routine performed by dedicated signal handling thread
-    static void* signal_handler_thread_routine_(
-            void*) noexcept;
+    static void signal_handler_thread_routine_() noexcept;
 
     /**
      * @brief List of active \c SignalHandlers
@@ -135,13 +136,22 @@ protected:
     static std::vector<SignalHandler*> active_handlers_;
 
     //! Guards access to variable \c active_handlers_
-    static std::mutex active_handlers_mutex_;
+    static std::recursive_mutex active_handlers_mutex_;
 
     //! Handle of thread dedicated to listening for signal arrival
-    static pthread_t signal_handler_thread_;
+    static std::thread signal_handler_thread_;
 
     //! Flag used to terminate \c signal_handler_thread_
     static std::atomic<bool> signal_handler_active_;
+
+    //! Flag set to true when a signal arrives
+    static std::atomic<bool> signal_received_;
+
+    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives
+    static std::condition_variable signal_received_cv_;
+
+    //! Guards access to \c signal_received_cv_
+    static std::mutex signal_received_cv_mutex_;
 };
 
 } /* namespace event */
