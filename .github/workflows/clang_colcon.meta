@@ -1,12 +1,58 @@
 {
     "names":
     {
-        "ddsrouter":
+        "ddsrouter_utils":
         {
             "cmake-args":
             [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
+            ]
+        },
+        "ddsrouter_event":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
+            ]
+        },
+        "ddsrouter_core":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
+            ]
+        },
+        "ddsrouter_yaml":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
+            ]
+        },
+        "ddsrouter_tool":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
+            ]
+        },
+        "ddsrouter_docs":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                "-DCMAKE_CXX_FLAGS='-Werror'"
             ]
         }
     }
