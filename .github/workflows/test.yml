@@ -52,13 +52,35 @@ jobs:
         with:
           cmake_build_type: "Release"
 
-      - name: Run tests
-        shell: pwsh
-        run: ctest -C Release --test-dir build\ddsrouter_utils -V --timeout 60 --label-exclude xfail &&
-             ctest -C Release --test-dir build\ddsrouter_event -V --timeout 60 --label-exclude xfail &&
-             ctest -C Release --test-dir build\ddsrouter_core -V --timeout 60 --label-exclude xfail &&
-             ctest -C Release --test-dir build\ddsrouter_yaml -V --timeout 60 --label-exclude xfail &&
-             ctest -C Release --test-dir build\ddsrouter_tool -V --timeout 60 --label-exclude xfail &&
+      - name: Run tests ddsrouter_utils
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_utils
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_event
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_event
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_core
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_core
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_yaml
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_tool
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_tool
+          cmake_build_type: "Release"
 
   windows-build-test-debug:
     runs-on: windows-latest
@@ -105,13 +127,35 @@ jobs:
         with:
           cmake_build_type: "Debug"
 
-      - name: Run tests
-        shell: pwsh
-        run: ctest -C Debug --test-dir build\ddsrouter_utils -V --timeout 60 --label-exclude xfail &&
-             ctest -C Debug --test-dir build\ddsrouter_event -V --timeout 60 --label-exclude xfail &&
-             ctest -C Debug --test-dir build\ddsrouter_core -V --timeout 60 --label-exclude xfail &&
-             ctest -C Debug --test-dir build\ddsrouter_yaml -V --timeout 60 --label-exclude xfail &&
-             ctest -C Debug --test-dir build\ddsrouter_tool -V --timeout 60 --label-exclude xfail &&
+      - name: Run tests ddsrouter_utils
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_utils
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_event
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_event
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_core
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_core
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_yaml
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_tool
+        uses: ./src/DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_tool
+          cmake_build_type: "Debug"
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
@@ -151,16 +195,30 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
-      - name: Run tests
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddsrouter \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
+      - name: Run tests ddsrouter_utils
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_utils
+
+      - name: Run tests ddsrouter_event
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_event
+
+      - name: Run tests ddsrouter_core
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_core
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_yaml
+
+      - name: Run tests ddsrouter_tool
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_tool
 
       - name: Generate coverage report
         run: |
