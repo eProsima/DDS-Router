@@ -7,8 +7,8 @@ inputs:
 runs:
   using: composite
   steps:
-  - run: >
-      source install/setup.bash && \
+  - run: |
+      source install/setup.bash
       colcon test \
         --packages-select ${{ inputs.package_name }} \
         --event-handlers=console_direct+ \
