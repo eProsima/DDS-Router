@@ -179,7 +179,7 @@ author = u'eProsima'
 #
 # The short X.Y version.
 versions = get_version(
-    os.path.abspath('{}/../CMakeLists.txt'.format(script_path)))
+    os.path.abspath('{}/CMakeLists.txt'.format(script_path)))
 version = u'{}.{}'.format(versions['major'], versions['minor'])
 # The full version, including alpha/beta/rc tags.
 release = u'{}.{}.{}'.format(
