@@ -72,7 +72,7 @@ The only configuration required for simple participants is the DDS ``domain`` id
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
-    :lines: 8-10
+    :lines: 11-13
 
 If launching the two routers in the same LAN, set a different ``domain`` id in one of the two configuration files (same
 as the one previously set for ShapesDemo).
@@ -116,8 +116,8 @@ allowlist will suffice) the square data should stop reaching the subscriber.
 .. code-block:: yaml
 
     allowlist:
-      - name: "Circle"
-        type: "ShapeType"
+      - name: Circle
+        type: ShapeType
         keyed: true
 
 After applying these changes, the square should no longer be updated in the subscriber's side (appearing visible but

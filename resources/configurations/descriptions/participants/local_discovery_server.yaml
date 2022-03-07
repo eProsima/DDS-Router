@@ -1,9 +1,9 @@
 
-####################################
-# Simple Participant Configuration #
-####################################
+####################################################
+# Local Discovery Server Participant Configuration #
+####################################################
 
-# Simple participant for local communication
+# Local Discovery Server participant
 
   # --------------------
   # KIND

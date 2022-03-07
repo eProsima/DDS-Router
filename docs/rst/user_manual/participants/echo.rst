@@ -7,7 +7,7 @@ Echo Participant
 ################
 
 This :term:`Participant` prints in ``stdout`` every data that is received by the |ddsrouter|.
-The resulted logs contain the echo :term:`Participant Id`, the source :term:`Endpoint` :term:`Guid` that has
+The resulted logs contain the echo :term:`Participant Name`, the source :term:`Endpoint` :term:`Guid` that has
 originally generated the message, the :term:`Topic` where this message has been received,
 and the :term:`Payload` (in hexadecimal format) received.
 Notice that this Payload is the same that a standard DDS :term:`DataReader` will receive if it is connected to one
@@ -37,7 +37,7 @@ All the data received by any of the Participants of the router will be printed w
 along with the payload.
 
 
-Type aliases
+Kind aliases
 ============
 
 * ``echo``
@@ -52,5 +52,5 @@ Configuration Example
 
 .. code-block:: yaml
 
-    echo_participant:       # Participant Id = echo_participant
+    - name: echo_participant     # Participant Name = echo_participant
       kind: echo

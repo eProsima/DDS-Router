@@ -11,7 +11,7 @@ The following YAML configuration file configures a DDS Router to create two
 
 .. literalinclude:: ../../resources/examples/change_domain.yaml
     :language: yaml
-    :lines: 5-29
+    :lines: 5-33
 
 Configuration
 =============
@@ -37,7 +37,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/change_domain.yaml
     :language: yaml
-    :lines: 19-21
+    :lines: 23-25
 
 
 Simple Participant Domain 1
@@ -47,7 +47,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/change_domain.yaml
     :language: yaml
-    :lines: 27-29
+    :lines: 31-33
 
 
 Execute example

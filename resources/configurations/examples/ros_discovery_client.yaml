@@ -7,31 +7,37 @@
 # Allowing ROS2 HelloWorld demo_nodes
 
 allowlist:
-  - name: "rt/chatter"                                            # 1
-    type: "std_msgs::msg::dds_::String_"                          # 1
+  - name: rt/chatter                                              # 1
+    type: std_msgs::msg::dds_::String_                            # 1
+
+##################################
+# PARTICIPANTS
+participants:
 
 ##################################
 # SIMPLE PARTICIPANT
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
-SimpleROS2:                                                       # 2
-  kind: local                                                     # 3
-  domain: 0                                                       # 4
+  - name: SimpleROS2                                              # 2
+    kind: local                                                   # 3
+    domain: 0                                                     # 4
 
 ##################################
 # ROS DISCOVERY CLIENT
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as Super Client
 
-ClientROS2:                                                       # 5
-  kind: local-discovery-server                                    # 6
-  ros-discovery-server: true                                      # 7
-  id: 2                                                           # 8
-  connection-addresses:                                           # 9
-    - ros-discovery-server: true                                  # 10
-      id: 1                                                       # 11
-      addresses:
-        - domain: "localhost"                                     # 12
-          port: 11888                                             # 13
+  - name: ClientROS2                                              # 5
+    kind: local-discovery-server                                  # 6
+    discovery-server-guid:
+      ros-discovery-server: true                                  # 7
+      id: 2                                                       # 8
+    connection-addresses:                                         # 9
+      - discovery-server-guid:
+          ros-discovery-server: true                              # 10
+          id: 1                                                   # 11
+        addresses:
+          - domain: localhost                                     # 12
+            port: 11888                                           # 13
                                                                   # 14
 
 ##################################

@@ -136,29 +136,32 @@ User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
 
-    WANServerParticipant_userA:
+    - name: WANServerParticipant_userA
       kind: wan
 
-      id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
+      discovery-server-guid:
+        id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
-        - ip: "1.1.1.1"                   # Public IP of host Ha
+        - ip: 1.1.1.1                     # Public IP of host Ha
           port: 11666                     # Port forwarded router Ra
-          transport: "tcp"                # Transport protocol
+          transport: tcp                  # Transport protocol
 
 User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
 
 .. code-block:: yaml
 
-    WANClientParticipant_userB:
+    - name: WANClientParticipant_userB
       kind: wan
 
-      id: 3                               # Must be different than A one
+      discovery-server-guid:
+        id: 3                             # Must be different than A one
       connection-addresses:
-        - id: 2                           # Id of the Discovery Server of A
+        - discovery-server-guid:
+            id: 2                         # Id of the Discovery Server of A
           addresses:
-            - ip: "1.1.1.1"               # Public IP of Ha
+            - ip: 1.1.1.1                 # Public IP of Ha
               port: 11666                 # Port forwarded in Ra
-              transport: "tcp"            # Transport protocol
+              transport: tcp              # Transport protocol
 
 This way, *B* will connect to *A*.
 *A* will be able to receive the message because *R*:sub:`A` will forward the message to *H*:sub:`A`.
@@ -184,12 +187,13 @@ User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
 
-    WANServerParticipant_userA:
+    - name: WANServerParticipant_userA
       kind: wan
 
-      id: 2                               # Id to generate the GuidPrefix of the Discovery Server of A
+      discovery-server-guid:
+        id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
-        - ip: "1.1.1.1"                   # Public IP of host Ha
+        - ip: 1.1.1.1                     # Public IP of host Ha
           port: 11666                     # Port forwarded router Ra
 
 User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11777``.
@@ -199,17 +203,19 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
 
 .. code-block:: yaml
 
-    WANClientParticipant_userB:
+    - name: WANClientParticipant_userB
       kind: wan
 
-      id: 3                               # Must be different than A one
+      discovery-server-guid:
+        id: 3                             # Must be different than A one
       listening-addresses:
-        - ip: "2.2.2.2"                   # Public IP of host Hb
+        - ip: 2.2.2.2                     # Public IP of host Hb
           port: 11777                     # Port forwarded router Rb
       connection-addresses:
-        - id: 2                           # Id of the Discovery Server of A
+        - discovery-server-guid:
+            id: 2                         # Id of the Discovery Server of A
           addresses:
-            - ip: "1.1.1.1"               # Public IP of Ha
+            - ip: 1.1.1.1                 # Public IP of Ha
               port: 11666                 # Port forwarded in Ra
 
 This way, *B* will connect to *A*.
@@ -224,37 +230,40 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
 
 .. code-block:: yaml
 
-    TLS_Server:
+    - name: TLS_Server
       kind: wan
 
-      id: 0
+      discovery-server-guid:
+        id: 0
       listening-addresses:
-        - ip: "1.1.1.1"
+        - ip: 1.1.1.1
           port: 11666
-          transport: "tcp"
+          transport: tcp
 
       tls:
-        ca: "ca.crt"
-        password: "ddsrouterpass"
-        private_key: "ddsrouter.key"
-        cert: "ddsrouter.crt"
-        dh_params: "dh_params.pem"
+        ca: ca.crt
+        password: ddsrouterpass
+        private_key: ddsrouter.key
+        cert: ddsrouter.crt
+        dh_params: dh_params.pem
 
 .. code-block:: yaml
 
-    TLS_Client:
+    - name: TLS_Client
       kind: wan
 
-      id: 1
+      discovery-server-guid:
+        id: 1
       connection-addresses:
-        - id: 0
+        - discovery-server-guid:
+            id: 0
           addresses:
-            - ip: "1.1.1.1"
+            - ip: 1.1.1.1
               port: 11666
-              transport: "tcp"
+              transport: tcp
 
       tls:
-        ca: "ca.crt"
+        ca: ca.crt
 
 You may also have a look at ``<path/to/ddsrouter>/share/resources/configurations/security/`` directory, which contains
 examples of key and certificate files as well as a script with the commands used to generate them.
