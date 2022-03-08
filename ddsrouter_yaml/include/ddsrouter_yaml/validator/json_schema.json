@@ -114,6 +114,9 @@
                     "items": {
                         "$ref": "#/definitions/ConnectionAddress"
                     }
+                },
+                "tls": {
+                    "$ref": "#/definitions/TLS"
                 }
             },
             "required": [
@@ -123,14 +126,20 @@
             "allOf": [
                 {
                     "if": {
-                        "properties": { "kind": { "const": "echo" } }
+                        "properties": {
+                            "kind": {
+                                "type": "string",
+                                "enum": ["void", "echo", "dummy"]
+                            }
+                        }
                     },
                     "then": {
                         "properties": {
                             "domain": { "not": { } },
                             "discovery-server-guid": { "not": { } },
                             "listening-addresses": { "not": { } },
-                            "connection-addresses": { "not": { } }
+                            "connection-addresses": { "not": { } },
+                            "tls": { "not": { } }
                         }
                     }
                 },
@@ -147,7 +156,8 @@
                         "allOf": [
                             {
                                 "properties": {
-                                    "discovery-server-guid": { "not": { } }
+                                    "discovery-server-guid": { "not": { } },
+                                    "tls": { "not": { } }
                                 }
                             },
                             {
@@ -229,6 +239,71 @@
                 "discovery-server-guid"
             ],
             "title": "ConnectionAddress"
+        },
+        "TLS": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "ca": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "private_key": {
+                    "type": "string"
+                },
+                "cert": {
+                    "type": "string"
+                },
+                "dh_params": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ca"
+            ],
+            "allOf": [
+                {
+                    "if": {
+                        "properties": { "password": { "type": "string"} },
+                        "required": ["password"]
+                    },
+                    "then": {
+                        "required": [
+                            "private_key",
+                            "cert"
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": { "private_key": { "not":  { "pattern": "^$" } } },
+                        "required": ["private_key"]
+                    },
+                    "then": {
+                        "properties": { "private_key": { "not": { "pattern": "^\\s*$" } } },
+                        "required": [
+                            "password",
+                            "cert"
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": { "cert": { "type": "string"} },
+                        "required": ["cert"]
+                    },
+                    "then": {
+                        "properties": { "cert": { "not": { "pattern": "^\\s*$" } } },
+                        "required": [
+                            "password",
+                            "private_key"
+                        ]
+                    }
+                }
+            ],
+            "title": "TLS"
         },
         "Address": {
             "type": "object",
