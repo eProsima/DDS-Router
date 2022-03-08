@@ -21,9 +21,12 @@
 
 #include <memory>
 
+#include <ddsrouter_utils/ReturnCode.hpp>
+
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
-#include <ddsrouter_utils/ReturnCode.hpp>
+#include <ddsrouter_core/library/library_dll.h>
+
 
 namespace eprosima {
 namespace ddsrouter {
@@ -51,7 +54,7 @@ public:
      * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
-    DDSRouter(
+    DDSROUTER_CORE_DllAPI DDSRouter(
             const configuration::DDSRouterConfiguration& configuration);
 
     /**
@@ -61,7 +64,7 @@ public:
      * Destroy all Bridges
      * Destroy all Participants
      */
-    virtual ~DDSRouter();
+    DDSROUTER_CORE_DllAPI virtual ~DDSRouter();
 
     // EVENTS
     /**
@@ -75,7 +78,7 @@ public:
      *
      * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
-    utils::ReturnCode reload_configuration(
+    DDSROUTER_CORE_DllAPI utils::ReturnCode reload_configuration(
             const configuration::DDSRouterReloadConfiguration& configuration);
 
     /**
@@ -87,7 +90,7 @@ public:
      *
      * @return \c RETCODE_OK always
      */
-    utils::ReturnCode start() noexcept;
+    DDSROUTER_CORE_DllAPI utils::ReturnCode start() noexcept;
 
     /**
      * @brief Stop communication in DDS Router
@@ -98,7 +101,7 @@ public:
      *
      * @return \c RETCODE_OK always
      */
-    utils::ReturnCode stop() noexcept;
+    DDSROUTER_CORE_DllAPI utils::ReturnCode stop() noexcept;
 
 protected:
 

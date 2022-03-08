@@ -20,6 +20,7 @@
 #define _DDSROUTERCORE_CONFIGURATION_PARTICIPANT_SIMPLEPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
 namespace eprosima {
@@ -35,7 +36,7 @@ class SimpleParticipantConfiguration : public ParticipantConfiguration
 public:
 
     //! TODO
-    SimpleParticipantConfiguration(
+    DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind = types::ParticipantKind::SIMPLE_RTPS,
             const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
@@ -47,12 +48,12 @@ public:
      *
      * @return DomainId
      */
-    types::DomainId domain() const noexcept;
+    DDSROUTER_CORE_DllAPI types::DomainId domain() const noexcept;
 
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const SimpleParticipantConfiguration& other) const noexcept;
 
-    virtual bool is_valid(
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
 protected:

@@ -23,6 +23,7 @@
 #include <string>
 
 #include <ddsrouter_event/EventHandler.hpp>
+#include <ddsrouter_event/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -47,7 +48,7 @@ public:
      *
      * @param file_path : path for the file to watch
      */
-    FileWatcherHandler(
+    DDSROUTER_EVENT_DllAPI FileWatcherHandler(
             std::string file_path);
 
 
@@ -57,7 +58,7 @@ public:
      * @param file_path : path for the file to watch
      * @param callback : function that will be called when the event raises.
      */
-    FileWatcherHandler(
+    DDSROUTER_EVENT_DllAPI FileWatcherHandler(
             std::function<void(std::string)> callback,
             std::string file_path);
 
@@ -66,7 +67,7 @@ public:
      *
      * Calls \c unset_callback
      */
-    ~FileWatcherHandler();
+    DDSROUTER_EVENT_DllAPI ~FileWatcherHandler();
 
 protected:
 

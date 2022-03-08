@@ -41,20 +41,17 @@ namespace utils {
  * concatenated in a single string. For example:
  * Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
  */
-class DDSROUTERUTILS_DllAPI Formatter
+class Formatter
 {
 public:
 
     //! Concatenate stream values to this formatter
-    template<class Val> Formatter& operator <<(
-            const Val& val)
-    {
-        ss_ << val;
-        return *this;
-    }
+    template<class Val>
+    Formatter& operator <<(
+            const Val& val);
 
     //! Return a string with the concatenation of this object
-    std::string to_string() const noexcept;
+    DDSROUTER_UTILS_DllAPI std::string to_string() const noexcept;
 
 protected:
 
@@ -63,12 +60,15 @@ protected:
 };
 
 //! \c Formatter to stream serializator
-DDSROUTERUTILS_DllAPI std::ostream& operator <<(
+DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Formatter& f);
 
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+// Include implementation template file
+#include <ddsrouter_utils/impl/Formatter.ipp>
 
 #endif /* _DDSROUTERUTILS_FORMATTET_HPP_ */

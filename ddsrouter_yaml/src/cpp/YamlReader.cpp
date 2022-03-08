@@ -35,6 +35,7 @@
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
+#include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 

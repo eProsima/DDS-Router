@@ -13,36 +13,21 @@
 // limitations under the License.
 
 /**
- * @file Timestamp.hpp
+ * @file Time.cpp
+ *
  */
 
-#ifndef _DDSROUTERUTILS_TIME_HPP_
-#define _DDSROUTERUTILS_TIME_HPP_
-
-#include <chrono>
-#include <ddsrouter_utils/library/library_dll.h>
+#include <ddsrouter_utils/Time.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-//! Type of Duration in milliseconds
-using Duration_ms = uint32_t;
-
-/**
- * Type used to represent time points
- */
-using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
-
-/**
- * @brief Now time
- *
- * @return Timestamp refering to the moment it is called
- */
-DDSROUTER_UTILS_DllAPI Timestamp now() noexcept;
+Timestamp now() noexcept
+{
+    return std::chrono::system_clock::now();
+}
 
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERUTILS_TIME_HPP_ */

@@ -28,7 +28,7 @@ namespace utils {
 /**
  * @brief Exception thrown when there has been an error initializing any Entity or subentity.
  */
-class DDSROUTERUTILS_DllAPI InitializationException : public Exception
+class InitializationException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

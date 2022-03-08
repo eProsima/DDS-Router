@@ -57,8 +57,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJ
 
 # Define Public API
 target_compile_definitions(${PROJECT_NAME}
-    PUBLIC
-        PROJECT_SOURCE
+    PRIVATE
+        ${SUBMODULE_PROJECT_MACROS}_SOURCE
     )
 
 if(MSVC)

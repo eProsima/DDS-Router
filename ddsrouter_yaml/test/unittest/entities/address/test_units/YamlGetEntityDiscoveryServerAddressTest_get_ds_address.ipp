@@ -113,7 +113,9 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         // Check every address introduced in yaml is in result
         for (core::types::Address address : addresses)
         {
-            ASSERT_NE(result.addresses().find(address), result.addresses().end());
+            // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
+            std::set<eprosima::ddsrouter::core::types::Address> addresses = result.addresses();
+            ASSERT_NE(addresses.find(address), addresses.end());
         }
     }
 }

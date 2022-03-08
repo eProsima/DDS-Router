@@ -26,6 +26,7 @@ set(SUBMODULE_PROJECT_FIND_PACKAGES
     ddsrouter_utils
     ddsrouter_event
     ddsrouter_core
+    yaml-cpp
     ddsrouter_yaml)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES

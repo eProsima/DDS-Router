@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERYAML_YAMLMANAGER_HPP_
 #define _DDSROUTERYAML_YAMLMANAGER_HPP_
 
+#include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/Yaml.hpp>
 
 namespace eprosima {
@@ -28,7 +29,7 @@ namespace yaml {
 /**
  * Class that manages generic methods related with yaml load and yaml validation.
  */
-class YamlManager
+class DDSROUTER_YAML_DllAPI YamlManager
 {
 public:
 

@@ -32,7 +32,7 @@ namespace utils {
  *
  * It uses the fastdds ReturnCode_t
  */
-class DDSROUTERUTILS_DllAPI ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
+class ReturnCode : public eprosima::fastrtps::types::ReturnCode_t
 {
 public:
 
@@ -40,10 +40,10 @@ public:
     using eprosima::fastrtps::types::ReturnCode_t::ReturnCode_t;
 
     //! Specify the operator so OK code could be translated to True.
-    bool operator ()() const noexcept;
+    DDSROUTER_UTILS_DllAPI bool operator ()() const noexcept;
 
     //! Minor operator
-    bool operator <(
+    DDSROUTER_UTILS_DllAPI bool operator <(
             const ReturnCode& other) const noexcept;
 
 protected:
@@ -52,13 +52,13 @@ protected:
     static const std::map<ReturnCode, std::string> to_string_conversion_;
 
     // operator << needs access to the object
-    friend std::ostream& operator <<(
+    DDSROUTER_UTILS_DllAPI friend std::ostream& operator <<(
             std::ostream& os,
             const ReturnCode& code);
 };
 
 //! \c ReturnCode to stream serializator
-DDSROUTERUTILS_DllAPI std::ostream& operator <<(
+DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const ReturnCode& code);
 

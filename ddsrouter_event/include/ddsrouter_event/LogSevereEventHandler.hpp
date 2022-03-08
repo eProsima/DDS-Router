@@ -22,6 +22,7 @@
 #include <functional>
 
 #include <ddsrouter_event/LogEventHandler.hpp>
+#include <ddsrouter_event/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -44,12 +45,12 @@ public:
      * @param callback callback to call every time a log entry is consumed.
      * @param threshold minimum log kind that will be consumed.
      */
-    LogSevereEventHandler(
+    DDSROUTER_EVENT_DllAPI LogSevereEventHandler(
             std::function<void(utils::Log::Entry)> callback,
             const utils::Log::Kind threshold = utils::Log::Kind::Warning);
 
     //! Override parent \c Consume method but only consuming logs above the \c threshold_ kind.
-    void Consume(
+    DDSROUTER_EVENT_DllAPI void Consume(
             const utils::Log::Entry& entry) override;
 
 protected:

@@ -36,7 +36,7 @@ namespace ddsrouter {
 namespace utils {
 
 //! Perform the wildcard matching using file comparison method
-DDSROUTERUTILS_DllAPI bool match_pattern(
+DDSROUTER_UTILS_DllAPI bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept;
 
@@ -47,11 +47,11 @@ DDSROUTERUTILS_DllAPI bool match_pattern(
  *
  * @param [in,out] st : string to modify
  */
-DDSROUTERUTILS_DllAPI void to_lowercase(
+DDSROUTER_UTILS_DllAPI void to_lowercase(
         std::string& st) noexcept;
 
 template <typename T, bool Ptr = false>
-DDSROUTERUTILS_DllAPI std::ostream& element_to_stream(
+std::ostream& element_to_stream(
         std::ostream& os,
         T element);
 
@@ -65,25 +65,25 @@ DDSROUTERUTILS_DllAPI std::ostream& element_to_stream(
  * @return std::ostream& with the result stream concatenated
  */
 template <typename T, bool Ptr = false>
-DDSROUTERUTILS_DllAPI std::ostream& container_to_stream(
+std::ostream& container_to_stream(
         std::ostream& os,
         std::vector<T> list,
         std::string separator = ";");
 
 //! Concatenate a set by converting to vector.
 template <typename T, bool Ptr = false>
-DDSROUTERUTILS_DllAPI std::ostream& container_to_stream(
+std::ostream& container_to_stream(
         std::ostream& os,
         std::set<T> list,
         std::string separator = ";");
 
 template <typename T>
-DDSROUTERUTILS_DllAPI bool set_of_ptr_contains(
+bool set_of_ptr_contains(
         const std::set<std::shared_ptr<T>> set,
         const std::shared_ptr<T> element);
 
 template <typename T>
-DDSROUTERUTILS_DllAPI bool are_set_of_ptr_equal(
+bool are_set_of_ptr_equal(
         const std::set<std::shared_ptr<T>> set1,
         const std::set<std::shared_ptr<T>> set2);
 
@@ -98,14 +98,14 @@ DDSROUTERUTILS_DllAPI bool are_set_of_ptr_equal(
  *
  * @param formatter msg of the unexpected case.
  */
-DDSROUTERUTILS_DllAPI void tsnh(
+DDSROUTER_UTILS_DllAPI void tsnh(
         const Formatter& formatter);
 
 /**
  * @brief Convert a elements set into a shared ptr elements set.
  */
 template <typename Parent, typename Child>
-DDSROUTERUTILS_DllAPI std::set<std::shared_ptr<Parent>> convert_set_to_shared(
+std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         std::set<Child> set);
 
 } /* namespace utils */

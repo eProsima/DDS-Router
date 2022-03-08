@@ -20,6 +20,7 @@
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 
 #include <ddsrouter_yaml/YamlManager.hpp>
+#include <ddsrouter_yaml/Yaml.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

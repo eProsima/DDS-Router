@@ -133,12 +133,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 void ParticipantFactory::remove_participant(
         std::shared_ptr<IParticipant> participant)
 {
-    switch (participant->kind()())
-    {
-        default:
-            // Rest of participants do not require specific destructor
-            break;
-    }
+    // Currently there are no Participants that requires specific remove functionality.
+    // Add it in a switch case if in the future some functionality is required.
 }
 
 } /* namespace core */

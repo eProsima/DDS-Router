@@ -25,6 +25,7 @@
 
 #include <ddsrouter_utils/Time.hpp>
 #include <ddsrouter_event/EventHandler.hpp>
+#include <ddsrouter_event/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -47,7 +48,7 @@ public:
      *
      * @throw \c InitializationException in case \c period_time is lower than minimum time period (1ms).
      */
-    PeriodicEventHandler(
+    DDSROUTER_EVENT_DllAPI PeriodicEventHandler(
             utils::Duration_ms period_time);
 
     /**
@@ -58,7 +59,7 @@ public:
      *
      * @throw \c InitializationException in case \c period_time is lower than minimum time period (1ms).
      */
-    PeriodicEventHandler(
+    DDSROUTER_EVENT_DllAPI PeriodicEventHandler(
             std::function<void()> callback,
             utils::Duration_ms period_time);
 
@@ -67,7 +68,7 @@ public:
      *
      * Calls \c unset_callback
      */
-    ~PeriodicEventHandler();
+    DDSROUTER_EVENT_DllAPI ~PeriodicEventHandler();
 
 protected:
 

@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/security/tls/TlsConfigurationServer.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfigurationClient.hpp>
 
@@ -37,20 +38,20 @@ class TlsConfigurationBoth : public TlsConfigurationServer, public TlsConfigurat
 {
 public:
 
-    TlsConfigurationBoth(
+    DDSROUTER_CORE_DllAPI TlsConfigurationBoth(
             const std::string& certificate_authority_file,
             const std::string& private_key_file_password,
             const std::string& private_key_file,
             const std::string& certificate_chain_file,
             const std::string& dh_params_file);
 
-    virtual bool is_valid() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept override;
 
-    virtual bool is_active() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_active() const noexcept override;
 
-    virtual bool can_be_client() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_client() const noexcept override;
 
-    virtual bool can_be_server() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_server() const noexcept override;
 };
 
 } /* namespace security */

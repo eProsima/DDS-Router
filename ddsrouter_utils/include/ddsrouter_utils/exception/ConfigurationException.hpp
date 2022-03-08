@@ -29,7 +29,7 @@ namespace utils {
  * @brief Exception thrown when there has been some error reading a configuration file, reading a corrupted or
  *  not well-formed yaml, and when a configuration creation has failed.
  */
-class DDSROUTERUTILS_DllAPI ConfigurationException : public Exception
+class ConfigurationException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;
