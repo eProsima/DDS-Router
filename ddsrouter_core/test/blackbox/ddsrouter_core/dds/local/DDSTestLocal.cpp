@@ -36,7 +36,7 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 /**
  * @brief Create a simple configuration for a DDS Router
  *
- * Create a configuration with 2 topics, onw with key and other without
+ * Create a configuration with 2 topics, one with key and other without
  * Create 2 simple participants with domains 0 and 1
  *
  * @return configuration::DDSRouterConfiguration
@@ -48,25 +48,25 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration()
 
     // Two topics, one keyed and other not
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics(
-    {
-        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
-        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
-    });
+                    {
+                        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
+                        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
+                    });
 
     // Two simple participants
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-    {
-        std::make_shared<configuration::SimpleParticipantConfiguration>(
-            types::ParticipantId("participant_0"),
-            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
-            types::DomainId(0u)
-            ),
-        std::make_shared<configuration::SimpleParticipantConfiguration>(
-            types::ParticipantId("participant_1"),
-            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
-            types::DomainId(1u)
-            ),
-    }
+                    {
+                        std::make_shared<configuration::SimpleParticipantConfiguration>(
+                            types::ParticipantId("participant_0"),
+                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::DomainId(0u)
+                            ),
+                        std::make_shared<configuration::SimpleParticipantConfiguration>(
+                            types::ParticipantId("participant_1"),
+                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::DomainId(1u)
+                            ),
+                    }
         );
 
     return configuration::DDSRouterConfiguration(

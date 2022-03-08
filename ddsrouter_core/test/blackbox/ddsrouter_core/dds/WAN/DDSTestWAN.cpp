@@ -20,8 +20,6 @@
 #include <gtest/gtest.h>
 #include <TestLogHandler.hpp>
 
-#include <ddsrouter_utils/Log.hpp> // TODO remove it
-
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -53,13 +51,18 @@ std::shared_ptr<types::security::TlsConfiguration> tls_configuration(
             "../../resources/tls/ddsrouter.key", // private key
             "../../resources/tls/ddsrouter.crt", // cert
             "../../resources/tls/dh_params.pem" // dh params
-        );
+            );
     }
-    else
+    else if (client)
     {
         return std::make_shared<types::security::TlsConfigurationClient>(
             "../../resources/tls/ca.crt" // ca
-        );
+            );
+    }
+    else
+    {
+        utils::tsnh(STR_ENTRY << "TLS cannot work without being server or client.");
+        return nullptr;
     }
 }
 
@@ -79,15 +82,15 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         connection_addresses.insert(
             types::DiscoveryServerConnectionAddress(
                 types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
-                {
-                    types::Address(
-                        (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
-                        11666 + (this_server_id_is_1 ? 0u : 1u),
-                        ip_version,
-                        transport_protocol)
-                }
-            )
-        );
+                        {
+                            types::Address(
+                                (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
+                                11666 + (this_server_id_is_1 ? 0u : 1u),
+                                ip_version,
+                                transport_protocol)
+                        }
+                )
+            );
     }
 
     if (server)
@@ -98,7 +101,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
                 transport_protocol)
-        );
+            );
     }
 
     if (tls)
@@ -120,15 +123,16 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             listening_addresses,
             connection_addresses,
             types::ParticipantKind(types::ParticipantKind::WAN)
-        );
+            );
     }
 }
 
 /**
  * @brief Create a simple configuration for a DDS Router
  *
- * Create a configuration with 2 topics, onw with key and other without
- * Create 2 simple participants with domains 0 and 1
+ * Create a configuration with 1 topic
+ * Create 1 simple participants with domains \c domain
+ * Create 1 custom participant by the configuration in \c participant_configuration
  *
  * @return configuration::DDSRouterConfiguration
  */
@@ -141,23 +145,23 @@ configuration::DDSRouterConfiguration router_configuration(
 
     // One topic
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics(
-    {
-        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
-    });
+                    {
+                        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
+                    });
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-    {
-        // custom
-        participant_configuration,
+                    {
+                        // custom
+                        participant_configuration,
 
-        // simple
-        std::make_shared<configuration::SimpleParticipantConfiguration>(
-            types::ParticipantId("simple_participant"),
-            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
-            types::DomainId(domain)
-            ),
-    }
+                        // simple
+                        std::make_shared<configuration::SimpleParticipantConfiguration>(
+                            types::ParticipantId("simple_participant"),
+                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::DomainId(domain)
+                            ),
+                    }
         );
 
     return configuration::DDSRouterConfiguration(
@@ -257,9 +261,9 @@ void test_WAN_communication_all(
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
-            ),
+                ),
             0 // domain
-        ),
+            ),
 
         test::router_configuration(
             test::wan_participant_configuration(
@@ -269,10 +273,10 @@ void test_WAN_communication_all(
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
-            ),
+                ),
             1 // domain
-        )
-    );
+            )
+        );
 
     // Test architecture server <-> server-client
     test::test_WAN_communication(
@@ -284,9 +288,9 @@ void test_WAN_communication_all(
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
-            ),
+                ),
             0 // domain
-        ),
+            ),
 
         test::router_configuration(
             test::wan_participant_configuration(
@@ -296,10 +300,10 @@ void test_WAN_communication_all(
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
-            ),
+                ),
             1 // domain
-        )
-    );
+            )
+        );
 
     // This test is disabled for TCPv6 and TLSv6, as an underlying middleware issue resulting in no matching for this
     // scenario exists.
@@ -316,9 +320,9 @@ void test_WAN_communication_all(
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
-                ),
+                    ),
                 0 // domain
-            ),
+                ),
 
             test::router_configuration(
                 test::wan_participant_configuration(
@@ -328,14 +332,10 @@ void test_WAN_communication_all(
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
-                ),
+                    ),
                 1 // domain
-            ),
-
-            1,
-
-            5000
-        );
+                )
+            );
     }
 }
 
@@ -425,9 +425,14 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 }
 
 /**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
  * through UDPv4.
+ *
+ * PARAMETERS:
+ * - Frequency: 1ms
+ * - Sample size: 50K
+ * -> Throughput: 50MBps
  */
 TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
 {
@@ -439,9 +444,9 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
                 false, // is client
                 types::TransportProtocol::UDP, // transport protocol
                 types::IpVersion::IPv4 // ip version
-            ),
+                ),
             0 // domain
-        ),
+            ),
 
         test::router_configuration(
             test::wan_participant_configuration(
@@ -450,9 +455,9 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
                 true, // is client
                 types::TransportProtocol::UDP, // transport protocol
                 types::IpVersion::IPv4 // ip version
-            ),
+                ),
             1 // domain
-        ),
+            ),
 
         500,
         1,
@@ -463,7 +468,6 @@ int main(
         int argc,
         char** argv)
 {
-    // eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

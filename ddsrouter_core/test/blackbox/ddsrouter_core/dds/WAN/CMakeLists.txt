@@ -58,4 +58,4 @@ add_blackbox_executable(
     "${TEST_XFAIL_FILES}")
 
 # Set flaky tests as xfail
-# add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)
+add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)
