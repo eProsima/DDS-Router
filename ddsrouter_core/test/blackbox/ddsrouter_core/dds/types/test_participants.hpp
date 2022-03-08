@@ -58,11 +58,11 @@ namespace test {
  * to the HelloWorld datatype
  */
 template <class MsgStruct>
-class DummyDDSPublisher
+class TestPublisher
 {
 public:
 
-    DummyDDSPublisher(
+    TestPublisher(
             bool keyed = false)
         : participant_(nullptr)
         , publisher_(nullptr)
@@ -72,7 +72,7 @@ public:
     {
     }
 
-    ~DummyDDSPublisher()
+    ~TestPublisher()
     {
         if (participant_ != nullptr)
         {
@@ -181,11 +181,11 @@ private:
  * corresponding to the HelloWorld datatype
  */
 template <class MsgStruct>
-class DummyDDSSubscriber
+class TestSubscriber
 {
 public:
 
-    DummyDDSSubscriber(
+    TestSubscriber(
             bool keyed = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
@@ -195,7 +195,7 @@ public:
     {
     }
 
-    ~DummyDDSSubscriber()
+    ~TestSubscriber()
     {
         if (participant_ != nullptr)
         {

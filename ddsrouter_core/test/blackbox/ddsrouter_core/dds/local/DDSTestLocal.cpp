@@ -107,11 +107,11 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    DummyDDSPublisher<MsgStruct> publisher(msg.isKeyDefined());
+    TestPublisher<MsgStruct> publisher(msg.isKeyDefined());
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    DummyDDSSubscriber<MsgStruct> subscriber(msg.isKeyDefined());
+    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined());
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DDSRouter entity

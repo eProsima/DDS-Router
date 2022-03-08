@@ -33,17 +33,35 @@ namespace ddsrouter {
 namespace core {
 namespace test {
 
+enum WanKind
+{
+    SERVER,
+    CLIENT,
+    SERVER_AND_CLIENT
+};
+
+bool is_client(
+        WanKind wan_kind)
+{
+    return wan_kind == CLIENT || wan_kind == SERVER_AND_CLIENT;
+}
+
+bool is_server(
+        WanKind wan_kind)
+{
+    return wan_kind == SERVER || wan_kind == SERVER_AND_CLIENT;
+}
+
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
 std::shared_ptr<types::security::TlsConfiguration> tls_configuration(
-        bool server,
-        bool client)
+        WanKind wan_kind)
 {
     // TODO: test that using server with only Server required files works
     // It fails when connecting to other server
-    if (server)
+    if (is_server(wan_kind))
     {
         return std::make_shared<types::security::TlsConfigurationBoth>(
             "../../resources/tls/ca.crt", // ca
@@ -53,23 +71,17 @@ std::shared_ptr<types::security::TlsConfiguration> tls_configuration(
             "../../resources/tls/dh_params.pem" // dh params
             );
     }
-    else if (client)
+    else
     {
         return std::make_shared<types::security::TlsConfigurationClient>(
             "../../resources/tls/ca.crt" // ca
             );
     }
-    else
-    {
-        utils::tsnh(STR_ENTRY << "TLS cannot work without being server or client.");
-        return nullptr;
-    }
 }
 
 std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configuration(
         bool this_server_id_is_1,
-        bool server,
-        bool client,
+        WanKind wan_kind,
         types::TransportProtocol transport_protocol,
         types::IpVersion ip_version,
         bool tls = false)
@@ -77,7 +89,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     std::set<types::Address> listening_addresses;
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses;
 
-    if (client)
+    if (is_client(wan_kind))
     {
         connection_addresses.insert(
             types::DiscoveryServerConnectionAddress(
@@ -93,7 +105,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             );
     }
 
-    if (server)
+    if (is_server(wan_kind))
     {
         listening_addresses.insert(
             types::Address(
@@ -112,7 +124,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             listening_addresses,
             connection_addresses,
             types::ParticipantKind(types::ParticipantKind::WAN),
-            tls_configuration(server, client));
+            tls_configuration(wan_kind));
 
     }
     else
@@ -204,11 +216,11 @@ void test_WAN_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    DummyDDSPublisher<HelloWorld> publisher;
+    TestPublisher<HelloWorld> publisher;
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    DummyDDSSubscriber<HelloWorld> subscriber;
+    TestSubscriber<HelloWorld> subscriber;
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DDSRouter entity whose WAN Participant is configured as server
@@ -256,8 +268,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                true, // is server
-                false, // is client
+                SERVER,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -268,8 +279,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                false, // is server
-                true, // is client
+                CLIENT,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -283,8 +293,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                true, // is server
-                false, // is client
+                SERVER,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -295,8 +304,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                true, // is server
-                true, // is client
+                SERVER_AND_CLIENT,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -315,8 +323,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     true, // is server 1
-                    true, // is server
-                    true, // is client
+                    SERVER_AND_CLIENT,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -327,8 +334,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     false, // is server 1
-                    true, // is server
-                    true, // is client
+                    SERVER_AND_CLIENT,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -440,8 +446,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                true, // is server
-                false, // is client
+                test::SERVER,
                 types::TransportProtocol::UDP, // transport protocol
                 types::IpVersion::IPv4 // ip version
                 ),
@@ -451,8 +456,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                false, // is server
-                true, // is client
+                test::CLIENT,
                 types::TransportProtocol::UDP, // transport protocol
                 types::IpVersion::IPv4 // ip version
                 ),
