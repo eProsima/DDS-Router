@@ -42,16 +42,15 @@ public:
 
 protected:
 
-    uint32_t max_severe_logs_;
-    uint32_t expected_severe_logs_;
-
     /**
      * @brief Pointer to the event handler log consumer
      *
      * @attention: this must be a raw pointer as Fast takes ownership of the consumer.
      */
-
     event::LogSevereEventHandler* log_consumer_;
+
+    uint32_t expected_severe_logs_;
+    uint32_t max_severe_logs_;
 };
 
 } /* namespace test */
