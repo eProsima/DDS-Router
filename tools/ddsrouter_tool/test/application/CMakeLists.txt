@@ -49,6 +49,29 @@ if(PYTHONINTERP_FOUND)
     set(TEST_ENVIRONMENT
         "PATH=$ENV{PATH};$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
+    foreach(PROJECT_DEPENDENCY ${SUBMODULE_PROJECT_DEPENDENCIES})
+
+        message(STATUS "Finding target for libraries for ${PROJECT_DEPENDENCY}")
+
+        if(TARGET ${PROJECT_DEPENDENCY} OR TARGET eprosima::${PROJECT_DEPENDENCY} OR TARGET ${PROJECT_DEPENDENCY}::${PROJECT_DEPENDENCY})
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${PROJECT_DEPENDENCY}>")
+
+        elseif(EXISTS ${PROJECT_DEPENDENCY}_LIBRARY)
+            get_filename_component(
+                ${PROJECT_DEPENDENCY}_LIBRARY_DIR ${${PROJECT_DEPENDENCY}_LIBRARY} DIRECTORY)
+            set(TEST_ENVIRONMENT
+                "${TEST_ENVIRONMENT};${${PROJECT_DEPENDENCY}_LIBRARY_DIR}")
+            unset(${PROJECT_DEPENDENCY}_LIBRARY_DIR)
+
+        else()
+
+            message(STATUS "${PROJECT_DEPENDENCY} could not be added to TEST_ENVIRONMENT")
+
+        endif()
+
+    endforeach()
+
     if(WIN32)
 
         if(TARGET tinyxml2 OR TARGET tinyxml2::tinyxml2)
@@ -76,6 +99,8 @@ if(PYTHONINTERP_FOUND)
         string(REPLACE ";" "\\;" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
 
     endif(WIN32)
+
+    message(STATUS "Test Environment: ${TEST_ENVIRONMENT}")
 
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)

@@ -38,6 +38,8 @@ set(TEST_LIST
 
 set(TEST_EXTRA_LIBRARIES
         yaml-cpp
+        fastcdr
+        fastrtps
         ddsrouter_utils
         ddsrouter_event
         ddsrouter_core
@@ -68,6 +70,8 @@ set(TEST_LIST
 
 set(TEST_EXTRA_LIBRARIES
         yaml-cpp
+        fastcdr
+        fastrtps
         ddsrouter_utils
         ddsrouter_event
         ddsrouter_core

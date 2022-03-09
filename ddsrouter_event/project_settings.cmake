@@ -23,9 +23,12 @@ set(SUBMODULE_PROJECT_SUMMARY
     "C++ library for generic event classes for DDS Router.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
+    fastcdr
+    fastrtps
     ddsrouter_utils)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES
+    $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     ${SUBMODULE_PROJECT_FIND_PACKAGES})
 
 set(SUBMODULE_PROJECT_MACROS

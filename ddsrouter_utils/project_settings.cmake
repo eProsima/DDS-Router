@@ -23,6 +23,7 @@ set(SUBMODULE_PROJECT_SUMMARY
     "C++ library for generic useful methods and classes for DDS Router.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
+    fastcdr
     fastrtps)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES
