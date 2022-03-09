@@ -20,7 +20,7 @@ set(SUBMODULE_PROJECT_NAME
     ddsrouter_core)
 
 set(SUBMODULE_PROJECT_SUMMARY
-    "C++ library to construct and run a DDS Router.")
+    "C++ library to build and run a DDS Router.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
     fastrtps

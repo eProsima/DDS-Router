@@ -129,7 +129,10 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
     )
 
     if(MSVC)
-        target_compile_definitions(${TEST_EXECUTABLE_NAME} PRIVATE _CRT_DECLARE_NONSTDC_NAMES=0 ${SUBMODULE_PROJECT_MACROS}_SOURCE)
+        target_compile_definitions(${TEST_EXECUTABLE_NAME}
+            PRIVATE
+                _CRT_DECLARE_NONSTDC_NAMES=0
+                ${SUBMODULE_PROJECT_MACROS}_SOURCE)
     endif(MSVC)
 
     target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE

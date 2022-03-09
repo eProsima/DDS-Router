@@ -36,6 +36,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastrtps
         ddsrouter_utils
     )
 
@@ -71,6 +72,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastrtps
         ddsrouter_utils
     )
 
