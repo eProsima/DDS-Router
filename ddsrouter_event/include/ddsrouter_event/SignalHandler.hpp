@@ -41,7 +41,9 @@ enum Signals
 };
 
 /**
- * It raises a callback each time the signal specified by \c SigNum is received.
+ * It raises a callback each time the signal specified by \c SigNum is received. Signals may be captured from any
+ * running thread, but handling is performed here in a dedicated thread (\c signal_handler_thread_) in order to avoid
+ * unexpected behaviors.
  *
  * This class is special because signals must be handled statically. Thus it stores every object
  * created in a static array, and for every signal that arrives it calls the callback of each object
@@ -112,11 +114,8 @@ protected:
      * @brief Method that will be called each time the signal arrives.
      *
      * This method will call callback of every \c SignalHandler in \c active_handlers_ .
-     *
-     * @param signum : signal value (it must be equal to \c SigNum )
      */
-    static void signal_handler_routine_(
-            int signum) noexcept;
+    static void signal_handler_routine_() noexcept;
 
     //! Set for while process the signal handler routine.
     static void set_signal_handler_() noexcept;
@@ -144,10 +143,10 @@ protected:
     //! Flag used to terminate \c signal_handler_thread_
     static std::atomic<bool> signal_handler_active_;
 
-    //! Flag set to true when a signal arrives
-    static std::atomic<bool> signal_received_;
+    //! Counter incremented when a signal arrives and decremented after being read by \c signal_handler_thread_
+    static std::atomic<uint32_t> signals_received_;
 
-    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives
+    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives or signal handler is unset
     static std::condition_variable signal_received_cv_;
 
     //! Guards access to \c signal_received_cv_
