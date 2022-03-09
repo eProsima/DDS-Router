@@ -81,6 +81,7 @@ It shows the usage information of the application.
     Usage: Fast DDS Router
     Connect different DDS networks via DDS through LAN or WAN.
     It will build a communication bridge between the different Participants included in the provided configuration file.
+    To close the execution gracefully use SIGINT (C^) or SIGTERM (kill).
     General options:
     -h --help         Print this help message.
     -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].

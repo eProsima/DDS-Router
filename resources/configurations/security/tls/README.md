@@ -1,8 +1,16 @@
-# COMMANDS
+# DDS ROUTER SECURITY RESOURCES
+
+In the following directory there are several example files representing the needed security files required in
+order to use a secure **TLS** communication.
+These files are needed to configure TLS from Fast DDS.
+
+> :warning: Do not use these files in a real scenario. Generate your own certificates and parameters.
+
+## COMMANDS
 
 Following are the commands used to generate this example's keys and certificates
 
-## Certification Authority (CA)
+### Certification Authority (CA)
 
 ```sh
 # Generate the Certificate Authority (CA) Private Key > ca.key
@@ -14,7 +22,7 @@ openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 365 -config ca.cnf
 # openssl req -new -x509 -sha256 -key ca.key -out ca.crt -days 365 -config ca.cnf -passin pass:cakey # with password
 ```
 
-## DDS-Router Certificate
+### DDS-Router Certificate
 
 ```sh
 # Generate the DDS-Router Certificate Private Key > ddsrouter.key
@@ -30,7 +38,7 @@ openssl x509 -req -in ddsrouter.csr -CA ca.crt -CAkey ca.key -CAcreateserial -ou
 # openssl x509 -req -in ddsrouter.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out ddsrouter.crt -days 1000 -sha256 -passin pass:cakey # with password
 ```
 
-## DH PARAMETERS
+### DH PARAMETERS
 
 ```sh
 # Generate the Diffie-Hellman (DF) parameters to define how OpenSSL performs the DF key-exchange > dh_params.pem
@@ -40,6 +48,7 @@ openssl dhparam -out dh_params.pem 2048
 ## Use
 
 ```yaml
+# Use this tag inside a wan participant configuration
 tls:
   ca: "ca.crt"
   password: ""
