@@ -100,8 +100,6 @@ if(PYTHONINTERP_FOUND)
 
     endif(WIN32)
 
-    message(STATUS "Test Environment: ${TEST_ENVIRONMENT}")
-
     # populate the tests
     foreach(TEST IN LISTS TEST_CONFIGURATIONS)
 
