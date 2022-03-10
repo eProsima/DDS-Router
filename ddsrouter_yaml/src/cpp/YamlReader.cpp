@@ -844,7 +844,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
         {
             throw utils::ConfigurationException(
                 STR_ENTRY <<
-                "Each Participant block must have " << PARTICIPANT_KIND_TAG_V1 << " tag with Participant Kind.");
+                "Each Participant block must have <" << PARTICIPANT_KIND_TAG_V1 << "> tag with Participant Kind.");
         }
 
         // Set name

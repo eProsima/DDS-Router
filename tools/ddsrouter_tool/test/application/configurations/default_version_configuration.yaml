@@ -2,7 +2,7 @@
 # 2 Void Participants
 
 participant1:
-  kind: void
+  type: void
 
 participant2:
-  kind: void
+  type: void
