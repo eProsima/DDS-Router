@@ -1,3 +1,5 @@
+version: 2.0
+
 allowlist:
 - name: rt/chatter # Required
   type: std_msgs::msg::dds_::String_

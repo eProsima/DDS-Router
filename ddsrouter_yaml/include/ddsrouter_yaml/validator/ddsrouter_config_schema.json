@@ -6,6 +6,10 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
+                "version": {
+                    "type": "string",
+                    "enum": ["2.0"]
+                },
                 "allowlist": {
                     "type": "array",
                     "items": {
@@ -36,6 +40,7 @@
                 }
             },
             "required": [
+                "version",
                 "participants"
             ],
             "title": "BaseObject"
