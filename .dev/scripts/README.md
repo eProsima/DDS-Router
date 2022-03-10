@@ -1,6 +1,6 @@
 # eProsima DDS Router Developer Directory
 
-This directory and this documentation is only targeted to developers and users very familiarized with this
+This directory and this documentation is only targeted to developers and users highly familiarized with this
 project and the repository.
 
 ---
@@ -11,12 +11,12 @@ A colcon package is a code package that is able to be compiled, installed and us
 All this subdirectory packages have a file `package.xml` that specify how they have to be treated by colcon,
 and its dependencies.
 
-This repository follows the ROS 2 convention of holding many colcon packages in the same git repository.
+This repository follows the ROS 2 convention of holding various colcon packages within the same git repository.
 This way there could be different packages that could be used independently, not being forced to used them if
 the requirements or dependencies of higher level packages are not fulfilled
 (e.g. `yamlcpp` is no longer a requirement for the whole project, but only for `ddsrouter_yaml` and `ddsrouter_tool`).
 
-The different modules are:
+The modules contained in this repository are the following:
 
 * **ddsrouter_utils** This is intend to be a generic utils library that could in the future be a generic utils for
   other libraries. It contains:
@@ -29,13 +29,14 @@ The different modules are:
   inherited so they handle different events.
   An EventHandler listens to a specific event and raises a callback when it is call.
   It also provides functionality to wait till the event has occurred.
-  * `Signal`: raises with SO specific signal
-  * `FileWatcher`: watches a specific file and raises when it has been written up / modified
-  * `PeriodicTimer`: raises every periodic time
-  * `Log`: raises with every log consumed (could change the verbosity listened) (very useful for testing).
+  * `Signal`: raise with Operating System (SO)-dependent signals
+  * `FileWatcher`: watch a specific file and raise when it has been written up / modified
+  * `PeriodicTimer`: raise every periodic time
+  * `Log`: raise with every log consumed (could change the verbosity listened) (very useful for testing).
 
-* **ddsrouter_core** This is the main library that holds the behaviour of the DDS Router.
-  The DDS Router as class could be instantiate and has some methods to interact with (e.g `start`, `reload`, `stop`).
+* **ddsrouter_core** This is the main library that implements the operation of the DDS Router.
+  The `DDSRouter` class could be instantiate and has some methods to handle the operation of a DDS Router
+  (e.g `start`, `reload`, `stop`).
   This package is divided in:
   * `Types`: all the types that are used to configure the DDS Router and in its internal functionality.
   * `Configuration`: Configuration classes to configure the DDS Router
@@ -47,7 +48,7 @@ The different modules are:
 * **ddsrouter_tool** This is an executable that instantiates a DDS Router from a `yaml` file.
 
 * **ddsrouter_docs** (hosted in directory `docs`)
-  This package contains the user documentation build with sphinx.
+  This package contains the user documentation built with sphinx.
 
 This is the dependency graph of the packages:
 
@@ -63,13 +64,13 @@ ddsrouter_yaml               +  *
 ddsrouter_tool                  +
 ```
 
-The reason why we divided the packages were:
+The reasons of the packages division are:
 
-1. Using the DDS Router as a library will be very useful in the future, avoiding to interact with it as an
+1. Using the DDS Router as a library will be very useful in future developments, avoiding to interact with it as an
   independent process.
-1. The dependencies of one part are no longer dependencies of the whole project.
-  Thus, the DDS Router could be used without the need of `yaml`.
-1. It is easier to organize and maintain small packages that a big one.
+1. The dependencies of one package are no longer dependencies of the whole project.
+  Thus, the DDS Router could be used without requiring the `yaml` library.
+1. It is easier to organize and maintain small packages than a big one.
 1. In the future utils and events are intended to be generic, and not only part of this project.
   (e.g. having a common Log library for many projects would be very useful).
 
@@ -79,14 +80,15 @@ The reason why we divided the packages were:
 
 Along all the subdirectories many files are repeated (e.g. VERSION, CMakeLists.txt, etc.).
 
-In order to be able to maintain a single version for all this files, there has been decided to keep common directory
-with every repeated file: `.common`, and every other file in every subpackage will be a *hard link* of this file.
+In order to be able to maintain a single version for all this files, there has been decided to keep a common directory
+(`.common`) with every repeated file;
+being every other files in every subpackage a *hard link* of the files contained in this directory.
 Thus, the file in `.common/` directory should be the one modified, and it will automatically modify every other
 file linked.
 
 > **NOTE:**  ddsrouter_docs does not use common files.
 
-The main points that made us took this decision were:
+The main points supporting this decision are:
 
 1. colcon packages could and should not use files outside their directory.
 1. symbolic links are not supported by windows.
@@ -124,7 +126,7 @@ When downloading from github, these links are lost.
 ## Packages policy
 
 Packages are intended to be independent.
-However, it is useful to maintain a policy on how to interact with them:
+However, it is useful to maintain a common development policy:
 
 1. All packages use same version, and are released at the same time in the github repository.
 1. Every package must be contained in its directory and every file needed for it must be inside as well.
@@ -151,7 +153,7 @@ The values that must be initialized are:
 ### License
 
 Every file must have its license at its head.
-This license must concordance with this one (change the year to the year the file has been created):
+This license be consistent with the following one (change the year to the year the file has been created):
 
 ```cpp
 // Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
@@ -171,7 +173,7 @@ This license must concordance with this one (change the year to the year the fil
 
 ### Headers
 
-**Headers must not contain code**, just declarations.
+**Headers must not contain any function implementation**, just the signatures.
 Each header must start with a unique define.
 In order to assure that they are unique, use the path of the file in it.
 
