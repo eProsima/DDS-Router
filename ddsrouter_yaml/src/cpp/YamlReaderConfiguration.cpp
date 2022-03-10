@@ -42,16 +42,32 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
 {
     try
     {
+        YamlReaderVersion version;
+        // Get version if present
+        if (is_tag_present(yml, VERSION_TAG))
+        {
+            version = get<YamlReaderVersion>(yml, VERSION_TAG, LATEST);
+        }
+        else
+        {
+            version = V_1_0;
+            logWarning(DDSROUTER_YAML,
+                "No version of yaml configuration given, using version " << version << " by default. " <<
+                "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
+                "in future releases.");
+        }
+        logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
+
         // Load DDS Router Configuration
         core::configuration::DDSRouterConfiguration router_configuration =
-                yaml::YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
+                yaml::YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, version);
 
         return router_configuration;
     }
     catch (const std::exception& e)
     {
         throw utils::ConfigurationException(
-                  utils::Formatter() << "Error loading DDSRouter configuration:\n " << e.what());
+                  utils::Formatter() << "Error loading DDS Router configuration from yaml:\n " << e.what());
     }
 }
 

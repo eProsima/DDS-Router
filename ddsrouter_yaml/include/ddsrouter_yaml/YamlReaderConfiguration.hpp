@@ -42,6 +42,11 @@ public:
 
     static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration_from_file(
             const std::string& file_path);
+
+protected:
+
+    static YamlReaderVersion load_yaml_version(
+            const Yaml& yml);
 };
 
 } /* namespace yaml */

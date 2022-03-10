@@ -31,6 +31,11 @@ namespace yaml {
 //! Retrieve a set with every tag used in the configuration of the DDSRouter or the Participants
 std::set<std::string> ddsrouter_tags() noexcept;
 
+// Yaml related tags
+constexpr const char* VERSION_TAG("version");       //! Version to parse the yaml with
+constexpr const char* VERSION_TAG_V_1_0("v1.0");    //! Version v1.0
+constexpr const char* VERSION_TAG_V_2_0("v2.0");    //! Version v2.0
+
 // Topics related tags
 constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
 constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics

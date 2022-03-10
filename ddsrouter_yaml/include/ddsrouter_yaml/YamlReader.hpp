@@ -28,8 +28,32 @@ namespace yaml {
 
 enum YamlReaderVersion
 {
+    /**
+     * @brief First version.
+     *
+     * @version 0.1.0
+     * @version 0.2.0
+     */
     V_1_0,
+
+    /**
+     * @brief  Latest version.
+     *
+     * @version 0.3.0
+     *
+     * - Adds builtin-topics tag.
+     * - Adds participants list.
+     * - Changes the parent of guid for DS to a new tag discovery-server-guid.
+     * - Adds domain tag in Address to remplace ip when DNS.
+     */
     V_2_0,
+
+    /**
+     * @brief  Main version.
+     *
+     * This is the version used when the method is not specialized regarding the version,
+     * or the latest version when it does.
+     */
     LATEST,
 };
 
@@ -102,6 +126,13 @@ protected:
             const TagType& tag,
             const std::map<TagType, T>& enum_values);
 };
+
+/**
+ * @brief \c YamlReaderVersion to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const YamlReaderVersion& version);
 
 } /* namespace yaml */
 } /* namespace ddsrouter */

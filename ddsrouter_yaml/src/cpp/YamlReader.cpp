@@ -81,6 +81,19 @@ Yaml YamlReader::get_value_in_tag(
     }
 }
 
+template <>
+YamlReaderVersion YamlReader::get<YamlReaderVersion>(
+        const Yaml& yml,
+        const YamlReaderVersion /* Not Specialization */)
+{
+    return get_enumeration<YamlReaderVersion>(
+        yml,
+                {
+                    {VERSION_TAG_V_1_0, YamlReaderVersion::V_1_0},
+                    {VERSION_TAG_V_2_0, YamlReaderVersion::V_2_0},
+                });
+}
+
 /************************
 * ENTITIES             *
 ************************/
@@ -631,68 +644,86 @@ core::configuration::DDSRouterConfiguration YamlReader::get<core::configuration:
         const Yaml& yml,
         const YamlReaderVersion version /* Not Specialization */)
 {
-    try
+    /////
+    // Get optional allowlist
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist;
+    if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        /////
-        // Get optional allowlist
-        std::set<std::shared_ptr<types::FilterTopic>> allowlist;
-        if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
-        {
-            allowlist = utils::convert_set_to_shared<types::FilterTopic>(
-                YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
-        }
-
-        /////
-        // Get optional blocklist
-        std::set<std::shared_ptr<types::FilterTopic>> blocklist;
-        if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
-        {
-            blocklist = utils::convert_set_to_shared<types::FilterTopic>(
-                YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
-        }
-
-        /////
-        // Get optional builtin topics
-        std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
-        if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
-        {
-            builtin_topics = utils::convert_set_to_shared<types::RealTopic>(
-                YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
-        }
-
-        /////
-        // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
-        std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
-        auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
-
-        // Check it is a list
-        if (!participants_configurations_yml.IsSequence())
-        {
-            throw utils::ConfigurationException(
-                      utils::Formatter() <<
-                          "Participant configurations must be specified in an array under tag: " <<
-                          COLLECTION_PARTICIPANTS_TAG);
-        }
-
-        for (auto conf : participants_configurations_yml)
-        {
-            participants_configurations.insert(
-                YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
-        }
-
-        /////
-        // Construct object
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations);
+        allowlist = utils::convert_set_to_shared<types::FilterTopic>(
+            YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
-    catch (const std::exception& e)
+
+    /////
+    // Get optional blocklist
+    std::set<std::shared_ptr<types::FilterTopic>> blocklist;
+    if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
+    {
+        blocklist = utils::convert_set_to_shared<types::FilterTopic>(
+            YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
+    }
+
+    /////
+    // Get optional builtin topics
+    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
+    if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
+    {
+        builtin_topics = utils::convert_set_to_shared<types::RealTopic>(
+            YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
+    }
+
+    /////
+    // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
+    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
+    auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
+
+    // Check it is a list
+    if (!participants_configurations_yml.IsSequence())
     {
         throw utils::ConfigurationException(
-                  utils::Formatter() << "Error loading DDS Router configuration:\n " << e.what());
+                    utils::Formatter() <<
+                        "Participant configurations must be specified in an array under tag: " <<
+                        COLLECTION_PARTICIPANTS_TAG);
     }
+
+    for (auto conf : participants_configurations_yml)
+    {
+        participants_configurations.insert(
+            YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
+    }
+
+    /////
+    // Construct object
+    return core::configuration::DDSRouterConfiguration(
+        allowlist,
+        blocklist,
+        builtin_topics,
+        participants_configurations);
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const YamlReaderVersion& version)
+{
+    switch (version)
+    {
+    case V_1_0:
+        os << VERSION_TAG_V_1_0;
+        break;
+
+    case V_2_0:
+        os << VERSION_TAG_V_2_0;
+        break;
+
+    case LATEST:
+        os << VERSION_TAG_V_2_0;
+        break;
+
+    default:
+        utils::tsnh(STR_ENTRY << "Value of YamlReaderVersion out of enumeration.");
+        break;
+    }
+
+    return os;
 }
 
 } /* namespace yaml */
