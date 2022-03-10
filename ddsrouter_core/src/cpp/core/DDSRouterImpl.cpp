@@ -17,6 +17,8 @@
  *
  */
 
+#include <set>
+
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
@@ -122,8 +124,18 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             new_configuration.allowlist(),
             new_configuration.blocklist());
 
+        // Check if there are any new builtin topics
+        std::set<RealTopic> new_builtin_topics;
+        for (auto builtin_topic : new_configuration.builtin_topics())
+        {
+            if (current_topics_.find(*builtin_topic) == current_topics_.end())
+            {
+                new_builtin_topics.insert(*builtin_topic);
+            }
+        }
+
         // Check if it should change or is the same configuration
-        if (new_allowed_topic_list == allowed_topics_)
+        if (new_allowed_topic_list == allowed_topics_ && new_builtin_topics.empty())
         {
             logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
             return utils::ReturnCode::RETCODE_NO_DATA;
@@ -155,10 +167,10 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             }
         }
 
-        // Create new bridges for builtin topics that do not exist yet
-        for (std::shared_ptr<RealTopic> topic : new_configuration.builtin_topics())
+        // Create bridges for newly added builtin topics
+        for (RealTopic topic : new_builtin_topics)
         {
-            discovered_topic_(*topic);
+            discovered_topic_(topic);
         }
 
         configuration_.reload(new_configuration);

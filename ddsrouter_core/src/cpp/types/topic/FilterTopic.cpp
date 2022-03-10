@@ -34,6 +34,13 @@ FilterTopic::FilterTopic(
 {
 }
 
+bool FilterTopic::operator ==(
+        const FilterTopic& other) const
+{
+
+    return Topic::operator==(other) && has_keyed_set_ == other.has_keyed_set_;
+}
+
 bool FilterTopic::has_keyed_set() const
 {
     return has_keyed_set_;
