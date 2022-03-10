@@ -28,8 +28,9 @@ namespace yaml {
 
 enum YamlReaderVersion
 {
-    V_0_1,
-    V_0_2,
+    V_1_0,
+    V_2_0,
+    LATEST,
 };
 
 using TagType = std::string;
@@ -37,25 +38,29 @@ using TagType = std::string;
 /**
  * @brief Class that encapsulates methods to get values from Yaml Node.
  *
+ * TODO: Check if default arguments are needed. They may not be, as version should always be given
  */
 class DDSROUTER_YAML_DllAPI YamlReader
 {
 public:
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static T get(
             const Yaml& yml,
-            const TagType& tag);
+            const TagType& tag,
+            const YamlReaderVersion version = LATEST);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static std::list<T> get_list(
             const Yaml& yml,
-            const TagType& tag);
+            const TagType& tag,
+            const YamlReaderVersion version = LATEST);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static std::set<T> get_set(
             const Yaml& yml,
-            const TagType& tag);
+            const TagType& tag,
+            const YamlReaderVersion version = LATEST);
 
     static bool is_tag_present(
             const Yaml& yml,
@@ -67,29 +72,31 @@ protected:
             const Yaml& yml,
             const TagType& tag);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static T get(
-            const Yaml& yml);
+            const Yaml& yml,
+            const YamlReaderVersion version = LATEST);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
+    static std::list<T> get_list(
+            const Yaml& yml,
+            const YamlReaderVersion version = LATEST);
+
+    template <typename T>
     static T get_scalar(
             const Yaml& yml);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static T get_scalar(
             const Yaml& yml,
             const TagType& tag);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
-    static std::list<T> get_list(
-            const Yaml& yml);
-
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static T get_enumeration(
             const Yaml& yml,
             const std::map<TagType, T>& enum_values);
 
-    template <typename T, YamlReaderVersion V = V_0_2>
+    template <typename T>
     static T get_enumeration(
             const Yaml& yml,
             const TagType& tag,

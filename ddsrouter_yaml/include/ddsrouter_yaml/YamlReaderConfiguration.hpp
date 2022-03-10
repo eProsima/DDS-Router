@@ -37,17 +37,11 @@ class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : public YamlReader
 {
 public:
 
-    static core::configuration::DDSRouterConfiguration get_ddsrouter_configuration(
+    static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration(
             const Yaml& yml);
 
     static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration_from_file(
             const std::string& file_path);
-
-protected:
-
-    static std::shared_ptr<core::configuration::ParticipantConfiguration>
-    participants_yaml_factory_(
-            const Yaml& yml);
 };
 
 } /* namespace yaml */
