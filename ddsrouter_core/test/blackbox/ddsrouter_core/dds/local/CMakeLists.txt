@@ -27,7 +27,6 @@ set(TEST_SOURCES
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx)
 
 set(TEST_LIST
-    simple_initialization
     end_to_end_local_communication
     end_to_end_local_communication_keyed
     end_to_end_local_communication_high_frequency
@@ -35,7 +34,7 @@ set(TEST_LIST
     end_to_end_local_communication_high_throughput)
 
 set(TEST_NEEDED_SOURCES
-    ../../resources/configurations/dds/local/dds_test_simple_configuration.yaml)
+    )
 
 set(TEST_EXTRA_HEADERS
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld

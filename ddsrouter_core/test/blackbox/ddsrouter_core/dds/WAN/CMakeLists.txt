@@ -32,44 +32,18 @@ set(TEST_LIST
     end_to_end_WAN_communication_TCPv4
     end_to_end_WAN_communication_TCPv6
     end_to_end_WAN_communication_TLSv4
-    end_to_end_WAN_communication_TLSv6)
+    end_to_end_WAN_communication_TLSv6
+    end_to_end_WAN_communication_high_throughput
+    )
+
 
 set(TEST_NEEDED_SOURCES
-    # UDPv4
-    ../../resources/configurations/dds/WAN/UDP/IPv4/server.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv4/client.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv4/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv4/server-client-B.yaml
-    # UDPv6
-    ../../resources/configurations/dds/WAN/UDP/IPv6/server.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv6/client.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv6/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/UDP/IPv6/server-client-B.yaml
-    # TCPv4
-    ../../resources/configurations/dds/WAN/TCP/IPv4/server.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv4/client.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv4/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv4/server-client-B.yaml
-    # TCPv6
-    ../../resources/configurations/dds/WAN/TCP/IPv6/server.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv6/client.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv6/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/TCP/IPv6/server-client-B.yaml
-    # TLSv4
-    ../../resources/configurations/dds/WAN/TLS/IPv4/server.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv4/client.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv4/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv4/server-client-B.yaml
-    # TLSv6
-    ../../resources/configurations/dds/WAN/TLS/IPv6/server.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv6/client.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv6/server-client-A.yaml
-    ../../resources/configurations/dds/WAN/TLS/IPv6/server-client-B.yaml
     # TLS security files
-    ../../resources/configurations/dds/WAN/TLS/security/ca.crt
-    ../../resources/configurations/dds/WAN/TLS/security/ddsrouter.crt
-    ../../resources/configurations/dds/WAN/TLS/security/ddsrouter.key
-    ../../resources/configurations/dds/WAN/TLS/security/dh_params.pem)
+    ../../resources/tls/ca.crt
+    ../../resources/tls/ddsrouter.crt
+    ../../resources/tls/ddsrouter.key
+    ../../resources/tls/dh_params.pem
+    )
 
 set(TEST_EXTRA_HEADERS
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld

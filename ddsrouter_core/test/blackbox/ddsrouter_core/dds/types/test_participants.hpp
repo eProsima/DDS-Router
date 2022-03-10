@@ -48,52 +48,21 @@
 #include "HelloWorld/HelloWorldPubSubTypes.h"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
 
-configuration::DDSRouterConfiguration dds_test_simple_configuration()
-{
-    std::set<std::shared_ptr<FilterTopic>> allowlist;   // empty
-    std::set<std::shared_ptr<FilterTopic>> blocklist;   // empty
-
-    // Two topics, one keyed and other not
-    std::set<std::shared_ptr<RealTopic>> builtin_topics(
-    {
-        std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorld"),
-        std::make_shared<RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
-    });
-
-    // Two simple participants
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-    {
-        std::make_shared<configuration::SimpleParticipantConfiguration>(
-            ParticipantId("participant_0"),
-            ParticipantKind(ParticipantKind::SIMPLE_RTPS),
-            DomainId(0u)
-            ),
-        std::make_shared<configuration::SimpleParticipantConfiguration>(
-            ParticipantId("participant_1"),
-            ParticipantKind(ParticipantKind::SIMPLE_RTPS),
-            DomainId(1u)
-            ),
-    }
-        );
-
-    return configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations
-        );
-}
+namespace eprosima {
+namespace ddsrouter {
+namespace core {
+namespace test {
 
 /**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
 template <class MsgStruct>
-class HelloWorldPublisher
+class TestPublisher
 {
 public:
 
-    HelloWorldPublisher(
+    TestPublisher(
             bool keyed = false)
         : participant_(nullptr)
         , publisher_(nullptr)
@@ -103,7 +72,7 @@ public:
     {
     }
 
-    ~HelloWorldPublisher()
+    ~TestPublisher()
     {
         if (participant_ != nullptr)
         {
@@ -212,11 +181,11 @@ private:
  * corresponding to the HelloWorld datatype
  */
 template <class MsgStruct>
-class HelloWorldSubscriber
+class TestSubscriber
 {
 public:
 
-    HelloWorldSubscriber(
+    TestSubscriber(
             bool keyed = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
@@ -226,7 +195,7 @@ public:
     {
     }
 
-    ~HelloWorldSubscriber()
+    ~TestSubscriber()
     {
         if (participant_ != nullptr)
         {
@@ -372,128 +341,9 @@ private:
     listener_;
 };
 
-/**
- * Test whole DDSRouter initialization by initializing two SimpleParticipants
- */
-TEST(DDSTest, simple_initialization)
-{
-    // Load configuration
-    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-
-    // Let test finish without failing
-}
-
-/**
- * Test communication in HelloWorld topic between two DDS participants created in different domains
- */
-TEST(DDSTest, end_to_end_communication)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorld");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher;
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber;
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    router.stop();
-}
-
-/**
- * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains
- */
-TEST(DDSTest, end_to_end_communication_keyed)
-{
-    uint32_t samples_sent = 0;
-
-    HelloWorld msg;
-    msg.message("HelloWorldKeyed");
-
-    //! Condition variable used to synchronize data flow
-    std::condition_variable reception_cv;
-    //! Mutex managing access to subscriber's \c data_received_ attribute
-    std::mutex reception_cv_mtx;
-
-    // Create DDS Publisher in domain 0
-    HelloWorldPublisher publisher(true);
-    ASSERT_TRUE(publisher.init(0));
-
-    // Create DDS Subscriber in domain 1
-    HelloWorldSubscriber subscriber(true);
-    ASSERT_TRUE(subscriber.init(1, &msg, &reception_cv, &reception_cv_mtx));
-
-    // Load configuration containing two Simple Participants, one in domain 0 and another one in domain 1
-    configuration::DDSRouterConfiguration router_configuration = dds_test_simple_configuration();
-
-    // Create DDSRouter entity
-    DDSRouter router(router_configuration);
-    router.start();
-
-    // Wait for the endpoints to match before sending any data
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    // Start publishing
-    while (samples_sent < SAMPLES_TO_SEND)
-    {
-        subscriber.data_received(false);
-        msg.index(++samples_sent);
-        publisher.publish(msg);
-        std::unique_lock<std::mutex> lck(reception_cv_mtx);
-        reception_cv.wait(lck, [&]
-                {
-                    return subscriber.data_received();
-                });
-    }
-
-    router.stop();
-}
-
-int main(
-        int argc,
-        char** argv)
-{
-    // Activate log
-    Log::SetVerbosity(Log::Kind::Info);
-    Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
+} /* namespace test */
+} /* namespace core */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
 
 #endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_ */
