@@ -71,6 +71,10 @@ public:
     DDSROUTER_CORE_DllAPI bool operator <(
             const DiscoveryServerConnectionAddress& other) const noexcept;
 
+    //! Equal operator
+    bool operator ==(
+            const DiscoveryServerConnectionAddress& other) const noexcept;
+
 protected:
 
     //! Internal Discovery Server Guid Prefix object

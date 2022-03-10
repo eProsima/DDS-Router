@@ -45,6 +45,12 @@ GuidPrefix::GuidPrefix (
 }
 
 GuidPrefix::GuidPrefix (
+        const char* str_prefix)
+    : GuidPrefix(std::string(str_prefix))
+{
+}
+
+GuidPrefix::GuidPrefix (
         bool ros /*= false*/,
         uint32_t id /*= 0*/) noexcept
 {

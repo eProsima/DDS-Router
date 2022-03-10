@@ -58,6 +58,10 @@ TEST(YamlTagsTest, yaml_tags)
         DISCOVERY_SERVER_GUID_TAG,
         DISCOVERY_SERVER_ID_TAG,
         DISCOVERY_SERVER_ID_ROS_TAG,
+        VERSION_TAG,
+        VERSION_TAG_V_1_0,
+        VERSION_TAG_V_2_0,
+        PARTICIPANT_KIND_TAG_V1,
     };
 
     ASSERT_EQ(retrieved_tags, current_tags);

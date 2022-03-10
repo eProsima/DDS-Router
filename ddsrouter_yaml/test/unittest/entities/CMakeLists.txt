@@ -17,5 +17,6 @@
 #########################
 
 add_subdirectory(address)
+add_subdirectory(ddsrouter)
 add_subdirectory(guid)
 add_subdirectory(topic)

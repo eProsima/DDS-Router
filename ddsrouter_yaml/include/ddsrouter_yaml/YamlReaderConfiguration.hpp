@@ -33,7 +33,7 @@ namespace yaml {
  *
  * TODO: Add version configuration so it could load different versions
  */
-class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : public YamlReader
+class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : protected YamlReader
 {
 public:
 

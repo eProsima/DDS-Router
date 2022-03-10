@@ -19,6 +19,7 @@
 set(TEST_NAME YamlReaderScalarTest)
 
 set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         YamlReaderScalarTest.cpp
     )

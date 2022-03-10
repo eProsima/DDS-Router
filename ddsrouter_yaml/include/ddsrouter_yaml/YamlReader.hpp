@@ -90,8 +90,6 @@ public:
             const Yaml& yml,
             const TagType& tag);
 
-protected:
-
     static Yaml get_value_in_tag(
             const Yaml& yml,
             const TagType& tag);
