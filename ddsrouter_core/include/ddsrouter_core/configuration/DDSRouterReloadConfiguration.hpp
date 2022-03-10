@@ -22,11 +22,13 @@
 #include <memory>
 #include <set>
 
+#include <ddsrouter_utils/Formatter.hpp>
+
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/FilterTopic.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_utils/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -44,7 +46,7 @@ public:
     /**
      * TODO
      */
-    DDSRouterReloadConfiguration(
+    DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration(
             std::set<std::shared_ptr<types::FilterTopic>> allowlist,
             std::set<std::shared_ptr<types::FilterTopic>> blocklist,
             std::set<std::shared_ptr<types::RealTopic>> builtin_topics);
@@ -54,21 +56,21 @@ public:
      *
      * @return Set of filters to get allowed topics
      */
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> allowlist() const noexcept;
 
     /**
      * @brief Return a set with the topics blocked in the configuration
      *
      * @return Set of filters to get blocked topics
      */
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> blocklist() const noexcept;
 
     /**
      * TODO
      */
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::RealTopic>> builtin_topics() const noexcept;
 
-    bool is_valid(
+    DDSROUTER_CORE_DllAPI bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
 protected:

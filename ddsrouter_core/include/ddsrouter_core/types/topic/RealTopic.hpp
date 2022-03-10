@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_TOPIC_REALTOPIC_HPP_
 #define _DDSROUTERCORE_TYPES_TOPIC_REALTOPIC_HPP_
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/Topic.hpp>
 
 namespace eprosima {
@@ -35,7 +36,7 @@ struct RealTopic : public Topic
     using Topic::Topic;
 
     //! Default non valid topic
-    RealTopic();
+    DDSROUTER_CORE_DllAPI RealTopic();
 
     /**
      * Whether a topic name and topic type name could be used as a valid real DDS topic
@@ -45,11 +46,11 @@ struct RealTopic : public Topic
      *
      * @return: true if a topic can be formed by these values
      */
-    static bool is_real_topic(
+    DDSROUTER_CORE_DllAPI static bool is_real_topic(
             const std::string& topic_name,
             const std::string& type_name) noexcept;
 
-    bool is_valid() const noexcept override;
+    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept override;
 
 protected:
 

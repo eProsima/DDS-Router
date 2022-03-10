@@ -24,6 +24,7 @@
 
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_event/EventHandler.hpp>
+#include <ddsrouter_event/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -50,7 +51,7 @@ public:
      *
      * @param callback callback to call every time a log entry is consumed.
      */
-    LogEventHandler(
+    DDSROUTER_EVENT_DllAPI LogEventHandler(
             std::function<void(utils::Log::Entry)> callback);
 
     /**
@@ -58,9 +59,9 @@ public:
      *
      * Calls \c unset_callback
      */
-    ~LogEventHandler();
+    DDSROUTER_EVENT_DllAPI ~LogEventHandler();
 
-    void Consume(
+    DDSROUTER_EVENT_DllAPI void Consume(
             const utils::Log::Entry& entry) override;
 
 protected:

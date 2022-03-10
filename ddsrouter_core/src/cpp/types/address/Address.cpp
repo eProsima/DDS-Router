@@ -45,12 +45,12 @@ Address::Address(
         const IpVersion& ip_version,
         const TransportProtocol& transport_protocol) noexcept
     : ip_(ip)
-    , port_(port)
-    , ip_version_(ip_version)
-    , transport_protocol_(transport_protocol)
     , domain_()
     , has_domain_(false)
     , has_valid_domain_(false)
+    , port_(port)
+    , ip_version_(ip_version)
+    , transport_protocol_(transport_protocol)
 {
 }
 
@@ -60,19 +60,19 @@ Address::Address(
         const DomainType& domain,
         const TransportProtocol& transport_protocol) noexcept
     : ip_()
-    , port_(port)
-    , ip_version_(ip_version)
-    , transport_protocol_(transport_protocol)
     , domain_(domain)
     , has_domain_(true)
     , has_valid_domain_(false)
+    , port_(port)
+    , ip_version_(ip_version)
+    , transport_protocol_(transport_protocol)
 {
     try
     {
         ip_ = Address::resolve_dns(domain_, ip_version_);
         has_valid_domain_ = true;
     }
-    catch (const utils::DNSException& e)
+    catch (const utils::DNSException& )
     {
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
@@ -96,11 +96,11 @@ Address::Address(
         const DomainType& domain,
         const TransportProtocol& transport_protocol) noexcept
     : ip_()
-    , port_(port)
-    , transport_protocol_(transport_protocol)
     , domain_(domain)
     , has_domain_(true)
     , has_valid_domain_(false)
+    , port_(port)
+    , transport_protocol_(transport_protocol)
 {
     try
     {
@@ -109,7 +109,7 @@ Address::Address(
         ip_version_ = dns_respone.second;
         has_valid_domain_ = true;
     }
-    catch (const utils::DNSException& e)
+    catch (const utils::DNSException& )
     {
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");

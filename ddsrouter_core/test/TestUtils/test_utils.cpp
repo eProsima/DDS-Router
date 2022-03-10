@@ -32,7 +32,7 @@ Guid random_guid(
         uint16_t seed /* = 1 */)
 {
     Guid guid;
-    guid.entityId.value[3] = seed;
+    guid.entityId.value[3] = static_cast<eprosima::fastrtps::rtps::octet>(seed);
     guid.guidPrefix.value[0] = 0x01;
     guid.guidPrefix.value[1] = 0x0f;
     return guid;

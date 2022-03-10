@@ -36,7 +36,7 @@ utils::ReturnCode DummyWriter::write_(
         new_data_to_store.source_guid = data->source_guid;
 
         // Copying data as it should not be stored in PayloadPool
-        for (int i = 0; i < data->payload.length; i++)
+        for (uint32_t i = 0; i < data->payload.length; i++)
         {
             new_data_to_store.payload.push_back(data->payload.data[i]);
         }

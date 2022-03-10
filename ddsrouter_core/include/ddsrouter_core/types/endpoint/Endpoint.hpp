@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 #define _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/endpoint/QoS.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
@@ -46,55 +47,55 @@ class Endpoint
 public:
 
     //! Default Endpoint that returns an invalid one
-    Endpoint() noexcept;
+    DDSROUTER_CORE_DllAPI Endpoint() noexcept;
 
     /**
      * Constructor with Endpoint information
      */
-    Endpoint(
+    DDSROUTER_CORE_DllAPI Endpoint(
             const EndpointKind& kind,
             const Guid& guid,
             const QoS& qos,
             const RealTopic& topic) noexcept;
 
     //! Endpoint kind getter
-    EndpointKind kind() const noexcept;
+    DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
 
     //! Guid getter
-    Guid guid() const noexcept;
+    DDSROUTER_CORE_DllAPI Guid guid() const noexcept;
 
     //! QoS getter
-    QoS qos() const noexcept;
+    DDSROUTER_CORE_DllAPI QoS qos() const noexcept;
 
     //! Topic getter
-    RealTopic topic() const noexcept;
+    DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
 
     //! Whether the endpoint referenced is currently active
-    bool active() const noexcept;
+    DDSROUTER_CORE_DllAPI bool active() const noexcept;
 
     //! Set active status of the Endpoint
-    void active(
+    DDSROUTER_CORE_DllAPI void active(
             bool status) noexcept;
 
     //! Whether the endpoint referenced is valid
-    bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
 
     /********************
     * SPECIFIC GETTERS *
     ********************/
 
     //! Whether the endpoint is a writer
-    bool is_writer() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_writer() const noexcept;
 
     //! Whether the endpoint is a reader
-    bool is_reader() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_reader() const noexcept;
 
     //! Copy operator
-    Endpoint& operator =(
+    DDSROUTER_CORE_DllAPI Endpoint& operator =(
             const Endpoint& other) noexcept;
 
     //! Equality operator (does not take \c active_ into consideration)
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const Endpoint& other) const noexcept;
 
 protected:
@@ -115,7 +116,7 @@ protected:
     bool active_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(
+    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
             std::ostream&,
             const Endpoint&);
 };
@@ -123,7 +124,7 @@ protected:
 /**
  * @brief \c Endpoint to stream serialization
  */
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Endpoint& endpoint);
 

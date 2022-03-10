@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 #define _DDSROUTERCORE_TYPES_TOPIC_WILDCARDTOPIC_HPP_
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/FilterTopic.hpp>
 
 namespace eprosima {
@@ -37,7 +38,7 @@ public:
     using FilterTopic::FilterTopic;
 
     //! Constructor that allows any type
-    WildcardTopic(
+    DDSROUTER_CORE_DllAPI WildcardTopic(
             const std::string& topic_name,
             bool has_keyed_set = false,
             bool topic_with_key = false) noexcept;
@@ -45,7 +46,7 @@ public:
     // TODO: extend test and documentation to admit ? and []
 
     //! Override \c contains method from \c FilterTopic
-    bool contains(
+    DDSROUTER_CORE_DllAPI bool contains(
             const FilterTopic& other) const override;
 
     /**
@@ -53,7 +54,7 @@ public:
      *
      * It uses \c fnmatch function, so it also contemplates ? and [] apart from *
      */
-    bool matches(
+    DDSROUTER_CORE_DllAPI bool matches(
             const RealTopic& other) const override;
 };
 

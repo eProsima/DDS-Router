@@ -57,8 +57,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJ
 
 # Define Public API
 target_compile_definitions(${PROJECT_NAME}
-    PUBLIC
-        PROJECT_SOURCE
+    PRIVATE
+        ${SUBMODULE_PROJECT_MACROS}_SOURCE
     )
 
 if(MSVC)
@@ -133,9 +133,14 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
         PATTERN "*.ipp"
     )
 
-# Install config.h header
-install(FILES ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}/library
+# Install config headers
+install(
+    FILES
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/config.h
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/eProsima_auto_link.h
+        ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/library/library_dll.h
+    DESTINATION
+        ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}/library
     COMPONENT headers
     )
 

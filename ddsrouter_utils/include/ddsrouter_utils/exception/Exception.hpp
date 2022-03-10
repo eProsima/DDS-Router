@@ -23,6 +23,7 @@
 #include <string>
 
 #include <ddsrouter_utils/Formatter.hpp>
+#include <ddsrouter_utils/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -42,7 +43,7 @@ public:
      *
      * @param message The message to be returned by what()
      */
-    Exception(
+    DDSROUTER_UTILS_DllAPI Exception(
             const char* message) noexcept;
 
     /**
@@ -50,7 +51,7 @@ public:
      *
      * @param message The message to be returned by what()
      */
-    Exception(
+    DDSROUTER_UTILS_DllAPI Exception(
             const std::string& message);
 
     /**
@@ -61,7 +62,7 @@ public:
      *
      * @param formatter The \c Formatter object where streams are concatenated
      */
-    Exception(
+    DDSROUTER_UTILS_DllAPI Exception(
             const utils::Formatter& formatter);
 
     /**
@@ -69,7 +70,7 @@ public:
      *
      * @param other The original exception object to copy
      */
-    Exception(
+    DDSROUTER_UTILS_DllAPI Exception(
             const Exception& other) = default;
 
     /**
@@ -78,7 +79,7 @@ public:
      * @param other The original exception object to copy
      * @return the current ddsrouter::Exception object after the copy
      */
-    Exception& operator =(
+    DDSROUTER_UTILS_DllAPI Exception& operator =(
             const Exception& other) = default;
 
     /**
@@ -86,7 +87,7 @@ public:
      *
      * @return Null-terminated string with the explanatory information
      */
-    virtual const char* what() const noexcept override;
+    DDSROUTER_UTILS_DllAPI virtual const char* what() const noexcept override;
 
 protected:
 

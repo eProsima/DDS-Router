@@ -21,6 +21,8 @@
 
 #include <fastrtps/types/TypesBase.h>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -44,22 +46,22 @@ public:
      *
      * @param discovery_server
      */
-    DomainId (
+    DDSROUTER_CORE_DllAPI DomainId (
             bool discovery_server = false) noexcept;
 
     //! Standar constructor by number
-    DomainId (
+    DDSROUTER_CORE_DllAPI DomainId (
             const DomainIdType& domain) noexcept;
 
     //! Return Fast DDS value for Domain ID
-    DomainIdType operator ()() const noexcept;
+    DDSROUTER_CORE_DllAPI DomainIdType operator ()() const noexcept;
 
     //! Return Fast DDS value for Domain ID
-    DomainIdType domain_id() const noexcept;
+    DDSROUTER_CORE_DllAPI DomainIdType domain_id() const noexcept;
 
-    bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
 
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const DomainId& other) const noexcept;
 
 protected:
@@ -78,7 +80,7 @@ protected:
 };
 
 //! \c DomainId serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& output,
         const DomainId& domain);
 

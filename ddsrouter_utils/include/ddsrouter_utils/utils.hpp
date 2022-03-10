@@ -29,13 +29,14 @@
 
 #include <ddsrouter_utils/macros.hpp>
 #include <ddsrouter_utils/Formatter.hpp>
+#include <ddsrouter_utils/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
 //! Perform the wildcard matching using file comparison method
-bool match_pattern(
+DDSROUTER_UTILS_DllAPI bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept;
 
@@ -46,7 +47,7 @@ bool match_pattern(
  *
  * @param [in,out] st : string to modify
  */
-void to_lowercase(
+DDSROUTER_UTILS_DllAPI void to_lowercase(
         std::string& st) noexcept;
 
 template <typename T, bool Ptr = false>
@@ -97,7 +98,7 @@ bool are_set_of_ptr_equal(
  *
  * @param formatter msg of the unexpected case.
  */
-void tsnh(
+DDSROUTER_UTILS_DllAPI void tsnh(
         const Formatter& formatter);
 
 /**

@@ -21,6 +21,8 @@
 
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -40,14 +42,14 @@ public:
     /**
      * @brief Construct a new Participant invalid Id object
      */
-    ParticipantId() noexcept;
+    DDSROUTER_CORE_DllAPI ParticipantId() noexcept;
 
     /**
      * @brief Construct a new Participant Id object from a string value
      *
      * @param id uniquely identifies the new \c ParticipantId
      */
-    ParticipantId(
+    DDSROUTER_CORE_DllAPI ParticipantId(
             const std::string& id) noexcept;
 
     /**
@@ -57,14 +59,14 @@ public:
      *
      * @return true if this Id is valid. False otherwise.
      */
-    bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
 
     /**
      * @brief Name that uniquely identifies
      *
      * @return key string that represents the ID
      */
-    std::string id_name() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string id_name() const noexcept;
 
     /////
     // OPERATOR OVERLOAD
@@ -77,7 +79,7 @@ public:
      * @param [in] other \c ParticipantId to compare with
      * @return true if this Ids are equal. False otherwise.
      */
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const ParticipantId& other) const noexcept;
 
     /**
@@ -88,7 +90,7 @@ public:
      * @param [in] other \c ParticipantId to compare with
      * @return true if this Id is lower than \c other . False otherwise.
      */
-    bool operator <(
+    DDSROUTER_CORE_DllAPI bool operator <(
             const ParticipantId& other) const noexcept;
 
     /////
@@ -101,7 +103,7 @@ public:
      *
      * @return ParticipantId invalid
      */
-    static ParticipantId invalid() noexcept;
+    DDSROUTER_CORE_DllAPI static ParticipantId invalid() noexcept;
 
     /**
      * @brief Check whether a string is valid to create a \c ParticipantId
@@ -109,7 +111,7 @@ public:
      * @param [in] id string as unique key
      * @return true in case the string is valid for an ID. False otherwise
      */
-    static bool is_valid_id(
+    DDSROUTER_CORE_DllAPI static bool is_valid_id(
             const std::string& id) noexcept;
 
 protected:
@@ -122,7 +124,7 @@ protected:
 };
 
 //! \c ParticipantId to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const ParticipantId& id);
 

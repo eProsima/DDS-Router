@@ -24,6 +24,7 @@
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 #include <ddsrouter_core/types/topic/WildcardTopic.hpp>
 
+#include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>

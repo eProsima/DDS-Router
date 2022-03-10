@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
 namespace eprosima {
@@ -36,16 +37,16 @@ class TlsConfigurationClient : virtual public TlsConfiguration
 {
 public:
 
-    TlsConfigurationClient(
+    DDSROUTER_CORE_DllAPI TlsConfigurationClient(
             const std::string& certificate_authority_file);
 
-    virtual bool is_valid() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept override;
 
-    virtual bool is_active() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_active() const noexcept override;
 
-    virtual bool can_be_client() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_client() const noexcept override;
 
-    virtual bool can_be_server() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_server() const noexcept override;
 
     std::string certificate_authority_file() const noexcept;
 

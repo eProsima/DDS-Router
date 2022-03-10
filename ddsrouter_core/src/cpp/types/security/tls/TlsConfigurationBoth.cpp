@@ -32,12 +32,12 @@ TlsConfigurationBoth::TlsConfigurationBoth(
         const std::string& certificate_chain_file,
         const std::string& dh_params_file)
     : TlsConfiguration(TLS_BOTH)
-    , TlsConfigurationClient(certificate_authority_file)
     , TlsConfigurationServer(
         private_key_file_password,
         private_key_file,
         certificate_chain_file,
         dh_params_file)
+    , TlsConfigurationClient(certificate_authority_file)
 {
 }
 

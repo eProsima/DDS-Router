@@ -134,9 +134,12 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Check every address is inside connection addresses of the configuration
         for (core::types::Address address : addresses)
         {
+            // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
+            std::set<eprosima::ddsrouter::core::types::Address> addresses_result =
+                    result.connection_addresses().begin()->addresses();
             ASSERT_NE(
-                result.connection_addresses().begin()->addresses().find(address),
-                result.connection_addresses().begin()->addresses().end());
+                addresses_result.find(address),
+                addresses_result.end());
         }
     }
 

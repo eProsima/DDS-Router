@@ -72,7 +72,11 @@ TEST(ImplementationsTest, solo_participant_implementation)
  */
 TEST(ImplementationsTest, pair_implementation)
 {
-    test::TestLogHandler test_log_handler;
+    // TODO: Change to warning when fastdds warning:
+    // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
+    // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
+    // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
+    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     // For each Participant Kind
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
@@ -109,7 +113,11 @@ TEST(ImplementationsTest, pair_implementation)
  */
 TEST(ImplementationsTest, pair_implementation_with_topic)
 {
-    test::TestLogHandler test_log_handler;
+    // TODO: Change to warning when fastdds warning:
+    // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
+    // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
+    // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
+    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     // For each Participant kind
     for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
@@ -150,7 +158,11 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
  */
 TEST(ImplementationsTest, all_implementations)
 {
-    test::TestLogHandler test_log_handler;
+    // TODO: Change to warning when fastdds warning:
+    // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
+    // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
+    // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
+    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     {
         // Set topic to active

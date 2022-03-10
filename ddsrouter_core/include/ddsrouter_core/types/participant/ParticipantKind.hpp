@@ -24,6 +24,8 @@
 #include <string>
 #include <vector>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -54,10 +56,10 @@ public:
     };
 
     //! Default constructor that returns an Invalid Participant Kind
-    ParticipantKind() noexcept;
+    DDSROUTER_CORE_DllAPI ParticipantKind() noexcept;
 
     //! Constructor by value of the ParticipantKind enum
-    ParticipantKind(
+    DDSROUTER_CORE_DllAPI ParticipantKind(
             ParticipantKindType value) noexcept;
 
     /**
@@ -65,20 +67,20 @@ public:
      *
      * @return true if valid. False otherwise
      */
-    bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
 
     //! Convert this ParticipantKind to string using the << operator
-    std::string to_string() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string to_string() const noexcept;
 
     //! Return the enum value of this object
-    ParticipantKindType operator ()() const noexcept;
+    DDSROUTER_CORE_DllAPI ParticipantKindType operator ()() const noexcept;
 
     //! Minor operator
-    bool operator <(
+    DDSROUTER_CORE_DllAPI bool operator <(
             const ParticipantKind& other) const noexcept;
 
     //! Equal operator
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const ParticipantKind& other) const noexcept;
 
     /**
@@ -93,10 +95,10 @@ public:
      * @param [in] kind : string with the name of the kind to build
      * @return ParticipantKind value, \c INVALID if \c kind does not refer to any existing kind
      */
-    static ParticipantKind participant_kind_from_name(
+    DDSROUTER_CORE_DllAPI static ParticipantKind participant_kind_from_name(
             std::string kind) noexcept;
 
-    static std::vector<ParticipantKind> all_valid_participant_kinds() noexcept;
+    DDSROUTER_CORE_DllAPI static std::vector<ParticipantKind> all_valid_participant_kinds() noexcept;
 
 protected:
 
@@ -107,13 +109,13 @@ protected:
     static const std::map<ParticipantKindType, std::vector<std::string>> participant_kind_with_aliases_;
 
     // Allow operator << to use \c participant_kind_with_aliases_
-    friend std::ostream& operator <<(
+    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
             std::ostream& os,
             const ParticipantKind& kind);
 };
 
 //! \c ParticipantKind to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const ParticipantKind& a);
 

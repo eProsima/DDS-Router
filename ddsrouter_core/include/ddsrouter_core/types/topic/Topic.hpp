@@ -22,6 +22,8 @@
 #include <iostream>
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -35,23 +37,23 @@ struct Topic
     /**
      * Std constructor by topic name, topic type name and (optionally) topic kind
      */
-    Topic(
+    DDSROUTER_CORE_DllAPI Topic(
             std::string topic_name,
             std::string topic_type,
             bool topic_with_key = false) noexcept;
 
     //! Copy constructor
-    Topic& operator =(
+    DDSROUTER_CORE_DllAPI Topic& operator =(
             const Topic& other);
 
     //! Topic name getter
-    const std::string& topic_name() const;
+    DDSROUTER_CORE_DllAPI const std::string& topic_name() const;
 
     //! Topic type name getter
-    const std::string& topic_type() const;
+    DDSROUTER_CORE_DllAPI const std::string& topic_type() const;
 
     //! Topic kind getter
-    bool topic_with_key() const;
+    DDSROUTER_CORE_DllAPI bool topic_with_key() const;
 
     // OPERATOR OVERLOAD
     /**
@@ -59,7 +61,7 @@ struct Topic
      *
      * It compares that the topic name and topic type are equal
      */
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const Topic& other) const;
 
     /**
@@ -67,10 +69,10 @@ struct Topic
      *
      * It compares first the topic name, and if it is the same, it compares the topic type
      */
-    bool operator <(
+    DDSROUTER_CORE_DllAPI bool operator <(
             const Topic& other) const;
 
-    virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
 
 protected:
 
@@ -90,7 +92,7 @@ protected:
  * It prints the topic name, type and kind inside "{}" and separated by ";"
  * Example: {TopicName;TopicType;no_key}
  */
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Topic& a);
 
