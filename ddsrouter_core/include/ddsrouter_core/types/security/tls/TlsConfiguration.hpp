@@ -21,6 +21,8 @@
 
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -44,17 +46,17 @@ class TlsConfiguration
 {
 public:
 
-    TlsConfiguration();
+    DDSROUTER_CORE_DllAPI TlsConfiguration();
 
-    virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
 
-    virtual bool is_active() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_active() const noexcept;
 
-    virtual bool can_be_client() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_client() const noexcept;
 
-    virtual bool can_be_server() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_server() const noexcept;
 
-    virtual TlsConfigurationKind tls_kind() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual TlsConfigurationKind tls_kind() const noexcept;
 
 protected:
 

@@ -21,6 +21,7 @@
 
 #include <fastrtps/rtps/common/Guid.h>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
 
 namespace eprosima {
@@ -29,7 +30,7 @@ namespace core {
 namespace types {
 
 //! Unique Id of every Endpoint
-class Guid : public fastrtps::rtps::GUID_t
+class DDSROUTER_CORE_DllAPI Guid : public fastrtps::rtps::GUID_t
 {
 public:
 

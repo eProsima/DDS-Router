@@ -21,6 +21,7 @@
 
 #include <fastdds/rtps/common/SerializedPayload.h>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 
 namespace eprosima {
@@ -45,12 +46,12 @@ struct DataReceived
 };
 
 //! \c octet to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const PayloadUnit& octet);
 
 //! \c SerializedPayload_t to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Payload& payload);
 

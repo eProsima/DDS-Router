@@ -21,6 +21,8 @@
 
 #include <fastdds/rtps/common/GuidPrefix_t.hpp>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -32,7 +34,7 @@ namespace types {
  * This class extends the \c GuidPrefix_t class in FastDDS, which is a RTPS Participant Unique Id.
  * This class does not belong to class \c Guid due to a design flaw in OOP (parallel hierarchy is the future).
  */
-class GuidPrefix : public fastrtps::rtps::GuidPrefix_t
+class DDSROUTER_CORE_DllAPI GuidPrefix : public fastrtps::rtps::GuidPrefix_t
 {
 public:
 

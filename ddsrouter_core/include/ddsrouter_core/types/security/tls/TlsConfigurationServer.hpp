@@ -21,6 +21,7 @@
 
 #include <string>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
 namespace eprosima {
@@ -36,27 +37,27 @@ class TlsConfigurationServer : virtual public TlsConfiguration
 {
 public:
 
-    TlsConfigurationServer(
+    DDSROUTER_CORE_DllAPI TlsConfigurationServer(
             const std::string& private_key_file_password,
             const std::string& private_key_file,
             const std::string& certificate_chain_file,
             const std::string& dh_params_file);
 
-    virtual bool is_valid() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept override;
 
-    virtual bool is_active() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool is_active() const noexcept override;
 
-    virtual bool can_be_client() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_client() const noexcept override;
 
-    virtual bool can_be_server() const noexcept override;
+    DDSROUTER_CORE_DllAPI virtual bool can_be_server() const noexcept override;
 
-    std::string private_key_file_password() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string private_key_file_password() const noexcept;
 
-    std::string private_key_file() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string private_key_file() const noexcept;
 
-    std::string certificate_chain_file() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string certificate_chain_file() const noexcept;
 
-    std::string dh_params_file() const noexcept;
+    DDSROUTER_CORE_DllAPI std::string dh_params_file() const noexcept;
 
 protected:
 

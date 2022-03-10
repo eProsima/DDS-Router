@@ -21,6 +21,8 @@
 
 #include <fastdds/rtps/common/Types.h>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -35,7 +37,7 @@ using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 /**
  * Collection of attributes of an Endpoint
  */
-class QoS
+class DDSROUTER_CORE_DllAPI QoS
 {
 public:
 
@@ -71,7 +73,7 @@ protected:
     ReliabilityKind reliability_;
 
     // Allow operator << to use private variables
-    friend std::ostream& operator <<(
+    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
             std::ostream&,
             const QoS&);
 };
@@ -79,7 +81,7 @@ protected:
 /**
  * @brief \c QoS to stream serialization
  */
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const QoS& qos);
 

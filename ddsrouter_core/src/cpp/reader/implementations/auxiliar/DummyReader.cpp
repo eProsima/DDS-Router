@@ -59,7 +59,7 @@ utils::ReturnCode DummyReader::take_(
 
     // Move Payload to DDSRouter Payload Pool
     payload_pool_->get_payload(
-        next_data_to_send.payload.size() * sizeof(PayloadUnit),
+        static_cast<uint32_t>(next_data_to_send.payload.size() * sizeof(PayloadUnit)),
         data->payload);
 
     // Set values in Payload as the data was not in the DDSRouter Payload Pool

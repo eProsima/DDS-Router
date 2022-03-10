@@ -20,6 +20,7 @@
 #define _DDSROUTERCORE_CONFIGURATION_PARTICIPANT_DISCOVERYSERVERPARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
@@ -40,7 +41,7 @@ class DiscoveryServerParticipantConfiguration : public SimpleParticipantConfigur
 public:
 
     // TODO
-    DiscoveryServerParticipantConfiguration(
+    DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
@@ -51,7 +52,7 @@ public:
             const types::DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
     // TODO
-    DiscoveryServerParticipantConfiguration(
+    DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
@@ -61,23 +62,23 @@ public:
             std::shared_ptr<types::security::TlsConfiguration> tls_configuration =
             std::make_shared<types::security::TlsConfiguration>());
 
-    types::GuidPrefix discovery_server_guid_prefix() const noexcept;
+    DDSROUTER_CORE_DllAPI types::GuidPrefix discovery_server_guid_prefix() const noexcept;
 
-    std::set<types::Address> listening_addresses() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<types::Address> listening_addresses() const noexcept;
 
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<types::DiscoveryServerConnectionAddress> connection_addresses() const noexcept;
 
-    bool tls_active() const noexcept;
+    DDSROUTER_CORE_DllAPI bool tls_active() const noexcept;
 
-    std::shared_ptr<types::security::TlsConfiguration> tls_configuration() const;
+    DDSROUTER_CORE_DllAPI std::shared_ptr<types::security::TlsConfiguration> tls_configuration() const;
 
-    virtual bool is_valid(
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const DiscoveryServerParticipantConfiguration& other) const noexcept;
 
-    static types::DomainId default_domain_id() noexcept;
+    DDSROUTER_CORE_DllAPI static types::DomainId default_domain_id() noexcept;
 
 protected:
 
@@ -86,7 +87,7 @@ protected:
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses_;
     std::shared_ptr<types::security::TlsConfiguration> tls_configuration_;
 
-    static const types::DomainId DEFAULT_DS_DOMAIN_ID_; // 66
+    DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
 
 } /* namespace configuration */

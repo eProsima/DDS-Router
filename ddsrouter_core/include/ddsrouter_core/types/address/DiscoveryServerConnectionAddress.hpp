@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 
@@ -37,7 +38,8 @@ namespace types {
  * An address will remain in an IP and a Port, IP version and Transport Protocol.
  * This class has several address associated with one \c GuidPrefix in order to connect with
  * a remote Discovery Server.
- */class DiscoveryServerConnectionAddress
+ */
+class DiscoveryServerConnectionAddress
 {
 public:
 
@@ -47,15 +49,15 @@ public:
      * @param discovery_server_guid_ : Guid Prefix of the remote Discovery Server
      * @param addresses_ collection of addresses
      */
-    DiscoveryServerConnectionAddress(
+    DDSROUTER_CORE_DllAPI DiscoveryServerConnectionAddress(
             GuidPrefix discovery_server_guid,
             std::set<Address> addresses);
 
     //! Discovery Server \c GuidPrefix Port getter
-    GuidPrefix discovery_server_guid_prefix() const noexcept;
+    DDSROUTER_CORE_DllAPI GuidPrefix discovery_server_guid_prefix() const noexcept;
 
     //! Addresses getter
-    std::set<Address> addresses() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<Address> addresses() const noexcept;
 
     /**
      * @brief Whether the address is correct
@@ -63,10 +65,10 @@ public:
      * Checks if GuidPrefix is correct.
      * Checks if it has at least one correct address.
      */
-    virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
 
     //! Minor operator
-    bool operator <(
+    DDSROUTER_CORE_DllAPI bool operator <(
             const DiscoveryServerConnectionAddress& other) const noexcept;
 
 protected:
@@ -79,7 +81,7 @@ protected:
 };
 
 //! \c DiscoveryServerConnectionAddress to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& output,
         const DiscoveryServerConnectionAddress& address);
 

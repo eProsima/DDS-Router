@@ -23,6 +23,7 @@
 #include <memory>
 
 #include <ddsrouter_event/EventHandler.hpp>
+#include <ddsrouter_event/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -52,7 +53,7 @@ public:
      *
      * @param callback : function that will be called when the signal raises.
      */
-    MultipleEventHandler(
+    DDSROUTER_EVENT_DllAPI MultipleEventHandler(
             std::function<void()> callback);
 
     /**
@@ -63,7 +64,7 @@ public:
      *
      * @warning Default callback is set in this constructor, so EventHandler is enabled.
      */
-    MultipleEventHandler();
+    DDSROUTER_EVENT_DllAPI MultipleEventHandler();
 
     /**
      * @brief Destroy MultipleEventHandler object
@@ -71,7 +72,7 @@ public:
      * Releases every inside EventHandler.
      * Calls \c unset_callback .
      */
-    ~MultipleEventHandler();
+    DDSROUTER_EVENT_DllAPI ~MultipleEventHandler();
 
     /**
      * @brief Register a new \c EventHandler

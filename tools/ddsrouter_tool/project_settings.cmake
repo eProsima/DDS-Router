@@ -23,6 +23,9 @@ set(SUBMODULE_PROJECT_SUMMARY
     "C++ application to run a DDS Router from a YAML configuration file.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
+    yaml-cpp
+    fastcdr
+    fastrtps
     ddsrouter_utils
     ddsrouter_event
     ddsrouter_core

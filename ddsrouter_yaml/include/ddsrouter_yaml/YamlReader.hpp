@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERYAML_YAMLREADER_HPP_
 #define _DDSROUTERYAML_YAMLREADER_HPP_
 
+#include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/Yaml.hpp>
 
 namespace eprosima {
@@ -37,7 +38,7 @@ using TagType = std::string;
  * @brief Class that encapsulates methods to get values from Yaml Node.
  *
  */
-class YamlReader
+class DDSROUTER_YAML_DllAPI YamlReader
 {
 public:
 

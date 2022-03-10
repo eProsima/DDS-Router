@@ -21,8 +21,8 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
+#include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/YamlReader.hpp>
-#include <ddsrouter_yaml/Yaml.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -33,7 +33,7 @@ namespace yaml {
  *
  * TODO: Add version configuration so it could load different versions
  */
-class YamlReaderConfiguration : public YamlReader
+class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : public YamlReader
 {
 public:
 

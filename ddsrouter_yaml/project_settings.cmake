@@ -24,14 +24,17 @@ set(SUBMODULE_PROJECT_SUMMARY
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
     yaml-cpp
+    fastcdr
+    fastrtps
     ddsrouter_utils
     ddsrouter_event
     ddsrouter_core)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES
+    $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     ${SUBMODULE_PROJECT_FIND_PACKAGES})
 
 set(SUBMODULE_PROJECT_MACROS
-    DDSROUTERYAML)
+    DDSROUTER_YAML)
 
 # set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )

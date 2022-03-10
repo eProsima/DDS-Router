@@ -24,6 +24,8 @@
 
 #include <fastdds/rtps/common/Locator.h>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -71,7 +73,7 @@ public:
      * @param ip_version ip version (4 or 6)
      * @param transport_protocol transport protocol (UDP or TCP)
      */
-    Address(
+    DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
             const PortType& port,
             const IpVersion& ip_version,
@@ -85,7 +87,7 @@ public:
      * @param domain address domain name to call DNS
      * @param transport_protocol transport protocol (UDP or TCP)
      */
-    Address(
+    DDSROUTER_CORE_DllAPI Address(
             const PortType& port,
             const IpVersion& ip_version,
             const DomainType& domain,
@@ -98,7 +100,7 @@ public:
      * If the IP is a string with format IPv6, version will be set to IPv6.
      * If the IP has an incorrect formant, version will be set to IPv4 and address will be invalid.
      */
-    Address(
+    DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
             const PortType& port,
             const TransportProtocol& transport_protocol) noexcept;
@@ -110,35 +112,35 @@ public:
      * @param domain address domain name to call DNS
      * @param transport_protocol transport protocol (UDP or TCP)
      */
-    Address(
+    DDSROUTER_CORE_DllAPI Address(
             const PortType& port,
             const DomainType& domain,
             const TransportProtocol& transport_protocol) noexcept;
 
     //! Construct a default IP by default values (set in this class)
-    Address();
+    DDSROUTER_CORE_DllAPI Address();
 
     //! Address Port getter
-    PortType port() const noexcept;
+    DDSROUTER_CORE_DllAPI PortType port() const noexcept;
     //! Address IP getter
-    IpType ip() const noexcept;
+    DDSROUTER_CORE_DllAPI IpType ip() const noexcept;
     //! Address IP version getter
-    IpVersion ip_version() const noexcept;
+    DDSROUTER_CORE_DllAPI IpVersion ip_version() const noexcept;
     //! Address transport protocol version getter
-    TransportProtocol transport_protocol() const noexcept;
+    DDSROUTER_CORE_DllAPI TransportProtocol transport_protocol() const noexcept;
 
     //! Whether transport is UDP
-    bool is_udp() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_udp() const noexcept;
     //! Whether transport is TCP
-    bool is_tcp() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_tcp() const noexcept;
 
     //! Whether ip version is IPv4
-    bool is_ipv4() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_ipv4() const noexcept;
     //! Whether ip version is IPv6
-    bool is_ipv6() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_ipv6() const noexcept;
 
     //! Get FastDDS Locator kind
-    LocatorType get_locator_kind() noexcept;
+    DDSROUTER_CORE_DllAPI LocatorType get_locator_kind() noexcept;
 
     /**
      * @brief Whether the address is correct
@@ -146,33 +148,33 @@ public:
      * Checks if IP is in correct format regarding the IP version.
      * Checks if Port is correct.
      */
-    virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
 
     //! Minor operator
-    bool operator <(
+    DDSROUTER_CORE_DllAPI bool operator <(
             const Address& other) const noexcept;
 
     //! Equal operator
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const Address& other) const noexcept;
 
     //! Whether string \c ip has correct IPv4 format.
-    static bool is_ipv4_correct(
+    DDSROUTER_CORE_DllAPI static bool is_ipv4_correct(
             const IpType& ip) noexcept;
 
     //! Whether string \c ip has correct IPv6 format.
-    static bool is_ipv6_correct(
+    DDSROUTER_CORE_DllAPI static bool is_ipv6_correct(
             const IpType& ip) noexcept;
 
     //! Default port for address when is not set: 11600
-    static PortType default_port() noexcept;
+    DDSROUTER_CORE_DllAPI static PortType default_port() noexcept;
     //! Default ip for address when is not set: 127.0.0.1
-    static IpType default_ip(
+    DDSROUTER_CORE_DllAPI static IpType default_ip(
             IpVersion ip_version = default_ip_version()) noexcept;
     //! Default ip version for address when is not set: IPv4
-    static IpVersion default_ip_version() noexcept;
+    DDSROUTER_CORE_DllAPI static IpVersion default_ip_version() noexcept;
     //! Default transport protocol for address when is not set: UDP
-    static TransportProtocol default_transport_protocol() noexcept;
+    DDSROUTER_CORE_DllAPI static TransportProtocol default_transport_protocol() noexcept;
 
     /**
      * @brief Return the IP corresponding to the \c domain name given with IP version specified in \c ip_version
@@ -186,7 +188,7 @@ public:
      *
      * @throw DNSException in case an IP for this domain could not be retrieved
      */
-    static IpType resolve_dns(
+    DDSROUTER_CORE_DllAPI static IpType resolve_dns(
             DomainType domain,
             IpVersion ip_version);
 
@@ -203,7 +205,7 @@ public:
      *
      * @throw DNSException in case an IP for this domain could not be retrieved
      */
-    static std::pair<IpType, IpVersion> resolve_dns(
+    DDSROUTER_CORE_DllAPI static std::pair<IpType, IpVersion> resolve_dns(
             DomainType domain);
 
 protected:
@@ -235,13 +237,13 @@ protected:
     static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_;  // UDP
 
     // Allow operator << to use domain info
-    friend std::ostream& operator <<(
+    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
             std::ostream& output,
             const Address& address);
 };
 
 //! \c Address to stream serializator
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& output,
         const Address& address);
 

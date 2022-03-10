@@ -20,6 +20,7 @@
 #define _DDSROUTERCORE_CONFIGURATION_PARTICIPANT_PARTICIPANTCONFIGURATION_HPP_
 
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 
@@ -38,15 +39,15 @@ public:
     /**
      * TODO
      */
-    ParticipantConfiguration(
+    DDSROUTER_CORE_DllAPI ParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind) noexcept;
 
     //! Participant Kind associated with this configuration
-    types::ParticipantKind kind() const noexcept;
+    DDSROUTER_CORE_DllAPI types::ParticipantKind kind() const noexcept;
 
     //! Participant Id associated with this configuration
-    types::ParticipantId id() const noexcept;
+    DDSROUTER_CORE_DllAPI types::ParticipantId id() const noexcept;
 
     /**
      * @brief Equal comparator
@@ -58,10 +59,10 @@ public:
      * @param [in] other: ParticipantConfiguration to compare.
      * @return True if both configurations are the same, False otherwise.
      */
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const ParticipantConfiguration& other) const noexcept;
 
-    virtual bool is_valid(
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
 protected:

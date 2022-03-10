@@ -20,17 +20,19 @@ set(SUBMODULE_PROJECT_NAME
     ddsrouter_core)
 
 set(SUBMODULE_PROJECT_SUMMARY
-    "C++ library to construct and run a DDS Router.")
+    "C++ library to build and run a DDS Router.")
 
 set(SUBMODULE_PROJECT_FIND_PACKAGES
+    fastcdr
     fastrtps
     ddsrouter_utils
     ddsrouter_event)
 
 set(SUBMODULE_PROJECT_DEPENDENCIES
+    $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     ${SUBMODULE_PROJECT_FIND_PACKAGES})
 
 set(SUBMODULE_PROJECT_MACROS
-    DDSROUTERCORE)
+    DDSROUTER_CORE)
 
 # set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )

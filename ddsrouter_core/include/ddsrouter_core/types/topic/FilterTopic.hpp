@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_TOPIC_FILTERTOPIC_HPP_
 #define _DDSROUTERCORE_TYPES_TOPIC_FILTERTOPIC_HPP_
 
+#include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
@@ -35,7 +36,7 @@ class FilterTopic : public Topic
 public:
 
     //! Constructor by topic name, topic type name, and (optionally) has_keyed_set and topic kind
-    FilterTopic(
+    DDSROUTER_CORE_DllAPI FilterTopic(
             const std::string& topic_name,
             const std::string& topic_type,
             bool has_keyed_set = false,
@@ -70,7 +71,7 @@ public:
             const RealTopic& real_topic) const = 0;
 
     //! \c has_keyed_set_ getter
-    bool has_keyed_set() const;
+    DDSROUTER_CORE_DllAPI bool has_keyed_set() const;
 
 protected:
 

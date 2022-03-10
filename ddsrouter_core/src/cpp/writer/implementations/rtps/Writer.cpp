@@ -102,13 +102,13 @@ Writer::~Writer()
 utils::ReturnCode Writer::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    uint32_t data_size = data->payload.length;
 
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
     // TODO : Set method to remove old changes in order to get a new one
     // In case it fails, remove old changes from history and try again
+    // uint32_t data_size = data->payload.length;
     // if (!new_change)
     // {
     //     rtps_writer_->remove_older_changes(1);

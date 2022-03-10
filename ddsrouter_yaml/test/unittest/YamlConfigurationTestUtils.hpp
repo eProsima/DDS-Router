@@ -49,8 +49,8 @@ struct YamlField
     {
     }
 
-    bool present;
     T value;
+    bool present;
 };
 
 template <typename T>

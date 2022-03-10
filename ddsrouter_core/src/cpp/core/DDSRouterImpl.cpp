@@ -41,10 +41,7 @@ DDSRouterImpl::DDSRouterImpl(
     : payload_pool_(new MapPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
-    , allowed_topics_()
-    , bridges_()
     , configuration_(configuration)
-    , participant_factory_()
     , enabled_(false)
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
@@ -285,7 +282,7 @@ void DDSRouterImpl::init_participants_()
                 new_participant->id(),
                 new_participant);
         }
-        catch (const utils::InconsistencyException& e)
+        catch (const utils::InconsistencyException& )
         {
             throw utils::ConfigurationException(utils::Formatter()
                           << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
