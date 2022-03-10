@@ -1,355 +1,477 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$ref": "#/definitions/BaseObject",
-    "definitions": {
-        "BaseObject": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "version": {
-                    "type": "string",
-                    "enum": ["2.0"]
+    "$schema":"http://json-schema.org/draft-07/schema#",
+    "$ref":"#/definitions/BaseObject",
+    "definitions":{
+        "BaseObject":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "version":{
+                    "type":"string",
+                    "enum":[
+                        "2.0"
+                    ]
                 },
-                "allowlist": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TopicFilter"
+                "allowlist":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/TopicFilter"
                     }
                 },
-                "blocklist": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TopicFilter"
+                "blocklist":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/TopicFilter"
                     }
                 },
-                "builtin-topics": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/TopicBuiltins"
+                "builtin-topics":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/TopicBuiltins"
                     }
                 },
-                "participants": {
-                    "type": "array",
-                    "minItems": 2,
-                    "items": {
-                        "$ref": "#/definitions/Participant"
+                "participants":{
+                    "type":"array",
+                    "minItems":2,
+                    "items":{
+                        "$ref":"#/definitions/Participant"
                     },
-                    "uniqueKeys": [
+                    "uniqueKeys":[
                         "/name"
                     ]
                 }
             },
-            "required": [
+            "required":[
                 "version",
                 "participants"
             ],
-            "title": "BaseObject"
+            "title":"BaseObject"
         },
-        "TopicFilter": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
+        "TopicFilter":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "name":{
+                    "type":"string"
                 },
-                "type": {
-                    "type": "string"
+                "type":{
+                    "type":"string"
                 },
-                "keyed": {
-                    "type": "boolean"
+                "keyed":{
+                    "type":"boolean"
                 }
             },
-            "required": [
+            "required":[
                 "name"
             ],
-            "title": "TopicFilter"
+            "title":"TopicFilter"
         },
-        "TopicBuiltins": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
+        "TopicBuiltins":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "name":{
+                    "type":"string"
                 },
-                "type": {
-                    "type": "string"
+                "type":{
+                    "type":"string"
                 },
-                "keyed": {
-                    "type": "boolean"
+                "keyed":{
+                    "type":"boolean"
                 }
             },
-            "required": [
+            "required":[
                 "name",
                 "type"
             ],
-            "title": "TopicBuiltins"
+            "title":"TopicBuiltins"
         },
-        "Participant": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
+        "Participant":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "name":{
+                    "type":"string"
                 },
-                "kind": {
-                    "type": "string",
-                    "enum": [
+                "kind":{
+                    "type":"string",
+                    "enum":[
                         "void",
                         "echo",
                         "dummy",
-                        "local", "simple",
-                        "discovery-server", "ds", "local-ds", "local-discovery-server",
-                        "wan", "router"
+                        "local",
+                        "simple",
+                        "discovery-server",
+                        "ds",
+                        "local-ds",
+                        "local-discovery-server",
+                        "wan",
+                        "router"
                     ]
                 },
-                "domain": {
-                    "type": "integer"
+                "domain":{
+                    "type":"integer"
                 },
-                "discovery-server-guid": {
-                    "$ref": "#/definitions/DiscoveryServerGUID"
+                "discovery-server-guid":{
+                    "$ref":"#/definitions/DiscoveryServerGUID"
                 },
-                "listening-addresses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Address"
+                "listening-addresses":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/Address"
                     }
                 },
-                "connection-addresses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ConnectionAddress"
+                "connection-addresses":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/ConnectionAddress"
                     }
                 },
-                "tls": {
-                    "$ref": "#/definitions/TLS"
+                "tls":{
+                    "$ref":"#/definitions/TLS"
                 }
             },
-            "required": [
+            "required":[
                 "kind",
                 "name"
             ],
-            "allOf": [
+            "allOf":[
                 {
-                    "if": {
-                        "properties": {
-                            "kind": {
-                                "type": "string",
-                                "enum": ["void", "echo", "dummy"]
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "void",
+                                    "echo",
+                                    "dummy"
+                                ]
                             }
                         }
                     },
-                    "then": {
-                        "properties": {
-                            "domain": { "not": { } },
-                            "discovery-server-guid": { "not": { } },
-                            "listening-addresses": { "not": { } },
-                            "connection-addresses": { "not": { } },
-                            "tls": { "not": { } }
+                    "then":{
+                        "properties":{
+                            "domain":{
+                                "not":{
+
+                                }
+                            },
+                            "discovery-server-guid":{
+                                "not":{
+
+                                }
+                            },
+                            "listening-addresses":{
+                                "not":{
+
+                                }
+                            },
+                            "connection-addresses":{
+                                "not":{
+
+                                }
+                            },
+                            "tls":{
+                                "not":{
+
+                                }
+                            }
                         }
                     }
                 },
                 {
-                    "if": {
-                        "properties": {
-                            "kind": {
-                                "type": "string",
-                                "enum": ["local", "simple"]
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "local",
+                                    "simple"
+                                ]
                             }
                         }
                     },
-                    "then": {
-                        "allOf": [
+                    "then":{
+                        "allOf":[
                             {
-                                "properties": {
-                                    "discovery-server-guid": { "not": { } },
-                                    "tls": { "not": { } }
+                                "properties":{
+                                    "discovery-server-guid":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "tls":{
+                                        "not":{
+
+                                        }
+                                    }
                                 }
                             },
                             {
-                                "required": [ "domain" ]
+                                "required":[
+                                    "domain"
+                                ]
                             }
                         ]
                     }
                 },
                 {
-                    "if": {
-                        "properties": {
-                            "kind": {
-                                "type": "string",
-                                "enum": [
-                                    "discovery-server", "ds", "local-ds", "local-discovery-server",
-                                    "wan", "router"
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "discovery-server",
+                                    "ds",
+                                    "local-ds",
+                                    "local-discovery-server",
+                                    "wan",
+                                    "router"
                                 ]
                             }
                         }
                     },
-                    "then": {
-                        "allOf": [
+                    "then":{
+                        "allOf":[
                             {
-                                "properties": {
-                                    "domain": { "not": { } }
+                                "properties":{
+                                    "domain":{
+                                        "not":{
+
+                                        }
+                                    }
                                 }
                             },
                             {
-                                "required": [ "discovery-server-guid" ]
+                                "required":[
+                                    "discovery-server-guid"
+                                ]
                             },
                             {
-                                "anyOf": [
-                                    { "required": ["listening-addresses"] },
-                                    { "required": ["connection-addresses"] }
+                                "anyOf":[
+                                    {
+                                        "required":[
+                                            "listening-addresses"
+                                        ]
+                                    },
+                                    {
+                                        "required":[
+                                            "connection-addresses"
+                                        ]
+                                    }
                                 ]
                             }
                         ]
                     }
                 }
             ],
-            "title": "Participant"
+            "title":"Participant"
         },
-        "DiscoveryServerGUID": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "guid": {
-                    "type": "string"
+        "DiscoveryServerGUID":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "guid":{
+                    "type":"string"
                 },
-                "id": {
-                    "type": "integer"
+                "id":{
+                    "type":"integer"
                 },
-                "ros-discovery-server": {
-                    "type": "boolean"
+                "ros-discovery-server":{
+                    "type":"boolean"
                 }
             },
-            "anyOf": [
-                { "required": ["guid"] },
-                { "required": ["id"] }
-            ],
-            "title": "DiscoveryServerGUID"
-        },
-        "ConnectionAddress": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "discovery-server-guid": {
-                    "$ref": "#/definitions/DiscoveryServerGUID"
+            "anyOf":[
+                {
+                    "required":[
+                        "guid"
+                    ]
                 },
-                "addresses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Address"
+                {
+                    "required":[
+                        "id"
+                    ]
+                }
+            ],
+            "title":"DiscoveryServerGUID"
+        },
+        "ConnectionAddress":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "discovery-server-guid":{
+                    "$ref":"#/definitions/DiscoveryServerGUID"
+                },
+                "addresses":{
+                    "type":"array",
+                    "items":{
+                        "$ref":"#/definitions/Address"
                     }
                 }
             },
-            "required": [
+            "required":[
                 "addresses",
                 "discovery-server-guid"
             ],
-            "title": "ConnectionAddress"
+            "title":"ConnectionAddress"
         },
-        "TLS": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "ca": {
-                    "type": "string"
+        "TLS":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "ca":{
+                    "type":"string"
                 },
-                "password": {
-                    "type": "string"
+                "password":{
+                    "type":"string"
                 },
-                "private_key": {
-                    "type": "string"
+                "private_key":{
+                    "type":"string"
                 },
-                "cert": {
-                    "type": "string"
+                "cert":{
+                    "type":"string"
                 },
-                "dh_params": {
-                    "type": "string"
+                "dh_params":{
+                    "type":"string"
                 }
             },
-            "required": [
+            "required":[
                 "ca"
             ],
-            "allOf": [
+            "allOf":[
                 {
-                    "if": {
-                        "properties": { "password": { "type": "string"} },
-                        "required": ["password"]
+                    "if":{
+                        "properties":{
+                            "password":{
+                                "type":"string"
+                            }
+                        },
+                        "required":[
+                            "password"
+                        ]
                     },
-                    "then": {
-                        "required": [
+                    "then":{
+                        "required":[
                             "private_key",
                             "cert"
                         ]
                     }
                 },
                 {
-                    "if": {
-                        "properties": { "private_key": { "not":  { "pattern": "^$" } } },
-                        "required": ["private_key"]
+                    "if":{
+                        "properties":{
+                            "private_key":{
+                                "not":{
+                                    "pattern":"^$"
+                                }
+                            }
+                        },
+                        "required":[
+                            "private_key"
+                        ]
                     },
-                    "then": {
-                        "properties": { "private_key": { "not": { "pattern": "^\\s*$" } } },
-                        "required": [
+                    "then":{
+                        "properties":{
+                            "private_key":{
+                                "not":{
+                                    "pattern":"^\\s*$"
+                                }
+                            }
+                        },
+                        "required":[
                             "password",
                             "cert"
                         ]
                     }
                 },
                 {
-                    "if": {
-                        "properties": { "cert": { "type": "string"} },
-                        "required": ["cert"]
+                    "if":{
+                        "properties":{
+                            "cert":{
+                                "type":"string"
+                            }
+                        },
+                        "required":[
+                            "cert"
+                        ]
                     },
-                    "then": {
-                        "properties": { "cert": { "not": { "pattern": "^\\s*$" } } },
-                        "required": [
+                    "then":{
+                        "properties":{
+                            "cert":{
+                                "not":{
+                                    "pattern":"^\\s*$"
+                                }
+                            }
+                        },
+                        "required":[
                             "password",
                             "private_key"
                         ]
                     }
                 }
             ],
-            "title": "TLS"
+            "title":"TLS"
         },
-        "Address": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "ip": {
-                    "type": "string",
-                    "anyOf": [
-                        { "format": "ipv4" },
-                        { "format": "ipv6" }
+        "Address":{
+            "type":"object",
+            "additionalProperties":false,
+            "properties":{
+                "ip":{
+                    "type":"string",
+                    "anyOf":[
+                        {
+                            "format":"ipv4"
+                        },
+                        {
+                            "format":"ipv6"
+                        }
                     ]
                 },
-                "domain": {
-                    "type": "string"
+                "domain":{
+                    "type":"string"
                 },
-                "port": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 65535
+                "port":{
+                    "type":"integer",
+                    "minimum":0,
+                    "maximum":65535
                 },
-                "transport": {
-                    "type": "string",
-                    "enum": ["tcp", "udp"]
+                "transport":{
+                    "type":"string",
+                    "enum":[
+                        "tcp",
+                        "udp"
+                    ]
                 },
-                "ip-version": {
-                    "type": "string",
-                    "enum": ["ipv4", "ipv6"]
+                "ip-version":{
+                    "type":"string",
+                    "enum":[
+                        "ipv4",
+                        "ipv6"
+                    ]
                 }
             },
-            "allOf": [
+            "allOf":[
                 {
-                    "anyOf": [
-                        { "required": ["domain"] },
-                        { "required": ["ip"] }
+                    "anyOf":[
+                        {
+                            "required":[
+                                "domain"
+                            ]
+                        },
+                        {
+                            "required":[
+                                "ip"
+                            ]
+                        }
                     ]
                 },
                 {
-                    "required": ["port"]
+                    "required":[
+                        "port"
+                    ]
                 }
             ],
-            "title": "Address"
+            "title":"Address"
         }
     }
 }
