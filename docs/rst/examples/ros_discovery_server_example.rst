@@ -12,7 +12,7 @@ In the following snippet we see a yaml file to configure a DDS Router to create 
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 5-31
+    :lines: 5-36
 
 Configuration
 =============
@@ -38,7 +38,7 @@ This Participant is configured by a name, a kind and the Domain Id, in this case
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 17-19
+    :lines: 21-23
 
 
 Discovery Server Participant
@@ -49,7 +49,7 @@ Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 25-31
+    :lines: 29-36
 
 
 Execute example

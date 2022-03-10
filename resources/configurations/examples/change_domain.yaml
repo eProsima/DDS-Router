@@ -7,26 +7,30 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  - name: "HelloWorldTopic"                                                 # 1
-    type: "HelloWorld"                                                      # 1
-  - name: "rt/chatter"                                                      # 2
-    type: "std_msgs::msg::dds_::String_"
+  - name: HelloWorldTopic                                                   # 1
+    type: HelloWorld                                                        # 1
+  - name: rt/chatter                                                        # 2
+    type: std_msgs::msg::dds_::String_
+
+##################################
+# PARTICIPANTS
+participants:
 
 ##################################
 # SIMPLE PARTICIPANT DOMAIN 0
 # This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
 
-SimpleParticipant_domain0:                                                  # 3
-  kind: local                                                               # 4
-  domain: 0                                                                 # 5
+  - name: SimpleParticipant_domain0                                         # 3
+    kind: local                                                             # 4
+    domain: 0                                                               # 5
 
 ##################################
 # SIMPLE PARTICIPANT DOMAIN 1
 # This Participant will print in stdout every message received by the other Participants
 
-SimpleParticipant_domain1:                                                  # 6
-  kind: local                                                               # 7
-  domain: 1                                                                 # 8
+  - name: SimpleParticipant_domain1                                         # 6
+    kind: local                                                             # 7
+    domain: 1                                                               # 8
 
 
 ##################################
