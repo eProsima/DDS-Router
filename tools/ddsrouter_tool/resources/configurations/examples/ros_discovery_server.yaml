@@ -1,0 +1,75 @@
+################################
+# ROS DISCOVERY SERVER EXAMPLE #
+################################
+
+##################################
+# ALLOWED TOPICS
+# Allowing ROS2 HelloWorld demo_nodes topic
+
+allowlist:
+  - name: rt/chatter                               # 1
+    type: std_msgs::msg::dds_::String_             # 1
+
+##################################
+# PARTICIPANTS
+participants:
+
+##################################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
+
+  - name: SimpleROS2                               # 2
+    kind: local                                    # 3
+    domain: 0                                      # 4
+
+##################################
+# ROS DISCOVERY SERVER
+# This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
+
+  - name: ServerROS2                               # 5
+    kind: local-discovery-server                   # 6
+    discovery-server-guid:
+      ros-discovery-server: true                   # 7
+      id: 1                                        # 8
+    listening-addresses:                           # 9
+      - domain: localhost                          # 10
+        port: 11888                                # 11
+                                                   # 12
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# This configuration example configures a DDS Router to listen to every message published in domain 0 in topic
+# rt/chatter from ROS2 demo_nodes, and to transmit these messages through a Discovery Server (configured as
+# Server) to another Discovery Server.
+# The other direction of communication is also possible; receive messages at the Discovery Server and locally
+# publish them in domain 0.
+
+# 1: Allow DDS ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
+# Insert new topics in order to route them.
+
+# 2: New Participant with name <SimpleROS2>.
+
+# 3: Kind of SimpleROS2: <local>.
+# LAN UDP communication with default simple multicast discovery.
+# Remember that every ROS 2 Node relays the middleware communication to DDS, as a standard Participant.
+
+# 5: New Participant with name <ServerROS2>.
+
+# 6: Kind of ServerROS2: <local-discovery-server>.
+# This kind of Participant uses Discovery Server as discovery protocol.
+
+# 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41> for ServerROS2.
+
+# 8: Set this Discovery Server GuidPrefix to <44.53.01.5f.45.50.52.4f.53.49.4d.41> for ServerROS2.
+
+# 9: Add the interfaces where this Discovery Server will listen for client discovery traffic.
+
+# 10: Listen in IP localhost(127.0.0.1) for remote discovery traffic
+# This IP must be set to the IP of the host where this DDS Router will run.
+
+# 11: Listen in port 11888
+
+# 12: This configuration is equal to create a Discovery Server with Fast DDS CLI using command:
+# $> fastdds discovery --server-id 1 --ip-address 127.0.0.1 --port 11888
+# Add every other address where this Discovery Server will listen.

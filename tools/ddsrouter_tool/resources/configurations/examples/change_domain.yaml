@@ -1,0 +1,57 @@
+#########################
+# CHANGE DOMAIN EXAMPLE #
+#########################
+
+##################################
+# ALLOWED TOPICS
+# Allowing FastDDS and ROS2 HelloWorld demo examples topics
+
+allowlist:
+  - name: HelloWorldTopic                                                   # 1
+    type: HelloWorld                                                        # 1
+  - name: rt/chatter                                                        # 2
+    type: std_msgs::msg::dds_::String_
+
+##################################
+# PARTICIPANTS
+participants:
+
+##################################
+# SIMPLE PARTICIPANT DOMAIN 0
+# This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
+
+  - name: SimpleParticipant_domain0                                         # 3
+    kind: local                                                             # 4
+    domain: 0                                                               # 5
+
+##################################
+# SIMPLE PARTICIPANT DOMAIN 1
+# This Participant will print in stdout every message received by the other Participants
+
+  - name: SimpleParticipant_domain1                                         # 6
+    kind: local                                                             # 7
+    domain: 1                                                               # 8
+
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# This configuration example configures a DDS Router to listen to every message published in two different domains
+# and transmit those messages through the other domain.
+
+# 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+
+# 2: Insert new topics in order to route to them.
+
+# 3: New Participant with name <SimpleParticipant_domain0>.
+
+# 4: Kind of SimpleParticipant_domain0: <local>.
+# LAN UDP communication with default simple multicast discovery.
+
+# 5: SimpleParticipant_domain0 will use DDS Domain ID <0>.
+
+# 6: New Participant with name <SimpleParticipant_domain1>.
+
+# 7: Kind of SimpleParticipant_domain1: <local>.
+
+# 8: SimpleParticipant_domain1 will use DDS Domain ID <1>.
