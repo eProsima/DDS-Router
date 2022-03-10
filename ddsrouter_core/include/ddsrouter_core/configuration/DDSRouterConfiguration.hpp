@@ -59,7 +59,8 @@ public:
      *
      * @return Set of \c ParticipantConfigurations
      */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const noexcept;
+    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const
+    noexcept;
 
     DDSROUTER_CORE_DllAPI bool is_valid(
             utils::Formatter& error_msg) const noexcept override;

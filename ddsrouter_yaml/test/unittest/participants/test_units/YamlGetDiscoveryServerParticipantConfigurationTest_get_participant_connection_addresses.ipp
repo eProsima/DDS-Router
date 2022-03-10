@@ -135,7 +135,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         for (core::types::Address address : addresses)
         {
             // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
-            std::set<eprosima::ddsrouter::core::types::Address> addresses_result = result.connection_addresses().begin()->addresses();
+            std::set<eprosima::ddsrouter::core::types::Address> addresses_result =
+                    result.connection_addresses().begin()->addresses();
             ASSERT_NE(
                 addresses_result.find(address),
                 addresses_result.end());
