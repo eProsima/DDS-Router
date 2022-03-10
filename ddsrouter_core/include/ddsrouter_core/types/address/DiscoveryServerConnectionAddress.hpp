@@ -72,7 +72,7 @@ public:
             const DiscoveryServerConnectionAddress& other) const noexcept;
 
     //! Equal operator
-    bool operator ==(
+    DDSROUTER_CORE_DllAPI bool operator ==(
             const DiscoveryServerConnectionAddress& other) const noexcept;
 
 protected:
