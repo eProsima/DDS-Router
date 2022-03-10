@@ -26,6 +26,8 @@ if(PYTHONINTERP_FOUND)
         simple_configuration
         ds_configuration
         complex_configuration
+        default_version_configuration
+        v1_configuration
     )
 
     # Whether one or other signal in test
