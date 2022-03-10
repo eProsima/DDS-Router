@@ -48,17 +48,14 @@ default settings).
 Router configuration
 ====================
 A configuration file is all that is required in order to run a |ddsrouter| instance. In a nutshell, each router will
-only forward messages if their associated topics are contained in its ``allowlist``. A ``blocklist`` can also be
-specified, on its own or in addition to an ``allowlist``, but we will not be covering this here.
+only forward messages if their associated topics match the filters contained in its ``allowlist``. A ``blocklist``
+may also be specified, on its own or in addition to an ``allowlist``, but we will not be covering this here.
 
 Let us first add only the ``Square`` topic:
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
     :lines: 5-8
-
-We must set ``keyed`` to ``true`` as shape topics use their color attribute as key. See
-:ref:`Topic Filtering <user_manual_configuration>` for more details on allowlisting.
 
 Apart from selecting on which topics we wish to send/receive data, we must configure as well the participants that will
 ultimately perform communication. Each router instance will contain a :ref:`simple <user_manual_participants_simple>`
@@ -111,7 +108,9 @@ square shape is now visible in the subscriber's panel.
 |ddsrouter| supports the dynamic addition/deletion of topics at runtime (see
 :ref:`Reload Topics <user_manual_user_interface_reload_topics>`). Let us test this feature by adding the circle topic to
 the allowlist of both routers. Also, by removing the square topic (removing this topic from one of the routers'
-allowlist will suffice) the square data should stop reaching the subscriber.
+allowlist will suffice) the square data should stop reaching the subscriber. Alternatively, the square topic may be
+added to the ``blocklist``,  achieving the same effect. See :ref:`Topic Filtering <topic_filtering>` for more details
+on allowlisting.
 
 .. code-block:: yaml
 

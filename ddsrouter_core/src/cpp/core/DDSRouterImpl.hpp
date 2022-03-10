@@ -56,7 +56,7 @@ public:
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
+     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSRouterImpl(
@@ -140,7 +140,7 @@ protected:
     /**
      * @brief Load allowed topics from configuration
      *
-     * @throw \c ConfigurationException in case the yaml inside allowedlist is not well-formed
+     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
      */
     void init_allowed_topics_();
 

@@ -149,9 +149,9 @@ Reload Topics
 -------------
 
 The topics that the |ddsrouter| is routing could be changed at runtime.
-Including topics in configuration's ``allowedlist`` will create new :term:`Writers <DataWriter>` and
+Including topics in configuration's ``allowlist`` will create new :term:`Writers <DataWriter>` and
 :term:`Readers <DataReader>` for each Participant in the Router.
-Removing a topic from ``allowedlist`` will disable this topic, and so it will stop routing data in such topic.
+Removing a topic from ``allowlist`` will disable this topic, and so it will stop routing data in such topic.
 Be aware that disabling a topic does not eliminate the entities of that topic.
 So, if a topic has been active before, the Writers and Readers will still be present in the |ddsrouter| and will still
 receive data.

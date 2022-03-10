@@ -46,6 +46,8 @@ This is the configuration version that is described along this page.
     **Deprecation Warning**.
     In future releases tag ``version`` will be mandatory.
 
+.. _topic_filtering:
+
 Topic Filtering
 ===============
 
@@ -84,7 +86,7 @@ Each Topic is determined by its entries ``name``, ``type`` and ``keyed``, with o
 
     *   - ``keyed``
         - ``bool``
-        - ``false``
+        - Both ``true`` and ``false``
 
 The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
 or not. See :term:`Topic` section for further information about the topic.
@@ -93,6 +95,11 @@ or not. See :term:`Topic` section for further information about the topic.
 
     Tags ``allowlist``, ``blocklist`` and ``builtin-topics`` must be at yaml base level (it must not be inside any
     other tag).
+
+.. note::
+
+    Placing quotation marks around values in a YAML file is generally optional. However, values containing wildcard
+    characters must be enclosed by single or double quotation marks.
 
 Allow topic list (``allowlist``)
 --------------------------------
@@ -122,6 +129,9 @@ The discovery phase of the network topics can be accelerated by using the builti
 By defining topics in this list, the DDS router will create the DataWriters and DataReaders for these topics without
 waiting for them to be discovered.
 In this way, the initialization phase mentioned above is omitted and the application launching efficiency is improved.
+
+Note that, for every topic contained in this list, both ``name`` and ``type`` must be specified and contain no wildcard
+characters. The entry ``keyed`` is optional, and defaults to ``false``.
 
 Examples of usage
 -----------------
