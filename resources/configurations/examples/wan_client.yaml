@@ -7,35 +7,41 @@
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  - name: "HelloWorldTopic"                                       # 1
-    type: "HelloWorld"                                            # 1
-  - name: "rt/chatter"                                            # 2
-    type: "std_msgs::msg::dds_::String_"
+  - name: HelloWorldTopic                                         # 1
+    type: HelloWorld                                              # 1
+  - name: rt/chatter                                              # 2
+    type: std_msgs::msg::dds_::String_
+
+##################################
+# PARTICIPANTS
+participants:
 
 ##################################
 # SIMPLE PARTICIPANT
 # This participant will subscribe to topics in allowlist in domain 1 and listen every message published there
 
-SimpleParticipant:                                                # 3
-  kind: local                                                     # 4
-  domain: 1                                                       # 5
+  - name: SimpleParticipant                                       # 3
+    kind: local                                                   # 4
+    domain: 1                                                     # 5
 
 ##################################
 # WAN CLIENT
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as SuperClient.
 
-WANClient:                                                        # 6
-  kind: wan                                                       # 7
-  id: 2                                                           # 8
-  connection-addresses:                                           # 9
-    - id: 1                                                       # 10
-      addresses:                                                  # 11
-        - ip: "1.1.1.1"
-          port: 11666
-  listening-addresses:                                            # 12
-    - ip: "2.2.2.2"                                               # 13
-      port: 11670                                                 # 14
-      transport: "udp"                                            # 15
+  - name: WANClient                                               # 6
+    kind: wan                                                     # 7
+    discovery-server-guid:
+      id: 2                                                       # 8
+    connection-addresses:                                         # 9
+      - discovery-server-guid:
+          id: 1                                                   # 10
+        addresses:                                                # 11
+          - ip: 1.1.1.1
+            port: 11666
+    listening-addresses:                                          # 12
+      - ip: 2.2.2.2                                               # 13
+        port: 11670                                               # 14
+        transport: udp                                            # 15
 
 ##################################
 # CONFIGURATION DESCRIPTION

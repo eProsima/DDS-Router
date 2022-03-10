@@ -12,7 +12,7 @@ The following YAML configuration file configures a DDS Router to create a
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 5-28
+    :lines: 5-32
 
 Configuration
 =============
@@ -38,7 +38,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 19-21
+    :lines: 23-25
 
 
 Echo Participant
@@ -48,7 +48,7 @@ This Participant does not require further configuration than name and kind.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 27-28
+    :lines: 31-32
 
 
 Execute example

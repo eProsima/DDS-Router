@@ -24,7 +24,7 @@ Each of the networks to be connected require a running |ddsrouter|, and the mess
 another depending on the topics filtered by each of them.
 
 
-Type aliases
+Kind aliases
 ============
 
 * ``wan``
@@ -65,19 +65,21 @@ Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` trans
 
 .. code-block:: yaml
 
-    wan_participant:             # Participant Id = wan_participant
+    - name: wan_participant                       # Participant Name = wan_participant
 
       kind: wan
 
-      id: 2                                       # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
+      discovery-server-guid:
+        id: 2                                     # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
       listening-addresses:                        # WAN Discovery Server Listening Addresses
-        - ip: "82.0.0.1"                          # Use UDP by default
+        - ip: 82.0.0.1                            # Use UDP by default
           port: 11600
 
       connection-addresses:                       # Another WAN Participant Listening Addresses
-        - id: 4                                   # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+        - discovery-server-guid:
+            id: 4                                 # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
           addresses:
-            - ip: "2001:4860:4860::8888"
+            - ip: 2001:4860:4860::8888
               port: 11666
               transport: udp                      # Use UDP transport

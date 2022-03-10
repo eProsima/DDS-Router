@@ -18,7 +18,7 @@ Use this Participant in order to communicate an internal standard DDS network, s
 in the same LAN.
 
 
-Type aliases
+Kind aliases
 ============
 
 * ``simple``
@@ -38,6 +38,6 @@ Configuration Example
 
 .. code-block:: yaml
 
-    simple_participant:         # Participant Id = simple_participant
+    - name: simple_participant     # Participant Name = simple_participant
       kind: simple
-      domain: 2                 # Domain Id = 2
+      domain: 2                    # Domain Id = 2

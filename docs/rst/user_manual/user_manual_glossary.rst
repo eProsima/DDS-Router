@@ -27,10 +27,10 @@ Participant nomenclature
 
         This term is explained :ref:`here <user_manual_participant_participant>`.
 
-    Participant Id
+    Participant Name
         Unique identifier of a Participant.
 
-        This term is explained :ref:`here <user_manual_participant_participant_id>`.
+        This term is explained :ref:`here <user_manual_participant_participant_name>`.
 
     Participant Kind
         Element that identifies a Participant kind.
