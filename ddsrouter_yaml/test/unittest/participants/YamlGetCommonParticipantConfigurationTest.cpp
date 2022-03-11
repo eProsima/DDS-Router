@@ -51,7 +51,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant)
 
             // Read Yaml
             core::configuration::ParticipantConfiguration result =
-                    YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant");
+                    YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST);
 
             // Check result
             ASSERT_EQ(id, result.id());
@@ -80,7 +80,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
-            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -97,7 +97,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
-            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -114,7 +114,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
-            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 }

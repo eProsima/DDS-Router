@@ -54,7 +54,7 @@ TEST(YamlGetEntityAddressTest, ip_and_domain)
     Yaml yml;
     yml[ADDRESS_TRANSPORT_TAG] = yml_address;
 
-    core::types::Address address = YamlReader::get<core::types::Address>(yml, ADDRESS_TRANSPORT_TAG);
+    core::types::Address address = YamlReader::get<core::types::Address>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
     ASSERT_EQ(address.ip(), ip_value);
 }

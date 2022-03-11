@@ -45,8 +45,7 @@ public:
 
 protected:
 
-    static YamlReaderVersion load_yaml_version(
-            const Yaml& yml);
+    static YamlReaderVersion default_yaml_version();
 };
 
 } /* namespace yaml */

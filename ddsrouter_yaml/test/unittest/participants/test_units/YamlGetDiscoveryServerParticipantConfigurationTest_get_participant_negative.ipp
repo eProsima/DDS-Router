@@ -51,7 +51,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -67,7 +67,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -82,7 +82,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -97,7 +97,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Read Yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 }

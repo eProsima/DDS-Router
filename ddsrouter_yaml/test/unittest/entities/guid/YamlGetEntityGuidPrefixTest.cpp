@@ -51,7 +51,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+        core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
         ASSERT_EQ(gp_result, core::types::GuidPrefix(st));
     }
@@ -75,7 +75,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+        core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
         ASSERT_EQ(gp_result, core::types::GuidPrefix(st));
     }
@@ -86,7 +86,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix"), utils::ConfigurationException);
+        ASSERT_THROW(
+            YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
+            utils::ConfigurationException);
     }
 
     // TODO: this tests requires to modify fastrtps core::types::GuidPrefix >> operator so it returns a non valid guid
@@ -102,7 +104,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
     //     yml["guid_prefix"] = yml_gp;
 
     //     // bool to str in yamlcpp does not cause an error
-    //     core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+    //     core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
     //     ASSERT_FALSE(gp_result.is_valid()) << gp_result;
     // }
@@ -121,7 +123,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
     //     yml["guid_prefix"] = yml_gp;
 
     //     // incorrect guid does not cause an error
-    //     core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+    //     core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
     //     ASSERT_FALSE(gp_result.is_valid());
     // }
@@ -153,7 +155,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
             Yaml yml;
             yml["guid_prefix"] = yml_gp;
 
-            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
             ASSERT_EQ(gp_result, core::types::GuidPrefix(id));
         }
@@ -171,7 +173,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST), utils::ConfigurationException);
     }
 }
 
@@ -208,7 +210,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
             Yaml yml;
             yml["guid_prefix"] = yml_gp;
 
-            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
             ASSERT_EQ(gp_result, core::types::GuidPrefix(true, id));
         }
@@ -235,7 +237,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
             Yaml yml;
             yml["guid_prefix"] = yml_gp;
 
-            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix");
+            core::types::GuidPrefix gp_result = YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST);
 
             ASSERT_EQ(gp_result, core::types::GuidPrefix(false, id));
         }
@@ -258,7 +260,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST), utils::ConfigurationException);
     }
 }
 

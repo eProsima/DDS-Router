@@ -46,7 +46,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     // Load configuration
     core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml);
+            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, LATEST);
 
     // Check is valid
     utils::Formatter error_msg;

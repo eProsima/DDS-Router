@@ -56,7 +56,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 
                 // Read Yaml
                 core::configuration::SimpleParticipantConfiguration result =
-                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant");
+                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST);
 
                 // Check result
                 ASSERT_EQ(id, result.id());
@@ -92,7 +92,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -108,7 +108,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -123,7 +123,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -138,7 +138,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Read Yaml
         ASSERT_THROW(
             core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 }

@@ -84,7 +84,7 @@ Yaml YamlReader::get_value_in_tag(
 template <>
 YamlReaderVersion YamlReader::get<YamlReaderVersion>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     return get_enumeration<YamlReaderVersion>(
         yml,
@@ -101,7 +101,7 @@ YamlReaderVersion YamlReader::get<YamlReaderVersion>(
 template <>
 TransportProtocol YamlReader::get<TransportProtocol>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     return get_enumeration<TransportProtocol>(
         yml,
@@ -114,7 +114,7 @@ TransportProtocol YamlReader::get<TransportProtocol>(
 template <>
 IpVersion YamlReader::get<IpVersion>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     return get_enumeration<IpVersion>(
         yml,
@@ -127,7 +127,7 @@ IpVersion YamlReader::get<IpVersion>(
 template <>
 PortType YamlReader::get<PortType>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Domain id required
     return PortType(get_scalar<PortType>(yml));
@@ -136,7 +136,7 @@ PortType YamlReader::get<PortType>(
 template <>
 IpType YamlReader::get<IpType>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Domain id required
     return IpType(get_scalar<IpType>(yml));
@@ -145,7 +145,7 @@ IpType YamlReader::get<IpType>(
 template <>
 ParticipantId YamlReader::get<ParticipantId>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Participant name required
     return ParticipantId(get_scalar<std::string>(yml));
@@ -154,7 +154,7 @@ ParticipantId YamlReader::get<ParticipantId>(
 template <>
 ParticipantKind YamlReader::get<ParticipantKind>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Participant kind required
     return ParticipantKind::participant_kind_from_name(get_scalar<std::string>(yml));
@@ -163,7 +163,7 @@ ParticipantKind YamlReader::get<ParticipantKind>(
 template <>
 DomainId YamlReader::get<DomainId>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Domain id required
     return DomainId(get_scalar<DomainIdType>(yml));
@@ -172,7 +172,7 @@ DomainId YamlReader::get<DomainId>(
 template <>
 GuidPrefix YamlReader::get<GuidPrefix>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // If guid exists, use it. Non mandatory.
     if (is_tag_present(yml, DISCOVERY_SERVER_GUID_TAG))
@@ -206,7 +206,7 @@ GuidPrefix YamlReader::get<GuidPrefix>(
 template <>
 Address YamlReader::get<Address>(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // Optional get IP version
     IpVersion ip_version;
@@ -299,7 +299,7 @@ Address YamlReader::get<Address>(
 
 DiscoveryServerConnectionAddress _get_discovery_server_connection_address_v1(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // GuidPrefix required
     GuidPrefix server_guid = YamlReader::get<GuidPrefix>(yml, version);
@@ -313,7 +313,7 @@ DiscoveryServerConnectionAddress _get_discovery_server_connection_address_v1(
 
 DiscoveryServerConnectionAddress _get_discovery_server_connection_address_latest(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // GuidPrefix required
     GuidPrefix server_guid = YamlReader::get<GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
@@ -343,7 +343,7 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
 template <>
 RealTopic YamlReader::get<RealTopic>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -373,7 +373,7 @@ RealTopic YamlReader::get<RealTopic>(
 template <>
 WildcardTopic YamlReader::get<WildcardTopic>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Mandatory name
     std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
@@ -422,7 +422,7 @@ WildcardTopic YamlReader::get<WildcardTopic>(
 template <>
 std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<security::TlsConfiguration>>(
         const Yaml& yml,
-        const YamlReaderVersion /* Not Specialization */)
+        const YamlReaderVersion /* version */)
 {
     // Optional private key
     std::string private_key_file;
@@ -508,7 +508,7 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
 template <>
 configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // Id required
     types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
@@ -522,7 +522,7 @@ configuration::ParticipantConfiguration YamlReader::get<configuration::Participa
 template <>
 configuration::SimpleParticipantConfiguration YamlReader::get<configuration::SimpleParticipantConfiguration>(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // Id required
     types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
@@ -744,7 +744,7 @@ template <>
 std::shared_ptr<core::configuration::ParticipantConfiguration>
 YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
         const Yaml& yml,
-        const YamlReaderVersion version /* Not Specialization */)
+        const YamlReaderVersion version)
 {
     // Kind required
     types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);

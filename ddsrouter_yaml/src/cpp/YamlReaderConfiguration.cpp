@@ -50,9 +50,10 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         }
         else
         {
-            version = V_1_0;
+            // Get default version
+            version = default_yaml_version();
             logWarning(DDSROUTER_YAML,
-                "No version of yaml configuration given, using version " << version << " by default. " <<
+                "No version of yaml configuration given. Using version " << version << " by default. " <<
                 "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
                 "in future releases.");
         }
@@ -90,6 +91,11 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
     }
 
     return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+}
+
+YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
+{
+    return V_1_0;
 }
 
 } /* namespace yaml */

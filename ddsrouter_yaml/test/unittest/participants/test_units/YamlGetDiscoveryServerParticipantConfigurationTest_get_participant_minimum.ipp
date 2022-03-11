@@ -55,8 +55,10 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
 
                 // Read Yaml
                 core::configuration::DiscoveryServerParticipantConfiguration result =
-                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml,
-                                "participant");
+                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(
+                            yml,
+                            "participant",
+                            LATEST);
 
                 // Check result
                 ASSERT_EQ(id, result.id());
