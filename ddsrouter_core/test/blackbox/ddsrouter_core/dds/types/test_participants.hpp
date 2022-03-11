@@ -130,7 +130,7 @@ public:
 
         // CREATE THE TOPIC
         std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
-        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic("DDS-Router-Test", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -257,7 +257,7 @@ public:
 
         // CREATE THE TOPIC
         std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
-        topic_ = participant_->create_topic("HelloWorldTopic", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic("DDS-Router-Test", type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
