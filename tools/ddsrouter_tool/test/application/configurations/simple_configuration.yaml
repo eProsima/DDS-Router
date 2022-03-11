@@ -1,0 +1,22 @@
+
+# 1 Echo Participant
+# 1 Simple Participant in domain 0
+# 2 topics, one with key and one without
+
+version: v2.0
+
+builtin:
+  - name: "rt/chatter"
+    type: "std_msgs::msg::dds_::String_"
+  - name: "rt/chatter/key"
+    type: "std_msgs::msg::dds_::String_"
+    keyed: true
+
+participants:
+
+  - name: echo
+    kind: echo
+
+  - name: simple
+    kind: simple
+    domain: 0

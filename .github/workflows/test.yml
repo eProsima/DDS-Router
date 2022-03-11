@@ -47,16 +47,70 @@ jobs:
         with:
           cmake_build_type: "Release"
 
-      - name: Install DDS Router
-        shell: pwsh
-        run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-            -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
-          cmake --build build\ddsrouter --config Release --target install
+      - name: Install ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_utils
+          subpackage_dir: ddsrouter_utils
 
-      - name: Run tests
-        shell: pwsh
-        run: ctest -C Release --test-dir build\ddsrouter -V --timeout 60 --label-exclude xfail
+      - name: Install ddsrouter_event
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_event
+          subpackage_dir: ddsrouter_event
+
+      - name: Install ddsrouter_core
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_core
+          subpackage_dir: ddsrouter_core
+
+      - name: Install ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_yaml
+          subpackage_dir: ddsrouter_yaml
+
+      - name: Install ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_tool
+          subpackage_dir: tools/ddsrouter_tool
+
+      - name: Run tests ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_utils
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_event
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_event
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_core
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_core
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_yaml
+          cmake_build_type: "Release"
+
+      - name: Run tests ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_tool
+          cmake_build_type: "Release"
 
   windows-build-test-debug:
     runs-on: windows-latest
@@ -98,16 +152,70 @@ jobs:
         with:
           cmake_build_type: "Debug"
 
-      - name: Install DDS Router
-        shell: pwsh
-        run: >
-          cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
-          -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\ddsrouter -A x64 -T host=x64 DDS-Router;
-          cmake --build build\ddsrouter --config Debug --target install
+      - name: Install ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_utils
+          subpackage_dir: ddsrouter_utils
 
-      - name: Run tests
-        shell: pwsh
-        run: ctest -C Debug --test-dir build\ddsrouter -V --timeout 60 --label-exclude xfail
+      - name: Install ddsrouter_event
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_event
+          subpackage_dir: ddsrouter_event
+
+      - name: Install ddsrouter_core
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_core
+          subpackage_dir: ddsrouter_core
+
+      - name: Install ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_yaml
+          subpackage_dir: ddsrouter_yaml
+
+      - name: Install ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_tool
+          subpackage_dir: tools/ddsrouter_tool
+
+      - name: Run tests ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_utils
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_event
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_event
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_core
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_core
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_yaml
+          cmake_build_type: "Debug"
+
+      - name: Run tests ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_tool
+          cmake_build_type: "Debug"
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
@@ -147,21 +255,37 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
-      - name: Run tests
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
+      - name: Run tests ddsrouter_utils
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_utils
+
+      - name: Run tests ddsrouter_event
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_event
+
+      - name: Run tests ddsrouter_core
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_core
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_yaml
+
+      - name: Run tests ddsrouter_tool
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_tool
 
       - name: Generate coverage report
         run: |
           cp src/DDS-Router/codecov.yml .
           mkdir coverage-report
+          mkdir build/ddsrouter
+          cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
           --root src/DDS-Router/ \
           --object-directory build/ddsrouter \
@@ -170,6 +294,8 @@ jobs:
           --exclude='.*docs/.*' \
           --exclude='.*test/.*' \
           --exclude='.*github/.*' \
+          --exclude='.*common/.*' \
+          --exclude='.*dev/.*' \
           --exclude='.*thirdparty/.*' \
           --exclude='.*resources/.*' \
           --exclude-unreachable-branches
@@ -192,13 +318,13 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: Documentation HTML
-          path: install/ddsrouter/docs/ddsrouter_docs/sphinx/html/
+          path: install/ddsrouter_docs/docs/ddsrouter_docs/sphinx/html/
 
       - name: Upload spelling errors
         uses: actions/upload-artifact@v1
         with:
           name: spelling_errors.txt
-          path: build/ddsrouter/docs/test/spelling/output.txt
+          path: build/ddsrouter_docs/docs/test/spelling/output.txt
         continue-on-error: true
 
       - name: Upload Logs
@@ -250,7 +376,7 @@ jobs:
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select ddsrouter \
+            --packages-select-regex ddsrouter \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
@@ -286,6 +412,8 @@ jobs:
 
       - name: Run clang-tidy
         run: |
+          mkdir build/ddsrouter
+          cp --recursive build/ddsrouter_* build/ddsrouter
           cd build/ddsrouter
           run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
 

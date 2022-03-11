@@ -1,0 +1,16 @@
+name: Run DDS Router subpackage tests in windows
+description: Run DDS Router tests in windows for a specific package
+inputs:
+  package_name:
+    description: 'Specifies the package build name to run the tests'
+    required: true
+  cmake_build_type:
+    description: 'Specifies the build type on single-configuration generators'
+    required: true
+    default: 'Release'
+runs:
+  using: composite
+  steps:
+  - run: >
+      ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail
+    shell: pwsh

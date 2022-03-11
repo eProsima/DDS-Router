@@ -1,23 +1,29 @@
 # local-ddsrouter.yaml
 
+version: v2.0
+
 allowlist:
-  - name: "rt/chatter"
-    type: "std_msgs::msg::dds_::String_"
+  - name: rt/chatter
+    type: std_msgs::msg::dds_::String_
 
-SimpleParticipant:
-  type: local
-  domain: 0
+participants:
 
-LocalWAN:
-  type: wan
-  id: 3
-  listening-addresses:  # Needed for UDP communication
-    - ip: "3.3.3.3"  # LAN public IP
-      port: 30003
-      transport: "udp"
-  connection-addresses:
-    - id: 2
-      addresses:
-        - ip: "2.2.2.2"  # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
-          port: 30002
-          transport: "udp"
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: LocalWAN
+    kind: wan
+    discovery-server-guid:
+      id: 3
+    listening-addresses:      # Needed for UDP communication
+      - ip: 3.3.3.3           # LAN public IP
+        port: 30003
+        transport: udp
+    connection-addresses:
+      - discovery-server-guid:
+          id: 2
+        addresses:
+          - ip: 2.2.2.2       # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
+            port: 30002
+            transport: udp

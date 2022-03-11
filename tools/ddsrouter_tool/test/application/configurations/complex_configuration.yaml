@@ -1,0 +1,45 @@
+
+# 1 Echo Participant
+# 2 Simple Participants in domains 0 and 1
+# 1 Local Discovery Server Participant with listening address
+# 1 WAN Participant with connection address
+# 2 topics, one with key and one without
+
+version: v2.0
+
+builtin:
+  - name: "rt/chatter"
+    type: "std_msgs::msg::dds_::String_"
+  - name: "rt/chatter/key"
+    type: "std_msgs::msg::dds_::String_"
+    keyed: true
+
+participants:
+
+  - name: simple_0
+    kind: simple
+    domain: 0
+
+  - name: simple_1
+    kind: simple
+    domain: 1
+
+  - name: local-ds
+    kind: local-discovery-server
+    discovery-server-guid:
+      id: 0
+    listening-addresses:
+      - ip: "127.0.0.1"
+        port: 11666
+
+  - name: wan
+    kind: wan
+    discovery-server-guid:
+      id: 1
+    connection-addresses:
+      - discovery-server-guid:
+          id: 2
+        addresses:
+        - ip: "127.0.0.1"
+          port: 11667
+          transport: tcp

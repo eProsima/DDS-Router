@@ -1,0 +1,22 @@
+name: Install DDS Router subpackages
+description: Install and setup DDS Router subpackages for linking and building application in Windows
+inputs:
+  cmake_build_type:
+    description: 'Specifies the build type on single-configuration generators'
+    required: true
+    default: 'Release'
+  subpackage:
+    description: 'Specifies the name of the subpackage to install'
+    required: true
+  subpackage_dir:
+    description: 'Specifies the path of the subpackage to install'
+    required: true
+runs:
+  using: composite
+  steps:
+  - run: >
+      cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
+        -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\${{ inputs.subpackage }} -A x64 -T host=x64 DDS-Router/${{ inputs.subpackage_dir }};
+      cmake --build build\${{ inputs.subpackage }} --config ${{ inputs.cmake_build_type }} --target install;
+
+    shell: pwsh

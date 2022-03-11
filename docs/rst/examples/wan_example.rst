@@ -12,7 +12,7 @@ In the following snippet we see a yaml file to configure a DDS Router to create 
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 5-33
+    :lines: 5-42
 
 Configuration
 =============
@@ -28,23 +28,23 @@ one domain to the other, allowing different DDS domains to interact to each othe
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 9-13
+    :lines: 13-17
 
 
 Simple Participant
 ------------------
 
-This Participant is configured by a name, a type and the Domain Id, in this case ``0``.
+This Participant is configured by a name, a kind and the Domain Id, in this case ``0``.
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 19-21
+    :lines: 27-29
 
 
 WAN Participant Server
 ----------------------
 
-This Participant is configured with a name, a type and the listening addresses where
+This Participant is configured with a name, a kind and the listening addresses where
 it will expect data from other remote WAN Participant Clients.
 This Participant act as a Server only to receive the discovery data from other WAN Participants.
 Once the connection has been established, the communication will be symmetrical (except in TCP case, in which case
@@ -52,7 +52,7 @@ this Participant will work as TCP Server).
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 27-33
+    :lines: 35-42
 
 WAN Participant Client
 ----------------------
@@ -62,7 +62,7 @@ In order to create a WAN Participant Client, check the configuration file
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
-    :lines: 27-38
+    :lines: 35-48
 
 
 Execute example
@@ -116,7 +116,7 @@ After executing both |ddsrouter| applications in both hosts, and *talker* and *l
 the *listener* in *H*:sub:`A` will start receiving and printing data from the *talker* in *H*:sub:`B`.
 **You are communicating DDS via WAN**.
 
-Remember that the Participants in every |ddsrouter| could be configured as any :term:`Participant Type`,
+Remember that the Participants in every |ddsrouter| could be configured as any :term:`Participant Kind`,
 allowing to use local Discovery Server, connect to several domains in the same LAN, connect to several WANs, etc.
 Endless Possibilities.
 Just remember uncle Ben's words: *with great power comes great responsibility*.

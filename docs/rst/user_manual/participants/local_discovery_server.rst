@@ -6,7 +6,7 @@
 Local Discovery Server Participant
 ##################################
 
-This type of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant`.
+This kind of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant`.
 This Participant will work as discovery broker for those Participants that connect to it (clients or servers).
 It could also connect to one or multiple Discovery Servers to create a Discovery Server Network.
 
@@ -19,7 +19,7 @@ This is highly useful in networks that do not support multicast communication;
 or to reduce the number of meta-traffic packets exchanged in discovery,
 reducing the network traffic in the discovery process.
 
-Type aliases
+Kind aliases
 ============
 
 * ``discovery-server``
@@ -57,22 +57,24 @@ Discovery Server GuidPrefix.
 
 .. code-block:: yaml
 
-    local_discovery_server_participant:           # Participant Id = local_discovery_server_participant
+    - name: local_discovery_server_participant        # Participant Name = local_discovery_server_participant
 
-      type: "discovery-server"
+      kind: discovery-server
 
-      id: 2
-      ros-discovery-server: true                  # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41
+      discovery-server-guid:
+        id: 2
+        ros-discovery-server: true                    # ROS Discovery Server id => GuidPrefix = 44.53.02.5f.45.50.52.4f.53.49.4d.41
 
-      listening-addresses:                        # Local Discovery Server Listening Addresses
-        - ip: "127.0.0.1"                         # Use UDP by default
+      listening-addresses:                            # Local Discovery Server Listening Addresses
+        - ip: 127.0.0.1                               # Use UDP by default
           port: 11600
-        - ip: "127.0.0.1"
+        - ip: 127.0.0.1
           port: 11601
-          transport: "tcp"                        # Use TCP transport
+          transport: tcp                              # Use TCP transport
 
-      connection-addresses:                       # External Discovery Server Listening Addresses
-        - id: 4                                   # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+      connection-addresses:                           # External Discovery Server Listening Addresses
+        - discovery-server-guid:
+            id: 4                                     # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
           addresses:
-            - ip: "2001:4860:4860::8888"          # Use UDP by default
+            - ip: 2001:4860:4860::8888                # Use UDP by default
               port: 11666

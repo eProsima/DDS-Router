@@ -1,0 +1,76 @@
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef _EPROSIMA_LIBRARY_@SUBMODULE_PROJECT_MACROS@DLL_H_
+#define _EPROSIMA_LIBRARY_@SUBMODULE_PROJECT_MACROS@DLL_H_
+
+#include <@PROJECT_NAME@/library/config.h>
+
+// normalize macros
+#if !defined(@SUBMODULE_PROJECT_MACROS@_DYN_LINK) && !defined(@SUBMODULE_PROJECT_MACROS@_STATIC_LINK) \
+    && !defined(EPROSIMA_ALL_DYN_LINK) && !defined(EPROSIMA_ALL_STATIC_LINK)
+#define @SUBMODULE_PROJECT_MACROS@_STATIC_LINK
+#endif // STATIC LINK CHECKS
+
+#if defined(EPROSIMA_ALL_DYN_LINK) && !defined(@SUBMODULE_PROJECT_MACROS@_DYN_LINK)
+#define @SUBMODULE_PROJECT_MACROS@_DYN_LINK
+#endif // DYNAMIC LINK CHECKS
+
+#if defined(@SUBMODULE_PROJECT_MACROS@_DYN_LINK) && defined(@SUBMODULE_PROJECT_MACROS@_STATIC_LINK)
+#error Must not define both @SUBMODULE_PROJECT_MACROS@_DYN_LINK and @SUBMODULE_PROJECT_MACROS@_STATIC_LINK
+#endif // DYNAMIC AND STATIC SANITY CHECK
+
+#if defined(EPROSIMA_ALL_NO_LIB) && !defined(@SUBMODULE_PROJECT_MACROS@_NO_LIB)
+#define @SUBMODULE_PROJECT_MACROS@_NO_LIB
+#endif // NO_LIB CHECK
+
+// enable dynamic linking
+
+#if defined(_WIN32)
+#if defined(EPROSIMA_ALL_DYN_LINK) || defined(@SUBMODULE_PROJECT_MACROS@_DYN_LINK)
+#if defined(@SUBMODULE_PROJECT_MACROS@_SOURCE)
+#define @SUBMODULE_PROJECT_MACROS@_DllAPI __declspec( dllexport )
+#else
+#define @SUBMODULE_PROJECT_MACROS@_DllAPI __declspec( dllimport )
+#endif // @SUBMODULE_PROJECT_MACROS@_SOURCE
+#else
+#define @SUBMODULE_PROJECT_MACROS@_DllAPI
+#endif // DYNAMIC LINK
+#else
+#define @SUBMODULE_PROJECT_MACROS@_DllAPI
+#endif // _WIN32
+
+// enabling user dynamic linking
+#if defined(_WIN32) && defined(@SUBMODULE_PROJECT_MACROS@_USER_DLL_EXPORT)
+  #define @SUBMODULE_PROJECT_MACROS@_USERDllExport __declspec(dllexport)
+#else
+  #define @SUBMODULE_PROJECT_MACROS@_USERDllExport
+#endif // USER_DLL_EXPORT
+
+// Auto linking.
+
+#if !defined(@SUBMODULE_PROJECT_MACROS@_SOURCE) && !defined(EPROSIMA_ALL_NO_LIB) \
+    && !defined(@SUBMODULE_PROJECT_MACROS@_NO_LIB)
+
+// Set properties.
+#define EPROSIMA_@SUBMODULE_PROJECT_MACROS@_LIB_NAME @SUBMODULE_PROJECT_NAME@
+
+#if defined(EPROSIMA_ALL_DYN_LINK) || defined(@SUBMODULE_PROJECT_MACROS@_DYN_LINK)
+#define EPROSIMA_DYN_LINK
+#endif // DYNAMIC LINK
+
+#include "eProsima_auto_link.h"
+#endif // auto-linking disabled
+
+#endif // _EPROSIMA_LIBRARY_@SUBMODULE_PROJECT_MACROS@DLL_H_
