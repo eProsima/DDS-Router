@@ -82,7 +82,10 @@ public:
             const types::Guid& guid) const noexcept;
 
     /**
-     * @brief Add insert operation to the queue \c entities_to_process_
+     * @brief Insert endpoint to the database
+     *
+     * This method stores an insert operation in an internal queue, being this operation then performed by a
+     * dedicated thread.
      *
      * @param [in] new_endpoint: new endpoint to store
      */
@@ -90,7 +93,10 @@ public:
             const types::Endpoint& new_endpoint) noexcept;
 
     /**
-     * @brief Add update operation to the queue \c entities_to_process_
+     * @brief Add update operation to the database
+     *
+     * This method stores an update operation in an internal queue, being this operation then performed by a
+     * dedicated thread.
      *
      * @param [in] endpoint_to_update: endpoint to update
      */
@@ -98,7 +104,10 @@ public:
             const types::Endpoint& endpoint_to_update) noexcept;
 
     /**
-     * @brief Add erase operation to the queue \c entities_to_process_
+     * @brief Add erase operation to the database
+     *
+     * This method stores an erase operation in an internal queue, being this operation then performed by a
+     * dedicated thread.
      *
      * @param [in] endpoint_to_erase endpoint that will be erased
      */
@@ -122,6 +131,8 @@ public:
      */
     void add_endpoint_discovered_callback(
             std::function<void(types::Endpoint)> endpoint_discovered_callback) noexcept;
+
+    // TODO add methods to register updated_endpoint and erased_endpoint callbacks
 
 protected:
 

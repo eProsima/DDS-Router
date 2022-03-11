@@ -156,8 +156,9 @@ configuration::DDSRouterConfiguration router_configuration(
     // One topic
     std::set<std::shared_ptr<types::FilterTopic>> allowlist(
                     {
-                        std::make_shared<types::WildcardTopic>("DDS-Router-Test", "HelloWorld"),
+                        std::make_shared<types::WildcardTopic>(TOPIC_NAME, "HelloWorld"),
                     });
+
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
