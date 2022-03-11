@@ -54,9 +54,10 @@ Topic Filtering
 |ddsrouter| allows filtering of DDS :term:`Topics<Topic>`, that is, it allows to define which DDS Topics are going to be
 relayed by the application.
 This way, it is possible to define a set of rules in |ddsrouter| to filter those data samples the user does not wish to
-forward. It is not mandatory to define such set of rules in the configuration file.
-In this case, a DDS Router will forward all the data published under the topics that it automatically discovers within
-the DDS network to which it connects.
+forward.
+
+It is not mandatory to define such set of rules in the configuration file. In this case, a DDS Router will forward all
+the data published under the topics that it automatically discovers within the DDS network to which it connects.
 
 To define these data filtering rules based on the Topics to which they belong, three lists are available:
 
@@ -149,19 +150,17 @@ Dynamic topic discovery example
 This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2
 topic for ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
 topics in the DDS network are expected to be dynamically discovered.
-Additionally, a rule is defined to block all topics of type ``HelloWorld``.
+Additionally, two rules are specified in the ``blocklist`` in order to filter out messages of no interest to the user.
 
 .. code-block:: yaml
 
     builtin-topics:
       - name: rt/chatter
         type: std_msgs::msg::dds_::String_
-      - name: "rq/*"
-      - name: "rr/*"
 
     blocklist:
-      - name: "*"
-        type: HelloWorld
+      - name: "rq/*"
+      - name: "rr/*"
 
     builtin-topics:
       - name: rt/chatter
