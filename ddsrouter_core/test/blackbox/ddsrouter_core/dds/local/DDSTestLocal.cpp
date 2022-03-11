@@ -20,6 +20,7 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
+#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
 #include <test_participants.hpp>
@@ -36,22 +37,21 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 /**
  * @brief Create a simple configuration for a DDS Router
  *
- * Create a configuration with 2 topics, one with key and other without
+ * Create a configuration with 1 topic in its allowlist, forwarding data for all topics with name "DDS-Router-Test"
+ * and any possible type (such as HelloWorld and HelloWorldKeyed) both with and without key.
  * Create 2 simple participants with domains 0 and 1
  *
  * @return configuration::DDSRouterConfiguration
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration()
 {
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
-
-    // Two topics, one keyed and other not
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics(
+    // One topic name, all topic types, both keyed and not
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist(
                     {
-                        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorld"),
-                        std::make_shared<types::RealTopic>("HelloWorldTopic", "HelloWorldKeyed", true),
+                        std::make_shared<types::WildcardTopic>("DDS-Router-Test"),
                     });
+    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
 
     // Two simple participants
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(

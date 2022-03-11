@@ -82,7 +82,7 @@ public:
             const types::Guid& guid) const noexcept;
 
     /**
-     * @brief Add a new endpoint to the database.
+     * @brief Add insert operation to the queue \c entities_to_process_
      *
      * @param [in] new_endpoint: new endpoint to store
      */
@@ -90,15 +90,15 @@ public:
             const types::Endpoint& new_endpoint) noexcept;
 
     /**
-     * @brief Update an entry of the database by replacing the stored endpoint by a new one.
+     * @brief Add update operation to the queue \c entities_to_process_
      *
-     * @param [in] new_endpoint: new endpoint to store
+     * @param [in] endpoint_to_update: endpoint to update
      */
     void update_endpoint(
-            const types::Endpoint& new_endpoint) noexcept;
+            const types::Endpoint& endpoint_to_update) noexcept;
 
     /**
-     * @brief Erase an endpoint inside the database
+     * @brief Add erase operation to the queue \c entities_to_process_
      *
      * @param [in] endpoint_to_erase endpoint that will be erased
      */
@@ -138,12 +138,12 @@ protected:
     /**
      * @brief Update an entry of the database by replacing the stored endpoint by a new one.
      *
-     * @param [in] new_endpoint: new endpoint to store
+     * @param [in] endpoint_to_update: endpoint to update
      * @return true if the endpoint has been updated
      * @throw \c InconsistencyException in case there is no entry associated to this endpoint
      */
     bool update_endpoint_(
-            const types::Endpoint& new_endpoint);
+            const types::Endpoint& endpoint_to_update);
 
     /**
      * @brief Erase an endpoint inside the database
@@ -175,8 +175,14 @@ protected:
     //! Mutex to guard queries to the database
     mutable std::shared_timed_mutex mutex_;
 
-    //! Vector of callbacks to be called when an Endpoint is discovered
-    std::vector<std::function<void(types::Endpoint)>> discovered_endpoint_callbacks_;
+    //! Vector of callbacks to be called when an Endpoint is added
+    std::vector<std::function<void(types::Endpoint)>> added_endpoint_callbacks_;
+
+    //! Vector of callbacks to be called when an Endpoint is updated
+    std::vector<std::function<void(types::Endpoint)>> updated_endpoint_callbacks_;
+
+    //! Vector of callbacks to be called when an Endpoint is erased
+    std::vector<std::function<void(types::Endpoint)>> erased_endpoint_callbacks_;
 
     //! Queue storing database operations to be performed in a dedicated thread
     fastrtps::DBQueue<std::tuple<DatabaseOperation, types::Endpoint>> entities_to_process_;

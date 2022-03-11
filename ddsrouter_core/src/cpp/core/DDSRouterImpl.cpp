@@ -57,16 +57,16 @@ DDSRouterImpl::DDSRouterImpl(
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
 
+    // Add callback to be called by the discovery database when an Endpoint is discovered
+    discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
+            std::placeholders::_1));
+
     // Init topic allowed
     init_allowed_topics_();
     // Load Participants
     init_participants_();
     // Create Bridges
     init_bridges_();
-
-    // Add callback to be called by the discovery database when an Endpoint is discovered
-    discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
-            std::placeholders::_1));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
@@ -348,7 +348,7 @@ void DDSRouterImpl::discovered_topic_(
 void DDSRouterImpl::discovered_endpoint_(
         const Endpoint& endpoint) noexcept
 {
-    logInfo(DDSROUTER, "Discovered endpoint: " << endpoint << ".");
+    logDebug(DDSROUTER, "Discovered endpoint: " << endpoint << ".");
 
     discovered_topic_(endpoint.topic());
 }
