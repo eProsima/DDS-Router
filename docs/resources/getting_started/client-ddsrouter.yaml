@@ -4,7 +4,6 @@ version: v2.0
 
 allowlist:
   - name: Square
-    type: ShapeType
 
 participants:
 

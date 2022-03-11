@@ -6,7 +6,7 @@
 User Interface
 ##############
 
-|eddsrouter| is an user application executed from command line and configured through a YAML configuration file.
+|eddsrouter| is a user application executed from command line and configured through a YAML configuration file.
 
 .. contents::
     :local:

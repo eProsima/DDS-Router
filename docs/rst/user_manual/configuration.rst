@@ -106,6 +106,10 @@ Allow topic list (``allowlist``)
 This is the list of topics that |ddsrouter| will forward, i.e. the data published under the topics matching the
 expressions in the ``allowlist`` will be relayed by |ddsrouter|.
 
+.. note::
+
+    If no ``allowlist`` is provided, data will be forwarded for all topics (unless filtered out in ``blocklist``).
+
 
 Block topic list (``blocklist``)
 --------------------------------
@@ -152,8 +156,8 @@ Additionally, a rule is defined to block all topics of type ``HelloWorld``.
     builtin-topics:
       - name: rt/chatter
         type: std_msgs::msg::dds_::String_
-      - name: HelloWorldTopic
-        type: HelloWorld
+      - name: "rq/*"
+      - name: "rr/*"
 
     blocklist:
       - name: "*"
