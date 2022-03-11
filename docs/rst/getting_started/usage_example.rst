@@ -55,7 +55,7 @@ Let us first add only the ``Square`` topic:
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
-    :lines: 3-6
+    :lines: 5-8
 
 We must set ``keyed`` to ``true`` as shape topics use their color attribute as key. See
 :ref:`Topic Filtering <user_manual_configuration>` for more details on allowlisting.
@@ -72,7 +72,7 @@ The only configuration required for simple participants is the DDS ``domain`` id
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
-    :lines: 11-13
+    :lines: 12-14
 
 If launching the two routers in the same LAN, set a different ``domain`` id in one of the two configuration files (same
 as the one previously set for ShapesDemo).

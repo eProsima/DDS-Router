@@ -61,7 +61,7 @@ TEST(YamlGetEntityAddressTest, get_address_ip)
             yml["address"] = yml_address;
 
             // Get core::types::Address from Yaml
-            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address");
+            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
 
             // Check result
             ASSERT_EQ(core::types::IpVersion::IPv4, result.ip_version());
@@ -97,7 +97,7 @@ TEST(YamlGetEntityAddressTest, get_address_ip)
             yml["address"] = yml_address;
 
             // Get core::types::Address from Yaml
-            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address");
+            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
 
             // Check result
             ASSERT_EQ(core::types::IpVersion::IPv6, result.ip_version());

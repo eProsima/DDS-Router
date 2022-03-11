@@ -19,10 +19,11 @@
 set(TEST_NAME YamlGetEntityTopicTest)
 
 set(TEST_SOURCES
+        YamlGetEntityTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
-        YamlGetEntityTopicTest.cpp
     )
 
 set(TEST_LIST

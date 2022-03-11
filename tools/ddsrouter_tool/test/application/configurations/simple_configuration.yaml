@@ -3,6 +3,8 @@
 # 1 Simple Participant in domain 0
 # 2 topics, one with key and one without
 
+version: v2.0
+
 builtin:
   - name: "rt/chatter"
     type: "std_msgs::msg::dds_::String_"

@@ -1,6 +1,8 @@
 
 # 2 Void Participants
 
+version: v2.0
+
 participants:
 
   - name: void0

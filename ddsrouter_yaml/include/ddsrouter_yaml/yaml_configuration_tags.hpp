@@ -31,6 +31,15 @@ namespace yaml {
 //! Retrieve a set with every tag used in the configuration of the DDSRouter or the Participants
 std::set<std::string> ddsrouter_tags() noexcept;
 
+//! Whether a string is a tag / key word
+bool is_tag(
+        const std::string& str) noexcept;
+
+// Yaml related tags
+constexpr const char* VERSION_TAG("version");       //! Version to parse the yaml with
+constexpr const char* VERSION_TAG_V_1_0("v1.0");    //! Version v1.0
+constexpr const char* VERSION_TAG_V_2_0("v2.0");    //! Version v2.0
+
 // Topics related tags
 constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
 constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics
@@ -78,6 +87,9 @@ constexpr const char* ADDRESS_TRANSPORT_TCP_TAG("tcp"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_GUID_TAG("guid"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO: add comment
+
+// Old versions tags
+constexpr const char* PARTICIPANT_KIND_TAG_V1("type"); //! Participant Kind
 
 } /* namespace yaml */
 } /* namespace ddsrouter */

@@ -37,102 +37,38 @@ namespace yaml {
 using namespace eprosima::ddsrouter::core;
 
 core::configuration::DDSRouterConfiguration
-YamlReaderConfiguration::get_ddsrouter_configuration(
+YamlReaderConfiguration::load_ddsrouter_configuration(
         const Yaml& yml)
 {
     try
     {
-        /////
-        // Get optional allowlist
-        std::set<std::shared_ptr<types::FilterTopic>> allowlist;
-        if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
+        YamlReaderVersion version;
+        // Get version if present
+        if (is_tag_present(yml, VERSION_TAG))
         {
-            allowlist = utils::convert_set_to_shared<types::FilterTopic>(
-                YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG));
+            version = get<YamlReaderVersion>(yml, VERSION_TAG, LATEST);
         }
-
-        /////
-        // Get optional blocklist
-        std::set<std::shared_ptr<types::FilterTopic>> blocklist;
-        if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
+        else
         {
-            blocklist = utils::convert_set_to_shared<types::FilterTopic>(
-                YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG));
+            // Get default version
+            version = default_yaml_version();
+            logWarning(DDSROUTER_YAML,
+                    "No version of yaml configuration given. Using version " << version << " by default. " <<
+                    "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
+                    "in future releases.");
         }
+        logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
-        /////
-        // Get optional builtin topics
-        std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
-        if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
-        {
-            builtin_topics = utils::convert_set_to_shared<types::RealTopic>(
-                YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG));
-        }
+        // Load DDS Router Configuration
+        core::configuration::DDSRouterConfiguration router_configuration =
+                yaml::YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, version);
 
-        /////
-        // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
-        std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
-        auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
-
-        // Check it is a list
-        if (!participants_configurations_yml.IsSequence())
-        {
-            throw utils::ConfigurationException(
-                      utils::Formatter() <<
-                          "Participant configurations must be specified in an array under tag: " <<
-                          COLLECTION_PARTICIPANTS_TAG);
-        }
-
-        for (auto conf : participants_configurations_yml)
-        {
-            participants_configurations.insert(participants_yaml_factory_(conf));
-        }
-
-        /////
-        // Construct object
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations);
+        return router_configuration;
     }
     catch (const std::exception& e)
     {
         throw utils::ConfigurationException(
-                  utils::Formatter() << "Error loading DDS Router configuration:\n " << e.what());
-    }
-}
-
-std::shared_ptr<core::configuration::ParticipantConfiguration>
-YamlReaderConfiguration::participants_yaml_factory_(
-        const Yaml& yml)
-{
-    // Kind required
-    types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG);
-
-    logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
-
-    switch (kind())
-    {
-        case types::ParticipantKind::VOID:
-        case types::ParticipantKind::ECHO:
-        case types::ParticipantKind::DUMMY:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(
-                YamlReader::get<core::configuration::ParticipantConfiguration>(yml));
-
-        case types::ParticipantKind::SIMPLE_RTPS:
-            return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
-                YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml));
-
-        case types::ParticipantKind::LOCAL_DISCOVERY_SERVER:
-        case types::ParticipantKind::WAN:
-            return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml));
-
-        default:
-            throw utils::ConfigurationException(
-                      utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
-            break;
+                  utils::Formatter() << "Error loading DDS Router configuration from yaml:\n " << e.what());
     }
 }
 
@@ -140,15 +76,12 @@ core::configuration::DDSRouterConfiguration
 YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
         const std::string& file_path)
 {
+    yaml::Yaml yml;
+
+    // Load file
     try
     {
-        yaml::Yaml yml = yaml::YamlManager::load_file(file_path);
-
-        // Load DDS Router Configuration
-        core::configuration::DDSRouterConfiguration router_configuration =
-                yaml::YamlReaderConfiguration::get_ddsrouter_configuration(yml);
-
-        return router_configuration;
+        yml = yaml::YamlManager::load_file(file_path);
     }
     catch (const std::exception& e)
     {
@@ -156,6 +89,13 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
                   utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
                       "> :\n " << e.what());
     }
+
+    return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+}
+
+YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
+{
+    return V_1_0;
 }
 
 } /* namespace yaml */

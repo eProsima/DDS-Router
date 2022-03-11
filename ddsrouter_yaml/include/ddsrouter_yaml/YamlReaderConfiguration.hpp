@@ -33,11 +33,11 @@ namespace yaml {
  *
  * TODO: Add version configuration so it could load different versions
  */
-class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : public YamlReader
+class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : protected YamlReader
 {
 public:
 
-    static core::configuration::DDSRouterConfiguration get_ddsrouter_configuration(
+    static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration(
             const Yaml& yml);
 
     static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration_from_file(
@@ -45,9 +45,7 @@ public:
 
 protected:
 
-    static std::shared_ptr<core::configuration::ParticipantConfiguration>
-    participants_yaml_factory_(
-            const Yaml& yml);
+    static YamlReaderVersion default_yaml_version();
 };
 
 } /* namespace yaml */

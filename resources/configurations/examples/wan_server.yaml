@@ -3,6 +3,10 @@
 ######################
 
 ##################################
+# CONFIGURATION VERSION
+version: v2.0                                                     # 0
+
+##################################
 # ALLOWED TOPICS
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
@@ -47,6 +51,8 @@ participants:
 # publish them in domain 0.
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
+
+# 0: Use YAML configuration version v2.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 

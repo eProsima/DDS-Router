@@ -77,7 +77,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         core::configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant",
+                        LATEST);
 
         // Check result
         ASSERT_EQ(1, result.connection_addresses().size());
@@ -125,7 +126,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         core::configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant",
+                        LATEST);
 
         // Check result
         ASSERT_EQ(1, result.connection_addresses().size());
@@ -185,7 +187,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Get configuration object from yaml
         core::configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant");
+                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant",
+                        LATEST);
 
         // Check result
         ASSERT_EQ(connection_guids.size(), result.connection_addresses().size());
@@ -232,7 +235,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -266,7 +269,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -305,7 +308,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 
@@ -340,7 +343,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Get configuration object from yaml
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant"),
+            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             utils::ConfigurationException);
     }
 }
