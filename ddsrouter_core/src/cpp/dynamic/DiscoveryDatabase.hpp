@@ -182,7 +182,7 @@ protected:
     std::vector<std::function<void(types::Endpoint)>> updated_endpoint_callbacks_;
 
     //! Vector of callbacks to be called when an Endpoint is erased
-    std::vector<std::function<void(types::Endpoint)>> erased_endpoint_callbacks_;
+    std::vector<std::function<void(types::Guid)>> erased_endpoint_callbacks_;
 
     //! Queue storing database operations to be performed in a dedicated thread
     fastrtps::DBQueue<std::tuple<DatabaseOperation, types::Endpoint>> entities_to_process_;
