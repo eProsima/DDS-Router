@@ -1,36 +1,34 @@
 # eProsima DDS Router Event Module
 
 This library contain classes with generic functionality to handle events.
-It is intended to be generic and not only for DDS Router propose.
-It may in the future be its own project that could be used for several ones.
+It is intended to be generic and not just for DDS Router.
+This could be a project of its own which could be used for several other projects in the future.
 
-An EventHandler is an object instantiated with a callback, and this callback will be called whenever the event
+An `EventHandler` is an object instantiated with a callback, and this callback will be called whenever the event
 this object handles occur.
 This object stores a counter with the number of times this event has happened.
-It also implements the functionality to wait for 1 or n events occur.
+It also implements the functionality of waiting for 1 or `n` events to occur.
 
 There are some event handlers implemented, but more could be added by inheriting the class `EventHandler`.
 It contain the following handlers:
 
 * **Signal**: handles a specific signal from the OS.
-  The event occurs every time a signal with number the object specifies arises in the process.
-  This object handles the `signal` method and creates its own static variables to handle thread calls in specific
-  thread.
+  The event occurs whenever a signal with the number the object specifies is triggered within the process.
 
-* **FileWatcher**: handles the listening on modifications over a file.
+* **FileWatcher**: handles file modification events.
 
-* **PeriodicTimer**: activates a timer and every time the timer elapsed, the event arises and call the callback.
+* **PeriodicTimer**: triggers a timer and each time the timer ends, the event is triggered and the callback is called.
 
 * **LogConsumer**: activates every time a log is consumed (printed).
   It could also be filtered to only some verbosity levels.
 
-* **MultipleHandler**: allow to register EventHandlers inside, so every time any of the handlers listen an event,
-  it will call the event of the MultipleHandler.
-  For example, this is useful to do a handler that waits in two different signals.
+* **MultipleHandler**: allow to register `EventHandlers`, so every time any of the handlers catch an event,
+  `MultipleHandler` event callback will be triggered.
+  For example, this is useful to do a handler that waits for two different signals.
 
 ---
 
-## Example of use
+## Example of usage
 
 ```cpp
 // Print message every 5 seconds
@@ -63,7 +61,7 @@ signal_handler.wait_for_event();
 
 ## How to use it in your project
 
-Just has to import in CMake the library `ddsrouter_event`
+Just import library `ddsrouter_event` into your CMake project.
 
 ```cmake
 find_package(ddsrouter_event)

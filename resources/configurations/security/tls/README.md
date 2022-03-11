@@ -1,8 +1,7 @@
 # DDS ROUTER SECURITY RESOURCES
 
-In the following directory there are several example files representing the needed security files required in
-order to use a secure **TLS** communication.
-These files are needed to configure TLS from Fast DDS.
+This directory contains several sample files needed to implement secure **TLS over TCP** communication.
+These files are required to configure the TCP transport protocol with TLS in Fast DDS.
 
 > :warning: Do not use these files in a real scenario. Generate your own certificates and parameters.
 

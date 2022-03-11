@@ -1,10 +1,10 @@
 # eProsima DDS Router Yaml Module
 
-This module create and executable that runs a DDS Router from a YAML configuration file.
+This module create an executable that runs a DDS Router configured via *yaml* configuration file.
 
 ---
 
-## Example of use
+## Example of usage
 
 ```sh
 # Source installation first. In colcon workspace: :$ source install/setup.bash

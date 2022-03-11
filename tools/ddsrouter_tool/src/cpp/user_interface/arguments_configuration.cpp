@@ -46,7 +46,7 @@ const option::Descriptor usage[] = {
         "Connect different DDS networks via DDS through LAN or WAN.\n" \
         "It will build a communication bridge between the different " \
         "Participants included in the provided configuration file.\n" \
-        "To close the execution gracefully use SIGINT (C^) or SIGTERM (kill).\n" \
+        "To stop the execution gracefully use SIGINT (C^) or SIGTERM (kill) signals.\n" \
         "General options:"
     },
 

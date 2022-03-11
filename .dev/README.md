@@ -148,7 +148,7 @@ The values that must be initialized are:
 
 ---
 
-## Design decisions
+## Contributing guidelines
 
 ### License
 

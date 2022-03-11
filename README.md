@@ -155,8 +155,7 @@ vcs import src < ddsrouter.repos
 colcon build
 ```
 
-This repository holds several colcon packages that are installed independently, and could be configured and
-use separately.
+This repository holds several colcon packages.
 These packages are:
 
 * `ddsrouter_utils`: library with generic utils and functions (Log, Time, etc.).
@@ -166,9 +165,10 @@ These packages are:
 * `ddsrouter_tool`: application to execute a DDS Router from a YAML configuration file.
 * `ddsrouter_docs`: package to generate the DDS Router documentation using sphinx.
 
-In order to compile only a package and its dependencies, use the colcon argument `--packages-up-to <package>`.
-In order to explicitly skip some of these packages, use the colcon argument
-`--packages-skip <package1> [<package2> ...]`.
+> *NOTE:* Those packages could be installed and use independently (according with each package dependency).
+  In order to compile only a package and its dependencies, use the colcon argument `--packages-up-to <package>`.
+  In order to explicitly skip some of these packages, use the colcon argument
+  `--packages-skip <package1> [<package2> ...]`.
 
 ### Run an application
 
