@@ -160,10 +160,9 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
     }
     else
     {
-        Endpoint erased_endpoint = get_endpoint(guid_of_endpoint_to_erase);
         for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
         {
-            erased_endpoint_callback(erased_endpoint);
+            erased_endpoint_callback(guid_of_endpoint_to_erase);
         }
 
         return utils::ReturnCode::RETCODE_OK;
