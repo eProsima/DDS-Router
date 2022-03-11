@@ -65,7 +65,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 
         // Get configuration object from yaml
         core::configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST);
+                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant",
+                        LATEST);
 
         // Check result
         ASSERT_EQ(1, result.listening_addresses().size());
@@ -102,7 +103,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 
         // Get configuration object from yaml
         core::configuration::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST);
+                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant",
+                        LATEST);
 
         // Check result
         ASSERT_EQ(addresses.size(), result.listening_addresses().size()) << yml;

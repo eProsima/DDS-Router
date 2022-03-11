@@ -46,7 +46,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             ADDRESS_TRANSPORT_TAG);
 
         core::types::TransportProtocol tp =
-            YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
+                YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
         ASSERT_EQ(tp, core::types::TransportProtocol::UDP);
     }
@@ -60,7 +60,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             ADDRESS_TRANSPORT_TAG);
 
         core::types::TransportProtocol tp =
-            YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
+                YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
         ASSERT_EQ(tp, core::types::TransportProtocol::TCP);
     }

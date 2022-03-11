@@ -280,7 +280,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
         {
             // Check the DS partipant is correct
             std::shared_ptr<core::configuration::DiscoveryServerParticipantConfiguration> ds_participant =
-                std::dynamic_pointer_cast<core::configuration::DiscoveryServerParticipantConfiguration>(participant);
+                    std::dynamic_pointer_cast<core::configuration::DiscoveryServerParticipantConfiguration>(participant);
 
             // Check Name
             ASSERT_EQ(ds_participant->id(), core::types::ParticipantId("participant2"));
@@ -300,8 +300,8 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
                 (core::types::DiscoveryServerConnectionAddress(
                     core::types::GuidPrefix("01.0f.00.00.00.00.00.00.00.00.00.00"),
                     {core::types::Address("127.0.0.1", 3333, core::types::Address::default_transport_protocol())}
-                ))
-            );
+                    ))
+                );
         }
     }
 }

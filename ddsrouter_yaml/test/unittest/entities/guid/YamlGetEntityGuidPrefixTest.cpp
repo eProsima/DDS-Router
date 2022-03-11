@@ -173,7 +173,8 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
+                utils::ConfigurationException);
     }
 }
 
@@ -260,7 +261,8 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
         Yaml yml;
         yml["guid_prefix"] = yml_gp;
 
-        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
+                utils::ConfigurationException);
     }
 }
 

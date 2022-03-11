@@ -56,7 +56,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 
                 // Read Yaml
                 core::configuration::SimpleParticipantConfiguration result =
-                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST);
+                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant",
+                                LATEST);
 
                 // Check result
                 ASSERT_EQ(id, result.id());

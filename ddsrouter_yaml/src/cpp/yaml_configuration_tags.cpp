@@ -67,7 +67,8 @@ std::set<std::string> ddsrouter_tags() noexcept
         };
 }
 
-bool is_tag(const std::string& str) noexcept
+bool is_tag(
+        const std::string& str) noexcept
 {
     std::set<std::string> tags = ddsrouter_tags();
     return tags.find(str) != tags.end();

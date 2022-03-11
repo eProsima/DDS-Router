@@ -32,7 +32,8 @@ namespace yaml {
 std::set<std::string> ddsrouter_tags() noexcept;
 
 //! Whether a string is a tag / key word
-bool is_tag(const std::string& str) noexcept;
+bool is_tag(
+        const std::string& str) noexcept;
 
 // Yaml related tags
 constexpr const char* VERSION_TAG("version");       //! Version to parse the yaml with

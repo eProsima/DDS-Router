@@ -79,7 +79,7 @@ bool DiscoveryServerConnectionAddress::operator ==(
         const DiscoveryServerConnectionAddress& other) const noexcept
 {
     return (this->discovery_server_guid_prefix() == other.discovery_server_guid_prefix()) &&
-        (this->addresses() == other.addresses());
+           (this->addresses() == other.addresses());
 }
 
 std::ostream& operator <<(

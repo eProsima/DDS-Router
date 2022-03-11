@@ -126,7 +126,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
     // trivial configuration of v1.0
     {
         const char* yml_configuration =
-            R"(
+                R"(
             participant1:
               type: "void"
             participant2:
@@ -147,7 +147,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
     // trivial configuration of v2.0 fails
     {
         const char* yml_configuration =
-            R"(
+                R"(
             participants:
               - name: "P1"
                 kind: "void"
@@ -181,7 +181,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
     {
         // trivial configuration
         const char* yml_configuration =
-            R"(
+                R"(
             version: v0.0
             participants:
               - name: "P1"
@@ -194,15 +194,15 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
 
         // Load configuration
         ASSERT_THROW(
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-                utils::ConfigurationException);
+            YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
 
     // not correct version: specify v1.0 and is v2.0
     {
         // trivial configuration
         const char* yml_configuration =
-            R"(
+                R"(
             version: v1.0
             participants:
               - name: "P1"
@@ -226,7 +226,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
     {
         // trivial configuration
         const char* yml_configuration =
-            R"(
+                R"(
             version: v2.0
             participant1:
               type: "void"
@@ -238,8 +238,8 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
 
         // Load configuration
         ASSERT_THROW(
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-                utils::ConfigurationException);
+            YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
 }
 

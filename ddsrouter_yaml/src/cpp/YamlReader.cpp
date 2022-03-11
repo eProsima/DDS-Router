@@ -332,11 +332,11 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
 {
     switch (version)
     {
-    case V_1_0:
-        return _get_discovery_server_connection_address_v1(yml, version);
+        case V_1_0:
+            return _get_discovery_server_connection_address_v1(yml, version);
 
-    default:
-        return _get_discovery_server_connection_address_latest(yml, version);
+        default:
+            return _get_discovery_server_connection_address_latest(yml, version);
     }
 }
 
@@ -662,7 +662,9 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses;
     if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
     {
-        connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(yml, CONNECTION_ADDRESSES_TAG, version);
+        connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(yml,
+                        CONNECTION_ADDRESSES_TAG,
+                        version);
     }
 
     // Optional TLS
@@ -728,17 +730,17 @@ configuration::DiscoveryServerParticipantConfiguration YamlReader::get<configura
 {
     switch (version)
     {
-    case V_1_0:
-        return _get_discovery_server_participant_configuration_v1(yml, version);
+        case V_1_0:
+            return _get_discovery_server_participant_configuration_v1(yml, version);
 
-    default:
-        return _get_discovery_server_participant_configuration_latest(yml, version);
+        default:
+            return _get_discovery_server_participant_configuration_latest(yml, version);
     }
 }
 
 /***************************
-* DDS ROUTER CONFIGURATION *
-****************************/
+ * DDS ROUTER CONFIGURATION *
+ ****************************/
 
 template <>
 std::shared_ptr<core::configuration::ParticipantConfiguration>
@@ -843,8 +845,9 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
         if (!participant_yml[PARTICIPANT_KIND_TAG_V1])
         {
             throw utils::ConfigurationException(
-                STR_ENTRY <<
-                "Each Participant block must have <" << PARTICIPANT_KIND_TAG_V1 << "> tag with Participant Kind.");
+                      STR_ENTRY <<
+                          "Each Participant block must have <" << PARTICIPANT_KIND_TAG_V1 <<
+                          "> tag with Participant Kind.");
         }
 
         // Set name
@@ -909,9 +912,9 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
     if (!participants_configurations_yml.IsSequence())
     {
         throw utils::ConfigurationException(
-                    utils::Formatter() <<
-                        "Participant configurations must be specified in an array under tag: " <<
-                        COLLECTION_PARTICIPANTS_TAG);
+                  utils::Formatter() <<
+                      "Participant configurations must be specified in an array under tag: " <<
+                      COLLECTION_PARTICIPANTS_TAG);
     }
 
     for (auto conf : participants_configurations_yml)
@@ -936,11 +939,11 @@ core::configuration::DDSRouterConfiguration YamlReader::get<core::configuration:
 {
     switch (version)
     {
-    case V_1_0:
-        return _get_ddsrouter_configuration_v1(yml, version);
+        case V_1_0:
+            return _get_ddsrouter_configuration_v1(yml, version);
 
-    default:
-        return _get_ddsrouter_configuration_latest(yml, version);
+        default:
+            return _get_ddsrouter_configuration_latest(yml, version);
     }
 }
 
@@ -950,21 +953,21 @@ std::ostream& operator <<(
 {
     switch (version)
     {
-    case V_1_0:
-        os << VERSION_TAG_V_1_0;
-        break;
+        case V_1_0:
+            os << VERSION_TAG_V_1_0;
+            break;
 
-    case V_2_0:
-        os << VERSION_TAG_V_2_0;
-        break;
+        case V_2_0:
+            os << VERSION_TAG_V_2_0;
+            break;
 
-    case LATEST:
-        os << VERSION_TAG_V_2_0;
-        break;
+        case LATEST:
+            os << VERSION_TAG_V_2_0;
+            break;
 
-    default:
-        utils::tsnh(STR_ENTRY << "Value of YamlReaderVersion out of enumeration.");
-        break;
+        default:
+            utils::tsnh(STR_ENTRY << "Value of YamlReaderVersion out of enumeration.");
+            break;
     }
 
     return os;

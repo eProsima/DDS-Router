@@ -53,9 +53,9 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
             // Get default version
             version = default_yaml_version();
             logWarning(DDSROUTER_YAML,
-                "No version of yaml configuration given. Using version " << version << " by default. " <<
-                "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
-                "in future releases.");
+                    "No version of yaml configuration given. Using version " << version << " by default. " <<
+                    "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
+                    "in future releases.");
         }
         logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
