@@ -3,6 +3,10 @@
 ################
 
 ##################################
+# CONFIGURATION VERSION
+version: v2.0                                                         # 0
+
+##################################
 # ALLOWED TOPICS
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
@@ -38,6 +42,8 @@ participants:
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to print the received
 # messages in stdout.
+
+# 0: Use YAML configuration version v2.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
