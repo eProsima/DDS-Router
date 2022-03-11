@@ -5,6 +5,8 @@
 # 1 WAN Participant with connection address
 # 2 topics, one with key and one without
 
+version: v2.0
+
 builtin:
   - name: "rt/chatter"
     type: "std_msgs::msg::dds_::String_"

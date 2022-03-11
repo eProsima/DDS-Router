@@ -47,7 +47,7 @@ TEST(YamlGetEntityAddressTest, get_port)
                 test::YamlField<core::types::PortType>(port),
                 ADDRESS_PORT_TAG);
 
-            ASSERT_EQ(port, YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG));
+            ASSERT_EQ(port, YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST));
         }
     }
 
@@ -55,7 +55,9 @@ TEST(YamlGetEntityAddressTest, get_port)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_PORT_TAG), utils::ConfigurationException);
+        ASSERT_THROW(
+            YamlReader::get<core::types::IpVersion>(yml, ADDRESS_PORT_TAG, LATEST),
+            utils::ConfigurationException);
     }
 
     // Incorrect format (string)
@@ -66,6 +68,8 @@ TEST(YamlGetEntityAddressTest, get_port)
             test::YamlField<std::string>("P11000"),
             ADDRESS_PORT_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG), utils::ConfigurationException);
+        ASSERT_THROW(
+            YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST),
+            utils::ConfigurationException);
     }
 }

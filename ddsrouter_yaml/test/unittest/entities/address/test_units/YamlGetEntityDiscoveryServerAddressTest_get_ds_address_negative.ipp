@@ -43,7 +43,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         yml["connection-address"] = yml_empty;
 
         ASSERT_THROW(
-            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address"),
+            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
             utils::ConfigurationException);
     }
 
@@ -62,7 +62,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         Yaml yml;
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
-            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address"),
+            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
             utils::ConfigurationException);
     }
 
@@ -79,7 +79,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         Yaml yml;
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
-            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address"),
+            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
             utils::ConfigurationException);
     }
 
@@ -106,7 +106,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         Yaml yml;
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
-            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address"),
+            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
             utils::ConfigurationException);
     }
 
@@ -131,7 +131,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         Yaml yml;
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
-            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address"),
+            YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
             utils::ConfigurationException);
     }
 }

@@ -12,24 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-####################################
-# Yaml GetEntities GuidPrefix Test #
-####################################
+#####################################
+# Yaml DDSRouter Configuration Test #
+#####################################
 
-set(TEST_NAME YamlGetEntityGuidPrefixTest)
+set(TEST_NAME YamlGetConfigurationDDSRouterTest)
 
 set(TEST_SOURCES
-        YamlGetEntityGuidPrefixTest.cpp
+        YamlGetConfigurationDDSRouterTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
     )
 
 set(TEST_LIST
-        get_guidprefix_explicitly
-        get_guidprefix_id
-        get_guidprefix_id_ros
+        get_ddsrouter_configuration_trivial
+        get_ddsrouter_configuration_ros_case
+
+        get_ddsrouter_configuration_trivial_v1
+        get_ddsrouter_configuration_builtin_v1
+        get_ddsrouter_configuration_discovery_server_v1
     )
 
 set(TEST_EXTRA_LIBRARIES

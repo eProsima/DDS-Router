@@ -104,7 +104,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic");
+        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
 
         test::compare_topic(topic, name, type, false); // By default no keyed
     }
@@ -121,7 +121,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic");
+        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
 
         test::compare_topic(topic, name, type, true);
     }
@@ -138,7 +138,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic");
+        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
 
         test::compare_topic(topic, name, type, false);
     }
@@ -149,7 +149,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 
     // Topic without name
@@ -164,7 +164,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 
     // Topic without type
@@ -179,7 +179,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 }
 
@@ -210,7 +210,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic");
+        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
 
         test::compare_wildcard_topic(topic, name, type, false, false); // By default no keyed
     }
@@ -227,7 +227,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic");
+        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
 
         test::compare_wildcard_topic(topic, name, "*", false, false); // By default no keyed
     }
@@ -244,7 +244,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic");
+        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
 
         test::compare_wildcard_topic(topic, name, type, true, true);
     }
@@ -261,7 +261,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic");
+        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
 
         test::compare_wildcard_topic(topic, name, type, true, false);
     }
@@ -278,7 +278,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic");
+        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
 
         test::compare_wildcard_topic(topic, name, "*", true, true);
     }
@@ -302,7 +302,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 
     // Topic without type
@@ -317,7 +317,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic"), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 }
 

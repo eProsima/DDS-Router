@@ -4,10 +4,11 @@ metadata:
   name: ddsrouter-config
 data:
   ddsrouter.config.file: |-
+    version: v2.0
+
     allowlist:
       - name: rt/chatter
         type: std_msgs::msg::dds_::String_
-
 
     participants:
 

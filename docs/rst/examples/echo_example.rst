@@ -12,7 +12,7 @@ The following YAML configuration file configures a DDS Router to create a
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 5-32
+    :lines: 5-36
 
 Configuration
 =============
@@ -28,7 +28,7 @@ and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` wi
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 9-13
+    :lines: 13-17
 
 
 Simple Participant
@@ -38,7 +38,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 23-25
+    :lines: 27-29
 
 
 Echo Participant
@@ -48,7 +48,7 @@ This Participant does not require further configuration than name and kind.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 31-32
+    :lines: 35-36
 
 
 Execute example

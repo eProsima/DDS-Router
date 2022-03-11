@@ -3,6 +3,10 @@
 #######################################
 
 ##################################
+# CONFIGURATION VERSION
+version: v2.0                                                     # 0
+
+##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes
 
@@ -48,6 +52,8 @@ participants:
 # Super Client) to another Discovery Server (configured as Server).
 # The other direction of communication is also possible; receive messages at the Discovery Server and locally
 # publish them in domain 0.
+
+# 0: Use YAML configuration version v2.0
 
 # 1: Allow ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
 # Insert new topics in order to route them.

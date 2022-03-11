@@ -58,6 +58,15 @@ public:
             const std::string& str_prefix);
 
     /**
+     * @brief Construct a new Guid Prefix object from a const char array
+     *
+     * Uses the constructor from string.
+     * @note This is used because creating a Guid Prefix from a const char * uses the constructor with the uint32_t id.
+     */
+    GuidPrefix (
+            const char* str_prefix);
+
+    /**
      * @brief Construct a new Guid Prefix object by seed
      *
      * Use \c id as seed to create an arbitrary \c GuidPrefix.

@@ -16,10 +16,11 @@
 # Yaml DDSRouter Configuration Test #
 #####################################
 
-set(TEST_NAME YamlConfigurationDDSRouterTest)
+set(TEST_NAME YamlReaderConfigurationTest)
 
 set(TEST_SOURCES
-        YamlConfigurationDDSRouterTest.cpp
+        YamlReaderConfigurationTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
@@ -27,8 +28,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        get_ddsrouter_configuration_trivial
-        get_ddsrouter_configuration_ros_case
+        get_ddsrouter_configuration_v1
+        get_ddsrouter_configuration_v2
+        get_ddsrouter_configuration_no_version
+        version_negative_cases
     )
 
 set(TEST_EXTRA_LIBRARIES

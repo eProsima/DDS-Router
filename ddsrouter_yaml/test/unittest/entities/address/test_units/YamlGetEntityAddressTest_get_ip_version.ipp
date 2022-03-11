@@ -46,7 +46,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
 
-        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG);
+        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
         ASSERT_EQ(iv, core::types::IpVersion::IPv4);
     }
@@ -59,7 +59,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
             ADDRESS_IP_VERSION_TAG);
 
-        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG);
+        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
         ASSERT_EQ(iv, core::types::IpVersion::IPv6);
     }
@@ -68,7 +68,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 utils::ConfigurationException);
     }
 
@@ -80,7 +80,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>("v7"),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 utils::ConfigurationException);
     }
 
@@ -92,7 +92,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<uint32_t>(17),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 utils::ConfigurationException);
     }
 }

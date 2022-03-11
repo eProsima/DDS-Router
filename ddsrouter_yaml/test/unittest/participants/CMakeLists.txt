@@ -19,6 +19,7 @@
 set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
 
 set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
         YamlGetCommonParticipantConfigurationTest.cpp
@@ -52,6 +53,7 @@ add_unittest_executable(
 set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
 
 set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
         YamlGetSimpleParticipantConfigurationTest.cpp
@@ -84,6 +86,7 @@ add_unittest_executable(
 set(TEST_NAME YamlGetDiscoveryServerParticipantConfigurationTest)
 
 set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
         YamlGetDiscoveryServerParticipantConfigurationTest.cpp

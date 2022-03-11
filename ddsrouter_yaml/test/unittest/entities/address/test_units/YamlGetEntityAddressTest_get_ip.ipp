@@ -51,7 +51,7 @@ TEST(YamlGetEntityAddressTest, get_ip)
                 test::YamlField<core::types::IpType>(ip),
                 ADDRESS_IP_TAG);
 
-            ASSERT_EQ(ip, YamlReader::get<core::types::IpType>(yml, ADDRESS_IP_TAG));
+            ASSERT_EQ(ip, YamlReader::get<core::types::IpType>(yml, ADDRESS_IP_TAG, LATEST));
         }
     }
 
@@ -59,7 +59,7 @@ TEST(YamlGetEntityAddressTest, get_ip)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG),
+        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 utils::ConfigurationException);
     }
 }

@@ -28,15 +28,16 @@ namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 T YamlReader::get(
         const Yaml& yml,
-        const TagType& tag)
+        const TagType& tag,
+        const YamlReaderVersion version /* = LATEST */)
 {
     // ATTENTION: This try catch can be avoided, it is only used to add verbose information
     try
     {
-        return get<T, V>(get_value_in_tag(yml, tag));
+        return get<T>(get_value_in_tag(yml, tag), version);
     }
     catch (const std::exception& e)
     {
@@ -47,17 +48,17 @@ T YamlReader::get(
     }
 
     utils::tsnh(utils::Formatter() << "Impossible to arrive to this point.");
-    return get<T, V>(yml); // Unreachable code
+    return get<T>(yml, version); // Unreachable code
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 T YamlReader::get_scalar(
         const Yaml& yml,
         const TagType& tag)
 {
     try
     {
-        return get_scalar<T, V>(get_value_in_tag(yml, tag));
+        return get_scalar<T>(get_value_in_tag(yml, tag));
     }
     catch (const std::exception& e)
     {
@@ -66,7 +67,7 @@ T YamlReader::get_scalar(
     }
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 T YamlReader::get_scalar(
         const Yaml& yml)
 {
@@ -89,14 +90,15 @@ T YamlReader::get_scalar(
     }
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 std::list<T> YamlReader::get_list(
         const Yaml& yml,
-        const TagType& tag)
+        const TagType& tag,
+        const YamlReaderVersion version /* = LATEST */)
 {
     try
     {
-        return get_list<T, V>(get_value_in_tag(yml, tag));
+        return get_list<T>(get_value_in_tag(yml, tag), version);
     }
     catch (const std::exception& e)
     {
@@ -105,9 +107,10 @@ std::list<T> YamlReader::get_list(
     }
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 std::list<T> YamlReader::get_list(
-        const Yaml& yml)
+        const Yaml& yml,
+        const YamlReaderVersion version /* = LATEST */)
 {
     if (!yml.IsSequence())
     {
@@ -121,7 +124,7 @@ std::list<T> YamlReader::get_list(
     {
         for (Yaml element : yml)
         {
-            result.push_back(get<T, V>(element));
+            result.push_back(get<T>(element, version));
         }
     }
     catch (const std::exception& e)
@@ -134,16 +137,17 @@ std::list<T> YamlReader::get_list(
     return result;
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 std::set<T> YamlReader::get_set(
         const Yaml& yml,
-        const TagType& tag)
+        const TagType& tag,
+        const YamlReaderVersion version /* = LATEST */)
 {
-    std::list<T> elements_list = get_list<T, V>(yml, tag);
+    std::list<T> elements_list = get_list<T>(yml, tag, version);
     return std::set<T>(elements_list.begin(), elements_list.end());
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 T YamlReader::get_enumeration(
         const Yaml& yml,
         const TagType& tag,
@@ -151,7 +155,7 @@ T YamlReader::get_enumeration(
 {
     try
     {
-        return get_enumeration<T, V>(get_value_in_tag(yml, tag), enum_values);
+        return get_enumeration<T>(get_value_in_tag(yml, tag), enum_values);
     }
     catch (const std::exception& e)
     {
@@ -160,7 +164,7 @@ T YamlReader::get_enumeration(
     }
 }
 
-template <typename T, YamlReaderVersion V>
+template <typename T>
 T YamlReader::get_enumeration(
         const Yaml& yml,
         const std::map<TagType, T>& enum_values)
