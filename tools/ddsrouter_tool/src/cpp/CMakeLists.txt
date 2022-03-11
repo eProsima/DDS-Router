@@ -39,3 +39,13 @@ install(TARGETS ${EXECUTABLE_TARGET}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR})
 
 set_target_properties(${EXECUTABLE_TARGET} PROPERTIES OUTPUT_NAME "${EXECUTABLE_NAME}")
+
+###############################################################################
+# Install Resources
+###############################################################################
+
+# Install resource files
+INSTALL(
+        DIRECTORY ${PROJECT_SOURCE_DIR}/resources/
+        DESTINATION ${DATA_INSTALL_DIR}/resources/
+    )
