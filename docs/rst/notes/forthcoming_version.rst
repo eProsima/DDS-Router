@@ -12,15 +12,8 @@ This release includes the following **mayor changes**:
   - `ddsrouter_yaml`:  C++ library to parse the DDS Router *yaml* configuration files.
   - `ddsrouter_tool`: DDS Router end-user application.
 
-* Build internal topic tracks via the `builtin-topics` configuration.
-
-This release includes the following **Routing features**:
-
-* Apply DDS Topic filter rules using the `allowlist` and `blocklist` lists.
-
 Next release includes the following **User Interface features**:
 
-* Allow using wildcard characters to define topics in `allowlist` and `blocklist`.
 * Upgrade the *yaml* configuration file to version 2.0 which breaks compatibility with version 1.0.
 * Support for both version 1.0 and version 2.0 of the *yaml* configuration file, maintaining version 1.0 by default.
 * Improve reporting of errors resulting from parsing a malformed *yaml* configuration file.
