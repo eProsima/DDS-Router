@@ -135,7 +135,7 @@ protected:
     static std::vector<SignalHandler*> active_handlers_;
 
     //! Guards access to variable \c active_handlers_
-    static std::recursive_mutex active_handlers_mutex_;
+    static std::mutex active_handlers_mutex_;
 
     //! Handle of thread dedicated to listening for signal arrival
     static std::thread signal_handler_thread_;
