@@ -37,21 +37,31 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 /**
  * @brief Create a simple configuration for a DDS Router
  *
- * Create a configuration with 1 topic in its allowlist, forwarding data for all topics with name "DDS-Router-Test"
+ * Create a configuration with 1 topic in its allowlist, forwarding data for all topics with name TOPIC_NAME
  * and any possible type (such as HelloWorld and HelloWorldKeyed) both with and without key.
  * Create 2 simple participants with domains 0 and 1
  *
  * @return configuration::DDSRouterConfiguration
  */
-configuration::DDSRouterConfiguration dds_test_simple_configuration()
+configuration::DDSRouterConfiguration dds_test_simple_configuration(
+        bool only_builtin_topics = false)
 {
-    // One topic name, all topic types, both keyed and not
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist(
-                    {
-                        std::make_shared<types::WildcardTopic>("DDS-Router-Test"),
-                    });
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
+    if (!only_builtin_topics)
+    {
+        // One topic name, all topic types, both keyed and not
+        allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    }
+
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    if (only_builtin_topics)
+    {
+        // Two topics, one keyed and other not
+        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld"));
+        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true));
+    }
 
     // Two simple participants
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
@@ -160,6 +170,20 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
     test::test_local_communication<HelloWorldKeyed>(
         test::dds_test_simple_configuration());
+}
+
+/**
+ * Test communication both in HelloWorld and HelloWorldKeyed topics between two DDS participants created in
+ * different domains, by using a router with two Simple Participants at each domain.
+ * In this test allowlist and blocklist are left empty, while only builtin topics are provided.
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_only_builtin_topics)
+{
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(true));
+
+    test::test_local_communication<HelloWorldKeyed>(
+        test::dds_test_simple_configuration(true));
 }
 
 /**

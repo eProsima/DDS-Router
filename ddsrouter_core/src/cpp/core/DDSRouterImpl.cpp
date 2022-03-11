@@ -348,7 +348,7 @@ void DDSRouterImpl::discovered_topic_(
 void DDSRouterImpl::discovered_endpoint_(
         const Endpoint& endpoint) noexcept
 {
-    logDebug(DDSROUTER, "Discovered endpoint: " << endpoint << ".");
+    logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
     discovered_topic_(endpoint.topic());
 }
