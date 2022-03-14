@@ -39,6 +39,10 @@ Following are some of the key features of *eProsima DDS Router*:
      networks.
   5. **Topic allowlisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
      topic specified by the user.
+  6. **Dynamic topic discovery**: the user does not need to fully specify over which topics to communicate (i.e. provide
+     concrete topic names and types). The discovery of topics matching the allowlisting rules automatically triggers the
+     creation of all entities required for communication.
+
 
 .. _fig_entities_diagram:
 
