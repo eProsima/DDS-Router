@@ -12,5 +12,5 @@ runs:
   using: composite
   steps:
   - run: >
-      ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail
+      ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail --repeat-until-fail 1000 -R "end_to_end_local_communication_only_builtin_topics"
     shell: pwsh
