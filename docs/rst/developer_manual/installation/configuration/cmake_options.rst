@@ -53,13 +53,6 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - ``OFF`` |br|
           ``ON``
         - ``OFF``
-    *   - :class:`BUILD_DOCUMENTATION`
-        - Build the *DDS Router* documentation. It is |br|
-          set to ``ON`` if :class:`BUILD_TESTS_DOCUMENTATION` is set |br|
-          to ``ON``.
-        - ``OFF`` |br|
-          ``ON``
-        - ``OFF``
     *   - :class:`LOG_INFO`
         - Activate *DDS Router* execution logs. It is |br|
           set to ``ON`` if :class:`CMAKE_BUILD_TYPE` is set |br|

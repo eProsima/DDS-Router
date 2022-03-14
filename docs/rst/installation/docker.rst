@@ -54,4 +54,4 @@ The steps to run |ddsrouter| in a Docker container are explained below.
 
     After executing the previous command you should be able to see the initialization traces from the |ddsrouter|
     running in the Docker container.
-    If you want to terminate the application gracefully, just press `Ctrl+C`` to stop the execution of |ddsrouter|.
+    If you want to terminate the application gracefully, just press ``Ctrl+C`` to stop the execution of |ddsrouter|.

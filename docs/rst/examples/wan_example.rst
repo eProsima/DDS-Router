@@ -58,7 +58,7 @@ WAN Participant Client
 ----------------------
 
 In order to create a WAN Participant Client, check the configuration file
-``<path/to/ddsrouter>/share/resources/configurations/examples/wan_client.yaml``
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/wan_client.yaml``
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
@@ -80,7 +80,7 @@ Host *H*:sub:`A`
 ----------------
 
 This host runs the |ddsrouter| WAN Server, which will wait for other WAN Clients to connect to it.
-Execute |ddsrouter| using file ``<path/to/ddsrouter>/share/resources/configurations/examples/wan_server.yaml``.
+Execute |ddsrouter| using file ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/wan_server.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
 Check the following :ref:`section <user_manual_wan_configuration>` for further information about how to configure
@@ -98,7 +98,7 @@ Host *H*:sub:`B`
 ----------------
 
 This host runs the |ddsrouter| WAN Client, which will connect to the previously launched WAN Server.
-Execute |ddsrouter| using file ``<path/to/ddsrouter>/share/resources/configurations/examples/wan_client.yaml``.
+Execute |ddsrouter| using file ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/wan_client.yaml``.
 Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`,
 and be sure that port forwarding is configured in *R*:sub:`B` so *H*:sub:`B` is accessible from the outside.
 
