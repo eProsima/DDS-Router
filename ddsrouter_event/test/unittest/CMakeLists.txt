@@ -12,10 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include custom test cmake functions
-include(${PROJECT_SOURCE_DIR}/cmake/test/cmake_test_utils.cmake)
-# Set test requirements
-test_requirements()
-
 # Add subdirectory with tests
-add_subdirectory(unittest)
+add_subdirectory(periodic_event)
