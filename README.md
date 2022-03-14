@@ -190,5 +190,5 @@ By default, *DDS Router* does not compile tests. However, they can be activated 
 can be run with the following command:
 
 ```bash
-colcon test --packages-select ddsrouter --event-handler=console_direct+
+colcon test --packages-select-regex ddsrouter --event-handler=console_direct+
 ```
