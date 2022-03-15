@@ -65,7 +65,6 @@ void tsnh(
     logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter.to_string());
     Log::Flush();
 
-    assert(false && "This Should Not Happen, assert!");
     abort();
 }
 

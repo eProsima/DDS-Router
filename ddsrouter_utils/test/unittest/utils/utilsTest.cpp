@@ -303,7 +303,7 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
 TEST(utilsTest, tsnh_call)
 {
     // Call tsnh
-    ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "This Should Not Happen");
+    ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "");
 }
 
 int main(
