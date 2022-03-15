@@ -84,8 +84,12 @@ void EventHandler<Args...>::unset_callback() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
+    bool was_callback_set_before = false;
+
     if (is_callback_set_)
     {
+        was_callback_set_before = true;
+
         std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
 
         {
@@ -103,8 +107,12 @@ void EventHandler<Args...>::unset_callback() noexcept
         logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had no callback set.")
     }
 
-    // Call child methods in case they should do something when handler is disabled
-    callback_unset_nts_();
+    // Should only call unset if the callback was set
+    if (was_callback_set_before)
+    {
+        // Call child methods in case they should do something when handler is disabled
+        callback_unset_nts_();
+    }
 
     // Awaking every thread waiting in wait_for_event()
     awake_all_waiting_threads_nts_();
