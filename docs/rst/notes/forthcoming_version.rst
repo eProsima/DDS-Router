@@ -11,7 +11,7 @@ Next release will include the following **major changes**:
   - `ddsrouter_core`: C++ library which implements the DDS Router operation and exports the DDS Router C++ API.
   - `ddsrouter_yaml`:  C++ library to parse the DDS Router *yaml* configuration files.
   - `ddsrouter_tool`: DDS Router end-user application.
-* New dynamic topic discovery feature to atomatically discover DDS Topics in a DDS network.
+* New dynamic topic discovery feature to automatically discover DDS Topics in a DDS network.
 * Allow using wildcard characters to define topics in ``allowlist`` and ``blocklist``.
 * Build internal topic tracks via the ``builtin-topics`` configuration.
 
