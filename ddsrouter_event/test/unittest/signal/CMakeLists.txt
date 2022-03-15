@@ -22,6 +22,7 @@ set(TEST_LIST
         create_signal_handler
         create_several_signal_handlers
         receive_signal
+        receive_n_signals
         erase_callback_while_other_handling
     )
 

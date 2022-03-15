@@ -12,16 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <algorithm>
-#include <csignal>
-#include <sys/types.h>
-#include <unistd.h>
-
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_utils/utils.hpp>
-#include <ddsrouter_utils/Log.hpp>
 
 #include <ddsrouter_event/SignalHandler.hpp>
 
@@ -221,6 +215,41 @@ TEST(SignalHandlerTest, receive_signal)
 }
 
 /**
+ * Receive N signals and handled them
+ *
+ * CASES:
+ * - 2
+ * - 20
+ * - 200
+ */
+TEST(SignalHandlerTest, receive_n_signals)
+{
+    std::vector<uint32_t> cases({2u, 20u, 200u});
+
+    // Cases
+    for (uint32_t number_signals : cases)
+    {
+        // Number of calls to the signal
+        uint32_t calls = 0;
+
+        // Create signal handler
+        SignalHandler<SIGNAL_SIGUSR1> handler( [&calls](int /* signal_number */ ){ calls++; } );
+
+        // Raise N signal
+        for (uint32_t i=0; i<number_signals; i++)
+        {
+            std::raise(SIGUSR1);
+        }
+
+        // Force handler to wait for signal
+        handler.wait_for_event(number_signals);
+
+        // Check that signal has been received
+        ASSERT_EQ(number_signals, calls);
+    }
+}
+
+/**
  * Create 2 handlers for same signal, get singal from both, then unset a callback and get signal in just one
  *
  * This tests that the set and unset of callbacks is done correctly
@@ -263,7 +292,6 @@ int main(
         int argc,
         char** argv)
 {
-    utils::Log::SetVerbosity(utils::Log::Kind::Info);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
