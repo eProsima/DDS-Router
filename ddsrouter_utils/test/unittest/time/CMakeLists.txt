@@ -12,6 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add test subdirectories
-add_subdirectory(time)
-add_subdirectory(utils)
+set(TEST_NAME TimerTest)
+
+set(TEST_SOURCES
+        TimerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Time.cpp
+    )
+
+set(TEST_LIST
+        elapsed
+        elapsed_ms
+        reset
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
