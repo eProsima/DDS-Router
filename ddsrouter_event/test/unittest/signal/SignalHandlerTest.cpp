@@ -108,10 +108,30 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
 }
 
 /**
- * Receive a signal from a Signal handler
+ * Receive a signal SIGINT from a Signal handler
+ */
+TEST(SignalHandlerTest, receive_signal_trivial)
+{
+    // Number of calls to the signal
+    uint32_t calls = 0;
+
+    // Create signal handler
+    SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
+
+    // Raise signal
+    raise(SIGNAL_SIGINT);
+
+    // Force handler to wait for signal
+    handler.wait_for_event();
+
+    // Check that signal has been received
+    ASSERT_EQ(1, calls);
+}
+
+/**
+ * Receive a signal from a Signal handler with complex environment
  *
  * CASES:
- * - SIGINT
  * - SIGINT double handler
  * - SIGINT double signal
  * - SIGINT receive signal after unset
@@ -119,24 +139,6 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
  */
 TEST(SignalHandlerTest, receive_signal)
 {
-    // SIGINT
-    {
-        // Number of calls to the signal
-        uint32_t calls = 0;
-
-        // Create signal handler
-        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
-
-        // Raise signal
-        raise(SIGNAL_SIGINT);
-
-        // Force handler to wait for signal
-        handler.wait_for_event();
-
-        // Check that signal has been received
-        ASSERT_EQ(1, calls);
-    }
-
     // SIGINT double handler
     {
         // Number of calls to the signal
