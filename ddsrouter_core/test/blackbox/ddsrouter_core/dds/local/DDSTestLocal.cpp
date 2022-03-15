@@ -181,7 +181,10 @@ TEST(DDSTestLocal, end_to_end_local_communication_only_builtin_topics)
 {
     test::test_local_communication<HelloWorld>(
         test::dds_test_simple_configuration(true));
+}
 
+TEST(DDSTestLocal, end_to_end_local_communication_only_builtin_topics_keyed)
+{
     test::test_local_communication<HelloWorldKeyed>(
         test::dds_test_simple_configuration(true));
 }
@@ -240,5 +243,6 @@ int main(
         char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
+
     return RUN_ALL_TESTS();
 }
