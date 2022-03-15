@@ -52,16 +52,16 @@ class Timer
 public:
 
     //! Create a new Timer which stores the time it has been created
-    Timer() noexcept;
+    DDSROUTER_UTILS_DllAPI Timer() noexcept;
 
     //! Reset timer initial time to the moment \c reset is called.
-    void reset() noexcept;
+    DDSROUTER_UTILS_DllAPI void reset() noexcept;
 
     //! Elapsed time in milliseconds
-    double elapsed() const noexcept;
+    DDSROUTER_UTILS_DllAPI double elapsed() const noexcept;
 
     //! Elapsed time rounded to milliseconds
-    Duration_ms elapsed_ms() const noexcept;
+    DDSROUTER_UTILS_DllAPI Duration_ms elapsed_ms() const noexcept;
 
 protected:
 
