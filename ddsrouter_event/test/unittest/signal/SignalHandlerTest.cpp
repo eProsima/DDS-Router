@@ -109,24 +109,24 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
  * Receive a signal from a Signal handler
  *
  * CASES:
- * - SIGUSR1
- * - SIGUSR1 double handler
- * - SIGUSR1 double signal
- * - SIGUSR1 receive signal after unset
- * - SIGUSR1 receive signal just before destroying
+ * - SIGINT
+ * - SIGINT double handler
+ * - SIGINT double signal
+ * - SIGINT receive signal after unset
+ * - SIGINT receive signal just before destroying
  */
 TEST(SignalHandlerTest, receive_signal)
 {
-    // SIGUSR1
+    // SIGINT
     {
         // Number of calls to the signal
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGUSR1> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -135,17 +135,17 @@ TEST(SignalHandlerTest, receive_signal)
         ASSERT_EQ(1, calls);
     }
 
-    // SIGUSR1 double handler
+    // SIGINT double handler
     {
         // Number of calls to the signal
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGUSR1> handler1 ( [&calls](int /* signal_number */ ){ calls++; } );
-        SignalHandler<SIGNAL_SIGUSR1> handler2 ( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
 
         // Force handler to wait for signal
         handler1.wait_for_event();
@@ -155,17 +155,17 @@ TEST(SignalHandlerTest, receive_signal)
         ASSERT_EQ(2, calls);
     }
 
-    // SIGUSR1 double signal
+    // SIGINT double signal
     {
         // Number of calls to the signal
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGUSR1> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGUSR1);
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
+        std::raise(SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event(2);
@@ -174,16 +174,16 @@ TEST(SignalHandlerTest, receive_signal)
         ASSERT_EQ(2, calls);
     }
 
-    // SIGUSR1 receive signal after unset
+    // SIGINT receive signal after unset
     {
         // Number of calls to the signal
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGUSR1> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -196,21 +196,21 @@ TEST(SignalHandlerTest, receive_signal)
         handler.unset_callback();
 
         // Raise signal
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
 
         // Check that signal has not been received
         ASSERT_EQ(1, calls);
     }
 
-    // SIGUSR1 receive signal just before destroying
+    // SIGINT receive signal just before destroying
     {
         {
             // Create signal handler
-            SignalHandler<SIGNAL_SIGUSR1> handler( [](int /* signal_number */ ){ /* empty callback */ } );
+            SignalHandler<SIGNAL_SIGINT> handler( [](int /* signal_number */ ){ /* empty callback */ } );
         }
 
         // Destroying handler while Raise signal
-        std::raise(SIGUSR1);
+        std::raise(SIGINT);
     }
 }
 
@@ -233,12 +233,12 @@ TEST(SignalHandlerTest, receive_n_signals)
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGUSR1> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise N signal
         for (uint32_t i=0; i<number_signals; i++)
         {
-            std::raise(SIGUSR1);
+            std::raise(SIGINT);
         }
 
         // Force handler to wait for signal
@@ -261,12 +261,12 @@ TEST(SignalHandlerTest, erase_callback_while_other_handling)
 
     // Create signal handler
     // This adds 10 each time signal is called
-    SignalHandler<SIGNAL_SIGUSR1> handler1 ( [&calls](int /* signal_number */ ){ calls += 10; } );
+    SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ ){ calls += 10; } );
     // This adds 1 each time signal is called
-    SignalHandler<SIGNAL_SIGUSR1> handler2 ( [&calls](int /* signal_number */ ){ calls += 1; } );
+    SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls += 1; } );
 
     // Raise signal
-    std::raise(SIGUSR1);
+    std::raise(SIGINT);
 
     // Force handler to wait for signal
     handler1.wait_for_event();
@@ -279,7 +279,7 @@ TEST(SignalHandlerTest, erase_callback_while_other_handling)
     handler1.unset_callback();
 
     // Raise signal
-    std::raise(SIGUSR1);
+    std::raise(SIGINT);
 
     // Force handler2 (remaining) to wait for signal (2 because it is the second one)
     handler2.wait_for_event(2);

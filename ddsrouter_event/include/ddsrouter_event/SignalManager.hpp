@@ -35,9 +35,13 @@ namespace event {
 enum Signals
 {
     SIGNAL_SIGINT   = SIGINT,   //! SIGINT  = ^C    = 2
+    SIGNAL_SIGTERM  = SIGTERM,  //! SIGTERM = kill  = 15
+
+#ifndef _WIN32
     SIGNAL_SIGUSR1  = SIGUSR1,  //! SIGUSR1 =       = 10
     SIGNAL_SIGUSR2  = SIGUSR2,  //! SIGUSR2 =       = 12
-    SIGNAL_SIGTERM  = SIGTERM,  //! SIGTERM = kill  = 15
+#endif
+
 };
 
 using UniqueCallbackId = uint32_t;
