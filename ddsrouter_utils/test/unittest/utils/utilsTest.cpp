@@ -297,6 +297,15 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
     }
 }
 
+/**
+ * Test \c tsnh call
+ */
+TEST(utilsTest, tsnh_call)
+{
+    // Call tsnh
+    ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "This Should Not Happen");
+}
+
 int main(
         int argc,
         char** argv)
