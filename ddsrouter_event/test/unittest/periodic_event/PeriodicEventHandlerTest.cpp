@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -198,46 +198,10 @@ TEST(PeriodicEventHandlerTest, negative_cases)
     }
 }
 
-/**
- * @brief Change a callback in a periodic handler
- *
- * @note: for coverage sake
- *
- */
-TEST(PeriodicEventHandlerTest, change_callback)
-{
-    // Not expecting log warnings
-    eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning);
-
-    // Creating handler with callback and changing it
-    PeriodicEventHandler handler([]()
-            {
-                /* empty callback */ }, utils::Duration_ms(10u));
-    handler.set_callback([]()
-            {
-                /* empty callback */ });
-}
-
-/**
- * @brief Unset a callback in a handler that does not have it
- *
- * @note: for coverage sake
- */
-TEST(PeriodicEventHandlerTest, unset_no_set_callback)
-{
-    // Expecting at least one warning, more could happen
-    eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning, 1, 100);
-
-    // Creating handler withoud callback and unsetting callback
-    PeriodicEventHandler handler(utils::Duration_ms(10u));
-    handler.unset_callback();
-}
-
 int main(
         int argc,
         char** argv)
 {
-    // utils::Log::SetVerbosity(utils::Log::Kind::Info);
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

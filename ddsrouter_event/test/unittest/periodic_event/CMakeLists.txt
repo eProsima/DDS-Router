@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,8 +29,6 @@ set(TEST_LIST
         handler_period_without_callback
         limit_cases
         negative_cases
-        change_callback
-        unset_no_set_callback
     )
 
 set(TEST_EXTRA_LIBRARIES

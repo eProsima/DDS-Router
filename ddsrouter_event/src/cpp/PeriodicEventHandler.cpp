@@ -116,18 +116,14 @@ void PeriodicEventHandler::stop_period_thread_nts_() noexcept
 
 void PeriodicEventHandler::callback_set_nts_() noexcept
 {
-    if (!timer_active_)
-    {
-        start_period_thread_nts_();
-    }
+    // Could not arrive here if the callback was set before
+    start_period_thread_nts_();
 }
 
 void PeriodicEventHandler::callback_unset_nts_() noexcept
 {
-    if (timer_active_)
-    {
-        stop_period_thread_nts_();
-    }
+    // Could not arrive here if the callback was not set before
+    stop_period_thread_nts_();
 }
 
 } /* namespace event */
