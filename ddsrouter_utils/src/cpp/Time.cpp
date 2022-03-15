@@ -28,6 +28,28 @@ Timestamp now() noexcept
     return std::chrono::system_clock::now();
 }
 
+Timer::Timer() noexcept
+    : start_time_(std::chrono::high_resolution_clock::now())
+{
+}
+
+void Timer::reset() noexcept
+{
+    start_time_ = std::chrono::high_resolution_clock::now();
+}
+
+double Timer::elapsed() const noexcept
+{
+    std::chrono::time_point<std::chrono::high_resolution_clock> now_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double, std::milli>(now_time - start_time_).count();
+}
+
+Duration_ms Timer::elapsed_ms() const noexcept
+{
+    double elapsed_time = elapsed();
+    return static_cast<Duration_ms>(elapsed_time);
+}
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
