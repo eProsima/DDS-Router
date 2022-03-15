@@ -56,7 +56,9 @@ TEST(PeriodicEventHandlerTest, trivial_create_handler)
     // with callback
     {
         PeriodicEventHandler handler(
-            [](){ /* empty callback */ },
+            []()
+            {
+                /* empty callback */ },
             test::DEFAULT_TIME_TEST);
     }
 
@@ -85,7 +87,9 @@ TEST(PeriodicEventHandlerTest, wait_handler)
 
         // Create handler and wait
         PeriodicEventHandler handler(
-            [](){ /* empty callback */ },
+            []()
+            {
+                /* empty callback */ },
             time);
 
         // Wait for the period time
@@ -117,7 +121,10 @@ TEST(PeriodicEventHandlerTest, handler_period)
 
         // Create handler and wait
         PeriodicEventHandler handler(
-            [&calls](){ calls++; },
+            [&calls]()
+            {
+                calls++;
+            },
             time);
 
         // Wait twice for the period time
@@ -154,7 +161,9 @@ TEST(PeriodicEventHandlerTest, limit_cases)
 {
     // 1ms period
     {
-        PeriodicEventHandler handler([](){ /* empty callback */ }, utils::Duration_ms(1u));
+        PeriodicEventHandler handler([]()
+                {
+                    /* empty callback */ }, utils::Duration_ms(1u));
 
         // Wait 100 events for the period time
         handler.wait_for_event(100);
@@ -164,7 +173,9 @@ TEST(PeriodicEventHandlerTest, limit_cases)
 
     // 1ms period and instant close
     {
-        PeriodicEventHandler handler([](){ /* empty callback */ }, utils::Duration_ms(1u));
+        PeriodicEventHandler handler([]()
+                {
+                    /* empty callback */ }, utils::Duration_ms(1u));
     }
 }
 
@@ -181,7 +192,9 @@ TEST(PeriodicEventHandlerTest, negative_cases)
         // Without callback
         ASSERT_THROW(PeriodicEventHandler(0), utils::InitializationException);
         // With callback
-        ASSERT_THROW(PeriodicEventHandler([](){ /* empty callback */ }, 0), utils::InitializationException);
+        ASSERT_THROW(PeriodicEventHandler([]()
+                {
+                    /* empty callback */ }, 0), utils::InitializationException);
     }
 }
 
@@ -197,8 +210,12 @@ TEST(PeriodicEventHandlerTest, change_callback)
     eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning);
 
     // Creating handler with callback and changing it
-    PeriodicEventHandler handler([](){ /* empty callback */ }, utils::Duration_ms(10u));
-    handler.set_callback([](){ /* empty callback */ });
+    PeriodicEventHandler handler([]()
+            {
+                /* empty callback */ }, utils::Duration_ms(10u));
+    handler.set_callback([]()
+            {
+                /* empty callback */ });
 }
 
 /**
