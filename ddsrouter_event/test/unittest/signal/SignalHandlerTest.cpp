@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <signal.h>
+
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
@@ -126,7 +128,7 @@ TEST(SignalHandlerTest, receive_signal)
         SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -145,7 +147,7 @@ TEST(SignalHandlerTest, receive_signal)
         SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
 
         // Force handler to wait for signal
         handler1.wait_for_event();
@@ -164,8 +166,8 @@ TEST(SignalHandlerTest, receive_signal)
         SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGINT);
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
+        raise(SIGNAL_SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event(2);
@@ -183,7 +185,7 @@ TEST(SignalHandlerTest, receive_signal)
         SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
 
         // Raise signal
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -196,7 +198,7 @@ TEST(SignalHandlerTest, receive_signal)
         handler.unset_callback();
 
         // Raise signal
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
 
         // Check that signal has not been received
         ASSERT_EQ(1, calls);
@@ -210,7 +212,7 @@ TEST(SignalHandlerTest, receive_signal)
         }
 
         // Destroying handler while Raise signal
-        std::raise(SIGINT);
+        raise(SIGNAL_SIGINT);
     }
 }
 
@@ -238,7 +240,7 @@ TEST(SignalHandlerTest, receive_n_signals)
         // Raise N signal
         for (uint32_t i=0; i<number_signals; i++)
         {
-            std::raise(SIGINT);
+            raise(SIGNAL_SIGINT);
         }
 
         // Force handler to wait for signal
@@ -266,7 +268,7 @@ TEST(SignalHandlerTest, erase_callback_while_other_handling)
     SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls += 1; } );
 
     // Raise signal
-    std::raise(SIGINT);
+    raise(SIGNAL_SIGINT);
 
     // Force handler to wait for signal
     handler1.wait_for_event();
@@ -279,7 +281,7 @@ TEST(SignalHandlerTest, erase_callback_while_other_handling)
     handler1.unset_callback();
 
     // Raise signal
-    std::raise(SIGINT);
+    raise(SIGNAL_SIGINT);
 
     // Force handler2 (remaining) to wait for signal (2 because it is the second one)
     handler2.wait_for_event(2);
