@@ -15,8 +15,12 @@
 set(TEST_NAME PeriodicEventHandlerTest)
 
 set(TEST_SOURCES
-    PeriodicEventHandlerTest.cpp
-    ${PROJECT_SOURCE_DIR}/src/cpp/PeriodicEventHandler.cpp)
+        PeriodicEventHandlerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/PeriodicEventHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/LogEventHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/LogSevereEventHandler.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
+    )
 
 set(TEST_LIST
         trivial_create_handler
@@ -25,6 +29,8 @@ set(TEST_LIST
         handler_period_without_callback
         limit_cases
         negative_cases
+        change_callback
+        unset_no_set_callback
     )
 
 set(TEST_EXTRA_LIBRARIES

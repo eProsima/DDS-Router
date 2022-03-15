@@ -19,6 +19,8 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <TestLogHandler.hpp>
+
 #include <ddsrouter_utils/Time.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
@@ -27,14 +29,12 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace event {
 namespace test {
 
 eprosima::ddsrouter::utils::Duration_ms DEFAULT_TIME_TEST = 1000u;
 eprosima::ddsrouter::utils::Duration_ms RESIDUAL_TIME_TEST = 10u;
 
 } /* namespace test */
-} /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
@@ -183,6 +183,37 @@ TEST(PeriodicEventHandlerTest, negative_cases)
         // With callback
         ASSERT_THROW(PeriodicEventHandler([](){ /* empty callback */ }, 0), utils::InitializationException);
     }
+}
+
+/**
+ * @brief Change a callback in a periodic handler
+ *
+ * @note: for coverage sake
+ *
+ */
+TEST(PeriodicEventHandlerTest, change_callback)
+{
+    // Not expecting log warnings
+    eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning);
+
+    // Creating handler with callback and changing it
+    PeriodicEventHandler handler([](){ /* empty callback */ }, utils::Duration_ms(10u));
+    handler.set_callback([](){ /* empty callback */ });
+}
+
+/**
+ * @brief Unset a callback in a handler that does not have it
+ *
+ * @note: for coverage sake
+ */
+TEST(PeriodicEventHandlerTest, unset_no_set_callback)
+{
+    // Expecting at least one warning, more could happen
+    eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning, 1, 100);
+
+    // Creating handler withoud callback and unsetting callback
+    PeriodicEventHandler handler(utils::Duration_ms(10u));
+    handler.unset_callback();
 }
 
 int main(
