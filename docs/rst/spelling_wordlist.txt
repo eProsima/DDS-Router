@@ -1,6 +1,7 @@
 allowlist
 allowlisting
 Asio
+blocklist
 Chocolatey
 CMake
 Colcon
@@ -16,9 +17,8 @@ executables
 fastcdr
 fastrtps
 github
-Gtest
 gMock
-guid
+Gtest
 guid
 IPv
 kubernetes

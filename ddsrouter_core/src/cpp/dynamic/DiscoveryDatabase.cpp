@@ -28,6 +28,26 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
+DiscoveryDatabase::DiscoveryDatabase() noexcept
+    : exit_(false)
+{
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Creating queue processing thread.");
+    queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
+}
+
+DiscoveryDatabase::~DiscoveryDatabase()
+{
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Destroying Discovery Database.");
+    {
+        std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+        exit_.store(true);
+    }
+    entities_to_process_cv_.notify_one();
+
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
+    queue_processing_thread_.join();
+}
+
 bool DiscoveryDatabase::topic_exists(
         const RealTopic& topic) const noexcept
 {
@@ -52,7 +72,7 @@ bool DiscoveryDatabase::endpoint_exists(
     return entities_.find(guid) != entities_.end();
 }
 
-bool DiscoveryDatabase::add_endpoint(
+bool DiscoveryDatabase::add_endpoint_(
         const Endpoint& new_endpoint)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
@@ -85,35 +105,46 @@ bool DiscoveryDatabase::add_endpoint(
 
         logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
 
+        for (auto added_endpoint_callback : added_endpoint_callbacks_)
+        {
+            added_endpoint_callback(new_endpoint);
+        }
+
         return true;
     }
 }
 
-bool DiscoveryDatabase::update_endpoint(
-        const Endpoint& new_endpoint)
+bool DiscoveryDatabase::update_endpoint_(
+        const Endpoint& endpoint_to_update)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
-    auto it = entities_.find(new_endpoint.guid());
+    auto it = entities_.find(endpoint_to_update.guid());
     if (it == entities_.end())
     {
         // Entry not found
         throw utils::InconsistencyException(
                   utils::Formatter() <<
-                      "Error updating Endpoint in database. Endpoint entry not found." << new_endpoint);
+                      "Error updating Endpoint in database. Endpoint entry not found." << endpoint_to_update);
     }
     else
     {
         // Modify entry
-        it->second = new_endpoint;
+        it->second = endpoint_to_update;
+        // It is assumed a topic cannot change, otherwise further actions may be taken
 
-        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << new_endpoint << ".");
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << endpoint_to_update << ".");
+
+        for (auto updated_endpoint_callback : updated_endpoint_callbacks_)
+        {
+            updated_endpoint_callback(endpoint_to_update);
+        }
 
         return true;
     }
 }
 
-utils::ReturnCode DiscoveryDatabase::erase_endpoint(
+utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
         const Guid& guid_of_endpoint_to_erase)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
@@ -129,8 +160,31 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint(
     }
     else
     {
+        for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
+        {
+            erased_endpoint_callback(guid_of_endpoint_to_erase);
+        }
+
         return utils::ReturnCode::RETCODE_OK;
     }
+}
+
+void DiscoveryDatabase::add_endpoint(
+        const Endpoint& new_endpoint) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::ADD, new_endpoint));
+}
+
+void DiscoveryDatabase::update_endpoint(
+        const Endpoint& endpoint_to_update) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::UPDATE, endpoint_to_update));
+}
+
+void DiscoveryDatabase::erase_endpoint(
+        const Endpoint& endpoint_to_erase) noexcept
+{
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::ERASE, endpoint_to_erase));
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
@@ -148,6 +202,77 @@ Endpoint DiscoveryDatabase::get_endpoint(
     }
 
     return it->second;
+}
+
+void DiscoveryDatabase::add_endpoint_discovered_callback(
+        std::function<void(Endpoint)> endpoint_discovered_callback) noexcept
+{
+    added_endpoint_callbacks_.push_back(endpoint_discovered_callback);
+}
+
+void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
+{
+    while (true)
+    {
+        {
+            std::unique_lock<std::mutex> lock(entities_to_process_cv_mutex_);
+            entities_to_process_cv_.wait(
+                lock,
+                [&]
+                {
+                    return !entities_to_process_.BothEmpty() || exit_.load();
+                });
+
+            if (exit_.load())
+            {
+                break;
+            }
+        }
+        // Release the mutex as DBQueue already has internal mutexes
+        process_queue_();
+    }
+}
+
+void DiscoveryDatabase::push_item_to_queue_(
+        std::tuple<DatabaseOperation, Endpoint> item) noexcept
+{
+    {
+        std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+        entities_to_process_.Push(item);
+    }
+    entities_to_process_cv_.notify_one();
+}
+
+void DiscoveryDatabase::process_queue_() noexcept
+{
+    entities_to_process_.Swap();
+    while (!entities_to_process_.Empty())
+    {
+        std::tuple<DatabaseOperation, Endpoint> queue_item = entities_to_process_.Front();
+        DatabaseOperation db_operation = std::get<0>(queue_item);
+        Endpoint entity = std::get<1>(queue_item);
+        try
+        {
+            if (db_operation == DatabaseOperation::ADD)
+            {
+                add_endpoint_(entity);
+            }
+            else if (db_operation == DatabaseOperation::UPDATE)
+            {
+                update_endpoint_(entity);
+            }
+            else if (db_operation == DatabaseOperation::ERASE)
+            {
+                erase_endpoint_(entity.guid());
+            }
+        }
+        catch (const utils::InconsistencyException& e)
+        {
+            logError(DDSROUTER_DISCOVERY_DATABASE,
+                    "Error processing database operations queue:" << e.what() << ".");
+        }
+        entities_to_process_.Pop();
+    }
 }
 
 } /* namespace core */

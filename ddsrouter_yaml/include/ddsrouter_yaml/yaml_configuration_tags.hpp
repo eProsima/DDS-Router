@@ -41,15 +41,15 @@ constexpr const char* VERSION_TAG_V_1_0("v1.0");    //! Version v1.0
 constexpr const char* VERSION_TAG_V_2_0("v2.0");    //! Version v2.0
 
 // Topics related tags
-constexpr const char* ALLOWLIST_TAG("allowlist");   //! List of allowed topics
-constexpr const char* BLOCKLIST_TAG("blocklist");   //! List of blocked topics
-constexpr const char* BUILTIN_TAG("builtin");       //! List of builtin topics
-constexpr const char* TOPIC_NAME_TAG("name");       //! Name of a topic
-constexpr const char* TOPIC_TYPE_NAME_TAG("type");  //! Type name of a topic
-constexpr const char* TOPIC_KIND_TAG("keyed");      //! Kind of a topic (with or without key)
+constexpr const char* ALLOWLIST_TAG("allowlist");     //! List of allowed topics
+constexpr const char* BLOCKLIST_TAG("blocklist");     //! List of blocked topics
+constexpr const char* BUILTIN_TAG("builtin-topics");  //! List of builtin topics
+constexpr const char* TOPIC_NAME_TAG("name");         //! Name of a topic
+constexpr const char* TOPIC_TYPE_NAME_TAG("type");    //! Type name of a topic
+constexpr const char* TOPIC_KIND_TAG("keyed");        //! Kind of a topic (with or without key)
 
-constexpr const char* PARTICIPANT_KIND_TAG("kind"); //! Participant Kind
-constexpr const char* PARTICIPANT_NAME_TAG("name"); //! Participant Name
+constexpr const char* PARTICIPANT_KIND_TAG("kind");   //! Participant Kind
+constexpr const char* PARTICIPANT_NAME_TAG("name");   //! Participant Name
 constexpr const char* COLLECTION_PARTICIPANTS_TAG("participants"); //! TODO: add comment
 
 // RTPS related tags

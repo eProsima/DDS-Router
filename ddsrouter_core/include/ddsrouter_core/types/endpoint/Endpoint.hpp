@@ -122,6 +122,13 @@ protected:
 };
 
 /**
+ * @brief \c EndpointKind to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const EndpointKind& kind);
+
+/**
  * @brief \c Endpoint to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(

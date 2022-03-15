@@ -42,6 +42,15 @@ public:
             bool has_keyed_set = false,
             bool topic_with_key = false) noexcept;
 
+    // OPERATOR OVERLOAD
+    /**
+     * Equal operator
+     *
+     * It compares that topic_name_, topic_type_, topic_with_key_ and has_keyed_set_ are equal
+     */
+    bool operator ==(
+            const FilterTopic& other) const;
+
     /**
      * Whether this topic filters the same of the topic by argument.
      *

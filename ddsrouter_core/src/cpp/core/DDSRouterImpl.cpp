@@ -17,6 +17,8 @@
  *
  */
 
+#include <set>
+
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
@@ -54,6 +56,10 @@ DDSRouterImpl::DDSRouterImpl(
                   utils::Formatter() <<
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
+
+    // Add callback to be called by the discovery database when an Endpoint is discovered
+    discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
+            std::placeholders::_1));
 
     // Init topic allowed
     init_allowed_topics_();
@@ -118,8 +124,18 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             new_configuration.allowlist(),
             new_configuration.blocklist());
 
+        // Check if there are any new builtin topics
+        std::set<RealTopic> new_builtin_topics;
+        for (auto builtin_topic : new_configuration.builtin_topics())
+        {
+            if (current_topics_.find(*builtin_topic) == current_topics_.end())
+            {
+                new_builtin_topics.insert(*builtin_topic);
+            }
+        }
+
         // Check if it should change or is the same configuration
-        if (new_allowed_topic_list == allowed_topics_)
+        if (new_allowed_topic_list == allowed_topics_ && new_builtin_topics.empty())
         {
             logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
             return utils::ReturnCode::RETCODE_NO_DATA;
@@ -129,14 +145,6 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
         allowed_topics_ = new_allowed_topic_list;
 
         logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
-
-        // TODO refactor with discovery functionality
-        // TODO add bridge creation when initial topics configuration added
-        // Create new bridges for topics that does not exist yet
-        for (std::shared_ptr<RealTopic> topic : new_configuration.builtin_topics())
-        {
-            discovered_topic_(*topic);
-        }
 
         // It must change the configuration. Check every topic discovered and active if needed.
         for (auto& topic_it : current_topics_)
@@ -157,6 +165,12 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
                     activate_topic_(topic_it.first);
                 }
             }
+        }
+
+        // Create bridges for newly added builtin topics
+        for (RealTopic topic : new_builtin_topics)
+        {
+            discovered_topic_(topic);
         }
 
         configuration_.reload(new_configuration);
@@ -329,6 +343,14 @@ void DDSRouterImpl::discovered_topic_(
     {
         activate_topic_(topic);
     }
+}
+
+void DDSRouterImpl::discovered_endpoint_(
+        const Endpoint& endpoint) noexcept
+{
+    logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
+
+    discovered_topic_(endpoint.topic());
 }
 
 void DDSRouterImpl::create_new_bridge(

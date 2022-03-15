@@ -79,6 +79,20 @@ protected:
 };
 
 /**
+ * @brief \c DurabilityKind to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const DurabilityKind& kind);
+
+/**
+ * @brief \c ReliabilityKind to stream serialization
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const ReliabilityKind& kind);
+
+/**
  * @brief \c QoS to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(

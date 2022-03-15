@@ -6,7 +6,7 @@
 User Interface
 ##############
 
-|eddsrouter| is an application executed from command line.
+|eddsrouter| is a user application executed from command line and configured through a YAML configuration file.
 
 .. contents::
     :local:
@@ -85,8 +85,9 @@ It shows the usage information of the application.
     General options:
     -h --help         Print this help message.
     -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
-    -r --reload-time  Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link).
-                        Value 0 does not reload file. [Default: 0].
+    -r --reload-time  Time period in seconds to reload configuration file. This is needed when File Watcher
+                      functionality is not available (e.g. config file is a symbolic link).
+                      Value 0 does not reload file. [Default: 0].
     -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
 
 
@@ -95,7 +96,8 @@ It shows the usage information of the application.
 Configuration File Argument
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Set the :ref:`user_manual_user_interface_configuration_file`.
+Please refer to :ref:`user_manual_user_interface_configuration_file` for more information on how to build this
+configuration file.
 
 
 .. _user_manual_user_interface_reload_time_argument:
@@ -129,8 +131,10 @@ or compiled with CMake option ``LOG_INFO=ON``.
 Configuration File
 ------------------
 
-A |ddsrouter| **requires** one and only one *YAML* configuration file.
-Check section :ref:`user_manual_configuration` in order to know how to write this configuration file.
+A |ddsrouter| **requires** one and only one *YAML* configuration file as the operation of this application is
+configured via this *YAML* configuration file.
+Please refer to :ref:`user_manual_configuration` for more information on how to build this
+configuration file.
 
 This *YAML* configuration file must be passed as argument to the |ddsrouter| when executed.
 If no configuration file is provided as argument, the |ddsrouter| will attempt to load a file named
@@ -145,9 +149,9 @@ Reload Topics
 -------------
 
 The topics that the |ddsrouter| is routing could be changed at runtime.
-Including topics in configuration's ``allowedlist`` will create new :term:`Writers <DataWriter>` and
+Including topics in configuration's ``allowlist`` will create new :term:`Writers <DataWriter>` and
 :term:`Readers <DataReader>` for each Participant in the Router.
-Removing a topic from ``allowedlist`` will disable this topic, and so it will stop routing data in such topic.
+Removing a topic from ``allowlist`` will disable this topic, and so it will stop routing data in such topic.
 Be aware that disabling a topic does not eliminate the entities of that topic.
 So, if a topic has been active before, the Writers and Readers will still be present in the |ddsrouter| and will still
 receive data.

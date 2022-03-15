@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter_core/types/endpoint/QoS.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -52,6 +53,60 @@ bool QoS::operator ==(
         const QoS& other) const noexcept
 {
     return durability_ == other.durability_ && reliability_ == other.reliability_;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const DurabilityKind& kind)
+{
+    std::string durability_str;
+    switch (kind)
+    {
+        case DurabilityKind::VOLATILE:
+            durability_str = "VOLATILE";
+            break;
+
+        case DurabilityKind::TRANSIENT_LOCAL:
+            durability_str = "TRANSIENT_LOCAL";
+            break;
+
+        case DurabilityKind::TRANSIENT:
+            durability_str = "TRANSIENT";
+            break;
+
+        case DurabilityKind::PERSISTENT:
+            durability_str = "PERSISTENT";
+            break;
+
+        default:
+            utils::tsnh(utils::Formatter() << "Invalid Durability Kind.");
+            break;
+    }
+
+    return os << durability_str;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const ReliabilityKind& kind)
+{
+    std::string reliability_str;
+    switch (kind)
+    {
+        case ReliabilityKind::RELIABLE:
+            reliability_str = "RELIABLE";
+            break;
+
+        case ReliabilityKind::BEST_EFFORT:
+            reliability_str = "BEST_EFFORT";
+            break;
+
+        default:
+            utils::tsnh(utils::Formatter() << "Invalid Reliability Kind.");
+            break;
+    }
+
+    return os << reliability_str;
 }
 
 std::ostream& operator <<(

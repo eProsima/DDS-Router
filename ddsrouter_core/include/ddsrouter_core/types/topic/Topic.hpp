@@ -67,7 +67,8 @@ struct Topic
     /**
      * Minor operator
      *
-     * It compares first the topic name, and if it is the same, it compares the topic type
+     * It compares first the topic name, and if it is the same, it compares the topic type, and if it is the same,
+     * it compares keyed attribute
      */
     DDSROUTER_CORE_DllAPI bool operator <(
             const Topic& other) const;

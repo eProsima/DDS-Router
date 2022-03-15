@@ -80,15 +80,28 @@ bool Topic::operator <(
     }
     else
     {
-        // To equal name, compare type
+        // Equal name, compare type
         // WARNING: do not return value from compare, as -1 != false
-        if (topic_type_.compare(other.topic_type_) < 0)
+        int topic_comparison = topic_type_.compare(other.topic_type_);
+        if (topic_comparison < 0)
         {
             return true;
         }
-        else
+        else if (topic_comparison > 0)
         {
             return false;
+        }
+        else
+        {
+            // Equal type, compare keyed
+            if (topic_with_key_ == other.topic_with_key_)
+            {
+                return false;
+            }
+            else
+            {
+                return !topic_with_key_;
+            }
         }
     }
 }
