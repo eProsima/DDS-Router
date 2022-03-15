@@ -54,15 +54,10 @@ public:
 };
 
 /**
- * It raises a callback each time the signal specified by \c SigNum is received. Signals may be captured from any
- * running thread, but handling is performed here in a dedicated thread (\c signal_handler_thread_) in order to avoid
- * unexpected behaviors.
+ * It raises a callback each time the signal specified by \c SigNum is received.
  *
- * This class is special because signals must be handled statically. Thus it stores every object
- * created in a static array, and for every signal that arrives it calls the callback of each object
- * in this array.
- * There could be several Handlers for the same signal, and all the callbacks will be called when
- * the signal arrives.
+ * This class uses \c SignalManager to handle the signal.
+ * This registers a callback in \c SignalManager so each signal received calls \c event_occured_
  *
  * The template \c SigNum references the signal that the object will handle following the
  * values in \c Signals .
@@ -78,11 +73,8 @@ public:
      * @brief Default constructor that intialized the EventHandler with a default callback.
      *
      * It is initialized with a callback that only prints a Log message when the signal has arrived.
-     *
      * In this class, handled events will be used mostly for wait interruption, so a default callback is set.
      * This default callback only logs that a signal has been received.
-     *
-     * @note Adds \c this to a static list of active \c SignalHandlers .
      *
      * @warning Default callback is set in this constructor, so EventHandler is enabled.
      */
@@ -92,9 +84,6 @@ public:
      * @brief Construct a new Signal Handler object with specific callback
      *
      * @param callback : function that will be called when the signal raises.
-     *
-     * @note Adds \c this to a static list of active \c SignalHandlers .
-     * If it is the first one, set the static signal handler function.
      */
     SignalHandler(
             std::function<void(int)> callback) noexcept;
@@ -103,9 +92,6 @@ public:
      * @brief Destroy Signal Handler object
      *
      * Calls \c unset_callback
-     *
-     * @note It eliminates \c this from static list of \c SignalHandlers .
-     * If it is the last one, unset the static signal handler function.
      */
     ~SignalHandler();
 
@@ -117,10 +103,13 @@ protected:
     //! Specific set method that removes \c this from \c active_handlers_
     void callback_unset_nts_() noexcept override;
 
+    //! Method called in the callback registered in \c SignalManager that calls \c event_occured_ .
     void signal_received_callback_() noexcept;
 
+    //! Whether a callback has been registered in \c SignalManager or not yet.
     std::atomic<bool> callback_set_in_manager_;
 
+    //! Id of the callback set in \c SignalManager .
     std::atomic<UniqueCallbackId> callback_id_;
 };
 

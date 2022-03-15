@@ -63,7 +63,7 @@ void SignalHandler<SigNum>::callback_set_nts_() noexcept
 {
     if (!callback_set_in_manager_.exchange(true))
     {
-        callback_id_ = SignalManager<SigNum>::get_instance().add_callback(
+        callback_id_ = SignalManager<SigNum>::get_instance().register_callback(
                 std::bind(&SignalHandler<SigNum>::signal_received_callback_, this)
             );
         // callback_id_ = SignalManager<SigNum>::get_instance().add_callback(
@@ -76,7 +76,7 @@ void SignalHandler<SigNum>::callback_unset_nts_() noexcept
 {
     if (callback_set_in_manager_.exchange(false))
     {
-        SignalManager<SigNum>::get_instance().erase_callback(callback_id_);
+        SignalManager<SigNum>::get_instance().unregister_callback(callback_id_);
     }
 }
 

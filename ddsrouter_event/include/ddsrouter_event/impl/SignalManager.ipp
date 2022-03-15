@@ -22,6 +22,7 @@
 
 #include <algorithm>
 
+#include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
 namespace eprosima {
@@ -68,7 +69,7 @@ SignalManager<SigNum>::~SignalManager() noexcept
 }
 
 template <int SigNum>
-UniqueCallbackId SignalManager<SigNum>::add_callback(std::function<void()> callback) noexcept
+UniqueCallbackId SignalManager<SigNum>::register_callback(std::function<void()> callback) noexcept
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
 
@@ -82,11 +83,14 @@ UniqueCallbackId SignalManager<SigNum>::add_callback(std::function<void()> callb
 }
 
 template <int SigNum>
-void SignalManager<SigNum>::erase_callback(UniqueCallbackId id) noexcept
+void SignalManager<SigNum>::unregister_callback(UniqueCallbackId id)
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
 
-    active_callbacks_.erase(id);
+    if(!active_callbacks_.erase(id))
+    {
+        throw utils::InconsistencyException("Unregistering callback that has not been registered before.");
+    }
 
     logDebug(DDSROUTER_SIGNALHANDLER,
             "Erase callback from signal " << SigNum << ".");
