@@ -1,7 +1,7 @@
 
 .. _forthcoming_version:
 
-This release includes the following **mayor changes**:
+This release includes the following **major changes**:
 
 * New DDS Router library that provides the DDS Router features through a C++ API.
 * Division of DDS Router application into several packages.
@@ -11,6 +11,9 @@ This release includes the following **mayor changes**:
   - `ddsrouter_core`: C++ library which implements the DDS Router operation and exports the DDS Router C++ API.
   - `ddsrouter_yaml`:  C++ library to parse the DDS Router *yaml* configuration files.
   - `ddsrouter_tool`: DDS Router end-user application.
+* New dynamic topic discovery feature: the user does not need to fully specify over which topics to communicate (i.e.
+  provide concrete topic names and types). The discovery of topics matching the allowlisting rules automatically
+  triggers the creation of all entities required for communication. See :ref:`topic_filtering` for more details.
 
 Next release includes the following **User Interface features**:
 
@@ -35,6 +38,6 @@ Next release will fix the following **minor bugs**:
 Next release includes the following **Documentation features**:
 
 * DDS Router execution from a provided Docker image.
-
 * Update all examples of *yaml* configuration files to be consistent with the new *yaml* configuration version.
 * High-level repository structure description and developer contribution guidelines.
+* Improved and extended :ref:`topic_filtering` section according to the new dynamic topic discovery functionality.
