@@ -21,23 +21,36 @@
 
 #include <atomic>
 #include <condition_variable>
-#include <csignal>
 #include <functional>
 #include <mutex>
-#include <string>
 #include <thread>
 
 #include <ddsrouter_event/EventHandler.hpp>
+#include <ddsrouter_event/SignalManager.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-//! Available data types for SignalHandler class
-enum Signals
+/**
+ * @brief Parent class for SignalEventHandler
+ *
+ * \c SignalEventHandler class is a template, and so there is no common parent class for every SignalEventHandler object.
+ * This class represents this common parent class without template, so it could be created a common
+ * interface of every kind of SignalEventHandler .
+ *
+ * This class does not implement nor define any method or variable required. It is merely an auxiliar
+ * class for container of SignalEventHandlers.
+ */
+class IBaseSignalHandler
 {
-    SIGNAL_SIGINT   = SIGINT,   //! SIGINT = ^C
-    SIGNAL_SIGTERM  = SIGTERM,  //! SIGTERM = kill
+public:
+
+    //! This virtual destructor is required so objects could be destroyed from its common interface.
+    virtual ~IBaseSignalHandler()
+    {
+    }
+
 };
 
 /**
@@ -57,7 +70,7 @@ enum Signals
  * that only share the same templatization.
  */
 template <int SigNum>
-class SignalHandler : public EventHandler<int>
+class SignalHandler : public EventHandler<int> , public IBaseSignalHandler
 {
 public:
 
@@ -104,53 +117,11 @@ protected:
     //! Specific set method that removes \c this from \c active_handlers_
     void callback_unset_nts_() noexcept override;
 
-    //! Add \c this to the active handlers list. Called when callback is set.
-    void add_to_active_handlers_() noexcept;
+    void signal_received_callback_() noexcept;
 
-    //! Remove \c this to the active handlers list. Called when callback is unset.
-    void erase_from_active_handlers_() noexcept;
+    std::atomic<bool> callback_set_in_manager_;
 
-    /**
-     * @brief Method that will be called each time the signal arrives.
-     *
-     * This method will call callback of every \c SignalHandler in \c active_handlers_ .
-     */
-    static void signal_handler_routine_() noexcept;
-
-    //! Set for while process the signal handler routine.
-    static void set_signal_handler_() noexcept;
-
-    //! Unset for while process the signal handler routine.
-    static void unset_signal_handler_() noexcept;
-
-    //! Routine performed by dedicated signal handling thread
-    static void signal_handler_thread_routine_() noexcept;
-
-    /**
-     * @brief List of active \c SignalHandlers
-     *
-     * Every time a callback is set to a \c SignalHandlers , the handler is added to this list.
-     * Every time a callback is unset to a \c SignalHandlers , the handler is erased from this list.
-     */
-    static std::vector<SignalHandler*> active_handlers_;
-
-    //! Guards access to variable \c active_handlers_
-    static std::mutex active_handlers_mutex_;
-
-    //! Handle of thread dedicated to listening for signal arrival
-    static std::thread signal_handler_thread_;
-
-    //! Flag used to terminate \c signal_handler_thread_
-    static std::atomic<bool> signal_handler_active_;
-
-    //! Counter incremented when a signal arrives and decremented after being read by \c signal_handler_thread_
-    static std::atomic<uint32_t> signals_received_;
-
-    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives or signal handler is unset
-    static std::condition_variable signal_received_cv_;
-
-    //! Guards access to \c signal_received_cv_
-    static std::mutex signal_received_cv_mutex_;
+    std::atomic<UniqueCallbackId> callback_id_;
 };
 
 } /* namespace event */

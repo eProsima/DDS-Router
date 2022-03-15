@@ -24,30 +24,11 @@
 
 #include <ddsrouter_utils/Log.hpp>
 
+#include <ddsrouter_event/SignalManager.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
-
-template <int SigNum>
-std::vector<SignalHandler<SigNum>*> SignalHandler<SigNum>::active_handlers_;
-
-template <int SigNum>
-std::mutex SignalHandler<SigNum>::active_handlers_mutex_;
-
-template <int SigNum>
-std::thread SignalHandler<SigNum>::signal_handler_thread_;
-
-template <int SigNum>
-std::atomic<bool> SignalHandler<SigNum>::signal_handler_active_(false);
-
-template <int SigNum>
-std::atomic<uint32_t> SignalHandler<SigNum>::signals_received_(0);
-
-template <int SigNum>
-std::condition_variable SignalHandler<SigNum>::signal_received_cv_;
-
-template <int SigNum>
-std::mutex SignalHandler<SigNum>::signal_received_cv_mutex_;
 
 template <int SigNum>
 SignalHandler<SigNum>::SignalHandler() noexcept
@@ -64,15 +45,15 @@ template <int SigNum>
 SignalHandler<SigNum>::SignalHandler(
         std::function<void(int)> callback) noexcept
     : EventHandler<int>()
+    , callback_set_in_manager_(false)
 {
-    std::lock_guard<std::mutex> lock(signal_received_cv_mutex_);
     set_callback(callback);
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler created for signal: " << SigNum << ".");
 }
 
 template <int SigNum>
 SignalHandler<SigNum>::~SignalHandler()
 {
-    std::lock_guard<std::mutex> lock(signal_received_cv_mutex_);
     unset_callback();
     logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler destroyed for signal: " << SigNum << ".");
 }
@@ -80,123 +61,29 @@ SignalHandler<SigNum>::~SignalHandler()
 template <int SigNum>
 void SignalHandler<SigNum>::callback_set_nts_() noexcept
 {
-    add_to_active_handlers_();
+    if (!callback_set_in_manager_.exchange(true))
+    {
+        callback_id_ = SignalManager<SigNum>::get_instance().add_callback(
+                std::bind(&SignalHandler<SigNum>::signal_received_callback_, this)
+            );
+        // callback_id_ = SignalManager<SigNum>::get_instance().add_callback(
+        //     [](int s){ std::cout << "!!" << s << std::endl; });
+    }
 }
 
 template <int SigNum>
 void SignalHandler<SigNum>::callback_unset_nts_() noexcept
 {
-    erase_from_active_handlers_();
-}
-
-template <int SigNum>
-void SignalHandler<SigNum>::add_to_active_handlers_() noexcept
-{
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
-
-    logInfo(DDSROUTER_SIGNALHANDLER,
-            "Add signal handler to signal " << SigNum << ".");
-
-    active_handlers_.push_back(this);
-
-    // First value included, set signal handler
-    if (active_handlers_.size() == 1)
+    if (callback_set_in_manager_.exchange(false))
     {
-        set_signal_handler_();
+        SignalManager<SigNum>::get_instance().erase_callback(callback_id_);
     }
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::erase_from_active_handlers_() noexcept
+void SignalHandler<SigNum>::signal_received_callback_() noexcept
 {
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
-
-    logInfo(DDSROUTER_SIGNALHANDLER,
-            "Erase signal handler from signal " << SigNum << ".");
-
-    active_handlers_.erase(std::remove(active_handlers_.begin(), active_handlers_.end(), this));
-
-    // Last handler erased, unset signal handler
-    if (active_handlers_.size() == 0)
-    {
-        unset_signal_handler_();
-    }
-}
-
-template <int SigNum>
-void SignalHandler<SigNum>::signal_handler_routine_() noexcept
-{
-    std::lock_guard<std::mutex> lock(active_handlers_mutex_);
-
-    logInfo(DDSROUTER_SIGNALHANDLER,
-            "Received signal " << SigNum << ".");
-
-    for (auto it : active_handlers_)
-    {
-        it->event_occurred_(SigNum);
-    }
-}
-
-template <int SigNum>
-void SignalHandler<SigNum>::signal_handler_thread_routine_() noexcept
-{
-    signal(SigNum, [](int)
-            {
-                // Normally \c signals_received_ should be guarded by \c signal_received_cv_mutex_ in order to prevent
-                // missing notifications. However here it is not possible as mutexes should not be taken from within
-                // signal handlers (e.g. the signal may be captured from the same thread holding the mutex causing a
-                // deadlock).
-                signals_received_++;
-                signal_received_cv_.notify_one();
-            });
-
-    signal_handler_active_.store(true);
-    while (true)
-    {
-        std::unique_lock<std::mutex> lock(signal_received_cv_mutex_);
-        signal_received_cv_.wait(
-            lock,
-            []
-            {
-                return signals_received_.load() > 0 || !signal_handler_active_.load();
-            });
-
-        if (!signal_handler_active_.load())
-        {
-            break;
-        }
-        else if (signals_received_.load() > 0)
-        {
-            signals_received_--;
-            signal_handler_routine_();
-        }
-    }
-}
-
-template <int SigNum>
-void SignalHandler<SigNum>::set_signal_handler_() noexcept
-{
-    logInfo(DDSROUTER_SIGNALHANDLER,
-            "Set signal handler for signal " << SigNum << ".");
-
-    signal_handler_thread_ = std::thread(signal_handler_thread_routine_);
-}
-
-template <int SigNum>
-void SignalHandler<SigNum>::unset_signal_handler_() noexcept
-{
-    logInfo(DDSROUTER_SIGNALHANDLER,
-            "Unset signal handler for signal " << SigNum << ".");
-
-    // signal_received_cv_mutex_ already taken in destructor
-    signal_handler_active_.store(false);
-
-    // Unlock mutex before call to join so signal_handler_thread_ can resume and finish execution
-    signal_received_cv_mutex_.unlock();
-
-    signal_received_cv_.notify_one();
-
-    signal_handler_thread_.join();
+    event_occurred_(SigNum);
 }
 
 } /* namespace event */
