@@ -65,7 +65,7 @@ public:
  * that only share the same templatization.
  */
 template <int SigNum>
-class SignalHandler : public EventHandler<int> , public IBaseSignalHandler
+class SignalHandler : public EventHandler<int>, public IBaseSignalHandler
 {
 public:
 

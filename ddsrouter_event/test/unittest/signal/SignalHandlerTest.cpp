@@ -81,7 +81,7 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGINT
     {
         std::vector<std::unique_ptr<SignalHandler<SIGNAL_SIGINT>>> v;
-        for (int i=0; i<test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalHandler<SIGNAL_SIGINT>>());
         }
@@ -90,7 +90,7 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGTERM
     {
         std::vector<std::unique_ptr<SignalHandler<SIGNAL_SIGTERM>>> v;
-        for (int i=0; i<test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalHandler<SIGNAL_SIGTERM>>());
         }
@@ -99,7 +99,7 @@ TEST(SignalHandlerTest, create_several_signal_handlers)
     // N signal handlers of SIGINT & SIGTERM
     {
         std::vector<std::unique_ptr<IBaseSignalHandler>> v;
-        for (int i=0; i<test::N_DEFAUL_TEST_EXECUTIONS; i++)
+        for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
             v.push_back(std::make_unique<SignalHandler<SIGNAL_SIGINT>>());
             v.push_back(std::make_unique<SignalHandler<SIGNAL_SIGTERM>>());
@@ -116,7 +116,10 @@ TEST(SignalHandlerTest, receive_signal_trivial)
     uint32_t calls = 0;
 
     // Create signal handler
-    SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
+    SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+            {
+                calls++;
+            } );
 
     // Raise signal
     raise(SIGNAL_SIGINT);
@@ -145,8 +148,14 @@ TEST(SignalHandlerTest, receive_signal)
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ ){ calls++; } );
-        SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ )
+                {
+                    calls++;
+                } );
+        SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ )
+                {
+                    calls++;
+                } );
 
         // Raise signal
         raise(SIGNAL_SIGINT);
@@ -165,7 +174,10 @@ TEST(SignalHandlerTest, receive_signal)
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+                {
+                    calls++;
+                } );
 
         // Raise signal
         raise(SIGNAL_SIGINT);
@@ -184,7 +196,10 @@ TEST(SignalHandlerTest, receive_signal)
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+                {
+                    calls++;
+                } );
 
         // Raise signal
         raise(SIGNAL_SIGINT);
@@ -210,7 +225,9 @@ TEST(SignalHandlerTest, receive_signal)
     {
         {
             // Create signal handler
-            SignalHandler<SIGNAL_SIGINT> handler( [](int /* signal_number */ ){ /* empty callback */ } );
+            SignalHandler<SIGNAL_SIGINT> handler( [](int /* signal_number */ )
+                    {
+                        /* empty callback */ } );
         }
 
         // Destroying handler while Raise signal
@@ -237,10 +254,13 @@ TEST(SignalHandlerTest, receive_n_signals)
         uint32_t calls = 0;
 
         // Create signal handler
-        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ ){ calls++; } );
+        SignalHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+                {
+                    calls++;
+                } );
 
         // Raise N signal
-        for (uint32_t i=0; i<number_signals; i++)
+        for (uint32_t i = 0; i < number_signals; i++)
         {
             raise(SIGNAL_SIGINT);
         }
@@ -265,9 +285,15 @@ TEST(SignalHandlerTest, erase_callback_while_other_handling)
 
     // Create signal handler
     // This adds 10 each time signal is called
-    SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ ){ calls += 10; } );
+    SignalHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ )
+            {
+                calls += 10;
+            } );
     // This adds 1 each time signal is called
-    SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ ){ calls += 1; } );
+    SignalHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ )
+            {
+                calls += 1;
+            } );
 
     // Raise signal
     raise(SIGNAL_SIGINT);
