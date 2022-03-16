@@ -9,7 +9,7 @@
                 "version":{
                     "type":"string",
                     "enum":[
-                        "2.0"
+                        "v2.0"
                     ]
                 },
                 "allowlist":{
@@ -206,11 +206,6 @@
                                         }
                                     }
                                 }
-                            },
-                            {
-                                "required":[
-                                    "domain"
-                                ]
                             }
                         ]
                     }
@@ -420,10 +415,10 @@
                     "type":"string",
                     "anyOf":[
                         {
-                            "format":"ipv4"
+                            "format":"v4"
                         },
                         {
-                            "format":"ipv6"
+                            "format":"v6"
                         }
                     ]
                 },
@@ -445,8 +440,8 @@
                 "ip-version":{
                     "type":"string",
                     "enum":[
-                        "ipv4",
-                        "ipv6"
+                        "v4",
+                        "v6"
                     ]
                 }
             },

@@ -45,6 +45,8 @@ installed in the system:
 * :ref:`cmake_gcc_pip_wget_git_sl`
 * :ref:`colcon_install` [optional]
 * :ref:`gtest_sl` [for test only]
+* :ref:`py_yaml` [for YAML Validator only]
+* :ref:`json_schema` [for YAML Validator only]
 
 
 .. _cmake_gcc_pip_wget_git_sl:
@@ -99,6 +101,40 @@ Use the following command to download the code:
 .. code-block:: bash
 
     git clone --branch release-1.10.0 https://github.com/google/googletest src/googletest-distribution
+
+
+.. _py_yaml:
+
+PyYAML
+^^^^^^
+
+`PyYAML <https://pyyaml.org/>`_ is a YAML parser and emitter for Python.
+
+It is used by the DDS-Router :ref:`yaml_validator` for loading the content of configuration files.
+
+Install ``pyyaml`` by executing the following command:
+
+.. code-block:: bash
+
+    pip3 install -U pyyaml
+
+
+.. _json_schema:
+
+jsonschema
+^^^^^^^^^^
+
+`jsonschema <https://python-jsonschema.readthedocs.io/>`_ is an implementation of the JSON Schema specification for
+Python.
+
+It is used by the DDS-Router :ref:`yaml_validator` for performing validation of configuration files against a given
+JSON schema.
+
+Install ``jsonschema`` by executing the following command:
+
+.. code-block:: bash
+
+    pip3 install -U jsonschema
 
 .. _dependencies:
 
@@ -299,13 +335,13 @@ Run an application
 ==================
 
 To run the |ddsrouter| application, source the *Fast DDS* library
-and execute the executable file that has been installed in :code:`<install-path>/ddsrouter/bin/ddsrouter`:
+and execute the executable file that has been installed in :code:`<install-path>/ddsrouter_tool/bin/ddsrouter`:
 
 .. code-block:: bash
 
     # If built has been done using colcon, all projects could be sourced as follows
     source install/setup.bash
-    ./<install-path>/ddsrouter/bin/ddsrouter
+    ./<install-path>/ddsrouter_tool/bin/ddsrouter
 
 Be sure that this executable has execute permissions.
 

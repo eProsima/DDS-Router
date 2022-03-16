@@ -1,4 +1,4 @@
-version: 2.0
+version: v2.0 # Required
 
 allowlist:
 - name: rt/chatter # Required
@@ -24,7 +24,7 @@ participants:
 
 - name: participant1 # Required
   kind: simple # Required
-  domain: 1 # Required
+  domain: 1
 
 - name: participant2
   kind: discovery-server
@@ -53,7 +53,7 @@ participants:
     ca: ca.crt # Required
     password: ddsrouterpass # If "password" present, "private_key" and "cert" required
     private_key: ddsrouter.key # If "private_key" present, "password" and "cert" required
-    cert: ddsrouter.crt # It "cert" present, "password" and "private_cert" required
+    cert: ddsrouter.crt # If "cert" present, "password" and "private_key" required
     dh_params: dh_params.pem
 
 - name: participant3

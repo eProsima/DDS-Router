@@ -1,0 +1,14 @@
+version: v2.0
+
+builtin-topics:
+  - type: HelloWorld
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo

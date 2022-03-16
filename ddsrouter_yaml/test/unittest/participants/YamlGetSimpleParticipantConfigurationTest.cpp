@@ -75,7 +75,6 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
  * - empty
  * - no id
  * - no type
- * - no domain
  */
 TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 {
@@ -119,21 +118,6 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         Yaml yml_participant;
         yaml::test::participantid_to_yaml(yml_participant, id);
         yaml::test::domain_to_yaml(yml_participant, domain);
-        yml["participant"] = yml_participant;
-
-        // Read Yaml
-        ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
-    }
-
-    // no domain
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
         yml["participant"] = yml_participant;
 
         // Read Yaml

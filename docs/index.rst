@@ -50,6 +50,7 @@
    Participant </rst/user_manual/participants/participant>
    /rst/user_manual/configuration
    /rst/user_manual/wan_configuration
+   /rst/user_manual/yaml_validator
    /rst/user_manual/user_manual_glossary
 
 
