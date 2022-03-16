@@ -162,6 +162,8 @@ int main(
         // Wait until signal arrives
         signal_handlers.wait_for_event();
 
+        logUser(DDSROUTER_EXECUTION, "Signal received, closing DDS Router.");
+
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)
         {

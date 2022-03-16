@@ -29,6 +29,7 @@ set(TEST_LIST
         handler_period_without_callback
         limit_cases
         negative_cases
+        not_wait_in_destruction
     )
 
 set(TEST_EXTRA_LIBRARIES
