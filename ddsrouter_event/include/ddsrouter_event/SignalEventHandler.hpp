@@ -16,8 +16,8 @@
  * @file SignalEventHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_SIGNALHANDLER_HPP_
-#define _DDSROUTEREVENT_SIGNALHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_SIGNALEVENTHANDLER_HPP_
+#define _DDSROUTEREVENT_SIGNALEVENTHANDLER_HPP_
 
 #include <atomic>
 #include <functional>
@@ -117,4 +117,4 @@ protected:
 // Include implementation template file
 #include <ddsrouter_event/impl/SignalEventHandler.ipp>
 
-#endif /* _DDSROUTEREVENT_SIGNALHANDLER_HPP_ */
+#endif /* _DDSROUTEREVENT_SIGNALEVENTHANDLER_HPP_ */

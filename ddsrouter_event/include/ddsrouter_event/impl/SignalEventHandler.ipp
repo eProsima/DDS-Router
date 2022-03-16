@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef _DDSROUTEREVENT_IMPL_SIGNALHANDLER_IPP_
-#define _DDSROUTEREVENT_IMPL_SIGNALHANDLER_IPP_
+#ifndef _DDSROUTEREVENT_IMPL_SIGNALEVENTHANDLER_IPP_
+#define _DDSROUTEREVENT_IMPL_SIGNALEVENTHANDLER_IPP_
 
 #include <algorithm>
 
@@ -88,4 +88,4 @@ void SignalEventHandler<SigNum>::signal_received_callback_() noexcept
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_IMPL_SIGNALHANDLER_IPP_ */
+#endif /* _DDSROUTEREVENT_IMPL_SIGNALEVENTHANDLER_IPP_ */

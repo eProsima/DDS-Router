@@ -112,10 +112,10 @@ void EventHandler<Args...>::unset_callback() noexcept
     {
         // Call child methods in case they should do something when handler is disabled
         callback_unset_nts_();
-    }
 
-    // Awaking every thread waiting in wait_for_event()
-    awake_all_waiting_threads_nts_();
+        // Awaking every thread waiting in wait_for_event()
+        awake_all_waiting_threads_nts_();
+    }
 }
 
 template <typename ... Args>
