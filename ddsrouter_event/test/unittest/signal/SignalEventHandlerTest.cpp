@@ -49,7 +49,9 @@ TEST(SignalEventHandlerTest, create_signal_handler)
 {
     // SIGINT with callback
     {
-        SignalEventHandler<SIGNAL_SIGINT> handler([](int /* signal_number */ ){ /* empty callback */ });
+        SignalEventHandler<SIGNAL_SIGINT> handler([](int /* signal_number */ )
+                {
+                    /* empty callback */ });
     }
 
     // SIGINT without callback
@@ -59,7 +61,9 @@ TEST(SignalEventHandlerTest, create_signal_handler)
 
     // SIGTERM with callback
     {
-        SignalEventHandler<SIGNAL_SIGTERM> handler([](int /* signal_number */ ){ /* empty callback */ });
+        SignalEventHandler<SIGNAL_SIGTERM> handler([](int /* signal_number */ )
+                {
+                    /* empty callback */ });
     }
 
     // SIGTERM without callback

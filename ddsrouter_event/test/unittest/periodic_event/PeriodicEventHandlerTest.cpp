@@ -225,7 +225,7 @@ TEST(PeriodicEventHandlerTest, not_wait_in_destruction)
     utils::Duration_ms time_elapsed = timer.elapsed_ms();
 
     // Check that the time elapsed is smaller than the time required to wait for first event AND to stop handler
-    ASSERT_LT(time_elapsed, handler_period*2) << time_elapsed;
+    ASSERT_LT(time_elapsed, handler_period * 2) << time_elapsed;
 }
 
 int main(
