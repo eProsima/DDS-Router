@@ -63,7 +63,7 @@ void PeriodicEventHandler::period_thread_routine_() noexcept
         std::unique_lock<std::mutex> lock(periodic_wait_mutex_);
 
         // Wait for period time or awake if object has been disabled
-        wait_condition_variable_.wait_for(
+        periodic_wait_condition_variable_.wait_for(
             lock,
             std::chrono::milliseconds(period_time_),
             [this]
