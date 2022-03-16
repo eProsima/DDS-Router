@@ -41,10 +41,7 @@ SignalManager<SigNum>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
     , signals_received_(0)
 {
-    signal(SigNum, [](int)
-        {
-            SignalManager<SigNum>::get_instance().signal_received_();
-        });
+    signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
 
     logDebug(DDSROUTER_SIGNALMANAGER,
             "Set SignalManager handling signal: " << SigNum << ".");
@@ -69,7 +66,8 @@ SignalManager<SigNum>::~SignalManager() noexcept
 }
 
 template <int SigNum>
-UniqueCallbackId SignalManager<SigNum>::register_callback(std::function<void()> callback) noexcept
+UniqueCallbackId SignalManager<SigNum>::register_callback(
+        std::function<void()> callback) noexcept
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
 
@@ -83,11 +81,12 @@ UniqueCallbackId SignalManager<SigNum>::register_callback(std::function<void()> 
 }
 
 template <int SigNum>
-void SignalManager<SigNum>::unregister_callback(UniqueCallbackId id)
+void SignalManager<SigNum>::unregister_callback(
+        UniqueCallbackId id)
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
 
-    if(!active_callbacks_.erase(id))
+    if (!active_callbacks_.erase(id))
     {
         throw utils::InconsistencyException("Unregistering callback that has not been registered before.");
     }
@@ -102,6 +101,17 @@ UniqueCallbackId SignalManager<SigNum>::new_unique_id_() noexcept
     std::lock_guard<std::mutex> lock(last_id_mutex_);
     current_last_id_++;
     return current_last_id_;
+}
+
+template <int SigNum>
+void SignalManager<SigNum>::signal_handler_function_(
+        int signal_number) noexcept
+{
+#ifdef _WIN32
+    // Windows requires to handle again the signal once it has been handled
+    signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
+#endif // _WIN32
+    SignalManager<SigNum>::get_instance().signal_received_();
 }
 
 template <int SigNum>
@@ -140,7 +150,7 @@ void SignalManager<SigNum>::signal_handler_thread_routine_() noexcept
             [this]
             {
                 return signals_received_.load() > 0 ||
-                    signal_handler_thread_stop_.load();
+                signal_handler_thread_stop_.load();
             });
 
         if (signal_handler_thread_stop_.load())

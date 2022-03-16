@@ -39,3 +39,5 @@ add_unittest_executable(
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
+
+add_windows_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)

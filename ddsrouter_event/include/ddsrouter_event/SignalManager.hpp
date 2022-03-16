@@ -40,7 +40,7 @@ enum Signals
 #ifndef _WIN32
     SIGNAL_SIGUSR1  = SIGUSR1,  //! SIGUSR1 =       = 10
     SIGNAL_SIGUSR2  = SIGUSR2,  //! SIGUSR2 =       = 12
-#endif
+#endif // ifndef _WIN32
 
 };
 
@@ -88,7 +88,7 @@ public:
      * @return UniqueCallbackId id which this callback will be registered
      */
     UniqueCallbackId register_callback(
-        std::function<void()> callback) noexcept;
+            std::function<void()> callback) noexcept;
 
     /**
      * @brief Unregister a callback by its id
@@ -97,12 +97,15 @@ public:
      *
      * @throw \c InconsistencyException in case the callback was not registered
      */
-    void unregister_callback(UniqueCallbackId id);
+    void unregister_callback(
+            UniqueCallbackId id);
 
     //! Deleted copy method
-    SignalManager(SignalManager const&) = delete;
+    SignalManager(
+            SignalManager const&) = delete;
     //! Deleted copy method
-    void operator=(SignalManager const&) = delete;
+    void operator =(
+            SignalManager const&) = delete;
 
 protected:
 
@@ -143,6 +146,10 @@ protected:
      * If more than one signal received, it will enter in wait again and exit by the predicate, without waiting.
      */
     void signal_handler_thread_routine_() noexcept;
+
+    //! Static function to call from \c signal . It only calls singleton \c signal_received_ .
+    static void signal_handler_function_(
+            int signal_number) noexcept;
 
     //////
     // Callbacks registered
