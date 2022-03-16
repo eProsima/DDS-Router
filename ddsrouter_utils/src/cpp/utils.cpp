@@ -63,8 +63,8 @@ void tsnh(
         const Formatter& formatter)
 {
     logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter.to_string());
-    // TODO: check log is written before killing process
-    assert(false);
+    Log::Flush();
+
     abort();
 }
 
