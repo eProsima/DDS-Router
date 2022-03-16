@@ -22,7 +22,7 @@
 #include <ddsrouter_event/FileWatcherHandler.hpp>
 #include <ddsrouter_event/MultipleEventHandler.hpp>
 #include <ddsrouter_event/PeriodicEventHandler.hpp>
-#include <ddsrouter_event/SignalHandler.hpp>
+#include <ddsrouter_event/SignalEventHandler.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
@@ -84,9 +84,9 @@ int main(
         event::MultipleEventHandler signal_handlers;
 
         signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
+            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
         signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
+            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization

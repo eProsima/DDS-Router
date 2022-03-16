@@ -39,7 +39,7 @@ event::PeriodicEventHandler periodic_event_handler(
 
 ```cpp
 // Wait for a signal
-event::SignalHandler<event::SIGNAL_SIGINT> signal_handler;
+event::SignalEventHandler<event::SIGNAL_SIGINT> signal_handler;
 signal_handler.wait_for_event();
 ```
 

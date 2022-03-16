@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ template <int SigNum>
 SignalManager<SigNum>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
     , signals_received_(0)
+    , current_last_id_(0)
 {
     signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
 

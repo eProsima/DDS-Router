@@ -199,7 +199,7 @@ protected:
     //! Mutex to block EventHandler execution while lambda is being set/unset or called
     mutable std::recursive_mutex internal_callback_mutex_;
 
-    //! Mutex to block set and unset callbacks from outside the class.
+    //! Mutex to block set and unset callbacks from outside the class
     mutable std::recursive_mutex event_mutex_;
 
     /**

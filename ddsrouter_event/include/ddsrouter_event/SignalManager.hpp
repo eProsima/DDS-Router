@@ -64,8 +64,8 @@ using UniqueCallbackId = uint32_t;
  * Be aware that objects for different signals are completely independent as they are different objects
  * that only share the same templatization.
  *
- * @note this class must be exported as public because SignalHandler is a template and it requires to use it,
- * so as the implementation of SignalHandler must be public, this too. But it is not mean to be used externally.
+ * @note this class must be exported as public because SignalEventHandler is a template and it requires to use it,
+ * so as the implementation of SignalEventHandler must be public, this too. But it is not mean to be used externally.
  *
  */
 template <int SigNum>
@@ -132,16 +132,17 @@ protected:
     /**
      * @brief Method called every time the signal arrives
      *
-     * It augmentate \c signals_received_ in one and awakes \c signal_handler_thread_ .
+     * It increments \c signals_received_ by one and awakes \c signal_handler_thread_
      */
     void signal_received_() noexcept;
 
+    //! function called from \c signal when a signal is handled.
     void signal_handler_routine_() noexcept;
 
     /**
      * @brief Routine for \c signal_handler_thread_
      *
-     * It is an infinite loop that waits for a signal comes or till \c signal_handler_thread_stop_ set to stop.
+     * It is an infinite loop that waits for a signal to come or till \c signal_handler_thread_stop_ is set to stop.
      * If awaken by signal received, it calls \c signal_handler_routine_ once.
      * If more than one signal received, it will enter in wait again and exit by the predicate, without waiting.
      */

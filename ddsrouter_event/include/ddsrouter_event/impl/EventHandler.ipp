@@ -59,7 +59,7 @@ void EventHandler<Args...>::set_callback(
 
         {
             // Setting callback
-            // Wait mutex must be taken because this variable is use d in wait_for_event() wait
+            // Wait mutex must be taken because this variable is used in wait_for_event() wait
             std::lock_guard<std::mutex> lock(wait_mutex_);
             was_callback_set_before = is_callback_set_.exchange(true);
         }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SignalHandler.ipp
+ * @file SignalEventHandler.ipp
  *
  */
 
@@ -31,8 +31,8 @@ namespace ddsrouter {
 namespace event {
 
 template <int SigNum>
-SignalHandler<SigNum>::SignalHandler() noexcept
-    : SignalHandler<SigNum>(
+SignalEventHandler<SigNum>::SignalEventHandler() noexcept
+    : SignalEventHandler<SigNum>(
         [](int signum)
         {
             logInfo(DDSROUTER_SIGNALHANDLER,
@@ -42,37 +42,35 @@ SignalHandler<SigNum>::SignalHandler() noexcept
 }
 
 template <int SigNum>
-SignalHandler<SigNum>::SignalHandler(
+SignalEventHandler<SigNum>::SignalEventHandler(
         std::function<void(int)> callback) noexcept
     : EventHandler<int>()
     , callback_set_in_manager_(false)
 {
     set_callback(callback);
-    logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler created for signal: " << SigNum << ".");
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler created for signal: " << SigNum << ".");
 }
 
 template <int SigNum>
-SignalHandler<SigNum>::~SignalHandler()
+SignalEventHandler<SigNum>::~SignalEventHandler()
 {
     unset_callback();
-    logDebug(DDSROUTER_SIGNALHANDLER, "SignalHandler destroyed for signal: " << SigNum << ".");
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler destroyed for signal: " << SigNum << ".");
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::callback_set_nts_() noexcept
+void SignalEventHandler<SigNum>::callback_set_nts_() noexcept
 {
     if (!callback_set_in_manager_.exchange(true))
     {
         callback_id_ = SignalManager<SigNum>::get_instance().register_callback(
-            std::bind(&SignalHandler<SigNum>::signal_received_callback_, this)
+            std::bind(&SignalEventHandler<SigNum>::signal_received_callback_, this)
             );
-        // callback_id_ = SignalManager<SigNum>::get_instance().add_callback(
-        //     [](int s){ std::cout << "!!" << s << std::endl; });
     }
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::callback_unset_nts_() noexcept
+void SignalEventHandler<SigNum>::callback_unset_nts_() noexcept
 {
     if (callback_set_in_manager_.exchange(false))
     {
@@ -81,7 +79,7 @@ void SignalHandler<SigNum>::callback_unset_nts_() noexcept
 }
 
 template <int SigNum>
-void SignalHandler<SigNum>::signal_received_callback_() noexcept
+void SignalEventHandler<SigNum>::signal_received_callback_() noexcept
 {
     event_occurred_(SigNum);
 }

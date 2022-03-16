@@ -13,17 +13,14 @@
 // limitations under the License.
 
 /**
- * @file SignalHandler.hpp
+ * @file SignalEventHandler.hpp
  */
 
 #ifndef _DDSROUTEREVENT_SIGNALHANDLER_HPP_
 #define _DDSROUTEREVENT_SIGNALHANDLER_HPP_
 
 #include <atomic>
-#include <condition_variable>
 #include <functional>
-#include <mutex>
-#include <thread>
 
 #include <ddsrouter_event/EventHandler.hpp>
 #include <ddsrouter_event/SignalManager.hpp>
@@ -42,12 +39,12 @@ namespace event {
  * This class does not implement nor define any method or variable required. It is merely an auxiliar
  * class for container of SignalEventHandlers.
  */
-class IBaseSignalHandler
+class IBaseSignalEventHandler
 {
 public:
 
     //! This virtual destructor is required so objects could be destroyed from its common interface.
-    virtual ~IBaseSignalHandler()
+    virtual ~IBaseSignalEventHandler()
     {
     }
 
@@ -65,7 +62,7 @@ public:
  * that only share the same templatization.
  */
 template <int SigNum>
-class SignalHandler : public EventHandler<int>, public IBaseSignalHandler
+class SignalEventHandler : public EventHandler<int>, public IBaseSignalEventHandler
 {
 public:
 
@@ -78,14 +75,14 @@ public:
      *
      * @warning Default callback is set in this constructor, so EventHandler is enabled.
      */
-    SignalHandler() noexcept;
+    SignalEventHandler() noexcept;
 
     /**
      * @brief Construct a new Signal Handler object with specific callback
      *
      * @param callback : function that will be called when the signal raises.
      */
-    SignalHandler(
+    SignalEventHandler(
             std::function<void(int)> callback) noexcept;
 
     /**
@@ -93,7 +90,7 @@ public:
      *
      * Calls \c unset_callback
      */
-    ~SignalHandler();
+    ~SignalEventHandler();
 
 protected:
 
@@ -118,6 +115,6 @@ protected:
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter_event/impl/SignalHandler.ipp>
+#include <ddsrouter_event/impl/SignalEventHandler.ipp>
 
 #endif /* _DDSROUTEREVENT_SIGNALHANDLER_HPP_ */

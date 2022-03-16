@@ -42,7 +42,7 @@ namespace event {
  *
  * Recommendation of use:
  * Create every EventHandler using make_unique in the same call of \c register_event_handler . e.g.:
- *  signal_handlers.register_event_handler<EventHandler<int>, int>(make_unique<SignalHandler<SIGNAL_SIGINT>>());
+ *  signal_handlers.register_event_handler<EventHandler<int>, int>(make_unique<SignalEventHandler<SIGNAL_SIGINT>>());
  */
 class MultipleEventHandler : public EventHandler<>
 {
@@ -79,8 +79,8 @@ public:
      *
      * Every handler registered will change its callback to target this object callback.
      *
-     * @tparam T typename of the EventHandler class (e.g. EventHandler<int> for SignalHandler)
-     * @tparam Args typename of the arguments for the class set in T (e.g. int for SignalHandler)
+     * @tparam T typename of the EventHandler class (e.g. EventHandler<int> for SignalEventHandler)
+     * @tparam Args typename of the arguments for the class set in T (e.g. int for SignalEventHandler)
      * @warning \c T must be the form of T<Args>. This is because C++ could not handle the template substitution
      * otherwise.
      *
