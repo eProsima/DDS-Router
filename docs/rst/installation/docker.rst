@@ -47,7 +47,7 @@ The steps to run |ddsrouter| in a Docker container are explained below.
         docker run -it \
             --net=host \
             -v /<dds_router_ws>/DDS_ROUTER_CONFIGURATION.yaml:/root/DDS_ROUTER_CONFIGURATION.yaml \
-            ubuntu-ddsrouter:v0.2.0
+            ubuntu-ddsrouter:v0.3.0
 
     It is important to mention that both the path to the configuration file hosted in the local machine and the one
     created in the Docker container must be absolute paths in order to share just one single file as a shared volume.

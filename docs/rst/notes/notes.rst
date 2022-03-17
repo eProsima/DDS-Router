@@ -2,53 +2,66 @@
 
 .. _release_notes:
 
-###################
-Forthcoming Version
-###################
-
-.. include:: forthcoming_version.rst
-
 ##############
-Version v0.2.0
+Version v0.3.0
 ##############
 
-This release includes the following **Configuration features**:
+This release includes the following **major changes**:
 
-* Support TLS over TCP configuration and communication.
-* Support IPv6 communication via UDP, TCP and TLS over TCP.
-* Support DNS by given Domain Name in configuration instead of an IP address.
-* Support keyed topics.
+* New DDS Router library that provides the DDS Router features through a C++ API.
+* Division of DDS Router application into several packages.
+
+  - `ddsrouter_event`: C++ library which implements System Operating (SO)-dependent signal handlers.
+  - `ddsrouter_utils`:  C++ library which implements various utility functions.
+  - `ddsrouter_core`: C++ library which implements the DDS Router operation and exports the DDS Router C++ API.
+  - `ddsrouter_yaml`:  C++ library to parse the DDS Router *yaml* configuration files.
+  - `ddsrouter_tool`: DDS Router end-user application.
+* New dynamic topic discovery feature to automatically discover DDS Topics in a DDS network.
+* Allow using wildcard characters to define topics in ``allowlist`` and ``blocklist``.
+* Build internal topic tracks via the ``builtin-topics`` configuration.
+
 
 This release includes the following **Routing features**:
 
-* Zero-Copy data transmission between internal Participants.
+* Apply DDS Topic filtering rules using the ``allowlist`` and ``blocklist`` lists.
+
 
 This release includes the following **User Interface features**:
 
-* Shutdown the DDS Router application gracefully sending ``SIGTERM`` (``kill``) or ``SIGINT`` (``^C``) signals.
+* Upgrade the *yaml* configuration file to version 2.0 which breaks compatibility with version 1.0.
+* Support for both version 1.0 and version 2.0 of the *yaml* configuration file, maintaining version 1.0 by default.
+* Improve reporting of errors resulting from parsing a malformed *yaml* configuration file.
+
 
 This release includes the following **Continuous-Integration features**:
 
-* Add communication tests for UDP, TCP and TLS over TCP WAN cases.
-* Extend tool test with more complex configurations.
-* Remove Flaky tests from CI required passing tests.
-* Implement a new class to check that no warning or error logs are produced during test executions.
-* Add gMock to test libraries.
+* Add tests for the *yaml* parsing library (`ddsrouter_yaml`).
+* Specific testing GitHub actions for each DDS Router package for both Windows and Linux platforms.
+
 
 This release fixes the following **major bugs**:
 
-* Fix GUID creation when explicit guid is provided.
-* Show error when participant ids are duplicated.
+* Fix deadlock between Track and Fast DDS Reader mutex.
+* Support any size for in and out messages.
+
 
 This release fixes the following **minor bugs**:
 
-* Change ``YAML`` example configurations to ``YAML`` format (instead of ``JSON``) fixing
-  an issue when blank lines were missing at the end of the file.
-* Normalize the error and process exit when failure.
-* Fix documentation typos.
+* Fix parsing of *reload-time* executable argument.
+* Handle signals in dedicated threads to prevent hangs when terminating execution.
+* Fix rare deadlock in EventHandler when destroying and callback called.
+
+
+This release includes the following **Documentation features**:
+
+* DDS Router execution from a provided Docker image.
+* Update all examples of *yaml* configuration files to be consistent with the new *yaml* configuration version.
+* High-level repository structure description and developer contribution guidelines.
+* Improved and extended :ref:`topic_filtering` section according to the new dynamic topic discovery functionality.
 
 #################
 Previous Versions
 #################
 
+.. include:: previous_versions/v0.2.0.rst
 .. include:: previous_versions/v0.1.0.rst
