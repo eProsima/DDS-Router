@@ -55,13 +55,17 @@ void EventHandler<Args...>::set_callback(
     bool was_callback_set_before;
 
     {
-        // Setting callback
-        // Wait mutex must be taken because this variable is used in wait_for_event() wait
-        std::lock_guard<std::mutex> lock(wait_mutex_);
-        was_callback_set_before = is_callback_set_.exchange(true);
-    }
+        std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
 
-    callback_ = callback;
+        {
+            // Setting callback
+            // Wait mutex must be taken because this variable is used in wait_for_event() wait
+            std::lock_guard<std::mutex> lock(wait_mutex_);
+            was_callback_set_before = is_callback_set_.exchange(true);
+        }
+
+        callback_ = callback;
+    }
 
     // Call child methods in case they should do something when handler is enabled or change callback
     if (was_callback_set_before)
@@ -80,8 +84,14 @@ void EventHandler<Args...>::unset_callback() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(event_mutex_);
 
+    bool was_callback_set_before = false;
+
     if (is_callback_set_)
     {
+        was_callback_set_before = true;
+
+        std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
+
         {
             // Unsetting callback
             // Wait mutex must be taken because this variable is used in wait_for_event() wait
@@ -89,18 +99,22 @@ void EventHandler<Args...>::unset_callback() noexcept
             is_callback_set_.store(false);
         }
 
-        // Awaking every thread waiting in wait_for_event()
-        awake_all_waiting_threads_nts_();
-
         // Setting new callback (even when it will not be called)
         callback_ = DEFAULT_CALLBACK_;
-
-        // Call child methods in case they should do something when handler is disabled
-        callback_unset_nts_();
     }
     else
     {
         logWarning(DDSROUTER_HANDLER, "Unsetting callback from an EventHandler that had no callback set.")
+    }
+
+    // Should only call unset if the callback was set
+    if (was_callback_set_before)
+    {
+        // Call child methods in case they should do something when handler is disabled
+        callback_unset_nts_();
+
+        // Awaking every thread waiting in wait_for_event()
+        awake_all_waiting_threads_nts_();
     }
 }
 
@@ -149,7 +163,7 @@ void EventHandler<Args...>::event_occurred_(
         Args... args) noexcept
 {
     // While event occurred is being process, avoid setting/unsetting callback or destroying object
-    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
 
     if (is_callback_set_.load())
     {

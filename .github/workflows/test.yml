@@ -87,30 +87,35 @@ jobs:
         with:
           package_name: ddsrouter_utils
           cmake_build_type: "Release"
+        if: always()
 
       - name: Run tests ddsrouter_event
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_event
           cmake_build_type: "Release"
+        if: always()
 
       - name: Run tests ddsrouter_core
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_core
           cmake_build_type: "Release"
+        if: always()
 
       - name: Run tests ddsrouter_yaml
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_yaml
           cmake_build_type: "Release"
+        if: always()
 
       - name: Run tests ddsrouter_tool
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_tool
           cmake_build_type: "Release"
+        if: always()
 
   windows-build-test-debug:
     runs-on: windows-latest
@@ -192,30 +197,35 @@ jobs:
         with:
           package_name: ddsrouter_utils
           cmake_build_type: "Debug"
+        if: always()
 
       - name: Run tests ddsrouter_event
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_event
           cmake_build_type: "Debug"
+        if: always()
 
       - name: Run tests ddsrouter_core
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_core
           cmake_build_type: "Debug"
+        if: always()
 
       - name: Run tests ddsrouter_yaml
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_yaml
           cmake_build_type: "Debug"
+        if: always()
 
       - name: Run tests ddsrouter_tool
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_tool
           cmake_build_type: "Debug"
+        if: always()
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
@@ -259,11 +269,13 @@ jobs:
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_utils
+        if: always()
 
       - name: Run tests ddsrouter_event
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_event
+        if: always()
 
       - name: Run tests ddsrouter_core
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
@@ -274,16 +286,19 @@ jobs:
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_yaml
+        if: always()
 
       - name: Run tests ddsrouter_tool
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_tool
+        if: always()
 
       - name: Run tests ddsrouter_docs
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_docs
+        if: always()
 
       - name: Generate coverage report
         run: |

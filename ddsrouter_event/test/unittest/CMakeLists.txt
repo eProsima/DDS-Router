@@ -14,3 +14,4 @@
 
 # Add subdirectory with tests
 add_subdirectory(periodic_event)
+add_subdirectory(signal)

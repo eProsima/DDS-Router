@@ -12,24 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME PeriodicEventHandlerTest)
+set(TEST_NAME SignalEventHandlerTest)
 
 set(TEST_SOURCES
-        PeriodicEventHandlerTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/PeriodicEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/LogEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/LogSevereEventHandler.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/TestLogHandler.cpp
+        SignalEventHandlerTest.cpp
     )
 
 set(TEST_LIST
-        trivial_create_handler
-        wait_handler
-        handler_period
-        handler_period_without_callback
-        limit_cases
-        negative_cases
-        not_wait_in_destruction
+        create_signal_handler
+        create_several_signal_handlers
+        receive_signal_trivial
+        receive_signal
+        receive_n_signals
+        erase_callback_while_other_handling
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -39,7 +34,10 @@ set(TEST_EXTRA_LIBRARIES
     )
 
 add_unittest_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
+
+add_windows_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/WINDOWS_TEST_XFAIL.list)

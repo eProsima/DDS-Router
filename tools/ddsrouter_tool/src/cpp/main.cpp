@@ -22,7 +22,7 @@
 #include <ddsrouter_event/FileWatcherHandler.hpp>
 #include <ddsrouter_event/MultipleEventHandler.hpp>
 #include <ddsrouter_event/PeriodicEventHandler.hpp>
-#include <ddsrouter_event/SignalHandler.hpp>
+#include <ddsrouter_event/SignalEventHandler.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
@@ -80,13 +80,13 @@ int main(
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
-        // First of all, create signal handler so SIGINT and SIGTERM does not break the program while initializing
+        // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
         event::MultipleEventHandler signal_handlers;
 
         signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
+            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
         signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
+            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization
@@ -161,6 +161,8 @@ int main(
 
         // Wait until signal arrives
         signal_handlers.wait_for_event();
+
+        logUser(DDSROUTER_EXECUTION, "Signal received, closing DDS Router.");
 
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)

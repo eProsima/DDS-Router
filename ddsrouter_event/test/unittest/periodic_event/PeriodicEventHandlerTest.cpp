@@ -33,6 +33,7 @@ namespace test {
 
 eprosima::ddsrouter::utils::Duration_ms DEFAULT_TIME_TEST = 1000u;
 eprosima::ddsrouter::utils::Duration_ms RESIDUAL_TIME_TEST = 10u;
+eprosima::ddsrouter::utils::Duration_ms LONG_TIME_TEST = 5000u;
 
 } /* namespace test */
 } /* namespace ddsrouter */
@@ -196,6 +197,35 @@ TEST(PeriodicEventHandlerTest, negative_cases)
                 {
                     /* empty callback */ }, 0), utils::InitializationException);
     }
+}
+
+/**
+ * @brief Check tat destroying a PeriodicEventHandler do not wait till period to be destroyed
+ *
+ * Create a PeriodicEventHandler with T time and destroy it afterwards.
+ * Check that time elapsed since the creation and the destruction is less than T time.
+ */
+TEST(PeriodicEventHandlerTest, not_wait_in_destruction)
+{
+    utils::Duration_ms handler_period = test::DEFAULT_TIME_TEST;
+
+    // Create timer to measure time
+    utils::Timer timer;
+    {
+
+        // Create object and let it start by waiting for first event
+        PeriodicEventHandler handler( []()
+                {
+                    /* empty callback */ }, handler_period);
+        handler.wait_for_event();
+
+        // Destroy handler
+    }
+
+    utils::Duration_ms time_elapsed = timer.elapsed_ms();
+
+    // Check that the time elapsed is smaller than the time required to wait for first event AND to stop handler
+    ASSERT_LT(time_elapsed, handler_period * 2) << time_elapsed;
 }
 
 int main(
