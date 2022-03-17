@@ -63,5 +63,5 @@ This release includes the following **Documentation features**:
 Previous Versions
 #################
 
-.. include:: previous_versions/v0.1.0.rst
 .. include:: previous_versions/v0.2.0.rst
+.. include:: previous_versions/v0.1.0.rst
