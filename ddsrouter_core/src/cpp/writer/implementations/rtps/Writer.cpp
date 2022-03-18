@@ -128,7 +128,7 @@ utils::ReturnCode Writer::write_(
     eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
     if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
     {
-        logError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
+        logDevError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
         return utils::ReturnCode::RETCODE_ERROR;
     }
 

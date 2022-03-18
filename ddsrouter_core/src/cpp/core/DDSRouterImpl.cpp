@@ -88,7 +88,7 @@ DDSRouterImpl::~DDSRouterImpl()
 
         if (!participant)
         {
-            logWarning(DDSROUTER, "Error poping participant from database.");
+            logDevError(DDSROUTER, "Error poping participant from database.");
         }
         else
         {

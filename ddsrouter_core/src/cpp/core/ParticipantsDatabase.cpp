@@ -32,7 +32,7 @@ ParticipantsDatabase::~ParticipantsDatabase()
 {
     if (!participants_.empty())
     {
-        logWarning(DDSROUTER_PARTICIPANT_DATABASE, "Erasing Participant Database with still Participants in it");
+        logDevError(DDSROUTER_PARTICIPANT_DATABASE, "Erasing Participant Database with still Participants in it");
     }
 }
 

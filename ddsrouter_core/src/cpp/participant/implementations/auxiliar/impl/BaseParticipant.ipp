@@ -50,13 +50,13 @@ BaseParticipant<ConfigurationType>::~BaseParticipant()
 
     if (!writers_.empty())
     {
-        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive writers");
+        logDevError(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive writers");
         writers_.clear();
     }
 
     if (!readers_.empty())
     {
-        logWarning(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive readers");
+        logDevError(DDSROUTER_BASEPARTICIPANT, "Deleting Participant " << id() << " with still alive readers");
         readers_.clear();
     }
 

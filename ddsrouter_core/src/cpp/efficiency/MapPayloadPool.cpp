@@ -33,7 +33,7 @@ MapPayloadPool::~MapPayloadPool()
 {
     if (reserved_payloads_.size() > 0)
     {
-        logError(
+        logDevError(
             DDSROUTER_PAYLOADPOOL,
             "Removing MapPayloadPool with still " << reserved_payloads_.size() << " payloads referenced.");
 

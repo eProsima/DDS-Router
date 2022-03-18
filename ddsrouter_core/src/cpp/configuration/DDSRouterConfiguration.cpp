@@ -72,7 +72,7 @@ bool DDSRouterConfiguration::is_valid(
         // Check configuration is not null
         if (!configuration)
         {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in participant configurations.");
+            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in participant configurations.");
             error_msg << "nullptr ParticipantConfiguration in participant configurations. ";
             return false;
         }

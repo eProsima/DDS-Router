@@ -124,7 +124,7 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
     // Check TLS
     if (!tls_configuration_)
     {
-        logError(DDSROUTER_CONFIGURATION, "Invalid ptr in tls configurations.");
+        logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in tls configurations.");
         error_msg << "nullptr TlsConfiguration in participant configuration. ";
         return false;
     }

@@ -189,3 +189,17 @@ The templates must be instantiated in a header file when no specialized.
 For this propose, a special file is used:
 `impl/<header>.ipp` file should be allocated in the directory of the header that declares the template,
 and the template methods without specialization must be implemented in it.
+
+### Log Verbosity
+
+These are the log levels and when to use them
+(some of them are not implemented separately, so they use others existing calls.)
+
+| Level           | Macro       | Visible              | Implementation | Used when:                                            |
+|-----------------|-------------|----------------------|----------------|-------------------------------------------------------|
+| Error           | logError    | always               | logError       | an error must break execution                         |
+| Developer Error | logDevError | only debug           | logWarning     | an internal error occurred but does not affect user   |
+| Warning         | logWarning  | with -d option       | logWarning     | something went wrong but the execution could continue |
+| User            | logUser     | always               | std::cout      | showing message to the user                           |
+| Info            | logInfo     | only debug -d option | logInfo        | showing important information about the execution     |
+| Debug           | logDebug    | only debug -d option | logInfo        | showing non important information                     |

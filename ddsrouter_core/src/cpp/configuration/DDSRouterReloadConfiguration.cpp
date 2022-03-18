@@ -62,7 +62,7 @@ bool DDSRouterReloadConfiguration::is_valid(
     {
         if (!topic)
         {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in allowlist topics.");
+            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in allowlist topics.");
             error_msg << "nullptr Filter Topic in allowlist. ";
             return false;
         }
@@ -79,7 +79,7 @@ bool DDSRouterReloadConfiguration::is_valid(
     {
         if (!topic)
         {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in blocklist topics.");
+            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in blocklist topics.");
             error_msg << "nullptr Filter Topic in blocklist. ";
             return false;
         }
@@ -96,7 +96,7 @@ bool DDSRouterReloadConfiguration::is_valid(
     {
         if (!topic)
         {
-            logError(DDSROUTER_CONFIGURATION, "Invalid ptr in builtin topics.");
+            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in builtin topics.");
             error_msg << "nullptr Topic in builtin. ";
             return false;
         }
