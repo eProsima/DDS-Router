@@ -16,4 +16,4 @@
 
 source /ddsrouter/install/setup.bash
 
-ddsrouter -d -c /ddsrouter/resources/DDS_ROUTER_CONFIGURATION.yaml -r 10
+ddsrouter --config-path /ddsrouter/resources/DDS_ROUTER_CONFIGURATION.yaml --reload-time 10 --debug

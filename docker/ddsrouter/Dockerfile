@@ -20,14 +20,11 @@ RUN apt-get update && apt-get install -y \
     pip3 install colcon-common-extensions vcstool
 
 # Download and build DDS-Router
-COPY ./colcon.meta /ddsrouter
 RUN mkdir resources && \
-    wget https://raw.githubusercontent.com/eProsima/DDS-Router/v0.2.0/ddsrouter.repos && \
+    wget https://raw.githubusercontent.com/eProsima/DDS-Router/v0.3.0/ddsrouter.repos && \
     mkdir src && \
     vcs import src < ddsrouter.repos && \
-    # Include track deadlock and parse reload-time fixes
-    cd src/ddsrouter && git checkout ebddc4447d565717e00e08e1d6de8df57b4e7147 && cd ../.. && \
-    colcon build --event-handlers=console_direct+
+    colcon build --event-handlers=console_direct+ --packages-skip ddsrouter_docs --cmake-args -DLOG_INFO=ON
 
 COPY ./run.bash /
 RUN chmod +x /run.bash
