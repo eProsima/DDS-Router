@@ -22,11 +22,22 @@
 #include <set>
 #include <stdlib.h>
 
+// TODO remove
+#include <iostream>
+
 // These libraries are used to execute wildcard using system functions, and depend on the OS
 #if defined(_WIN32)
 #include "Shlwapi.h"
 #else
 #include <fnmatch.h>
+#endif // if defined(_WIN32)
+
+// Includes to use access method. It checks if a file exists and it is readable
+#if defined(_WIN32)
+#include <io.h>         // Use _access windows method
+#define access _access  // Allow using same method for UNIX and windows
+#else
+#include <unistd.h>
 #endif // if defined(_WIN32)
 
 #include <ddsrouter_utils/utils.hpp>
@@ -66,6 +77,27 @@ void tsnh(
     Log::Flush();
 
     abort();
+}
+
+
+
+// Windows specific access method
+bool is_file_accessible(
+    const char* file_path,
+    const int access_mode /* = EXIST */ ) noexcept
+{
+
+// Check windows does not ask for execution
+#if defined(_WIN32)
+    if (access_mode % 2 == 1)
+    {
+        logWarning(
+            DDSROUTER_UTILS,
+            "Windows does not allow to check execution permission for file.");
+        access_mode = access_mode - 1;
+    }
+#endif // if defined(_WIN32)
+    return (access(file_path, access_mode) != -1);
 }
 
 } /* namespace utils */

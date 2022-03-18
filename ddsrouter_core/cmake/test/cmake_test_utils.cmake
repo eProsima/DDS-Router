@@ -120,7 +120,7 @@ endfunction()
 # TEST_EXTRA_LIBRARIES -> libraries that must be linked to compile the test
 # ARGV5 -> extra headers needed for the test (sixth optional argument)
 # Note: pass the arguments with "" in order to send them as a list. Otherwise they will not be received correctly
-function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LIST TEST_EXTRA_LIBRARIES)
+function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LIST TEST_EXTRA_LIBRARIES TEST_NEEDED_SOURCES)
 
     message(STATUS "Adding executable test: " ${TEST_EXECUTABLE_NAME})
 
@@ -143,7 +143,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         ${PROJECT_BINARY_DIR}/include
         ${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/src/cpp
-        ${ARGV5}  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
+        ${ARGV6}  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 
     target_link_libraries(
@@ -168,6 +168,13 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         PRIVATE FASTDDS_ENFORCE_LOG_INFO
         PRIVATE HAVE_LOG_NO_INFO=0)
 
+    # Store file sources needed
+    foreach(NEEDED_SOURCE ${TEST_NEEDED_SOURCES})
+        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${NEEDED_SOURCE}
+            ${CMAKE_CURRENT_BINARY_DIR}/${NEEDED_SOURCE}
+            COPYONLY)
+    endforeach()
+
 endfunction(add_test_executable)
 
 # Create an executable for a unittest
@@ -185,6 +192,7 @@ function(add_unittest_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_EXTRA_LIB
         "${TEST_NAME}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
+        "${ARGV4}"                  # TEST_NEEDED_SOURCES (EQUAL "" if not provided)
     )
 
 endfunction(add_unittest_executable)
@@ -205,13 +213,6 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
     set(EXTRA_LIBRARIES
         ${SUBMODULE_PROJECT_DEPENDENCIES})
 
-    # Store file sources needed
-    foreach(NEEDED_SOURCE ${TEST_NEEDED_SOURCES})
-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${NEEDED_SOURCE}
-            ${CMAKE_CURRENT_BINARY_DIR}/${NEEDED_SOURCE}
-            COPYONLY)
-    endforeach()
-
     # Create test executable
     add_test_executable(
         "blackbox_${TEST_NAME}"
@@ -219,6 +220,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
         "${TEST_NAME}"
         "${TEST_LIST}"
         "${EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
         "${ARGV4}"  # TEST_EXTRA_HEADERS (EQUAL "" if not provided)
     )
 

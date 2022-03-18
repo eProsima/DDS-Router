@@ -12,21 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME utilsTest)
+set(TEST_NAME accessTest)
 
 set(TEST_SOURCES
-        utilsTest.cpp
+        accessTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
     )
 
 set(TEST_LIST
-        set_of_ptr_contains_int
-        set_of_ptr_with_null_contains_int
-        set_of_ptr_contains_string
-        are_set_of_ptr_equal_int
-        tsnh_call
+        check_exist
+        check_r
+        check_w
+
+        # Not allowed methods in windows
+        $<$<NOT:$<BOOL:${WIN32}>>:check_x>
+        $<$<NOT:$<BOOL:${WIN32}>>:check_rwx>
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -35,13 +37,17 @@ set(TEST_EXTRA_LIBRARIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
+set(TEST_NEEDED_SOURCES
+        test_files/r__.test
+        test_files/r_x.test
+        test_files/rw_.test
+        test_files/rwx.test
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
     )
-
-#######
-# Adding access tests
-add_subdirectory(access)
