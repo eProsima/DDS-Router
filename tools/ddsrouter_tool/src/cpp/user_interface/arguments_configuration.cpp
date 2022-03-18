@@ -21,13 +21,8 @@
 #include <string>
 #include <vector>
 
-#if defined(_WIN32)
-#include <io.h>         // Use _access windows method
-#define access _access  // Use access method as windows _access method
-#define R_OK 04         // Use R_OK variable as Redeable for _access
-#else
-#include <unistd.h>
-#endif // if defined(_WIN32)
+#include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 #include "arguments_configuration.hpp"
 
@@ -142,7 +137,7 @@ ProcessReturnCode parse_arguments(
         // Unknown args provided
         if (parse.nonOptionsCount())
         {
-            std::cerr << "ERROR: Unknown argument: <" << parse.nonOption(0) << ">." << std::endl;
+            logError(DDSROUTER_ARGS, "ERROR: Unknown argument: <" << parse.nonOption(0) << ">." );
             option::printUsage(fwrite, stdout, usage, columns);
             return ProcessReturnCode::INCORRECT_ARGUMENT;
         }
@@ -172,7 +167,7 @@ ProcessReturnCode parse_arguments(
                     break;
 
                 case optionIndex::UNKNOWN_OPT:
-                    Arg::print_error("ERROR: ", opt, " is not a valid argument.\n");
+                    logError(DDSROUTER_ARGS, opt << " is not a valid argument.");
                     option::printUsage(fwrite, stdout, usage, columns);
                     return ProcessReturnCode::INCORRECT_ARGUMENT;
                     break;
@@ -191,23 +186,15 @@ ProcessReturnCode parse_arguments(
     return ProcessReturnCode::SUCCESS;
 }
 
-void Arg::print_error(
-        const char* msg1,
-        const option::Option& opt,
-        const char* msg2)
-{
-    fprintf(stderr, "%s", msg1);
-    fwrite(opt.name, opt.namelen, 1, stderr);
-    fprintf(stderr, "%s", msg2);
-}
-
 option::ArgStatus Arg::Unknown(
         const option::Option& option,
         bool msg)
 {
     if (msg)
     {
-        print_error("Unknown option '", option, "'\nUse -h to see this executable possible arguments.\n");
+        logError(
+            DDSROUTER_ARGS,
+            "Unknown option '" << option << "'. Use -h to see this executable possible arguments.");
     }
     return option::ARG_ILLEGAL;
 }
@@ -223,7 +210,7 @@ option::ArgStatus Arg::Required(
 
     if (msg)
     {
-        print_error("Option '", option, "' requires an argument\n");
+        logError(DDSROUTER_ARGS, "Option '" << option << "' required.");
     }
     return option::ARG_ILLEGAL;
 }
@@ -243,7 +230,7 @@ option::ArgStatus Arg::Numeric(
 
     if (msg)
     {
-        print_error("Option '", option, "' requires a numeric argument\n");
+        logError(DDSROUTER_ARGS, "Option '" << option << "' requires a numeric argument.");
     }
     return option::ARG_ILLEGAL;
 }
@@ -263,7 +250,7 @@ option::ArgStatus Arg::Float(
 
     if (msg)
     {
-        print_error("Option '", option, "' requires a float argument\n");
+        logError(DDSROUTER_ARGS, "Option '" << option << "' requires a float argument.");
     }
     return option::ARG_ILLEGAL;
 }
@@ -278,7 +265,7 @@ option::ArgStatus Arg::String(
     }
     if (msg)
     {
-        print_error("Option '", option, "' requires a text argument\n");
+        logError(DDSROUTER_ARGS, "Option '" << option << "' requires a text argument.");
     }
     return option::ARG_ILLEGAL;
 }
@@ -290,16 +277,24 @@ option::ArgStatus Arg::Readable_File(
     if (option.arg != 0)
     {
         // Windows has not unistd library, so to check if file is readable use a _access method (definition on top)
-        if (access( option.arg, R_OK ) != -1)
+        if (is_file_accessible(option.arg, utils::READ))
         {
             return option::ARG_OK;
         }
     }
     if (msg)
     {
-        print_error("Option '", option, "' requires an existing readable file as argument\n");
+        logError(DDSROUTER_ARGS, "Option '" << option << "' requires an existing readable file as argument.");
     }
     return option::ARG_ILLEGAL;
+}
+
+std::ostream& operator <<(
+        std::ostream& output,
+        const option::Option& option)
+{
+    output << std::string(option.name, option.name + option.namelen);
+    return output;
 }
 
 } /* namespace ui */

@@ -188,11 +188,11 @@ utils::ReturnCode DDSRouterImpl::start() noexcept
     utils::ReturnCode ret = start_();
     if (ret == utils::ReturnCode::RETCODE_OK)
     {
-        logUser(DDSROUTER, "Starting DDS Router.");
+        logInfo(DDSROUTER, "Starting DDS Router.");
     }
     else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
-        logUser(DDSROUTER, "Trying to start an enabled DDS Router.");
+        logInfo(DDSROUTER, "Trying to start an enabled DDS Router.");
     }
 
     return ret;
@@ -203,11 +203,11 @@ utils::ReturnCode DDSRouterImpl::stop() noexcept
     utils::ReturnCode ret = stop_();
     if (ret == utils::ReturnCode::RETCODE_OK)
     {
-        logUser(DDSROUTER, "Stopping DDS Router.");
+        logInfo(DDSROUTER, "Stopping DDS Router.");
     }
     else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
     {
-        logUser(DDSROUTER, "Trying to stop a not enabled DDS Router.");
+        logInfo(DDSROUTER, "Trying to stop a not enabled DDS Router.");
     }
 
     return ret;

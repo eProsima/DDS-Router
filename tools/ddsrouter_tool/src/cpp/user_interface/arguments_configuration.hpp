@@ -93,12 +93,33 @@ enum  optionIndex
  */
 extern const option::Descriptor usage[];
 
+/**
+ * @brief Parse process arguments
+ *
+ * Set variables given as arguments with the arguments given to the process
+ *
+ * @param [in] argc number of process arguments
+ * @param [in] argv process arguments array (with size \c argc )
+ * @param [out] file_path path to the configuration file
+ * @param [out] reload_time time in seconds to reload the configuration file
+ * @param [out] activate_debug activate log info
+ *
+ * @return \c SUCCESS if everything OK
+ * @return \c INCORRECT_ARGUMENT if arguments were incorrect (unknown or incorrect value)
+ * @return \c HELP_ARGUMENT if arguments help given
+ * @return \c REQUIRED_ARGUMENT_FAILED if required arguments not given
+ */
 ProcessReturnCode parse_arguments(
         int argc,
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
         bool& activate_debug);
+
+//! \c Option to stream serializator
+std::ostream& operator <<(
+        std::ostream& output,
+        const option::Option& option);
 
 } /* namespace ui */
 } /* namespace ddsrouter */
