@@ -41,7 +41,7 @@ enum FileAccessMode
     READ        = 4,
     WRITE       = 2,
 
-// Windoes does not have execution info of a file
+    // Windoes does not have execution info of a file
     EXECUTION   = 1,
 };
 
@@ -139,8 +139,8 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  * @return false otherwise
  */
 DDSROUTER_UTILS_DllAPI bool is_file_accessible(
-    const char* file_path,
-    int access_mode = EXIST) noexcept;
+        const char* file_path,
+        int access_mode = EXIST) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

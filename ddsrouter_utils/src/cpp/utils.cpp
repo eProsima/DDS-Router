@@ -79,15 +79,13 @@ void tsnh(
     abort();
 }
 
-
-
 // Windows specific access method
 bool is_file_accessible(
-    const char* file_path,
-    int access_mode /* = EXIST */ ) noexcept
+        const char* file_path,
+        int access_mode /* = EXIST */ ) noexcept
 {
 
-// Check windows does not ask for execution
+    // Check windows does not ask for execution
 #if defined(_WIN32)
     if (access_mode % 2 == 1)
     {
