@@ -138,9 +138,9 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  * @return true if file is accessible regarding the permissions given
  * @return false otherwise
  */
-bool is_file_accessible(
+DDSROUTER_UTILS_DllAPI bool is_file_accessible(
     const char* file_path,
-    const int access_mode = EXIST) noexcept;
+    int access_mode = EXIST) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

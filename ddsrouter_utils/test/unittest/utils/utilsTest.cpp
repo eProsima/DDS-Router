@@ -306,6 +306,45 @@ TEST(utilsTest, tsnh_call)
     ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "");
 }
 
+/**
+ * Test \c is_file_accesible method
+ *
+ * CASES:
+ * - File exist
+ * - File is readable
+ * - File exist and it is readable
+ * - File does not exist
+ */
+TEST(utilsTest, is_file_accesible)
+{
+    // File exist
+    {
+        // Default argument
+        ASSERT_TRUE(is_file_accessible("resources/exist.test"));
+
+        // Set argument
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST));
+    }
+
+    // File is readable
+    {
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", READ));
+    }
+
+    // File exist and it is readable
+    {
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST | READ));
+    }
+
+    // File does not exist
+    {
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test"));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", READ));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST | READ));
+    }
+}
+
 int main(
         int argc,
         char** argv)

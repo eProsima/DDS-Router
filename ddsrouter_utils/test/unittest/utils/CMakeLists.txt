@@ -27,6 +27,7 @@ set(TEST_LIST
         set_of_ptr_contains_string
         are_set_of_ptr_equal_int
         tsnh_call
+        is_file_accesible
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -35,13 +36,14 @@ set(TEST_EXTRA_LIBRARIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
+set(TEST_NEEDED_SOURCES
+        resources/exist.test
+    )
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
     )
-
-#######
-# Adding access tests
-add_subdirectory(access)
