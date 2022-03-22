@@ -110,7 +110,9 @@
                     ]
                 },
                 "domain":{
-                    "type":"integer"
+                    "type":"integer",
+                    "minimum":0,
+                    "maximum":230
                 },
                 "discovery-server-guid":{
                     "$ref":"#/definitions/DiscoveryServerGUID"
@@ -119,13 +121,15 @@
                     "type":"array",
                     "items":{
                         "$ref":"#/definitions/Address"
-                    }
+                    },
+                    "minItems": 1
                 },
                 "connection-addresses":{
                     "type":"array",
                     "items":{
                         "$ref":"#/definitions/ConnectionAddress"
-                    }
+                    },
+                    "minItems": 1
                 },
                 "tls":{
                     "$ref":"#/definitions/TLS"
