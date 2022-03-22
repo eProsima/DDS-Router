@@ -60,7 +60,7 @@ protected:
 
     types::DomainId domain_;
 
-    static const types::DomainId DEFAULT_DOMAIN_ID_; // 0
+    DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DOMAIN_ID_; // 0
 };
 
 } /* namespace configuration */
