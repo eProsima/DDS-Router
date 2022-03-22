@@ -30,8 +30,19 @@ namespace ddsrouter {
 namespace event {
 
 template <int SigNum>
+std::recursive_mutex SignalManager<SigNum>::instance_mutex_;
+
+template <int SigNum>
+std::condition_variable SignalManager<SigNum>::signal_received_cv_;
+
+template <int SigNum>
+std::atomic<uint32_t> SignalManager<SigNum>::signals_received_(0);
+
+template <int SigNum>
 SignalManager<SigNum>& SignalManager<SigNum>::get_instance() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(instance_mutex_);
+
     static SignalManager<SigNum> instance_;
     return instance_;
 }
@@ -39,7 +50,6 @@ SignalManager<SigNum>& SignalManager<SigNum>::get_instance() noexcept
 template <int SigNum>
 SignalManager<SigNum>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
-    , signals_received_(0)
     , current_last_id_(0)
 {
     signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
@@ -112,7 +122,7 @@ void SignalManager<SigNum>::signal_handler_function_(
     // Windows requires to handle again the signal once it has been handled
     signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
 #endif // _WIN32
-    SignalManager<SigNum>::get_instance().signal_received_();
+    signal_received_();
 }
 
 template <int SigNum>

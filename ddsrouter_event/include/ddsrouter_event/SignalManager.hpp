@@ -129,13 +129,6 @@ protected:
     //! Give a new unique id for a new callback
     UniqueCallbackId new_unique_id_() noexcept;
 
-    /**
-     * @brief Method called every time the signal arrives
-     *
-     * It increments \c signals_received_ by one and awakes \c signal_handler_thread_
-     */
-    void signal_received_() noexcept;
-
     //! function called from \c signal when a signal is handled.
     void signal_handler_routine_() noexcept;
 
@@ -147,6 +140,13 @@ protected:
      * If more than one signal received, it will enter in wait again and exit by the predicate, without waiting.
      */
     void signal_handler_thread_routine_() noexcept;
+
+    /**
+     * @brief Method called every time the signal arrives
+     *
+     * It increments \c signals_received_ by one and awakes \c signal_handler_thread_
+     */
+    static void signal_received_() noexcept;
 
     //! Static function to call from \c signal . It only calls singleton \c signal_received_ .
     static void signal_handler_function_(
@@ -175,14 +175,20 @@ protected:
     //! Whether \c signal_handler_thread_ must stop. Only set to true in destruction.
     std::atomic<bool> signal_handler_thread_stop_;
 
-    //! Counter incremented when a signal arrives and decremented after being read by \c signal_handler_thread_
-    std::atomic<uint32_t> signals_received_;
-
-    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives or signal handler is unset
-    std::condition_variable signal_received_cv_;
-
     //! Guards access to \c signal_received_cv_
     std::mutex signal_received_cv_mutex_;
+
+    /**
+     * @brief Counter incremented when a signal arrives and decremented after being read by \c signal_handler_thread_.
+     *
+     * Although in principle it is not required to be static (as it belongs to a singleton class), it is made so to
+     * avoid race conditions when a signal is caught, thus interrumpting the execution of a thread which may be locking
+     * internal resources required by \c get_instance.
+     */
+    static std::atomic<uint32_t> signals_received_;
+
+    //! Condition variable to wait in \c signal_handler_thread_ until a signal arrives or signal handler is unset.
+    static std::condition_variable signal_received_cv_;
 
     //////
     // Unique id
@@ -191,6 +197,9 @@ protected:
 
     //! Variable to store the last unique id registered, so the new one is unique.
     UniqueCallbackId current_last_id_;
+
+    //! Guards access to singleton instance
+    static std::recursive_mutex instance_mutex_;
 };
 
 } /* namespace event */
