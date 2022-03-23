@@ -35,6 +35,16 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+enum FileAccessMode
+{
+    EXIST       = 0,
+    READ        = 4,
+    WRITE       = 2,
+
+    // Windoes does not have execution info of a file
+    EXECUTION   = 1,
+};
+
 //! Perform the wildcard matching using file comparison method
 DDSROUTER_UTILS_DllAPI bool match_pattern(
         const std::string& pattern,
@@ -107,6 +117,30 @@ DDSROUTER_UTILS_DllAPI void tsnh(
 template <typename Parent, typename Child>
 std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         std::set<Child> set);
+
+/**
+ * @brief Whether a file exist and/or is accessible with specific permissions
+ *
+ * The accessibility could be checked for different permissions regarding argument \c access_mode ,
+ * and each of them are asked by a different \c FileAccessMode :
+ * - \c EXIST       : check if the file exist (any argument check this)
+ * - \c READ        : check if the file has read access
+ * - \c WRITE       : check if the file has write access
+ * - \c EXECUTION   : check if the file has execution access
+ *
+ * This method could be used by OR \c FileAccessMode to check that file has all permissions in OR as:
+ * access_mode = READ | WRITE -> check that file has read and write access permission.
+ *
+ * @warning windows does not retrieve information about the execution permission on a file.
+ *
+ * @param file_path path to the file to check
+ * @param access_mode access permission(s) to check in the file
+ * @return true if file is accessible regarding the permissions given
+ * @return false otherwise
+ */
+DDSROUTER_UTILS_DllAPI bool is_file_accessible(
+        const char* file_path,
+        int access_mode = EXIST) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

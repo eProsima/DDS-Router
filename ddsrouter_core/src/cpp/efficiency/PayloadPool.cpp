@@ -38,11 +38,11 @@ PayloadPool::~PayloadPool()
 {
     if (reserve_count_ < release_count_)
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Removing non Consistent PayloadPool.");
+        logDevError(DDSROUTER_PAYLOADPOOL, "Removing non Consistent PayloadPool.");
     }
     else if (reserve_count_ != release_count_)
     {
-        logWarning(DDSROUTER_PAYLOADPOOL,
+        logDevError(DDSROUTER_PAYLOADPOOL,
                 "From " << reserve_count_ << " payloads reserved only " << release_count_ << " has been released.");
     }
     else
@@ -66,7 +66,7 @@ bool PayloadPool::get_payload(
     }
     else
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while creating payload.")
+        logDevError(DDSROUTER_PAYLOADPOOL, "Error occurred while creating payload.")
         return false;
     }
 }
@@ -83,7 +83,7 @@ bool PayloadPool::get_payload(
     }
     else
     {
-        logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while referencing payload.")
+        logDevError(DDSROUTER_PAYLOADPOOL, "Error occurred while referencing payload.")
         return false;
     }
 }
@@ -100,7 +100,7 @@ bool PayloadPool::release_payload(
         }
         else
         {
-            logWarning(DDSROUTER_PAYLOADPOOL, "Error occurred while releasing payload.")
+            logDevError(DDSROUTER_PAYLOADPOOL, "Error occurred while releasing payload.")
             return false;
         }
     }
@@ -141,7 +141,7 @@ bool PayloadPool::reserve_(
 {
     if (size == 0)
     {
-        logError(DDSROUTER_PAYLOADPOOL,
+        logDevError(DDSROUTER_PAYLOADPOOL,
                 "Trying to reserve a data block of 0 bytes.");
         return false;
     }

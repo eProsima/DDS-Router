@@ -268,7 +268,7 @@ void DiscoveryDatabase::process_queue_() noexcept
         }
         catch (const utils::InconsistencyException& e)
         {
-            logError(DDSROUTER_DISCOVERY_DATABASE,
+            logDevError(DDSROUTER_DISCOVERY_DATABASE,
                     "Error processing database operations queue:" << e.what() << ".");
         }
         entities_to_process_.Pop();

@@ -27,6 +27,7 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
 #include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>
 
@@ -40,10 +41,10 @@ int main(
         int argc,
         char** argv)
 {
-    logUser(DDSROUTER_EXECUTION, "Starting DDS Router execution.");
+    logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
 
     // Configuration File path
-    std::string file_path = ui::DEFAULT_CONFIGURATION_FILE_NAME;
+    std::string file_path = "";
 
     // Reload time
     utils::Duration_ms reload_time = 0;
@@ -64,12 +65,33 @@ int main(
         return arg_parse_result;
     }
 
+    // Check file is in args, else get the default file
+    if (file_path == "")
+    {
+        file_path = ui::DEFAULT_CONFIGURATION_FILE_NAME;
+
+        logUser(
+            DDSROUTER_EXECUTION,
+            "Not configuration file given, using default file " << file_path << ".");
+    }
+
+    // Check file exists and it is readable
+    // NOTE: this check is redundant with option parse arg check
+    if (!is_file_accessible(file_path.c_str(), utils::READ))
+    {
+        logError(
+            DDSROUTER_ARGS,
+            "File '" << file_path << "' does not exist or it is not accessible.");
+        return ui::ProcessReturnCode::REQUIRED_ARGUMENT_FAILED;
+    }
+
     // Activate Debug
     if (activate_debug)
     {
         // Activate log
         utils::Log::SetVerbosity(utils::Log::Kind::Info);
 
+        // NOTE:
         // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
         // in non debug or with LOG_NO_INFO=ON.
         // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
@@ -107,7 +129,10 @@ int main(
                 [&router, file_path]
                     (std::string file_name)
                 {
-                    logUser(DDSROUTER_EXECUTION, "FileWatcher event raised. Reloading configuration.");
+                    logUser(
+                        DDSROUTER_EXECUTION,
+                        "FileWatcher notified changes in file " << file_name << ". Reloading configuration");
+
                     try
                     {
                         core::configuration::DDSRouterConfiguration router_configuration =
@@ -139,7 +164,10 @@ int main(
                     [&router, file_path]
                         ()
                     {
-                        logUser(DDSROUTER_EXECUTION, "Periodic event raised. Reloading configuration.");
+                        logUser(
+                            DDSROUTER_EXECUTION,
+                            "Periodic Timer raised. Reloading configuration from file " << file_path << ".");
+
                         try
                         {
                             core::configuration::DDSRouterConfiguration router_configuration =
@@ -159,10 +187,12 @@ int main(
         // Start Router
         router.start();
 
+        logUser(DDSROUTER_EXECUTION, "DDS Router running.");
+
         // Wait until signal arrives
         signal_handlers.wait_for_event();
 
-        logUser(DDSROUTER_EXECUTION, "Signal received, closing DDS Router.");
+        logUser(DDSROUTER_EXECUTION, "Signal received, stopping DDS Router.");
 
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)
@@ -177,6 +207,8 @@ int main(
 
         // Stop Router
         router.stop();
+
+        logUser(DDSROUTER_EXECUTION, "DDS Router stopped correctly.");
     }
     catch (const utils::ConfigurationException& e)
     {
@@ -194,7 +226,7 @@ int main(
         return ui::ProcessReturnCode::EXECUTION_FAILED;
     }
 
-    logUser(DDSROUTER_EXECUTION, "Finishing DDS Router execution correctly.");
+    logUser(DDSROUTER_EXECUTION, "Finishing DDS Router Tool execution correctly.");
 
     // Force print every log before closing
     utils::Log::Flush();

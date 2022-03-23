@@ -29,7 +29,7 @@ using namespace eprosima::ddsrouter::core::types;
 const std::function<void()> BaseReader::DEFAULT_ON_DATA_AVAILABLE_CALLBACK =
         []()
         {
-            logWarning(DDSROUTER_READER, "Calling unset callback");
+            logDevError(DDSROUTER_READER, "Calling unset callback");
         };
 
 BaseReader::BaseReader(
@@ -81,7 +81,7 @@ void BaseReader::set_on_data_available_callback(
 
     if (on_data_available_lambda_set_)
     {
-        logWarning(DDSROUTER_BASEREADER, "Changing on_data_available callback for Reader in topic " <<
+        logDevError(DDSROUTER_BASEREADER, "Changing on_data_available callback for Reader in topic " <<
                 topic_ << " in Participant " << participant_id_);
     }
 
@@ -95,7 +95,7 @@ void BaseReader::unset_on_data_available_callback() noexcept
 
     if (!on_data_available_lambda_set_)
     {
-        logWarning(DDSROUTER_BASEREADER, "Unsetting a non set on_data_available callback for Reader in topic " <<
+        logDevError(DDSROUTER_BASEREADER, "Unsetting a non set on_data_available callback for Reader in topic " <<
                 topic_ << " in Participant " << participant_id_);
     }
 
@@ -114,7 +114,7 @@ utils::ReturnCode BaseReader::take(
     }
     else
     {
-        logWarning(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in topic " <<
+        logDevError(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in topic " <<
                 topic_ << " in Participant " << participant_id_);
         return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
@@ -128,7 +128,7 @@ void BaseReader::on_data_available_() const noexcept
     }
     else
     {
-        logWarning(DDSROUTER_BASEREADER, "Calling not set on_data_available callback for Reader in topic " <<
+        logDevError(DDSROUTER_BASEREADER, "Calling not set on_data_available callback for Reader in topic " <<
                 topic_ << " in Participant " << participant_id_);
     }
 }
