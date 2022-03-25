@@ -3,13 +3,10 @@ from setuptools import setup
 
 
 package_name = 'ddsrouter_yaml_validator'
-file_packages = [
-    package_name,
-]
 
 setup(
     name=package_name,
-    version='0.0.0',
+    version='0.3.0',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',

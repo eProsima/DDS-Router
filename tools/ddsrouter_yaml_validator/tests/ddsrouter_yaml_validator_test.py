@@ -17,7 +17,7 @@
 import glob
 import os
 
-from ddsrouter_yaml_validator.ddsrouter_yaml_validator import YamlValidator
+from ddsrouter_yaml_validator.validator import YamlValidator
 
 
 # Move to project root level
@@ -31,7 +31,7 @@ VALID_CONFIGURATION_FILES = [
     glob.glob('docs/resources/getting_started/*.yaml')]
 
 INVALID_CONFIGURATION_FILES = [
-    glob.glob('tools/ddsrouter_yaml_validator/tests/resources/'
+    glob.glob('tools/ddsrouter_yaml_validator/tests/'
               'invalid_configuration_files/*.yaml')]
 
 
