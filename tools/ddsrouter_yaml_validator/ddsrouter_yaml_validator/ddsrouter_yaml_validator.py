@@ -24,7 +24,7 @@ def main(args=None):
     args = parser.parse()
 
     validator = YamlValidator()
-    validator.validate_config_file(args.config_file, args.schema)
+    validator.validate(args.config_file, args.schema, args.recursive)
 
 
 if __name__ == '__main__':

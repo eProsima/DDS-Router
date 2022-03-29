@@ -30,7 +30,16 @@ class Parser:
             '-c',
             '--config-file',
             required=True,
-            help='YAML file used to configure DDS-Router',
+            help='YAML file or directory with files used to configure'
+            'DDS-Router',
+        )
+        parser.add_argument(
+            '-r',
+            '--recursive',
+            action='store_true',
+            default=False,
+            help='Whether to perform recursive search when --config-file'
+            ' refers to a directory (default: false)',
         )
         parser.add_argument(
             '-s',

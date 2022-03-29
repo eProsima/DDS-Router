@@ -30,8 +30,39 @@ class YamlValidator:
     DDS-Router configurations are YAML files, and the schema is in JSON format.
     """
 
-    def validate_config_file(self, config_file_path, schema_path, logout=True):
-        """Load the files whose paths are given, and perform validation."""
+    def validate(self, config_path, schema_path, recursive=True, logout=True):
+        """Validate configuration file or files under a directory."""
+        if not self.__is_json(schema_path):
+            print(
+                'The given schema {} is not a JSON file.'.format(
+                    os.path.basename(schema_path)
+                )
+            )
+            return
+
+        if os.path.isdir(config_path):
+            visited_dirs = []
+            for root, dirs, files in os.walk(config_path):
+                print(f'Scanning directory {root}')
+                if root not in visited_dirs:
+                    visited_dirs.append(root)
+                    for f in files:
+                        if self.__is_yaml(f):
+                            self.__validate_config_file(
+                                os.path.join(root, f), schema_path, logout)
+                    if not recursive:
+                        break
+        else:
+            if self.__is_yaml(config_path):
+                self.__validate_config_file(config_path, schema_path, logout)
+            else:
+                print(
+                    'The given config file {} is not a YAML file.'.format(
+                        os.path.basename(config_path)))
+
+    def __validate_config_file(self, config_file_path, schema_path,
+                               logout=True):
+        """Validate DDS-Router configuration file."""
         with open(schema_path) as json_file:
             schema = json.load(json_file)
         with open(config_file_path) as yaml_file:
@@ -48,3 +79,22 @@ class YamlValidator:
             print(os.path.basename(config_file_path),
                   'is a valid DDS-Router configuration file.')
         return True
+
+    def __is_json(self, file):
+        """
+        Check if a file is a JSON file.
+
+        :param file: The input file
+        :return: True if the file is an JSON file, False if not.
+        """
+        return os.path.splitext(str(file))[-1] == '.json'
+
+    def __is_yaml(self, file):
+        """
+        Check if a file is a YAML file.
+
+        :param file: The input file
+        :return: True if the file is an YAML file, False if not.
+        """
+        ext = os.path.splitext(str(file))[-1]
+        return ext == '.yaml' or ext == '.yml'
