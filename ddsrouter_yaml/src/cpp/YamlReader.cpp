@@ -352,22 +352,22 @@ RealTopic YamlReader::get<RealTopic>(
     std::string type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
 
     // Optional keyed
-    bool keyed;
+    bool keyed = false;
     bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
     if (keyed_set)
     {
         keyed = get_scalar<bool>(yml, TOPIC_KIND_TAG);
     }
 
-    // Create Topic
-    if (keyed_set)
+    // Optional reliable DataReader
+    bool reliable = false;
+    bool reliable_set = is_tag_present(yml, TOPIC_RELIABLE_TAG);
+    if (reliable_set)
     {
-        return RealTopic(name, type, keyed);
+        reliable = get_scalar<bool>(yml, TOPIC_RELIABLE_TAG);
     }
-    else
-    {
-        return RealTopic(name, type);
-    }
+
+    return RealTopic(name, type, keyed, reliable);
 }
 
 template <>
@@ -798,7 +798,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic>(
+        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
@@ -807,7 +807,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic>(
+        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
@@ -892,7 +892,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic>(
+        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
@@ -901,7 +901,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic>(
+        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
@@ -910,7 +910,7 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        builtin_topics = utils::convert_set_to_shared<types::RealTopic>(
+        builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
             YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
     }
 

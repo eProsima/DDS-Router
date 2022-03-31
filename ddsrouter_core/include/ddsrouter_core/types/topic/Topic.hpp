@@ -40,7 +40,8 @@ struct Topic
     DDSROUTER_CORE_DllAPI Topic(
             std::string topic_name,
             std::string topic_type,
-            bool topic_with_key = false) noexcept;
+            bool topic_with_key = false,
+            bool topic_reliable = false) noexcept;
 
     //! Copy constructor
     DDSROUTER_CORE_DllAPI Topic& operator =(
@@ -54,6 +55,9 @@ struct Topic
 
     //! Topic kind getter
     DDSROUTER_CORE_DllAPI bool topic_with_key() const;
+
+    //! Topic reliability getter
+    DDSROUTER_CORE_DllAPI bool topic_reliable() const;
 
     // OPERATOR OVERLOAD
     /**
@@ -85,6 +89,9 @@ protected:
 
     //! Topic kind; WITH_KEY(true), NO_KEY(false)
     bool topic_with_key_;
+
+    //! The DataReader subscribed to this topic is configured as RELIABLE
+    bool topic_reliable_;
 };
 
 /**

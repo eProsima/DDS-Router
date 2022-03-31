@@ -27,10 +27,12 @@ namespace types {
 Topic::Topic(
         std::string topic_name,
         std::string topic_type,
-        bool topic_with_key /* = false */) noexcept
+        bool topic_with_key, /* = false */
+        bool topic_reliable /* = false */) noexcept
     : topic_name_(topic_name)
     , topic_type_(topic_type)
     , topic_with_key_(topic_with_key)
+    , topic_reliable_(topic_reliable)
 {
 }
 
@@ -40,6 +42,7 @@ Topic& Topic::operator =(
     this->topic_name_ = other.topic_name_;
     this->topic_type_ = other.topic_type_;
     this->topic_with_key_ = other.topic_with_key_;
+    this->topic_reliable_ = other.topic_reliable_;
     return *this;
 }
 
@@ -58,12 +61,19 @@ bool Topic::topic_with_key() const
     return topic_with_key_;
 }
 
+bool Topic::topic_reliable() const
+{
+    return topic_reliable_;
+}
+
 bool Topic::operator ==(
         const Topic& other) const
 {
 
-    return topic_name_ == other.topic_name_ && topic_type_ == other.topic_type_ &&
-           topic_with_key_ == other.topic_with_key_;
+    return topic_name_ == other.topic_name_
+            && topic_type_ == other.topic_type_
+            && topic_with_key_ == other.topic_with_key_
+            && topic_reliable_ == other.topic_reliable_;
 }
 
 bool Topic::operator <(
@@ -96,7 +106,15 @@ bool Topic::operator <(
             // Equal type, compare keyed
             if (topic_with_key_ == other.topic_with_key_)
             {
-                return false;
+                // Equal key, compare reliability
+                if (topic_reliable_ == other.topic_reliable_)
+                {
+                    return false;
+                }
+                else
+                {
+                    return !topic_reliable_;
+                }
             }
             else
             {
@@ -116,7 +134,8 @@ std::ostream& operator <<(
         const Topic& a)
 {
     std::string keyed_str = a.topic_with_key() ? "keyed" : "no_key";
-    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << "}";
+    std::string reliable_str = a.topic_reliable() ? "reliable" : "best_effort";
+    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << ";" << reliable_str << "}";
     return os;
 }
 
