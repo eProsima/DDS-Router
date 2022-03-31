@@ -530,10 +530,22 @@ configuration::SimpleParticipantConfiguration YamlReader::get<configuration::Sim
     // Kind required
     types::ParticipantKind kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
 
-    // Domain required
-    types::DomainId domain = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
+    // Domain optional
+    types::DomainId domain;
+    bool has_domain = is_tag_present(yml, DOMAIN_ID_TAG);
+    if (has_domain)
+    {
+        domain = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
+    }
 
-    return configuration::SimpleParticipantConfiguration(id, kind, domain);
+    if (has_domain)
+    {
+        return configuration::SimpleParticipantConfiguration(id, kind, domain);
+    }
+    else
+    {
+        return configuration::SimpleParticipantConfiguration(id, kind);
+    }
 }
 
 configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_participant_configuration_v1(

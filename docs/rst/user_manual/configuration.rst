@@ -8,7 +8,8 @@ DDS Router Configuration
 
 A |ddsrouter| is configured by a *.yaml* configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering
-and :term:`Participants <Participant>` configurations.
+and :term:`Participants <Participant>` configurations. Configuration files may be easily validated by using the
+:ref:`yaml_validator` tool.
 
 Configuration version
 =====================
@@ -34,7 +35,7 @@ with future releases.
         - ``v2.0``
         - *v0.2.0*
 
-**Current configuration version is ``v2.0``**.
+**Current configuration version is v2.0**.
 This is the configuration version that is described along this page.
 
 .. note::
