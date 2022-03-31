@@ -41,6 +41,7 @@ class YamlValidator:
             return
 
         if os.path.isdir(config_path):
+            ret = True
             visited_dirs = []
             for root, dirs, files in os.walk(config_path):
                 print(f'Scanning directory {root}')
@@ -48,13 +49,15 @@ class YamlValidator:
                     visited_dirs.append(root)
                     for f in files:
                         if self.__is_yaml(f):
-                            self.__validate_config_file(
+                            ret = ret and self.__validate_config_file(
                                 os.path.join(root, f), schema_path, logout)
                     if not recursive:
                         break
+            return ret
         else:
             if self.__is_yaml(config_path):
-                self.__validate_config_file(config_path, schema_path, logout)
+                return self.__validate_config_file(
+                    config_path, schema_path, logout)
             else:
                 print(
                     'The given config file {} is not a YAML file.'.format(

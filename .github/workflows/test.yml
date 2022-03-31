@@ -288,6 +288,12 @@ jobs:
           package_name: ddsrouter_yaml
         if: always()
 
+      - name: Run tests ddsrouter_yaml_validator
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_yaml_validator
+        if: always()
+
       - name: Run tests ddsrouter_tool
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
@@ -397,6 +403,7 @@ jobs:
           source install/setup.bash && \
           colcon test \
             --packages-select-regex ddsrouter \
+            --packages-skip ddsrouter_yaml_validator \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \

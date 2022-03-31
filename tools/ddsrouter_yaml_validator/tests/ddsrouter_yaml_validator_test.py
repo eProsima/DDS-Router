@@ -14,7 +14,6 @@
 
 """DDS-Router YAML Validator tests."""
 
-import glob
 import os
 
 from ddsrouter_yaml_validator.validator import YamlValidator
@@ -27,27 +26,23 @@ SCHEMA_PATH = 'tools/ddsrouter_yaml_validator/ddsrouter_yaml_validator/' \
               'ddsrouter_config_schema.json'
 
 VALID_CONFIGURATION_FILES = [
-    glob.glob('resources/configurations/examples/*.yaml'),
-    glob.glob('docs/resources/getting_started/*.yaml')]
+    'resources/configurations/examples',
+    'docs/resources/getting_started']
 
 INVALID_CONFIGURATION_FILES = [
-    glob.glob('tools/ddsrouter_yaml_validator/tests/'
-              'invalid_configuration_files/*.yaml')]
+    'tools/ddsrouter_yaml_validator/tests/invalid_configuration_files']
 
 
 def test_valid_yamls():
     """Assert given configuration files are valid."""
     validator = YamlValidator()
-    for valid_files_list in VALID_CONFIGURATION_FILES:
-        for valid_file in valid_files_list:
-            assert validator.validate_config_file(
-                valid_file, SCHEMA_PATH, logout=False)
+    for valid_files_dir in VALID_CONFIGURATION_FILES:
+        assert validator.validate(valid_files_dir, SCHEMA_PATH, logout=False)
 
 
 def test_invalid_yamls():
     """Assert given configuration files are invalid."""
     validator = YamlValidator()
-    for invalid_files_list in INVALID_CONFIGURATION_FILES:
-        for invalid_file in invalid_files_list:
-            assert not validator.validate_config_file(
-                invalid_file, SCHEMA_PATH, logout=False)
+    for invalid_files_dir in INVALID_CONFIGURATION_FILES:
+        assert not validator.validate(
+            invalid_files_dir, SCHEMA_PATH, logout=False)
