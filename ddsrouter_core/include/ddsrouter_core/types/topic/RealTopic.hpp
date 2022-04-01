@@ -32,8 +32,12 @@ namespace types {
  */
 struct RealTopic : public Topic
 {
-    //! Inherit parent constructors
-    using Topic::Topic;
+    //! Constructor by topic name, topic type name, and (optionally) has_keyed_set and topic kind
+    DDSROUTER_CORE_DllAPI RealTopic(
+            const std::string& topic_name,
+            const std::string& topic_type,
+            bool topic_with_key = false,
+            bool topic_reliable = false) noexcept;
 
     //! Default non valid topic
     DDSROUTER_CORE_DllAPI RealTopic();
@@ -52,11 +56,27 @@ struct RealTopic : public Topic
 
     DDSROUTER_CORE_DllAPI bool is_valid() const noexcept override;
 
+    //! Topic reliability getter
+    DDSROUTER_CORE_DllAPI bool topic_reliable() const;
+
 protected:
 
     static const char* INVALID_TOPIC_NAME;  // __invalid_topic_name__
     static const char* INVALID_TOPIC_TYPE;  // __invalid_topic_type_name__
+
+    //! The DataReader subscribed to this topic is configured as RELIABLE
+    bool topic_reliable_;
 };
+
+/**
+ * Serialization method
+ *
+ * It prints the topic name, type, kind and reliability inside "{}" and separated by ";"
+ * Example: {TopicName;TopicType;no_key;reliable}
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const RealTopic& a);
 
 } /* namespace types */
 } /* namespace core */
