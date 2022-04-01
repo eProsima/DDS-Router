@@ -78,6 +78,9 @@
                 },
                 "keyed":{
                     "type":"boolean"
+                },
+                "reliable":{
+                    "type":"boolean"
                 }
             },
             "required":[
