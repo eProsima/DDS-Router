@@ -505,6 +505,13 @@ void YamlReader::fill(
         object.certificate_chain_file = get<std::string>(yml, TLS_CERT_TAG, version);
     }
 
+    std::string sni_host;
+    bool has_sni_host = is_tag_present(yml, TLS_SNI_HOST_TAG);
+    if (has_sni_host)
+    {
+        sni_host = get_scalar<std::string>(yml, TLS_SNI_HOST_TAG);
+    }
+
     // Optional dh params
     if (is_tag_present(yml, TLS_DHPARAMS_TAG))
     {

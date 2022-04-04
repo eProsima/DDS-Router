@@ -78,6 +78,7 @@ constexpr const char* TLS_PRIVATE_KEY_TAG("private_key"); //! DDS-Router Certifi
 constexpr const char* TLS_CERT_TAG("cert"); //! DDS-Router Certificate
 constexpr const char* TLS_DHPARAMS_TAG("dh_params"); //! Diffie-Hellman (DF) parameters
 constexpr const char* TLS_PEER_VERIFICATION_TAG("peer_verification"); //! Peer Verification parameter
+constexpr const char* TLS_SNI_HOST_TAG("sni_host"); //! TLS configuration tag
 
 // Address related tags
 constexpr const char* ADDRESS_IP_TAG("ip"); //! TODO: add comment
