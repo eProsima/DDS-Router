@@ -183,15 +183,16 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
 fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
-    att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
 
     if (topic_.topic_reliable())
     {
         att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     }
     else
     {
         att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
     }
 
     if (topic_.topic_with_key())
@@ -228,13 +229,11 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
     if(topic_.topic_reliable())
     {
         qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
-        // TESTING
         qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
     }
     else
     {
         qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
-        // TESTING
         qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
     }
 

@@ -67,6 +67,11 @@ DDSRouterImpl::DDSRouterImpl(
     init_participants_();
     // Create Bridges
     init_bridges_();
+    // Init discovery database
+    // The entities should not be added to the Discovery Database until the builtin topics have been created.
+    // This is due to the fact that the Participants endpoints start discovering topics with different configuration
+    // than the one specified in the yaml configuration file.
+    discovery_database_->init();
 
     logDebug(DDSROUTER, "DDS Router created.");
 }

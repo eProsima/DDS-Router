@@ -32,7 +32,6 @@ DiscoveryDatabase::DiscoveryDatabase() noexcept
     : exit_(false)
 {
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Creating queue processing thread.");
-    queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
 }
 
 DiscoveryDatabase::~DiscoveryDatabase()
@@ -46,6 +45,12 @@ DiscoveryDatabase::~DiscoveryDatabase()
 
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
     queue_processing_thread_.join();
+}
+
+void DiscoveryDatabase::init() noexcept
+{
+    queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Initializing queue processing thread routine.");
 }
 
 bool DiscoveryDatabase::topic_exists(

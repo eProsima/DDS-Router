@@ -42,9 +42,11 @@
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 #include <fastrtps/attributes/ParticipantAttributes.h>
 #include <fastrtps/attributes/PublisherAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
+#include <fastrtps/xmlparser/XMLProfileManager.h>
 
 #include "HelloWorld/HelloWorldPubSubTypes.h"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
@@ -99,10 +101,16 @@ public:
     bool init(
             uint32_t domain)
     {
+        eprosima::fastrtps::LibrarySettingsAttributes library_settings;
+        library_settings.intraprocess_delivery = eprosima::fastrtps::IntraprocessDeliveryType::INTRAPROCESS_OFF;
+        eprosima::fastrtps::xmlparser::XMLProfileManager::library_settings(library_settings);
+
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
 
         pqos.name("Participant_pub");
+        pqos.transport().use_builtin_transports = false;
+        pqos.transport().user_transports.push_back(std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>());
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(domain, pqos);
 
@@ -145,6 +153,7 @@ public:
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+        wqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
         if (writer_ == nullptr)
@@ -282,12 +291,18 @@ public:
             MsgStruct* msg_should_receive,
             std::atomic<uint32_t>* samples_received)
     {
+        eprosima::fastrtps::LibrarySettingsAttributes library_settings;
+        library_settings.intraprocess_delivery = eprosima::fastrtps::IntraprocessDeliveryType::INTRAPROCESS_OFF;
+        eprosima::fastrtps::xmlparser::XMLProfileManager::library_settings(library_settings);
+
         // INITIALIZE THE LISTENER
         listener_.init(msg_should_receive, samples_received);
 
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
         pqos.name("Participant_sub");
+        pqos.transport().use_builtin_transports = false;
+        pqos.transport().user_transports.push_back(std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>());
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(domain, pqos);
 
@@ -330,6 +345,7 @@ public:
         eprosima::fastdds::dds::DataReaderQos rqos =  eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
         rqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+        rqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
 
         if (reader_ == nullptr)

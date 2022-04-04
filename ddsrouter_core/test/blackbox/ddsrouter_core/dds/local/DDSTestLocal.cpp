@@ -84,11 +84,7 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                             types::ParticipantId("participant_1"),
                             types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
                             types::DomainId(1u)
-                            ),
-                        std::make_shared<configuration::ParticipantConfiguration>(
-                            types::ParticipantId("participant_echo"),
-                            types::ParticipantKind(types::ParticipantKind::ECHO)
-                            ),
+                            )
                     }
         );
 
@@ -110,7 +106,7 @@ void test_local_communication(
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
-        bool wait_discovery = false)
+        bool reliable = false)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
@@ -140,15 +136,9 @@ void test_local_communication(
 
     // Create DDSRouter entity
     DDSRouter router(ddsrouter_configuration);
-    router.start();
 
-    if (wait_discovery)
+    if (reliable)
     {
-        publisher.wait_discovery();
-        subscriber.wait_discovery();
-
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
         for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
             msg.index(samples_sent);
@@ -164,13 +154,18 @@ void test_local_communication(
 
         std::cout << "Publisher sent " << samples_sent << " samples" << std::endl;
 
+        router.start();
+
         while (samples_received.load() < samples_to_receive)
         {
-            // std::cout << "Subscriber waiting for samples (received: " << samples_received.load() << ") ..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
     }
     else
     {
+        // Start DDS Router
+        router.start();
+
         // Start publishing
         while (samples_received.load() < samples_to_receive)
         {

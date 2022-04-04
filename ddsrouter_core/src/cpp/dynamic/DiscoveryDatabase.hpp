@@ -69,6 +69,13 @@ public:
     ~DiscoveryDatabase();
 
     /**
+     * @brief Initialize the queue processing thread routine
+     *
+     * Create a thread in charge of processing the dynamic discovery of endpoints.
+     */
+    void init() noexcept;
+
+    /**
      * @brief Whether a topic exists in any Endpoint in the database
      *
      * @param [in] topic: topic to check if it exists
