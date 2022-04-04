@@ -345,7 +345,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
 
     // Perform verification of the server
     descriptor->tls_config.add_verify_mode(
-        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
+        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_NONE);
 
     if (client)
     {
@@ -404,7 +404,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
     {
         // Fail verification if the server has no certificate
         descriptor->tls_config.add_verify_mode(
-            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_FAIL_IF_NO_PEER_CERT);
+            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_NONE);
     }
 
     // CA certificate
