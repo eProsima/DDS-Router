@@ -456,6 +456,13 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         certificate_chain_file = get_scalar<std::string>(yml, TLS_CERT_TAG);
     }
 
+    std::string sni_host;
+    bool has_sni_host = is_tag_present(yml, TLS_SNI_HOST_TAG);
+    if (has_sni_host)
+    {
+        sni_host = get_scalar<std::string>(yml, TLS_SNI_HOST_TAG);
+    }
+
     // Optional dh params
     std::string dh_params_file;
     bool has_dh_params_file = is_tag_present(yml, TLS_DHPARAMS_TAG);
@@ -491,7 +498,10 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         if (has_certificate_authority_file)
         {
             // Client TLS configuration
-            return std::make_shared<security::TlsConfigurationClient>(certificate_authority_file);
+            return std::make_shared<security::TlsConfigurationClient>(certificate_authority_file, "");
+        }else if(has_sni_host)
+        {
+            return std::make_shared<security::TlsConfigurationClient>(certificate_authority_file, sni_host);
         }
         else
         {

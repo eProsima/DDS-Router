@@ -38,7 +38,7 @@ class TlsConfigurationClient : virtual public TlsConfiguration
 public:
 
     DDSROUTER_CORE_DllAPI TlsConfigurationClient(
-            const std::string& certificate_authority_file);
+            const std::string& certificate_authority_file, const std::string& sni_host);
 
     DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept override;
 
@@ -49,10 +49,12 @@ public:
     DDSROUTER_CORE_DllAPI virtual bool can_be_server() const noexcept override;
 
     std::string certificate_authority_file() const noexcept;
+    std::string sni_host() const noexcept;
 
 protected:
 
     std::string certificate_authority_file_;
+    std::string sni_host_;
 };
 
 } /* namespace security */

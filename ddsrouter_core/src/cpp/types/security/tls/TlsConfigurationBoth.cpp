@@ -37,7 +37,7 @@ TlsConfigurationBoth::TlsConfigurationBoth(
         private_key_file,
         certificate_chain_file,
         dh_params_file)
-    , TlsConfigurationClient(certificate_authority_file)
+    , TlsConfigurationClient(certificate_authority_file, "")
 {
 }
 

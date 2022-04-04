@@ -26,16 +26,17 @@ namespace types {
 namespace security {
 
 TlsConfigurationClient::TlsConfigurationClient(
-        const std::string& certificate_authority_file)
+        const std::string& certificate_authority_file, const std::string& sni_host)
     : TlsConfiguration(TLS_CLIENT)
     , certificate_authority_file_(certificate_authority_file)
+    , sni_host_(sni_host)
 {
 }
 
 bool TlsConfigurationClient::is_valid() const noexcept
 {
     // TODO check it is a correct file
-    return certificate_authority_file_ != "";
+    return certificate_authority_file_ != "" || sni_host_ != "";
 }
 
 bool TlsConfigurationClient::is_active() const noexcept
@@ -56,6 +57,11 @@ bool TlsConfigurationClient::can_be_server() const noexcept
 std::string TlsConfigurationClient::certificate_authority_file() const noexcept
 {
     return certificate_authority_file_;
+}
+
+std::string TlsConfigurationClient::sni_host() const noexcept
+{
+        return sni_host_;
 }
 
 } /* namespace security */

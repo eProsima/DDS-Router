@@ -400,7 +400,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
             utils::Formatter() << "Error, client available TlsConfiguration does not cast to TlsConfigurationClient.");
     }
 
-    if (only_client)
+   if (only_client)
     {
         // Fail verification if the server has no certificate
         descriptor->tls_config.add_verify_mode(
@@ -409,6 +409,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
 
     // CA certificate
     descriptor->tls_config.verify_file = tls_configuration_->certificate_authority_file();
+    descriptor->tls_config.sni_host = tls_configuration_->sni_host();
 }
 
 template <class ConfigurationType>
