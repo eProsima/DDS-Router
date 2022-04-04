@@ -16,21 +16,20 @@
 # Set settings for project ddsrouter_utils
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME
+set(MODULE_NAME
     ddsrouter_utils)
 
-set(SUBMODULE_PROJECT_SUMMARY
+set(MODULE_SUMMARY
     "C++ library for generic useful methods and classes for DDS Router.")
 
-set(SUBMODULE_PROJECT_FIND_PACKAGES
-    fastcdr
-    fastrtps)
+set(MODULE_FIND_PACKAGES
+        fastcdr
+        fastrtps
+        ddsrouter_cmake
+    )
 
-set(SUBMODULE_PROJECT_DEPENDENCIES
-    $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
-    ${SUBMODULE_PROJECT_FIND_PACKAGES})
-
-set(SUBMODULE_PROJECT_MACROS
-    DDSROUTER_UTILS)
-
-# set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )
+set(MODULE_DEPENDENCIES
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+        fastcdr
+        fastrtps
+    )
