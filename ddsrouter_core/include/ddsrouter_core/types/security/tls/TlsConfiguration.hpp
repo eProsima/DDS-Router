@@ -108,6 +108,7 @@ struct TlsConfiguration : public configuration::BaseConfiguration
     ////////
     // CLIENT-ONLY VARIABLES
     std::string certificate_authority_file = "";
+    std::string sni_server_name = "";
 
     ////////
     // SERVER-ONLY VARIABLES
