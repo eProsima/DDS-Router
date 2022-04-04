@@ -47,6 +47,13 @@ jobs:
         with:
           cmake_build_type: "Release"
 
+      - name: Install ddsrouter_cmake
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Release"
+          subpackage: ddsrouter_cmake
+          subpackage_dir: ddsrouter_cmake
+
       - name: Install ddsrouter_utils
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
@@ -156,6 +163,13 @@ jobs:
         uses: ./DDS-Router/.github/actions/install-fastdds-windows
         with:
           cmake_build_type: "Debug"
+
+      - name: Install ddsrouter_cmake
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: "Debug"
+          subpackage: ddsrouter_cmake
+          subpackage_dir: ddsrouter_cmake
 
       - name: Install ddsrouter_utils
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
