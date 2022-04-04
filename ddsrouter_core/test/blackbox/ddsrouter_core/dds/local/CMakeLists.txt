@@ -33,7 +33,8 @@ set(TEST_LIST
     end_to_end_local_communication_only_builtin_topics_keyed
     end_to_end_local_communication_high_frequency
     end_to_end_local_communication_high_size
-    end_to_end_local_communication_high_throughput)
+    end_to_end_local_communication_high_throughput
+    end_to_end_local_communication_reliable)
 
 set(TEST_NEEDED_SOURCES
     )

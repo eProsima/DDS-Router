@@ -31,7 +31,7 @@ namespace ddsrouter {
 namespace yaml {
 namespace test {
 
-// Add a topic into a yaml by using name, type and key tags
+// Create a yaml Topic object with name, type and key tags
 void topic_to_yaml(
         Yaml& yml,
         const test::YamlField<std::string>& name,
@@ -43,16 +43,32 @@ void topic_to_yaml(
     test::add_field_to_yaml(yml, keyed, TOPIC_KIND_TAG);
 }
 
+// Create a yaml RealTopic object with name, type, key and reliable tags
+void real_topic_to_yaml(
+        Yaml& yml,
+        const test::YamlField<std::string>& name,
+        const test::YamlField<std::string>& type,
+        const test::YamlField<bool>& keyed,
+        const test::YamlField<bool>& reliable)
+{
+    test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
+    test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
+    test::add_field_to_yaml(yml, keyed, TOPIC_KIND_TAG);
+    test::add_field_to_yaml(yml, reliable, TOPIC_RELIABLE_TAG);
+}
+
 // Check the values of a real topic are the expected ones
 void compare_topic(
         core::types::RealTopic topic,
         std::string name,
         std::string type,
-        bool keyed)
+        bool keyed,
+        bool reliable = false)
 {
     ASSERT_EQ(topic.topic_name(), name);
     ASSERT_EQ(topic.topic_type(), type);
     ASSERT_EQ(topic.topic_with_key(), keyed);
+    ASSERT_EQ(topic.topic_reliable(), reliable);
 }
 
 // Check the values of a wildcard topic are the expected ones
@@ -180,6 +196,24 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+    }
+
+    // Topic reliable
+    {
+        Yaml yml_topic;
+        test::real_topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>(false),
+            test::YamlField<bool>(true));
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
+
+        test::compare_topic(topic, name, type, false, true); // By default no keyed
     }
 }
 

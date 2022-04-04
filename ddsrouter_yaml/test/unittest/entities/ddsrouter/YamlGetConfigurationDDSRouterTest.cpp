@@ -114,6 +114,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
     ASSERT_EQ(topic_result->topic_name(), "rt/chatter");
     ASSERT_EQ(topic_result->topic_type(), "std_msgs::msg::dds_::String_");
     ASSERT_EQ(topic_result->topic_with_key(), false);
+    ASSERT_EQ(topic_result->topic_reliable(), false);
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>

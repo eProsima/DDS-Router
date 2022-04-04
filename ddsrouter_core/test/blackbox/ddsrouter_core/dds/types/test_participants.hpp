@@ -32,6 +32,7 @@
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/publisher/DataWriter.hpp>
+#include <fastdds/dds/publisher/DataWriterListener.hpp>
 #include <fastdds/dds/publisher/Publisher.hpp>
 #include <fastdds/dds/publisher/qos/DataWriterQos.hpp>
 #include <fastdds/dds/publisher/qos/PublisherQos.hpp>
@@ -144,7 +145,7 @@ public:
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
-        writer_ = publisher_->create_datawriter(topic_, wqos);
+        writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
         if (writer_ == nullptr)
         {
@@ -163,6 +164,12 @@ public:
         ASSERT_TRUE(writer_->write(&hello_));
     }
 
+    void wait_discovery(
+        uint32_t n_subscribers = 1)
+    {
+        listener_.wait_discovery(n_subscribers);
+    }
+
 private:
 
     MsgStruct hello_;
@@ -176,6 +183,58 @@ private:
     eprosima::fastdds::dds::DataWriter* writer_;
 
     bool keyed_;
+
+    class PubListener : public eprosima::fastdds::dds::DataWriterListener
+    {
+    public:
+
+        PubListener()
+            : discovered_(0)
+        {
+        }
+
+        void wait_discovery(
+            uint32_t n_subscribers = 1)
+        {
+            if (discovered_ < n_subscribers)
+            {
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
+                wait_discovery_cv_.wait(lock, [this, n_subscribers]
+                        {
+                            return discovered_ >= n_subscribers;
+                        });
+            }
+        }
+
+        void on_publication_matched(
+            eprosima::fastdds::dds::DataWriter*,
+            const eprosima::fastdds::dds::PublicationMatchedStatus& info)
+        {
+            if (info.current_count_change == 1)
+            {
+                std::cout << "Subscriber discovered." << std::endl;
+                discovered_ = info.current_count;
+                wait_discovery_cv_.notify_all();
+            }
+            else if (info.current_count_change == -1)
+            {
+                std::cout << "Subscriber removed." << std::endl;
+                discovered_ = info.current_count;
+            }
+        }
+
+    private:
+
+        //! Number of DataReaders discovered
+        std::atomic<std::uint32_t> discovered_;
+
+        //! Protects wait_discovery condition variable
+        std::mutex wait_discovery_cv_mtx_;
+
+        //! Waits to discovery enough DataReaders
+        std::condition_variable wait_discovery_cv_;
+    }
+    listener_;
 };
 
 /**
@@ -281,6 +340,12 @@ public:
         return true;
     }
 
+    void wait_discovery(
+        uint32_t n_publishers = 1)
+    {
+        listener_.wait_discovery(n_publishers);
+    }
+
 private:
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
@@ -300,6 +365,11 @@ private:
     {
     public:
 
+        SubListener()
+            : discovered_(0)
+        {
+        }
+
         //! Initialize the listener
         void init(
                 MsgStruct* msg_should_receive,
@@ -307,6 +377,19 @@ private:
         {
             msg_should_receive_ = msg_should_receive;
             samples_received_ = samples_received;
+        }
+
+        void wait_discovery(
+            uint32_t n_publishers = 1)
+        {
+            if (discovered_ < n_publishers)
+            {
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
+                wait_discovery_cv_.wait(lock, [this, n_publishers]
+                        {
+                            return discovered_ >= n_publishers;
+                        });
+            }
         }
 
         //! Callback executed when a new sample is received
@@ -319,6 +402,8 @@ private:
             {
                 if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
                 {
+                    std::cout << "Msg received: \""  << msg_received_.message() << " "
+                              << msg_received_.index() << "\"" << std::endl;
                     if (msg_received_.message() == msg_should_receive_->message())
                     {
                         success = true;
@@ -327,6 +412,23 @@ private:
                 }
             }
             ASSERT_TRUE(success);
+        }
+
+        void on_subscription_matched(
+                eprosima::fastdds::dds::DataReader*,
+                const eprosima::fastdds::dds::SubscriptionMatchedStatus& info)
+        {
+            if (info.current_count_change == 1)
+            {
+                std::cout << "Publisher discovered." << std::endl;
+                discovered_ = info.current_count;
+                wait_discovery_cv_.notify_all();
+            }
+            else if (info.current_count_change == -1)
+            {
+                std::cout << "Publisher removed." << std::endl;
+                discovered_ = info.current_count;
+            }
         }
 
     private:
@@ -339,6 +441,15 @@ private:
 
         //! Reference to received messages counter
         std::atomic<uint32_t>* samples_received_;
+
+        //! Number of DataWriters discovered
+        std::atomic<std::uint32_t> discovered_;
+
+        //! Protects wait_discovery condition variable
+        std::mutex wait_discovery_cv_mtx_;
+
+        //! Waits to discovery enough DataWriters
+        std::condition_variable wait_discovery_cv_;
     }
     listener_;
 };

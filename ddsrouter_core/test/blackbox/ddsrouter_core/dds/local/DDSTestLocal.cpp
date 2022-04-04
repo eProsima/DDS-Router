@@ -44,7 +44,8 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  * @return configuration::DDSRouterConfiguration
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration(
-        bool only_builtin_topics = false)
+        bool only_builtin_topics = false,
+        bool reliable_readers = false)
 {
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
     if (!only_builtin_topics)
@@ -56,11 +57,19 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
-    if (only_builtin_topics)
+    if (only_builtin_topics || reliable_readers)
     {
         // Two topics, one keyed and other not
-        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld"));
-        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true));
+        if (reliable_readers)
+        {
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, true));
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, true));
+        }
+        else
+        {
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld"));
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true));
+        }
     }
 
     // Two simple participants
@@ -75,6 +84,10 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                             types::ParticipantId("participant_1"),
                             types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
                             types::DomainId(1u)
+                            ),
+                        std::make_shared<configuration::ParticipantConfiguration>(
+                            types::ParticipantId("participant_echo"),
+                            types::ParticipantKind(types::ParticipantKind::ECHO)
                             ),
                     }
         );
@@ -96,7 +109,8 @@ void test_local_communication(
         configuration::DDSRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
+        uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
+        bool wait_discovery = false)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
@@ -128,16 +142,46 @@ void test_local_communication(
     DDSRouter router(ddsrouter_configuration);
     router.start();
 
-    // Start publishing
-    while (samples_received.load() < samples_to_receive)
+    if (wait_discovery)
     {
-        msg.index(++samples_sent);
-        publisher.publish(msg);
+        publisher.wait_discovery();
+        subscriber.wait_discovery();
 
-        // If time is 0 do not wait
-        if (time_between_samples > 0)
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+            msg.index(samples_sent);
+            publisher.publish(msg);
+            std::cout << "Published sample " << samples_sent << std::endl;
+
+            // If time is 0 do not wait
+            if (time_between_samples > 0)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+            }
+        }
+
+        std::cout << "Publisher sent " << samples_sent << " samples" << std::endl;
+
+        while (samples_received.load() < samples_to_receive)
+        {
+            // std::cout << "Subscriber waiting for samples (received: " << samples_received.load() << ") ..." << std::endl;
+        }
+    }
+    else
+    {
+        // Start publishing
+        while (samples_received.load() < samples_to_receive)
+        {
+            msg.index(++samples_sent);
+            publisher.publish(msg);
+
+            // If time is 0 do not wait
+            if (time_between_samples > 0)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+            }
         }
     }
 
@@ -236,6 +280,20 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
         500,
         1,
         1000); // 50K message size
+}
+
+/**
+ * Test reliable communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_reliable)
+{
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(true, true),
+        test::DEFAULT_SAMPLES_TO_RECEIVE,
+        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+        test::DEFAULT_MESSAGE_SIZE,
+        true);
 }
 
 int main(
