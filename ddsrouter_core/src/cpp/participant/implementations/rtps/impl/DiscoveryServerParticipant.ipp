@@ -151,7 +151,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
         // Port
         eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
+        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, 443);
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
