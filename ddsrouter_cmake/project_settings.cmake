@@ -21,6 +21,3 @@ set(MODULE_NAME
 
 set(MODULE_SUMMARY
     "DDS Router CMake module")
-
-set(MODULE_DESCRIPTION
-    "${MODULE_PROJECT_SUMMARY}")

@@ -26,6 +26,7 @@
 # - MODULE_LICENSE_INSTALL_DIR   : License path        - /
 macro(set_installation_paths)
 
+    # Set MODULE_ variable to installation path
     set(MODULE_BIN_INSTALL_DIR bin/ CACHE PATH "Installation directory for binaries")
     set(MODULE_INCLUDE_INSTALL_DIR include/ CACHE PATH "Installation directory for C++ headers")
     set(MODULE_LIB_INSTALL_DIR lib/ CACHE PATH "Installation directory for libraries")
@@ -36,6 +37,7 @@ macro(set_installation_paths)
         set(MODULE_LICENSE_INSTALL_DIR ${MODULE_DATA_INSTALL_DIR}/${MODULE_NAME} CACHE PATH "Installation directory for licenses")
     endif()
 
+    # Set common names for installation paths
     set(BIN_INSTALL_DIR ${MODULE_BIN_INSTALL_DIR})
     set(INCLUDE_INSTALL_DIR ${MODULE_INCLUDE_INSTALL_DIR})
     set(LIB_INSTALL_DIR ${MODULE_LIB_INSTALL_DIR})

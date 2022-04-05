@@ -22,11 +22,6 @@ if(NOT DEFINED ddsrouter_cmake_DIR)
   message(FATAL_ERROR "ddsrouter_cmake_DIR is not set")
 endif()
 
-# the following operations must be performed inside a project context
-if(NOT PROJECT_NAME)
-  project(ddsrouter_cmake_internal NONE)
-endif()
-
 ######
 # Include functions, methods and modules
 # Get every cmake that must be included

@@ -38,10 +38,10 @@ macro(configure_project_cpp)
     set_cmake_build_type()
 
     # If CMake C++ version is not set, set it to C++17
-    if (NOT PROJECT_CPP_VERSION)
+    if (NOT MODULE_CPP_VERSION)
         check_cpp("C++17")
     else()
-        check_cpp(${PROJECT_CPP_VERSION})
+        check_cpp(${MODULE_CPP_VERSION})
     endif()
 
     # Set Build Shared Libs as default option
@@ -53,7 +53,7 @@ macro(configure_project_cpp)
         )
     find_thirdparties_headeronly(
             "${MODULE_THIRDPARTY_HEADERONLY}"
-            "thirdparty"
+            "${MODULE_THIRDPARTY_PATH}"
         )
 
     # Activate coverage it required
@@ -65,6 +65,6 @@ macro(configure_project_cpp)
     configure_eprosima_log()
 
     # Finish macro
-    message(STATUS "C++ Project ${PROJECT_NAME_LARGE} configured.")
+    message(STATUS "C++ Project ${MODULE_NAME_LARGE} configured.")
 
 endmacro()

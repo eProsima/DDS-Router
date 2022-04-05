@@ -24,7 +24,7 @@
 # - MODULE_NAME: Name of the project.
 #
 # OPTIONAL ADVICED VARIABLES:
-# - MODULE_LARGE_NAME       : Project large name (default MODULE_NAME)
+# - MODULE_NAME_LARGE       : Project large name (default MODULE_NAME)
 # - MODULE_SUMMARY          : Project summary    (default MODULE_NAME)
 # - MODULE_DESCRIPTION      : Project description (default MODULE_SUMMARY)
 # - MODULE_FIND_PACKAGES    : Packages required to be used in the project
@@ -55,17 +55,17 @@ macro(load_project_settings)
         message (FATAL_ERROR "Module name variable MODULE_NAME not defined in ${PROJECT_SETTINGS_FILE}")
     endif()
 
-    # MODULE_NAME_LARGE
+    # Set MODULE_NAME_LARGE
     if (NOT MODULE_NAME_LARGE)
         set (MODULE_NAME_LARGE ${MODULE_NAME})
     endif()
 
-    # MODULE_SUMMARY
+    # Set MODULE_SUMMARY
     if (NOT MODULE_SUMMARY)
         set (MODULE_SUMMARY ${MODULE_NAME})
     endif()
 
-    # MODULE_DESCRIPTION
+    # Set MODULE_DESCRIPTION
     if (NOT MODULE_DESCRIPTION)
         set (MODULE_DESCRIPTION ${MODULE_SUMMARY})
     endif()
@@ -75,8 +75,18 @@ macro(load_project_settings)
         string (TOUPPER ${MODULE_NAME} MODULE_MACRO)
     endif()
 
+    # Set MODULE_THIRDPARTY_PATH
+    if (NOT MODULE_THIRDPARTY_PATH)
+        set (MODULE_THIRDPARTY_PATH "thirdparty")
+    endif()
+
+    # Set MODULE_DEPENDENCIES
+    if (NOT MODULE_DEPENDENCIES)
+        set (MODULE_DEPENDENCIES ${MODULE_FIND_PACKAGES})
+    endif()
+
     # Finish macro
-    message (STATUS "Loaded project settings from ${PROJECT_SETTINGS_FILE} to project ${MODULE_LARGE_NAME}:")
+    message (STATUS "Loaded project settings from ${PROJECT_SETTINGS_FILE} to project ${MODULE_NAME_LARGE}:")
     message (STATUS " - Module Name: ${MODULE_NAME}")
     message (STATUS " - Module Name Large: ${MODULE_NAME_LARGE}")
     message (STATUS " - Module Summary: ${MODULE_SUMMARY}")
