@@ -17,27 +17,49 @@
 ###############################################################################
 
 # TODO
-macro(compile_test _TEST_PATH)
+macro(configure_test_flags)
 
     option(BUILD_TESTS "Build eProsima ${PROJECT_NAME} library tests" OFF)
-    option(BUILD_APP_TESTS "Build eProsima ${PROJECT_NAME} app library tests" OFF)
+    option(BUILD_LIBRARY_TESTS "Build eProsima ${PROJECT_NAME} library tests" OFF)
+    option(BUILD_APP_TESTS "Build eProsima ${PROJECT_NAME} app tests" OFF)
+    option(BUILD_DOCUMENTATION_TESTS "Build eProsima ${PROJECT_NAME} documentation tests" OFF)
 
     if (BUILD_TESTS)
+        set(BUILD_LIBRARY_TESTS ON)
         set(BUILD_APP_TESTS ON)
-    endif()
+        set(BUILD_DOCUMENTATION_TESTS ON)
 
-    if(BUILD_APP_TESTS)
-        # CTest needs to be included here, otherwise it is not possible to run the tests from the root
-        # of the build directory
         enable_testing()
         include(CTest)
     endif()
 
-    if(BUILD_APP_TESTS)
+endmacro()
 
-        message(STATUS "Compiling ${PROJECT_NAME} tests")
+# TODO
+macro(compile_test_library _TEST_PATH)
+
+    configure_test_flags()
+
+    if(BUILD_LIBRARY_TESTS)
+
+        message(STATUS "Compiling ${PROJECT_NAME} library tests")
 
         test_requirements()
+
+        add_subdirectory(${_TEST_PATH})
+
+    endif()
+
+endmacro()
+
+# TODO
+macro(compile_test_documentation _TEST_PATH)
+
+    configure_test_flags()
+
+    if(BUILD_DOCUMENTATION_TESTS)
+
+        message(STATUS "Compiling ${PROJECT_NAME} documentation tests")
 
         add_subdirectory(${_TEST_PATH})
 

@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Look for an executable called sphinx-build
-find_program(SPHINX_EXECUTABLE
-             NAMES sphinx-build
-             DOC "Path to sphinx-build executable")
+###############################################################################
+# Set settings for project amlip_docs
+###############################################################################
 
-include(FindPackageHandleStandardArgs)
+set(MODULE_NAME
+    ddsrouter_docs)
 
-# Handle standard arguments to find_package like REQUIRED and QUIET
-find_package_handle_standard_args(Sphinx
-                                  "Failed to find sphinx-build executable"
-                                  SPHINX_EXECUTABLE)
+set(MODULE_SUMMARY
+    "Sphinx documentation for DDS Router project.")
+
+set(MODULE_FIND_PACKAGES
+    ddsrouter_cmake
+    Sphinx
+)
+
+set(MODULE_DEPENDENCIES
+    ${SUBMODULE_PROJECT_FIND_PACKAGES}
+)
