@@ -20,7 +20,7 @@
 # Always use /build or any other auxiliar directory
 macro(in_source_build_prevention)
 
-    if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
         message(FATAL_ERROR "In-source build detected!")
     endif()
     # Thanks to: https://towardsdatascience.com/7-tips-for-clean-cmake-scripts-c8d276587389

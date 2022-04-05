@@ -36,7 +36,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         target_compile_definitions(${TEST_EXECUTABLE_NAME}
             PRIVATE
                 _CRT_DECLARE_NONSTDC_NAMES=0
-                ${SUBMODULE_PROJECT_MACROS}_SOURCE)
+                ${MODULEMACROS}_SOURCE)
     endif(MSVC)
 
     target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE
@@ -115,7 +115,7 @@ function(add_blackbox_executable TEST_NAME TEST_SOURCES TEST_LIST TEST_NEEDED_SO
 
     # Add all library needed by sources
     set(EXTRA_LIBRARIES
-        ${SUBMODULE_PROJECT_DEPENDENCIES})
+        ${MODULE_DEPENDENCIES})
 
     # Create test executable
     add_test_executable(
