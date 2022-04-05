@@ -141,7 +141,7 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
             )
         endif()
 
-        if("${CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
+        if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
             set_target_properties(${PROJECT_NAME} PROPERTIES VS_WINRT_COMPONENT "true")
         endif()
     endif()

@@ -20,7 +20,7 @@
 macro(activate_code_coverage)
 
     # Warning/Error messages
-    if(NOT (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
+    if(NOT (CMAKE_BUILD_TYPE STREQUAL "Debug"))
         message(WARNING "Code coverage results with an optimized (non-Debug) build may be misleading")
     endif()
 

@@ -19,18 +19,11 @@
 # Configure eProsima Log by setting Info level if Debug and enforcing Fast DDS log info
 macro(configure_eprosima_log)
 
-    if("Debug" STREQUAL ${CMAKE_BUILD_TYPE})
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         option(LOG_INFO "Compile logInfo messages" ON)
     else()
         option(LOG_INFO "No Compile logInfo messages" OFF)
     endif()
-
-    # if(LOG_INFO)
-    #     target_compile_definitions(${PROJECT_NAME}
-    #         PRIVATE FASTDDS_ENFORCE_LOG_INFO
-    #         PRIVATE HAVE_LOG_NO_INFO=0
-    #         )
-    # endif()
 
     if(${LOG_INFO})
         message(STATUS "Compiling logInfo messages (they still need to be activated in order to be seem).")

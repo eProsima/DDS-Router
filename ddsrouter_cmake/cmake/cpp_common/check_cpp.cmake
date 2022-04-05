@@ -23,7 +23,7 @@
 macro(check_cpp CPP_VERSION)
 
     # C++17
-    if(${CPP_VERSION} STREQUAL "17" OR ${CPP_VERSION} STREQUAL "C++17")
+    if("${CPP_VERSION}" STREQUAL "17" OR "${CPP_VERSION}" STREQUAL "C++17")
         check_cpp_17()
     else()
         message(FATAL_ERROR "C++ version ${CPP_VERSION} is not supported yet by this cmake macro")
