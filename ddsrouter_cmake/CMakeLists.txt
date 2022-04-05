@@ -25,7 +25,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/in_source_build_prevention.cma
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/load_project_settings.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/read_version.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/installation_paths.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/configuration/configure_project.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/project/configure_project.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging/eProsima_packaging.cmake)
 
 # Get all variables for project

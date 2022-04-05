@@ -36,7 +36,7 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
         target_compile_definitions(${TEST_EXECUTABLE_NAME}
             PRIVATE
                 _CRT_DECLARE_NONSTDC_NAMES=0
-                ${MODULEMACROS}_SOURCE)
+                ${MODULE_MACRO}_SOURCE)
     endif(MSVC)
 
     target_include_directories(${TEST_EXECUTABLE_NAME} PRIVATE
