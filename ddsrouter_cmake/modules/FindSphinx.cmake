@@ -12,22 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(@PROJECT_NAME@_VERSION @PROJECT_VERSION@)
+# Look for an executable called sphinx-build
+find_program(SPHINX_EXECUTABLE
+             NAMES sphinx-build
+             DOC "Path to sphinx-build executable")
 
-@PACKAGE_INIT@
+include(FindPackageHandleStandardArgs)
 
-if(MSVC OR MSVC_IDE)
-    set_and_check(@PROJECT_NAME@_BIN_DIR "@PACKAGE_BIN_INSTALL_DIR@")
-endif()
-set_and_check(@PROJECT_NAME@_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
-set_and_check(@PROJECT_NAME@_LIB_DIR "@PACKAGE_LIB_INSTALL_DIR@")
-
-if(NOT fastcdr_FOUND)
-    find_package(fastcdr)
-endif()
-
-if(NOT fastrtps_FOUND)
-    find_package(fastrtps)
-endif()
-
-include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
+# Handle standard arguments to find_package like REQUIRED and QUIET
+find_package_handle_standard_args(Sphinx
+                                  "Failed to find sphinx-build executable"
+                                  SPHINX_EXECUTABLE)

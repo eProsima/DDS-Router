@@ -25,9 +25,49 @@ import re
 import requests
 
 
-def get_version(cmakelists):
+PROJECT_NAME = 'DDS Router'
+COMPRESS_PROJECT_NAME = 'ddsrouter'
+
+
+def get_version(version_file='VERSION'):
     """
-    Get the project version from a file
+    Get the project version from a version file.
+
+    This method get the VERSION file in this directory and read the version from it.
+
+    :param version_file: The file to scan the version (Default: VERSION)
+    :return: A dict in the manner:
+        {
+            'major': int,
+            'minor': int,
+            'patch': int
+        }
+        None if file does not exist
+    """
+    version = {}
+
+    try:
+        with open(version_file, 'r') as f:
+            for line in f:
+                if re.search('VERSION_MAJOR', line):
+                    version['major'] = line.split()[1][:-1]
+                if re.search('VERSION_MINOR', line):
+                    version['minor'] = line.split()[1][:-1]
+                if re.search('VERSION_PATCH', line):
+                    version['patch'] = line.split()[1][:-1]
+                if ('major' in version and
+                        'minor' in version and
+                        'patch' in version):
+                    break
+    except EnvironmentError:
+        return None
+
+    return version
+
+
+def get_version_from_cmakelists(cmakelists):
+    """
+    Get the project version from a cmakelists file.
 
     The function looks for PRODUCT_MAJOR_VERSION, PRODUCT_MINOR_VERSION, and
     PRODUCT_PATCH_VERSION in the given file
@@ -169,7 +209,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DDS Router'
+project = u'{PROJECT_NAME}'
 copyright = u'2021, eProsima'
 author = u'eProsima'
 
@@ -178,8 +218,11 @@ author = u'eProsima'
 # built documents.
 #
 # The short X.Y version.
-versions = get_version(
-    os.path.abspath('{}/CMakeLists.txt'.format(script_path)))
+versions = get_version()
+if versions is None:
+    versions = get_version_from_cmakelists(
+        os.path.abspath('{}/CMakeLists.txt'.format(script_path)))
+
 version = u'{}.{}'.format(versions['major'], versions['minor'])
 # The full version, including alpha/beta/rc tags.
 release = u'{}.{}.{}'.format(
@@ -369,7 +412,7 @@ html_context = {
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DDS Router Manual'
+htmlhelp_basename = f'{PROJECT_NAME} Manual'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -396,8 +439,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc,
-     'ddsrouter.tex',
-     u'DDS Router Documentation',
+     f'{COMPRESS_PROJECT_NAME}.tex',
+     u'{PROJECT_NAME} Documentation',
      u'eProsima',
      'manual'),
 ]
@@ -441,8 +484,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc,
-     'DDS Router',
-     u'DDS Router Documentation',
+     f'{PROJECT_NAME}',
+     u'{PROJECT_NAME} Documentation',
      [author],
      1)
 ]
@@ -459,11 +502,11 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc,
-     'DDS Router',
-     u'DDS Router Documentation',
+     f'{PROJECT_NAME}',
+     u'{PROJECT_NAME} Documentation',
      author,
-     'DDS Router',
-     'Documentation of eProsima DDS Router',
+     f'{PROJECT_NAME}',
+     f'Documentation of eProsima {PROJECT_NAME}',
      'Miscellaneous'),
 ]
 

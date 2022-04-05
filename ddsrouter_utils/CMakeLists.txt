@@ -65,7 +65,7 @@ compile_library(
 # Test
 ###############################################################################
 # Compile tests if CMake options requires it
-compile_test(
+compile_test_library(
     "${PROJECT_SOURCE_DIR}/test" # Test directory
 )
 
