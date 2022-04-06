@@ -23,7 +23,6 @@ set(MODULE_SUMMARY
     "Sphinx documentation for DDS Router project.")
 
 set(MODULE_FIND_PACKAGES
-    ddsrouter_cmake
     Sphinx
 )
 

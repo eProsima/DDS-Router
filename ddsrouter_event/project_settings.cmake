@@ -33,6 +33,3 @@ set(MODULE_DEPENDENCIES
 
 set(MODULE_THIRDPARTY_HEADERONLY
     filewatch)
-
-set(MODULE_THIRDPARTY_PATH
-    "../thirdparty")

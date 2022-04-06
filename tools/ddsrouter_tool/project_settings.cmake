@@ -22,7 +22,7 @@ set(MODULE_NAME
 set(MODULE_SUMMARY
     "C++ application to run a DDS Router from a YAML configuration file.")
 
-set(MODULE_DEPENDENCIES
+set(MODULE_FIND_PACKAGES
     yaml-cpp
     fastcdr
     fastrtps
@@ -32,16 +32,20 @@ set(MODULE_DEPENDENCIES
     ddsrouter_yaml
 )
 
-set(MODULE_FIND_PACKAGES
-    ddsrouter_cmake
-    ${MODULE_DEPENDENCIES}
-)
-
-set(MODULE_RESOURCES_PATH
-    resources)
+set(MODULE_DEPENDENCIES
+    ${MODULE_FIND_PACKAGES})
 
 set(MODULE_THIRDPARTY_HEADERONLY
     optionparser)
 
+set(MODULE_RESOURCES_PATH
+    "../../resources")
+
 set(MODULE_THIRDPARTY_PATH
     "../../thirdparty")
+
+set(MODULE_LICENSE_FILE_PATH
+    "../../LICENSE")
+
+set(MODULE_VERSION_FILE_PATH
+    "../../VERSION")

@@ -53,7 +53,17 @@ macro(configure_project)
 
     # Set variables for project
     load_project_settings()
-    read_version()
+
+    # Read version if it is not already set
+    if( NOT DEFINED MODULE_VERSION_MAJOR OR
+        NOT DEFINED MODULE_VERSION_MINOR OR
+        NOT DEFINED MODULE_VERSION_PATCH OR
+        NOT DEFINED MODULE_VERSION)
+
+        read_version(${MODULE_VERSION_FILE_PATH})
+    endif()
+
+    # Set install directories
     set_installation_paths()
 
     # Finishing macro

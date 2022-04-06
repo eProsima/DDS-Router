@@ -31,37 +31,19 @@
 #
 # Arguments:
 # (optional) VERSION_FILE_NAME -> File to load version parameters [default: VERSION]
-macro(read_version)
+macro(read_version VERSION_FILE_NAME)
 
-    # If version already set, it must not read file
-    if( NOT DEFINED MODULE_VERSION_MAJOR OR
-        NOT DEFINED MODULE_VERSION_MAJOR OR
-        NOT DEFINED MODULE_VERSION_MAJOR)
+    # Read version file
+    file(READ ${VERSION_FILE_NAME} READ_VERSION_FILE)
 
-        # Use default file
-        set(VERSION_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/VERSION)
+    string(REGEX MATCH "VERSION_MAJOR ([0-9]*)" _ ${READ_VERSION_FILE})
+    set(MODULE_VERSION_MAJOR ${CMAKE_MATCH_1})
 
-        # Check if there is an argument, if it is set, modify default.
-        set(VARIADIC_ARGS ${ARGN})
-        list(LENGTH VARIADIC_ARGS VARIADIC_ARGS_LENGTH)
-        if (${VARIADIC_ARGS_LENGTH} GREATER 0)
-            # Set VERSION_FILE_NAME with first value of ARGS
-            list(GET VARIADIC_ARGS 0 VERSION_FILE_NAME)
-        endif ()
+    string(REGEX MATCH "VERSION_MINOR ([0-9]*)" _ ${READ_VERSION_FILE})
+    set(MODULE_VERSION_MINOR ${CMAKE_MATCH_1})
 
-        # Read version file
-        file(READ ${VERSION_FILE_NAME} READ_VERSION_FILE)
-
-        string(REGEX MATCH "VERSION_MAJOR ([0-9]*)" _ ${READ_VERSION_FILE})
-        set(MODULE_VERSION_MAJOR ${CMAKE_MATCH_1})
-
-        string(REGEX MATCH "VERSION_MINOR ([0-9]*)" _ ${READ_VERSION_FILE})
-        set(MODULE_VERSION_MINOR ${CMAKE_MATCH_1})
-
-        string(REGEX MATCH "VERSION_PATCH ([0-9]*)" _ ${READ_VERSION_FILE})
-        set(MODULE_VERSION_PATCH ${CMAKE_MATCH_1})
-
-    endif()
+    string(REGEX MATCH "VERSION_PATCH ([0-9]*)" _ ${READ_VERSION_FILE})
+    set(MODULE_VERSION_PATCH ${CMAKE_MATCH_1})
 
     # VERSION complete string
     if(NOT DEFINED MODULE_VERSION)

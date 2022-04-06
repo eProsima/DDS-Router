@@ -27,14 +27,28 @@
 macro(set_installation_paths)
 
     # Set MODULE_ variable to installation path
-    set(MODULE_BIN_INSTALL_DIR bin/ CACHE PATH "Installation directory for binaries")
-    set(MODULE_INCLUDE_INSTALL_DIR include/ CACHE PATH "Installation directory for C++ headers")
-    set(MODULE_LIB_INSTALL_DIR lib/ CACHE PATH "Installation directory for libraries")
-    set(MODULE_DATA_INSTALL_DIR share/ CACHE PATH "Installation directory for data")
-    if(WIN32)
-        set(MODULE_LICENSE_INSTALL_DIR . CACHE PATH "Installation directory for licenses")
-    else()
-        set(MODULE_LICENSE_INSTALL_DIR ${MODULE_DATA_INSTALL_DIR}/${MODULE_NAME} CACHE PATH "Installation directory for licenses")
+    if (NOT MODULE_BIN_INSTALL_DIR)
+        set(MODULE_BIN_INSTALL_DIR bin/ CACHE PATH "Installation directory for binaries")
+    endif()
+
+    if (NOT MODULE_INCLUDE_INSTALL_DIR)
+        set(MODULE_INCLUDE_INSTALL_DIR include/ CACHE PATH "Installation directory for C++ headers")
+    endif()
+
+    if (NOT MODULE_LIB_INSTALL_DIR)
+        set(MODULE_LIB_INSTALL_DIR lib/ CACHE PATH "Installation directory for libraries")
+    endif()
+
+    if (NOT MODULE_DATA_INSTALL_DIR)
+        set(MODULE_DATA_INSTALL_DIR share/ CACHE PATH "Installation directory for data")
+    endif()
+
+    if (NOT MODULE_LICENSE_INSTALL_DIR)
+        if(WIN32)
+            set(MODULE_LICENSE_INSTALL_DIR . CACHE PATH "Installation directory for licenses")
+        else()
+            set(MODULE_LICENSE_INSTALL_DIR ${MODULE_DATA_INSTALL_DIR}/${MODULE_NAME} CACHE PATH "Installation directory for licenses")
+        endif()
     endif()
 
     # Set common names for installation paths

@@ -19,7 +19,7 @@
 # TODO comment
 macro(eprosima_packaging)
 
-    install(FILES ${PROJECT_SOURCE_DIR}/LICENSE
+    install(FILES ${MODULE_LICENSE_FILE_PATH}
         DESTINATION
             ${MODULE_LICENSE_INSTALL_DIR}
         COMPONENT

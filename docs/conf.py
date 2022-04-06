@@ -218,7 +218,10 @@ author = u'eProsima'
 # built documents.
 #
 # The short X.Y version.
-versions = get_version()
+versions = get_version('{}/VERSION'.format(script_path))
+if versions is None:
+    versions = get_version(
+        os.path.abspath('{}/../VERSION'.format(script_path)))
 if versions is None:
     versions = get_version_from_cmakelists(
         os.path.abspath('{}/CMakeLists.txt'.format(script_path)))

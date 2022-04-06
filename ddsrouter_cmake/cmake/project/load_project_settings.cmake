@@ -24,13 +24,17 @@
 # - MODULE_NAME: Name of the project.
 #
 # OPTIONAL ADVICED VARIABLES:
-# - MODULE_NAME_LARGE       : Project large name (default MODULE_NAME)
 # - MODULE_SUMMARY          : Project summary    (default MODULE_NAME)
-# - MODULE_DESCRIPTION      : Project description (default MODULE_SUMMARY)
 # - MODULE_FIND_PACKAGES    : Packages required to be used in the project
 # - MODULE_THIRDPARTY_HEADERONLY    : Thirdparty Headeronly projects required (in /thirdparty directory)
 # - MODULE_DEPENDENCIES     : Packages required to be linked by target
-# - MODULE_MACRO           : String to set macros in project (default MODULE_NAME in UPPERCASE)
+#
+# OPTIONAL VARIABLES:
+# - MODULE_NAME_LARGE       : Project large name (default MODULE_NAME)
+# - MODULE_DESCRIPTION      : Project description (default MODULE_SUMMARY)
+# - MODULE_MACRO            : String to set macros in project (default MODULE_NAME in UPPERCASE)
+#
+# TODO
 #
 # Arguments:
 # (optional) PROJECT_SETTINGS_FILE -> File to load Project settings [default: project_settings.cmake]
@@ -54,6 +58,9 @@ macro(load_project_settings)
     if (NOT DEFINED MODULE_NAME)
         message (FATAL_ERROR "Module name variable MODULE_NAME not defined in ${PROJECT_SETTINGS_FILE}")
     endif()
+
+    #####
+    # Module information
 
     # Set MODULE_TARGET_NAME
     if (NOT MODULE_TARGET_NAME)
@@ -80,9 +87,12 @@ macro(load_project_settings)
         string (TOUPPER ${MODULE_NAME} MODULE_MACRO)
     endif()
 
+    #####
+    # Module dependencies
+
     # Set MODULE_THIRDPARTY_PATH
     if (NOT MODULE_THIRDPARTY_PATH)
-        set (MODULE_THIRDPARTY_PATH "thirdparty")
+        set (MODULE_THIRDPARTY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty")
     endif()
 
     # Set MODULE_DEPENDENCIES
@@ -90,12 +100,23 @@ macro(load_project_settings)
         set (MODULE_DEPENDENCIES ${MODULE_FIND_PACKAGES})
     endif()
 
+    #####
+    # Module version
+
+    # Set MODULE_VERSION_FILE_PATH
+    if (NOT MODULE_VERSION_FILE_PATH)
+        set (MODULE_VERSION_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../VERSION")
+    endif()
+
+    #####
+    # Module files
+
+    # Set MODULE_LICENSE_FILE_PATH
+    if (NOT MODULE_LICENSE_FILE_PATH)
+        set (MODULE_LICENSE_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE")
+    endif()
+
     # Finish macro
     message (STATUS "Loaded project settings from ${PROJECT_SETTINGS_FILE} to project ${MODULE_NAME_LARGE}:")
-    message (STATUS " - Module Name: ${MODULE_NAME}")
-    message (STATUS " - Module Name Large: ${MODULE_NAME_LARGE}")
-    message (STATUS " - Module Summary: ${MODULE_SUMMARY}")
-    message (STATUS " - Module Description: ${MODULE_DESCRIPTION}")
-    message (STATUS " - Module Macros: ${MODULE_MACRO}")
 
 endmacro()
