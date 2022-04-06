@@ -16,26 +16,32 @@
 # Set settings for project ddsrouter_yaml
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME
+set(MODULE_NAME
     ddsrouter_tool)
 
-set(SUBMODULE_PROJECT_SUMMARY
+set(MODULE_SUMMARY
     "C++ application to run a DDS Router from a YAML configuration file.")
 
-set(SUBMODULE_PROJECT_FIND_PACKAGES
+set(MODULE_DEPENDENCIES
     yaml-cpp
     fastcdr
     fastrtps
     ddsrouter_utils
     ddsrouter_event
     ddsrouter_core
-    ddsrouter_yaml)
+    ddsrouter_yaml
+)
 
-set(SUBMODULE_PROJECT_DEPENDENCIES
-    ${SUBMODULE_PROJECT_FIND_PACKAGES})
+set(MODULE_FIND_PACKAGES
+    ddsrouter_cmake
+    ${MODULE_DEPENDENCIES}
+)
 
-set(SUBMODULE_PROJECT_MACROS
-    DDSROUTERTOOL)
+set(MODULE_RESOURCES_PATH
+    resources)
 
-set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES
+set(MODULE_THIRDPARTY_HEADERONLY
     optionparser)
+
+set(MODULE_THIRDPARTY_PATH
+    "../../thirdparty")

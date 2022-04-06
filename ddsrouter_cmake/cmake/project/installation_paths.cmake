@@ -46,7 +46,7 @@ macro(set_installation_paths)
 
     # Finish macro
     message(STATUS "Installation paths set:")
-    message(STATUS " - Set binarry path to: ${MODULE_BIN_INSTALL_DIR}")
+    message(STATUS " - Set binary path to: ${MODULE_BIN_INSTALL_DIR}")
     message(STATUS " - Set include path to: ${MODULE_INCLUDE_INSTALL_DIR}")
     message(STATUS " - Set library path to: ${MODULE_LIB_INSTALL_DIR}")
     message(STATUS " - Set data path to: ${MODULE_DATA_INSTALL_DIR}")

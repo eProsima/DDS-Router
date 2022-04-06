@@ -77,6 +77,7 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
     add_library(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
     set_target_properties(${MODULE_NAME} PROPERTIES VERSION ${MODULE_VERSION})
     set_target_properties(${MODULE_NAME} PROPERTIES SOVERSION ${MODULE_VERSION_MAJOR})
+    # set_target_properties(${MODULE_NAME} PROPERTIES OUTPUT_NAME ${MODULE_TARGET_NAME})
 
     # Define Public API
     target_compile_definitions(${MODULE_NAME}

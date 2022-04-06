@@ -55,6 +55,11 @@ macro(load_project_settings)
         message (FATAL_ERROR "Module name variable MODULE_NAME not defined in ${PROJECT_SETTINGS_FILE}")
     endif()
 
+    # Set MODULE_TARGET_NAME
+    if (NOT MODULE_TARGET_NAME)
+        set (MODULE_TARGET_NAME ${MODULE_NAME})
+    endif()
+
     # Set MODULE_NAME_LARGE
     if (NOT MODULE_NAME_LARGE)
         set (MODULE_NAME_LARGE ${MODULE_NAME})

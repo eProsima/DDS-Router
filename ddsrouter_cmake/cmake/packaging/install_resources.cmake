@@ -13,24 +13,28 @@
 # limitations under the License.
 
 ###############################################################################
-# Version Reader function
+# Install resources
 ###############################################################################
 
-# Return a list of all cpp files required by ddsrouter library
-# Arguments:
-# TEST_SOURCES -> List of source files where new sources will be added
-# TODO: check if it is needed the arguments with the versions
-function(read_version VERSION_FILE_NAME)
+# TODO comment
+macro(install_resources _RESOURCES_PATH _RESOURCES_DESTINATION)
 
-    file(READ ${VERSION_FILE_NAME} READ_VERSION_FILE)
+    # Install resource files
+    INSTALL(
+        DIRECTORY
+            ${PROJECT_SOURCE_DIR}/${_RESOURCES_PATH}/
+        DESTINATION
+            ${DATA_INSTALL_DIR}/${_RESOURCES_DESTINATION}/
+    )
 
-    string(REGEX MATCH "VERSION_MAJOR ([0-9]*)" _ ${READ_VERSION_FILE})
-    set(PRODUCT_MAJOR_VERSION ${CMAKE_MATCH_1} PARENT_SCOPE)
+endmacro()
 
-    string(REGEX MATCH "VERSION_MINOR ([0-9]*)" _ ${READ_VERSION_FILE})
-    set(PRODUCT_MINOR_VERSION ${CMAKE_MATCH_1} PARENT_SCOPE)
+# TODO comment
+macro(eprosima_install_resources)
 
-    string(REGEX MATCH "VERSION_PATCH ([0-9]*)" _ ${READ_VERSION_FILE})
-    set(PRODUCT_PATCH_VERSION ${CMAKE_MATCH_1} PARENT_SCOPE)
+    # If MODULE_RESOURCES_PATH defined, use it as source for resource installation
+    if(DEFINED MODULE_RESOURCES_PATH)
+        install_resources(${MODULE_RESOURCES_PATH} "resources")
+    endif()
 
-endfunction()
+endmacro()
