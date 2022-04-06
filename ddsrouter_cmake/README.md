@@ -58,6 +58,7 @@ Those variables which default is `x` must be set, and those with `-` are not req
 | Variable                     | Default                                                                 | Description                                                                                        |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | MODULE_NAME                  | x                                                                       | Name of the module (must be project name)                                                          |
+| MODULE_TARGET_NAME           | ${MODULE_NAME}                                                          | Output name of the target                                                                          |
 | MODULE_NAME_LARGE            | ${MODULE_NAME}                                                          | Large name                                                                                         |
 | MODULE_SUMMARY               | ${MODULE_NAME_LARGE}                                                    | Summary (short description)                                                                        |
 | MODULE_DESCRIPTION           | ${MODULE_SUMMARY}                                                       | Description                                                                                        |

@@ -66,3 +66,20 @@ macro(compile_test_documentation _TEST_PATH)
     endif()
 
 endmacro()
+
+# TODO
+macro(compile_test_tool _TEST_PATH)
+
+    configure_test_flags()
+
+    if(BUILD_APP_TESTS)
+
+        message(STATUS "Compiling ${PROJECT_NAME} tool tests")
+
+        test_requirements()
+
+        add_subdirectory(${_TEST_PATH})
+
+    endif()
+
+endmacro()

@@ -52,4 +52,6 @@ macro(eprosima_packaging)
 
     include(CPack)
 
+    eprosima_install_resources()
+
 endmacro()
