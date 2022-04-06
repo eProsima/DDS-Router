@@ -25,11 +25,9 @@ set(MODULE_SUMMARY
 set(MODULE_FIND_PACKAGES
         fastcdr
         fastrtps
-        ddsrouter_cmake
     )
 
 set(MODULE_DEPENDENCIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
-        fastcdr
-        fastrtps
+        ${MODULE_FIND_PACKAGES}
     )
