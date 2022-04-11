@@ -28,6 +28,11 @@ Timestamp now() noexcept
     return std::chrono::system_clock::now();
 }
 
+Timestamp at_the_end_of_times() noexcept
+{
+    return  std::chrono::time_point<std::chrono::system_clock>::max();
+}
+
 std::chrono::milliseconds duration_to_ms(
         const Duration_ms& duration) noexcept
 {

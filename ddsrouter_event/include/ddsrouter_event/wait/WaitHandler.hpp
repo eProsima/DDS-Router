@@ -139,13 +139,14 @@ protected:
     std::atomic<uint32_t> should_awake_;
 
     /**
-     * @brief Number of threads waiting
-     *
+     * @brief Number of threads currently waiting
      */
     std::atomic<uint32_t> threads_waiting_;
 
+    //! Wait condition variable to call waits
     std::condition_variable wait_condition_variable_;
 
+    //! Mutex to protect condition variable and internal variables \c enabled_ \c should_awake_ and \c threads_waiting_
     std::mutex wait_condition_variable_mutex_;
 };
 

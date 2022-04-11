@@ -13,17 +13,17 @@
 // limitations under the License.
 
 /**
- * @file CounterWaiter.hpp
+ * @file CounterWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAITER_COUNTERWAITER_HPP_
-#define _DDSROUTEREVENT_WAITER_COUNTERWAITER_HPP_
+#ifndef _DDSROUTEREVENT_WAITER_COUNTERWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAITER_COUNTERWAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 
-#include <ddsrouter_event/waiter/VariableWaiter.hpp>
+#include <ddsrouter_event/wait/VariableWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -31,22 +31,22 @@ namespace event {
 
 using CounterType = uint32_t;
 
-class CounterWaiter : protected VariableWaiter<CounterType>
+class CounterWaitHandler : protected VariableWaitHandler<CounterType>
 {
 public:
 
-    CounterWaiter(
+    CounterWaitHandler(
         bool enabled = true);
 
-    ~CounterWaiter();
+    ~CounterWaitHandler();
 
     /////
     // Enabling methods
 
     // Make this methods public
-    using VariableWaiter<CounterType>::enable;
-    using VariableWaiter<CounterType>::disable;
-    using VariableWaiter<CounterType>::enabled;
+    using VariableWaitHandler<CounterType>::enable;
+    using VariableWaitHandler<CounterType>::disable;
+    using VariableWaitHandler<CounterType>::enabled;
 
     /////
     // Wait methods
@@ -62,8 +62,8 @@ public:
     /////
     // Block methods
 
-    using VariableWaiter<CounterType>::block;
-    using VariableWaiter<CounterType>::unblock;
+    using VariableWaitHandler<CounterType>::block;
+    using VariableWaitHandler<CounterType>::unblock;
 
     /////
     // Value methods
@@ -77,4 +77,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAITER_COUNTERWAITER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAITER_COUNTERWAITHANDLER_HPP_ */

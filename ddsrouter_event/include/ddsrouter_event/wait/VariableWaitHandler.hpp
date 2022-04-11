@@ -13,61 +13,68 @@
 // limitations under the License.
 
 /**
- * @file VariableWaiter.hpp
+ * @file VariableWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAITER_VARIABLEWAITER_HPP_
-#define _DDSROUTEREVENT_WAITER_VARIABLEWAITER_HPP_
+#ifndef _DDSROUTEREVENT_WAITER_VARIABLEWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAITER_VARIABLEWAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
+#include <functional>
 #include <mutex>
 
-#include <ddsrouter_event/waiter/Waiter.hpp>
+#include <ddsrouter_event/wait/WaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
 template <typename T>
-class VariableWaiter : protected Waiter
+class VariableWaitHandler
 {
 public:
 
-    VariableWaiter(
+    VariableWaitHandler(
         bool enabled = true);
 
-    VariableWaiter(
+    VariableWaitHandler(
         T init_value,
         bool enabled = true);
 
-    ~VariableWaiter();
+    ~VariableWaitHandler();
 
     /////
     // Enabling methods
 
-    // Make this methods public
-    using Waiter::enable;
-    using Waiter::disable;
-    using Waiter::enabled;
+    /**
+     * @brief Enable object
+     *
+     * If object is disable, enable it. Otherwise do nothing.
+     *
+     * @note: A WaitHandler not enabled could not wait.
+     */
+    virtual void enable() noexcept;
+
+    /**
+     * @brief Disable object
+     *
+     * If object is enable, disable it. Otherwise do nothing.
+     * This method does not finished until every waiting thread has finished waiting.
+     *
+     * @note: A WaitHandler not enabled could not wait.
+     */
+    virtual void disable() noexcept;
+
+    //! Whether the object is enabled or disabled
+    virtual bool enabled() const noexcept;
 
     /////
     // Wait methods
 
-    virtual AwakeReason wait(
-            std::function<bool(T&)> predicate,
+    AwakeReason wait(
+            std::function<bool(const T&)> predicate,
             const utils::Duration_ms& timeout = 0);
-
-    virtual AwakeReason blocking_wait(
-            std::function<bool(T&)> predicate,
-            const utils::Duration_ms& timeout = 0);
-
-    /////
-    // Block methods
-
-    void block();
-
-    void unblock();
 
     /////
     // Value methods
@@ -76,16 +83,35 @@ public:
 
     void set_value(T new_value) noexcept;
 
+    /**
+     * @brief This thread will wait until every waiting thread has been awaken
+     */
+    void blocking_awake_all() noexcept;
+
 protected:
 
-    AwakeReason wait(
-            const utils::Duration_ms& timeout = 0) override;
-
     std::atomic<T> value_;
+
+    //! Whether this object is enabled
+    std::atomic<bool> enabled_;
+
+    /**
+     * @brief Number of threads currently waiting
+     */
+    std::atomic<uint32_t> threads_waiting_;
+
+    //! Wait condition variable to call waits
+    std::condition_variable wait_condition_variable_;
+
+    //! Mutex to protect condition variable and internal variables \c enabled_ \c should_awake_ and \c threads_waiting_
+    std::mutex wait_condition_variable_mutex_;
 };
 
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAITER_VARIABLEWAITER_HPP_ */
+// Include implementation template file
+#include <ddsrouter_event/wait/impl/VariableWaitHandler.ipp>
+
+#endif /* _DDSROUTEREVENT_WAITER_VARIABLEWAITHANDLER_HPP_ */

@@ -13,67 +13,58 @@
 // limitations under the License.
 
 /**
- * @file BooleanWaiter.hpp
+ * @file BooleanWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAITER_BOOLEANWAITER_HPP_
-#define _DDSROUTEREVENT_WAITER_BOOLEANWAITER_HPP_
+#ifndef _DDSROUTEREVENT_WAITER_BOOLEANWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAITER_BOOLEANWAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 
-#include <ddsrouter_event/waiter/VariableWaiter.hpp>
+#include <ddsrouter_event/wait/VariableWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-class BooleanWaiter : protected VariableWaiter<bool>
+class BooleanWaitHandler : private VariableWaitHandler<bool>
 {
 public:
 
-    BooleanWaiter(
+    BooleanWaitHandler(
         bool activated = false,
         bool enabled = true);
 
-    ~BooleanWaiter();
+    ~BooleanWaitHandler();
 
     /////
     // Enabling methods
 
     // Make this methods public
-    using VariableWaiter<bool>::enable;
-    using VariableWaiter<bool>::disable;
-    using VariableWaiter<bool>::enabled;
+    using VariableWaitHandler<bool>::enable;
+    using VariableWaitHandler<bool>::disable;
+    using VariableWaitHandler<bool>::enabled;
 
     /////
     // Wait methods
 
-    virtual AwakeReason wait(
+    AwakeReason wait(
             const utils::Duration_ms& timeout = 0);
-
-    virtual AwakeReason blocking_wait(
-            const utils::Duration_ms& timeout = 0);
-
-    /////
-    // Block methods
-
-    using VariableWaiter<bool>::block;
-    using VariableWaiter<bool>::unblock;
 
     /////
     // Value methods
 
-    void activate() noexcept;
+    void open() noexcept;
 
-    void deactivate() noexcept;
+    void close() noexcept;
 
-    bool active() noexcept;
+    bool is_open() const noexcept;
 };
 
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAITER_BOOLEANWAITER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAITER_BOOLEANWAITHANDLER_HPP_ */

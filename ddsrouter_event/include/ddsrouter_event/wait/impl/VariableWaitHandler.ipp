@@ -13,33 +13,39 @@
 // limitations under the License.
 
 /**
- * @file WaitHandler.cpp
- *
+ * @file VariableWaitHandler.ipp
  */
 
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/Time.hpp>
 
-#include <ddsrouter_event/wait/WaitHandler.hpp>
+#ifndef _DDSROUTEREVENT_IMPL_VARIABLEWAITHANDLER_IPP_
+#define _DDSROUTEREVENT_IMPL_VARIABLEWAITHANDLER_IPP_
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-WaitHandler::WaitHandler(
+template <typename T>
+VariableWaitHandler<T>::VariableWaitHandler(
         bool enabled /* = true */)
     : enabled_(enabled)
-    , should_awake_(0)
     , threads_waiting_(0)
 {
 }
 
-WaitHandler::~WaitHandler()
+template <typename T>
+VariableWaitHandler<T>::VariableWaitHandler(
+        T init_value,
+        bool enabled /* = true */)
+    : enabled_(enabled)
+    , threads_waiting_(0)
+    , value_(init_value)
 {
-    // Disable object
-    disable();
 }
 
-void WaitHandler::enable() noexcept
+template <typename T>
+void VariableWaitHandler<T>::enable() noexcept
 {
     // If disable, enable it. Otherwise do nothing
     if(!enabled_.load())
@@ -55,7 +61,8 @@ void WaitHandler::enable() noexcept
     }
 }
 
-void WaitHandler::disable() noexcept
+template <typename T>
+void VariableWaitHandler<T>::disable() noexcept
 {
     // If enable, disable it. Otherwise do nothing
     if(enabled_.load())
@@ -66,7 +73,7 @@ void WaitHandler::disable() noexcept
         enabled_.store(false);
 
         // Do not block for awaken
-        awake_all();
+        wait_condition_variable_.notify_all();
     }
     else
     {
@@ -74,53 +81,51 @@ void WaitHandler::disable() noexcept
     }
 }
 
-bool WaitHandler::enabled() const noexcept
+template <typename T>
+bool VariableWaitHandler<T>::enabled() const noexcept
 {
     return enabled_.load();
 }
 
-AwakeReason WaitHandler::wait(
+template <typename T>
+AwakeReason VariableWaitHandler<T>::wait(
+        std::function<bool(const T&)> predicate,
         const utils::Duration_ms& timeout /* = 0 */)
 {
+    // Do wait with mutex taken
+    std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
+
     // Check if it is disabled and exit
     if (!enabled())
     {
         return AwakeReason::DISABLED;
     }
 
-    // Do wait with mutex taken
-    std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
-
     // Increment number of threads waiting
     // WARNING: mutex must be taken
     threads_waiting_++;
 
     bool finished_for_timeout = false;
+    utils::Timestamp time_to_wait_until;
 
     // If timeout is 0, use wait, if not use wait for timeout
     if (timeout > 0)
     {
-        finished_for_timeout = wait_condition_variable_.wait_for(
-            lock,
-            utils::duration_to_ms(timeout),
-            [this]
-            {
-                // Exit if number of events is bigger than expected n
-                // or if callback is no longer set
-                return should_awake_.load() > 0 || !enabled_.load();
-            });
+        time_to_wait_until = utils::at_the_end_of_times();
     }
     else
     {
-        wait_condition_variable_.wait(
-            lock,
-            [this]
-            {
-                // Exit if number of events is bigger than expected n
-                // or if callback is no longer set
-                return should_awake_.load() > 0 || !enabled_.load();
-            });
+        time_to_wait_until = utils::now() + utils::duration_to_ms(timeout);
     }
+
+    finished_for_timeout = wait_condition_variable_.wait_until(
+        lock,
+        time_to_wait_until,
+        [this, predicate]
+        {
+            // Exit if predicate is true or if this has been disabled
+            return !enabled_.load() || predicate(value_);
+        });
 
     // Decrement number of threads waiting
     // NOTE: mutex is still taken
@@ -131,11 +136,7 @@ AwakeReason WaitHandler::wait(
     {
         return AwakeReason::DISABLED;
     }
-
-    // Decrement number of threads that should be awaken
-    should_awake_--;
-
-    if (finished_for_timeout)
+    else if (finished_for_timeout)
     {
         return AwakeReason::TIMEOUT;
     }
@@ -145,49 +146,41 @@ AwakeReason WaitHandler::wait(
     }
 }
 
-void WaitHandler::awake_all() noexcept
+template <typename T>
+T VariableWaitHandler<T>::get_value() const noexcept
 {
-    // Set number of threads that should be awaken to all
+    return value_;
+}
+
+template <typename T>
+void VariableWaitHandler<T>::set_value(T new_value) noexcept
+{
     {
-        std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
-        should_awake_ = threads_waiting_.load();
+        // Mutex must guard the modification of value_
+        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+        value_ = new_value;
     }
 
-    // Notify all threads
     wait_condition_variable_.notify_all();
 }
 
-void WaitHandler::awake_one() noexcept
-{
-    // Increment number of threads that should be awaken in 1
-    {
-        std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
-
-        // If every thread waiting should already be awaken, do nothing and finish
-        if (threads_waiting_ <= should_awake_)
-        {
-            return;
-        }
-        else
-        {
-            should_awake_++;
-        }
-    }
-
-    // Notify one thread
-    wait_condition_variable_.notify_one();
-}
-
-void WaitHandler::blocking_awake_all() noexcept
+template <typename T>
+void VariableWaitHandler<T>::blocking_awake_all() noexcept
 {
     // NOTE: awake_all is non blocking, so it does not matter calling it with no threads
     // Thus, there is no need to block this method with mutex
     while(threads_waiting_.load() > 0)
     {
-        awake_all();
+        // Notify all threads
+        wait_condition_variable_.notify_all();
+
+        // Avoid this loop to run and overlap the threads while awaking
+        std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
     }
 }
 
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* _DDSROUTEREVENT_IMPL_VARIABLEWAITHANDLER_IPP_ */
