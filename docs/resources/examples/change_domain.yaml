@@ -1,1 +1,19 @@
-../../../resources/configurations/examples/change_domain.yaml
+#############################
+# CHANGE DDS DOMAIN EXAMPLE #
+#############################
+
+# Yaml configuration file version
+version: v2.0
+
+# DDS Router participants
+participants:
+
+  # DDS Simple Participant for DDS Domain 0
+  - name: SimpleParticipant_Domain_0
+    kind: local
+    domain: 0
+
+  # DDS Simple Participant for DDS Domain 1
+  - name: SimpleParticipant_Domain_1
+    kind: local
+    domain: 1
