@@ -16,11 +16,12 @@
  * @file WaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_
-#define _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
+#include <functional>
 #include <mutex>
 
 #include <ddsrouter_utils/Time.hpp>
@@ -28,6 +29,7 @@
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
+
 
 //! Reasons why a thread waiting in a WaitHandler could have been awaken
 enum AwakeReason
@@ -48,6 +50,7 @@ enum AwakeReason
  * @note This class is useful because it gives an easy API to handle a wait condition variable and every variable that
  * it needs (mutex, stop, predicate, etc.).
  */
+template <typename T>
 class WaitHandler
 {
 public:
@@ -55,7 +58,11 @@ public:
     WaitHandler(
         bool enabled = true);
 
-    virtual ~WaitHandler();
+    WaitHandler(
+        T init_value,
+        bool enabled = true);
+
+    ~WaitHandler();
 
     /////
     // Enabling methods
@@ -73,11 +80,21 @@ public:
      * @brief Disable object
      *
      * If object is enable, disable it. Otherwise do nothing.
-     * This method does not finished until every waiting thread has finished waiting.
+     * This method can finish before the rest of threads has finished.
      *
      * @note: A WaitHandler not enabled could not wait.
      */
     virtual void disable() noexcept;
+
+    /**
+     * @brief Disable object and wait till every thread has finished
+     *
+     * If object is enable, disable it. Otherwise do nothing.
+     * This method does not finished until every waiting thread has finished waiting.
+     *
+     * @note: A WaitHandler not enabled could not wait.
+     */
+    virtual void blocking_disable() noexcept;
 
     //! Whether the object is enabled or disabled
     virtual bool enabled() const noexcept;
@@ -85,58 +102,26 @@ public:
     /////
     // Wait methods
 
-    /**
-     * @brief Stop the thread until it is awaken
-     *
-     * There are three ways to awake a thread waiting in this method:
-     * - \c DISABLED WaitHandler has been disabled
-     * - \c TIMEOUT Maximum time set has ellapsed
-     * - \c CONDITION_MET awake has been called
-     *
-     * This method handles the \c threads_waiting_ and \c should_awake_ variables
-     *
-     * @param timeout maximum time to wait in milliseconds. If 0: infinite time. Default: 0.
-     *
-     * @return AwakeReason Reason why thread was awaken
-     */
     AwakeReason wait(
+            std::function<bool(const T&)> predicate,
             const utils::Duration_ms& timeout = 0);
 
     /////
-    // Awake methods
+    // Value methods
 
-    //! Awake all waiting threads
-    void awake_all() noexcept;
+    //! Get current value
+    T get_value() const noexcept;
 
-    /**
-     * @brief Awake one of the waiting threads.
-     *
-     * The thread awaken is chosen random (it uses \c notify_one ).
-     *
-     * @note If no threads are waiting, do nothing.
-     * @note If awaken has been called at least once for each waiting thread, do nothing.
-     */
-    void awake_one() noexcept;
-
-    /**
-     * @brief This thread will wait until every waiting thread has been awaken
-     */
-    void blocking_awake_all() noexcept;
+    //! Set new value
+    void set_value(T new_value) noexcept;
 
 protected:
 
+    //! Current value
+    std::atomic<T> value_;
+
     //! Whether this object is enabled
     std::atomic<bool> enabled_;
-
-    /**
-     * @brief Number of threads that should be awaken
-     *
-     * In case awake_one is called, it is incremented by one (unless the current value is same as \c threads_waiting_ )
-     * In case awake_all is called, it is set as \c threads_waiting_ .
-     *
-     * @warning this never be greater than threads_waiting_
-     */
-    std::atomic<uint32_t> should_awake_;
 
     /**
      * @brief Number of threads currently waiting
@@ -154,4 +139,7 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_ */
+// Include implementation template file
+#include <ddsrouter_event/wait/impl/WaitHandler.ipp>
+
+#endif /* _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_ */

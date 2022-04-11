@@ -28,7 +28,7 @@ namespace event {
 BooleanWaitHandler::BooleanWaitHandler(
         bool activated /* = false */,
         bool enabled /* = true */)
-    : VariableWaitHandler<bool>(enabled, activated)
+    : WaitHandler<bool>(enabled, activated)
 {
 }
 
@@ -39,7 +39,7 @@ BooleanWaitHandler::~BooleanWaitHandler()
 AwakeReason BooleanWaitHandler::wait(
         const utils::Duration_ms& timeout /* = 0 */)
 {
-    return VariableWaitHandler<bool>::wait(
+    return WaitHandler<bool>::wait(
         std::function<bool(const bool&)>([this](const bool& value){return value;}),
         timeout);
 }

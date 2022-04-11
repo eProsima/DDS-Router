@@ -23,13 +23,13 @@
 #include <condition_variable>
 #include <mutex>
 
-#include <ddsrouter_event/wait/VariableWaitHandler.hpp>
+#include <ddsrouter_event/wait/WaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-class BooleanWaitHandler : private VariableWaitHandler<bool>
+class BooleanWaitHandler : private WaitHandler<bool>
 {
 public:
 
@@ -43,9 +43,9 @@ public:
     // Enabling methods
 
     // Make this methods public
-    using VariableWaitHandler<bool>::enable;
-    using VariableWaitHandler<bool>::disable;
-    using VariableWaitHandler<bool>::enabled;
+    using WaitHandler<bool>::enable;
+    using WaitHandler<bool>::disable;
+    using WaitHandler<bool>::enabled;
 
     /////
     // Wait methods
