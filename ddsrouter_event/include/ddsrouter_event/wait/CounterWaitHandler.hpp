@@ -77,7 +77,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-// Include implementation template file
-#include <ddsrouter_event/impl/EventHandler.ipp>
-
 #endif /* _DDSROUTEREVENT_WAITER_COUNTERWAITER_HPP_ */

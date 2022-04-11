@@ -28,6 +28,12 @@ Timestamp now() noexcept
     return std::chrono::system_clock::now();
 }
 
+std::chrono::milliseconds duration_to_ms(
+        const Duration_ms& duration) noexcept
+{
+    return std::chrono::milliseconds(duration);
+}
+
 Timer::Timer() noexcept
     : start_time_(std::chrono::high_resolution_clock::now())
 {

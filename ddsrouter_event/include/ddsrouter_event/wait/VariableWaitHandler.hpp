@@ -81,14 +81,11 @@ protected:
     AwakeReason wait(
             const utils::Duration_ms& timeout = 0) override;
 
-    std::atomic<T> value;
+    std::atomic<T> value_;
 };
 
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-// Include implementation template file
-#include <ddsrouter_event/impl/EventHandler.ipp>
 
 #endif /* _DDSROUTEREVENT_WAITER_VARIABLEWAITER_HPP_ */

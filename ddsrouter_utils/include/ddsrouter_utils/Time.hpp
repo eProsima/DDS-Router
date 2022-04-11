@@ -41,6 +41,9 @@ using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
  */
 DDSROUTER_UTILS_DllAPI Timestamp now() noexcept;
 
+DDSROUTER_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
+    const Duration_ms& duration) noexcept;
+
 /**
  * @brief Class to measure time elapsed.
  *
