@@ -49,3 +49,6 @@ set(MODULE_LICENSE_FILE_PATH
 
 set(MODULE_VERSION_FILE_PATH
     "../../VERSION")
+
+set(MODULE_TARGET_NAME
+    "ddsrouter")
