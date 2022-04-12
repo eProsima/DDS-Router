@@ -29,14 +29,28 @@ namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-class BooleanWaitHandler : private WaitHandler<bool>
+/**
+ * @brief This WaitHandler allows to wait for a value to be set to true.
+ *
+ * This works as a door that could be opened or closed.
+ * While open, every thread waiting will be awake, and every new thread will not await.
+ * While closed, every thread waiting or new will wait until timeout, disabled, or opened again.
+ */
+class BooleanWaitHandler : protected WaitHandler<bool>
 {
 public:
 
+    /**
+     * @brief Construct a new Boolean Wait Handler object
+     *
+     * @param activated whether the object starts opened or closed
+     * @param enabled whether the object starts enabled or disabled
+     */
     BooleanWaitHandler(
         bool activated = false,
         bool enabled = true);
 
+    //! Default constructor
     ~BooleanWaitHandler();
 
     /////
@@ -50,16 +64,27 @@ public:
     /////
     // Wait methods
 
+    /**
+     * @brief Wait current thread while object is closed.
+     *
+     * This thread will be awake when object is opened, when timeout is reached, or when object is disabled.
+     *
+     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
+     * @return reason why thread was awake
+     */
     AwakeReason wait(
             const utils::Duration_ms& timeout = 0);
 
     /////
     // Value methods
 
+    //! Set current status of \c this object as opened (awake every thread)
     void open() noexcept;
 
+    //! Set current status of \c this object as closed (threads must wait)
     void close() noexcept;
 
+    //! Check whether the object is currently opened
     bool is_open() const noexcept;
 };
 

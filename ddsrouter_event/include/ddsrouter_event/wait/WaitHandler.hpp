@@ -55,13 +55,31 @@ class WaitHandler
 {
 public:
 
+    /**
+     * @brief Construct a new Wait Handler object
+     *
+     * In this case, the variable \c value_ will be initialized by default.
+     *
+     * @param enabled whether the WaitHandler should be initialized enabled
+     */
     WaitHandler(
         bool enabled = true);
 
+    /**
+     * @brief Construct a new Wait Handler object
+     *
+     * @param init_value initial value for the internal value that is checked in wait conditions
+     * @param enabled whether the WaitHandler should be initialized enabled
+     */
     WaitHandler(
         T init_value,
         bool enabled = true);
 
+    /**
+     * @brief Destroy the Wait Handler object
+     *
+     * It disables and blocks until every thread has finished.
+     */
     ~WaitHandler();
 
     /////
@@ -100,6 +118,17 @@ public:
     /////
     // Wait methods
 
+    /**
+     * @brief Wait the current thread until one of the awaken reasons happen:
+     * - DISABLED       : The object has been disabled while this thread was waiting
+     * - TIMEOUT        : Timeout has been reached
+     * - CONDITION_MET  : Condition set has been fulfilled
+     *
+     * @param predicate lambda that will be called with internal \c value_ , must return \c true for values
+     * that where the thread must awake
+     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
+     * @return reason why thread was awake
+     */
     AwakeReason wait(
             std::function<bool(const T&)> predicate,
             const utils::Duration_ms& timeout = 0);
