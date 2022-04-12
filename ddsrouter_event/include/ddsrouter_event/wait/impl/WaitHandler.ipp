@@ -1,5 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
-//
+// Copyright 2022
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,8 +18,8 @@
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/Time.hpp>
 
-#ifndef _DDSROUTEREVENT_IMPL_WAITHANDLER_IPP_
-#define _DDSROUTEREVENT_IMPL_WAITHANDLER_IPP_
+#ifndef _DDSROUTEREVENT_WAIT_IMPL_WAITHANDLER_IPP_
+#define _DDSROUTEREVENT_WAIT_IMPL_WAITHANDLER_IPP_
 
 namespace eprosima {
 namespace ddsrouter {
@@ -63,7 +62,7 @@ void WaitHandler<T>::enable() noexcept
     }
     else
     {
-        logDebug(DDSROUTER_WAIT, "Enabling not disabled WaitHandler.");
+        logDebug(DDSROUTER_WAIT, "Enabling already enabled WaitHandler.");
     }
 }
 
@@ -73,17 +72,19 @@ void WaitHandler<T>::disable() noexcept
     // If enable, disable it. Otherwise do nothing
     if(enabled_.load())
     {
-        // WARNING: enabled_ should be modified with mutex taken
-        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
-        logDebug(DDSROUTER_WAIT, "Disabling WaitHandler.");
-        enabled_.store(false);
+        {
+            // WARNING: enabled_ should be modified with mutex taken
+            std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+            logDebug(DDSROUTER_WAIT, "Disabling WaitHandler.");
+            enabled_.store(false);
+        }
 
         // Do not block for awaken
         wait_condition_variable_.notify_all();
     }
     else
     {
-        logDebug(DDSROUTER_WAIT, "Disabling not enabled WaitHandler.");
+        logDebug(DDSROUTER_WAIT, "Disabling already disabled WaitHandler.");
     }
 }
 
@@ -136,11 +137,11 @@ AwakeReason WaitHandler<T>::wait(
     // If timeout is 0, use wait, if not use wait for timeout
     if (timeout > 0)
     {
-        time_to_wait_until = utils::at_the_end_of_times();
+        time_to_wait_until = utils::now() + utils::duration_to_ms(timeout);
     }
     else
     {
-        time_to_wait_until = utils::now() + utils::duration_to_ms(timeout);
+        time_to_wait_until = utils::the_end_of_times();
     }
 
     finished_for_timeout = wait_condition_variable_.wait_until(
@@ -193,4 +194,4 @@ void WaitHandler<T>::set_value(T new_value) noexcept
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_IMPL_WAITHANDLER_IPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_IMPL_WAITHANDLER_IPP_ */

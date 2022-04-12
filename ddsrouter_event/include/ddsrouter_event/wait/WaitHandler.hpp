@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ enum AwakeReason
 };
 
 /**
- * @brief This object allow to wait multiple threads waiting for other thread to awake them.
+ * @brief This object allows to make multiple threads wait, until another thread awakes them.
  *
- * While enable, every thread that calls \c wait will wait until other thread calls an awake method
+ * While enabled, every thread that calls \c wait will wait until other thread calls an awake method
  * ( \c awake_one , \c awake_all , \c blocking_awake_all ).
  *
  * Every thread waiting could be awaken by a timeout elapsed, due to calling an awaken method or by disabling Handler.
@@ -70,29 +70,27 @@ public:
     /**
      * @brief Enable object
      *
-     * If object is disable, enable it. Otherwise do nothing.
+     * If object is disabled, enable it. Otherwise do nothing.
      *
-     * @note: A WaitHandler not enabled could not wait.
+     * @note: A WaitHandler not enabled will not wait.
      */
     virtual void enable() noexcept;
 
     /**
      * @brief Disable object
      *
-     * If object is enable, disable it. Otherwise do nothing.
-     * This method can finish before the rest of threads has finished.
+     * If object is enabled, disable it. Otherwise do nothing.
+     * This method may finish before the rest of threads have finished.
      *
-     * @note: A WaitHandler not enabled could not wait.
+     * @note: A disabled WaitHandler  will not wait.
      */
     virtual void disable() noexcept;
 
     /**
      * @brief Disable object and wait till every thread has finished
      *
-     * If object is enable, disable it. Otherwise do nothing.
-     * This method does not finished until every waiting thread has finished waiting.
-     *
-     * @note: A WaitHandler not enabled could not wait.
+     * If object is enabled, disable it. Otherwise do nothing.
+     * This method does not finish until every waiting thread has finished waiting.
      */
     virtual void blocking_disable() noexcept;
 
@@ -131,7 +129,7 @@ protected:
     //! Wait condition variable to call waits
     std::condition_variable wait_condition_variable_;
 
-    //! Mutex to protect condition variable and internal variables \c enabled_ \c should_awake_ and \c threads_waiting_
+    //! Mutex to protect condition variable and internal variables \c enabled and \c threads_waiting_
     std::mutex wait_condition_variable_mutex_;
 };
 
