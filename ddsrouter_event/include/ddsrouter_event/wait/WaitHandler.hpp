@@ -131,6 +131,13 @@ protected:
 
     //! Mutex to protect condition variable and internal variables \c enabled and \c threads_waiting_
     std::mutex wait_condition_variable_mutex_;
+
+    /**
+     * @brief Mutex to protect enable and disable methods
+     *
+     * Methods \c enable , \c disable and \c blocking_disable ,
+     */
+    std::recursive_mutex status_mutex_;
 };
 
 } /* namespace event */

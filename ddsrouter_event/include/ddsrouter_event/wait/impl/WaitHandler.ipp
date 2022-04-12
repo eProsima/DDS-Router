@@ -52,6 +52,8 @@ WaitHandler<T>::~WaitHandler()
 template <typename T>
 void WaitHandler<T>::enable() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+
     // If disable, enable it. Otherwise do nothing
     if(!enabled_.load())
     {
@@ -69,6 +71,8 @@ void WaitHandler<T>::enable() noexcept
 template <typename T>
 void WaitHandler<T>::disable() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+
     // If enable, disable it. Otherwise do nothing
     if(enabled_.load())
     {
@@ -91,6 +95,8 @@ void WaitHandler<T>::disable() noexcept
 template <typename T>
 void WaitHandler<T>::blocking_disable() noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+
     // Disable this object
     disable();
 
