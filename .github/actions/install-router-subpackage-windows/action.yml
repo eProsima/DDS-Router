@@ -15,7 +15,7 @@ runs:
   using: composite
   steps:
   - run: >
-      cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp' `
+      cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp;C:\Program Files' `
         -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_APP_TESTS=ON -B build\${{ inputs.subpackage }} -A x64 -T host=x64 DDS-Router/${{ inputs.subpackage_dir }};
       cmake --build build\${{ inputs.subpackage }} --config ${{ inputs.cmake_build_type }} --target install;
 

@@ -16,23 +16,20 @@
 # Set settings for project ddsrouter_event
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME
+set(MODULE_NAME
     ddsrouter_event)
 
-set(SUBMODULE_PROJECT_SUMMARY
+set(MODULE_SUMMARY
     "C++ library for generic event classes for DDS Router.")
 
-set(SUBMODULE_PROJECT_FIND_PACKAGES
+set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
     ddsrouter_utils)
 
-set(SUBMODULE_PROJECT_DEPENDENCIES
+set(MODULE_DEPENDENCIES
     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
-    ${SUBMODULE_PROJECT_FIND_PACKAGES})
+    ${MODULE_FIND_PACKAGES})
 
-set(SUBMODULE_PROJECT_MACROS
-    DDSROUTER_EVENT)
-
-set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES
+set(MODULE_THIRDPARTY_HEADERONLY
     filewatch)

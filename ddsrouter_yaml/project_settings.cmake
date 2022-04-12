@@ -16,13 +16,13 @@
 # Set settings for project ddsrouter_yaml
 ###############################################################################
 
-set(SUBMODULE_PROJECT_NAME
+set(MODULE_NAME
     ddsrouter_yaml)
 
-set(SUBMODULE_PROJECT_SUMMARY
+set(MODULE_SUMMARY
     "C++ library to create a DDS Router configuration from a YAML.")
 
-set(SUBMODULE_PROJECT_FIND_PACKAGES
+set(MODULE_FIND_PACKAGES
     yaml-cpp
     fastcdr
     fastrtps
@@ -30,11 +30,6 @@ set(SUBMODULE_PROJECT_FIND_PACKAGES
     ddsrouter_event
     ddsrouter_core)
 
-set(SUBMODULE_PROJECT_DEPENDENCIES
+set(MODULE_DEPENDENCIES
     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
-    ${SUBMODULE_PROJECT_FIND_PACKAGES})
-
-set(SUBMODULE_PROJECT_MACROS
-    DDSROUTER_YAML)
-
-# set(SUBMODULE_THIRDPARTY_HEADERONLY_PACKAGES )
+    ${MODULE_FIND_PACKAGES})

@@ -18,6 +18,14 @@ the requirements or dependencies of higher level packages are not fulfilled
 
 The modules contained in this repository are the following:
 
+* **ddsrouter_cmake** This is intend to be a generic cmake library that offer general function and macros to
+  facilitate the written of CMake files for the rest of the packages.
+  * `cmake`: CMake files with different functions and macros
+  * `loader`: Files to load every `ddsrouter_cmake` when package is added into another CMake
+  * `modules`: CMake files to find different modules or packages
+  * `templates`: Template files that will be installed for different proposes
+  * `test_installer`: Files installed for testing
+
 * **ddsrouter_utils** This is intend to be a generic utils library that could in the future be a generic utils for
   other libraries. It contains:
   * `Log`: `fastrtps` log module
@@ -58,12 +66,13 @@ This is the dependency graph of the packages:
 #  *  = dependency
 # (*) = test dependency
 
-ddsrouter_docs   +
-ddsrouter_utils     +  *  *  *  *
-ddsrouter_event        + (*)(*) *
-ddsrouter_core            +  *  *
-ddsrouter_yaml               +  *
-ddsrouter_tool                  +
+ddsrouter_cmake  +  *  *  *  *  *  *
+ddsrouter_docs      +
+ddsrouter_utils        +  *  *  *  *
+ddsrouter_event           + (*)(*) *
+ddsrouter_core               +  *  *
+ddsrouter_yaml                  +  *
+ddsrouter_tool                     +
 ```
 
 The reasons of the packages division are:
@@ -75,53 +84,6 @@ The reasons of the packages division are:
 1. It is easier to organize and maintain small packages than a big one.
 1. In the future utils and events are intended to be generic, and not only part of this project.
   (e.g. having a common Log library for many projects would be very useful).
-
----
-
-## Repeated files
-
-Along all the subdirectories many files are repeated (e.g. VERSION, CMakeLists.txt, etc.).
-
-In order to be able to maintain a single version for all this files, there has been decided to keep a common directory
-(`.common`) with every repeated file;
-being every other files in every subpackage a *hard link* of the files contained in this directory.
-Thus, the file in `.common/` directory should be the one modified, and it will automatically modify every other
-file linked.
-
-> **NOTE:**  ddsrouter_docs does not use common files.
-
-The main points supporting this decision are:
-
-1. colcon packages could and should not use files outside their directory.
-1. symbolic links are not supported by windows.
-
-### Files Linked
-
-* **VERSION** version of the project. CMake will take the version from here.
-* **LICENSE** license of the project. It is installed along with each package.
-* **cmake** many cmake functions and macros are reused in most of the subpackages.
-* **test** gtest aux includes needed for all tests.
-* **CMakeLists.txt** the main CMakeLists.txt is the same for all packages, parametrized by `project_settings.cmake`.
-
-There are some files that are not generic for all packages, but only for those that generates a library
-or an application.
-
-Use the script `update_links.bash` to create all the common files and link them with hard links.
-When downloading from github, these links are lost.
-
-#### Only library packages
-
-* **include/<package_name>** every library requires the same files to generate the .lib/.so . These files are parametrized (`.in`)
-  so the CMakeLists.txt produces and installs the files headers.
-  * `config.h.in` parameterizable file to configure version and project metaparameters.
-  * `eprosima_auto_link.h.in` parameterizable file to create dll
-  * `library_dll.h.in` parameterizable file to set macros to create dll
-
-* **src/cpp** every library works with the same generic CMakeLists.txt parametrized by `project_settings.cmake`.
-
-#### Only app packages
-
-* **src/cpp** every app works with the same generic CMakeLists.txt parametrized by `project_settings.cmake`.
 
 ---
 
@@ -142,11 +104,13 @@ This CMake file configure the specific values required to parametrize the common
 project.
 The values that must be initialized are:
 
-* `SUBMODULE_PROJECT_NAME` project name
-* `SUBMODULE_PROJECT_SUMMARY` project summary
-* `SUBMODULE_PROJECT_FIND_PACKAGES` packages that the project needs to find by `find_package` cmake command
-* `SUBMODULE_PROJECT_DEPENDENCIES` project dependencies (usually: `${SUBMODULE_PROJECT_FIND_PACKAGES}`)
-* `SUBMODULE_PROJECT_MACROS` project macros name (usually: `$SUBMODULE_PROJECT_NAME` in capital letters). This is used for example to set the dll macro: ${SUBMODULE_PROJECT_MACROS}_DllAPI
+* `MODULE_NAME` project name
+* `MODULE_SUMMARY` project summary
+* `MODULE_FIND_PACKAGES` packages that the project needs to find by `find_package` cmake command
+* `MODULE_DEPENDENCIES` project dependencies (usually: `${SUBMODULE_PROJECT_FIND_PACKAGES}`)
+
+Apart from this variable, there are other variables that may be useful to set.
+Check `ddsrouter_cmake` README to know the different values used.
 
 ---
 

@@ -21,6 +21,7 @@
   <depend>fastrtps</depend>
   <depend>ddsrouter_utils</depend>
   <depend>ddsrouter_core</depend>
+  <depend>ddsrouter_cmake</depend>
 
   <doc_depend>doxygen</doc_depend>
 
