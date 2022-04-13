@@ -11,121 +11,14 @@ on:
 
 jobs:
 
-  windows-build-test-release:
+  windows-build-test:
     runs-on: windows-latest
-    env:
-      CXXFLAGS: /MP
-      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
-
-    steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
-        with:
-          path: DDS-Router
-
-      - name: Install OpenSSL
-        uses: ./DDS-Router/.github/actions/install-openssl-windows
-
-      - name: Install GTest
-        uses: ./DDS-Router/.github/actions/install-gtest-windows
-
-      - name: Install yaml-cpp
-        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
-
-      - name: Install foonatham memory
-        uses: ./DDS-Router/.github/actions/install-foonathan-memory-windows
-        with:
-          cmake_build_type: "Release"
-
-      - name: Install Fast CDR
-        uses: ./DDS-Router/.github/actions/install-fastcdr-windows
-        with:
-          cmake_build_type: "Release"
-
-      - name: Install Fast DDS
-        uses: ./DDS-Router/.github/actions/install-fastdds-windows
-        with:
-          cmake_build_type: "Release"
-
-      - name: Install ddsrouter_cmake
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_cmake
-          subpackage_dir: ddsrouter_cmake
-
-      - name: Install ddsrouter_utils
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_utils
-          subpackage_dir: ddsrouter_utils
-
-      - name: Install ddsrouter_event
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_event
-          subpackage_dir: ddsrouter_event
-
-      - name: Install ddsrouter_core
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_core
-          subpackage_dir: ddsrouter_core
-
-      - name: Install ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_yaml
-          subpackage_dir: ddsrouter_yaml
-
-      - name: Install ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: "Release"
-          subpackage: ddsrouter_tool
-          subpackage_dir: tools/ddsrouter_tool
-
-      - name: Run tests ddsrouter_utils
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_utils
-          cmake_build_type: "Release"
-        if: always()
-
-      - name: Run tests ddsrouter_event
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_event
-          cmake_build_type: "Release"
-        if: always()
-
-      - name: Run tests ddsrouter_core
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_core
-          cmake_build_type: "Release"
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_yaml
-          cmake_build_type: "Release"
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_tool
-          cmake_build_type: "Release"
-        if: always()
-
-  windows-build-test-debug:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -142,67 +35,67 @@ jobs:
       - name: Install GTest
         uses: ./DDS-Router/.github/actions/install-gtest-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
 
       - name: Install yaml-cpp
         uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
 
       - name: Install foonatham memory
         uses: ./DDS-Router/.github/actions/install-foonathan-memory-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
 
       - name: Install Fast CDR
         uses: ./DDS-Router/.github/actions/install-fastcdr-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
 
       - name: Install Fast DDS
         uses: ./DDS-Router/.github/actions/install-fastdds-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
 
       - name: Install ddsrouter_cmake
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_cmake
           subpackage_dir: ddsrouter_cmake
 
       - name: Install ddsrouter_utils
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_utils
           subpackage_dir: ddsrouter_utils
 
       - name: Install ddsrouter_event
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_event
           subpackage_dir: ddsrouter_event
 
       - name: Install ddsrouter_core
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_core
           subpackage_dir: ddsrouter_core
 
       - name: Install ddsrouter_yaml
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_yaml
           subpackage_dir: ddsrouter_yaml
 
       - name: Install ddsrouter_tool
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_tool
           subpackage_dir: tools/ddsrouter_tool
 
@@ -210,35 +103,35 @@ jobs:
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_utils
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
       - name: Run tests ddsrouter_event
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_event
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
       - name: Run tests ddsrouter_core
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_core
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
       - name: Run tests ddsrouter_yaml
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_yaml
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
       - name: Run tests ddsrouter_tool
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_tool
-          cmake_build_type: "Debug"
+          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
   ubuntu-build-test:
