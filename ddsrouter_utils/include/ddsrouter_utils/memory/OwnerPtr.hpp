@@ -75,19 +75,19 @@ public:
 
     ~LesseePtr();
 
-    std::unique_ptr<T> lock();
+    std::shared_ptr<T> lock();
 
 protected:
 
     LesseePtr(
-        std::shared_ptr<T> data,
+        std::weak_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex);
 
     // It requires friendship to use the constructor
     friend class OwnerPtr<T>;
 
     //! Concatenated stream where the streams are added at the end
-    const std::shared_ptr<T> data_reference_;
+    const std::weak_ptr<T> data_reference_;
     const std::shared_ptr<std::mutex> shared_mutex_;
 };
 

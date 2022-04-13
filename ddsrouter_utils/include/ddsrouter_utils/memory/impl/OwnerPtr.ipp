@@ -25,7 +25,7 @@ namespace utils {
 
 template<typename T>
 LesseePtr<T>::LesseePtr(
-        std::shared_ptr<T> data,
+        std::weak_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex)
     : data_reference_(data)
     , shared_mutex_(shared_mutex)
@@ -38,18 +38,21 @@ LesseePtr<T>::~LesseePtr()
 }
 
 template<typename T>
-std::unique_ptr<T> LesseePtr<T>::lock()
+std::shared_ptr<T> LesseePtr<T>::lock()
 {
     shared_mutex_->lock();
 
-    if (!data_reference_)
+    std::shared_ptr<T> locked_ptr = data_reference_.lock();
+
+    if (!locked_ptr)
     {
         this->shared_mutex_->unlock();
         return nullptr;
     }
 
-    return std::unique_ptr<T> (
-        data_reference_.get(),
+    // Create a different shared_ptr that points to the same element
+    return std::shared_ptr<T> (
+        locked_ptr.get(),
         [this](T* ptr)
         {
             this->shared_mutex_->unlock();

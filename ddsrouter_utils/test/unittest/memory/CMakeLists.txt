@@ -52,10 +52,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        lessee_ptr_class_access
-        lessee_ptr_class_multiple_access
-        lessee_ptr_class_access_after_destroy
-        lessee_ptr_class_access_lock_before_destroy
+        lessee_ptr_string_access
+        lessee_ptr_string_multiple_access
+        lessee_ptr_string_access_after_destroy
+        lessee_ptr_string_access_lock_before_destroy
     )
 
 set(TEST_EXTRA_LIBRARIES
