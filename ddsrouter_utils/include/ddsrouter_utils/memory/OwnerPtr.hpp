@@ -30,6 +30,9 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+template <typename T>
+class OwnerPtr;
+
 /**
  * @brief This classes implement a new smart pointer that allows to reference data with only one ownership
  * from different scopes and threads.
@@ -79,7 +82,9 @@ protected:
     LesseePtr(
         std::shared_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex);
-    friend class OwnerPtr;
+
+    // It requires friendship to use the constructor
+    friend class OwnerPtr<T>;
 
     //! Concatenated stream where the streams are added at the end
     const std::shared_ptr<T> data_reference_;
@@ -100,19 +105,22 @@ class OwnerPtr
 {
 public:
 
-    OwnerPtr(T&& reference);
+    OwnerPtr(
+        T&& reference,
+        std::function<void(T*)> deleter = [](T* value){ delete value; });
 
     ~OwnerPtr();
 
-    LesseePtr<T> lease() const;
+    LesseePtr<T> lease();
 
     T* operator->();
 
+    T& operator*();
+
 protected:
 
-    const std::shared_ptr<T> data_reference_;
+    std::shared_ptr<T> data_reference_;
     std::vector<std::shared_ptr<std::mutex>> leases_mutexes_;
-
 };
 
 } /* namespace utils */

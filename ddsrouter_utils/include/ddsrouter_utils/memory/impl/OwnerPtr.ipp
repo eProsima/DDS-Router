@@ -23,7 +23,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template<class T>
+template<typename T>
 LesseePtr<T>::LesseePtr(
         std::shared_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex)
@@ -32,12 +32,12 @@ LesseePtr<T>::LesseePtr(
 {
 }
 
-template<class T>
+template<typename T>
 LesseePtr<T>::~LesseePtr()
 {
 }
 
-template<class T>
+template<typename T>
 std::unique_ptr<T> LesseePtr<T>::lock()
 {
     shared_mutex_->lock();
@@ -48,7 +48,7 @@ std::unique_ptr<T> LesseePtr<T>::lock()
         return nullptr;
     }
 
-    return std::unique_ptr<T> new_ptr(
+    return std::unique_ptr<T> (
         data_reference_.get(),
         [this](T* ptr)
         {
@@ -56,13 +56,15 @@ std::unique_ptr<T> LesseePtr<T>::lock()
         });
 }
 
-template<class T>
-OwnerPtr<T>::OwnerPtr(T&& reference)
-        : data_reference_(new T(reference))
+template<typename T>
+OwnerPtr<T>::OwnerPtr(
+        T&& reference,
+        std::function<void(T*)> deleter /* = [](T* value){ delete value; } */)
+    : data_reference_(new T(reference), deleter)
 {
 }
 
-template<class T>
+template<typename T>
 OwnerPtr<T>::~OwnerPtr()
 {
     for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
@@ -70,7 +72,7 @@ OwnerPtr<T>::~OwnerPtr()
         mutex->lock();
     }
 
-    data_reference_->reset();
+    data_reference_.reset();
 
     for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
     {
@@ -78,19 +80,28 @@ OwnerPtr<T>::~OwnerPtr()
     }
 }
 
-template<class T>
-LesseePtr<T> OwnerPtr<T>::lease() const
+template<typename T>
+LesseePtr<T> OwnerPtr<T>::lease()
 {
     std::shared_ptr<std::mutex> new_mutex = std::make_shared<std::mutex>();
 
     leases_mutexes_.push_back(new_mutex);
 
     return LesseePtr<T>(
-        std::weak_ptr<OwnerPtrData<T>>(
-            data_reference_,
-            new_mutex
-        )
-    );
+        data_reference_,
+        new_mutex);
+}
+
+template<typename T>
+T* OwnerPtr<T>::operator->()
+{
+    return data_reference_.operator->();
+}
+
+template<typename T>
+T& OwnerPtr<T>::operator*()
+{
+    return data_reference_.operator*();
 }
 
 } /* namespace utils */
