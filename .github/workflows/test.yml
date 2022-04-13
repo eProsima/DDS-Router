@@ -261,8 +261,24 @@ jobs:
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
-      - name: Fetch Fast DDS repositories
-        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Install eProsima dependencies
+        run: |
+          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
 
       - name: Update colcon mixin
         run: |
@@ -274,6 +290,7 @@ jobs:
       - name: Build workspace
         run: |
           cat src/DDS-Router/.github/workflows/test_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
@@ -327,18 +344,18 @@ jobs:
           mkdir build/ddsrouter
           cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
-          --root src/DDS-Router/ \
-          --object-directory build/ddsrouter \
-          --output coverage-report/coverage.xml \
-          --xml-pretty \
-          --exclude='.*docs/.*' \
-          --exclude='.*test/.*' \
-          --exclude='.*github/.*' \
-          --exclude='.*common/.*' \
-          --exclude='.*dev/.*' \
-          --exclude='.*thirdparty/.*' \
-          --exclude='.*resources/.*' \
-          --exclude-unreachable-branches
+            --root src/DDS-Router/ \
+            --object-directory build/ddsrouter \
+            --output coverage-report/coverage.xml \
+            --xml-pretty \
+            --exclude='.*docs/.*' \
+            --exclude='.*test/.*' \
+            --exclude='.*github/.*' \
+            --exclude='.*common/.*' \
+            --exclude='.*dev/.*' \
+            --exclude='.*thirdparty/.*' \
+            --exclude='.*resources/.*' \
+            --exclude-unreachable-branches
 
       - name: Upload coverage
         uses: actions/upload-artifact@v1
@@ -394,8 +411,24 @@ jobs:
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
-      - name: Fetch Fast DDS repositories
-        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Install eProsima dependencies
+        run: |
+          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
 
       - name: Update colcon mixin
         run: |
@@ -441,8 +474,24 @@ jobs:
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
-      - name: Fetch Fast DDS repositories
-        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Install eProsima dependencies
+        run: |
+          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
+          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
 
       - name: Build workspace
         run: |
