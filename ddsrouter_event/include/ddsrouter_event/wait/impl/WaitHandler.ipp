@@ -181,7 +181,7 @@ AwakeReason WaitHandler<T>::wait(
 template <typename T>
 T WaitHandler<T>::get_value() const noexcept
 {
-    return value_;
+    return value_.load();
 }
 
 template <typename T>

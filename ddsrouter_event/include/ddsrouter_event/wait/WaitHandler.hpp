@@ -16,8 +16,8 @@
  * @file WaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_
-#define _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
@@ -176,4 +176,4 @@ protected:
 // Include implementation template file
 #include <ddsrouter_event/wait/impl/WaitHandler.ipp>
 
-#endif /* _DDSROUTEREVENT_WAITER_WAITHANDLER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_WAITHANDLER_HPP_ */
