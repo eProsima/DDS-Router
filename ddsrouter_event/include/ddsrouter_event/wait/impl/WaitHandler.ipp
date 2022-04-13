@@ -137,7 +137,6 @@ AwakeReason WaitHandler<T>::wait(
     // WARNING: mutex must be taken
     threads_waiting_++;
 
-    bool finished_for_timeout = false;
     utils::Timestamp time_to_wait_until;
 
     // If timeout is 0, use wait, if not use wait for timeout
@@ -150,7 +149,7 @@ AwakeReason WaitHandler<T>::wait(
         time_to_wait_until = utils::the_end_of_times();
     }
 
-    finished_for_timeout = wait_condition_variable_.wait_until(
+    bool finished_for_condition_met = wait_condition_variable_.wait_until(
         lock,
         time_to_wait_until,
         [this, predicate]
@@ -168,13 +167,13 @@ AwakeReason WaitHandler<T>::wait(
     {
         return AwakeReason::DISABLED;
     }
-    else if (finished_for_timeout)
+    else if (finished_for_condition_met)
     {
-        return AwakeReason::TIMEOUT;
+        return AwakeReason::CONDITION_MET;
     }
     else
     {
-        return AwakeReason::CONDITION_MET;
+        return AwakeReason::TIMEOUT;
     }
 }
 

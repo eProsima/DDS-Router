@@ -43,11 +43,11 @@ public:
     /**
      * @brief Construct a new Boolean Wait Handler object
      *
-     * @param activated whether the object starts opened or closed
+     * @param opened whether the object starts opened or closed
      * @param enabled whether the object starts enabled or disabled
      */
     BooleanWaitHandler(
-        bool activated = false,
+        bool opened = false,
         bool enabled = true);
 
     //! Default constructor

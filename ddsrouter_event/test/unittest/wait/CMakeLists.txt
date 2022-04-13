@@ -12,7 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add subdirectory with tests
-add_subdirectory(periodic_event)
-add_subdirectory(signal)
-add_subdirectory(wait)
+set(TEST_NAME BooleanWaitHandlerTest)
+
+set(TEST_SOURCES
+        BooleanWaitHandlerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/BooleanWaitHandler.cpp
+    )
+
+set(TEST_LIST
+        create_wait_handler
+        open_close
+        wait_for_open
+        wait_for_timeout
+        wait_for_disable
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        ddsrouter_utils
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")

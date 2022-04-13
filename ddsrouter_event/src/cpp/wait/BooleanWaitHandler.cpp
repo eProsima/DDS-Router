@@ -26,9 +26,9 @@ namespace ddsrouter {
 namespace event {
 
 BooleanWaitHandler::BooleanWaitHandler(
-        bool activated /* = false */,
+        bool opened /* = false */,
         bool enabled /* = true */)
-    : WaitHandler<bool>(enabled, activated)
+    : WaitHandler<bool>(opened, enabled)
 {
 }
 
