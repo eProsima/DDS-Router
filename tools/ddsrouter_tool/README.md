@@ -37,11 +37,3 @@ Only for test:
 * `python`
 
 ---
-
-## CMake options
-
-* `BUILD_TESTS`
-* `BUILD_APPLICATION_TESTS`
-* `LOG_INFO`
-
----

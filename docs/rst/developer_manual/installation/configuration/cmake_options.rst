@@ -28,26 +28,54 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - ``Release`` |br|
           ``Debug``
         - ``Release``
-    *   - :class:`COMPILE_TOOLS`
-        - Build the *DDS Router* application tool `ddsrouter`.
+    *   - :class:`BUILD_ALL`
+        - Build the *DDS Router* application tool `ddsrouter`. |br|
+          Setting to ``ON`` sets to ``ON`` |br|
+          :class:`BUILD_TOOL`, :class:`BUILD_LIBRARY`, and |br|
+          :class:`BUILD_DOCS`.
+        - ``OFF`` |br|
+          ``ON``
+        - ``OFF``
+    *   - :class:`BUILD_LIBRARY`
+        - Build the *DDS Router* documentation.
+          It is set to ``ON`` if :class:`BUILD_ALL` is set to ``ON``.
         - ``OFF`` |br|
           ``ON``
         - ``ON``
+    *   - :class:`BUILD_TOOL`
+        - Build the *DDS Router* documentation.
+          It is set to ``ON`` if :class:`BUILD_ALL` is set to ``ON``.
+        - ``OFF`` |br|
+          ``ON``
+        - ``ON``
+    *   - :class:`BUILD_DOCS`
+        - Build the *DDS Router* documentation.
+          It is set to ``ON`` if :class:`BUILD_ALL` is set to ``ON``.
+        - ``OFF`` |br|
+          ``ON``
+        - ``OFF``
     *   - :class:`BUILD_TESTS`
         - Build the *DDS Router* application and documentation |br|
           tests. Setting :class:`BUILD_TESTS` to ``ON`` sets |br|
-          :class:`BUILD_APP_TESTS` and :class:`BUILD_DOCUMENTATION_TESTS` |br|
+          :class:`BUILD_ALL`, :class:`BUILD_LIBRARY_TESTS`, |br|
+          :class:`BUILD_TOOL_TESTS`, and :class:`BUILD_DOCS_TESTS` |br|
           to ``ON``.
         - ``OFF`` |br|
           ``ON``
         - ``OFF``
-    *   - :class:`BUILD_APP_TESTS`
+    *   - :class:`BUILD_LIBRARY_TESTS`
+        - Build the *DDS Router* library tests. It is |br|
+          set to ``ON`` if :class:`BUILD_TESTS` is set to ``ON``. |br|
+        - ``OFF`` |br|
+          ``ON``
+        - ``OFF``
+    *   - :class:`BUILD_TOOL_TESTS`
         - Build the *DDS Router* application tests. It is |br|
           set to ``ON`` if :class:`BUILD_TESTS` is set to ``ON``. |br|
         - ``OFF`` |br|
           ``ON``
         - ``OFF``
-    *   - :class:`BUILD_DOCUMENTATION_TESTS`
+    *   - :class:`BUILD_DOCS_TESTS`
         - Build the *DDS Router* documentation tests. It is |br|
           set to ``ON`` if :class:`BUILD_TESTS` is set to ``ON``. |br|
         - ``OFF`` |br|

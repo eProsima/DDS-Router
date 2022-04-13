@@ -51,14 +51,6 @@ signal_handler.wait_for_event();
 
 ---
 
-## CMake options
-
-* `BUILD_TESTS`
-* `BUILD_APPLICATION_TESTS`
-* `LOG_INFO`
-
----
-
 ## How to use it in your project
 
 Just import library `ddsrouter_event` into your CMake project.

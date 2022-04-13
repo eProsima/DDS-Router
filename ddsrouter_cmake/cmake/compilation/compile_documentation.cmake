@@ -19,48 +19,54 @@
 # TODO
 macro(compile_documentation)
 
-    ####################################################################################################
-    # Build documentation
-    ####################################################################################################
+    if (BUILD_DOCS)
 
-    set(PROJECT_SOURCE_DOCS_DIR ${PROJECT_SOURCE_DIR})
-    set(PROJECT_BINARY_DOCS_DIR ${PROJECT_BINARY_DIR}/docs)
-    set(DOCS_OUTPUT_HTML_DIR ${PROJECT_BINARY_DOCS_DIR}/html)
+        message(STATUS "DEBUG: Compiling documentation")
 
-    # Create docs directories
-    add_custom_target(doc-dirs
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DOCS_DIR}
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${DOCS_OUTPUT_HTML_DIR}
-        COMMENT "Creating documentation directories" VERBATIM)
+        ####################################################################################################
+        # Build documentation
+        ####################################################################################################
 
-    ####################################################################################################
-    # Build Sphinx documentation
-    ####################################################################################################
+        set(PROJECT_SOURCE_DOCS_DIR ${PROJECT_SOURCE_DIR})
+        set(PROJECT_BINARY_DOCS_DIR ${PROJECT_BINARY_DIR}/docs)
+        set(DOCS_OUTPUT_HTML_DIR ${PROJECT_BINARY_DOCS_DIR}/html)
 
-    # Find sphinx
-    find_package(Sphinx REQUIRED)
+        # Create docs directories
+        add_custom_target(doc-dirs
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DOCS_DIR}
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${DOCS_OUTPUT_HTML_DIR}
+            COMMENT "Creating documentation directories" VERBATIM)
 
-    set(DOCS_BUILDER html)
+        ####################################################################################################
+        # Build Sphinx documentation
+        ####################################################################################################
 
-    # Generate the sphinx documentation
-    add_custom_target(Sphinx ALL
-        COMMAND
-        ${SPHINX_EXECUTABLE} -b ${DOCS_BUILDER}
-        -d "${PROJECT_BINARY_DOCS_DIR}/doctrees"
-        ${PROJECT_SOURCE_DOCS_DIR}
-        ${DOCS_OUTPUT_HTML_DIR}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating documentation with Sphinx"
-        $<$<STREQUAL:"${CMAKE_BUILD_TYPE}","Debug">:-Dtodo_include_todos=1>)
+        # Find sphinx
+        find_package(Sphinx REQUIRED)
 
-    # Install the generated docs
-    install(DIRECTORY ${DOCS_OUTPUT_HTML_DIR}
-        DESTINATION docs/${PROJECT_NAME}/sphinx
-        COMPONENT monitor-sphinx
-        PATTERN ".buildinfo" EXCLUDE)
-    set(CPACK_COMPONENT_monitor-sphinx_DISPLAY_NAME "${MODULE_LARGE_NAME}")
-    set(CPACK_COMPONENT_monitor-sphinx_DESCRIPTION
-        "${MODULE_DESCRIPTION}")
-    set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} ${DOCS_BUILDER})
+        set(DOCS_BUILDER html)
+
+        # Generate the sphinx documentation
+        add_custom_target(Sphinx ALL
+            COMMAND
+            ${SPHINX_EXECUTABLE} -b ${DOCS_BUILDER}
+            -d "${PROJECT_BINARY_DOCS_DIR}/doctrees"
+            ${PROJECT_SOURCE_DOCS_DIR}
+            ${DOCS_OUTPUT_HTML_DIR}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating documentation with Sphinx"
+            $<$<STREQUAL:"${CMAKE_BUILD_TYPE}","Debug">:-Dtodo_include_todos=1>)
+
+        # Install the generated docs
+        install(DIRECTORY ${DOCS_OUTPUT_HTML_DIR}
+            DESTINATION docs/${PROJECT_NAME}/sphinx
+            COMPONENT monitor-sphinx
+            PATTERN ".buildinfo" EXCLUDE)
+        set(CPACK_COMPONENT_monitor-sphinx_DISPLAY_NAME "${MODULE_LARGE_NAME}")
+        set(CPACK_COMPONENT_monitor-sphinx_DESCRIPTION
+            "${MODULE_DESCRIPTION}")
+        set(CPACK_COMPONENTS_ALL ${CPACK_COMPONENTS_ALL} ${DOCS_BUILDER})
+
+    endif()
 
 endmacro()
