@@ -36,11 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: windows_${{ matrix.cmake-config }}_fastdds_install
-<<<<<<< HEAD
           path: ${{ github.workspace }}\eprosima\install
-=======
-          path: /home/runner/work/$GITHUB_REPOSITORY/fastdds/install
->>>>>>> 1ecef217... Add build Fast DDS binaries job for Windows
 
   ubuntu-build:
     runs-on: ubuntu-latest

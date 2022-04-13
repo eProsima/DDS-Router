@@ -7,7 +7,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 1 * * *'
 
 jobs:
 
@@ -42,20 +42,21 @@ jobs:
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
 
-      - name: Install foonatham memory
-        uses: ./DDS-Router/.github/actions/install-foonathan-memory-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
+      - name: Get build eProsima dependencies Job Id
+        shell: pwsh
+        run: |
+          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
+          Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
+          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
+          echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
 
-      - name: Install Fast CDR
-        uses: ./DDS-Router/.github/actions/install-fastcdr-windows
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-
-      - name: Install Fast DDS
-        uses: ./DDS-Router/.github/actions/install-fastdds-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
+          workflow: build_fastdds.yml
+          path: ${{ github.workspace }}\..\fastdds\install
+          name: windows_${{ matrix.cmake-config }}_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
 
       - name: Install ddsrouter_cmake
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
@@ -156,7 +157,9 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
 
       - name: Download eProsima dependencies
