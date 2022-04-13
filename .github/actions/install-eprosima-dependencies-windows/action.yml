@@ -1,4 +1,3 @@
-
 name: Install eProsima dependencies
 description: Install and setup foonatham-memory, Fast CDR and Fast DDS for linking and building applications in Windows
 inputs:
@@ -33,8 +32,4 @@ runs:
           -DCMAKE_PREFIX_PATH=${{ github.workspace }}\eprosima\install `
           -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
           -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
-<<<<<<< HEAD
         cmake --build build\fastdds --config ${{ inputs.cmake_build_type }} --target install
-=======
-        cmake --build build\fastdds --config ${{ inputs.cmake_build_type }} --target install
->>>>>>> 5c14253e... Build Fast DDS for Windows on build_fastdds workflow
