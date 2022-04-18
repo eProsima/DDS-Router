@@ -209,9 +209,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'{PROJECT_NAME}'
-copyright = u'2021, eProsima'
-author = u'eProsima'
+project = PROJECT_NAME
+copyright = '2021, eProsima'
+author = 'eProsima'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -324,8 +324,8 @@ html_theme = 'sphinx_rtd_theme'
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs. This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#
-# html_favicon = None
+
+html_favicon = 'rst/_static/css/imgs/eProsima.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -380,8 +380,8 @@ html_context = {
 # html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#
-# html_show_sphinx = True
+
+html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #
@@ -443,8 +443,8 @@ latex_elements = {
 latex_documents = [
     (master_doc,
      f'{COMPRESS_PROJECT_NAME}.tex',
-     u'{PROJECT_NAME} Documentation',
-     u'eProsima',
+     f'{PROJECT_NAME} Documentation',
+     'eProsima',
      'manual'),
 ]
 
@@ -487,8 +487,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc,
-     f'{PROJECT_NAME}',
-     u'{PROJECT_NAME} Documentation',
+     PROJECT_NAME,
+     f'{PROJECT_NAME} Documentation',
      [author],
      1)
 ]
@@ -505,10 +505,10 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc,
-     f'{PROJECT_NAME}',
-     u'{PROJECT_NAME} Documentation',
+     PROJECT_NAME,
+     f'{PROJECT_NAME} Documentation',
      author,
-     f'{PROJECT_NAME}',
+     PROJECT_NAME,
      f'Documentation of eProsima {PROJECT_NAME}',
      'Miscellaneous'),
 ]
