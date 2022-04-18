@@ -6,6 +6,37 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
+  windows-build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: DDS-Router
+
+      - name: Install OpenSSL
+        uses: ./DDS-Router/.github/actions/install-openssl-windows
+
+      - name: Install eProsima dependencies
+        uses: ./DDS-Router/.github/actions/install-eprosima-dependencies-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows_${{ matrix.cmake-config }}_fastdds_install
+          path: ${{ github.workspace }}\eprosima\install
 
   ubuntu-build:
     runs-on: ubuntu-latest
