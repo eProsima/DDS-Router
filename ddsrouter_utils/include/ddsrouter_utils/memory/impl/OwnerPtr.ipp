@@ -60,27 +60,25 @@ std::shared_ptr<T> LesseePtr<T>::lock()
 }
 
 template<typename T>
+const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value){ delete value; };
+
+template<typename T>
+OwnerPtr<T>::OwnerPtr()
+{
+}
+
+template<typename T>
 OwnerPtr<T>::OwnerPtr(
-        T&& reference,
-        std::function<void(T*)> deleter /* = [](T* value){ delete value; } */)
-    : data_reference_(new T(reference), deleter)
+        T* reference,
+        std::function<void(T*)> deleter /* = default_deleter() */)
+    : data_reference_(reference, deleter)
 {
 }
 
 template<typename T>
 OwnerPtr<T>::~OwnerPtr()
 {
-    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
-    {
-        mutex->lock();
-    }
-
-    data_reference_.reset();
-
-    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
-    {
-        mutex->unlock();
-    }
+    reset();
 }
 
 template<typename T>
@@ -96,6 +94,33 @@ LesseePtr<T> OwnerPtr<T>::lease()
 }
 
 template<typename T>
+void OwnerPtr<T>::reset()
+{
+    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
+    {
+        mutex->lock();
+    }
+
+    data_reference_.reset();
+
+    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
+    {
+        mutex->unlock();
+    }
+
+    leases_mutexes_.clear();
+}
+
+template<typename T>
+void OwnerPtr<T>::reset(
+        T* reference,
+        std::function<void(T*)> deleter /* = default_deleter() */)
+{
+    reset();
+    data_reference_ = std::shared_ptr<T>(reference, deleter);
+}
+
+template<typename T>
 T* OwnerPtr<T>::operator->()
 {
     return data_reference_.operator->();
@@ -105,6 +130,18 @@ template<typename T>
 T& OwnerPtr<T>::operator*()
 {
     return data_reference_.operator*();
+}
+
+template<typename T>
+OwnerPtr<T>::operator bool() const noexcept
+{
+    return data_reference_.operator bool();
+}
+
+template<typename T>
+std::function<void(T*)> OwnerPtr<T>::default_deleter()
+{
+    return OwnerPtr<T>::DEFAULT_DELETER_;
 }
 
 } /* namespace utils */

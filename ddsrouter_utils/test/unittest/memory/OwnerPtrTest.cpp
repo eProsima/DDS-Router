@@ -52,6 +52,15 @@ struct TestClass
 } /* namespace eprosima */
 
 /**
+ * Create a default owner ptr
+ */
+TEST(OwnerPtrTest, owner_ptr_default_constructor)
+{
+    OwnerPtr<int> ptr;
+    ASSERT_FALSE(ptr);
+}
+
+/**
  * Create a OwnerPtr with type int and access it
  *
  * CASES:
@@ -63,7 +72,7 @@ TEST(OwnerPtrTest, owner_ptr_access_int)
 
     for (int test_case : test_cases)
     {
-        OwnerPtr<int> ptr(std::move(int(test_case)));
+        OwnerPtr<int> ptr(new int(test_case));
 
         EXPECT_EQ(test_case, *ptr);
     }
@@ -86,7 +95,7 @@ TEST(OwnerPtrTest, owner_ptr_access_string)
     for (std::string test_case : test_cases)
     {
         OwnerPtr<std::string> ptr(
-            std::move(std::string(test_case)));
+            new std::string(test_case));
 
         EXPECT_EQ(test_case, *ptr);
     }
@@ -104,7 +113,7 @@ TEST(OwnerPtrTest, owner_ptr_access_string)
 TEST(OwnerPtrTest, owner_ptr_access_class)
 {
     OwnerPtr<test::TestClass> ptr(
-        std::move(test::TestClass()));
+        new test::TestClass());
 
     test::TestClass tester_object; // Every TestClass object is initialized with same values
 
@@ -128,20 +137,62 @@ TEST(OwnerPtrTest, owner_ptr_custom_deleter)
 
     // Create Ptr object from int with custom deleter
     OwnerPtr<int> ptr(
-        std::move(42),
+        new int(42),
         [&deleter_calls](int*){ deleter_calls++; });
 
     // Get access to int reference
     int& actual_value_inside = *ptr;
 
     // Remove ptr
-    ptr.~OwnerPtr();
+    ptr.reset();
 
     // Check the deleter has been called
     ASSERT_EQ(deleter_calls, 1);
 
     // As deleter did not destroy object, it should still be accessible
     ASSERT_EQ(actual_value_inside, 42);
+}
+
+/**
+ * Check reset method
+ *
+ * STEPS:
+ * - Create a void ptr
+ * - Reset with a new value
+ * - Reset with nothing
+ * - Reset with specific deleter
+ * - Reset with nothing
+ */
+TEST(OwnerPtrTest, owner_ptr_reset)
+{
+    // Variable to store deleter calls
+    int deleter_calls = 0;
+
+    // Create a void ptr
+    OwnerPtr<int> ptr;
+
+    // Reset with a new value
+    ptr.reset(new int(1));
+    ASSERT_EQ(*ptr, 1);
+
+    // Reset with nothing
+    ptr.reset();
+    ASSERT_FALSE(ptr);
+
+    // Reset with specific deleter
+    ptr.reset(
+        new int(2),
+        [&deleter_calls](int* x)
+        {
+            deleter_calls++;
+            delete x;
+        });
+    ASSERT_EQ(*ptr, 2);
+
+    // Reset with nothing
+    ptr.reset();
+    ASSERT_FALSE(ptr);
+    ASSERT_EQ(deleter_calls, 1);
 }
 
 int main(

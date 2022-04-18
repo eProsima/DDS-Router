@@ -105,22 +105,36 @@ class OwnerPtr
 {
 public:
 
+    OwnerPtr();
+
     OwnerPtr(
-        T&& reference,
-        std::function<void(T*)> deleter = [](T* value){ delete value; });
+        T* reference,
+        std::function<void(T*)> deleter = default_deleter());
 
     ~OwnerPtr();
 
     LesseePtr<T> lease();
 
+    void reset();
+
+    void reset(
+        T* reference,
+        std::function<void(T*)> deleter = default_deleter());
+
     T* operator->();
 
     T& operator*();
+
+    operator bool() const noexcept;
+
+    static std::function<void(T*)> default_deleter();
 
 protected:
 
     std::shared_ptr<T> data_reference_;
     std::vector<std::shared_ptr<std::mutex>> leases_mutexes_;
+
+    static const std::function<void(T*)> DEFAULT_DELETER_;
 };
 
 } /* namespace utils */

@@ -23,10 +23,12 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
+        owner_ptr_default_constructor
         owner_ptr_access_int
         owner_ptr_access_string
         owner_ptr_access_class
         owner_ptr_custom_deleter
+        owner_ptr_reset
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -52,6 +54,7 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
+        lessee_ptr_string_reset
         lessee_ptr_string_access
         lessee_ptr_string_multiple_access
         lessee_ptr_string_access_after_destroy

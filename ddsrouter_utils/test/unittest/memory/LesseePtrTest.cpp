@@ -25,12 +25,35 @@
 using namespace eprosima::ddsrouter::utils;
 
 /**
+ * Create an owner and a lease from it.
+ * Check once the owner has reset the value, the lease cannot lock the data (the original value has been destroyed)
+ */
+TEST(LesseePtrTest, lessee_ptr_string_reset)
+{
+    const char* internal_str_1 = "StringTest1";
+    const char* internal_str_2 = "StringTest2";
+
+    // Create Owner
+    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str_1));
+
+    // Create Lessee 1
+    LesseePtr<std::string> lessee = owner.lease();
+    ASSERT_EQ(0, std::strcmp(lessee.lock()->c_str(), internal_str_1));
+
+    // Destroy element
+    owner.reset(new std::string(internal_str_2));
+
+    // Try to access lessee by lock and by operator->
+    ASSERT_FALSE(lessee.lock());
+}
+
+/**
  * Access a value inside a \c LesseePtr class
  */
 TEST(LesseePtrTest, lessee_ptr_string_access)
 {
     const char* internal_str = "StringTest";
-    OwnerPtr<std::string> owner(internal_str);
+    OwnerPtr<std::string> owner(new std::string(internal_str));
 
     // Create Lessee
     LesseePtr<std::string> lessee = owner.lease();
@@ -48,7 +71,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access)
 TEST(LesseePtrTest, lessee_ptr_string_multiple_access)
 {
     const char* internal_str = "StringTest";
-    OwnerPtr<std::string> owner(internal_str);
+    OwnerPtr<std::string> owner(new std::string(internal_str));
 
     // Create Lessee 1
     LesseePtr<std::string> lessee_1 = owner.lease();
@@ -75,15 +98,15 @@ TEST(LesseePtrTest, lessee_ptr_string_access_after_destroy)
 {
     const char* internal_str = "StringTest";
 
-    // This must be a ptr because it must be deleted before the end of the scope
-    OwnerPtr<std::string>* owner = new OwnerPtr<std::string>(internal_str);
+    // Create Owner
+    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str));
 
     // Create Lessee 1
-    LesseePtr<std::string> lessee = owner->lease();
+    LesseePtr<std::string> lessee = owner.lease();
     ASSERT_EQ(0, std::strcmp(lessee.lock()->c_str(), internal_str));
 
     // Destroy element
-    delete owner;
+    owner.reset();
 
     // Try to access lessee by lock and by operator->
     ASSERT_FALSE(lessee.lock());
@@ -107,11 +130,11 @@ TEST(LesseePtrTest, lessee_ptr_string_access_lock_before_destroy)
     std::condition_variable cv;
     int synchronization_step = 0;
 
-    // This must be a ptr because it must be deleted before the end of the scope
-    OwnerPtr<std::string>* owner = new OwnerPtr<std::string>(internal_str);
+    // Create Owner
+    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str));
 
     // Create Lessee 1
-    LesseePtr<std::string> lessee = owner->lease();
+    LesseePtr<std::string> lessee = owner.lease();
 
     // Execute thread with a reference locked
     std::thread lease_thread ([&lessee, &cv_mutex, &cv, &synchronization_step]()
@@ -145,7 +168,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access_lock_before_destroy)
     }
 
     // Destroy owner (this must wait until the lease is released)
-    delete owner;
+    owner.reset();
 
     // Wait the thread is finished
     lease_thread.join();
