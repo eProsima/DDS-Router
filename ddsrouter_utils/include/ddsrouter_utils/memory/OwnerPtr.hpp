@@ -30,7 +30,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template <typename T>
+template <class T>
 class OwnerPtr;
 
 /**
@@ -68,7 +68,7 @@ class OwnerPtr;
  *
  * @note It could only be created from a \c OwnerPtr object, the owner of the data referenced.
  */
-template <typename T>
+template <class T>
 class LesseePtr
 {
 public:
@@ -86,7 +86,7 @@ protected:
     // It requires friendship to use the constructor
     friend class OwnerPtr<T>;
 
-    //! Concatenated stream where the streams are added at the end
+    //!
     const std::weak_ptr<T> data_reference_;
     const std::shared_ptr<std::mutex> shared_mutex_;
 };
@@ -100,7 +100,7 @@ protected:
  *
  * @tparam T Type of the data referenced by this ptr.
  */
-template <typename T>
+template <class T>
 class OwnerPtr
 {
 public:
@@ -136,6 +136,12 @@ protected:
 
     static const std::function<void(T*)> DEFAULT_DELETER_;
 };
+
+template<class T>
+bool operator==(const OwnerPtr<T>& lhs, std::nullptr_t) noexcept;
+
+template<class T>
+bool operator==(std::nullptr_t, const OwnerPtr<T>& lhs) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

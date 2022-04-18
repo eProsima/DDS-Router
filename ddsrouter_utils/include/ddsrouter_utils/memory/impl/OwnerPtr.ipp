@@ -144,6 +144,18 @@ std::function<void(T*)> OwnerPtr<T>::default_deleter()
     return OwnerPtr<T>::DEFAULT_DELETER_;
 }
 
+template<class T>
+bool operator==(const OwnerPtr<T>& lhs, std::nullptr_t) noexcept
+{
+    return !lhs;
+}
+
+template<class T>
+bool operator==(std::nullptr_t, const OwnerPtr<T>& lhs) noexcept
+{
+    return !lhs;
+}
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
