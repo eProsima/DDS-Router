@@ -180,7 +180,8 @@ AwakeReason WaitHandler<T>::wait(
 template <typename T>
 T WaitHandler<T>::get_value() const noexcept
 {
-    return value_.load();
+    std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+    return value_;
 }
 
 template <typename T>

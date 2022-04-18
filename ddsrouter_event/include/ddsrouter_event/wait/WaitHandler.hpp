@@ -144,8 +144,14 @@ public:
 
 protected:
 
-    //! Current value
-    std::atomic<T> value_;
+    /**
+     * @brief  Current value
+     *
+     * Must be protected with \c status_mutex_ to read and write
+     *
+     * @note could not be atomic cause it could be a complex type
+     */
+    T value_;
 
     //! Whether this object is enabled
     std::atomic<bool> enabled_;
@@ -159,14 +165,14 @@ protected:
     std::condition_variable wait_condition_variable_;
 
     //! Mutex to protect condition variable and internal variables \c enabled and \c threads_waiting_
-    std::mutex wait_condition_variable_mutex_;
+    mutable std::mutex wait_condition_variable_mutex_;
 
     /**
      * @brief Mutex to protect enable and disable methods
      *
      * Methods \c enable , \c disable and \c blocking_disable ,
      */
-    std::recursive_mutex status_mutex_;
+    mutable std::recursive_mutex status_mutex_;
 };
 
 } /* namespace event */
