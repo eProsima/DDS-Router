@@ -20,6 +20,8 @@ set(TEST_NAME OwnerPtrTest)
 
 set(TEST_SOURCES
         OwnerPtrTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
     )
 
 set(TEST_LIST
@@ -51,6 +53,8 @@ set(TEST_NAME LesseePtrTest)
 
 set(TEST_SOURCES
         LesseePtrTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
     )
 
 set(TEST_LIST

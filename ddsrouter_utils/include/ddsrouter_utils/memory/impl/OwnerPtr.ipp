@@ -19,6 +19,8 @@
 #ifndef _DDSROUTERUTILS_IMPL_MEMORY_OWNERPTR_IPP_
 #define _DDSROUTERUTILS_IMPL_MEMORY_OWNERPTR_IPP_
 
+#include <ddsrouter_utils/exception/InitializationException.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
@@ -71,8 +73,16 @@ template<typename T>
 OwnerPtr<T>::OwnerPtr(
         T* reference,
         std::function<void(T*)> deleter /* = default_deleter() */)
-    : data_reference_(reference, deleter)
 {
+    if (nullptr == reference)
+    {
+        throw InitializationException(
+            "Trying to create an OwnerPtr without a nullptr.");
+    }
+    else
+    {
+        data_reference_ = std::shared_ptr<T>(reference, deleter);
+    }
 }
 
 template<typename T>
@@ -117,7 +127,16 @@ void OwnerPtr<T>::reset(
         std::function<void(T*)> deleter /* = default_deleter() */)
 {
     reset();
-    data_reference_ = std::shared_ptr<T>(reference, deleter);
+
+    if (nullptr == reference)
+    {
+        throw InitializationException(
+            "Trying to reset an OwnerPtr with a nullptr.");
+    }
+    else
+    {
+        data_reference_ = std::shared_ptr<T>(reference, deleter);
+    }
 }
 
 template<typename T>
