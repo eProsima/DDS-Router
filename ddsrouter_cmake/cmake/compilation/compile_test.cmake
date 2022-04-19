@@ -16,7 +16,8 @@
 # Configure Test module
 ###############################################################################
 
-# TODO
+# This macro configure the CMake variables needed to enable tests
+# It must be called only when tests must be built
 macro(configure_test_flags)
 
     enable_testing()
