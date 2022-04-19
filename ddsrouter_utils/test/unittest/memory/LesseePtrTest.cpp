@@ -34,7 +34,7 @@ TEST(LesseePtrTest, lessee_ptr_string_reset)
     const char* internal_str_2 = "StringTest2";
 
     // Create Owner
-    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str_1));
+    OwnerPtr<std::string> owner(new std::string(internal_str_1));
 
     // Create Lessee 1
     LesseePtr<std::string> lessee = owner.lease();
@@ -99,7 +99,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access_after_destroy)
     const char* internal_str = "StringTest";
 
     // Create Owner
-    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str));
+    OwnerPtr<std::string> owner(new std::string(internal_str));
 
     // Create Lessee 1
     LesseePtr<std::string> lessee = owner.lease();
@@ -131,7 +131,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access_lock_before_destroy)
     int synchronization_step = 0;
 
     // Create Owner
-    OwnerPtr<std::string> owner = OwnerPtr<std::string>(new std::string(internal_str));
+    OwnerPtr<std::string> owner(new std::string(internal_str));
 
     // Create Lessee 1
     LesseePtr<std::string> lessee = owner.lease();

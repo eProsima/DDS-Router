@@ -27,6 +27,7 @@ namespace utils {
 
 template<typename T>
 LesseePtr<T>::LesseePtr()
+    : shared_mutex_(new std::mutex())
 {
 }
 
