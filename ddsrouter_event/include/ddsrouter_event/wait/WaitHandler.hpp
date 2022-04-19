@@ -147,7 +147,7 @@ protected:
     /**
      * @brief  Current value
      *
-     * Must be protected with \c status_mutex_ to read and write
+     * @warning Must be protected with \c status_mutex_ to read and write
      *
      * @note could not be atomic cause it could be a complex type
      */
@@ -164,7 +164,7 @@ protected:
     //! Wait condition variable to call waits
     std::condition_variable wait_condition_variable_;
 
-    //! Mutex to protect condition variable and internal variables \c enabled and \c threads_waiting_
+    //! Mutex to protect condition variable and internal variables \c enabled, \c threads_waiting_ and \c value_
     mutable std::mutex wait_condition_variable_mutex_;
 
     /**
