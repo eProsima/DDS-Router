@@ -26,6 +26,11 @@ namespace ddsrouter {
 namespace utils {
 
 template<typename T>
+LesseePtr<T>::LesseePtr()
+{
+}
+
+template<typename T>
 LesseePtr<T>::LesseePtr(
         std::weak_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex)
@@ -37,10 +42,32 @@ LesseePtr<T>::LesseePtr(
 template<typename T>
 LesseePtr<T>::~LesseePtr()
 {
+    // It waits in case there are still some locked references
+    std::lock_guard<std::mutex> lock(*shared_mutex_);
 }
 
 template<typename T>
-std::shared_ptr<T> LesseePtr<T>::lock()
+LesseePtr<T>& LesseePtr<T>::operator =(
+        const LesseePtr<T>& other)
+{
+    this->data_reference_ = other.data_reference_;
+    this->shared_mutex_ = other.shared_mutex_;
+}
+
+template<typename T>
+std::shared_ptr<T> LesseePtr<T>::lock() noexcept
+{
+    return lock_(false);
+}
+
+template<typename T>
+std::shared_ptr<T> LesseePtr<T>::lock_with_exception()
+{
+    return lock_(true);
+}
+
+template<typename T>
+std::shared_ptr<T> LesseePtr<T>::lock_(bool throw_exception)
 {
     shared_mutex_->lock();
 
@@ -49,7 +76,16 @@ std::shared_ptr<T> LesseePtr<T>::lock()
     if (!locked_ptr)
     {
         this->shared_mutex_->unlock();
-        return nullptr;
+
+        if (throw_exception)
+        {
+            throw InitializationException(
+                "Trying to access a data not available anymore.");
+        }
+        else
+        {
+            return nullptr;
+        }
     }
 
     // Create a different shared_ptr that points to the same element

@@ -73,9 +73,16 @@ class LesseePtr
 {
 public:
 
+    LesseePtr();
+
     ~LesseePtr();
 
-    std::shared_ptr<T> lock();
+    LesseePtr<T>& operator =(
+            const LesseePtr<T>& other);
+
+    std::shared_ptr<T> lock() noexcept;
+
+    std::shared_ptr<T> lock_with_exception();
 
 protected:
 
@@ -83,12 +90,14 @@ protected:
         std::weak_ptr<T> data,
         std::shared_ptr<std::mutex> shared_mutex);
 
+    std::shared_ptr<T> lock_(bool throw_exception);
+
     // It requires friendship to use the constructor
     friend class OwnerPtr<T>;
 
     //!
-    const std::weak_ptr<T> data_reference_;
-    const std::shared_ptr<std::mutex> shared_mutex_;
+    std::weak_ptr<T> data_reference_;
+    std::shared_ptr<std::mutex> shared_mutex_;
 };
 
 /**
