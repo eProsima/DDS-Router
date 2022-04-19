@@ -63,6 +63,16 @@ macro(configure_project)
         read_version(${MODULE_VERSION_FILE_PATH})
     endif()
 
+    # Set CMake options
+    configure_cmake_options()
+
+    message(STATUS "DEBUG: MODULE_CPP_VERSION: ${MODULE_CPP_VERSION}")
+    message(STATUS "DEBUG: BUILD_TESTS: ${BUILD_TESTS}")
+    message(STATUS "DEBUG: BUILD_ALL: ${BUILD_ALL}")
+    message(STATUS "DEBUG: BUILD_DOCS: ${BUILD_DOCS}")
+    message(STATUS "DEBUG: BUILD_TOOL: ${BUILD_TOOL}")
+    message(STATUS "DEBUG: BUILD_LIBRARY: ${BUILD_LIBRARY}")
+
     # Set install directories
     set_installation_paths()
 

@@ -85,4 +85,24 @@ Those variables which default is `x` must be set, and those with `-` are not req
 | MODULE_DATA_INSTALL_DIR      | share/                                                                  | Data installation path                                                                             |
 | MODULE_LICENSE_INSTALL_DIR   | share/                                                                  | License installation path                                                                          |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| MODULE_CPP_VERSION           | C++17                                                                   | C++ required version                                                                               |
+| MODULE_CPP_VERSION           | C++17                                                                   | C++ version                                                                                        |
+
+#### Project using ddsrouter_cmake CMake options
+
+There are default CMake options used within ddsrouter_cmake package that will always be set.
+In case the user sets these variables, they will have that value. Otherwise,
+they will be initialized to their corresponding default value.
+
+| Option Name         | Default value     | Description                                 |
+|---------------------|-------------------|---------------------------------------------|
+| BUILD_TESTS         | OFF               | Build tests                                 |
+| BUILD_DOCS_TESTS    | $BUILD_TESTS      | Build tests only for Documentation packages |
+| BUILD_TOOL_TESTS    | $BUILD_TESTS      | Build tests only for Application packages   |
+| BUILD_LIBRARY_TESTS | $BUILD_TESTS      | Build tests only for Library packages       |
+| BUILD_ALL           | $BUILD_TESTS      | Build package                               |
+| BUILD_DOCS          | $BUILD_DOCS_TESTS | Build only Documentation packages           |
+| BUILD_TOOL          | ON                | Build only Application packages             |
+| BUILD_LIBRARY       | ON                | Build only Library packages                 |
+| CODE_COVERAGE       | OFF               | Activate Code Coverage flags                |
+| CMAKE_BUILD_TYPE    | Release           | CMake Build Type                            |
+| LOG_INFO            | OFF (ON if Debug) | Activate log info verbosity level           |

@@ -16,33 +16,23 @@
 # Configure Test module
 ###############################################################################
 
-# TODO
+# This macro configure the CMake variables needed to enable tests
+# It must be called only when tests must be built
 macro(configure_test_flags)
 
-    option(BUILD_TESTS "Build eProsima ${PROJECT_NAME} library tests" OFF)
-    option(BUILD_LIBRARY_TESTS "Build eProsima ${PROJECT_NAME} library tests" OFF)
-    option(BUILD_APP_TESTS "Build eProsima ${PROJECT_NAME} app tests" OFF)
-    option(BUILD_DOCUMENTATION_TESTS "Build eProsima ${PROJECT_NAME} documentation tests" OFF)
-
-    if (BUILD_TESTS)
-        set(BUILD_LIBRARY_TESTS ON)
-        set(BUILD_APP_TESTS ON)
-        set(BUILD_DOCUMENTATION_TESTS ON)
-
-        enable_testing()
-        include(CTest)
-    endif()
+    enable_testing()
+    include(CTest)
 
 endmacro()
 
 # TODO
 macro(compile_test_library _TEST_PATH)
 
-    configure_test_flags()
-
     if(BUILD_LIBRARY_TESTS)
 
         message(STATUS "Compiling ${PROJECT_NAME} library tests")
+
+        configure_test_flags()
 
         test_requirements()
 
@@ -55,11 +45,11 @@ endmacro()
 # TODO
 macro(compile_test_documentation _TEST_PATH)
 
-    configure_test_flags()
-
-    if(BUILD_DOCUMENTATION_TESTS)
+    if(BUILD_DOCS_TESTS)
 
         message(STATUS "Compiling ${PROJECT_NAME} documentation tests")
+
+        configure_test_flags()
 
         add_subdirectory(${_TEST_PATH})
 
@@ -70,11 +60,11 @@ endmacro()
 # TODO
 macro(compile_test_tool _TEST_PATH)
 
-    configure_test_flags()
-
-    if(BUILD_APP_TESTS)
+    if(BUILD_TOOL_TESTS)
 
         message(STATUS "Compiling ${PROJECT_NAME} tool tests")
+
+        configure_test_flags()
 
         test_requirements()
 

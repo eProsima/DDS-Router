@@ -19,53 +19,57 @@
 # TODO
 function(compile_tool _SOURCE_PATH)
 
-    ###############################################################################
-    # Check needed variables
-    ###############################################################################
-    if(NOT DEFINED MODULE_NAME)
-        message(FATAL_ERROR "MODULE_NAME is not defined. Use load_project_settings or configure_project macros to set it")
-    endif()
+    if (BUILD_TOOL)
 
-    ###############################################################################
-    # Get source files
-    ###############################################################################
-    # Project sources
-    file(
-        GLOB_RECURSE ${MODULE_NAME}_SOURCES
-            "${_SOURCE_PATH}/*.c"
-            "${_SOURCE_PATH}/*.cpp"
-            "${_SOURCE_PATH}/*.cxx"
-            "${_SOURCE_PATH}/**/*.c"
-            "${_SOURCE_PATH}/**/*.cpp"
-            "${_SOURCE_PATH}/**/*.cxx"
+        ###############################################################################
+        # Check needed variables
+        ###############################################################################
+        if(NOT DEFINED MODULE_NAME)
+            message(FATAL_ERROR "MODULE_NAME is not defined. Use load_project_settings or configure_project macros to set it")
+        endif()
+
+        ###############################################################################
+        # Get source files
+        ###############################################################################
+        # Project sources
+        file(
+            GLOB_RECURSE ${MODULE_NAME}_SOURCES
+                "${_SOURCE_PATH}/*.c"
+                "${_SOURCE_PATH}/*.cpp"
+                "${_SOURCE_PATH}/*.cxx"
+                "${_SOURCE_PATH}/**/*.c"
+                "${_SOURCE_PATH}/**/*.cpp"
+                "${_SOURCE_PATH}/**/*.cxx"
+            )
+
+        ###############################################################################
+        # Compile executable
+        ###############################################################################
+
+        # Add executable
+        add_executable(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
+
+        # Set name for target
+        set_target_properties(
+            ${MODULE_NAME}
+            PROPERTIES OUTPUT_NAME
+                "${MODULE_TARGET_NAME}"
         )
 
-    ###############################################################################
-    # Compile executable
-    ###############################################################################
-
-    # Add executable
-    add_executable(${MODULE_NAME} ${${MODULE_NAME}_SOURCES})
-
-    # Set name for target
-    set_target_properties(
-        ${MODULE_NAME}
-        PROPERTIES OUTPUT_NAME
-            "${MODULE_TARGET_NAME}"
-    )
-
-    # Link dependent libraries
-    target_link_libraries(
-        ${MODULE_NAME}
-        ${MODULE_DEPENDENCIES}
-    )
-
-    # Install
-    install(
-        TARGETS
+        # Link dependent libraries
+        target_link_libraries(
             ${MODULE_NAME}
-        RUNTIME DESTINATION
-            ${BIN_INSTALL_DIR}
-    )
+            ${MODULE_DEPENDENCIES}
+        )
+
+        # Install
+        install(
+            TARGETS
+                ${MODULE_NAME}
+            RUNTIME DESTINATION
+                ${BIN_INSTALL_DIR}
+        )
+
+    endif()
 
 endfunction()

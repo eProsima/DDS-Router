@@ -107,7 +107,7 @@ The values that must be initialized are:
 * `MODULE_NAME` project name
 * `MODULE_SUMMARY` project summary
 * `MODULE_FIND_PACKAGES` packages that the project needs to find by `find_package` cmake command
-* `MODULE_DEPENDENCIES` project dependencies (usually: `${SUBMODULE_PROJECT_FIND_PACKAGES}`)
+* `MODULE_DEPENDENCIES` project dependencies (usually: `${MODULE_FIND_PACKAGES}`)
 
 Apart from this variable, there are other variables that may be useful to set.
 Check `ddsrouter_cmake` README to know the different values used.
