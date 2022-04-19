@@ -45,7 +45,7 @@ DDSROUTER_UTILS_DllAPI Timestamp now() noexcept;
 DDSROUTER_UTILS_DllAPI Timestamp the_end_of_times() noexcept;
 
 DDSROUTER_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
-    const Duration_ms& duration) noexcept;
+        const Duration_ms& duration) noexcept;
 
 /**
  * @brief Class to measure time elapsed.

@@ -30,7 +30,7 @@ Timestamp now() noexcept
 
 Timestamp the_end_of_times() noexcept
 {
-    return  std::chrono::time_point<std::chrono::system_clock>::max();
+    return std::chrono::time_point<std::chrono::system_clock>::max();
 }
 
 std::chrono::milliseconds duration_to_ms(

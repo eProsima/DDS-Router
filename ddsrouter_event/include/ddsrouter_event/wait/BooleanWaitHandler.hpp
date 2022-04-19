@@ -47,8 +47,8 @@ public:
      * @param enabled whether the object starts enabled or disabled
      */
     BooleanWaitHandler(
-        bool opened = false,
-        bool enabled = true);
+            bool opened = false,
+            bool enabled = true);
 
     //! Default constructor
     ~BooleanWaitHandler();

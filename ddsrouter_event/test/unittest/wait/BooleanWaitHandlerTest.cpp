@@ -141,7 +141,7 @@ TEST(BooleanWaitHandlerTest, wait_for_open)
             // it will jut not wait but awake reason will be correct.
             waiter.open();
         }
-    );
+        );
 
     AwakeReason reason = waiter.wait(); // Wait forever
     ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
@@ -178,7 +178,7 @@ TEST(BooleanWaitHandlerTest, wait_for_disable)
             // Awake new thread by disabling waiter
             waiter.disable();
         }
-    );
+        );
 
     AwakeReason reason = waiter.wait(); // Wait forever
     ASSERT_EQ(reason, AwakeReason::DISABLED);

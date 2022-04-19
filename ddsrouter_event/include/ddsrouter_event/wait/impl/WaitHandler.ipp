@@ -55,7 +55,7 @@ void WaitHandler<T>::enable() noexcept
     std::lock_guard<std::recursive_mutex> lock(status_mutex_);
 
     // If disable, enable it. Otherwise do nothing
-    if(!enabled_.load())
+    if (!enabled_.load())
     {
         // WARNING: enabled_ should be modified with mutex taken
         std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
@@ -74,7 +74,7 @@ void WaitHandler<T>::disable() noexcept
     std::lock_guard<std::recursive_mutex> lock(status_mutex_);
 
     // If enable, disable it. Otherwise do nothing
-    if(enabled_.load())
+    if (enabled_.load())
     {
         {
             // WARNING: enabled_ should be modified with mutex taken
@@ -101,7 +101,7 @@ void WaitHandler<T>::blocking_disable() noexcept
     disable();
 
     // Wait till every thread has finished
-    while(threads_waiting_.load() > 0)
+    while (threads_waiting_.load() > 0)
     {
         // Lock so this thread has no priority over closin threads
         {
@@ -185,7 +185,8 @@ T WaitHandler<T>::get_value() const noexcept
 }
 
 template <typename T>
-void WaitHandler<T>::set_value(T new_value) noexcept
+void WaitHandler<T>::set_value(
+        T new_value) noexcept
 {
     {
         // Mutex must guard the modification of value_

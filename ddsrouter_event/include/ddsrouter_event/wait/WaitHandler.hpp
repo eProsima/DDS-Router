@@ -63,7 +63,7 @@ public:
      * @param enabled whether the WaitHandler should be initialized enabled
      */
     WaitHandler(
-        bool enabled = true);
+            bool enabled = true);
 
     /**
      * @brief Construct a new Wait Handler object
@@ -72,8 +72,8 @@ public:
      * @param enabled whether the WaitHandler should be initialized enabled
      */
     WaitHandler(
-        T init_value,
-        bool enabled = true);
+            T init_value,
+            bool enabled = true);
 
     /**
      * @brief Destroy the Wait Handler object
@@ -140,7 +140,8 @@ public:
     T get_value() const noexcept;
 
     //! Set new value
-    void set_value(T new_value) noexcept;
+    void set_value(
+            T new_value) noexcept;
 
 protected:
 
