@@ -16,7 +16,7 @@ runs:
           vcstool \
           GitPython \
           setuptools \
-          gcovr \
+          gcovr==5.0 \
           pyyaml \
           jsonschema
       shell: bash

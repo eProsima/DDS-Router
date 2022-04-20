@@ -235,7 +235,6 @@ jobs:
           cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
             --root src/DDS-Router/ \
-            --object-directory build/ddsrouter \
             --output coverage-report/coverage.xml \
             --xml-pretty \
             --exclude='.*docs/.*' \
@@ -245,7 +244,8 @@ jobs:
             --exclude='.*dev/.*' \
             --exclude='.*thirdparty/.*' \
             --exclude='.*resources/.*' \
-            --exclude-unreachable-branches
+            --exclude-unreachable-branches \
+            build/ddsrouter_*
 
       - name: Upload coverage
         uses: actions/upload-artifact@v1
