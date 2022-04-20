@@ -170,12 +170,6 @@ jobs:
           name: ubuntu_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
-      - name: Install eProsima dependencies
-        run: |
-          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
-
       - name: Update colcon mixin
         run: |
           colcon mixin add default \
@@ -320,12 +314,6 @@ jobs:
           name: ubuntu_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
-      - name: Install eProsima dependencies
-        run: |
-          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
-
       - name: Update colcon mixin
         run: |
           colcon mixin add default \
@@ -336,6 +324,7 @@ jobs:
       - name: Build workspace
         run: |
           cat src/DDS-Router/.github/workflows/test_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
@@ -383,15 +372,10 @@ jobs:
           name: ubuntu_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
-      - name: Install eProsima dependencies
-        run: |
-          sudo cp -r /home/runner/work/fastdds/install/foonathan_memory_vendor/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastcdr/* /usr/local
-          sudo cp -r /home/runner/work/fastdds/install/fastrtps/* /usr/local
-
       - name: Build workspace
         run: |
           cat src/DDS-Router/.github/workflows/clang_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/clang_colcon.meta
