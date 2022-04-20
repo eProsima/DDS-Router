@@ -48,7 +48,8 @@ LesseePtr<T>::~LesseePtr()
 }
 
 template<typename T>
-LesseePtr<T>::LesseePtr(LesseePtr<T>&& other)
+LesseePtr<T>::LesseePtr(
+        LesseePtr<T>&& other)
 {
     this->data_reference_ = std::move(other.data_reference_);
     this->shared_mutex_ = std::move(other.shared_mutex_);
@@ -77,7 +78,8 @@ std::shared_ptr<T> LesseePtr<T>::lock_with_exception()
 }
 
 template<typename T>
-std::shared_ptr<T> LesseePtr<T>::lock_(bool throw_exception)
+std::shared_ptr<T> LesseePtr<T>::lock_(
+        bool throw_exception)
 {
     shared_mutex_->lock();
 
@@ -90,7 +92,7 @@ std::shared_ptr<T> LesseePtr<T>::lock_(bool throw_exception)
         if (throw_exception)
         {
             throw InitializationException(
-                "Trying to access a data not available anymore.");
+                      "Trying to access a data not available anymore.");
         }
         else
         {
@@ -108,7 +110,10 @@ std::shared_ptr<T> LesseePtr<T>::lock_(bool throw_exception)
 }
 
 template<typename T>
-const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value){ delete value; };
+const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value)
+        {
+            delete value;
+        };
 
 template<typename T>
 OwnerPtr<T>::OwnerPtr()
@@ -123,7 +128,7 @@ OwnerPtr<T>::OwnerPtr(
     if (nullptr == reference)
     {
         throw InitializationException(
-            "Trying to create an OwnerPtr without a nullptr.");
+                  "Trying to create an OwnerPtr without a nullptr.");
     }
     else
     {
@@ -177,7 +182,7 @@ void OwnerPtr<T>::reset(
     if (nullptr == reference)
     {
         throw InitializationException(
-            "Trying to reset an OwnerPtr with a nullptr.");
+                  "Trying to reset an OwnerPtr with a nullptr.");
     }
     else
     {
@@ -186,15 +191,15 @@ void OwnerPtr<T>::reset(
 }
 
 template<typename T>
-T* OwnerPtr<T>::operator->()
+T* OwnerPtr<T>::operator ->()
 {
-    return data_reference_.operator->();
+    return data_reference_.operator ->();
 }
 
 template<typename T>
-T& OwnerPtr<T>::operator*()
+T& OwnerPtr<T>::operator *()
 {
-    return data_reference_.operator*();
+    return data_reference_.operator *();
 }
 
 template<typename T>
@@ -210,13 +215,17 @@ std::function<void(T*)> OwnerPtr<T>::default_deleter()
 }
 
 template<class T>
-bool operator==(const OwnerPtr<T>& lhs, std::nullptr_t) noexcept
+bool operator ==(
+        const OwnerPtr<T>& lhs,
+        std::nullptr_t) noexcept
 {
     return !lhs;
 }
 
 template<class T>
-bool operator==(std::nullptr_t, const OwnerPtr<T>& lhs) noexcept
+bool operator ==(
+        std::nullptr_t,
+        const OwnerPtr<T>& lhs) noexcept
 {
     return !lhs;
 }

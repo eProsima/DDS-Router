@@ -104,14 +104,16 @@ public:
     ~LesseePtr();
 
     //! This class is not copyable
-    LesseePtr(const LesseePtr<T>& other) = delete;
+    LesseePtr(
+            const LesseePtr<T>& other) = delete;
 
     //! This class is not copyable
     LesseePtr<T>& operator =(
             const LesseePtr<T>& other) = delete;
 
     // Move constructor
-    LesseePtr(LesseePtr<T>&& other);
+    LesseePtr(
+            LesseePtr<T>&& other);
 
     /**
      * @brief move assigment
@@ -158,8 +160,8 @@ public:
 protected:
 
     LesseePtr(
-        std::weak_ptr<T> data,
-        std::shared_ptr<std::mutex> shared_mutex);
+            std::weak_ptr<T> data,
+            std::shared_ptr<std::mutex> shared_mutex);
 
     /**
      * @brief Generic lock method that throws an exception or return nullptr depending on the argument.
@@ -168,7 +170,8 @@ protected:
      * @return std::shared_ptr<T> to the data. nullptr if the reference is not valid anymore if not \c throw_exception .
      * @throw \c InitializationException if the data is not valid anymore if \c throw_exception is \c true .
      */
-    std::shared_ptr<T> lock_(bool throw_exception);
+    std::shared_ptr<T> lock_(
+            bool throw_exception);
 
     // It requires friendship to use the constructor
     friend class OwnerPtr<T>;
@@ -220,8 +223,8 @@ public:
      * @param deleter
      */
     OwnerPtr(
-        T* reference,
-        std::function<void(T*)> deleter = default_deleter());
+            T* reference,
+            std::function<void(T*)> deleter = default_deleter());
 
     /**
      * @brief Destroy the Owner Ptr object
@@ -232,7 +235,8 @@ public:
     ~OwnerPtr();
 
     //! This class is not copyable
-    OwnerPtr(const OwnerPtr<T>& other) = delete;
+    OwnerPtr(
+            const OwnerPtr<T>& other) = delete;
 
     //! This class is not copyable
     OwnerPtr<T>& operator =(
@@ -262,15 +266,15 @@ public:
      * Using this method, the lessees created so far will be detached (this is, the mutex is not longer shared).
      */
     void reset(
-        T* reference,
-        std::function<void(T*)> deleter = default_deleter());
+            T* reference,
+            std::function<void(T*)> deleter = default_deleter());
 
     /**
      * @brief Access the data owned by this object with operator->
      *
      * @warning this method does not check if the data is valid.
      */
-    T* operator->();
+    T* operator ->();
 
     /**
      * @brief Access to a reference of the data owned by this object.
@@ -278,7 +282,7 @@ public:
      * @warning this method does not check if the data is valid.
      * @warning this method does not block this reference, that could be destroyed while used.
      */
-    T& operator*();
+    T& operator *();
 
     /**
      * @brief Whether the data is not a nullptr.
@@ -314,11 +318,15 @@ protected:
 
 //! Allow to compare an OwnerPtr with nullptr
 template<class T>
-bool operator==(const OwnerPtr<T>& lhs, std::nullptr_t) noexcept;
+bool operator ==(
+        const OwnerPtr<T>& lhs,
+        std::nullptr_t) noexcept;
 
 //! Allow to compare an OwnerPtr with nullptr in the other direction (from C++20 this is not needed)
 template<class T>
-bool operator==(std::nullptr_t, const OwnerPtr<T>& lhs) noexcept;
+bool operator ==(
+        std::nullptr_t,
+        const OwnerPtr<T>& lhs) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

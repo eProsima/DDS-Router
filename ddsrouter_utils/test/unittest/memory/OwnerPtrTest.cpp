@@ -37,9 +37,20 @@ struct TestClass
     {
     }
 
-    int get_int() { return int_value; };
-    std::string get_str() { return string_value; };
-    std::vector<char> get_vec() { return vector_value; };
+    int get_int()
+    {
+        return int_value;
+    }
+
+    std::string get_str()
+    {
+        return string_value;
+    }
+
+    std::vector<char> get_vec()
+    {
+        return vector_value;
+    }
 
     int int_value;
     std::string string_value;
@@ -138,7 +149,10 @@ TEST(OwnerPtrTest, owner_ptr_custom_deleter)
     // Create Ptr object from int with custom deleter
     OwnerPtr<int> ptr(
         new int(42),
-        [&deleter_calls](int*){ deleter_calls++; });
+        [&deleter_calls](int*)
+        {
+            deleter_calls++;
+        });
 
     // Get access to int reference
     int& actual_value_inside = *ptr;

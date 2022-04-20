@@ -138,33 +138,33 @@ TEST(LesseePtrTest, lessee_ptr_string_access_lock_before_destroy)
 
     // Execute thread with a reference locked
     std::thread lease_thread ([&lessee, &cv_mutex, &cv, &synchronization_step]()
-    {
-        // Create blocking reference
-        auto reference_blocking_owner = lessee.lock();
+            {
+                // Create blocking reference
+                auto reference_blocking_owner = lessee.lock();
 
-        // Set step 1 is ready
-        {
-            std::unique_lock<std::mutex> lock(cv_mutex);
-            synchronization_step = 1;
-            cv.notify_all();
-        }
+                // Set step 1 is ready
+                {
+                    std::unique_lock<std::mutex> lock(cv_mutex);
+                    synchronization_step = 1;
+                    cv.notify_all();
+                }
 
-        // Sleep for a small time to let the owner arrive to delete
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                // Sleep for a small time to let the owner arrive to delete
+                std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
-        // At this point, the owner is waiting to be destroyed, but cant because this is locking it:
-        reference_blocking_owner->append("_crazy_access_to_previous_deletion_memory"); // This would break if error
+                // At this point, the owner is waiting to be destroyed, but cant because this is locking it:
+                reference_blocking_owner->append("_crazy_access_to_previous_deletion_memory"); // This would break if error
 
-        // At this point the lease will be relased and the owner could be destroyed
-    });
+                // At this point the lease will be relased and the owner could be destroyed
+            });
 
     // WAIT for step 1
     {
         std::unique_lock<std::mutex> lock(cv_mutex);
         cv.wait(lock, [&]()
-        {
-            return synchronization_step == 1;
-        });
+                {
+                    return synchronization_step == 1;
+                });
     }
 
     // Destroy owner (this must wait until the lease is released)
