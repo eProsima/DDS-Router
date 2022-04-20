@@ -15,7 +15,7 @@
 /**
  * @file OwnerPtr.hpp
  *
- * This file contains class OwnerPtr implementation.
+ * This file contains class OwnerPtr and LesseePtr implementation.
  */
 
 #ifndef _DDSROUTERUTILS_MEMORY_OWNERPTR_HPP_
@@ -34,7 +34,7 @@ template <class T>
 class OwnerPtr;
 
 /**
- * @brief This classes implement a new smart pointer that allows to reference data with only one ownership
+ * @brief These classes implement a new smart pointer that allows to reference data with only one ownership
  * from different scopes and threads.
  *
  * INSTRUCTIONS
@@ -49,12 +49,12 @@ class OwnerPtr;
  *
  * WHY NEW CLASS
  * It is similar to a shared_ptr and weak_ptr, but this assures the object is only destroyed from its
- * owner, and only if any lessee is not using it at the moment.
+ * owner, and only if no lessee is using it at the moment.
  *
  * IMPLEMENTATION
  * The way it works, is that every \c OwnerPtr shares a mutex with every \c LesseePtr , so while the
- * data is being used by a lessee, the owner could not destroy it.
- * Whenever the object is used from a lessee, a new ptr is created and mutex lock. When this ptr is deleted
+ * data is being used by a lessee, the owner cannot destroy it.
+ * Whenever the object is used from a lessee, a new ptr is created and the mutex locked. When this ptr is deleted
  * the mutex is unlocked (by unique_ptr deleter).
  *
  *
@@ -72,9 +72,9 @@ class OwnerPtr;
  */
 
 /**
- * This class contains a reference (ptr) to a value of type T but do not own it.
- * Not owning the object implies that, when using, this reference could have been invalidated.
- * For that, method \c lock create a smart pointer referencing that object, that will not be destroyed
+ * This class contains a reference (ptr) to a value of type T but does not own it.
+ * Not owning the object implies that, when being used, this reference could have been invalidated.
+ * In order to avoid that, method \c lock creates a smart pointer referencing that object, that will not be destroyed
  * while the smart pointer exists.
  *
  * @tparam T Type of the data referenced by this ptr.
@@ -103,42 +103,52 @@ public:
      */
     ~LesseePtr();
 
+    //! This class is not copyable
+    LesseePtr(const LesseePtr<T>& other) = delete;
+
+    //! This class is not copyable
+    LesseePtr<T>& operator =(
+            const LesseePtr<T>& other) = delete;
+
+    // Move constructor
+    LesseePtr(LesseePtr<T>&& other);
+
     /**
-     * @brief copy assigment
+     * @brief move assigment
      *
      * It gets the reference from the other object.
      * It looses an old reference and the mutex in case it had it.
      *
      * @param other object to copy
-     * @return LesseePtr<T>& this object
+     * @return this object
      */
     LesseePtr<T>& operator =(
-            const LesseePtr<T>& other);
+            LesseePtr<T>&& other);
 
     /**
-     * @brief Create an smart reference to the data.
+     * @brief Create a smart reference to the data.
      *
-     * While the smart reference (return of this method) exists, the data could not be destroyed.
+     * While the smart reference (return of this method) exists, the data cannot be destroyed.
      * This smart reference must be destroyed as soon as possible, because it locks the real owner of the data.
      *
      * This method is similar to \c std::weak_ptr::lock() .
      *
      * @warning return of this method must be checked before used, the data returned could not be valid anymore.
-     * @warning this method does not protect the access to the internal data. It only avoid its destruction.
+     * @warning this method does not protect the access to the internal data. It only avoids its destruction.
      *
      * @return std::shared_ptr<T> to the data. nullptr if the reference is not valid anymore.
      */
     std::shared_ptr<T> lock() noexcept;
 
     /**
-     * @brief Create an smart reference to the data or throw an exception if data is not available
+     * @brief Create a smart reference to the data or throw an exception if data is not available
      *
      * While the smart reference (return of this method) exists, the data could not be destroyed.
      * This smart reference must be destroyed as soon as possible, because it locks the real owner of the data.
      *
      * Use this method instead of \c lock if the non existence of the data is treated as error.
      *
-     * @warning this method does not protect the access to the internal data. It only avoid its destruction.
+     * @warning this method does not protect the access to the internal data. It only avoids its destruction.
      *
      * @return std::shared_ptr<T> to the data
      * @throw \c InitializationException if the data is not valid anymore.
@@ -182,11 +192,11 @@ protected:
 };
 
 /**
- * Class that contains a reference (ptr) for an object which ownership is \c this .
+ * Class that contains a reference (ptr) for an object whose ownership is \c this .
  * When \c this is destroyed, the object is destroyed too (using the deleter function given).
  * In order to use the object from another context, it must be by using a \c LesseePtr ,
- * that is allowed to use it and assures the object is not destroyed while it is being used, but do not
- * own the object, that could be destroyed when no lessee is using it.
+ * that is allowed to use it and assures the object is not destroyed while it is being used, but does not
+ * own the object, which could only be destroyed when no lessee is using it.
  *
  * @tparam T Type of the data referenced by this ptr.
  */
@@ -217,7 +227,7 @@ public:
      * @brief Destroy the Owner Ptr object
      *
      * It waits in case there are locks taken from the lessees.
-     * Once every lessee has not the data locked, it destroys it and destroy itself.
+     * Once every lessee has not the data locked, it destroys it and destroys itself.
      */
     ~OwnerPtr();
 

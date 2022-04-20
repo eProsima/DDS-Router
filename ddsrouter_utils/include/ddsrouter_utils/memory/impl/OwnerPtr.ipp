@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Formatter.ipp
+ * @file OwnerPtr.ipp
  */
 
 #ifndef _DDSROUTERUTILS_IMPL_MEMORY_OWNERPTR_IPP_
@@ -48,11 +48,20 @@ LesseePtr<T>::~LesseePtr()
 }
 
 template<typename T>
-LesseePtr<T>& LesseePtr<T>::operator =(
-        const LesseePtr<T>& other)
+LesseePtr<T>::LesseePtr(LesseePtr<T>&& other)
 {
-    this->data_reference_ = other.data_reference_;
-    this->shared_mutex_ = other.shared_mutex_;
+    this->data_reference_ = std::move(other.data_reference_);
+    this->shared_mutex_ = std::move(other.shared_mutex_);
+}
+
+template<typename T>
+LesseePtr<T>& LesseePtr<T>::operator =(
+        LesseePtr<T>&& other)
+{
+    this->data_reference_ = std::move(other.data_reference_);
+    this->shared_mutex_ = std::move(other.shared_mutex_);
+
+    return *this;
 }
 
 template<typename T>

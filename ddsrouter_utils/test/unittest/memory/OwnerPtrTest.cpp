@@ -102,7 +102,7 @@ TEST(OwnerPtrTest, owner_ptr_access_string)
 }
 
 /**
- * Create a \c TestClass object (alwas initialized with same values)
+ * Create a \c TestClass object (always initialized with same values)
  *
  * STEPS:
  * - Create ptr from an object of TestClass
