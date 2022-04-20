@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # Add test subdirectories
-add_subdirectory(time)
 add_subdirectory(exception)
+add_subdirectory(memory)
 add_subdirectory(return_code)
+add_subdirectory(time)
 add_subdirectory(utils)
