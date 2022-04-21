@@ -56,6 +56,13 @@ function(compile_tool _SOURCE_PATH)
                 "${MODULE_TARGET_NAME}"
         )
 
+        if(LOG_INFO)
+            target_compile_definitions(${MODULE_NAME}
+                PRIVATE FASTDDS_ENFORCE_LOG_INFO
+                PRIVATE HAVE_LOG_NO_INFO=0
+                )
+        endif()
+
         # Link dependent libraries
         target_link_libraries(
             ${MODULE_NAME}

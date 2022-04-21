@@ -86,6 +86,13 @@ function(compile_library _SOURCE_PATH _INCLUDE_PATH)
                 ${MODULE_MACRO}_SOURCE
             )
 
+        if(LOG_INFO)
+            target_compile_definitions(${MODULE_NAME}
+                PRIVATE FASTDDS_ENFORCE_LOG_INFO
+                PRIVATE HAVE_LOG_NO_INFO=0
+                )
+        endif()
+
         if(MSVC)
             target_compile_definitions(${MODULE_NAME}
                 INTERFACE
