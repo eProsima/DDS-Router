@@ -42,6 +42,12 @@ class DiscoveryDatabase : public eprosima::ddsrouter::core::DiscoveryDatabase
 {
 public:
 
+    DiscoveryDatabase()
+        : eprosima::ddsrouter::core::DiscoveryDatabase()
+    {
+        init();
+    }
+
     bool add_endpoint_protected(
             const Endpoint& new_endpoint)
     {

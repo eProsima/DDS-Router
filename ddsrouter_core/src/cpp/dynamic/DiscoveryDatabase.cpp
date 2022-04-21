@@ -43,13 +43,17 @@ DiscoveryDatabase::~DiscoveryDatabase()
     }
     entities_to_process_cv_.notify_one();
 
-    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
-    queue_processing_thread_.join();
+    if (initialized_)
+    {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
+        queue_processing_thread_.join();
+    }
 }
 
 void DiscoveryDatabase::init() noexcept
 {
     queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
+    initialized_.store(true);
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Initializing queue processing thread routine.");
 }
 

@@ -57,6 +57,7 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+
     if (only_builtin_topics || reliable_readers)
     {
         // Two topics, one keyed and other not
@@ -143,7 +144,6 @@ void test_local_communication(
         {
             msg.index(samples_sent);
             publisher.publish(msg);
-            std::cout << "Published sample " << samples_sent << std::endl;
 
             // If time is 0 do not wait
             if (time_between_samples > 0)
@@ -151,8 +151,6 @@ void test_local_communication(
                 std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
             }
         }
-
-        std::cout << "Publisher sent " << samples_sent << " samples" << std::endl;
 
         router.start();
 

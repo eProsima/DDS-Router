@@ -43,6 +43,7 @@ std::shared_ptr<IParticipant> create_participant(
     ParticipantFactory participant_factory;
     std::shared_ptr<PayloadPool> payload_pool = std::make_shared<MapPayloadPool>();
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
+    discovery_database->init();
     std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration =
             random_participant_configuration(kind);
 

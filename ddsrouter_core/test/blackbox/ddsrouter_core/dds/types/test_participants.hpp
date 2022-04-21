@@ -221,13 +221,11 @@ private:
         {
             if (info.current_count_change == 1)
             {
-                std::cout << "Subscriber discovered." << std::endl;
                 discovered_ = info.current_count;
                 wait_discovery_cv_.notify_all();
             }
             else if (info.current_count_change == -1)
             {
-                std::cout << "Subscriber removed." << std::endl;
                 discovered_ = info.current_count;
             }
         }
@@ -418,8 +416,6 @@ private:
             {
                 if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
                 {
-                    std::cout << "Msg received: \""  << msg_received_.message() << " "
-                              << msg_received_.index() << "\"" << std::endl;
                     if (msg_received_.message() == msg_should_receive_->message())
                     {
                         success = true;
@@ -436,13 +432,11 @@ private:
         {
             if (info.current_count_change == 1)
             {
-                std::cout << "Publisher discovered." << std::endl;
                 discovered_ = info.current_count;
                 wait_discovery_cv_.notify_all();
             }
             else if (info.current_count_change == -1)
             {
-                std::cout << "Publisher removed." << std::endl;
                 discovered_ = info.current_count;
             }
         }

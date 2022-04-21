@@ -216,6 +216,9 @@ protected:
 
     //! Guards access to \c entities_to_process_cv_
     std::mutex entities_to_process_cv_mutex_;
+
+    //! Flag to indicate whether the DiscoveryDatabase was initialized
+    std::atomic<bool> initialized_;
 };
 
 } /* namespace core */
