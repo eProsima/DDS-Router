@@ -226,7 +226,7 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
 
-    if(topic_.topic_reliable())
+    if (topic_.topic_reliable())
     {
         qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
         qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;

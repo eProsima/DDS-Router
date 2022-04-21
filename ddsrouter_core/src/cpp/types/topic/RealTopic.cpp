@@ -32,7 +32,7 @@ const char* RealTopic::INVALID_TOPIC_NAME = "__invalid_topic_name__";
 const char* RealTopic::INVALID_TOPIC_TYPE = "__invalid_topic_type_name__";
 
 RealTopic::RealTopic(
-    const std::string& topic_name,
+        const std::string& topic_name,
         const std::string& topic_type,
         bool topic_with_key, /* = false */
         bool topic_reliable /* = false */) noexcept

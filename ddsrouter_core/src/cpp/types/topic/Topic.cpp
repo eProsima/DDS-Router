@@ -63,8 +63,8 @@ bool Topic::operator ==(
 {
 
     return topic_name_ == other.topic_name_
-            && topic_type_ == other.topic_type_
-            && topic_with_key_ == other.topic_with_key_;
+           && topic_type_ == other.topic_type_
+           && topic_with_key_ == other.topic_with_key_;
 }
 
 bool Topic::operator <(

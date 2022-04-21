@@ -174,7 +174,7 @@ public:
     }
 
     void wait_discovery(
-        uint32_t n_subscribers = 1)
+            uint32_t n_subscribers = 1)
     {
         listener_.wait_discovery(n_subscribers);
     }
@@ -203,7 +203,7 @@ private:
         }
 
         void wait_discovery(
-            uint32_t n_subscribers = 1)
+                uint32_t n_subscribers = 1)
         {
             if (discovered_ < n_subscribers)
             {
@@ -216,8 +216,8 @@ private:
         }
 
         void on_publication_matched(
-            eprosima::fastdds::dds::DataWriter*,
-            const eprosima::fastdds::dds::PublicationMatchedStatus& info)
+                eprosima::fastdds::dds::DataWriter*,
+                const eprosima::fastdds::dds::PublicationMatchedStatus& info)
         {
             if (info.current_count_change == 1)
             {
@@ -355,7 +355,7 @@ public:
     }
 
     void wait_discovery(
-        uint32_t n_publishers = 1)
+            uint32_t n_publishers = 1)
     {
         listener_.wait_discovery(n_publishers);
     }
@@ -394,7 +394,7 @@ private:
         }
 
         void wait_discovery(
-            uint32_t n_publishers = 1)
+                uint32_t n_publishers = 1)
         {
             if (discovered_ < n_publishers)
             {
