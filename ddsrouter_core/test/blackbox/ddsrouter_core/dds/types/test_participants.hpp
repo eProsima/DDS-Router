@@ -254,12 +254,14 @@ class TestSubscriber
 public:
 
     TestSubscriber(
-            bool keyed = false)
+            bool keyed = false,
+            bool reliable = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
+        , reliable_ (reliable)
     {
     }
 
@@ -344,6 +346,12 @@ public:
         rqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         rqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
+        if (reliable_)
+        {
+            rqos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+            rqos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        }
+
         reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
 
         if (reader_ == nullptr)
@@ -371,6 +379,8 @@ private:
     eprosima::fastdds::dds::DataReader* reader_;
 
     bool keyed_;
+
+    bool reliable_;
 
     /**
      * Class handling dataflow events
