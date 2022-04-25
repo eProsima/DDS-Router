@@ -21,7 +21,7 @@ macro(compile_documentation)
 
     if (BUILD_DOCS)
 
-        message(STATUS "DEBUG: Compiling documentation")
+        message(STATUS "Compiling documentation")
 
         ####################################################################################################
         # Build documentation
