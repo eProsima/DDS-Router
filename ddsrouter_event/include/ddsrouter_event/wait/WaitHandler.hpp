@@ -143,6 +143,11 @@ public:
     void set_value(
             T new_value) noexcept;
 
+    /**
+     * @brief Awake every waiting thread due to disable and set as enable afterwards
+     */
+    void stop_and_continue() noexcept;
+
 protected:
 
     /**

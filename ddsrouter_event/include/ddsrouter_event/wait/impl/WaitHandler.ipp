@@ -197,6 +197,18 @@ void WaitHandler<T>::set_value(
     wait_condition_variable_.notify_all();
 }
 
+template <typename T>
+void WaitHandler<T>::stop_and_continue() noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+
+    if (enabled())
+    {
+        blocking_disable();
+    }
+    enable();
+}
+
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
