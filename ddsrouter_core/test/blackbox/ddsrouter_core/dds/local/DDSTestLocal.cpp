@@ -60,9 +60,17 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
 
     if (only_builtin_topics || reliable_readers)
     {
-        // Two topics, one keyed and other not
-        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
-        builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
+        if (reliable_readers)
+        {
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, true));
+            // builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, true));
+        }
+        else
+        {
+            // Two topics, one keyed and other not
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld"));
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true));
+        }
     }
 
     // Two simple participants
@@ -143,7 +151,6 @@ void test_local_communication(
                 std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
             }
         }
-        // std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
         router.start();
 
@@ -287,9 +294,6 @@ int main(
         char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-
-    eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
-    eprosima::ddsrouter::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
 
     return RUN_ALL_TESTS();
 }

@@ -5,6 +5,11 @@
 # Yaml configuration file version
 version: v2.0
 
+builtin-topics:
+  - name: helloworld_raul
+    type: HelloWorld
+    reliable: true
+
 # DDS Router participants
 participants:
 

@@ -160,6 +160,14 @@ utils::ReturnCode Reader::take_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
+void Reader::enable_() noexcept
+{
+    // Check if there is available data to read
+    // If the topic is reliable, the reader will keep the samples received when it was disabled. 
+    // However, if the topic is best_effort, the reader will discard the samples received when it was disabled. 
+    on_data_available_();
+}
+
 bool Reader::come_from_this_participant_(
         const fastrtps::rtps::CacheChange_t* change) const noexcept
 {
@@ -244,17 +252,29 @@ void Reader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader*,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
-    if (enabled_ && !come_from_this_participant_(change))
+    if (!come_from_this_participant_(change))
     {
-        // Call Track callback (by calling BaseReader callback method)
-        logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
-                change->writerGUID);
-        on_data_available_();
+        // Do not remove previous received changes so they can be read when the reader is enabled
+        if (enabled_)
+        {
+            // Call Track callback (by calling BaseReader callback method)
+            logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                    "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
+                    change->writerGUID);
+            on_data_available_();
+        }
+        else
+        {
+            // Remove received change if the Reader is disbled and the topic is not reliable
+            if (!topic_.topic_reliable())
+            {
+                rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+            }
+        }
     }
     else
     {
-        // If it is a message from this Participant, or Reader is disabled, do not send it forward and remove it
+        // If it is a message from this Participant, do not send it forward and remove it
         // TODO: do this more elegant
         rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
     }

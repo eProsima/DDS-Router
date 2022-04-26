@@ -90,6 +90,7 @@ void Track::enable() noexcept
     if (!enabled_)
     {
         logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+        enabled_ = true;
 
         // Enabling writers
         for (auto& writer_it : writers_)
@@ -100,7 +101,6 @@ void Track::enable() noexcept
         // Enabling reader
         reader_->enable();
 
-        enabled_ = true;
     }
 }
 
