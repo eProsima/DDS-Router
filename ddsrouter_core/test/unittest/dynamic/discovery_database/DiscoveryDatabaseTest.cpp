@@ -45,7 +45,7 @@ public:
     DiscoveryDatabase()
         : eprosima::ddsrouter::core::DiscoveryDatabase()
     {
-        init();
+        enable();
     }
 
     bool add_endpoint_protected(

@@ -163,8 +163,8 @@ utils::ReturnCode Reader::take_(
 void Reader::enable_() noexcept
 {
     // Check if there is available data to read
-    // If the topic is reliable, the reader will keep the samples received when it was disabled. 
-    // However, if the topic is best_effort, the reader will discard the samples received when it was disabled. 
+    // If the topic is reliable, the reader will keep the samples received when it was disabled.
+    // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
     on_data_available_();
 }
 

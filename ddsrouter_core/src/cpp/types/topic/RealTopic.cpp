@@ -41,6 +41,15 @@ RealTopic::RealTopic(
 {
 }
 
+RealTopic::RealTopic(
+        bool topic_reliable,
+        const std::string& topic_name,
+        const std::string& topic_type) noexcept
+    : Topic(topic_name, topic_type)
+    , topic_reliable_(topic_reliable)
+{
+}
+
 RealTopic::RealTopic()
     : Topic(INVALID_TOPIC_NAME, INVALID_TOPIC_TYPE)
 {

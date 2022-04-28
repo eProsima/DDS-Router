@@ -44,11 +44,11 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  * @return configuration::DDSRouterConfiguration
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration(
-        bool only_builtin_topics = false,
+        bool use_dynamic_discovery = false,
         bool reliable_readers = false)
 {
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    if (!only_builtin_topics)
+    if (!use_dynamic_discovery)
     {
         // One topic name, all topic types, both keyed and not
         allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
@@ -58,12 +58,12 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
 
-    if (only_builtin_topics || reliable_readers)
+    if (use_dynamic_discovery || reliable_readers)
     {
         if (reliable_readers)
         {
             builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, true));
-            // builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, true));
+            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, true));
         }
         else
         {
@@ -100,6 +100,9 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
  * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
+ *
+ * The reliable option changes the test behavior to verify that the communication is reliable and all old data is sent
+ * to Late Joiners.
  */
 template <class MsgStruct>
 void test_local_communication(
@@ -136,10 +139,13 @@ void test_local_communication(
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DDSRouter entity
+    // The DDS Router does not start here in order to test a reliable communication
     DDSRouter router(ddsrouter_configuration);
 
     if (reliable)
     {
+        // To check that the communication is reliable and all previous published samples are sent to late joiner,
+        // the publisher publish all data at once.
         for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
             msg.index(samples_sent);
@@ -152,8 +158,11 @@ void test_local_communication(
             }
         }
 
+        // Once the publisher has already publish all its samples, the DDS Router starts.
         router.start();
 
+        // The subscriber should receive all samples sent by the publisher when the communication was not
+        // already established.
         while (samples_received.load() < samples_to_receive)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -214,13 +223,13 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
  * different domains, by using a router with two Simple Participants at each domain.
  * In this test allowlist and blocklist are left empty, while only builtin topics are provided.
  */
-TEST(DDSTestLocal, end_to_end_local_communication_only_builtin_topics)
+TEST(DDSTestLocal, end_to_end_local_communication_use_dynamic_discovery)
 {
     test::test_local_communication<HelloWorld>(
         test::dds_test_simple_configuration(true));
 }
 
-TEST(DDSTestLocal, end_to_end_local_communication_only_builtin_topics_keyed)
+TEST(DDSTestLocal, end_to_end_local_communication_use_dynamic_discovery_keyed)
 {
     test::test_local_communication<HelloWorldKeyed>(
         test::dds_test_simple_configuration(true));

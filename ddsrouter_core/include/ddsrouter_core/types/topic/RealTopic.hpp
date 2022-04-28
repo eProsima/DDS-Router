@@ -32,12 +32,18 @@ namespace types {
  */
 struct RealTopic : public Topic
 {
-    //! Constructor by topic name, topic type name, and (optionally) has_keyed_set and topic kind
+    //! Constructor by topic name, topic type name, and (optionally) topic with key and topic kind
     DDSROUTER_CORE_DllAPI RealTopic(
             const std::string& topic_name,
             const std::string& topic_type,
             bool topic_with_key = false,
             bool topic_reliable = false) noexcept;
+
+    //! Constructor by topic kind, topic name and topic type name
+    DDSROUTER_CORE_DllAPI RealTopic(
+            bool topic_reliable,
+            const std::string& topic_name,
+            const std::string& topic_type) noexcept;
 
     //! Default non valid topic
     DDSROUTER_CORE_DllAPI RealTopic();

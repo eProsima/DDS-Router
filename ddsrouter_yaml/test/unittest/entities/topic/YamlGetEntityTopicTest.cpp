@@ -159,6 +159,24 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         test::compare_topic(topic, name, type, false);
     }
 
+    // Topic reliable with no key
+    {
+        Yaml yml_topic;
+        test::real_topic_to_yaml(
+            yml_topic,
+            test::YamlField<std::string>(name),
+            test::YamlField<std::string>(type),
+            test::YamlField<bool>(false),
+            test::YamlField<bool>(true));
+
+        Yaml yml;
+        yml["topic"] = yml_topic;
+
+        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
+
+        test::compare_topic(topic, name, type, false, true); // By default no keyed
+    }
+
     // Empty
     {
         Yaml yml_topic;
@@ -196,24 +214,6 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST), utils::ConfigurationException);
-    }
-
-    // Topic reliable
-    {
-        Yaml yml_topic;
-        test::real_topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(false),
-            test::YamlField<bool>(true));
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::RealTopic topic = YamlReader::get<core::types::RealTopic>(yml, "topic", LATEST);
-
-        test::compare_topic(topic, name, type, false, true); // By default no keyed
     }
 }
 

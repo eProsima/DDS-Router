@@ -58,6 +58,7 @@ public:
      * @brief Construct a new DiscoveryDatabase object
      *
      * Create a thread in charge of processing DB transactions stored in a queue.
+     * Call enable() function to enable the DiscoveryDatabase.
      */
     DiscoveryDatabase() noexcept;
 
@@ -72,8 +73,20 @@ public:
      * @brief Initialize the queue processing thread routine
      *
      * Create a thread in charge of processing the dynamic discovery of endpoints.
+     * The creation of the discovery database processing thread is done after the creation of the DiscoveryDatabase due
+     * to a data race condition that may involve first creating the topics through the discovered endpoints or creating
+     * them from the builtin topics configuration.
+     * The builtin topics may have special topic configurations not detected in discovery
+     * that would mean that the topic does not have the correct configuration.
      */
-    void init() noexcept;
+    void enable() noexcept;
+
+    /**
+     * @brief Stop the queue processing thread routine
+     *
+     * Join the thread in charge of processing the dynamic discovery of endpoints.
+     */
+    void disable() noexcept;
 
     /**
      * @brief Whether a topic exists in any Endpoint in the database
@@ -218,7 +231,7 @@ protected:
     std::mutex entities_to_process_cv_mutex_;
 
     //! Flag to indicate whether the DiscoveryDatabase was initialized
-    std::atomic<bool> initialized_;
+    std::atomic<bool> enabled_;
 };
 
 } /* namespace core */

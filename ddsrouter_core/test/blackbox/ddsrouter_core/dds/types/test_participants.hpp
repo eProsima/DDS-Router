@@ -101,16 +101,10 @@ public:
     bool init(
             uint32_t domain)
     {
-        eprosima::fastrtps::LibrarySettingsAttributes library_settings;
-        library_settings.intraprocess_delivery = eprosima::fastrtps::IntraprocessDeliveryType::INTRAPROCESS_OFF;
-        eprosima::fastrtps::xmlparser::XMLProfileManager::library_settings(library_settings);
-
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
 
         pqos.name("Participant_pub");
-        pqos.transport().use_builtin_transports = false;
-        pqos.transport().user_transports.push_back(std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>());
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(domain, pqos);
 
@@ -291,18 +285,12 @@ public:
             MsgStruct* msg_should_receive,
             std::atomic<uint32_t>* samples_received)
     {
-        eprosima::fastrtps::LibrarySettingsAttributes library_settings;
-        library_settings.intraprocess_delivery = eprosima::fastrtps::IntraprocessDeliveryType::INTRAPROCESS_OFF;
-        eprosima::fastrtps::xmlparser::XMLProfileManager::library_settings(library_settings);
-
         // INITIALIZE THE LISTENER
         listener_.init(msg_should_receive, samples_received);
 
         // CREATE THE PARTICIPANT
         eprosima::fastdds::dds::DomainParticipantQos pqos;
         pqos.name("Participant_sub");
-        pqos.transport().use_builtin_transports = false;
-        pqos.transport().user_transports.push_back(std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>());
         participant_ =
                 eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(domain, pqos);
 

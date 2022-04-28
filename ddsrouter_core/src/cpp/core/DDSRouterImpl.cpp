@@ -71,7 +71,7 @@ DDSRouterImpl::DDSRouterImpl(
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
-    discovery_database_->init();
+    discovery_database_->enable();
 
     logDebug(DDSROUTER, "DDS Router created.");
 }

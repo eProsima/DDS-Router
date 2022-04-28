@@ -352,7 +352,7 @@ RealTopic YamlReader::get<RealTopic>(
     std::string type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
 
     // Optional keyed
-    bool keyed = false;
+    bool keyed;
     bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
     if (keyed_set)
     {
@@ -360,14 +360,35 @@ RealTopic YamlReader::get<RealTopic>(
     }
 
     // Optional reliable DataReader
-    bool reliable = false;
+    bool reliable;
     bool reliable_set = is_tag_present(yml, TOPIC_RELIABLE_TAG);
     if (reliable_set)
     {
         reliable = get_scalar<bool>(yml, TOPIC_RELIABLE_TAG);
     }
 
-    return RealTopic(name, type, keyed, reliable);
+    if (keyed_set)
+    {
+        if (reliable_set)
+        {
+            return RealTopic(name, type, keyed, reliable);
+        }
+        else
+        {
+            return RealTopic(name, type, keyed);
+        }
+    }
+    else
+    {
+        if (reliable_set)
+        {
+            return RealTopic(reliable, name, type);
+        }
+        else
+        {
+            return RealTopic(name, type);
+        }
+    }
 }
 
 template <>
