@@ -40,7 +40,7 @@ AwakeReason BooleanWaitHandler::wait(
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<bool>::wait(
-        std::function<bool(const bool&)>([this](const bool& value)
+        std::function<bool(const bool&)>([](const bool& value)
         {
             return value;
         }),
