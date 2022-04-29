@@ -27,14 +27,14 @@ namespace utils {
 
 template<typename T>
 LesseePtr<T>::LesseePtr()
-    : shared_mutex_(new std::mutex())
+    : shared_mutex_()
 {
 }
 
 template<typename T>
 LesseePtr<T>::LesseePtr(
         std::weak_ptr<T> data,
-        std::shared_ptr<std::mutex> shared_mutex)
+        std::shared_ptr<std::shared_timed_mutex> shared_mutex)
     : data_reference_(data)
     , shared_mutex_(shared_mutex)
 {
@@ -43,8 +43,19 @@ LesseePtr<T>::LesseePtr(
 template<typename T>
 LesseePtr<T>::~LesseePtr()
 {
-    // It waits in case there are still some locked references
-    std::lock_guard<std::mutex> lock(*shared_mutex_);
+    if (shared_mutex_)
+    {
+        // It waits in case there are still some locked references
+        std::lock_guard<std::shared_timed_mutex> lock(*shared_mutex_);
+    }
+}
+
+template<typename T>
+LesseePtr<T>::LesseePtr(
+        const LesseePtr<T>& other)
+{
+    this->data_reference_ = other.data_reference_;
+    this->shared_mutex_ = other.shared_mutex_;
 }
 
 template<typename T>
@@ -53,6 +64,16 @@ LesseePtr<T>::LesseePtr(
 {
     this->data_reference_ = std::move(other.data_reference_);
     this->shared_mutex_ = std::move(other.shared_mutex_);
+}
+
+template<typename T>
+LesseePtr<T>& LesseePtr<T>::operator =(
+        const LesseePtr<T>& other)
+{
+    this->data_reference_ = other.data_reference_;
+    this->shared_mutex_ = other.shared_mutex_;
+
+    return *this;
 }
 
 template<typename T>
@@ -81,32 +102,47 @@ template<typename T>
 std::shared_ptr<T> LesseePtr<T>::lock_(
         bool throw_exception)
 {
-    shared_mutex_->lock();
-
-    std::shared_ptr<T> locked_ptr = data_reference_.lock();
-
-    if (!locked_ptr)
+    if (!shared_mutex_)
     {
-        this->shared_mutex_->unlock();
-
         if (throw_exception)
         {
             throw InitializationException(
-                      "Trying to access a data not available anymore.");
+                      "Trying to access a data from a non initialized LesseePtr.");
         }
         else
         {
             return nullptr;
         }
     }
+    else
+    {
+        shared_mutex_->lock_shared();
 
-    // Create a different shared_ptr that points to the same element
-    return std::shared_ptr<T> (
-        locked_ptr.get(),
-        [this](T* ptr)
+        std::shared_ptr<T> locked_ptr = data_reference_.lock();
+
+        if (!locked_ptr)
         {
-            this->shared_mutex_->unlock();
-        });
+            this->shared_mutex_->unlock_shared();
+
+            if (throw_exception)
+            {
+                throw InitializationException(
+                          "Trying to access a data not available anymore.");
+            }
+            else
+            {
+                return nullptr;
+            }
+        }
+
+        // Create a different shared_ptr that points to the same element
+        return std::shared_ptr<T> (
+            locked_ptr.get(),
+            [this](T* ptr)
+            {
+                this->shared_mutex_->unlock_shared();
+            });
+    }
 }
 
 template<typename T>
@@ -143,9 +179,27 @@ OwnerPtr<T>::~OwnerPtr()
 }
 
 template<typename T>
+OwnerPtr<T>::OwnerPtr(
+        OwnerPtr<T>&& other)
+{
+    this->data_reference_ = std::move(other.data_reference_);
+    this->leases_mutexes_ = std::move(other.leases_mutexes_);
+}
+
+template<typename T>
+OwnerPtr<T>& OwnerPtr<T>::operator =(
+        OwnerPtr<T>&& other)
+{
+    this->data_reference_ = std::move(other.data_reference_);
+    this->leases_mutexes_ = std::move(other.leases_mutexes_);
+
+    return *this;
+}
+
+template<typename T>
 LesseePtr<T> OwnerPtr<T>::lease()
 {
-    std::shared_ptr<std::mutex> new_mutex = std::make_shared<std::mutex>();
+    std::shared_ptr<std::shared_timed_mutex> new_mutex = std::make_shared<std::shared_timed_mutex>();
 
     leases_mutexes_.push_back(new_mutex);
 
@@ -157,14 +211,14 @@ LesseePtr<T> OwnerPtr<T>::lease()
 template<typename T>
 void OwnerPtr<T>::reset()
 {
-    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
+    for (std::shared_ptr<std::shared_timed_mutex> mutex : leases_mutexes_)
     {
         mutex->lock();
     }
 
     data_reference_.reset();
 
-    for (std::shared_ptr<std::mutex> mutex : leases_mutexes_)
+    for (std::shared_ptr<std::shared_timed_mutex> mutex : leases_mutexes_)
     {
         mutex->unlock();
     }

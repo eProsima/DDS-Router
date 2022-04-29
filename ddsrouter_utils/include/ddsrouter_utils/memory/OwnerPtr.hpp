@@ -23,6 +23,7 @@
 
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 
 #include <ddsrouter_utils/library/library_dll.h>
 
@@ -103,17 +104,25 @@ public:
      */
     ~LesseePtr();
 
-    //! This class is not copyable
+    //! Copy constructor
     LesseePtr(
-            const LesseePtr<T>& other) = delete;
-
-    //! This class is not copyable
-    LesseePtr<T>& operator =(
-            const LesseePtr<T>& other) = delete;
+            const LesseePtr<T>& other);
 
     // Move constructor
     LesseePtr(
             LesseePtr<T>&& other);
+
+    /**
+     * @brief move assigment
+     *
+     * It gets the reference from the other object.
+     * It looses an old reference and the mutex in case it had it.
+     *
+     * @param other object to copy
+     * @return this object
+     */
+    LesseePtr<T>& operator =(
+            const LesseePtr<T>& other);
 
     /**
      * @brief move assigment
@@ -159,9 +168,20 @@ public:
 
 protected:
 
+    // It requires friendship to use the constructor
+    friend class OwnerPtr<T>;
+
+    /**
+     * @brief Construct a new Lessee Ptr object
+     *
+     * Protected constructor that must be called from \c OwnerPtr .
+     *
+     * @param data weak reference to the data.
+     * @param shared_mutex shared mutex between owner and this.
+     */
     LesseePtr(
             std::weak_ptr<T> data,
-            std::shared_ptr<std::mutex> shared_mutex);
+            std::shared_ptr<std::shared_timed_mutex> shared_mutex);
 
     /**
      * @brief Generic lock method that throws an exception or return nullptr depending on the argument.
@@ -172,9 +192,6 @@ protected:
      */
     std::shared_ptr<T> lock_(
             bool throw_exception);
-
-    // It requires friendship to use the constructor
-    friend class OwnerPtr<T>;
 
     /**
      * @brief Reference to the data. The shared ptr that owns the data is in OwnerPtr
@@ -189,9 +206,10 @@ protected:
      * This mutex must come from the \c OwnerPtr that has created this object.
      * It is used to lock the data when it is being used.
      *
+     * @note It uses the read (non blocking) lock when used from lessee. So owner is locked but not other lessees copied
      * @note It is a shared_ptr because it is shared between the \c OwnerPtr and the \c LesseePtr.
      */
-    std::shared_ptr<std::mutex> shared_mutex_;
+    std::shared_ptr<std::shared_timed_mutex> shared_mutex_;
 };
 
 /**
@@ -238,9 +256,17 @@ public:
     OwnerPtr(
             const OwnerPtr<T>& other) = delete;
 
+    //! Movement constructor
+    OwnerPtr(
+            OwnerPtr<T>&& other);
+
     //! This class is not copyable
     OwnerPtr<T>& operator =(
             const OwnerPtr<T>& other) = delete;
+
+    //! Movement operator
+    OwnerPtr<T>& operator =(
+            OwnerPtr<T>&& other);
 
     /**
      * @brief Create a new Lessee object that references the data owned by this object.
@@ -308,9 +334,12 @@ protected:
      * @brief List of mutexes shared between this object and the lessees it has created.
      *
      * These mutexes will only be locked when the data is being used by a lessee, and only until the locked
-     * result is alive.
+     * result is destroyed.
+     * The Lessee must lock the mutex by shared-block, so copies of themselves are not locked.
+     * The mutex must be locked as non-shared from owner, because while the owner wants to destroy the internal data,
+     * any lessee must have access to it.
      */
-    std::vector<std::shared_ptr<std::mutex>> leases_mutexes_;
+    std::vector<std::shared_ptr<std::shared_timed_mutex>> leases_mutexes_;
 
     //! Default deleter lambda
     static const std::function<void(T*)> DEFAULT_DELETER_;
