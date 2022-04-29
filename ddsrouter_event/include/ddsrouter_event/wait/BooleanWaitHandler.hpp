@@ -60,6 +60,7 @@ public:
     using WaitHandler<bool>::enable;
     using WaitHandler<bool>::disable;
     using WaitHandler<bool>::enabled;
+    using WaitHandler<bool>::stop_and_continue;
 
     /////
     // Wait methods

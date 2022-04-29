@@ -143,22 +143,33 @@ public:
     void set_value(
             T new_value) noexcept;
 
+    /**
+     * @brief Awake every waiting thread by disabling and set as enabled afterwards
+     */
+    void stop_and_continue() noexcept;
+
 protected:
 
     /**
      * @brief  Current value
      *
-     * @warning Must be protected with \c status_mutex_ to read and write
+     * @warning Must be protected with \c wait_condition_variable_mutex_ to read and write
      *
      * @note could not be atomic cause it could be a complex type
      */
     T value_;
 
-    //! Whether this object is enabled
+    /**
+     * @brief Whether this object is enabled
+     *
+     * @warning Must be protected with \c wait_condition_variable_mutex_ to write
+     */
     std::atomic<bool> enabled_;
 
     /**
      * @brief Number of threads currently waiting
+     *
+     * @warning Must be protected with \c wait_condition_variable_mutex_ to write
      */
     std::atomic<uint32_t> threads_waiting_;
 
@@ -171,7 +182,7 @@ protected:
     /**
      * @brief Mutex to protect enable and disable methods
      *
-     * Methods \c enable , \c disable and \c blocking_disable ,
+     * Methods \c enable , \c disable , \c blocking_disable , and \c stop_and_continue
      */
     mutable std::recursive_mutex status_mutex_;
 };
