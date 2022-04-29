@@ -16,8 +16,8 @@
  * @file CounterWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_
-#define _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
@@ -59,6 +59,7 @@ public:
     // Make this methods public
     using WaitHandler<CounterType>::enable;
     using WaitHandler<CounterType>::disable;
+    using WaitHandler<CounterType>::blocking_disable;
     using WaitHandler<CounterType>::enabled;
     using WaitHandler<CounterType>::set_value;
     using WaitHandler<CounterType>::get_value;
@@ -119,4 +120,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_ */
