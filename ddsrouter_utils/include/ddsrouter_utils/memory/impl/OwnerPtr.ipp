@@ -102,12 +102,12 @@ template<typename T>
 std::shared_ptr<T> LesseePtr<T>::lock_(
         bool throw_exception)
 {
-    if(!shared_mutex_)
+    if (!shared_mutex_)
     {
         if (throw_exception)
         {
             throw InitializationException(
-                    "Trying to access a data from a non initialized LesseePtr.");
+                      "Trying to access a data from a non initialized LesseePtr.");
         }
         else
         {
@@ -127,7 +127,7 @@ std::shared_ptr<T> LesseePtr<T>::lock_(
             if (throw_exception)
             {
                 throw InitializationException(
-                        "Trying to access a data not available anymore.");
+                          "Trying to access a data not available anymore.");
             }
             else
             {
@@ -179,7 +179,8 @@ OwnerPtr<T>::~OwnerPtr()
 }
 
 template<typename T>
-OwnerPtr<T>::OwnerPtr(OwnerPtr<T>&& other)
+OwnerPtr<T>::OwnerPtr(
+        OwnerPtr<T>&& other)
 {
     this->data_reference_ = std::move(other.data_reference_);
     this->leases_mutexes_ = std::move(other.leases_mutexes_);
@@ -187,7 +188,7 @@ OwnerPtr<T>::OwnerPtr(OwnerPtr<T>&& other)
 
 template<typename T>
 OwnerPtr<T>& OwnerPtr<T>::operator =(
-            OwnerPtr<T>&& other)
+        OwnerPtr<T>&& other)
 {
     this->data_reference_ = std::move(other.data_reference_);
     this->leases_mutexes_ = std::move(other.leases_mutexes_);

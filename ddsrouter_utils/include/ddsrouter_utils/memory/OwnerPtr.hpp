@@ -257,7 +257,8 @@ public:
             const OwnerPtr<T>& other) = delete;
 
     //! Movement constructor
-    OwnerPtr(OwnerPtr<T>&& other);
+    OwnerPtr(
+            OwnerPtr<T>&& other);
 
     //! This class is not copyable
     OwnerPtr<T>& operator =(
