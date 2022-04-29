@@ -159,7 +159,9 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         test::compare_topic(topic, name, type, false);
     }
 
-    // Topic reliable with no key
+    // Checks that a topic yaml object has been parsed correctly with the topic reliable tag set to true.
+    // A topic configured as reliable creates RELIABLE-TRANSIENT_LOCAL RTPS Readers in order to ensure
+    // that no data is lost in the information relay.
     {
         Yaml yml_topic;
         test::real_topic_to_yaml(

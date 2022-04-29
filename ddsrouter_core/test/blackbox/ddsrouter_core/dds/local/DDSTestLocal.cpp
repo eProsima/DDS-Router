@@ -44,33 +44,23 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  * @return configuration::DDSRouterConfiguration
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration(
-        bool use_dynamic_discovery = false,
+        bool disable_dynamic_discovery = false,
         bool reliable_readers = false)
 {
+    // Always filter the test topics by topic name
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    if (!use_dynamic_discovery)
-    {
-        // One topic name, all topic types, both keyed and not
-        allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
-    }
+    allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
 
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
 
-    if (use_dynamic_discovery || reliable_readers)
+    if (disable_dynamic_discovery || reliable_readers)
     {
-        if (reliable_readers)
-        {
-            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, true));
-            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, true));
-        }
-        else
-        {
-            // Two topics, one keyed and other not
-            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld"));
-            builtin_topics.insert(std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true));
-        }
+        builtin_topics.insert(
+            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
+        builtin_topics.insert(
+            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
     }
 
     // Two simple participants
@@ -223,13 +213,13 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
  * different domains, by using a router with two Simple Participants at each domain.
  * In this test allowlist and blocklist are left empty, while only builtin topics are provided.
  */
-TEST(DDSTestLocal, end_to_end_local_communication_use_dynamic_discovery)
+TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
 {
     test::test_local_communication<HelloWorld>(
         test::dds_test_simple_configuration(true));
 }
 
-TEST(DDSTestLocal, end_to_end_local_communication_use_dynamic_discovery_keyed)
+TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
 {
     test::test_local_communication<HelloWorldKeyed>(
         test::dds_test_simple_configuration(true));
