@@ -31,6 +31,25 @@ namespace types {
 const char* RealTopic::INVALID_TOPIC_NAME = "__invalid_topic_name__";
 const char* RealTopic::INVALID_TOPIC_TYPE = "__invalid_topic_type_name__";
 
+RealTopic::RealTopic(
+        const std::string& topic_name,
+        const std::string& topic_type,
+        bool topic_with_key, /* = false */
+        bool topic_reliable /* = false */) noexcept
+    : Topic(topic_name, topic_type, topic_with_key)
+    , topic_reliable_(topic_reliable)
+{
+}
+
+RealTopic::RealTopic(
+        bool topic_reliable,
+        const std::string& topic_name,
+        const std::string& topic_type) noexcept
+    : Topic(topic_name, topic_type)
+    , topic_reliable_(topic_reliable)
+{
+}
+
 RealTopic::RealTopic()
     : Topic(INVALID_TOPIC_NAME, INVALID_TOPIC_TYPE)
 {
@@ -69,6 +88,21 @@ bool RealTopic::is_valid() const noexcept
     return topic_name_ != INVALID_TOPIC_NAME &&
            topic_type_ != INVALID_TOPIC_TYPE &&
            is_real_topic(topic_name_, topic_type_);
+}
+
+bool RealTopic::topic_reliable() const
+{
+    return topic_reliable_;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const RealTopic& a)
+{
+    std::string keyed_str = a.topic_with_key() ? "keyed" : "no_key";
+    std::string reliable_str = a.topic_reliable() ? "reliable" : "best_effort";
+    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << ";" << reliable_str << "}";
+    return os;
 }
 
 } /* namespace types */

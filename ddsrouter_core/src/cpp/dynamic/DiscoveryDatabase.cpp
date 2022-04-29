@@ -30,9 +30,9 @@ using namespace eprosima::ddsrouter::core::types;
 
 DiscoveryDatabase::DiscoveryDatabase() noexcept
     : exit_(false)
+    , enabled_(false)
 {
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Creating queue processing thread.");
-    queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
 }
 
 DiscoveryDatabase::~DiscoveryDatabase()
@@ -44,8 +44,35 @@ DiscoveryDatabase::~DiscoveryDatabase()
     }
     entities_to_process_cv_.notify_one();
 
-    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
-    queue_processing_thread_.join();
+    disable();
+}
+
+void DiscoveryDatabase::enable() noexcept
+{
+    if (!enabled_.load())
+    {
+        queue_processing_thread_ = std::thread(&DiscoveryDatabase::queue_processing_thread_routine_, this);
+        enabled_.store(true);
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Creating queue processing thread routine.");
+    }
+    else
+    {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Processing thread routine already enabled.");
+    }
+}
+
+void DiscoveryDatabase::disable() noexcept
+{
+    if (enabled_.load())
+    {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
+        enabled_.store(false);
+        queue_processing_thread_.join();
+    }
+    else
+    {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Processing thread routine already stopped.");
+    }
 }
 
 bool DiscoveryDatabase::topic_exists(

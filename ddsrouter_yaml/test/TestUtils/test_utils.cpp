@@ -38,24 +38,82 @@ Guid random_guid(
     return guid;
 }
 
+TopicInput::TopicInput(
+        std::string name,
+        std::string type,
+        bool keyed,
+        bool key_set)
+    : name(name)
+    , type(type)
+    , keyed(keyed)
+    , key_set(key_set)
+{
+}
+
+RealTopicInput::RealTopicInput(
+        std::string name,
+        std::string type,
+        bool keyed,
+        bool key_set,
+        bool reliable,
+        bool reliable_set)
+    : TopicInput(name, type, keyed, key_set)
+    , reliable(reliable)
+    , reliable_set(reliable_set)
+{
+}
+
+WildcardTopicInput::WildcardTopicInput(
+        std::string name,
+        std::string type,
+        bool keyed,
+        bool key_set,
+        bool type_set)
+    : TopicInput(name, type, keyed, key_set)
+    , type_set(type_set)
+{
+}
+
 std::set<std::shared_ptr<RealTopic>> topic_set(
-        std::vector<TopicInput> topics)
+        std::vector<RealTopicInput> topics)
 {
     std::set<std::shared_ptr<RealTopic>> result;
-    for (TopicInput input : topics)
+    for (RealTopicInput input : topics)
     {
         if (input.key_set)
         {
-            result.insert(std::make_shared<RealTopic>(
-                        input.name,
-                        input.type,
-                        input.keyed));
+            if (input.reliable_set)
+            {
+                result.insert(std::make_shared<RealTopic>(
+                            input.name,
+                            input.type,
+                            input.keyed,
+                            input.reliable));
+            }
+            else
+            {
+                result.insert(std::make_shared<RealTopic>(
+                            input.name,
+                            input.type,
+                            input.keyed));
+            }
         }
         else
         {
-            result.insert(std::make_shared<RealTopic>(
-                        input.name,
-                        input.type));
+            if (input.reliable_set)
+            {
+                result.insert(std::make_shared<RealTopic>(
+                            input.name,
+                            input.type,
+                            false,
+                            input.reliable));
+            }
+            else
+            {
+                result.insert(std::make_shared<RealTopic>(
+                            input.name,
+                            input.type));
+            }
         }
     }
     return result;

@@ -32,6 +32,7 @@
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/publisher/DataWriter.hpp>
+#include <fastdds/dds/publisher/DataWriterListener.hpp>
 #include <fastdds/dds/publisher/Publisher.hpp>
 #include <fastdds/dds/publisher/qos/DataWriterQos.hpp>
 #include <fastdds/dds/publisher/qos/PublisherQos.hpp>
@@ -41,9 +42,11 @@
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 #include <fastrtps/attributes/ParticipantAttributes.h>
 #include <fastrtps/attributes/PublisherAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
+#include <fastrtps/xmlparser/XMLProfileManager.h>
 
 #include "HelloWorld/HelloWorldPubSubTypes.h"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
@@ -144,7 +147,8 @@ public:
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
-        writer_ = publisher_->create_datawriter(topic_, wqos);
+        wqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
+        writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
         if (writer_ == nullptr)
         {
@@ -163,6 +167,12 @@ public:
         ASSERT_TRUE(writer_->write(&hello_));
     }
 
+    void wait_discovery(
+            uint32_t n_subscribers = 1)
+    {
+        listener_.wait_discovery(n_subscribers);
+    }
+
 private:
 
     MsgStruct hello_;
@@ -176,6 +186,56 @@ private:
     eprosima::fastdds::dds::DataWriter* writer_;
 
     bool keyed_;
+
+    class PubListener : public eprosima::fastdds::dds::DataWriterListener
+    {
+    public:
+
+        PubListener()
+            : discovered_(0)
+        {
+        }
+
+        void wait_discovery(
+                uint32_t n_subscribers = 1)
+        {
+            if (discovered_ < n_subscribers)
+            {
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
+                wait_discovery_cv_.wait(lock, [this, n_subscribers]
+                        {
+                            return discovered_ >= n_subscribers;
+                        });
+            }
+        }
+
+        void on_publication_matched(
+                eprosima::fastdds::dds::DataWriter*,
+                const eprosima::fastdds::dds::PublicationMatchedStatus& info)
+        {
+            if (info.current_count_change == 1)
+            {
+                discovered_ = info.current_count;
+                wait_discovery_cv_.notify_all();
+            }
+            else if (info.current_count_change == -1)
+            {
+                discovered_ = info.current_count;
+            }
+        }
+
+    private:
+
+        //! Number of DataReaders discovered
+        std::atomic<std::uint32_t> discovered_;
+
+        //! Protects wait_discovery condition variable
+        std::mutex wait_discovery_cv_mtx_;
+
+        //! Waits to discovery enough DataReaders
+        std::condition_variable wait_discovery_cv_;
+    }
+    listener_;
 };
 
 /**
@@ -188,12 +248,14 @@ class TestSubscriber
 public:
 
     TestSubscriber(
-            bool keyed = false)
+            bool keyed = false,
+            bool reliable = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
+        , reliable_ (reliable)
     {
     }
 
@@ -271,6 +333,13 @@ public:
         eprosima::fastdds::dds::DataReaderQos rqos =  eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
         rqos.endpoint().history_memory_policy =
                 eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+        rqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
+        if (reliable_)
+        {
+            rqos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+            rqos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        }
+
         reader_ = subscriber_->create_datareader(topic_, rqos, &listener_);
 
         if (reader_ == nullptr)
@@ -279,6 +348,12 @@ public:
         }
 
         return true;
+    }
+
+    void wait_discovery(
+            uint32_t n_publishers = 1)
+    {
+        listener_.wait_discovery(n_publishers);
     }
 
 private:
@@ -293,12 +368,19 @@ private:
 
     bool keyed_;
 
+    bool reliable_;
+
     /**
      * Class handling dataflow events
      */
     class SubListener : public eprosima::fastdds::dds::DataReaderListener
     {
     public:
+
+        SubListener()
+            : discovered_(0)
+        {
+        }
 
         //! Initialize the listener
         void init(
@@ -307,6 +389,19 @@ private:
         {
             msg_should_receive_ = msg_should_receive;
             samples_received_ = samples_received;
+        }
+
+        void wait_discovery(
+                uint32_t n_publishers = 1)
+        {
+            if (discovered_ < n_publishers)
+            {
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
+                wait_discovery_cv_.wait(lock, [this, n_publishers]
+                        {
+                            return discovered_ >= n_publishers;
+                        });
+            }
         }
 
         //! Callback executed when a new sample is received
@@ -329,6 +424,21 @@ private:
             ASSERT_TRUE(success);
         }
 
+        void on_subscription_matched(
+                eprosima::fastdds::dds::DataReader*,
+                const eprosima::fastdds::dds::SubscriptionMatchedStatus& info)
+        {
+            if (info.current_count_change == 1)
+            {
+                discovered_ = info.current_count;
+                wait_discovery_cv_.notify_all();
+            }
+            else if (info.current_count_change == -1)
+            {
+                discovered_ = info.current_count;
+            }
+        }
+
     private:
 
         //! Placeholder where received data is stored
@@ -339,6 +449,15 @@ private:
 
         //! Reference to received messages counter
         std::atomic<uint32_t>* samples_received_;
+
+        //! Number of DataWriters discovered
+        std::atomic<std::uint32_t> discovered_;
+
+        //! Protects wait_discovery condition variable
+        std::mutex wait_discovery_cv_mtx_;
+
+        //! Waits to discovery enough DataWriters
+        std::condition_variable wait_discovery_cv_;
     }
     listener_;
 };

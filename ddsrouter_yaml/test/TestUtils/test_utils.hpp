@@ -54,19 +54,46 @@ Guid random_guid(
 
 struct TopicInput
 {
+    TopicInput(
+            std::string name,
+            std::string type,
+            bool keyed,
+            bool key_set);
+
     std::string name;
     std::string type;
     bool keyed;
     bool key_set;
 };
 
+struct RealTopicInput : public TopicInput
+{
+    RealTopicInput(
+            std::string name,
+            std::string type,
+            bool keyed,
+            bool key_set,
+            bool reliable,
+            bool reliable_set);
+
+    bool reliable;
+    bool reliable_set;
+};
+
 struct WildcardTopicInput : public TopicInput
 {
+    WildcardTopicInput(
+            std::string name,
+            std::string type,
+            bool keyed,
+            bool key_set,
+            bool type_set);
+
     bool type_set;
 };
 
 std::set<std::shared_ptr<RealTopic>> topic_set(
-        std::vector<TopicInput> topics);
+        std::vector<RealTopicInput> topics);
 
 std::set<std::shared_ptr<FilterTopic>> topic_set(
         std::vector<WildcardTopicInput> topics);

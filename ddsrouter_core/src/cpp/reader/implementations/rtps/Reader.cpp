@@ -160,6 +160,14 @@ utils::ReturnCode Reader::take_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
+void Reader::enable_() noexcept
+{
+    // TODO: refactor with the transparency module
+    // If the topic is reliable, the reader will keep the samples received when it was disabled.
+    // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
+    on_data_available_();
+}
+
 bool Reader::come_from_this_participant_(
         const fastrtps::rtps::CacheChange_t* change) const noexcept
 {
@@ -183,8 +191,18 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
 fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
-    att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
-    att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+
+    if (topic_.topic_reliable())
+    {
+        att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+    }
+    else
+    {
+        att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
+    }
+
     if (topic_.topic_with_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -215,8 +233,18 @@ fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
 fastrtps::ReaderQos Reader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
-    qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
-    qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+
+    if (topic_.topic_reliable())
+    {
+        qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+    }
+    else
+    {
+        qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+        qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+    }
+
     return qos;
 }
 
@@ -224,17 +252,29 @@ void Reader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader*,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
-    if (enabled_ && !come_from_this_participant_(change))
+    if (!come_from_this_participant_(change))
     {
-        // Call Track callback (by calling BaseReader callback method)
-        logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
-                change->writerGUID);
-        on_data_available_();
+        // Do not remove previous received changes so they can be read when the reader is enabled
+        if (enabled_)
+        {
+            // Call Track callback (by calling BaseReader callback method)
+            logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                    "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
+                    change->writerGUID);
+            on_data_available_();
+        }
+        else
+        {
+            // Remove received change if the Reader is disbled and the topic is not reliable
+            if (!topic_.topic_reliable())
+            {
+                rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+            }
+        }
     }
     else
     {
-        // If it is a message from this Participant, or Reader is disabled, do not send it forward and remove it
+        // If it is a message from this Participant, do not send it forward and remove it
         // TODO: do this more elegant
         rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
     }
