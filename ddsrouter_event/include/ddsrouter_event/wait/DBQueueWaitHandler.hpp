@@ -19,6 +19,8 @@
 #ifndef _DDSROUTEREVENT_WAIT_DBQUEUEWAITHANDLER_HPP_
 #define _DDSROUTEREVENT_WAIT_DBQUEUEWAITHANDLER_HPP_
 
+#include <fastrtps/utils/DBQueue.h>
+
 #include <ddsrouter_event/wait/CollectionWaitHandler.hpp>
 
 namespace eprosima {
@@ -33,17 +35,13 @@ class DBQueueWaitHandler : public CollectionWaitHandler
 {
 public:
 
-    // Make this methods public
-    using CounterWaitHandler::enable;
-    using CounterWaitHandler::disable;
-    using CounterWaitHandler::enabled;
-    using CounterWaitHandler::stop_and_continue;
-
-protected:
-
     T get_next_value_() override;
 
     T add_value_(T&& value) override;
+
+protected:
+
+    fastrtps::DBQueue<T> queue_;
 };
 
 } /* namespace event */

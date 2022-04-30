@@ -42,12 +42,13 @@ public:
     /////
     // Add values methods
 
-    virtual void add_value(T&& value) = 0;
+    void add_value(T&& value);
 
     /////
     // Get values methods
 
-    virtual T get_next_value() = 0;
+    T get_next_value(
+        const utils::Duration_ms& timeout = 0);
 
 protected:
 
@@ -59,5 +60,8 @@ protected:
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+// Include implementation template file
+#include <ddsrouter_event/wait/impl/CollectionWaitHandler.ipp>
 
 #endif /* _DDSROUTEREVENT_WAIT_COLLECTIONWAITHANDLER_HPP_ */
