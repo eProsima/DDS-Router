@@ -25,6 +25,7 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         dummy
+        dummy_multiple
     )
 
 set(TEST_NEEDED_SOURCES

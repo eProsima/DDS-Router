@@ -18,8 +18,8 @@
  * This file contains class Task definition.
  */
 
-#ifndef _DDSROUTERTHREAD__SRC_CPP_TASK_TASK_HPP_
-#define _DDSROUTERTHREAD__SRC_CPP_TASK_TASK_HPP_
+#ifndef _DDSROUTERTHREAD_TASK_TASK_HPP_
+#define _DDSROUTERTHREAD_TASK_TASK_HPP_
 
 #include <functional>
 
@@ -39,4 +39,4 @@ class Task : public std::function<void()>
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERTHREAD__SRC_CPP_TASK_TASK_HPP_ */
+#endif /* _DDSROUTERTHREAD_TASK_TASK_HPP_ */

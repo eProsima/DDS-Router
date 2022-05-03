@@ -31,12 +31,16 @@ ThreadPool::ThreadPool(
         uint32_t n_threads)
     : task_queue_(task_queue)
 {
+    logDebug(DDSROUTER_THREAD_POOL, "Creating Thread Pool with " << n_threads << " threads.");
+
     for (uint32_t i = 0; i < n_threads; ++i)
     {
         threads_.emplace_back(
             CustomThread(
                 std::bind(&ThreadPool::thread_routine_, this)));
     }
+
+    logDebug(DDSROUTER_THREAD_POOL, "Thread Pool created.");
 }
 
 ThreadPool::~ThreadPool()
@@ -52,17 +56,21 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::thread_routine_()
 {
-    logDebug(THREADPOOL_THREAD_ROUTINE, "Starting thread routine: " << std::this_thread::get_id() << ".");
+    logDebug(DDSROUTER_THREAD_POOL, "Starting thread routine: " << std::this_thread::get_id() << ".");
 
     try
     {
-        std::shared_ptr<Task> task = task_queue_->next_task();
-        logDebug(THREADPOOL_THREAD_ROUTINE, "Thread: " << std::this_thread::get_id() << " executing callback.");
-        (*task)();
+        while(true)
+        {
+            logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " free, getting new callback.");
+            Task task = task_queue_->get_next_value();
+            logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " executing callback.");
+            task();
+        }
     }
     catch(const utils::StopException& e)
     {
-        logDebug(THREADPOOL_THREAD_ROUTINE, "Stopping thread: " << std::this_thread::get_id() << ".");
+        logDebug(DDSROUTER_THREAD_POOL, "Stopping thread: " << std::this_thread::get_id() << ".");
     }
 }
 

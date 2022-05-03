@@ -40,7 +40,7 @@ class DBQueueWaitHandler : public CollectionWaitHandler<T>
 {
 public:
 
-    // Use parent constructor
+    //! Using parent class constructors.
     using CollectionWaitHandler<T>::CollectionWaitHandler;
 
 protected:

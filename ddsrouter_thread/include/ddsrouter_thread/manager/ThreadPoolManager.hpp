@@ -41,7 +41,7 @@ public:
     ~ThreadPoolManager();
 
     void emit(
-        std::shared_ptr<Task> task);
+        Task&& task);
 
 protected:
 

@@ -34,7 +34,7 @@ namespace thread {
 /**
  * TODO
  */
-class ThreadPool : public std::thread
+class ThreadPool
 {
 public:
 
