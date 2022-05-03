@@ -24,11 +24,9 @@
 #include <thread>
 #include <vector>
 
-#include <fastrtps/utils/DBQueue.h>
+#include <ddsrouter_event/wait/DBQueueWaitHandler.hpp>
 
-#include <ddsrouter_event/wait/CounterWaitHandler.hpp>
-
-#include <task/Task.hpp>
+#include <ddsrouter_thread/task/Task.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -37,30 +35,12 @@ namespace thread {
 /**
  * TODO
  */
-class TaskQueue : public std::thread
+class TaskQueue : public event::DBQueueWaitHandler<Task>
 {
 public:
 
-    TaskQueue();
-
-    ~TaskQueue();
-
-    // TODO add enable and logic associated
-
-    // Disable is required to turn off waiter
-    void disable();
-
-    void add_task(std::shared_ptr<Task> task);
-
-    std::shared_ptr<Task> next_task();
-
-protected:
-
-    std::shared_ptr<Task> take_task_nts_();
-
-    fastrtps::DBQueue<std::shared_ptr<Task>> task_queue_;
-
-    event::CounterWaitHandler waiter_;
+    //! Using parent class constructors.
+    using event::DBQueueWaitHandler<Task>::DBQueueWaitHandler;
 };
 
 } /* namespace thread */

@@ -29,16 +29,18 @@ ThreadPoolManager::ThreadPoolManager(
     : queue_(std::make_shared<TaskQueue>())
     , pool_(std::make_shared<ThreadPool>(queue_, n_threads))
 {
+    logDebug(DDSROUTER_THREAD_MANAGER, "Thread Pool Manager created.");
 }
 
 ThreadPoolManager::~ThreadPoolManager()
 {
+    logDebug(DDSROUTER_THREAD_MANAGER, "Thread Pool Manager destroyed.");
 }
 
 void ThreadPoolManager::emit(
-        std::shared_ptr<Task> task)
+        Task&& task)
 {
-    queue_->add_task(task);
+    queue_->add_value(std::move(task));
 }
 
 } /* namespace thread */

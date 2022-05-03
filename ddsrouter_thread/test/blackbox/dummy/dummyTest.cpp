@@ -29,24 +29,51 @@ using namespace eprosima::ddsrouter::thread;
 TEST(DummyTest, dummy)
 {
     {
+        ThreadPoolManager manager(1);
+
+        eprosima::ddsrouter::event::CounterWaitHandler waiter(0);
+
+        Task task(
+            [&waiter]
+            ()
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                ++waiter;
+            });
+
+        eprosima::ddsrouter::utils::Timer timer;
+
+        manager.emit(std::move(task));
+
+        waiter.wait_upper_bound_threshold(0);
+
+        ASSERT_LE(timer.elapsed_ms(), 2000);
+    }
+}
+
+TEST(DummyTest, dummy_multiple)
+{
+    {
         ThreadPoolManager manager(3);
 
         eprosima::ddsrouter::event::CounterWaitHandler waiter(0);
 
-        std::shared_ptr<Task> task = std::make_shared<Task>([&waiter]() {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            ++waiter;
-        });
-
         eprosima::ddsrouter::utils::Timer timer;
 
-        manager.emit(task);
-        manager.emit(task);
-        manager.emit(task);
+        for (int i = 0; i < 6; i++)
+        {
+            manager.emit(
+                [&waiter]
+                ()
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    ++waiter;
+                });
+        }
 
-        waiter.wait_upper_bound_threshold(2);
+        waiter.wait_upper_bound_threshold(5);
 
-        ASSERT_LE(timer.elapsed_ms(), 2000);
+        ASSERT_LE(timer.elapsed_ms(), 3000);
     }
 }
 
