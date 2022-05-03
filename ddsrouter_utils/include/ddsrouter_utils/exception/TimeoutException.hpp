@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file DisabledException.hpp
+ * @file TimeoutException.hpp
  */
 
 #ifndef _DDSROUTERUTILS_EXCEPTIONS_TIMEOUTEXCEPTION_HPP_
@@ -28,7 +28,7 @@ namespace utils {
 /**
  * @brief Exception thrown when calling a method and timeout is reached before finishing routine.
  */
-class DisabledException : public Exception
+class TimeoutException : public Exception
 {
     // Use parent class constructors
     using Exception::Exception;

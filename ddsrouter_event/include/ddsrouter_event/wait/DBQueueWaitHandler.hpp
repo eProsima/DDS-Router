@@ -31,21 +31,30 @@ namespace event {
  *TODO
  */
 template <typename T>
-class DBQueueWaitHandler : public CollectionWaitHandler
+class DBQueueWaitHandler : public CollectionWaitHandler<T>
 {
 public:
 
-    T get_next_value_() override;
-
-    T add_value_(T&& value) override;
+    using CollectionWaitHandler<T>::CollectionWaitHandler;
 
 protected:
 
+    void add_value_(T&& value) override;
+
+    void add_value_(const T& value) override;
+
+    T get_next_value_() override;
+
     fastrtps::DBQueue<T> queue_;
+
+    std::mutex pop_queue_mutex_;
 };
 
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+// Include implementation template file
+#include <ddsrouter_event/wait/impl/DBQueueWaitHandler.ipp>
 
 #endif /* _DDSROUTEREVENT_WAIT_DBQUEUEWAITHANDLER_HPP_ */
