@@ -39,7 +39,7 @@ void DBQueueWaitHandler<T>::add_value_(const T& value)
 }
 
 template <typename T>
-T DBQueueWaitHandler<T>::get_next_value_nts_()
+T DBQueueWaitHandler<T>::get_next_value_()
 {
     // Assure that only one thread check if queue must be swapped
     std::unique_lock<std::mutex> lock(pop_queue_mutex_);
