@@ -43,9 +43,13 @@ public:
     void emit(
         Task&& task);
 
+    void emit(
+        const Task& task);
+
 protected:
 
     std::shared_ptr<TaskQueue> queue_;
+
     std::shared_ptr<ThreadPool> pool_;
 
 };

@@ -17,15 +17,17 @@
 ########################
 
 set(TEST_NAME
-    DummyTest)
+    StdTest)
 
 set(TEST_SOURCES
-        dummyTest.cpp
+        stdTest.cpp
     )
 
 set(TEST_LIST
-        dummy
-        dummy_multiple
+        manager_creation
+        manager_one_thread_emit_one
+        manager_one_thread_emit_multiple
+        manager_n_threads_emit
     )
 
 set(TEST_NEEDED_SOURCES
