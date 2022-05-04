@@ -16,8 +16,8 @@
  * @file CounterWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_
-#define _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_
 
 #include <atomic>
 #include <condition_variable>
@@ -41,9 +41,9 @@ class CounterWaitHandler : protected WaitHandler<CounterType>
 public:
 
     /**
-     * @brief Construct a new Boolean Wait Handler object
+     * @brief Construct a new Counter Wait Handler object
      *
-     * @param value to initialize internal value
+     * @param value to initialize counter
      * @param enabled whether the object starts enabled or disabled
      */
     CounterWaitHandler(
@@ -68,11 +68,9 @@ public:
     // Wait methods
 
     /**
-     * @brief Wait current thread while value is not \c expected_value
+     * @brief Wait current thread while counter is not \c expected_value .
      *
-     * This thread will be awake when counter is equal to \c expected_value .
-     *
-     * @param expected_value value of counter which the thread will awake
+     * @param expected_value value of counter for which the thread will awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
      * @return reason why thread was awake
@@ -82,9 +80,9 @@ public:
             const utils::Duration_ms& timeout = 0);
 
     /**
-     * @brief Wait current thread while internal value is lower or equal than \c upper_bound .
+     * @brief Wait current thread while counter is lower or equal than \c upper_bound .
      *
-     * @param upper_bound maximum value of counter which with the thread will not awake
+     * @param upper_bound maximum value of counter with which the thread will not awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
      * @return reason why thread was awake
@@ -93,15 +91,15 @@ public:
             CounterType upper_bound,
             const utils::Duration_ms& timeout = 0);
 
-    //! @brief Wait current thread while internal value is lower than \c upper_bound .
+    //! @brief Wait current thread while counter is lower than \c upper_bound .
     AwakeReason wait_greater_equal_than(
             CounterType upper_bound,
             const utils::Duration_ms& timeout = 0);
 
     /**
-     * @brief Wait current thread while internal value is higher or equal than \c lower_bound .
+     * @brief Wait current thread while counter is higher or equal than \c lower_bound .
      *
-     * @param lower_bound minimum value of counter which with the thread will not awake
+     * @param lower_bound minimum value of counter with which the thread will not awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
      * @return reason why thread was awake
@@ -110,7 +108,7 @@ public:
             CounterType lower_bound,
             const utils::Duration_ms& timeout = 0);
 
-    //! Wait current thread while internal value is higher than \c lower_bound .
+    //! Wait current thread while counter is higher than \c lower_bound .
     AwakeReason wait_lower_equal_than(
             CounterType lower_bound,
             const utils::Duration_ms& timeout = 0);
@@ -118,10 +116,10 @@ public:
     /////
     // Value methods
 
-    //! Operator ++ to add 1 to internal value
+    //! Operator prefix ++ to add 1 to counter
     CounterWaitHandler& operator++();
 
-    //! Operator -- to substract 1 to internal value
+    //! Operator prefix -- to substract 1 to counter
     CounterWaitHandler& operator--();
 };
 
@@ -129,4 +127,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAIT_BOOLEANWAITHANDLER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_COUNTERWAITHANDLER_HPP_ */

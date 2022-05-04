@@ -40,7 +40,7 @@ eprosima::ddsrouter::utils::Duration_ms LONG_TIME_TEST = 5000u;
 using namespace eprosima::ddsrouter::event;
 
 /**
- * \c Create a CounterWaitHandler and check its internal values with different numbers
+ * Create a \c CounterWaitHandler and check its internal values with different numbers
  *
  * Change the internal values and check if the values are changed
  */
