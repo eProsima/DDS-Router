@@ -27,8 +27,8 @@ namespace ddsrouter {
 namespace thread {
 
 ThreadPool::ThreadPool(
-        std::shared_ptr<TaskQueue> task_queue,
-        uint32_t n_threads)
+        const std::shared_ptr<TaskQueue>& task_queue,
+        const uint32_t n_threads)
     : task_queue_(task_queue)
 {
     logDebug(DDSROUTER_THREAD_POOL, "Creating Thread Pool with " << n_threads << " threads.");

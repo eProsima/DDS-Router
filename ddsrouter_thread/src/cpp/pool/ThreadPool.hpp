@@ -39,8 +39,8 @@ class ThreadPool
 public:
 
     ThreadPool(
-        std::shared_ptr<TaskQueue> task_queue,
-        uint32_t n_threads);
+        const std::shared_ptr<TaskQueue>& task_queue,
+        const uint32_t n_threads);
 
     ~ThreadPool();
 

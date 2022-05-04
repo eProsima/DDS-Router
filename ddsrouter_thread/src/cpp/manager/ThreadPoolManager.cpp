@@ -43,6 +43,12 @@ void ThreadPoolManager::emit(
     queue_->add_value(std::move(task));
 }
 
+void ThreadPoolManager::emit(
+        const Task& task)
+{
+    queue_->add_value(task);
+}
+
 } /* namespace thread */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
