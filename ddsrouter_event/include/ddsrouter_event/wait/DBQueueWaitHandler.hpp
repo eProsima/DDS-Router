@@ -28,25 +28,51 @@ namespace ddsrouter {
 namespace event {
 
 /**
- *TODO
+ * This Wait Handler will make threads wait until a data has been added to a Double Queue.
+ *
+ * The Double Queue works as a queue where pushing data do not block popping data from it, and thus it is a
+ * very efficient implementation.
+ *
+ * \c T specializes this class depending on the data that is stored inside the queue.
  */
 template <typename T>
 class DBQueueWaitHandler : public CollectionWaitHandler<T>
 {
 public:
 
+    // Use parent constructor
     using CollectionWaitHandler<T>::CollectionWaitHandler;
 
 protected:
 
+    /**
+     * @brief Override of \c CollectionWaitHandler method to move a new value to the queue
+     *
+     * @warning DBQueue do not allow moving elements, and thus it will always be copied
+     *
+     * @param value new value to move
+     */
     void add_value_(T&& value) override;
 
+    //! Override of CollectionWaitHandler method to copy a new value into the queue
     void add_value_(const T& value) override;
 
+    /**
+     * @brief Override of \c CollectionWaitHandler method to remove a value from the queue
+     *
+     * Before removing the value, this method will check if the front queue is empty and swap.
+     * This method should not be called if there is no data in the queue.
+     *
+     * This method is protected with \c pop_queue_mutex so swap cannot be done but from one thread at a time.
+     *
+     * @throw \c InconsistencyException if it is called without data in the queue
+     */
     T get_next_value_() override;
 
+    //! DBQueue variable that stores the data
     fastrtps::DBQueue<T> queue_;
 
+    //! Protect getting values from the queue so only one thread can do the swap at a time
     std::mutex pop_queue_mutex_;
 };
 
