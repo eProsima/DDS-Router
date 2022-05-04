@@ -23,6 +23,9 @@
 #include <map>
 #include <mutex>
 
+#include <ddsrouter_utils/ReturnCode.hpp>
+#include <ddsrouter_thread/manager/ThreadPoolManager.hpp>
+
 #include <communication/Bridge.hpp>
 #include <dynamic/AllowedTopicList.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
@@ -33,7 +36,6 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_utils/ReturnCode.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -190,7 +192,7 @@ protected:
      *
      * @param [in] topic : new topic
      */
-    void create_new_bridge(
+    void create_new_bridge_(
             const types::RealTopic& topic,
             bool enabled = false) noexcept;
 
@@ -278,6 +280,10 @@ protected:
 
     //! Internal mutex for concurrent calls
     std::recursive_mutex mutex_;
+
+    std::shared_ptr<thread::ThreadPoolManager> thread_pool_;
+
+    static const uint32_t N_THREADS_;
 };
 
 } /* namespace core */

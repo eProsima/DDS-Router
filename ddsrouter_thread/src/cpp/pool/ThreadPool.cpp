@@ -19,6 +19,7 @@
  */
 
 #include <ddsrouter_utils/exception/DisabledException.hpp>
+#include <ddsrouter_utils/Log.hpp>
 
 #include <pool/ThreadPool.hpp>
 

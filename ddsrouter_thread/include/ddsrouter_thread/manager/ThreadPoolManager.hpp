@@ -21,12 +21,16 @@
 #ifndef _DDSROUTERTHREAD_MANAGER_THREADPOOLMANAGER_HPP_
 #define _DDSROUTERTHREAD_MANAGER_THREADPOOLMANAGER_HPP_
 
-#include <queue/TaskQueue.hpp>
-#include <pool/ThreadPool.hpp>
+#include <memory>
+
+#include <ddsrouter_thread/task/Task.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace thread {
+
+class TaskQueue;
+class ThreadPool;
 
 /**
  * TODO
