@@ -77,31 +77,41 @@ public:
      *
      * @return reason why thread was awake
      */
-    AwakeReason wait_value(
+    AwakeReason wait_equal(
             CounterType expected_value,
             const utils::Duration_ms& timeout = 0);
 
     /**
-     * @brief Wait current thread while internal value is lower or equal \c upper_bound .
+     * @brief Wait current thread while internal value is lower or equal than \c upper_bound .
      *
      * @param upper_bound maximum value of counter which with the thread will not awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
      * @return reason why thread was awake
      */
-    AwakeReason wait_upper_bound_threshold(
+    AwakeReason wait_greater_than(
+            CounterType upper_bound,
+            const utils::Duration_ms& timeout = 0);
+
+    //! @brief Wait current thread while internal value is lower than \c upper_bound .
+    AwakeReason wait_greater_equal_than(
             CounterType upper_bound,
             const utils::Duration_ms& timeout = 0);
 
     /**
-     * @brief Wait current thread while internal value is higher or equal \c lower_bound .
+     * @brief Wait current thread while internal value is higher or equal than \c lower_bound .
      *
      * @param lower_bound minimum value of counter which with the thread will not awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
      * @return reason why thread was awake
      */
-    AwakeReason wait_lower_bound_threshold(
+    AwakeReason wait_lower_than(
+            CounterType lower_bound,
+            const utils::Duration_ms& timeout = 0);
+
+    //! Wait current thread while internal value is higher than \c lower_bound .
+    AwakeReason wait_lower_equal_than(
             CounterType lower_bound,
             const utils::Duration_ms& timeout = 0);
 

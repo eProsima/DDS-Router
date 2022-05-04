@@ -36,7 +36,7 @@ CounterWaitHandler::~CounterWaitHandler()
 {
 }
 
-AwakeReason CounterWaitHandler::wait_value(
+AwakeReason CounterWaitHandler::wait_equal(
         CounterType expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
@@ -48,7 +48,7 @@ AwakeReason CounterWaitHandler::wait_value(
         timeout);
 }
 
-AwakeReason CounterWaitHandler::wait_upper_bound_threshold(
+AwakeReason CounterWaitHandler::wait_greater_than(
         CounterType expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
@@ -60,7 +60,19 @@ AwakeReason CounterWaitHandler::wait_upper_bound_threshold(
         timeout);
 }
 
-AwakeReason CounterWaitHandler::wait_lower_bound_threshold(
+AwakeReason CounterWaitHandler::wait_greater_equal_than(
+        CounterType expected_value,
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    return WaitHandler<CounterType>::wait(
+        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
+        {
+            return value >= expected_value;
+        }),
+        timeout);
+}
+
+AwakeReason CounterWaitHandler::wait_lower_than(
         CounterType expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
@@ -68,6 +80,18 @@ AwakeReason CounterWaitHandler::wait_lower_bound_threshold(
         std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
         {
             return value < expected_value;
+        }),
+        timeout);
+}
+
+AwakeReason CounterWaitHandler::wait_lower_equal_than(
+        CounterType expected_value,
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    return WaitHandler<CounterType>::wait(
+        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
+        {
+            return value <= expected_value;
         }),
         timeout);
 }

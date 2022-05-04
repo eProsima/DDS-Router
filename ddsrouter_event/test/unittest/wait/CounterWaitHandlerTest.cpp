@@ -87,7 +87,7 @@ TEST(CounterWaitHandlerTest, wait_value)
                 // Wait in new thread
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
-                AwakeReason reason = waiter.wait_value(1);
+                AwakeReason reason = waiter.wait_equal(1);
                 ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
             }
             );
@@ -109,7 +109,7 @@ TEST(CounterWaitHandlerTest, wait_value)
             [&waiter]()
             {
                 // Wait in new thread
-                AwakeReason reason = waiter.wait_value(2);
+                AwakeReason reason = waiter.wait_equal(2);
                 ASSERT_EQ(reason, AwakeReason::DISABLED);
             }
             );
@@ -132,6 +132,7 @@ TEST(CounterWaitHandlerTest, wait_value)
  *
  * Wait for 3 and set value to 5.
  * Wait for -1 and let it awake alone as initial is 0.
+ * Wait for ge 13 and set value to 13
  * Wait for 17 and set value to 13, and close it by disabling
  */
 TEST(CounterWaitHandlerTest, wait_upper)
@@ -147,7 +148,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
                 // Wait in new thread
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
-                AwakeReason reason = waiter.wait_upper_bound_threshold(3);
+                AwakeReason reason = waiter.wait_greater_than(3);
                 ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
             }
             );
@@ -169,7 +170,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
             [&waiter]()
             {
                 // Wait in new thread
-                AwakeReason reason = waiter.wait_upper_bound_threshold(-1);
+                AwakeReason reason = waiter.wait_greater_than(-1);
                 ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
             }
             );
@@ -178,7 +179,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
         waiting_thread.join();
     }
 
-    // Wait for 2 and set value to 3, and close it by disabling
+    // Wait for ge 13 and set value to 13
     {
         CounterWaitHandler waiter(0); // It starts closed and enabled
 
@@ -187,7 +188,26 @@ TEST(CounterWaitHandlerTest, wait_upper)
             [&waiter]()
             {
                 // Wait in new thread
-                AwakeReason reason = waiter.wait_upper_bound_threshold(17); // Wait for disable
+                AwakeReason reason = waiter.wait_greater_equal_than(13);
+                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+            }
+            );
+        waiter.set_value(13);
+
+        // Wait for the thread to finish
+        waiting_thread.join();
+    }
+
+    //  Wait for 17 and set value to 13, and close it by disabling
+    {
+        CounterWaitHandler waiter(0); // It starts closed and enabled
+
+        // Create a thread that waits for the waiter to open
+        std::thread waiting_thread(
+            [&waiter]()
+            {
+                // Wait in new thread
+                AwakeReason reason = waiter.wait_greater_than(17); // Wait for disable
                 ASSERT_EQ(reason, AwakeReason::DISABLED);
             }
             );
@@ -210,6 +230,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
  *
  * Wait for -3 and set value to -5.
  * Wait for 1 and let it awake alone as initial is 0.
+ * Wait for le 13 and set value to 13
  * Wait for -17 and set value to -13, and close it by disabling
  */
 TEST(CounterWaitHandlerTest, wait_lower)
@@ -225,7 +246,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
                 // Wait in new thread
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
-                AwakeReason reason = waiter.wait_lower_bound_threshold(-3);
+                AwakeReason reason = waiter.wait_lower_than(-3);
                 ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
             }
             );
@@ -247,10 +268,29 @@ TEST(CounterWaitHandlerTest, wait_lower)
             [&waiter]()
             {
                 // Wait in new thread
-                AwakeReason reason = waiter.wait_lower_bound_threshold(1);
+                AwakeReason reason = waiter.wait_lower_than(1);
                 ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
             }
             );
+
+        // Wait for the thread to finish
+        waiting_thread.join();
+    }
+
+    // Wait for le 13 and set value to 13
+    {
+        CounterWaitHandler waiter(0); // It starts closed and enabled
+
+        // Create a thread that waits for the waiter to open
+        std::thread waiting_thread(
+            [&waiter]()
+            {
+                // Wait in new thread
+                AwakeReason reason = waiter.wait_lower_equal_than(13);
+                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+            }
+            );
+        waiter.set_value(13);
 
         // Wait for the thread to finish
         waiting_thread.join();
@@ -265,7 +305,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
             [&waiter]()
             {
                 // Wait in new thread
-                AwakeReason reason = waiter.wait_lower_bound_threshold(-17); // Wait for disable
+                AwakeReason reason = waiter.wait_lower_than(-17); // Wait for disable
                 ASSERT_EQ(reason, AwakeReason::DISABLED);
             }
             );
