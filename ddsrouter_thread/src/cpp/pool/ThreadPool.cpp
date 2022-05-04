@@ -18,7 +18,7 @@
  * This file contains class ThreadPool implementation.
  */
 
-#include <ddsrouter_utils/exception/StopException.hpp>
+#include <ddsrouter_utils/exception/DisabledException.hpp>
 
 #include <pool/ThreadPool.hpp>
 
@@ -63,12 +63,12 @@ void ThreadPool::thread_routine_()
         while(true)
         {
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " free, getting new callback.");
-            Task task = task_queue_->get_next_value();
+            Task task = task_queue_->wait_next_value();
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " executing callback.");
             task();
         }
     }
-    catch(const utils::StopException& e)
+    catch(const utils::DisabledException& e)
     {
         logDebug(DDSROUTER_THREAD_POOL, "Stopping thread: " << std::this_thread::get_id() << ".");
     }
