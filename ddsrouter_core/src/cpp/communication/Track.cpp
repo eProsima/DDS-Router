@@ -34,6 +34,7 @@ Track::Track(
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<thread::ThreadPoolManager> thread_pool,
         bool enable /* = false */) noexcept
     : reader_participant_id_(reader_participant_id)
     , topic_(topic)
@@ -42,15 +43,12 @@ Track::Track(
     , payload_pool_(payload_pool)
     , enabled_(false)
     , exit_(false)
-    , data_available_status_(NO_MORE_DATA)
+    , thread_pool_(thread_pool)
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
     // Set this track to on_data_available lambda call
     reader_->set_on_data_available_callback(std::bind(&Track::data_available_, this));
-
-    // Activate transmit thread even without being enabled
-    transmit_thread_ = std::thread(&Track::transmit_thread_function_, this);
 
     if (enable)
     {
@@ -69,16 +67,6 @@ Track::~Track()
 
     // Unset callback on the Reader (this is needed as Reader will live longer than Track)
     reader_->unset_on_data_available_callback();
-
-    // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
-    {
-        // Set exit status and call transmit thread to awake and terminate. Then wait for it.
-        std::lock_guard<std::mutex> lock(data_available_mutex_);
-        exit_.store(true);
-    }
-
-    data_available_condition_variable_.notify_all();
-    transmit_thread_.join();
 
     logDebug(DDSROUTER_TRACK, "Track " << *this << " destroyed.");
 }
@@ -100,7 +88,6 @@ void Track::enable() noexcept
 
         // Enabling reader
         reader_->enable();
-
     }
 }
 
@@ -130,28 +117,6 @@ void Track::disable() noexcept
     }
 }
 
-void Track::no_more_data_available_() noexcept
-{
-    std::lock_guard<std::mutex> lock(data_available_mutex_);
-
-    // It may occur that within the process of set data_available_status, the actual status had changed
-    // Thus, it must take care that it is only set to NO_DATA when it comes from transmitting data
-    if (data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA)
-    {
-        logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
-        data_available_status_.store(DataAvailableStatus::NO_MORE_DATA);
-    }
-    // If it is NEW_DATA_ARRIVED is that the Listener has notified new data AFTER Track has received a NO_DATA
-    // from the Reader. Very unlikely timing, but possible.
-    // In this occasion, it must not be set as NO_MORE_DATA because THERE IS data.
-    // If it is NO_MORE_DATA it does not need to be changed (however it should never happen)
-}
-
-bool Track::should_transmit_() noexcept
-{
-    return !exit_ && enabled_ && this->is_data_available_();
-}
-
 void Track::data_available_() noexcept
 {
     // Only hear callback if it is enabled
@@ -159,110 +124,68 @@ void Track::data_available_() noexcept
     {
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has data ready to be sent.");
 
-        // It does need to guard the mutex to avoid notifying Track thread while it is checking variable condition
-        {
-            // Set data available to true and notify transmit thread
-            std::lock_guard<std::mutex> lock(data_available_mutex_);
-            data_available_status_.store(DataAvailableStatus::NEW_DATA_ARRIVED);
-        }
-
-        data_available_condition_variable_.notify_one();
-    }
-}
-
-bool Track::is_data_available_() const noexcept
-{
-    return data_available_status_ == DataAvailableStatus::NEW_DATA_ARRIVED ||
-           data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA;
-}
-
-void Track::transmit_thread_function_() noexcept
-{
-    while (!exit_)
-    {
-        // Wait in Condition Variable till there is data to send or it must exit
-        {
-            std::unique_lock<std::mutex> lock(data_available_mutex_);
-            data_available_condition_variable_.wait(
-                lock,
-                [this]
-                {
-                    return this->is_data_available_() || this->exit_;
-                });
-        }
-
-        // Once thread awakes, transmit without any mutex guarded
-        if (!this->exit_)
-        {
-            transmit_();
-        }
+        // Emit to call transmit from thread pool
+        thread_pool_->emit([this](){ Track::transmit_(); });
     }
 }
 
 void Track::transmit_() noexcept
 {
-    // Loop that ends if it should stop transmitting (should_transmit_nts_).
-    // Called inside the loop so it is protected by a mutex that is freed in every iteration.
-    while (true)
+    // TODO: this will only work if there is 1 on_data_available callback for message
+
+    // Lock Mutex on_transmition while a data is being transmitted
+    // This prevents the Track to be disabled (and disable writers and readers) while sending a data
+    std::unique_lock<std::mutex> lock(on_transmission_mutex_);
+
+    // If this Track should exit, do nothing
+    if (exit_)
     {
-        // Lock Mutex on_transmition while a data is being transmitted
-        // This prevents the Track to be disabled (and disable writers and readers) while sending a data
-        std::unique_lock<std::mutex> lock(on_transmission_mutex_);
+        return;
+    }
 
-        // If it must not keep transmitting, stop loop
-        if (!should_transmit_())
-        {
-            break;
-        }
+    // Get data received
+    std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
+    utils::ReturnCode ret = reader_->take(data);
 
-        // It starts transmitting, so it sets the data available status as transmitting
-        data_available_status_ = TRANSMITTING_DATA;
+    if (ret == utils::ReturnCode::RETCODE_NO_DATA)
+    {
+        // Should not call this method if there is no data to read
+        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from reader without data.");
+        return;
+    }
+    else if (ret == utils::ReturnCode::RETCODE_NOT_ENABLED)
+    {
+        // Should not call this method if there is no data to read
+        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from not enabled reader.");
+        return;
+    }
+    else if (!ret)
+    {
+        // Error reading data
+        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
+                                                                    << ". Skipping data and continue.");
+        return;
+    }
 
-        // Get data received
-        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
-        utils::ReturnCode ret = reader_->take(data);
+    logDebug(DDSROUTER_TRACK,
+            "Track " << reader_participant_id_ << " for topic " << topic_ <<
+            " transmitting data from remote endpoint " << data->source_guid << ".");
 
-        if (ret == utils::ReturnCode::RETCODE_NO_DATA)
+    // Send data through writers
+    for (auto& writer_it : writers_)
+    {
+        ret = writer_it.second->write(data);
+
+        if (!ret)
         {
-            // There is no more data, so finish loop and wait again for new data
-            no_more_data_available_();
-            break;
-        }
-        else if (ret == utils::ReturnCode::RETCODE_NOT_ENABLED)
-        {
-            // This may not happen because the Reader is only disabled from here, however
-            // it is better to cut it and set as no more data is available.
-            no_more_data_available_();
-            break;
-        }
-        else if (!ret)
-        {
-            // Error reading data
-            logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
-                                                                      << ". Skipping data and continue.");
+            logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
+                                                                        << ret <<
+                    ". Skipping data for this writer and continue.");
             continue;
         }
-
-        logDebug(DDSROUTER_TRACK,
-                "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->source_guid << ".");
-
-        // Send data through writers
-        for (auto& writer_it : writers_)
-        {
-            ret = writer_it.second->write(data);
-
-            if (!ret)
-            {
-                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
-                                                                            << ret <<
-                        ". Skipping data for this writer and continue.");
-                continue;
-            }
-        }
-
-        payload_pool_->release_payload(data->payload);
     }
+
+    payload_pool_->release_payload(data->payload);
 }
 
 std::ostream& operator <<(

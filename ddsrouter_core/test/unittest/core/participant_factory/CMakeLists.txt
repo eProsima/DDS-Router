@@ -34,6 +34,7 @@ set(TEST_EXTRA_LIBRARIES
         fastrtps
         ddsrouter_utils
         ddsrouter_event
+        ddsrouter_thread
     )
 
 add_unittest_executable(

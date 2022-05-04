@@ -21,6 +21,8 @@
 
 #include <mutex>
 
+#include <ddsrouter_thread/manager/ThreadPoolManager.hpp>
+
 #include <communication/Track.hpp>
 #include <participant/IParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
@@ -58,6 +60,7 @@ public:
             const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<thread::ThreadPoolManager> thread_pool,
             bool enable = false);
 
     /**

@@ -18,7 +18,11 @@
  * This file contains class ThreadPoolManager implementation.
  */
 
+#include <ddsrouter_utils/Log.hpp>
+
 #include <ddsrouter_thread/manager/ThreadPoolManager.hpp>
+#include <queue/TaskQueue.hpp>
+#include <pool/ThreadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

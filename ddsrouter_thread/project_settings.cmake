@@ -17,7 +17,7 @@
 ###############################################################################
 
 set(MODULE_NAME
-    ddsrouter_tread)
+    ddsrouter_thread)
 
 set(MODULE_SUMMARY
     "C++ library for generic Thread Pool classes for DDS Router.")
