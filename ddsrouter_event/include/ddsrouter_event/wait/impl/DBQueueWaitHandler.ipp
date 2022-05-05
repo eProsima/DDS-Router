@@ -57,8 +57,8 @@ T DBQueueWaitHandler<T>::get_next_value_()
         throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
     }
 
-    // TODO: Check if this does not copy value
-    auto& value = queue_.Front();
+    // TODO: Do it without copy
+    auto value = queue_.Front();
     queue_.Pop();
 
     return value;
