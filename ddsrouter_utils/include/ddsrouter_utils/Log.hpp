@@ -124,7 +124,7 @@ using LogConsumer = eprosima::fastdds::dds::LogConsumer;
 #define logDevError_(cat, msg)
 #endif // ifndef LOG_NO_INFO
 
-#if EPROSIMA_PERFORMANCE_DEBUG
+#ifdef EPROSIMA_PERFORMANCE_DEBUG
 #define logPerformance_(cat, msg)                                                                                       \
     {                                                                                                               \
         using namespace eprosima::fastdds::dds;                                                                     \

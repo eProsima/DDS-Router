@@ -42,7 +42,7 @@ namespace debug {
  * use and to implement.
  */
 
-#if EPROSIMA_PERFORMANCE_DEBUG
+#ifdef EPROSIMA_PERFORMANCE_DEBUG
 
 /**
  * TODO

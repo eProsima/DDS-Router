@@ -28,4 +28,7 @@
 #define @MODULE_MACRO@_VERSION_STR "@PROJECT_VERSION@"
 #endif // ifndef @MODULE_MACRO@_VERSION_STR
 
+// Performance
+#cmakedefine EPROSIMA_PERFORMANCE_DEBUG
+
 #endif // ifndef _@MODULE_MACRO@_LIBRARY_CONFIG_H_

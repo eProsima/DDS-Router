@@ -24,7 +24,7 @@ namespace ddsrouter {
 namespace utils {
 namespace debug {
 
-#if EPROSIMA_PERFORMANCE_DEBUG
+#ifdef EPROSIMA_PERFORMANCE_DEBUG
 
 ExecutionTimerDebugger::ExecutionTimerDebugger(const std::string& debugger_name)
     : timer_(false)
