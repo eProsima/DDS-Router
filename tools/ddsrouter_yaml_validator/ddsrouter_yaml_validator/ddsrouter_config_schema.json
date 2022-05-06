@@ -101,6 +101,8 @@
                     "enum":[
                         "void",
                         "echo",
+                        "discovery",
+                        "echo-discovery",
                         "dummy",
                         "local",
                         "simple",
