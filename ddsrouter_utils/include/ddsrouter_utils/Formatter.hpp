@@ -53,6 +53,9 @@ public:
     //! Return a string with the concatenation of this object
     DDSROUTER_UTILS_DllAPI std::string to_string() const noexcept;
 
+    //! Cast operator to implicitly cast a \c Formatter to a \c std::string
+    DDSROUTER_UTILS_DllAPI operator std::string() const noexcept;
+
 protected:
 
     //! Concatenated stream where the streams are added at the end

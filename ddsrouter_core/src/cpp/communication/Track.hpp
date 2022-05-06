@@ -24,6 +24,8 @@
 #include <mutex>
 #include <thread>
 
+#include <ddsrouter_utils/performance_debugger/ExecutionTimerDebugger.hpp>
+
 #include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
@@ -252,6 +254,8 @@ protected:
      * Mutex to guard while the Track is sending a message.
      */
     std::mutex on_transmission_mutex_;
+
+    utils::debug::ExecutionTimerDebugger debug_transmit_timer__;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

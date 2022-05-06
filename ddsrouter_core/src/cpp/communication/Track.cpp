@@ -43,6 +43,7 @@ Track::Track(
     , enabled_(false)
     , exit_(false)
     , data_available_status_(NO_MORE_DATA)
+    , debug_transmit_timer__(STR_ENTRY << "Track::transmit_ {" << *this << "}")
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
@@ -201,6 +202,8 @@ void Track::transmit_thread_function_() noexcept
 
 void Track::transmit_() noexcept
 {
+    debug_transmit_timer__.in_execution();
+
     // Loop that ends if it should stop transmitting (should_transmit_nts_).
     // Called inside the loop so it is protected by a mutex that is freed in every iteration.
     while (true)
@@ -263,6 +266,8 @@ void Track::transmit_() noexcept
 
         payload_pool_->release_payload(data->payload);
     }
+
+    debug_transmit_timer__.end_execution();
 }
 
 std::ostream& operator <<(
