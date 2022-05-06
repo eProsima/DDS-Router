@@ -27,6 +27,7 @@
 #include <core/ParticipantFactory.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <participant/implementations/auxiliar/EchoDiscoveryParticipant.hpp>
 #include <participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
@@ -56,6 +57,10 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         case ParticipantKind::ECHO:
             // EchoParticipant
             return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, discovery_database);
+
+        case ParticipantKind::ECHO_DISCOVERY:
+            // EchoDiscoveryParticipant
+            return std::make_shared<EchoDiscoveryParticipant>((*participant_configuration), payload_pool, discovery_database);
 
         case ParticipantKind::DUMMY:
             // DummyParticipant

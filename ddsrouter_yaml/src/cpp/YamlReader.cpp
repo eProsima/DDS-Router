@@ -790,6 +790,7 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
     {
         case types::ParticipantKind::VOID:
         case types::ParticipantKind::ECHO:
+        case types::ParticipantKind::ECHO_DISCOVERY:
         case types::ParticipantKind::DUMMY:
             return std::make_shared<core::configuration::ParticipantConfiguration>(
                 YamlReader::get<core::configuration::ParticipantConfiguration>(yml, version));

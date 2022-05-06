@@ -49,6 +49,7 @@ public:
         PARTICIPANT_KIND_INVALID,   //! Invalid Participant Kind
         VOID,                       //! Void Participant Kind
         ECHO,                       //! Echo Participant Kind
+        ECHO_DISCOVERY,             //! Echo Discovery Participant Kind
         DUMMY,                      //! Dummy Participant Kind
         SIMPLE_RTPS,                //! Simple RTPS Participant Kind
         LOCAL_DISCOVERY_SERVER,     //! Discovery Server RTPS UDP Participant Kind
