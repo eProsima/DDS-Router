@@ -26,7 +26,7 @@
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/time_utils.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>

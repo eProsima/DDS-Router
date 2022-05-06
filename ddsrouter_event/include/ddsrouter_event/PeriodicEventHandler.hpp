@@ -23,7 +23,7 @@
 #include <functional>
 #include <thread>
 
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/time_utils.hpp>
 #include <ddsrouter_event/EventHandler.hpp>
 #include <ddsrouter_event/library/library_dll.h>
 

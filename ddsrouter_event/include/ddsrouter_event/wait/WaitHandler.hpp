@@ -24,7 +24,7 @@
 #include <functional>
 #include <mutex>
 
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/time_utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
