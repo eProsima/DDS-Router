@@ -24,7 +24,7 @@
 
 #include <optionparser.h>
 
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/time_utils.hpp>
 
 #include "ProcessReturnCode.hpp"
 

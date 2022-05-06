@@ -16,7 +16,7 @@
  */
 
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/time_utils.hpp>
 
 #ifndef _DDSROUTEREVENT_WAIT_IMPL_WAITHANDLER_IPP_
 #define _DDSROUTEREVENT_WAIT_IMPL_WAITHANDLER_IPP_

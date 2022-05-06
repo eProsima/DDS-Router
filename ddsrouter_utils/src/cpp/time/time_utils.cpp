@@ -13,11 +13,13 @@
 // limitations under the License.
 
 /**
- * @file Time.cpp
+ * @file time_utils.cpp
  *
  */
 
-#include <ddsrouter_utils/Time.hpp>
+#include <thread>
+
+#include <ddsrouter_utils/time/time_utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,26 +41,10 @@ std::chrono::milliseconds duration_to_ms(
     return std::chrono::milliseconds(duration);
 }
 
-Timer::Timer() noexcept
-    : start_time_(std::chrono::high_resolution_clock::now())
+void sleep_for(
+        const Duration_ms& sleep_time) noexcept
 {
-}
-
-void Timer::reset() noexcept
-{
-    start_time_ = std::chrono::high_resolution_clock::now();
-}
-
-double Timer::elapsed() const noexcept
-{
-    std::chrono::time_point<std::chrono::high_resolution_clock> now_time = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration<double, std::milli>(now_time - start_time_).count();
-}
-
-Duration_ms Timer::elapsed_ms() const noexcept
-{
-    double elapsed_time = elapsed();
-    return static_cast<Duration_ms>(elapsed_time);
+    std::this_thread::sleep_for(duration_to_ms(sleep_time));
 }
 
 } /* namespace utils */

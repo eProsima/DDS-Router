@@ -21,7 +21,7 @@
 
 #include <TestLogHandler.hpp>
 
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/Timer.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 
