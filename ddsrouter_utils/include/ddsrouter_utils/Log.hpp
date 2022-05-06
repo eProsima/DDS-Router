@@ -57,6 +57,13 @@ using LogConsumer = eprosima::fastdds::dds::LogConsumer;
  */
 #define logUser(cat, msg) std::cout /* << STRINGIFY(cat) << " : " */ << msg << std::endl;
 
+/**
+ * @brief Log level only for debug performance
+ *
+ * @note As this level is not implemented, it is used as Warning level.
+ */
+#define logPerformance(cat, msg) logPerformance_(cat, msg)
+
 // Allow multiconfig platforms like windows to disable info queueing on Release and other non-debug configs
 #if !HAVE_LOG_NO_INFO &&  \
     (defined(FASTDDS_ENFORCE_LOG_INFO) || \
@@ -116,6 +123,32 @@ using LogConsumer = eprosima::fastdds::dds::LogConsumer;
 #else
 #define logDevError_(cat, msg)
 #endif // ifndef LOG_NO_INFO
+
+#if EPROSIMA_PERFORMANCE_DEBUG
+#define logPerformance_(cat, msg)                                                                                       \
+    {                                                                                                               \
+        using namespace eprosima::fastdds::dds;                                                                     \
+        if (Log::GetVerbosity() >= Log::Kind::Warning)                                                              \
+        {                                                                                                           \
+            std::stringstream fastdds_log_ss_tmp__;                                                                 \
+            fastdds_log_ss_tmp__ << "PERFORMANCE: " msg;                                                                            \
+            Log::QueueLog(                                                                                          \
+                fastdds_log_ss_tmp__.str(), Log::Context{__FILE__, __LINE__, __func__, #cat}, Log::Kind::Warning);  \
+        }                                                                                                           \
+    }
+#elif (__INTERNALDEBUG || _INTERNALDEBUG)
+#define logPerformance_(cat, msg)                                   \
+    {                                                           \
+        auto fastdds_log_lambda_tmp__ = [&]()                   \
+                {                                               \
+                    std::stringstream fastdds_log_ss_tmp__;     \
+                    fastdds_log_ss_tmp__ << msg;                \
+                };                                              \
+        (void)fastdds_log_lambda_tmp__;                         \
+    }
+#else
+#define logPerformance_(cat, msg)
+#endif // if EPROSIMA_PERFORMANCE_DEBUG
 
 } /* namespace utils */
 } /* namespace ddsrouter */
