@@ -40,8 +40,8 @@ ExecutionTimerDebugger::~ExecutionTimerDebugger()
 
     logPerformance(
         PERFORMANCE,
-        "ExecutionTimerDebugger <" << debugger_name_ << "> has lived for " << total_time << " seconds. " <<
-        "It has worked for " << execution_time << " seconds. Thus it has worked  " <<
+        "ExecutionTimerDebugger <" << debugger_name_ << "> has lived for " << total_time << " milliseconds. " <<
+        "It has worked for " << execution_time << " milliseconds. Thus it has worked  " <<
         (100*proportion) << "\% of it total life time.");
 }
 
