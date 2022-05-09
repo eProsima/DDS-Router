@@ -77,20 +77,22 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_int)
  * - Push and pop one value by moving it
  *
  * TODO:
- * This test will not work as DBQueue do not allow moving values, it only copy them
+ * This test will not work as DBQueue do not allow moving values, it only copies them
  */
 TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
 {
-    // DBQueueWaitHandler<std::string> handler;
+    DBQueueWaitHandler<std::string> handler;
 
-    // std::string lvalue("test_data");
+    std::string lvalue("test_data");
 
-    // handler.add_value(std::move(lvalue));
+    handler.add_value(std::move(lvalue));
 
-    // // Getting first value
-    // std::string pop_value = handler.wait_next_value();
+    // Getting first value
+    std::string pop_value = handler.wait_next_value();
 
-    // EXPECT_EQ(lvalue, pop_value);
+    EXPECT_EQ(lvalue, pop_value);
+
+    // TODO support move in DBQueue
     // EXPECT_EQ(&lvalue, &pop_value);
 
     // // They should be same object, check that modifying one modifies the other
@@ -117,7 +119,7 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_copy)
     std::string pop_value = handler.wait_next_value();
     EXPECT_EQ(lvalue, pop_value);
 
-    // They should be same object, check that modifying one modifies the other
+    // They should be different objects, check that modifying one does not modify the other
     pop_value[0] = 'a';
     EXPECT_NE(lvalue, pop_value);
 }
@@ -182,6 +184,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         ASSERT_TRUE(popped_1 && popped_2);
     }
 
+    // 2
     {
         int popped_1 = 0;
         int popped_2 = 0;
@@ -245,7 +248,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         thread_C.join();
 
         // Wait for notification to arrive to waiting threads
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::this_thread::sleep_for(std::chrono::milliseconds(test::RESIDUAL_TIME_TEST));
 
         handler.disable();
 

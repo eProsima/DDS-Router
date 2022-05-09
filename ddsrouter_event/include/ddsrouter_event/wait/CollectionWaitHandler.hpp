@@ -26,9 +26,9 @@ namespace ddsrouter {
 namespace event {
 
 /**
- * \c CollectionWaitHandler is a class to implement a Wait Handler that store data in a collection and allow
- * to threads to wait until some data is inserted, and remove it from the collection.
- * The typicall use will be to implement this class with an internal queue or stack to store sorted data and
+ * \c CollectionWaitHandler is a class that implements a Wait Handler storing data in a collection and allows
+ * threads to wait until some data is inserted, and remove it from the collection.
+ * The typical use will be to implement this class with an internal queue or stack to store sorted data and
  * consume this data from threads that may wait for a data to be available.
  *
  * \c T specializes this class depending on the data that is stored inside the collection.
@@ -37,6 +37,8 @@ namespace event {
  *
  * WARNING: This class does not protect the internal collection. Making it thread safe is users duty.
  * WARNING: The collection must be inside this handler object and should not be accessed outside this class methods.
+ *
+ * TODO: reimplement this class without CounterWaitHandler inheritance
  */
 template <typename T>
 class CollectionWaitHandler : protected CounterWaitHandler
@@ -76,7 +78,7 @@ public:
      * @brief Wait until there is data available in the internal collection and retrieve the first one.
      *
      * This method will wait until there is data available in the internal collection.
-     * In case there are data (or some data is stored while waiting) the internal collection is the one that decide
+     * In case there are data (or some data is stored while waiting) the internal collection is the one that decides
      * which data is returned (if FIFO, LIFO, etc. depending on the collection type).
      *
      * @note this method calls \c get_next_value_ , method that must be overriden by the child class.
@@ -93,29 +95,29 @@ public:
 protected:
 
     /**
-     * @brief Method that add a new value in the collection. Use move constructor.
+     * @brief Method that adds a new value in the collection. Use move constructor.
      *
      * This method must be reimplemented in child classes specialized to the internal collection.
      *
-     * This method is called without any mutex taken and before increase by 1 the internal counter.
+     * This method is called without any mutex taken and afterwards the internal counter is increased by 1.
      *
      * @param value new value
      */
     virtual void add_value_(T&& value) = 0;
 
-    //! Method that add a new value in the collection. Use copy constructor.
+    //! Method that adds a new value in the collection. Use copy constructor.
     virtual void add_value_(const T& value) = 0;
 
     /**
-     * @brief Method that get next available value from the collection
+     * @brief Method that gets next available value from the collection
      *
      * This method must be reimplemented in child classes specialized to the internal collection.
      * Typically it will remove this value from the collection, but it is not mandatory.
      *
-     * @warning This method must assure to retrieve a values at least when \c add_value_
+     * @warning This method must assure that values are retrieved whenever \c add_value_
      * has been called more times than \c get_next_value_ .
      *
-     * This method is called without any mutex taken and after decrease by 1 the internal counter.
+     * This method is called without any mutex taken and after the internal counter is decreased by 1.
      *
      * @return next value from the collection.
      *

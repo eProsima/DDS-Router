@@ -48,7 +48,7 @@ protected:
     /**
      * @brief Override of \c CollectionWaitHandler method to move a new value to the queue
      *
-     * @warning DBQueue do not allow moving elements, and thus it will always be copied
+     * @warning \c DBQueue does not allow moving elements, and thus it will always be copied
      *
      * @param value new value to move
      */
@@ -69,7 +69,7 @@ protected:
      */
     T get_next_value_() override;
 
-    //! DBQueue variable that stores the data
+    //! \c DBQueue variable that stores the data
     fastrtps::DBQueue<T> queue_;
 
     //! Protect getting values from the queue so only one thread can do the swap at a time
