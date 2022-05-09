@@ -13,51 +13,48 @@
 // limitations under the License.
 
 /**
- * @file CollectionWaitHandler.hpp
+ * @file ConsumerWaitHandler.hpp
  */
 
-#ifndef _DDSROUTEREVENT_WAIT_COLLECTIONWAITHANDLER_HPP_
-#define _DDSROUTEREVENT_WAIT_COLLECTIONWAITHANDLER_HPP_
+#ifndef _DDSROUTEREVENT_WAIT_CONSUMERWAITHANDLER_HPP_
+#define _DDSROUTEREVENT_WAIT_CONSUMERWAITHANDLER_HPP_
 
-#include <ddsrouter_event/wait/CounterWaitHandler.hpp>
+#include <ddsrouter_event/wait/WaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
 /**
- * \c CollectionWaitHandler is a class that implements a Wait Handler storing data in a collection and allows
+ * \c ConsumerWaitHandler is a class that implements a Wait Handler storing data in a collection and allows
  * threads to wait until some data is inserted, and remove it from the collection.
  * The typical use will be to implement this class with an internal queue or stack to store sorted data and
- * consume this data from threads that may wait for a data to be available.
+ * consume this data from different threads, that may wait for a data to be available.
  *
  * \c T specializes this class depending on the data that is stored inside the collection.
  *
- * This class uses an internal CounterWaitHandler to count the number of data stored in the collection.
- *
  * WARNING: This class does not protect the internal collection. Making it thread safe is users duty.
  * WARNING: The collection must be inside this handler object and should not be accessed outside this class methods.
- *
- * TODO: reimplement this class without CounterWaitHandler inheritance
  */
 template <typename T>
-class CollectionWaitHandler : protected CounterWaitHandler
+class ConsumerWaitHandler : protected WaitHandler<uint32_t>
 {
 public:
 
-    CollectionWaitHandler(bool enabled = true);
+    ConsumerWaitHandler(bool enabled = true);
 
     // Make this parent methods public
-    using CounterWaitHandler::enable;
-    using CounterWaitHandler::disable;
-    using CounterWaitHandler::enabled;
-    using CounterWaitHandler::stop_and_continue;
+    using WaitHandler::enable;
+    using WaitHandler::disable;
+    using WaitHandler::blocking_disable;
+    using WaitHandler::enabled;
+    using WaitHandler::stop_and_continue;
 
     /////
     // Add values methods
 
     /**
-     * @brief Add a new value to the collection. Use move constructor.
+     * @brief Add a new value to the consumer. Use move constructor.
      *
      * This method will awake ONE thread waiting for data to be available if there is any waiting
      * Otherwise it will store the data inside the collection.
@@ -66,10 +63,20 @@ public:
      *
      * @param value new data available
      */
-    void add_value(T&& value);
+    void produce(T&& value);
 
-    //! Add a new value to the collection. Use copy constructor.
-    void add_value(const T& value);
+
+    /**
+     * @brief Add a new value to the collection. Use copy constructor.
+     *
+     * This method will awake ONE thread waiting for data to be available if there is any waiting
+     * Otherwise it will store the data inside the collection.
+     *
+     * @note this method calls \c add_value_ , method that must be overriden by the child class.
+     *
+     * @param value new data available
+     */
+    void produce(const T& value);
 
     /////
     // Get values methods
@@ -89,7 +96,7 @@ public:
      * @throw \c DisabledException if the handler is disabled when calling this method or while waiting.
      * @throw \c TimeoutException if timeout is reached.
      */
-    T wait_next_value(
+    T consume(
         const utils::Duration_ms& timeout = 0);
 
 protected:
@@ -105,7 +112,16 @@ protected:
      */
     virtual void add_value_(T&& value) = 0;
 
-    //! Method that adds a new value in the collection. Use copy constructor.
+
+    /**
+     * @brief Method that adds a new value in the collection. Use copy constructor.
+     *
+     * This method must be reimplemented in child classes specialized to the internal collection.
+     *
+     * This method is called without any mutex taken and afterwards the internal counter is increased by 1.
+     *
+     * @param value new value
+     */
     virtual void add_value_(const T& value) = 0;
 
     /**
@@ -132,6 +148,6 @@ protected:
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter_event/wait/impl/CollectionWaitHandler.ipp>
+#include <ddsrouter_event/wait/impl/ConsumerWaitHandler.ipp>
 
-#endif /* _DDSROUTEREVENT_WAIT_COLLECTIONWAITHANDLER_HPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_CONSUMERWAITHANDLER_HPP_ */

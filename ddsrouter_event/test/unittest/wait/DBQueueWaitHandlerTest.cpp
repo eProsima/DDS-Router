@@ -47,25 +47,25 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_int)
     // Push and pop one value
     {
         DBQueueWaitHandler<int> handler;
-        handler.add_value(1);
-        EXPECT_EQ(handler.wait_next_value(), 1);
+        handler.produce(1);
+        EXPECT_EQ(handler.consume(), 1);
     }
 
     // Push and pop multiple values
     {
         DBQueueWaitHandler<int> handler;
 
-        handler.add_value(1);
-        handler.add_value(2);
-        handler.add_value(3);
+        handler.produce(1);
+        handler.produce(2);
+        handler.produce(3);
 
-        EXPECT_EQ(handler.wait_next_value(), 1);
-        EXPECT_EQ(handler.wait_next_value(), 2);
+        EXPECT_EQ(handler.consume(), 1);
+        EXPECT_EQ(handler.consume(), 2);
 
-        handler.add_value(4);
+        handler.produce(4);
 
-        EXPECT_EQ(handler.wait_next_value(), 3);
-        EXPECT_EQ(handler.wait_next_value(), 4);
+        EXPECT_EQ(handler.consume(), 3);
+        EXPECT_EQ(handler.consume(), 4);
     }
 }
 
@@ -85,10 +85,10 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
 
     std::string lvalue("test_data");
 
-    handler.add_value(std::move(lvalue));
+    handler.produce(std::move(lvalue));
 
     // Getting first value
-    std::string pop_value = handler.wait_next_value();
+    std::string pop_value = handler.consume();
 
     EXPECT_EQ(lvalue, pop_value);
 
@@ -113,10 +113,10 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_copy)
 
     std::string lvalue("test_data");
 
-    handler.add_value(lvalue);
+    handler.produce(lvalue);
 
     // Getting first value
-    std::string pop_value = handler.wait_next_value();
+    std::string pop_value = handler.consume();
     EXPECT_EQ(lvalue, pop_value);
 
     // They should be different objects, check that modifying one does not modify the other
@@ -148,7 +148,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
 
         // Create 3 threads. A & B will read wait handler, and C will write
         std::thread thread_A([&]() {
-            int pop_value = handler.wait_next_value();
+            int pop_value = handler.consume();
             EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
             if (pop_value == 1)
             {
@@ -160,7 +160,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
             }
         });
         std::thread thread_B([&]() {
-            int pop_value = handler.wait_next_value();
+            int pop_value = handler.consume();
             EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
             if (pop_value == 1)
             {
@@ -173,8 +173,8 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         });
         std::thread thread_C([&]() {
 
-            handler.add_value(1);
-            handler.add_value(2);
+            handler.produce(1);
+            handler.produce(2);
         });
 
         thread_A.join();
@@ -199,7 +199,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
                 try
                 {
                     // Wait for first value from queue
-                    int pop_value = handler.wait_next_value();
+                    int pop_value = handler.consume();
                     if (pop_value == 1)
                     {
                         popped_1++;
@@ -213,7 +213,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
                         popped_3++;
                     }
                     // Wait for second value from queue
-                    pop_value = handler.wait_next_value();
+                    pop_value = handler.consume();
                     if (pop_value == 1)
                     {
                         popped_1++;
@@ -240,9 +240,9 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         std::thread thread_B(lambda_for_A_and_B);
 
         std::thread thread_C([&]() {
-            handler.add_value(1);
-            handler.add_value(2);
-            handler.add_value(3);
+            handler.produce(1);
+            handler.produce(2);
+            handler.produce(3);
         });
 
         thread_C.join();

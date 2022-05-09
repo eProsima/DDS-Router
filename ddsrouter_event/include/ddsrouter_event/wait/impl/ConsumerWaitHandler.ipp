@@ -12,44 +12,56 @@
 // limitations under the License.
 
 /**
- * @file CollectionWaitHandler.ipp
+ * @file ConsumerWaitHandler.ipp
  */
 
 #include <ddsrouter_utils/exception/DisabledException.hpp>
 #include <ddsrouter_utils/exception/TimeoutException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
-#ifndef _DDSROUTEREVENT_WAIT_IMPL_COLLECTIONWAITHANDLER_IPP_
-#define _DDSROUTEREVENT_WAIT_IMPL_COLLECTIONWAITHANDLER_IPP_
+#ifndef _DDSROUTEREVENT_WAIT_IMPL_CONSUMERWAITHANDLER_IPP_
+#define _DDSROUTEREVENT_WAIT_IMPL_CONSUMERWAITHANDLER_IPP_
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
 template <typename T>
-CollectionWaitHandler<T>::CollectionWaitHandler(
+ConsumerWaitHandler<T>::ConsumerWaitHandler(
         bool enabled /* = true */)
-    : CounterWaitHandler(0, enabled)
+    : WaitHandler(0, enabled)
 {
-    logDebug(DDSROUTER_WAIT_COLLECTION, "Created Collection Wait Handler with type " << TYPE_NAME(T) << ".");
+    logDebug(DDSROUTER_WAIT_COLLECTION, "Created Consumer Wait Handler with type " << TYPE_NAME(T) << ".");
 }
 
 template <typename T>
-void CollectionWaitHandler<T>::add_value(T&& value)
+void ConsumerWaitHandler<T>::produce(T&& value)
 {
     add_value_(std::move(value));
-    this->operator++();
+    {
+        // Mutex must guard the modification of value_
+        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+        value_++;
+    }
+
+    wait_condition_variable_.notify_one();
 }
 
 template <typename T>
-void CollectionWaitHandler<T>::add_value(const T& value)
+void ConsumerWaitHandler<T>::produce(const T& value)
 {
     add_value_(value);
-    this->operator++();
+    {
+        // Mutex must guard the modification of value_
+        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+        value_++;
+    }
+
+    wait_condition_variable_.notify_one();
 }
 
 template <typename T>
-T CollectionWaitHandler<T>::wait_next_value(
+T ConsumerWaitHandler<T>::consume(
         const utils::Duration_ms& timeout /* = 0 */)
 {
     {
@@ -59,7 +71,7 @@ T CollectionWaitHandler<T>::wait_next_value(
         // Check if it is disabled and exit
         if (!enabled())
         {
-            throw utils::DisabledException("CollectionWaitHandler disabled.");
+            throw utils::DisabledException("ConsumerWaitHandler disabled.");
         }
 
         // Increment number of threads waiting
@@ -94,11 +106,11 @@ T CollectionWaitHandler<T>::wait_next_value(
         // Check awake reason. Mutex is taken so it can not change while checking
         if (!enabled_.load())
         {
-            throw utils::DisabledException("CollectionWaitHandler has been disabled.");
+            throw utils::DisabledException("ConsumerWaitHandler has been disabled.");
         }
         else if (!finished_for_condition_met)
         {
-            throw utils::TimeoutException("CollectionWaitHandler awaken by timeout.");
+            throw utils::TimeoutException("ConsumerWaitHandler awaken by timeout.");
         }
         else
         {
@@ -113,10 +125,8 @@ T CollectionWaitHandler<T>::wait_next_value(
     return get_next_value_();
 }
 
-
-
 } /* namespace event */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTEREVENT_WAIT_IMPL_COLLECTIONWAITHANDLER_IPP_ */
+#endif /* _DDSROUTEREVENT_WAIT_IMPL_CONSUMERWAITHANDLER_IPP_ */

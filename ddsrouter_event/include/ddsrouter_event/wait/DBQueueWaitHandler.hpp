@@ -21,7 +21,7 @@
 
 #include <fastrtps/utils/DBQueue.h>
 
-#include <ddsrouter_event/wait/CollectionWaitHandler.hpp>
+#include <ddsrouter_event/wait/ConsumerWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -36,17 +36,17 @@ namespace event {
  * \c T specializes this class depending on the data that is stored inside the queue.
  */
 template <typename T>
-class DBQueueWaitHandler : public CollectionWaitHandler<T>
+class DBQueueWaitHandler : public ConsumerWaitHandler<T>
 {
 public:
 
     // Use parent constructor
-    using CollectionWaitHandler<T>::CollectionWaitHandler;
+    using ConsumerWaitHandler<T>::ConsumerWaitHandler;
 
 protected:
 
     /**
-     * @brief Override of \c CollectionWaitHandler method to move a new value to the queue
+     * @brief Override of \c ConsumerWaitHandler method to move a new value to the queue
      *
      * @warning \c DBQueue does not allow moving elements, and thus it will always be copied
      *
@@ -54,11 +54,11 @@ protected:
      */
     void add_value_(T&& value) override;
 
-    //! Override of CollectionWaitHandler method to copy a new value into the queue
+    //! Override of ConsumerWaitHandler method to copy a new value into the queue
     void add_value_(const T& value) override;
 
     /**
-     * @brief Override of \c CollectionWaitHandler method to remove a value from the queue
+     * @brief Override of \c ConsumerWaitHandler method to remove a value from the queue
      *
      * Before removing the value, this method will check if the front queue is empty and swap.
      * This method should not be called if there is no data in the queue.
