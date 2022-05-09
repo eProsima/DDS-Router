@@ -117,10 +117,10 @@ public:
     // Value methods
 
     //! Operator prefix ++ to add 1 to counter
-    CounterWaitHandler& operator++();
+    CounterWaitHandler& operator ++();
 
     //! Operator prefix -- to substract 1 to counter
-    CounterWaitHandler& operator--();
+    CounterWaitHandler& operator --();
 };
 
 } /* namespace event */

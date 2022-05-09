@@ -96,7 +96,7 @@ AwakeReason CounterWaitHandler::wait_lower_equal_than(
         timeout);
 }
 
-CounterWaitHandler& CounterWaitHandler::operator++()
+CounterWaitHandler& CounterWaitHandler::operator ++()
 {
     // NOTE: This operation could be done using the WaitHandler methods, but it will be less efficient than
     // set the actual value directly.
@@ -112,7 +112,7 @@ CounterWaitHandler& CounterWaitHandler::operator++()
     return *this;
 }
 
-CounterWaitHandler& CounterWaitHandler::operator--()
+CounterWaitHandler& CounterWaitHandler::operator --()
 {
     // NOTE: This operation could be done using the WaitHandler methods, but it will be less efficient than
     // set the actual value directly.
