@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#############################################
+# BOOLEAN WAIT HANDLER TEST
+#############################################
+
 set(TEST_NAME BooleanWaitHandlerTest)
 
 set(TEST_SOURCES
@@ -33,8 +37,38 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_utils
     )
 
+#############################################
+# COUNTER WAIT HANDLER TEST
+#############################################
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
     "${TEST_EXTRA_LIBRARIES}")
+
+    set(TEST_NAME CounterWaitHandlerTest)
+
+    set(TEST_SOURCES
+            CounterWaitHandlerTest.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        )
+
+    set(TEST_LIST
+            value_handler
+            wait_value
+            wait_upper
+            wait_lower
+        )
+
+    set(TEST_EXTRA_LIBRARIES
+            fastcdr
+            fastrtps
+            ddsrouter_utils
+        )
+
+    add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}")
