@@ -25,19 +25,24 @@ namespace utils {
 
 uint32_t fast_module(uint32_t dividend, uint32_t divisor) noexcept
 {
-    if (dividend <= divisor)
+    if (dividend < divisor)
     {
         // Optimize to 1 operation [if]
         return dividend;
     }
+    else if (dividend == divisor)
+    {
+        // Optimize to 2 operation [if, if]
+        return 0;
+    }
     else if (divisor == 2)
     {
-        // Optimize to 3 operations [if, if, and]
+        // Optimize to 4 operations [if, if, if, and]
         return dividend & 1;
     }
     else
     {
-        // Optimize to 6 operations [if, if, -, and, -, and] in case E(n){divisor = 2^n}
+        // Optimize to 7 operations [if, if, if, -, and, -, and] in case E(n){divisor = 2^n}
         return divisor & (divisor-1) ? dividend % divisor : dividend & (divisor-1);
     }
 }
