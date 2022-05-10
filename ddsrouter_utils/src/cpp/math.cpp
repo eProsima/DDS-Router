@@ -21,6 +21,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+#include <ddsrouter_utils/math.hpp>
+
 uint32_t fast_module(uint32_t dividend, uint32_t divisor) noexcept
 {
     if (dividend <= divisor)
