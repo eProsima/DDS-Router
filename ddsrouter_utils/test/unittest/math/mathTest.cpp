@@ -26,7 +26,9 @@ namespace ddsrouter {
 namespace utils {
 namespace test {
 
-void compare_fast_module(uint32_t dividend, uint32_t divisor)
+void compare_fast_module(
+        uint32_t dividend,
+        uint32_t divisor)
 {
     ASSERT_EQ(fast_module(dividend, divisor), dividend % divisor) << dividend << " % " << divisor;
 }

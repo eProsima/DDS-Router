@@ -23,7 +23,9 @@ namespace utils {
 
 #include <ddsrouter_utils/math.hpp>
 
-uint32_t fast_module(uint32_t dividend, uint32_t divisor) noexcept
+uint32_t fast_module(
+        uint32_t dividend,
+        uint32_t divisor) noexcept
 {
     if (dividend < divisor)
     {
@@ -43,7 +45,7 @@ uint32_t fast_module(uint32_t dividend, uint32_t divisor) noexcept
     else
     {
         // Optimize to 7 operations [if, if, if, -, and, -, and] in case E(n){divisor = 2^n}
-        return divisor & (divisor-1) ? dividend % divisor : dividend & (divisor-1);
+        return divisor & (divisor - 1) ? dividend % divisor : dividend& (divisor - 1);
     }
 }
 

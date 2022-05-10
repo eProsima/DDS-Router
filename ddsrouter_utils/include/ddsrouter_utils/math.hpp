@@ -44,7 +44,9 @@ namespace utils {
  *
  * @return The result of the operation
  */
-DDSROUTER_UTILS_DllAPI uint32_t fast_module(uint32_t dividend, uint32_t divisor) noexcept;
+DDSROUTER_UTILS_DllAPI uint32_t fast_module(
+        uint32_t dividend,
+        uint32_t divisor) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */
