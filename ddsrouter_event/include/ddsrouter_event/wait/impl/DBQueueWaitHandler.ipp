@@ -27,14 +27,14 @@ namespace event {
 template <typename T>
 void DBQueueWaitHandler<T>::add_value_(T&& value)
 {
-    logDebug(DDSROUTER_WAIT_COLLECTION, "Moving element to DBQueue.");
+    logDebug(DDSROUTER_WAIT_DBQUEUE, "Moving element to DBQueue.");
     queue_.Push(std::move(value));
 }
 
 template <typename T>
 void DBQueueWaitHandler<T>::add_value_(const T& value)
 {
-    logDebug(DDSROUTER_WAIT_COLLECTION, "Copying element to DBQueue.");
+    logDebug(DDSROUTER_WAIT_DBQUEUE, "Copying element to DBQueue.");
     queue_.Push(value);
 }
 
@@ -47,7 +47,7 @@ T DBQueueWaitHandler<T>::get_next_value_()
     // If front is empty, swap to back queue
     if (queue_.Empty())
     {
-        logDebug(DDSROUTER_WAIT_COLLECTION, "Swapping DBQueue to get element.");
+        logDebug(DDSROUTER_WAIT_DBQUEUE, "Swapping DBQueue to get element.");
         queue_.Swap();
     }
 

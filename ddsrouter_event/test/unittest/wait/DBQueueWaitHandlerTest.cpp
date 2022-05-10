@@ -83,21 +83,16 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
 {
     DBQueueWaitHandler<std::string> handler;
 
-    std::string lvalue("test_data");
+    std::string source_value("test_data");
+    std::string lvalue(source_value);
 
+    // This lvalue is moved as rvalue, so after moving it will be empty
     handler.produce(std::move(lvalue));
+    ASSERT_EQ(lvalue.size(), 0);
 
     // Getting first value
     std::string pop_value = handler.consume();
-
-    EXPECT_EQ(lvalue, pop_value);
-
-    // TODO support move in DBQueue
-    // EXPECT_EQ(&lvalue, &pop_value);
-
-    // // They should be same object, check that modifying one modifies the other
-    // pop_value[0] = 'a';
-    // EXPECT_EQ(lvalue, pop_value);
+    EXPECT_EQ(source_value, pop_value);
 }
 
 /**
