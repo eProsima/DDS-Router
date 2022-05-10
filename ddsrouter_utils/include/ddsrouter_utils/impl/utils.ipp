@@ -26,10 +26,11 @@ namespace utils {
 template <typename T, bool Ptr /* = false */>
 std::ostream& element_to_stream(
         std::ostream& os,
-        T element)
+        const T& element)
 {
     if (Ptr)
     {
+        // If pointer, print object and not address
         os << (*element);
     }
     else
@@ -43,8 +44,8 @@ std::ostream& element_to_stream(
 template <typename T, bool Ptr /* = false */>
 std::ostream& container_to_stream(
         std::ostream& os,
-        std::vector<T> list,
-        std::string separator /* = ";"*/)
+        const std::vector<T>& list,
+        const std::string& separator /* = ";"*/)
 {
     os << "{";
 
@@ -56,6 +57,7 @@ std::ostream& container_to_stream(
         os << separator;
     }
 
+    // For the last element, to avoid separator
     if (size > 0)
     {
         element_to_stream<T, Ptr>(os, list[size - 1]);
@@ -69,16 +71,16 @@ std::ostream& container_to_stream(
 template <typename T, bool Ptr /* = false */>
 std::ostream& container_to_stream(
         std::ostream& os,
-        std::set<T> list,
-        std::string separator /* = ";" */)
+        const std::set<T>& list,
+        const std::string& separator /* = ";" */)
 {
     return container_to_stream<T, Ptr>(os, std::vector<T>(list.begin(), list.end()), separator);
 }
 
 template <typename T>
 bool set_of_ptr_contains(
-        const std::set<std::shared_ptr<T>> set,
-        const std::shared_ptr<T> element)
+        const std::set<std::shared_ptr<T>>& set,
+        const std::shared_ptr<T>& element)
 {
     // If the pointer belongs to set, it is contained
     if (set.find(element) != set.end())
@@ -112,8 +114,8 @@ bool set_of_ptr_contains(
 
 template <typename T>
 bool are_set_of_ptr_equal(
-        const std::set<std::shared_ptr<T>> set1,
-        const std::set<std::shared_ptr<T>> set2)
+        const std::set<std::shared_ptr<T>>& set1,
+        const std::set<std::shared_ptr<T>>& set2)
 {
     if (set1.size() != set2.size())
     {
@@ -134,7 +136,7 @@ bool are_set_of_ptr_equal(
 
 template <typename Parent, typename Child>
 std::set<std::shared_ptr<Parent>> convert_set_to_shared(
-        std::set<Child> set)
+        const std::set<Child>& set)
 {
     FORCE_TEMPLATE_SUBCLASS(Parent, Child);
 

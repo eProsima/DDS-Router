@@ -38,8 +38,10 @@ namespace utils {
  *
  * The main case to use this class is in Exception creation. In order to generate an Exception message
  * using the << operator for the objects in the block, add them to Formatter() object and they will be
- * concatenated in a single string. For example:
- * Exception(Formatter() << " object1 stream: " << obj1 << " object2 stream: " << obj2);
+ * concatenated in a single string.
+ *
+ * Example of use:
+ * Exception(STR_ENTRY << " object1 stream: " << obj1 << " object2 stream: " << obj2);
  */
 class Formatter
 {
@@ -49,6 +51,9 @@ public:
     template<class Val>
     Formatter& operator <<(
             const Val& val);
+
+    //! Cast operator to implicitly cast a \c Formatter to a \c std::string
+    DDSROUTER_UTILS_DllAPI operator std::string() const noexcept;
 
     //! Return a string with the concatenation of this object
     DDSROUTER_UTILS_DllAPI std::string to_string() const noexcept;

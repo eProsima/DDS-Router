@@ -27,12 +27,24 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//! Return the name of an argument called in a macro
 #define STRINGIFY(x) #x
 
+/**
+ * @brief Force a template (function or class) to be specialized by a child class that inherits from a specific class.
+ *
+ * @param base Base class that must be specialized in template.
+ * @param derived Specialization of template.
+ *
+ * e.g.
+ * Specialization of function foo must inherit from class Foo:
+ * <template class T> void foo(T t) { FORCE_TEMPLATE_SUBCLASS(Foo, T); ... };
+ */
 #define FORCE_TEMPLATE_SUBCLASS(base, derived) \
     static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
 
 // TODO: probably in the future is needed to create a utils method that transforms this name to a human reasonable name
+//! Get the name of the class
 #define TYPE_NAME(x) typeid(x).name()
 
 } /* namespace utils */

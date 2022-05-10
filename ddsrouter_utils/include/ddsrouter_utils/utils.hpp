@@ -15,7 +15,7 @@
 /**
  * @file utils.hpp
  *
- * This file contains constant values common for the whole project
+ * This file contains util functions for the whole project
  */
 
 #ifndef _DDSROUTERUTILS_UTILS_HPP_
@@ -42,7 +42,7 @@ using FileAccessModeType = int;
  * Linux: See https://linux.die.net/man/2/access
  * Windows: See https://docs.microsoft.com/es-es/cpp/c-runtime-library/reference/access-waccess?view=msvc-170
  */
-enum class FileAccessMode
+enum class FileAccessMode : FileAccessModeType
 {
     exist               = 0,
     read                = 4,
@@ -64,7 +64,15 @@ FileAccessMode operator &(
         FileAccessMode mode_a,
         FileAccessMode mode_b);
 
-//! Perform the wildcard matching using file comparison method
+/**
+ * @brief Perform the wildcard matching using file comparison method
+ *
+ * Wildcard matching uses * for any string of chars, ? for any char, and [a-z] for any char in the range.
+ *
+ * @param pattern pattern that must be matched
+ * @param str string to check if matches the pattern
+ * @return \c true if \c str matches the \c pattern, \c false otherwise
+ */
 DDSROUTER_UTILS_DllAPI bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept;
@@ -79,43 +87,6 @@ DDSROUTER_UTILS_DllAPI bool match_pattern(
 DDSROUTER_UTILS_DllAPI void to_lowercase(
         std::string& st) noexcept;
 
-template <typename T, bool Ptr = false>
-std::ostream& element_to_stream(
-        std::ostream& os,
-        T element);
-
-/**
- * @brief Concatenate serialization of elements in an array separated by \c separator .
- *
- * @tparam T type of each element. This object must have an << operator
- * @param os stream to store the concatenation result
- * @param list list of elements
- * @param separator char or string separator between elements
- * @return std::ostream& with the result stream concatenated
- */
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
-        std::ostream& os,
-        std::vector<T> list,
-        std::string separator = ";");
-
-//! Concatenate a set by converting to vector.
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
-        std::ostream& os,
-        std::set<T> list,
-        std::string separator = ";");
-
-template <typename T>
-bool set_of_ptr_contains(
-        const std::set<std::shared_ptr<T>> set,
-        const std::shared_ptr<T> element);
-
-template <typename T>
-bool are_set_of_ptr_equal(
-        const std::set<std::shared_ptr<T>> set1,
-        const std::set<std::shared_ptr<T>> set2);
-
 /**
  * @brief This Should Not Happen.
  *
@@ -129,13 +100,6 @@ bool are_set_of_ptr_equal(
  */
 DDSROUTER_UTILS_DllAPI void tsnh(
         const Formatter& formatter);
-
-/**
- * @brief Convert a elements set into a shared ptr elements set.
- */
-template <typename Parent, typename Child>
-std::set<std::shared_ptr<Parent>> convert_set_to_shared(
-        std::set<Child> set);
 
 /**
  * @brief Whether a file exist and/or is accessible with specific permissions
@@ -159,7 +123,96 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  */
 DDSROUTER_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
-        FileAccessMode access_mode = FileAccessMode::exist) noexcept;
+        const FileAccessMode& access_mode) noexcept;
+
+/////
+// TEMPLATE FUNCTIONS
+
+/**
+ * @brief Concatenate an element \c element into a stream by operator <<
+ *
+ * @tparam T type of each element. This object must have an << operator
+ * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
+ *
+ * @param os stream to store the concatenation result
+ * @param element element to concatenate into stream
+ *
+ * @return stream object with the concatenation of \c os and \c element
+ */
+template <typename T, bool Ptr = false>
+std::ostream& element_to_stream(
+        std::ostream& os,
+        const T& element);
+
+/**
+ * @brief Concatenate serialization of elements in a vector separated by \c separator .
+ *
+ * @tparam T type of each element. This object must have an << operator
+ * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
+ *
+ * @param os stream to store the concatenation result
+ * @param list vector of elements
+ * @param separator char or string separator between elements
+ *
+ * @return stream object with the concatenation of \c os and \c element
+ */
+template <typename T, bool Ptr = false>
+std::ostream& container_to_stream(
+        std::ostream& os,
+        const std::vector<T>& list,
+        const std::string& separator = ";");
+
+/**
+ * @brief Concatenate serialization of elements in a set separated by \c separator .
+ *
+ * The order of the elements in the final stream is not guaranteed.
+ *
+ * @tparam T type of each element. This object must have an << operator
+ * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
+ *
+ * @param os stream to store the concatenation result
+ * @param list set of elements
+ * @param separator char or string separator between elements
+ *
+ * @return stream object with the concatenation of \c os and \c element
+ */
+template <typename T, bool Ptr = false>
+std::ostream& container_to_stream(
+        std::ostream& os,
+        const std::set<T>& list,
+        const std::string& separator = ";");
+
+/**
+ * @brief Check if an element contained in a shared ptr is contained in a set of shared pointers
+ *
+ * This function is needed to find elements inside sets of shared pointers, because the operator==
+ * of shared ptr is limited to check the address, and not the internal value.
+ * It uses the internal operator== of \c T instead of comparing by address.
+ *
+ * @tparam T type of the element inside the pointer and the set
+ *
+ * @param set set of elements where to look for \c element
+ * @param element element to look for in \c set
+ *
+ * @return \c true if element is inside the set, \c false otherwise
+ */
+template <typename T>
+bool set_of_ptr_contains(
+        const std::set<std::shared_ptr<T>>& set,
+        const std::shared_ptr<T>& element);
+
+//! Whether two set of shared ptrs have the same internal values (compared by object and not by address)
+template <typename T>
+bool are_set_of_ptr_equal(
+        const std::set<std::shared_ptr<T>>& set1,
+        const std::set<std::shared_ptr<T>>& set2);
+
+/**
+ * @brief Convert a elements set into a shared ptr elements set.
+ */
+template <typename Parent, typename Child>
+std::set<std::shared_ptr<Parent>> convert_set_to_shared(
+        const std::set<Child>& set);
 
 } /* namespace utils */
 } /* namespace ddsrouter */

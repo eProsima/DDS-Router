@@ -35,7 +35,7 @@ using Duration_ms = uint32_t;
 using Timestamp = std::chrono::time_point<std::chrono::system_clock>;
 
 /**
- * @brief Now time
+ * @brief Current time
  *
  * @return Timestamp refering to the moment it is called
  */
@@ -44,6 +44,7 @@ DDSROUTER_UTILS_DllAPI Timestamp now() noexcept;
 //! Returns the maximum time available for \c Timestamp
 DDSROUTER_UTILS_DllAPI Timestamp the_end_of_times() noexcept;
 
+//! Cast a \c Duration_ms type to \c chrono::milliseconds
 DDSROUTER_UTILS_DllAPI std::chrono::milliseconds duration_to_ms(
         const Duration_ms& duration) noexcept;
 

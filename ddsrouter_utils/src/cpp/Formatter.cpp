@@ -25,7 +25,12 @@ namespace utils {
 
 std::string Formatter::to_string() const noexcept
 {
-    return ss_.str().c_str();
+    return ss_.str();
+}
+
+Formatter::operator std::string() const noexcept
+{
+    return ss_.str();
 }
 
 std::ostream& operator <<(

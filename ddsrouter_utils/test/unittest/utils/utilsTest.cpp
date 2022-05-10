@@ -351,9 +351,6 @@ TEST(utilsTest, is_file_accessible)
 
     // File exist
     {
-        // Default argument
-        ASSERT_TRUE(is_file_accessible("resources/exist.test"));
-
         // Set argument
         ASSERT_TRUE(is_file_accessible("resources/exist.test", FileAccessMode::exist));
     }
@@ -365,7 +362,6 @@ TEST(utilsTest, is_file_accessible)
 
     // File does not exist and not readable
     {
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test"));
         ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::exist));
         ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::read));
     }
