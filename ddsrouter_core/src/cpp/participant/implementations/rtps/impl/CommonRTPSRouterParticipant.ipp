@@ -66,20 +66,26 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
     {
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY,
+            logInfo(DDSROUTER_DISCOVERY, "Thread: " << std::this_thread::get_id() << " | " <<
                     "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Participant " << info.info.m_guid <<
+                                    " changed QoS.");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::REMOVED_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " removed.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Participant " << info.info.m_guid <<
+                                    " removed.");
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " dropped.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Participant " << info.info.m_guid <<
+                                    " dropped.");
         }
     }
 }
@@ -143,27 +149,33 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
 
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY,
+            logInfo(DDSROUTER_DISCOVERY, "Thread: " << std::this_thread::get_id() << " | " <<
                     "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Reader " << info.info.guid() <<
+                                    " changed QoS.");
 
             this->discovery_database_->update_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Reader " << info.info.guid() <<
+                                    " removed.");
 
             info_reader.active(false);
             this->discovery_database_->update_endpoint(info_reader);
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Reader " << info.info.guid() <<
+                                    " dropped.");
 
             info_reader.active(false);
             this->discovery_database_->update_endpoint(info_reader);
@@ -182,27 +194,33 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY,
+            logInfo(DDSROUTER_DISCOVERY, "Thread: " << std::this_thread::get_id() << " | " <<
                     "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Writer " << info.info.guid() <<
+                                    " changed QoS.");
 
             this->discovery_database_->update_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Writer " << info.info.guid() <<
+                                    " removed.");
 
             info_writer.active(false);
             this->discovery_database_->update_endpoint(info_writer);
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
+            logInfo(DDSROUTER_DISCOVERY,
+                    "Thread: " << std::this_thread::get_id() << " | " << "Writer " << info.info.guid() <<
+                                    " dropped.");
 
             info_writer.active(false);
             this->discovery_database_->update_endpoint(info_writer);
