@@ -40,6 +40,7 @@
 #include <unistd.h>
 #endif // if defined(_WIN32)
 
+#include <ddsrouter_utils/math.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -87,7 +88,7 @@ bool is_file_accessible(
 
     // Check windows does not ask for execution
 #if defined(_WIN32)
-    if (access_mode % 2 == 1)
+    if (fast_module(access_mode, 2) == 1)
     {
         logWarning(
             DDSROUTER_UTILS,
