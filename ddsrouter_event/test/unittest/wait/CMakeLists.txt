@@ -37,38 +37,71 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_utils
     )
 
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
+
 #############################################
 # COUNTER WAIT HANDLER TEST
 #############################################
 
+set(TEST_NAME CounterWaitHandlerTest)
+
+set(TEST_SOURCES
+        CounterWaitHandlerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+    )
+
+set(TEST_LIST
+        value_handler
+        wait_value
+        wait_upper
+        wait_lower
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        ddsrouter_utils
+    )
+
 add_unittest_executable(
-    "${TEST_NAME}"
-    "${TEST_SOURCES}"
-    "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
-
-    set(TEST_NAME CounterWaitHandlerTest)
-
-    set(TEST_SOURCES
-            CounterWaitHandlerTest.cpp
-            ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
-        )
-
-    set(TEST_LIST
-            value_handler
-            wait_value
-            wait_upper
-            wait_lower
-        )
-
-    set(TEST_EXTRA_LIBRARIES
-            fastcdr
-            fastrtps
-            ddsrouter_utils
-        )
-
-    add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}")
+        "${TEST_EXTRA_LIBRARIES}"
+    )
+
+#############################################
+# DOUBLE QUEUE WAIT HANDLER TEST
+#############################################
+
+set(TEST_NAME DBQueueWaitHandlerTest)
+
+set(TEST_SOURCES
+        DBQueueWaitHandlerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+    )
+
+set(TEST_LIST
+        push_pop_one_thread_int
+        push_pop_one_thread_string_move # not working
+        push_pop_one_thread_string_copy
+        push_one_thread_pop_many_int
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        ddsrouter_utils
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
