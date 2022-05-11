@@ -61,7 +61,7 @@ TEST(mathTest, fast_module)
     {
         test::compare_fast_module(3, 3);
         test::compare_fast_module(4, 4);
-        test::compare_fast_module(66666, 666666);
+        test::compare_fast_module(66666, 66666);
     }
 
     // divisor = 2
