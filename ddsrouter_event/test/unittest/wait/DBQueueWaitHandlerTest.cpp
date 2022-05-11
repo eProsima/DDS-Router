@@ -143,35 +143,38 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         DBQueueWaitHandler<int> handler;
 
         // Create 3 threads. A & B will read wait handler, and C will write
-        std::thread thread_A([&]() {
-            int pop_value = handler.consume();
-            EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
-            if (pop_value == 1)
-            {
-                popped_1 = true;
-            }
-            else
-            {
-                popped_2 = true;
-            }
-        });
-        std::thread thread_B([&]() {
-            int pop_value = handler.consume();
-            EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
-            if (pop_value == 1)
-            {
-                popped_1 = true;
-            }
-            else
-            {
-                popped_2 = true;
-            }
-        });
-        std::thread thread_C([&]() {
+        std::thread thread_A([&]()
+                {
+                    int pop_value = handler.consume();
+                    EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
+                    if (pop_value == 1)
+                    {
+                        popped_1 = true;
+                    }
+                    else
+                    {
+                        popped_2 = true;
+                    }
+                });
+        std::thread thread_B([&]()
+                {
+                    int pop_value = handler.consume();
+                    EXPECT_TRUE((pop_value == 1) || (pop_value == 2));
+                    if (pop_value == 1)
+                    {
+                        popped_1 = true;
+                    }
+                    else
+                    {
+                        popped_2 = true;
+                    }
+                });
+        std::thread thread_C([&]()
+                {
 
-            handler.produce(1);
-            handler.produce(2);
-        });
+                    handler.produce(1);
+                    handler.produce(2);
+                });
 
         thread_A.join();
         thread_B.join();
@@ -189,57 +192,58 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         DBQueueWaitHandler<int> handler;
 
         auto lambda_for_A_and_B =
-            [&popped_1, &popped_2, &popped_3, &stopped_by_exception, &handler]
-            ()
-            {
-                try
+                [&popped_1, &popped_2, &popped_3, &stopped_by_exception, &handler]
+                    ()
                 {
-                    // Wait for first value from queue
-                    int pop_value = handler.consume();
-                    if (pop_value == 1)
+                    try
                     {
-                        popped_1++;
+                        // Wait for first value from queue
+                        int pop_value = handler.consume();
+                        if (pop_value == 1)
+                        {
+                            popped_1++;
+                        }
+                        else if (pop_value == 2)
+                        {
+                            popped_2++;
+                        }
+                        else if (pop_value == 3)
+                        {
+                            popped_3++;
+                        }
+                        // Wait for second value from queue
+                        pop_value = handler.consume();
+                        if (pop_value == 1)
+                        {
+                            popped_1++;
+                        }
+                        else if (pop_value == 2)
+                        {
+                            popped_2++;
+                        }
+                        else if (pop_value == 3)
+                        {
+                            popped_3++;
+                        }
                     }
-                    else if (pop_value == 2)
+                    catch (const eprosima::ddsrouter::utils::DisabledException& e)
                     {
-                        popped_2++;
+                        // Stopped by disabled
+                        stopped_by_exception++;
                     }
-                    else if (pop_value == 3)
-                    {
-                        popped_3++;
-                    }
-                    // Wait for second value from queue
-                    pop_value = handler.consume();
-                    if (pop_value == 1)
-                    {
-                        popped_1++;
-                    }
-                    else if (pop_value == 2)
-                    {
-                        popped_2++;
-                    }
-                    else if (pop_value == 3)
-                    {
-                        popped_3++;
-                    }
-                }
-                catch (const eprosima::ddsrouter::utils::DisabledException & e)
-                {
-                    // Stopped by disabled
-                    stopped_by_exception++;
-                }
 
-            };
+                };
 
         // Create 3 threads. A & B will read wait handler, and C will write
         std::thread thread_A(lambda_for_A_and_B);
         std::thread thread_B(lambda_for_A_and_B);
 
-        std::thread thread_C([&]() {
-            handler.produce(1);
-            handler.produce(2);
-            handler.produce(3);
-        });
+        std::thread thread_C([&]()
+                {
+                    handler.produce(1);
+                    handler.produce(2);
+                    handler.produce(3);
+                });
 
         thread_C.join();
 

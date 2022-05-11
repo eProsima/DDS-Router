@@ -25,14 +25,16 @@ namespace ddsrouter {
 namespace event {
 
 template <typename T>
-void DBQueueWaitHandler<T>::add_value_(T&& value)
+void DBQueueWaitHandler<T>::add_value_(
+        T&& value)
 {
     logDebug(DDSROUTER_WAIT_DBQUEUE, "Moving element to DBQueue.");
     queue_.Push(std::move(value));
 }
 
 template <typename T>
-void DBQueueWaitHandler<T>::add_value_(const T& value)
+void DBQueueWaitHandler<T>::add_value_(
+        const T& value)
 {
     logDebug(DDSROUTER_WAIT_DBQUEUE, "Copying element to DBQueue.");
     queue_.Push(value);

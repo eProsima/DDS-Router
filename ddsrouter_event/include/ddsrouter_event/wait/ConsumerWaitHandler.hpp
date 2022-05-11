@@ -41,7 +41,8 @@ class ConsumerWaitHandler : protected WaitHandler<uint32_t>
 {
 public:
 
-    ConsumerWaitHandler(bool enabled = true);
+    ConsumerWaitHandler(
+            bool enabled = true);
 
     // Make this parent methods public
     using WaitHandler::enable;
@@ -63,7 +64,8 @@ public:
      *
      * @param value new data available
      */
-    void produce(T&& value);
+    void produce(
+            T&& value);
 
 
     /**
@@ -76,7 +78,8 @@ public:
      *
      * @param value new data available
      */
-    void produce(const T& value);
+    void produce(
+            const T& value);
 
     /////
     // Get values methods
@@ -97,7 +100,7 @@ public:
      * @throw \c TimeoutException if timeout is reached.
      */
     T consume(
-        const utils::Duration_ms& timeout = 0);
+            const utils::Duration_ms& timeout = 0);
 
 protected:
 
@@ -110,7 +113,8 @@ protected:
      *
      * @param value new value
      */
-    virtual void add_value_(T&& value) = 0;
+    virtual void add_value_(
+            T&& value) = 0;
 
 
     /**
@@ -122,7 +126,8 @@ protected:
      *
      * @param value new value
      */
-    virtual void add_value_(const T& value) = 0;
+    virtual void add_value_(
+            const T& value) = 0;
 
     /**
      * @brief Method that gets next available value from the collection
