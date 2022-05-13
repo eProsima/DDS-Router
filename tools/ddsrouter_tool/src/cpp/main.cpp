@@ -105,10 +105,10 @@ int main(
         // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
         event::MultipleEventHandler signal_handlers;
 
-        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
-        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
+        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+            std::make_unique<event::SignalEventHandler<event::Signal::sigint>>());     // Add SIGINT
+        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+            std::make_unique<event::SignalEventHandler<event::Signal::sigterm>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization

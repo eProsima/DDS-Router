@@ -30,58 +30,58 @@ namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-template <int SigNum>
-SignalEventHandler<SigNum>::SignalEventHandler() noexcept
-    : SignalEventHandler<SigNum>(
-        [](int signum)
+template <Signal SigVal>
+SignalEventHandler<SigVal>::SignalEventHandler() noexcept
+    : SignalEventHandler<SigVal>(
+        [](Signal sigval)
         {
             logInfo(DDSROUTER_SIGNALHANDLER,
-            "Received signal " << signum << " in specific handler.");
+            "Received signal " << sigval << " in specific handler.");
         })
 {
 }
 
-template <int SigNum>
-SignalEventHandler<SigNum>::SignalEventHandler(
-        std::function<void(int)> callback) noexcept
-    : EventHandler<int>()
+template <Signal SigVal>
+SignalEventHandler<SigVal>::SignalEventHandler(
+        std::function<void(Signal)> callback) noexcept
+    : EventHandler<Signal>()
     , callback_set_in_manager_(false)
 {
     set_callback(callback);
-    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler created for signal: " << SigNum << ".");
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler created for signal: " << SigVal << ".");
 }
 
-template <int SigNum>
-SignalEventHandler<SigNum>::~SignalEventHandler()
+template <Signal SigVal>
+SignalEventHandler<SigVal>::~SignalEventHandler()
 {
     unset_callback();
-    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler destroyed for signal: " << SigNum << ".");
+    logDebug(DDSROUTER_SIGNALHANDLER, "SignalEventHandler destroyed for signal: " << SigVal << ".");
 }
 
-template <int SigNum>
-void SignalEventHandler<SigNum>::callback_set_nts_() noexcept
+template <Signal SigVal>
+void SignalEventHandler<SigVal>::callback_set_nts_() noexcept
 {
     if (!callback_set_in_manager_.exchange(true))
     {
-        callback_id_ = SignalManager<SigNum>::get_instance().register_callback(
-            std::bind(&SignalEventHandler<SigNum>::signal_received_callback_, this)
+        callback_id_ = SignalManager<SigVal>::get_instance().register_callback(
+            std::bind(&SignalEventHandler<SigVal>::signal_received_callback_, this)
             );
     }
 }
 
-template <int SigNum>
-void SignalEventHandler<SigNum>::callback_unset_nts_() noexcept
+template <Signal SigVal>
+void SignalEventHandler<SigVal>::callback_unset_nts_() noexcept
 {
     if (callback_set_in_manager_.exchange(false))
     {
-        SignalManager<SigNum>::get_instance().unregister_callback(callback_id_);
+        SignalManager<SigVal>::get_instance().unregister_callback(callback_id_);
     }
 }
 
-template <int SigNum>
-void SignalEventHandler<SigNum>::signal_received_callback_() noexcept
+template <Signal SigVal>
+void SignalEventHandler<SigVal>::signal_received_callback_() noexcept
 {
-    event_occurred_(SigNum);
+    event_occurred_(SigVal);
 }
 
 } /* namespace event */

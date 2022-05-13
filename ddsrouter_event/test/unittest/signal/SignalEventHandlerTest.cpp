@@ -49,26 +49,26 @@ TEST(SignalEventHandlerTest, create_signal_handler)
 {
     // SIGINT with callback
     {
-        SignalEventHandler<SIGNAL_SIGINT> handler([](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler([](Signal /* signal_number */ )
                 {
                     /* empty callback */ });
     }
 
     // SIGINT without callback
     {
-        SignalEventHandler<SIGNAL_SIGINT> handler;
+        SignalEventHandler<Signal::sigint> handler;
     }
 
     // SIGTERM with callback
     {
-        SignalEventHandler<SIGNAL_SIGTERM> handler([](int /* signal_number */ )
+        SignalEventHandler<Signal::sigterm> handler([](Signal /* signal_number */ )
                 {
                     /* empty callback */ });
     }
 
     // SIGTERM without callback
     {
-        SignalEventHandler<SIGNAL_SIGTERM> handler;
+        SignalEventHandler<Signal::sigterm> handler;
     }
 }
 
@@ -84,19 +84,19 @@ TEST(SignalEventHandlerTest, create_several_signal_handlers)
 {
     // N signal handlers of SIGINT
     {
-        std::vector<std::unique_ptr<SignalEventHandler<SIGNAL_SIGINT>>> v;
+        std::vector<std::unique_ptr<SignalEventHandler<Signal::sigint>>> v;
         for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
-            v.push_back(std::make_unique<SignalEventHandler<SIGNAL_SIGINT>>());
+            v.push_back(std::make_unique<SignalEventHandler<Signal::sigint>>());
         }
     }
 
     // N signal handlers of SIGTERM
     {
-        std::vector<std::unique_ptr<SignalEventHandler<SIGNAL_SIGTERM>>> v;
+        std::vector<std::unique_ptr<SignalEventHandler<Signal::sigterm>>> v;
         for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
-            v.push_back(std::make_unique<SignalEventHandler<SIGNAL_SIGTERM>>());
+            v.push_back(std::make_unique<SignalEventHandler<Signal::sigterm>>());
         }
     }
 
@@ -105,8 +105,8 @@ TEST(SignalEventHandlerTest, create_several_signal_handlers)
         std::vector<std::unique_ptr<IBaseSignalEventHandler>> v;
         for (int i = 0; i < test::N_DEFAUL_TEST_EXECUTIONS; i++)
         {
-            v.push_back(std::make_unique<SignalEventHandler<SIGNAL_SIGINT>>());
-            v.push_back(std::make_unique<SignalEventHandler<SIGNAL_SIGTERM>>());
+            v.push_back(std::make_unique<SignalEventHandler<Signal::sigint>>());
+            v.push_back(std::make_unique<SignalEventHandler<Signal::sigterm>>());
         }
     }
 }
@@ -120,13 +120,13 @@ TEST(SignalEventHandlerTest, receive_signal_trivial)
     std::atomic<uint32_t> calls(0);
 
     // Create signal handler
-    SignalEventHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+    SignalEventHandler<Signal::sigint> handler( [&calls](Signal /* signal_number */ )
             {
                 calls++;
             } );
 
     // Raise signal
-    raise(SIGNAL_SIGINT);
+    raise(static_cast<SignalType>(Signal::sigint));
 
     // Force handler to wait for signal
     handler.wait_for_event();
@@ -152,17 +152,17 @@ TEST(SignalEventHandlerTest, receive_signal)
         std::atomic<uint32_t> calls(0);
 
         // Create signal handler
-        SignalEventHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler1 ( [&calls](Signal /* signal_number */ )
                 {
                     calls++;
                 } );
-        SignalEventHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler2 ( [&calls](Signal /* signal_number */ )
                 {
                     calls++;
                 } );
 
         // Raise signal
-        raise(SIGNAL_SIGINT);
+        raise(static_cast<SignalType>(Signal::sigint));
 
         // Force handler to wait for signal
         handler1.wait_for_event();
@@ -178,14 +178,14 @@ TEST(SignalEventHandlerTest, receive_signal)
         std::atomic<uint32_t> calls(0);
 
         // Create signal handler
-        SignalEventHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler( [&calls](Signal /* signal_number */ )
                 {
                     calls++;
                 } );
 
         // Raise signal
-        raise(SIGNAL_SIGINT);
-        raise(SIGNAL_SIGINT);
+        raise(static_cast<SignalType>(Signal::sigint));
+        raise(static_cast<SignalType>(Signal::sigint));
 
         // Force handler to wait for signal
         handler.wait_for_event(2);
@@ -200,13 +200,13 @@ TEST(SignalEventHandlerTest, receive_signal)
         std::atomic<uint32_t> calls(0);
 
         // Create signal handler
-        SignalEventHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler( [&calls](Signal /* signal_number */ )
                 {
                     calls++;
                 } );
 
         // Raise signal
-        raise(SIGNAL_SIGINT);
+        raise(static_cast<SignalType>(Signal::sigint));
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -219,7 +219,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         handler.unset_callback();
 
         // Raise signal
-        raise(SIGNAL_SIGINT);
+        raise(static_cast<SignalType>(Signal::sigint));
 
         // Check that signal has not been received
         ASSERT_EQ(1, calls);
@@ -229,11 +229,11 @@ TEST(SignalEventHandlerTest, receive_signal)
     {
         {
             // Create signal handler
-            SignalEventHandler<SIGNAL_SIGINT> handler( [](int /* signal_number */ )
+            SignalEventHandler<Signal::sigint> handler( [](Signal /* signal_number */ )
                     {
                         /* empty callback */ } );
 
-            raise(SIGNAL_SIGINT);
+            raise(static_cast<SignalType>(Signal::sigint));
             // Destroying handler while Raise signal
         }
 
@@ -259,7 +259,7 @@ TEST(SignalEventHandlerTest, receive_n_signals)
         std::atomic<uint32_t> calls(0);
 
         // Create signal handler
-        SignalEventHandler<SIGNAL_SIGINT> handler( [&calls](int /* signal_number */ )
+        SignalEventHandler<Signal::sigint> handler( [&calls](Signal /* signal_number */ )
                 {
                     calls++;
                 } );
@@ -267,7 +267,7 @@ TEST(SignalEventHandlerTest, receive_n_signals)
         // Raise N signal
         for (uint32_t i = 0; i < number_signals; i++)
         {
-            raise(SIGNAL_SIGINT);
+            raise(static_cast<SignalType>(Signal::sigint));
         }
 
         // Force handler to wait for signal
@@ -290,18 +290,18 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
 
     // Create signal handler
     // This adds 10 each time signal is called
-    SignalEventHandler<SIGNAL_SIGINT> handler1 ( [&calls](int /* signal_number */ )
+    SignalEventHandler<Signal::sigint> handler1 ( [&calls](Signal /* signal_number */ )
             {
                 calls += 10;
             } );
     // This adds 1 each time signal is called
-    SignalEventHandler<SIGNAL_SIGINT> handler2 ( [&calls](int /* signal_number */ )
+    SignalEventHandler<Signal::sigint> handler2 ( [&calls](Signal /* signal_number */ )
             {
                 calls += 1;
             } );
 
     // Raise signal
-    raise(SIGNAL_SIGINT);
+    raise(static_cast<SignalType>(Signal::sigint));
 
     // Force handler to wait for signal
     handler1.wait_for_event();
@@ -314,7 +314,7 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
     handler1.unset_callback();
 
     // Raise signal
-    raise(SIGNAL_SIGINT);
+    raise(static_cast<SignalType>(Signal::sigint));
 
     // Force handler2 (remaining) to wait for signal (2 because it is the second one)
     handler2.wait_for_event(2);

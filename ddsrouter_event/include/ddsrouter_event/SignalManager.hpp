@@ -31,15 +31,17 @@ namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
+using SignalType = int;
+
 //! Available data types for SignalManager class
-enum Signals
+enum class Signal : SignalType
 {
-    SIGNAL_SIGINT   = SIGINT,   //! SIGINT  = ^C    = 2
-    SIGNAL_SIGTERM  = SIGTERM,  //! SIGTERM = kill  = 15
+    sigint   = SIGINT,   //! SIGINT  = ^C    = 2
+    sigterm  = SIGTERM,  //! SIGTERM = kill  = 15
 
 #ifndef _WIN32
-    SIGNAL_SIGUSR1  = SIGUSR1,  //! SIGUSR1 =       = 10
-    SIGNAL_SIGUSR2  = SIGUSR2,  //! SIGUSR2 =       = 12
+    sigusr1  = SIGUSR1,  //! SIGUSR1 =       = 10
+    sigusr2  = SIGUSR2,  //! SIGUSR2 =       = 12
 #endif // ifndef _WIN32
 
 };
@@ -47,7 +49,7 @@ enum Signals
 using UniqueCallbackId = uint32_t;
 
 /**
- * This class creates a Singleton object that manages a specific signal given by template specialization \c SigNum .
+ * This class creates a Singleton object that manages a specific signal given by template specialization \c SigVal .
  *
  * Signals may be captured from any running thread, but handling is performed here in a dedicated thread
  * \c signal_handler_thread_ in order to avoid unexpected behaviors.
@@ -68,7 +70,7 @@ using UniqueCallbackId = uint32_t;
  * so as the implementation of SignalEventHandler must be public, this too. But it is not mean to be used externally.
  *
  */
-template <int SigNum>
+template <Signal SigVal>
 class SignalManager
 {
 public:
@@ -150,7 +152,7 @@ protected:
 
     //! Static function to call from \c signal . It only calls singleton \c signal_received_ .
     static void signal_handler_function_(
-            int signal_number) noexcept;
+            SignalType sigval) noexcept;
 
     //////
     // Callbacks registered
@@ -201,6 +203,10 @@ protected:
     //! Guards access to singleton instance
     static std::recursive_mutex instance_mutex_;
 };
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const Signal& sigval);
 
 } /* namespace event */
 } /* namespace ddsrouter */
