@@ -80,23 +80,8 @@ void tsnh(
     abort();
 }
 
-// Windows specific access method
-bool is_file_accessible(
-        const char* file_path,
-        int access_mode /* = EXIST */ ) noexcept
-{
-
-    // Check windows does not ask for execution
-#if defined(_WIN32)
-    if (fast_module(access_mode, 2) == 1)
-    {
-        logWarning(
-            DDSROUTER_UTILS,
-            "Windows does not allow to check execution permission for file.");
-        access_mode = access_mode - 1;
-    }
-#endif // if defined(_WIN32)
-    return (access(file_path, access_mode) != -1);
+bool is_file_accessible(const char* file_path, FileAccessMode access_mode) noexcept {
+    return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 
 } /* namespace utils */

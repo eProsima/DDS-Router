@@ -77,7 +77,7 @@ int main(
 
     // Check file exists and it is readable
     // NOTE: this check is redundant with option parse arg check
-    if (!is_file_accessible(file_path.c_str(), utils::READ))
+    if (!is_file_accessible(file_path.c_str(), utils::FileAccessMode::read))
     {
         logError(
             DDSROUTER_ARGS,

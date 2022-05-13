@@ -28,7 +28,7 @@ set(TEST_LIST
         set_of_ptr_contains_string
         are_set_of_ptr_equal_int
         tsnh_call
-        is_file_accesible
+        is_file_accessible
     )
 
 set(TEST_EXTRA_LIBRARIES

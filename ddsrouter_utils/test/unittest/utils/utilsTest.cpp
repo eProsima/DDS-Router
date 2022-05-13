@@ -307,41 +307,36 @@ TEST(utilsTest, tsnh_call)
 }
 
 /**
- * Test \c is_file_accesible method
+ * Test \c is_file_accessible method
  *
  * CASES:
  * - File exist
  * - File is readable
- * - File exist and it is readable
- * - File does not exist
+ * - File does not exist and not readable
  */
-TEST(utilsTest, is_file_accesible)
+TEST(utilsTest, is_file_accessible)
 {
+    // TODO. We should ideally change the RWX permissions with chmod and test all cases
+
     // File exist
     {
         // Default argument
         ASSERT_TRUE(is_file_accessible("resources/exist.test"));
 
         // Set argument
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST));
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", FileAccessMode::exist));
     }
 
     // File is readable
     {
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", READ));
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", FileAccessMode::read));
     }
 
-    // File exist and it is readable
-    {
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST | READ));
-    }
-
-    // File does not exist
+    // File does not exist and not readable
     {
         ASSERT_FALSE(is_file_accessible("resources/not_exist.test"));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", READ));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST | READ));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::exist));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::read));
     }
 }
 

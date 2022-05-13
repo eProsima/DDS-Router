@@ -277,7 +277,7 @@ option::ArgStatus Arg::Readable_File(
     if (option.arg != 0)
     {
         // Windows has not unistd library, so to check if file is readable use a _access method (definition on top)
-        if (is_file_accessible(option.arg, utils::READ))
+        if (is_file_accessible(option.arg, utils::FileAccessMode::read))
         {
             return option::ARG_OK;
         }
