@@ -42,7 +42,7 @@ Track::Track(
     , payload_pool_(payload_pool)
     , enabled_(false)
     , exit_(false)
-    , data_available_status_(NO_MORE_DATA)
+    , data_available_status_(DataAvailableStatus::no_more_data)
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
@@ -136,15 +136,15 @@ void Track::no_more_data_available_() noexcept
 
     // It may occur that within the process of set data_available_status, the actual status had changed
     // Thus, it must take care that it is only set to NO_DATA when it comes from transmitting data
-    if (data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA)
+    if (data_available_status_ == DataAvailableStatus::transmitting_data)
     {
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
-        data_available_status_.store(DataAvailableStatus::NO_MORE_DATA);
+        data_available_status_.store(DataAvailableStatus::no_more_data);
     }
-    // If it is NEW_DATA_ARRIVED is that the Listener has notified new data AFTER Track has received a NO_DATA
+    // If it is DataAvailableStatus::new_data_arrived is that the Listener has notified new data AFTER Track has received a NO_DATA
     // from the Reader. Very unlikely timing, but possible.
-    // In this occasion, it must not be set as NO_MORE_DATA because THERE IS data.
-    // If it is NO_MORE_DATA it does not need to be changed (however it should never happen)
+    // In this occasion, it must not be set as DataAvailableStatus::no_more_data because THERE IS data.
+    // If it is DataAvailableStatus::no_more_data it does not need to be changed (however it should never happen)
 }
 
 bool Track::should_transmit_() noexcept
@@ -163,7 +163,7 @@ void Track::data_available_() noexcept
         {
             // Set data available to true and notify transmit thread
             std::lock_guard<std::mutex> lock(data_available_mutex_);
-            data_available_status_.store(DataAvailableStatus::NEW_DATA_ARRIVED);
+            data_available_status_.store(DataAvailableStatus::new_data_arrived);
         }
 
         data_available_condition_variable_.notify_one();
@@ -172,8 +172,8 @@ void Track::data_available_() noexcept
 
 bool Track::is_data_available_() const noexcept
 {
-    return data_available_status_ == DataAvailableStatus::NEW_DATA_ARRIVED ||
-           data_available_status_ == DataAvailableStatus::TRANSMITTING_DATA;
+    return data_available_status_ == DataAvailableStatus::new_data_arrived ||
+           data_available_status_ == DataAvailableStatus::transmitting_data;
 }
 
 void Track::transmit_thread_function_() noexcept
@@ -216,7 +216,7 @@ void Track::transmit_() noexcept
         }
 
         // It starts transmitting, so it sets the data available status as transmitting
-        data_available_status_ = TRANSMITTING_DATA;
+        data_available_status_ = DataAvailableStatus::transmitting_data;
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
