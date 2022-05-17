@@ -96,9 +96,9 @@ public:
     /**
      * @brief Construct Address and get IP version from IP format
      *
-     * If the IP is a string with format IpVersion::v4, version will be set to IpVersion::v4.
-     * If the IP is a string with format IpVersion::v6, version will be set to IpVersion::v6.
-     * If the IP has an incorrect formant, version will be set to IpVersion::v4 and address will be invalid.
+     * If the IP is a string with format IPv4, version will be set to IpVersion::v4.
+     * If the IP is a string with format IPv6, version will be set to IpVersion::v6.
+     * If the IP has an incorrect format, version will be set to IpVersion::v4 and address will be invalid.
      */
     DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
