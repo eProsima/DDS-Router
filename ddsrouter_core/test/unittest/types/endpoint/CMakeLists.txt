@@ -88,6 +88,7 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
+        string_conversions
         constructor
         kind_getter
         guid_getter

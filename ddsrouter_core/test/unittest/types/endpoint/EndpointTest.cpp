@@ -96,6 +96,17 @@ Guid random_valid_guid(
 }
 
 /**
+ * Test \c EndpointKind string conversions
+ */
+TEST(EndpointTest, string_conversions)
+{
+    ASSERT_EQ(std::string(EndpointKindStrings[static_cast<EndpointKindType>(EndpointKind::invalid)]), std::string("invalid"));
+    ASSERT_EQ(std::string(EndpointKindStrings[static_cast<EndpointKindType>(EndpointKind::writer)]), std::string("writer"));
+    ASSERT_EQ(std::string(EndpointKindStrings[static_cast<EndpointKindType>(EndpointKind::reader)]), std::string("reader"));
+}
+
+
+/**
  * Test \c Endpoint constructor
  */
 TEST(EndpointTest, constructor)

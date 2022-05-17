@@ -85,7 +85,7 @@ static constexpr unsigned MaxParticipantKindAliases = 4;
 using ParticipantKindAliasesType = std::array<const char *, MaxParticipantKindAliases>;
 
 /**
- * @brief All possible string aliases for each ParticipantKind.
+ * @brief All possible string aliases for each \c ParticipantKind.
  */
 constexpr std::array<ParticipantKindAliasesType, ParticipantKindCount> ParticipantKindAliases = {
     ParticipantKindAliasesType({"__invalid_participant_kind__", "", "", ""}),
@@ -97,6 +97,9 @@ constexpr std::array<ParticipantKindAliasesType, ParticipantKindCount> Participa
     ParticipantKindAliasesType({"wan", "router", "", ""}),
 };
 
+static_assert(ParticipantKindAliases.size() == AllParticipantKinds.size());
+static_assert(AllValidParticipantKinds.size() == AllParticipantKinds.size() - 1);
+
 std::ostream& operator <<(
         std::ostream& os,
         const ParticipantKind& kind);
@@ -104,7 +107,7 @@ std::ostream& operator <<(
 /**
  * @brief Create a Participant Kind regarding the string argument in lower case
  *
- * @note Kind name is not case sensitive
+ * @note Kind name is case sensitive
  *
  * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
  * matches any of them, return the ParticipantKind associated with that name.

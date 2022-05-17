@@ -340,6 +340,64 @@ TEST(utilsTest, is_file_accessible)
     }
 }
 
+TEST(utilsTest, combined_file_permissions)
+{
+#if defined(_WIN32)
+    // Match exist
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::exist) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::exist)), static_cast<int>(FileAccessMode::exist));
+
+    // Match read
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::read));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::read));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::read));
+
+    // Match write
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::write));
+#else
+    // Match exist
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::exist) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read_exec) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::write_exec) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read_write_exec) & static_cast<int>(FileAccessMode::exist), static_cast<int>(FileAccessMode::exist));
+
+    // Match read
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::read));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::read));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::exec) & static_cast<int>(FileAccessMode::read));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::read));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_exec) & static_cast<int>(FileAccessMode::read));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write_exec) & static_cast<int>(FileAccessMode::read));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::write_exec) & static_cast<int>(FileAccessMode::read));
+
+    // Match write
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::write));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::exec) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::write));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::read_exec) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write_exec) & static_cast<int>(FileAccessMode::write));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::write_exec) & static_cast<int>(FileAccessMode::write));
+
+    // Match exec
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::write) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::exec) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_FALSE(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_exec) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::read_write_exec) & static_cast<int>(FileAccessMode::exec));
+    ASSERT_TRUE(static_cast<int>(FileAccessMode::write_exec) & static_cast<int>(FileAccessMode::exec));
+#endif
+
+}
+
 int main(
         int argc,
         char** argv)

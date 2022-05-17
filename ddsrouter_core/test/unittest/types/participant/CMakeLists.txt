@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#################
+# ParticipantId #
+#################
+
 set(TEST_NAME ParticipantIdTest)
 
 set(TEST_SOURCES
@@ -31,6 +35,34 @@ set(TEST_LIST
         is_non_valid
         non_equal_operator
         non_minor_operator
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        ddsrouter_utils
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
+
+
+###################
+# ParticipantKind #
+###################
+
+set(TEST_NAME ParticipantKindTest)
+
+set(TEST_SOURCES
+        ParticipantKindTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
+    )
+
+set(TEST_LIST
+        int_conversions
+        string_conversions
     )
 
 set(TEST_EXTRA_LIBRARIES

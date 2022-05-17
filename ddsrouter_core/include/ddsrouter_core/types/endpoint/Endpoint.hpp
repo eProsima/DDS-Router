@@ -29,15 +29,22 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
+using EndpointKindType = unsigned int;
+
 //! Possible kinds of the endpoint
-enum class EndpointKind : unsigned int
+enum class EndpointKind : EndpointKindType
 {
     invalid = 0,
     writer = 1,
     reader = 2,
 };
 
-constexpr std::array<const char*, 3> EndpointKindStrings = {"Invalid", "Writer", "Reader"};
+constexpr std::array<const char*, 3> EndpointKindStrings = 
+{
+    "invalid",
+    "writer",
+    "reader"
+};
 
 /**
  * Data collection to describe an Endpoint

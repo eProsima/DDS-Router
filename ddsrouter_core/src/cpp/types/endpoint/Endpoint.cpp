@@ -112,10 +112,10 @@ std::ostream& operator <<(
 {
     try {
 
-        os << EndpointKindStrings.at(static_cast<unsigned>(kind));
+        os << EndpointKindStrings.at(static_cast<EndpointKindType>(kind));
 
     } catch (const std::out_of_range& oor) {
-        utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind." << static_cast<unsigned>(kind));
+        utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind." << static_cast<EndpointKindType>(kind));
     }
     return os;
 }
