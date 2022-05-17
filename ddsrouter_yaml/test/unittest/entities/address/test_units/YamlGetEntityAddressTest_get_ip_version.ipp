@@ -48,7 +48,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
 
         core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
-        ASSERT_EQ(iv, core::types::IpVersion::IPv4);
+        ASSERT_EQ(iv, core::types::IpVersion::v4);
     }
 
     // v6
@@ -61,7 +61,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
 
         core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
-        ASSERT_EQ(iv, core::types::IpVersion::IPv6);
+        ASSERT_EQ(iv, core::types::IpVersion::v6);
     }
 
     // Empty

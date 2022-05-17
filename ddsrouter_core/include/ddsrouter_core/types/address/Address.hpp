@@ -41,10 +41,10 @@ using DomainType = std::string;
 using PortType = uint16_t;
 
 //! Different versions allowed for IP
-enum IpVersion
+enum class IpVersion : int
 {
-    IPv4,
-    IPv6
+    v4 = 4,
+    v6 = 6,
 };
 
 //! Different Transport Protocols allowed
@@ -96,9 +96,9 @@ public:
     /**
      * @brief Construct Address and get IP version from IP format
      *
-     * If the IP is a string with format IPv4, version will be set to IPv4.
-     * If the IP is a string with format IPv6, version will be set to IPv6.
-     * If the IP has an incorrect formant, version will be set to IPv4 and address will be invalid.
+     * If the IP is a string with format IpVersion::v4, version will be set to IpVersion::v4.
+     * If the IP is a string with format IpVersion::v6, version will be set to IpVersion::v6.
+     * If the IP has an incorrect formant, version will be set to IpVersion::v4 and address will be invalid.
      */
     DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
@@ -134,9 +134,9 @@ public:
     //! Whether transport is TCP
     DDSROUTER_CORE_DllAPI bool is_tcp() const noexcept;
 
-    //! Whether ip version is IPv4
+    //! Whether ip version is IpVersion::v4
     DDSROUTER_CORE_DllAPI bool is_ipv4() const noexcept;
-    //! Whether ip version is IPv6
+    //! Whether ip version is IpVersion::v6
     DDSROUTER_CORE_DllAPI bool is_ipv6() const noexcept;
 
     //! Get FastDDS Locator kind
@@ -158,11 +158,11 @@ public:
     DDSROUTER_CORE_DllAPI bool operator ==(
             const Address& other) const noexcept;
 
-    //! Whether string \c ip has correct IPv4 format.
+    //! Whether string \c ip has correct IpVersion::v4 format.
     DDSROUTER_CORE_DllAPI static bool is_ipv4_correct(
             const IpType& ip) noexcept;
 
-    //! Whether string \c ip has correct IPv6 format.
+    //! Whether string \c ip has correct IpVersion::v6 format.
     DDSROUTER_CORE_DllAPI static bool is_ipv6_correct(
             const IpType& ip) noexcept;
 
@@ -171,7 +171,7 @@ public:
     //! Default ip for address when is not set: 127.0.0.1
     DDSROUTER_CORE_DllAPI static IpType default_ip(
             IpVersion ip_version = default_ip_version()) noexcept;
-    //! Default ip version for address when is not set: IPv4
+    //! Default ip version for address when is not set: IpVersion::v4
     DDSROUTER_CORE_DllAPI static IpVersion default_ip_version() noexcept;
     //! Default transport protocol for address when is not set: UDP
     DDSROUTER_CORE_DllAPI static TransportProtocol default_transport_protocol() noexcept;
@@ -196,7 +196,7 @@ public:
      * @brief Return the IP corresponding to the \c domain name given
      *
      * Make a DNS call to get the IP related with \c domain .
-     * Get the IP found in default IP Version (IPv4) if present. If not, find IPv6.
+     * Get the IP found in default IP Version (IpVersion::v4) if present. If not, find IpVersion::v6.
      *
      * @param domain domain name of the ip to look for
      *
@@ -227,12 +227,12 @@ protected:
 
     //! Default Port
     static const PortType DEFAULT_PORT_;                         // 11666
-    //! Default IPv4
+    //! Default IpVersion::v4
     static const IpType DEFAULT_IP_v4_;                             // 127.0.0.1
-    //! Default IPv6
+    //! Default IpVersion::v6
     static const IpType DEFAULT_IP_v6_;                             // ::1
     //! Default IP version
-    static const IpVersion DEFAULT_IP_VERSION_;                  // IPv4
+    static const IpVersion DEFAULT_IP_VERSION_;                  // IpVersion::v4
     //! Default Transport protocol
     static const TransportProtocol DEFAULT_TRANSPORT_PROTOCOL_;  // UDP
 

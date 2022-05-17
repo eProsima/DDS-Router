@@ -97,7 +97,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
                 types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
                         {
                             types::Address(
-                                (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
+                                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                                 11666 + (this_server_id_is_1 ? 0u : 1u),
                                 ip_version,
                                 transport_protocol)
@@ -110,7 +110,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         listening_addresses.insert(
             types::Address(
-                (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
+                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
                 transport_protocol)
@@ -364,7 +364,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::udp,
-        types::IpVersion::IPv4);
+        types::IpVersion::v4);
 }
 
 /**
@@ -376,7 +376,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::udp,
-        types::IpVersion::IPv6);
+        types::IpVersion::v6);
 }
 
 /**
@@ -388,7 +388,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::tcp,
-        types::IpVersion::IPv4);
+        types::IpVersion::v4);
 }
 
 /**
@@ -400,7 +400,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::tcp,
-        types::IpVersion::IPv6,
+        types::IpVersion::v6,
         true);
 }
 
@@ -413,7 +413,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::tcp,
-        types::IpVersion::IPv4,
+        types::IpVersion::v4,
         false,
         true);
 }
@@ -427,7 +427,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 {
     test::test_WAN_communication_all(
         types::TransportProtocol::tcp,
-        types::IpVersion::IPv6,
+        types::IpVersion::v6,
         true,
         true);
 }
@@ -450,7 +450,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
                 true, // is server 1
                 test::SERVER,
                 types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::IPv4 // ip version
+                types::IpVersion::v4 // ip version
                 ),
             0 // domain
             ),
@@ -460,7 +460,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
                 false, // is server 1
                 test::CLIENT,
                 types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::IPv4 // ip version
+                types::IpVersion::v4 // ip version
                 ),
             1 // domain
             ),

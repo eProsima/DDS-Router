@@ -31,7 +31,7 @@ namespace types {
 const PortType Address::DEFAULT_PORT_ = 11666;
 const IpType Address::DEFAULT_IP_v4_ = "127.0.0.1";
 const IpType Address::DEFAULT_IP_v6_ = "::1";
-const IpVersion Address::DEFAULT_IP_VERSION_ = IPv4;
+const IpVersion Address::DEFAULT_IP_VERSION_ = IpVersion::v4;
 const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = TransportProtocol::udp;
 
 Address::Address()
@@ -83,11 +83,11 @@ Address::Address(
         const IpType& ip,
         const PortType& port,
         const TransportProtocol& transport_protocol) noexcept
-    : Address(ip, port, IPv4, transport_protocol)
+    : Address(ip, port, IpVersion::v4, transport_protocol)
 {
     if (is_ipv6_correct(ip_))
     {
-        ip_version_ = IPv6;
+        ip_version_ = IpVersion::v6;
     }
 }
 
@@ -148,17 +148,17 @@ bool Address::is_tcp() const noexcept
 
 bool Address::is_ipv4() const noexcept
 {
-    return ip_version_ == IPv4;
+    return ip_version_ == IpVersion::v4;
 }
 
 bool Address::is_ipv6() const noexcept
 {
-    return ip_version_ == IPv6;
+    return ip_version_ == IpVersion::v6;
 }
 
 LocatorType Address::get_locator_kind() noexcept
 {
-    if (ip_version_ == IPv4)
+    if (ip_version_ == IpVersion::v4)
     {
         if (transport_protocol_ == TransportProtocol::udp)
         {
@@ -169,7 +169,7 @@ LocatorType Address::get_locator_kind() noexcept
             return LOCATOR_KIND_TCPv4;
         }
     }
-    else if (ip_version_ == IPv6)
+    else if (ip_version_ == IpVersion::v6)
     {
         if (transport_protocol_ == TransportProtocol::udp)
         {
@@ -194,10 +194,10 @@ bool Address::is_valid() const noexcept
     // TODO check port and maybe UDP/TCP specific rules
     switch (ip_version_)
     {
-        case IPv4:
+        case IpVersion::v4:
             return is_ipv4_correct(ip_);
 
-        case IPv6:
+        case IpVersion::v6:
             return is_ipv6_correct(ip_);
 
         default:
@@ -280,17 +280,17 @@ PortType Address::default_port() noexcept
 IpType Address::default_ip(
         IpVersion ip_version /* = default_ip_version() */) noexcept
 {
-    if (ip_version == IPv4)
+    if (ip_version == IpVersion::v4)
     {
         return DEFAULT_IP_v4_;
     }
-    else if (ip_version == IPv6)
+    else if (ip_version == IpVersion::v6)
     {
         return DEFAULT_IP_v6_;
     }
     else
     {
-        utils::tsnh(utils::Formatter() << "Value " << ip_version << " is not allowed.");
+        utils::tsnh(utils::Formatter() << "Value v" << static_cast<int>(ip_version) << " is not allowed for IpVersion.");
         return DEFAULT_IP_v4_;
     }
 }
@@ -312,18 +312,18 @@ IpType Address::resolve_dns(
     std::pair<std::set<std::string>, std::set<std::string>> dns_response =
             fastrtps::rtps::IPLocator::resolveNameDNS(domain);
 
-    if (ip_version == IPv4)
+    if (ip_version == IpVersion::v4)
     {
         if (dns_response.first.empty())
         {
             throw utils::DNSException(
-                      utils::Formatter() << "Could not resolve IPv4 for domain name <" << domain << ">.");
+                      utils::Formatter() << "Could not resolve IpVersion::v4 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
-                "Getting first IPv4: " << dns_response.first.begin()->data() <<
+                "Getting first IpVersion::v4: " << dns_response.first.begin()->data() <<
                     " for Domain name: " << domain <<
                     " from DNS response from " << dns_response.first.size() << " valid IPs.");
             return dns_response.first.begin()->data();
@@ -334,13 +334,13 @@ IpType Address::resolve_dns(
         if (dns_response.second.empty())
         {
             throw utils::DNSException(
-                      utils::Formatter() << "Could not resolve IPv6 for domain name <" << domain << ">.");
+                      utils::Formatter() << "Could not resolve IpVersion::v6 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
-                "Getting first IPv6: " << dns_response.second.begin()->data() <<
+                "Getting first IpVersion::v6: " << dns_response.second.begin()->data() <<
                     " for Domain name: " << domain <<
                     " from DNS response from " << dns_response.second.size() << " valid IPs.");
             return dns_response.second.begin()->data();
@@ -360,27 +360,27 @@ std::pair<IpType, IpVersion> Address::resolve_dns(
         {
             throw utils::DNSException(
                       utils::Formatter() <<
-                          "Could not resolve IP for IPv4 nor IPv6 for domain name <" << domain << ">.");
+                          "Could not resolve IP for IpVersion::v4 nor IpVersion::v6 for domain name <" << domain << ">.");
         }
         else
         {
             logInfo(
                 DDSROUTER_ADDRESS,
-                "Getting first IPv6: " << dns_response.second.begin()->data() <<
+                "Getting first IpVersion::v6: " << dns_response.second.begin()->data() <<
                     " for Domain name: " << domain <<
                     " from DNS response from " << dns_response.second.size() << " valid IPs.");
-            return {dns_response.second.begin()->data(), IPv6};
+            return {dns_response.second.begin()->data(), IpVersion::v6};
         }
     }
     else
     {
         logInfo(
             DDSROUTER_ADDRESS,
-            "Getting first IPv4: " << dns_response.first.begin()->data() <<
+            "Getting first IpVersion::v4: " << dns_response.first.begin()->data() <<
                 " for Domain name: " << domain <<
                 " from DNS response from " << (dns_response.first.size() + dns_response.second.size()) <<
                 " valid IPs.");
-        return {dns_response.first.begin()->data(), IPv4};
+        return {dns_response.first.begin()->data(), IpVersion::v4};
     }
 }
 

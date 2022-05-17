@@ -119,8 +119,8 @@ IpVersion YamlReader::get<IpVersion>(
     return get_enumeration<IpVersion>(
         yml,
                 {
-                    {ADDRESS_IP_VERSION_V4_TAG, IpVersion::IPv4},
-                    {ADDRESS_IP_VERSION_V6_TAG, IpVersion::IPv6},
+                    {ADDRESS_IP_VERSION_V4_TAG, IpVersion::v4},
+                    {ADDRESS_IP_VERSION_V6_TAG, IpVersion::v6},
                 });
 }
 

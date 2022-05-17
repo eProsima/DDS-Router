@@ -117,14 +117,14 @@ void address_to_yaml(
             ADDRESS_TRANSPORT_TAG);
     }
 
-    if (address.ip_version() == core::types::IpVersion::IPv4)
+    if (address.ip_version() == core::types::IpVersion::v4)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
-    else if (address.ip_version() == core::types::IpVersion::IPv6)
+    else if (address.ip_version() == core::types::IpVersion::v6)
     {
         test::add_field_to_yaml(
             yml,
