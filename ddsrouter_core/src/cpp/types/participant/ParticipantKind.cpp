@@ -44,18 +44,6 @@ std::ostream& operator <<(
     return os;
 }
 
-/**
- * @brief Create a Participant Kind regarding the string argument in lower case
- *
- * @note Kind name is not case sensitive
- *
- * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
- * matches any of them, return the ParticipantKind associated with that name.
- * It will return \c ParticipantKind::invalid in case no existing ParticipantKind name matches the argument.
- *
- * @param [in] kind : string with the name of the kind to build
- * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
- */
 ParticipantKind participant_kind_from_name(std::string participantKindName) {
 
     if (participantKindName.size() == 0) {
