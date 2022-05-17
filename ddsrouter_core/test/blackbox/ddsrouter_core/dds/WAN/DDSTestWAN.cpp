@@ -34,23 +34,23 @@ namespace ddsrouter {
 namespace core {
 namespace test {
 
-enum WanKind
+enum class WanKind
 {
-    SERVER,
-    CLIENT,
-    SERVER_AND_CLIENT
+    server,
+    client,
+    server_and_client
 };
 
 bool is_client(
         WanKind wan_kind)
 {
-    return wan_kind == CLIENT || wan_kind == SERVER_AND_CLIENT;
+    return wan_kind == WanKind::client || wan_kind == WanKind::server_and_client;
 }
 
 bool is_server(
         WanKind wan_kind)
 {
-    return wan_kind == SERVER || wan_kind == SERVER_AND_CLIENT;
+    return wan_kind == WanKind::server || wan_kind == WanKind::server_and_client;
 }
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
@@ -270,7 +270,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                SERVER,
+                WanKind::server,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -281,7 +281,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                CLIENT,
+                WanKind::client,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -295,7 +295,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                SERVER,
+                WanKind::server,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -306,7 +306,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                SERVER_AND_CLIENT,
+                WanKind::server_and_client,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -325,7 +325,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     true, // is server 1
-                    SERVER_AND_CLIENT,
+                    WanKind::server_and_client,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -336,7 +336,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     false, // is server 1
-                    SERVER_AND_CLIENT,
+                    WanKind::server_and_client,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -448,7 +448,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                test::SERVER,
+                test::WanKind::server,
                 types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::v4 // ip version
                 ),
@@ -458,7 +458,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                test::CLIENT,
+                test::WanKind::client,
                 types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::v4 // ip version
                 ),
