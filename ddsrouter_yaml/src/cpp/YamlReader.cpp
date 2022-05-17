@@ -106,8 +106,8 @@ TransportProtocol YamlReader::get<TransportProtocol>(
     return get_enumeration<TransportProtocol>(
         yml,
                 {
-                    {ADDRESS_TRANSPORT_TCP_TAG, TransportProtocol::TCP},
-                    {ADDRESS_TRANSPORT_UDP_TAG, TransportProtocol::UDP},
+                    {ADDRESS_TRANSPORT_TCP_TAG, TransportProtocol::tcp},
+                    {ADDRESS_TRANSPORT_UDP_TAG, TransportProtocol::udp},
                 });
 }
 

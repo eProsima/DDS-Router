@@ -363,7 +363,7 @@ using namespace eprosima::ddsrouter::core::types;
 TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::UDP,
+        types::TransportProtocol::udp,
         types::IpVersion::IPv4);
 }
 
@@ -375,7 +375,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::UDP,
+        types::TransportProtocol::udp,
         types::IpVersion::IPv6);
 }
 
@@ -387,7 +387,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
+        types::TransportProtocol::tcp,
         types::IpVersion::IPv4);
 }
 
@@ -399,7 +399,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
+        types::TransportProtocol::tcp,
         types::IpVersion::IPv6,
         true);
 }
@@ -412,7 +412,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
+        types::TransportProtocol::tcp,
         types::IpVersion::IPv4,
         false,
         true);
@@ -426,7 +426,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
+        types::TransportProtocol::tcp,
         types::IpVersion::IPv6,
         true,
         true);
@@ -449,7 +449,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
             test::wan_participant_configuration(
                 true, // is server 1
                 test::SERVER,
-                types::TransportProtocol::UDP, // transport protocol
+                types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::IPv4 // ip version
                 ),
             0 // domain
@@ -459,7 +459,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
             test::wan_participant_configuration(
                 false, // is server 1
                 test::CLIENT,
-                types::TransportProtocol::UDP, // transport protocol
+                types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::IPv4 // ip version
                 ),
             1 // domain

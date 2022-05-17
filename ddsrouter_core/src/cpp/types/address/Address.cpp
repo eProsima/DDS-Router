@@ -32,7 +32,7 @@ const PortType Address::DEFAULT_PORT_ = 11666;
 const IpType Address::DEFAULT_IP_v4_ = "127.0.0.1";
 const IpType Address::DEFAULT_IP_v6_ = "::1";
 const IpVersion Address::DEFAULT_IP_VERSION_ = IPv4;
-const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = UDP;
+const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = TransportProtocol::udp;
 
 Address::Address()
     : Address(DEFAULT_IP_v4_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
@@ -138,12 +138,12 @@ TransportProtocol Address::transport_protocol() const noexcept
 
 bool Address::is_udp() const noexcept
 {
-    return transport_protocol_ == UDP;
+    return transport_protocol_ == TransportProtocol::udp;
 }
 
 bool Address::is_tcp() const noexcept
 {
-    return transport_protocol_ == TCP;
+    return transport_protocol_ == TransportProtocol::tcp;
 }
 
 bool Address::is_ipv4() const noexcept
@@ -160,22 +160,22 @@ LocatorType Address::get_locator_kind() noexcept
 {
     if (ip_version_ == IPv4)
     {
-        if (transport_protocol_ == UDP)
+        if (transport_protocol_ == TransportProtocol::udp)
         {
             return LOCATOR_KIND_UDPv4;
         }
-        else if (transport_protocol_ == TCP)
+        else if (transport_protocol_ == TransportProtocol::tcp)
         {
             return LOCATOR_KIND_TCPv4;
         }
     }
     else if (ip_version_ == IPv6)
     {
-        if (transport_protocol_ == UDP)
+        if (transport_protocol_ == TransportProtocol::udp)
         {
             return LOCATOR_KIND_UDPv6;
         }
-        else if (transport_protocol_ == TCP)
+        else if (transport_protocol_ == TransportProtocol::tcp)
         {
             return LOCATOR_KIND_TCPv6;
         }

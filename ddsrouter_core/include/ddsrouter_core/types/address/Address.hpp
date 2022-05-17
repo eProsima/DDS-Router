@@ -48,10 +48,10 @@ enum IpVersion
 };
 
 //! Different Transport Protocols allowed
-enum TransportProtocol
+enum class TransportProtocol
 {
-    UDP,
-    TCP
+    udp,
+    tcp
 };
 
 /**

@@ -102,14 +102,14 @@ void address_to_yaml(
         test::YamlField<core::types::PortType>(address.port()),
         ADDRESS_PORT_TAG);
 
-    if (address.transport_protocol() == core::types::TransportProtocol::UDP)
+    if (address.transport_protocol() == core::types::TransportProtocol::udp)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
     }
-    else if (address.transport_protocol() == core::types::TransportProtocol::TCP)
+    else if (address.transport_protocol() == core::types::TransportProtocol::tcp)
     {
         test::add_field_to_yaml(
             yml,
