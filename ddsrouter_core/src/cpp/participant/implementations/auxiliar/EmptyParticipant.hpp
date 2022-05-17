@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file VoidParticipant.hpp
+ * @file EmptyParticipant.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_VOIDPARTICIPANT_HPP_
@@ -33,12 +33,12 @@ namespace core {
  * Writer: VoidWriter
  * Reader: VoidReader
  */
-class VoidParticipant : public IParticipant
+class EmptyParticipant : public IParticipant
 {
 public:
 
     //! Constructor with Id of this participant
-    VoidParticipant(
+    EmptyParticipant(
             const types::ParticipantId& id_);
 
     //! Override id() IParticipant method

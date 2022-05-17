@@ -13,10 +13,10 @@
 // limitations under the License.
 
 /**
- * @file VoidParticipant.cpp
+ * @file EmptyParticipant.cpp
  */
 
-#include <participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <participant/implementations/auxiliar/EmptyParticipant.hpp>
 #include <reader/implementations/auxiliar/VoidReader.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <writer/implementations/auxiliar/VoidWriter.hpp>
@@ -27,40 +27,40 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-VoidParticipant::VoidParticipant(
+EmptyParticipant::EmptyParticipant(
         const ParticipantId& id)
     : id_(id)
 {
 }
 
-ParticipantId VoidParticipant::id() const noexcept
+ParticipantId EmptyParticipant::id() const noexcept
 {
     return id_;
 }
 
-ParticipantKind VoidParticipant::kind() const noexcept
+ParticipantKind EmptyParticipant::kind() const noexcept
 {
     return ParticipantKind::empty;
 }
 
-std::shared_ptr<IWriter> VoidParticipant::create_writer(
+std::shared_ptr<IWriter> EmptyParticipant::create_writer(
         RealTopic topic)
 {
     return std::make_shared<VoidWriter>();
 }
 
-std::shared_ptr<IReader> VoidParticipant::create_reader(
+std::shared_ptr<IReader> EmptyParticipant::create_reader(
         RealTopic topic)
 {
     return std::make_shared<VoidReader>();
 }
 
-void VoidParticipant::delete_writer(
+void EmptyParticipant::delete_writer(
         std::shared_ptr<IWriter> writer) noexcept
 {
 }
 
-void VoidParticipant::delete_reader(
+void EmptyParticipant::delete_reader(
         std::shared_ptr<IReader> reader) noexcept
 {
 }

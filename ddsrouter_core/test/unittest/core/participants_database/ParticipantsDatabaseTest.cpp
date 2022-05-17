@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
-#include <participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <participant/implementations/auxiliar/EmptyParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
@@ -99,7 +99,7 @@ TEST(ParticipantsDatabaseTest, add_participant)
     ASSERT_TRUE(participants_database->empty());
 
     ParticipantId id("void_part");
-    std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
+    std::shared_ptr<EmptyParticipant> participant = std::make_shared<EmptyParticipant>(id);
     // Insert participant
     participants_database->add_participant(participant->id(), participant, 1);
 
@@ -129,9 +129,9 @@ TEST(ParticipantsDatabaseTest, pop)
     ASSERT_TRUE(participants_database->pop() == nullptr);
 
     ParticipantId id1("void_p1");
-    std::shared_ptr<VoidParticipant> participant1 = std::make_shared<VoidParticipant>(id1);
+    std::shared_ptr<EmptyParticipant> participant1 = std::make_shared<EmptyParticipant>(id1);
     ParticipantId id2("void_p2");
-    std::shared_ptr<VoidParticipant> participant2 = std::make_shared<VoidParticipant>(id2);
+    std::shared_ptr<EmptyParticipant> participant2 = std::make_shared<EmptyParticipant>(id2);
     // Pop not yet stored participant
     ASSERT_TRUE(participants_database->pop(id1) == nullptr);
     ASSERT_TRUE(participants_database->pop(id2) == nullptr);
@@ -168,7 +168,7 @@ TEST(ParticipantsDatabaseTest, empty)
 
     // Non-empty database
     ParticipantId id("void_part");
-    std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
+    std::shared_ptr<EmptyParticipant> participant = std::make_shared<EmptyParticipant>(id);
     participants_database->add_participant(participant->id(), participant, 1);
     ASSERT_FALSE(participants_database->empty());
 }
@@ -185,7 +185,7 @@ TEST(ParticipantsDatabaseTest, get_participant)
     std::shared_ptr<test::ParticipantsDatabase> participants_database = std::make_shared<test::ParticipantsDatabase>();
 
     ParticipantId id("void_part");
-    std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
+    std::shared_ptr<EmptyParticipant> participant = std::make_shared<EmptyParticipant>(id);
     participants_database->add_participant(participant->id(), participant, 1);
 
     ASSERT_EQ(participants_database->get_participant(id), participant);
@@ -199,11 +199,11 @@ TEST(ParticipantsDatabaseTest, get_participants_ids)
     std::shared_ptr<test::ParticipantsDatabase> participants_database = std::make_shared<test::ParticipantsDatabase>();
 
     ParticipantId id1("void_p1");
-    std::shared_ptr<VoidParticipant> participant1 = std::make_shared<VoidParticipant>(id1);
+    std::shared_ptr<EmptyParticipant> participant1 = std::make_shared<EmptyParticipant>(id1);
     participants_database->add_participant(participant1->id(), participant1, 1);
 
     ParticipantId id2("void_p2");
-    std::shared_ptr<VoidParticipant> participant2 = std::make_shared<VoidParticipant>(id2);
+    std::shared_ptr<EmptyParticipant> participant2 = std::make_shared<EmptyParticipant>(id2);
     participants_database->add_participant(participant2->id(), participant2, 2);
 
     std::set<ParticipantId> ids {id2, id1};
@@ -216,7 +216,7 @@ TEST(ParticipantsDatabaseTest, get_participants_ids)
 TEST(ParticipantsDatabaseTest, get_participants_map)
 {
     ParticipantId id("void_part");
-    std::shared_ptr<VoidParticipant> participant = std::make_shared<VoidParticipant>(id);
+    std::shared_ptr<EmptyParticipant> participant = std::make_shared<EmptyParticipant>(id);
     std::map<ParticipantId, std::shared_ptr<IParticipant>> participants = {{id, participant}};
 
     std::shared_ptr<test::ParticipantsDatabase> participants_database = std::make_shared<test::ParticipantsDatabase>(
@@ -234,13 +234,13 @@ TEST(ParticipantsDatabaseTest, size)
     ASSERT_EQ(participants_database->size(), 0);
 
     ParticipantId id_1("void_part");
-    std::shared_ptr<VoidParticipant> participant_1 = std::make_shared<VoidParticipant>(id_1);
+    std::shared_ptr<EmptyParticipant> participant_1 = std::make_shared<EmptyParticipant>(id_1);
     // Insert participant_1
     participants_database->add_participant(participant_1->id(), participant_1, 1);
     ASSERT_EQ(participants_database->size(), 1);
 
     ParticipantId id_2("simple_part");
-    std::shared_ptr<VoidParticipant> participant_2 = std::make_shared<VoidParticipant>(id_2);
+    std::shared_ptr<EmptyParticipant> participant_2 = std::make_shared<EmptyParticipant>(id_2);
     // Insert participant_2
     participants_database->add_participant(participant_2->id(), participant_2, 2);
     ASSERT_EQ(participants_database->size(), 2);

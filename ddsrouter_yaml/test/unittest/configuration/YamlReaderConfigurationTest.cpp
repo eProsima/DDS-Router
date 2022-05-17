@@ -39,9 +39,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
         R"(
         version: v1.0
         participant1:
-          type: "void"
+          type: "empty"
         participant2:
-          type: "void"
+          type: "empty"
         )",
     };
 
@@ -75,9 +75,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
         version: v2.0
         participants:
           - name: "P1"
-            kind: "void"
+            kind: "empty"
           - name: "P2"
-            kind: "void"
+            kind: "empty"
         )",
 
         // ROS common configuration
@@ -128,9 +128,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
         const char* yml_configuration =
                 R"(
             participant1:
-              type: "void"
+              type: "empty"
             participant2:
-              type: "void"
+              type: "empty"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -150,9 +150,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
                 R"(
             participants:
               - name: "P1"
-                kind: "void"
+                kind: "empty"
               - name: "P2"
-                kind: "void
+                kind: empty"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -185,9 +185,9 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
             version: v0.0
             participants:
               - name: "P1"
-                kind: "void"
+                kind: "empty"
               - name: "P2"
-                kind: "void
+                kind: empty"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -206,9 +206,9 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
             version: v1.0
             participants:
               - name: "P1"
-                kind: "void"
+                kind: "empty"
               - name: "P2"
-                kind: "void
+                kind: empty"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -229,9 +229,9 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
                 R"(
             version: v2.0
             participant1:
-              type: "void"
+              type: "empty"
             participant2:
-              type: "void"
+              type: "empty"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);

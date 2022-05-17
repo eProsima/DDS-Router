@@ -93,7 +93,7 @@ configuration::DDSRouterConfiguration simple_configuration(
 }
 
 /**
- * Test Whole DDSRouter initialization by initializing two VoidParticipants
+ * Test Whole DDSRouter initialization by initializing two EmptyParticipants
  */
 TEST(TrivialTest, trivial_void_initialization)
 {

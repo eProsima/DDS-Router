@@ -20,7 +20,7 @@ set(TEST_NAME ParticipantsDatabaseTest)
 
 set(TEST_SOURCES
         ParticipantsDatabaseTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/VoidParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/EmptyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/core/ParticipantsDatabase.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
