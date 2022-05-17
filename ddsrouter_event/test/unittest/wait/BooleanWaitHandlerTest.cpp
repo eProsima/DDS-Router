@@ -144,7 +144,7 @@ TEST(BooleanWaitHandlerTest, wait_for_open)
         );
 
     AwakeReason reason = waiter.wait(); // Wait forever
-    ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+    ASSERT_EQ(reason, AwakeReason::condition_met);
 
     // Wait for the thread to finish
     waiting_thread.join();
@@ -161,7 +161,7 @@ TEST(BooleanWaitHandlerTest, wait_for_timeout)
     AwakeReason reason = waiter.wait(test::RESIDUAL_TIME_TEST);
 
     // Check it has been awaken from timeout
-    ASSERT_EQ(reason, AwakeReason::TIMEOUT);
+    ASSERT_EQ(reason, AwakeReason::timeout);
 }
 
 /**
@@ -181,7 +181,7 @@ TEST(BooleanWaitHandlerTest, wait_for_disable)
         );
 
     AwakeReason reason = waiter.wait(); // Wait forever
-    ASSERT_EQ(reason, AwakeReason::DISABLED);
+    ASSERT_EQ(reason, AwakeReason::disabled);
 
     // Wait for the thread to finish
     waiting_thread.join();
