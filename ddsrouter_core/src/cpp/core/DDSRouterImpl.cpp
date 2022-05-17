@@ -284,7 +284,7 @@ void DDSRouterImpl::init_participants_()
 
         // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||
-                !new_participant->kind().is_valid())
+                new_participant->kind() == ParticipantKind::invalid)
         {
             // Failed to create participant
             throw utils::InitializationException(utils::Formatter()

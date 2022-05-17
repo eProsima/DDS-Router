@@ -55,7 +55,7 @@ bool ParticipantConfiguration::is_valid(
         return false;
     }
 
-    if (!kind_.is_valid())
+    if (kind_ == ParticipantKind::invalid)
     {
         error_msg << "Non valid Participant kind " << kind_ << ". ";
         return false;

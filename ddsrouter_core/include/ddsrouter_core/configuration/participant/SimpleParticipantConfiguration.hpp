@@ -38,7 +38,7 @@ public:
     //! TODO
     DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::ParticipantKind& kind = types::ParticipantKind::SIMPLE_RTPS,
+            const types::ParticipantKind& kind = types::ParticipantKind::simple_rtps,
             const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
 
     /**

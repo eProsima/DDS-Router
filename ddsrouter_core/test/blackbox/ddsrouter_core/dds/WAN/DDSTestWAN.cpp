@@ -124,7 +124,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::WAN),
+            types::ParticipantKind(types::ParticipantKind::wan),
             tls_configuration(wan_kind));
 
     }
@@ -135,7 +135,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::WAN)
+            types::ParticipantKind(types::ParticipantKind::wan)
             );
     }
 }
@@ -172,7 +172,7 @@ configuration::DDSRouterConfiguration router_configuration(
                         // simple
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("simple_participant"),
-                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             types::DomainId(domain)
                             ),
                     }

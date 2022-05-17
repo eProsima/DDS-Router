@@ -157,7 +157,7 @@ ParticipantKind YamlReader::get<ParticipantKind>(
         const YamlReaderVersion /* version */)
 {
     // Participant kind required
-    return ParticipantKind::participant_kind_from_name(get_scalar<std::string>(yml));
+    return participant_kind_from_name(get_scalar<std::string>(yml));
 }
 
 template <>
@@ -786,20 +786,20 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
 
     logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
 
-    switch (kind())
+    switch (kind)
     {
-        case types::ParticipantKind::VOID:
-        case types::ParticipantKind::ECHO:
-        case types::ParticipantKind::DUMMY:
+        case types::ParticipantKind::empty:
+        case types::ParticipantKind::echo:
+        case types::ParticipantKind::dummy:
             return std::make_shared<core::configuration::ParticipantConfiguration>(
                 YamlReader::get<core::configuration::ParticipantConfiguration>(yml, version));
 
-        case types::ParticipantKind::SIMPLE_RTPS:
+        case types::ParticipantKind::simple_rtps:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
 
-        case types::ParticipantKind::LOCAL_DISCOVERY_SERVER:
-        case types::ParticipantKind::WAN:
+        case types::ParticipantKind::local_discovery_server:
+        case types::ParticipantKind::wan:
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
 

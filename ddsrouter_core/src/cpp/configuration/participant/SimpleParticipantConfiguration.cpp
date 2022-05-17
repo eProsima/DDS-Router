@@ -30,7 +30,7 @@ const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& kind /* = ParticipantKind::SIMPLE_RTPS */,
+        const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
         const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
     : ParticipantConfiguration(id, kind)
     , domain_(domain_id)

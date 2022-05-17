@@ -223,8 +223,7 @@ ParticipantKind random_participant_kind(
         uint16_t seed = 0)
 {
     // Avoid Invalid type
-    auto kinds = ParticipantKind::all_valid_participant_kinds();
-    return kinds[seed % kinds.size()];
+    return AllValidParticipantKinds[seed % AllValidParticipantKinds.size()];
 }
 
 /*

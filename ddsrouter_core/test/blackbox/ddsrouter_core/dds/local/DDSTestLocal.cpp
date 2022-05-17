@@ -68,12 +68,12 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                     {
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("participant_0"),
-                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             types::DomainId(0u)
                             ),
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("participant_1"),
-                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             types::DomainId(1u)
                             )
                     }

@@ -40,7 +40,7 @@ ParticipantId VoidParticipant::id() const noexcept
 
 ParticipantKind VoidParticipant::kind() const noexcept
 {
-    return ParticipantKind::VOID;
+    return ParticipantKind::empty;
 }
 
 std::shared_ptr<IWriter> VoidParticipant::create_writer(

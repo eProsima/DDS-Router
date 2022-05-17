@@ -30,114 +30,48 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-const std::map<ParticipantKindType, std::vector<std::string>> ParticipantKind::participant_kind_with_aliases_ =
-{
-    {PARTICIPANT_KIND_INVALID, {"__invalid_participant_kind__"}},
-    {VOID, {"void"}},
-    {ECHO, {"echo"}},
-    {DUMMY, {"dummy"}},
-    {SIMPLE_RTPS, {"local", "simple"}},
-    {LOCAL_DISCOVERY_SERVER, {"discovery-server", "ds", "local-ds", "local-discovery-server"}},
-    {WAN, {"wan", "router"}},
-};
-
-ParticipantKind::ParticipantKind(
-        ParticipantKindType value) noexcept
-    : value_(value)
-{
-}
-
-ParticipantKind::ParticipantKind() noexcept
-    : ParticipantKind(PARTICIPANT_KIND_INVALID)
-{
-}
-
-bool ParticipantKind::is_valid() const noexcept
-{
-    return value_ != PARTICIPANT_KIND_INVALID;
-}
-
-std::string ParticipantKind::to_string() const noexcept
-{
-    auto it = ParticipantKind::participant_kind_with_aliases_.find(value_);
-
-    // Value must be in map
-    assert(it != ParticipantKind::participant_kind_with_aliases_.end());
-
-    return it->second[0];
-}
-
-ParticipantKindType ParticipantKind::operator ()() const noexcept
-{
-    return value_;
-}
-
-bool ParticipantKind::operator <(
-        const ParticipantKind& other) const noexcept
-{
-    return this->value_ < other.value_;
-}
-
-bool ParticipantKind::operator ==(
-        const ParticipantKind& other) const noexcept
-{
-    return (*this)() == other();
-}
-
-ParticipantKind ParticipantKind::participant_kind_from_name(
-        std::string kind) noexcept
-{
-    // Pass kind name to lowercase
-    utils::to_lowercase(kind);
-
-    // Look for string in names map and return the kind it matches
-    for (auto kinds : ParticipantKind::participant_kind_with_aliases_)
-    {
-        // Check if it fix with any of the aliases
-        for (std::string alias : kinds.second)
-        {
-            if (kind == alias)
-            {
-                return kinds.first;
-            }
-        }
-    }
-    return PARTICIPANT_KIND_INVALID;
-}
-
-std::vector<ParticipantKind> ParticipantKind::all_valid_participant_kinds() noexcept
-{
-    std::vector<ParticipantKind> result;
-
-    for (auto kind : participant_kind_with_aliases_)
-    {
-        result.push_back(kind.first);
-    }
-
-    // Remove invalid kind
-    result.erase(
-        std::remove_if(
-            result.begin(),
-            result.end(),
-            [](ParticipantKind x)
-            {
-                return !x.is_valid();
-            }));
-
-    return result;
-}
-
 std::ostream& operator <<(
         std::ostream& os,
         const ParticipantKind& kind)
 {
-    auto it = ParticipantKind::participant_kind_with_aliases_.find(kind.value_);
+    try {
 
-    // Value must be in map
-    assert(it != ParticipantKind::participant_kind_with_aliases_.end());
+        os << ParticipantKindStrings.at(static_cast<ParticipantKindType>(kind));
 
-    os << "ParticipantKind{" << it->second[0] << "}";
+    } catch (const std::out_of_range& oor) {
+        utils::tsnh(utils::Formatter() << "Invalid Participant Kind." << static_cast<ParticipantKindType>(kind));
+    }
     return os;
+}
+
+/**
+ * @brief Create a Participant Kind regarding the string argument in lower case
+ *
+ * @note Kind name is not case sensitive
+ *
+ * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
+ * matches any of them, return the ParticipantKind associated with that name.
+ * It will return \c ParticipantKind::invalid in case no existing ParticipantKind name matches the argument.
+ *
+ * @param [in] kind : string with the name of the kind to build
+ * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
+ */
+ParticipantKind participant_kind_from_name(std::string participantKindName) {
+
+    if (participantKindName.size() == 0) {
+        return ParticipantKind::invalid;
+    }
+
+    ParticipantKindType pkId = 0u; 
+    for (const auto& aliases : ParticipantKindAliases)
+    {
+        if (std::find(std::cbegin(aliases), std::cend(aliases), participantKindName) != std::cend(aliases)) {
+            // Alias match, since std::find returned iterator before end
+            return AllParticipantKinds.at(pkId);
+        }
+        pkId++;
+    }
+    return ParticipantKind::invalid;
 }
 
 } /* namespace types */

@@ -214,16 +214,16 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
 {
     ParticipantId id("Participant" + std::to_string(seed));
 
-    switch (kind())
+    switch (kind)
     {
-        case ParticipantKind::SIMPLE_RTPS:
+        case ParticipantKind::simple_rtps:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,
                 random_domain(seed));
 
-        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-        case ParticipantKind::WAN:
+        case ParticipantKind::local_discovery_server:
+        case ParticipantKind::wan:
 
         {
             // TODO get random values
@@ -263,14 +263,14 @@ ParticipantKind random_participant_kind(
         bool valid /* = true */,
         uint16_t seed /* = 0 */)
 {
-    std::vector<ParticipantKind> kinds = ParticipantKind::all_valid_participant_kinds();
+    std::vector<ParticipantKind> kinds(std::begin(AllValidParticipantKinds), std::end(AllValidParticipantKinds));
     if (valid)
     {
         return kinds[seed % kinds.size()];
     }
     else
     {
-        kinds.push_back(ParticipantKind::PARTICIPANT_KIND_INVALID);
+        kinds.push_back(ParticipantKind::invalid);
         return kinds[seed % kinds.size()];
     }
 }
