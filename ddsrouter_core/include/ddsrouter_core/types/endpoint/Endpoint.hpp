@@ -30,12 +30,14 @@ namespace core {
 namespace types {
 
 //! Possible kinds of the endpoint
-enum EndpointKind
+enum class EndpointKind : unsigned int
 {
-    ENDPOINT_KIND_INVALID,
-    WRITER,
-    READER
+    invalid = 0,
+    writer = 1,
+    reader = 2,
 };
+
+constexpr std::array<const char*, 3> EndpointKindStrings = {"Invalid", "Writer", "Reader"};
 
 /**
  * Data collection to describe an Endpoint
