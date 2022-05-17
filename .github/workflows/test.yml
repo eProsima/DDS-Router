@@ -29,6 +29,21 @@ jobs:
         with:
           path: DDS-Router
 
+      # TMP: TODO remove
+      # https://docs.microsoft.com/en-us/windows/win32/wer/collecting-user-mode-dumps
+      - name: Get Dump properties
+        shell: pwsh
+        run: |
+          Echo Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps'
+
+      # TMP: TODO remove
+      - name: Dump SegFault
+        shell: pwsh
+        run: |
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\' -Name DumpType -Value '2'
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\' -Name DumpFolder -Value '%LOCALAPPDATA%\CrashDumps'
+        # New-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\' -Name 'LocalDumps';
+
       - name: Install OpenSSL
         uses: ./DDS-Router/.github/actions/install-openssl-windows
 
@@ -133,6 +148,13 @@ jobs:
         with:
           package_name: ddsrouter_tool
           cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      # TMP: TODO remove
+      - name: Cat SegFault in terminal
+        shell: pwsh
+        run: |
+          Get-Content %LOCALAPPDATA%\CrashDumps\*
         if: always()
 
   ubuntu-build-test:
