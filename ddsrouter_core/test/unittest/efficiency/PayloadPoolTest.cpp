@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 
 #include <fastdds/rtps/common/CacheChange.h>
+#include <fastdds/rtps/common/SerializedPayload.h>
 
 #include <efficiency/PayloadPool.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
@@ -30,6 +31,33 @@ using namespace eprosima::ddsrouter::core::types;
 using ::testing::_;
 using ::testing::Invoke;
 using ::testing::Return;
+
+namespace eprosima {
+namespace fastrtps {
+namespace rtps {
+
+/*
+ * WORKAROUND:
+ * This definition is needed due to googletest-distribution (1.11.0) requires to every class used inside ASSERT macro
+ * to have the operator << defined in SAME namespace than the class.
+ * In our case, Payload is defined as eprosima::fastrtps::rtps::SerializedPayload_t but redefined as
+ * eprosima::ddsrouter::core::types::Payload and the operator << is defined in eprosima::ddsrouter::core::types
+ * Thus, gtest could not find this definition (arising a very messy and cryptic compilation error).
+ * This definition corrects that problem.
+ *
+ * NOTE:
+ * In googletest-distribution release-1.10.0 this does not happen.
+ */
+void PrintTo(
+        const SerializedPayload_t,
+        std::ostream* os)
+{
+    *os << "::eprosima::fastrtps::rtps::SerializedPayload_t";
+}
+
+} /* namespace rtps */
+} /* namespace fastrtps */
+} /* namespace eprosima */
 
 namespace eprosima {
 namespace ddsrouter {

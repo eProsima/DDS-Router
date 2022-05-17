@@ -100,7 +100,7 @@ Use the following command to download the code:
 
 .. code-block:: bash
 
-    git clone --branch release-1.10.0 https://github.com/google/googletest src/googletest-distribution
+    git clone --branch release-1.11.0 https://github.com/google/googletest src/googletest-distribution
 
 
 .. _py_yaml:
