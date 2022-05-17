@@ -19,6 +19,8 @@
 #ifndef _DDSROUTERUTILS_LOG_HPP_
 #define _DDSROUTERUTILS_LOG_HPP_
 
+#include <iostream>
+
 // Use FastDDS log
 #include <fastdds/dds/log/Log.hpp>
 

@@ -21,8 +21,6 @@
 #ifndef _DDSROUTERUTILS_MATH_HPP_
 #define _DDSROUTERUTILS_MATH_HPP_
 
-#include <stdint.h>
-
 #include <ddsrouter_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -44,9 +42,9 @@ namespace utils {
  *
  * @return The result of the operation
  */
-DDSROUTER_UTILS_DllAPI uint32_t fast_module(
-        uint32_t dividend,
-        uint32_t divisor) noexcept;
+DDSROUTER_UTILS_DllAPI unsigned int fast_module(
+        unsigned int dividend,
+        unsigned int divisor) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

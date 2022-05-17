@@ -160,11 +160,11 @@ std::ostream& operator <<(
 
     // Allowed topics
     os << "allowed";
-    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.allowlist_);
+    utils::ptr_container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.allowlist_);
 
     // Blocked topics
     os << "blocked";
-    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.blocklist_);
+    utils::ptr_container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.blocklist_);
 
     os << "}";
 

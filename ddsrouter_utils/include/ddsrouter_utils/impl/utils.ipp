@@ -23,26 +23,27 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template <typename T, bool Ptr /* = false */>
+template <typename T>
+std::ostream& pointer_to_stream(
+        std::ostream& os,
+        const T& element)
+{
+    // If pointer, print object and not address
+    os << (*element);
+    return os;
+}
+
+template <typename T>
 std::ostream& element_to_stream(
         std::ostream& os,
         const T& element)
 {
-    if (Ptr)
-    {
-        // If pointer, print object and not address
-        os << (*element);
-    }
-    else
-    {
-        os << element;
-    }
-
+    os << element;
     return os;
 }
 
-template <typename T, bool Ptr /* = false */>
-std::ostream& container_to_stream(
+template <typename T>
+std::ostream& ptr_container_to_stream(
         std::ostream& os,
         const std::vector<T>& list,
         const std::string& separator /* = ";"*/)
@@ -53,14 +54,14 @@ std::ostream& container_to_stream(
 
     for (size_t i = 0; size != 0 && i < size - 1; ++i)
     {
-        element_to_stream<T, Ptr>(os, list[i]);
+        pointer_to_stream<T>(os, list[i]);
         os << separator;
     }
 
     // For the last element, to avoid separator
     if (size > 0)
     {
-        element_to_stream<T, Ptr>(os, list[size - 1]);
+        pointer_to_stream<T>(os, list[size - 1]);
     }
 
     os << "}";
@@ -68,13 +69,13 @@ std::ostream& container_to_stream(
     return os;
 }
 
-template <typename T, bool Ptr /* = false */>
-std::ostream& container_to_stream(
+template <typename T>
+std::ostream& ptr_container_to_stream(
         std::ostream& os,
         const std::set<T>& list,
         const std::string& separator /* = ";" */)
 {
-    return container_to_stream<T, Ptr>(os, std::vector<T>(list.begin(), list.end()), separator);
+    return ptr_container_to_stream<T>(os, std::vector<T>(list.begin(), list.end()), separator);
 }
 
 template <typename T>
@@ -146,6 +147,22 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         result_set.insert(std::make_shared<Child>(element));
     }
     return result_set;
+}
+
+template <typename T>
+std::string to_string(
+        const T& element) noexcept
+{
+    std::ostringstream os;
+    element_to_stream<T>(os, element);
+    return os.str();
+}
+
+template <typename T>
+std::string to_string(
+        T&& element) noexcept
+{
+    return to_string<T>(element);
 }
 
 } /* namespace utils */

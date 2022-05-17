@@ -139,8 +139,13 @@ DDSROUTER_UTILS_DllAPI bool is_file_accessible(
  *
  * @return stream object with the concatenation of \c os and \c element
  */
-template <typename T, bool Ptr = false>
+template <typename T>
 std::ostream& element_to_stream(
+        std::ostream& os,
+        const T& element);
+
+template <typename T>
+std::ostream& pointer_to_stream(
         std::ostream& os,
         const T& element);
 
@@ -156,8 +161,8 @@ std::ostream& element_to_stream(
  *
  * @return stream object with the concatenation of \c os and \c element
  */
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
+template <typename T>
+std::ostream& ptr_container_to_stream(
         std::ostream& os,
         const std::vector<T>& list,
         const std::string& separator = ";");
@@ -176,8 +181,8 @@ std::ostream& container_to_stream(
  *
  * @return stream object with the concatenation of \c os and \c element
  */
-template <typename T, bool Ptr = false>
-std::ostream& container_to_stream(
+template <typename T>
+std::ostream& ptr_container_to_stream(
         std::ostream& os,
         const std::set<T>& list,
         const std::string& separator = ";");
@@ -213,6 +218,14 @@ bool are_set_of_ptr_equal(
 template <typename Parent, typename Child>
 std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         const std::set<Child>& set);
+
+template <typename T>
+DDSROUTER_UTILS_DllAPI std::string to_string(
+        const T& element) noexcept;
+
+template <typename T>
+DDSROUTER_UTILS_DllAPI std::string to_string(
+        T&& element) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

@@ -17,15 +17,17 @@
  *
  */
 
+#include <ddsrouter_utils/math.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
 #include <ddsrouter_utils/math/math.hpp>
 
-uint32_t fast_module(
-        uint32_t dividend,
-        uint32_t divisor) noexcept
+unsigned int fast_module(
+        unsigned int dividend,
+        unsigned int divisor) noexcept
 {
     if (dividend < divisor)
     {
