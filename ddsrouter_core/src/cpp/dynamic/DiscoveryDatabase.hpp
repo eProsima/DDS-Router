@@ -40,11 +40,11 @@ namespace ddsrouter {
 namespace core {
 
 //! Operations to perform on a DiscoveryDatabase
-enum DatabaseOperation
+enum class DatabaseOperation
 {
-    ADD,
-    UPDATE,
-    ERASE
+    add,
+    update,
+    erase
 };
 
 /**
