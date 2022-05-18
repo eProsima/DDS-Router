@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include utils for this specific test
-include_directories("TestUtils")
+####################################
+# Mocked Dummy Performance Test
+####################################
 
-# Add subdirectory with tests
-add_subdirectory(unittest)
-add_subdirectory(blackbox)
-add_subdirectory(performance)
+set(TEST_NAME
+    MockPerformanceTest)
+
+set(TEST_SOURCES
+    mock_performance_test.cpp)
+
+set(TEST_LIST
+    dummy_test)
+
+set(TEST_NEEDED_SOURCES
+    )
+
+set(TEST_EXTRA_HEADERS
+    )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")

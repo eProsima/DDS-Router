@@ -50,6 +50,7 @@ public:
         VOID,                       //! Void Participant Kind
         ECHO,                       //! Echo Participant Kind
         DUMMY,                      //! Dummy Participant Kind
+        MOCK,                       //! Mock Participant Kind
         SIMPLE_RTPS,                //! Simple RTPS Participant Kind
         LOCAL_DISCOVERY_SERVER,     //! Discovery Server RTPS UDP Participant Kind
         WAN,                        //! Discovery Server RTPS TCP Participant Kind
