@@ -8,9 +8,17 @@ inputs:
     description: 'Specifies the build type on single-configuration generators'
     required: true
     default: 'Release'
+  repetitions:
+    description: 'Repeat until fail N times'
+    required: true
+    default: 1
+  filter:
+    description: 'Filter per test name'
+    required: true
+    default: "."
 runs:
   using: composite
   steps:
   - run: >
-      ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail
+      ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail --repeat-until-fail ${{ inputs.repetitions }} -R ${{ inputs.filter }}
     shell: pwsh

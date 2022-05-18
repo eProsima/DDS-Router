@@ -134,6 +134,8 @@ jobs:
         with:
           package_name: ddsrouter_core
           cmake_build_type: ${{ matrix.cmake-config }}
+          repetitions: 200
+          filter: "DDSTestWAN"
         if: always()
 
       - name: Run tests ddsrouter_yaml
