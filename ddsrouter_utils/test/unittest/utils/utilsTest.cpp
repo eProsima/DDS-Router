@@ -350,8 +350,8 @@ TEST(utilsTest, combined_file_permissions)
             static_cast<int>(FileAccessMode::exist));
     ASSERT_EQ(static_cast<int>(FileAccessMode::exist) & static_cast<int>(FileAccessMode::exist),
             static_cast<int>(FileAccessMode::exist));
-    ASSERT_EQ(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::exist)),
-    static_cast<int>(FileAccessMode::exist);
+    ASSERT_EQ(static_cast<int>(FileAccessMode::read_write) & static_cast<int>(FileAccessMode::exist),
+            static_cast<int>(FileAccessMode::exist));
 
     // Match read
     ASSERT_TRUE(static_cast<int>(FileAccessMode::read) & static_cast<int>(FileAccessMode::read));

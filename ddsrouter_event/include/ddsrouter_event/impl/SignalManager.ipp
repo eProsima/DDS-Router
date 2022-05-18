@@ -120,7 +120,7 @@ void SignalManager<SigVal>::signal_handler_function_(
 {
 #ifdef _WIN32
     // Windows requires to handle again the signal once it has been handled
-    signal(SigVal, SignalManager<SigVal>::signal_handler_function_);
+    signal(static_cast<SignalType>(SigVal), SignalManager<SigVal>::signal_handler_function_);
 #endif // _WIN32
     signal_received_();
 }

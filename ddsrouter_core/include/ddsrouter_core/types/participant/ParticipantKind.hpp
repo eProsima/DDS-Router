@@ -19,9 +19,8 @@
 #ifndef _DDSROUTERCORE_TYPES_PARTICIPANTKIND_HPP_
 #define _DDSROUTERCORE_TYPES_PARTICIPANTKIND_HPP_
 
-#include <map>
 #include <string>
-#include <vector>
+#include <array>
 
 #include <ddsrouter_core/library/library_dll.h>
 
@@ -98,12 +97,9 @@ constexpr std::array<ParticipantKindAliasesType, ParticipantKindCount> Participa
     ParticipantKindAliasesType({"wan", "router", "", ""}),
 };
 
-static_assert(ParticipantKindAliases.size() == AllParticipantKinds.size());
-static_assert(AllValidParticipantKinds.size() == AllParticipantKinds.size() - 1);
-
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const ParticipantKind& kind);
+        ParticipantKind kind);
 
 /**
  * @brief Create a Participant Kind regarding the string argument in lower case
@@ -117,7 +113,7 @@ std::ostream& operator <<(
  * @param [in] kind : string with the name of the kind to build
  * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
  */
-ParticipantKind participant_kind_from_name(
+DDSROUTER_CORE_DllAPI ParticipantKind participant_kind_from_name(
         std::string participantKindName);
 
 } /* namespace types */

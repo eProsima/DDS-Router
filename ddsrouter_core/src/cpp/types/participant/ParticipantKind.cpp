@@ -32,7 +32,7 @@ namespace types {
 
 std::ostream& operator <<(
         std::ostream& os,
-        const ParticipantKind& kind)
+        ParticipantKind kind)
 {
     try
     {
