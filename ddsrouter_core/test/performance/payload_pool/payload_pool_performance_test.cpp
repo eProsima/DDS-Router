@@ -30,6 +30,7 @@
 #include <ddsrouter_core/types/dds/Data.hpp>
 #include <efficiency/CopyPayloadPool.hpp>
 #include <efficiency/MapPayloadPool.hpp>
+#include <efficiency/FastPayloadPool.hpp>
 #include <participant/implementations/auxiliar/MockParticipant.hpp>
 
 namespace eprosima {
@@ -239,7 +240,7 @@ void payload_pool_performance_templatized_test()
     // std::vector<uint32_t> number_of_threads{1, 2, 4, 8, 16, 32};
     // std::vector<uint32_t> number_of_allocations{1, 2, 16, 32, 1024};
     std::vector<uint32_t> data_sizes{8, 2048, 1048576};
-    std::vector<uint32_t> number_of_allocations{1, 2, 32, 1024};
+    std::vector<uint32_t> number_of_allocations{1, 2, 32};
     std::vector<uint32_t> number_of_threads{1, 4, 32};
 
     // Launch test and print results in stdout
@@ -263,6 +264,11 @@ TEST(PayloadPoolPerformanceTest, copy_payload_pool)
 TEST(PayloadPoolPerformanceTest, map_payload_pool)
 {
     ::test::payload_pool_performance_templatized_test<core::MapPayloadPool>();
+}
+
+TEST(PayloadPoolPerformanceTest, fast_payload_pool)
+{
+    ::test::payload_pool_performance_templatized_test<core::FastPayloadPool>();
 }
 
 int main(

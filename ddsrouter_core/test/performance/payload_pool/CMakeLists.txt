@@ -24,7 +24,8 @@ set(TEST_SOURCES
 
 set(TEST_LIST
     copy_payload_pool
-    map_payload_pool)
+    map_payload_pool
+    fast_payload_pool)
 
 set(TEST_NEEDED_SOURCES
     )
