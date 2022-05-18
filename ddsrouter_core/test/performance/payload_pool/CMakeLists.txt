@@ -12,6 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+####################################
+# Payload Pool Performance Test
+####################################
 
-add_subdirectory(first_approach)
-add_subdirectory(payload_pool)
+set(TEST_NAME
+    PayloadPoolPerformanceTest)
+
+set(TEST_SOURCES
+    payload_pool_performance_test.cpp)
+
+set(TEST_LIST
+    copy_payload_pool
+    map_payload_pool)
+
+set(TEST_NEEDED_SOURCES
+    )
+
+set(TEST_EXTRA_HEADERS
+    )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
