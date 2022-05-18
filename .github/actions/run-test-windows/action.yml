@@ -20,5 +20,7 @@ runs:
   using: composite
   steps:
   - run: >
+      Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\' -Name DumpType -Value '2';
+      Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\' -Name DumpFolder -Value '%LOCALAPPDATA%\CrashDumps';
       ctest -C ${{ inputs.cmake_build_type }} --test-dir build\${{ inputs.package_name }} -V --timeout 60 --label-exclude xfail --repeat-until-fail ${{ inputs.repetitions }} -R ${{ inputs.filter }}
     shell: pwsh

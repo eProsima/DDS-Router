@@ -4,16 +4,27 @@ inputs:
   package_name:
     description: 'Specifies the package to run the tests'
     required: true
+  filter:
+    description: 'Specifies the package to run the tests'
+    required: true
+    default: "."
+  repetitions:
+    description: 'Specifies the package to run the tests'
+    required: true
+    default: "1"
 runs:
   using: composite
   steps:
   - run: |
       source install/setup.bash
+      ulimit -c unlimited
       colcon test \
         --packages-select ${{ inputs.package_name }} \
         --event-handlers=console_direct+ \
         --return-code-on-test-failure \
         --ctest-args \
           --label-exclude xfail \
-          --timeout 60
+          --timeout 60 \
+          -R ${{ inputs.filter }} \
+          --repeat-until-fail ${{ inputs.repetitions }}
     shell: bash

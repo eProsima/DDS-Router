@@ -34,7 +34,7 @@ jobs:
       - name: Get Dump properties
         shell: pwsh
         run: |
-          Echo Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps'
+          Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps'
 
       # TMP: TODO remove
       - name: Dump SegFault
@@ -134,7 +134,7 @@ jobs:
         with:
           package_name: ddsrouter_core
           cmake_build_type: ${{ matrix.cmake-config }}
-          repetitions: 200
+          repetitions: 1000
           filter: "DDSTestWAN"
         if: always()
 
@@ -153,6 +153,12 @@ jobs:
         if: always()
 
       # TMP: TODO remove
+      - name: Cat SegFault directory
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path %LOCALAPPDATA%\CrashDumps;
+        if: always()
+
       - name: Cat SegFault in terminal
         shell: pwsh
         run: |
@@ -226,6 +232,9 @@ jobs:
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_core
+          repetitions: 1000
+          filter: "DDSTestWAN"
+        if: always()
 
       - name: Run tests ddsrouter_yaml
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
@@ -304,6 +313,10 @@ jobs:
           name: colcon-logs-ubuntu
           path: log/
         if: always()
+
+      - name: Check for seg faults
+        run: |
+          coredumpctl list
 
   ubuntu-build-test-flaky:
     runs-on: ubuntu-latest
