@@ -39,7 +39,7 @@ enum class EndpointKind : EndpointKindType
     reader = 2,
 };
 
-constexpr std::array<const char*, 3> EndpointKindStrings = 
+constexpr std::array<const char*, 3> EndpointKindStrings =
 {
     "invalid",
     "writer",

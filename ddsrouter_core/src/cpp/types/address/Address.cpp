@@ -290,7 +290,8 @@ IpType Address::default_ip(
     }
     else
     {
-        utils::tsnh(utils::Formatter() << "Value v" << static_cast<int>(ip_version) << " is not allowed for IpVersion.");
+        utils::tsnh(utils::Formatter() << "Value v" << static_cast<int>(ip_version) <<
+                " is not allowed for IpVersion.");
         return DEFAULT_IP_v4_;
     }
 }
@@ -360,7 +361,8 @@ std::pair<IpType, IpVersion> Address::resolve_dns(
         {
             throw utils::DNSException(
                       utils::Formatter() <<
-                          "Could not resolve IP for IpVersion::v4 nor IpVersion::v6 for domain name <" << domain << ">.");
+                          "Could not resolve IP for IpVersion::v4 nor IpVersion::v6 for domain name <" << domain <<
+                          ">.");
         }
         else
         {

@@ -80,7 +80,10 @@ void tsnh(
     abort();
 }
 
-bool is_file_accessible(const char* file_path, FileAccessMode access_mode) noexcept {
+bool is_file_accessible(
+        const char* file_path,
+        FileAccessMode access_mode) noexcept
+{
     return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 

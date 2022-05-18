@@ -34,26 +34,33 @@ std::ostream& operator <<(
         std::ostream& os,
         const ParticipantKind& kind)
 {
-    try {
+    try
+    {
 
         os << ParticipantKindStrings.at(static_cast<ParticipantKindType>(kind));
 
-    } catch (const std::out_of_range& oor) {
+    }
+    catch (const std::out_of_range& oor)
+    {
         utils::tsnh(utils::Formatter() << "Invalid Participant Kind." << static_cast<ParticipantKindType>(kind));
     }
     return os;
 }
 
-ParticipantKind participant_kind_from_name(std::string participantKindName) {
+ParticipantKind participant_kind_from_name(
+        std::string participantKindName)
+{
 
-    if (participantKindName.size() == 0) {
+    if (participantKindName.size() == 0)
+    {
         return ParticipantKind::invalid;
     }
 
-    ParticipantKindType pkId = 0u; 
+    ParticipantKindType pkId = 0u;
     for (const auto& aliases : ParticipantKindAliases)
     {
-        if (std::find(std::cbegin(aliases), std::cend(aliases), participantKindName) != std::cend(aliases)) {
+        if (std::find(std::cbegin(aliases), std::cend(aliases), participantKindName) != std::cend(aliases))
+        {
             // Alias match, since std::find returned iterator before end
             return AllParticipantKinds.at(pkId);
         }

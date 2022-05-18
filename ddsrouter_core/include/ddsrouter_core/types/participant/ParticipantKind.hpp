@@ -32,7 +32,8 @@ namespace types {
 
 using ParticipantKindType = uint16_t;
 
-enum class ParticipantKind : ParticipantKindType {
+enum class ParticipantKind : ParticipantKindType
+{
     invalid = 0,                    //! Invalid Participant Kind
     empty = 1,                      //! Empty Participant Kind
     echo = 2,                       //! Echo Participant Kind
@@ -50,10 +51,10 @@ static constexpr unsigned ParticipantKindCount = 7;
 constexpr std::array<ParticipantKind, ParticipantKindCount> AllParticipantKinds = {
     ParticipantKind::invalid,
     ParticipantKind::empty,
-    ParticipantKind::echo, 
-    ParticipantKind::dummy, 
-    ParticipantKind::simple_rtps, 
-    ParticipantKind::local_discovery_server, 
+    ParticipantKind::echo,
+    ParticipantKind::dummy,
+    ParticipantKind::simple_rtps,
+    ParticipantKind::local_discovery_server,
     ParticipantKind::wan
 };
 
@@ -63,17 +64,17 @@ constexpr std::array<ParticipantKind, ParticipantKindCount> AllParticipantKinds 
 constexpr std::array<ParticipantKind, ParticipantKindCount - 1> AllValidParticipantKinds = {
     // ParticipantKind::invalid, // Not valid, so not included in this array
     ParticipantKind::empty,
-    ParticipantKind::echo, 
-    ParticipantKind::dummy, 
-    ParticipantKind::simple_rtps, 
-    ParticipantKind::local_discovery_server, 
+    ParticipantKind::echo,
+    ParticipantKind::dummy,
+    ParticipantKind::simple_rtps,
+    ParticipantKind::local_discovery_server,
     ParticipantKind::wan
 };
 
 constexpr std::array<const char*, ParticipantKindCount> ParticipantKindStrings = {
     "invalid",
     "empty",
-    "echo", 
+    "echo",
     "dummy",
     "simple_rtps",
     "local_discovery_server",
@@ -82,7 +83,7 @@ constexpr std::array<const char*, ParticipantKindCount> ParticipantKindStrings =
 
 static constexpr unsigned MaxParticipantKindAliases = 4;
 
-using ParticipantKindAliasesType = std::array<const char *, MaxParticipantKindAliases>;
+using ParticipantKindAliasesType = std::array<const char*, MaxParticipantKindAliases>;
 
 /**
  * @brief All possible string aliases for each \c ParticipantKind.
@@ -116,11 +117,12 @@ std::ostream& operator <<(
  * @param [in] kind : string with the name of the kind to build
  * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
  */
-ParticipantKind participant_kind_from_name(std::string participantKindName);
+ParticipantKind participant_kind_from_name(
+        std::string participantKindName);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
- 
+
 #endif /* _DDSROUTERCORE_TYPES_PARTICIPANTKIND_HPP_ */

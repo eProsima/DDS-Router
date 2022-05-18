@@ -39,13 +39,22 @@ TEST(ParticipantKindTest, int_conversions)
 TEST(ParticipantKindTest, string_conversions)
 {
     // Check consistency between enum value and its associated string.
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::invalid)]), std::string("invalid"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::empty)]), std::string("empty"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::echo)]), std::string("echo"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string("dummy"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]), std::string("simple_rtps"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::local_discovery_server)]), std::string("local_discovery_server"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::wan)]), std::string("wan"));
+    ASSERT_EQ(std::string(
+                ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::invalid)]),
+            std::string("invalid"));
+    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::empty)]), std::string(
+                "empty"));
+    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::echo)]),
+            std::string("echo"));
+    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
+                "dummy"));
+    ASSERT_EQ(std::string(
+                ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
+            std::string("simple_rtps"));
+    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::
+                    local_discovery_server)]), std::string("local_discovery_server"));
+    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
+            std::string("wan"));
 
     // Test all possible aliases for each participant kind
     ASSERT_EQ(participant_kind_from_name(""), ParticipantKind::invalid);

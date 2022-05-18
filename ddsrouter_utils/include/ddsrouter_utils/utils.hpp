@@ -54,7 +54,7 @@ enum class FileAccessMode
     read_exec           = read | exec,
     read_write_exec     = read | write | exec,
     write_exec          = write | exec,
-#endif
+#endif // if defined(_WIN32)
 };
 
 

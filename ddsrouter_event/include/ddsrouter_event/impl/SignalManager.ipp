@@ -178,7 +178,8 @@ void SignalManager<SigVal>::signal_handler_thread_routine_() noexcept
 
 std::ostream& operator <<(
         std::ostream& os,
-        const Signal& sigval) {
+        const Signal& sigval)
+{
     os << static_cast<SignalType>(sigval);
     return os;
 }
