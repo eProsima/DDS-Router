@@ -235,6 +235,7 @@ jobs:
           repetitions: 1000
           filter: "DDSTestWAN"
         if: always()
+        continue-on-error: true
 
       - name: Run tests ddsrouter_yaml
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
@@ -317,6 +318,7 @@ jobs:
       - name: Check for seg faults
         run: |
           coredumpctl list
+        if: always()
 
   ubuntu-build-test-flaky:
     runs-on: ubuntu-latest
