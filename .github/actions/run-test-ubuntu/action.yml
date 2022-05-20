@@ -17,6 +17,7 @@ runs:
   steps:
   - run: |
       source install/setup.bash
+      sudo apt update && sudo apt -y install systemd-coredump
       ulimit -c unlimited
       colcon test \
         --packages-select ${{ inputs.package_name }} \
@@ -27,4 +28,6 @@ runs:
           --timeout 60 \
           -R ${{ inputs.filter }} \
           --repeat-until-fail ${{ inputs.repetitions }}
+      sudo coredumpctl list
+      sudo coredumpctl dump -1
     shell: bash

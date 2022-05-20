@@ -317,7 +317,8 @@ jobs:
 
       - name: Check for seg faults
         run: |
-          coredumpctl list
+          sudo coredumpctl list
+          sudo coredumpctl dump -1
         if: always()
 
   ubuntu-build-test-flaky:
