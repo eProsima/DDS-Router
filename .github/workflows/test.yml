@@ -321,6 +321,18 @@ jobs:
           sudo coredumpctl dump -1
         if: always()
 
+      - name: Upload coredumps
+        uses: actions/upload-artifact@v3
+        with:
+          name: crashes
+          path: /var/lib/systemd/coredump
+
+      - name: Upload DDS-Router sources and binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: code
+          path: /home/runner/work/DDS-Router/DDS-Router
+
   ubuntu-build-test-flaky:
     runs-on: ubuntu-latest
     environment:
