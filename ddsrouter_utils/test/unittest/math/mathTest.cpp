@@ -46,6 +46,7 @@ void compare_fast_module(
  * - dividend equal to divisor
  * - divisor = 2
  * - divisor = 2^N
+ * - divisor even no 2^N
  * - divisor odd
  */
 TEST(mathTest, fast_module)
@@ -80,12 +81,20 @@ TEST(mathTest, fast_module)
         test::compare_fast_module(431253426, 2048);
     }
 
+    // divisor even no 2^N
+    {
+        test::compare_fast_module(3, 8);
+        test::compare_fast_module(12, 10);
+        test::compare_fast_module(66666, 120);
+        test::compare_fast_module(431253426, 2040);
+    }
+
     // divisor odd
     {
         test::compare_fast_module(3, 5);
-        test::compare_fast_module(12, 10);
+        test::compare_fast_module(12, 11);
         test::compare_fast_module(66666, 127);
-        test::compare_fast_module(431253426, 2040);
+        test::compare_fast_module(431253426, 2041);
     }
 }
 
