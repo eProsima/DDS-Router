@@ -27,6 +27,7 @@ set(TEST_LIST
         set_of_ptr_with_null_contains_int
         set_of_ptr_contains_string
         are_set_of_ptr_equal_int
+        to_lowercase
         tsnh_call
         is_file_accessible
         combined_file_permissions

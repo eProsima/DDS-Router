@@ -298,6 +298,37 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
 }
 
 /**
+ * Test \c to_lowercase call
+ */
+TEST(utilsTest, to_lowercase)
+{
+    // Uppercase
+    {
+        std::string str = "FOO";
+        to_lowercase(str);
+        ASSERT_EQ(str, "foo");
+    }
+    // Invariant
+    {
+        std::string str = "foo";
+        to_lowercase(str);
+        ASSERT_EQ(str, "foo");
+    }
+    // With non-letter characters
+    {
+        std::string str = "!_-.,FoO";
+        to_lowercase(str);
+        ASSERT_EQ(str, "!_-.,foo");
+    }
+    // Empty
+    {
+        std::string str = "";
+        to_lowercase(str);
+        ASSERT_EQ(str, "");
+    }
+}
+
+/**
  * Test \c tsnh call
  */
 TEST(utilsTest, tsnh_call)
