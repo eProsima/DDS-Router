@@ -13,32 +13,26 @@
 // limitations under the License.
 
 /**
- * @file Formatter.cpp
+ * @file utils.cpp
  *
  */
 
-#include <ddsrouter_utils/Formatter.hpp>
+#include <algorithm>
+
+#include <ddsrouter_utils/format/format_utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-std::string Formatter::to_string() const noexcept
+void to_lowercase(
+        std::string& st) noexcept
 {
-    return ss_.str();
-}
-
-Formatter::operator std::string() const noexcept
-{
-    return ss_.str();
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const Formatter& f)
-{
-    os << f.to_string();
-    return os;
+    std::transform(st.begin(), st.end(), st.begin(),
+            [](unsigned char c)
+            {
+                return std::tolower(c);
+            });
 }
 
 } /* namespace utils */

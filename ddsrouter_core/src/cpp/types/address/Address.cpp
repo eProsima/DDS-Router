@@ -22,6 +22,7 @@
 #include <ddsrouter_utils/exception/DNSException.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

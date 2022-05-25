@@ -23,7 +23,7 @@
 #include <iostream>
 
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/format/format_utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

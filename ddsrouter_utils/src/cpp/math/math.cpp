@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter_utils/math.hpp>
+#include <ddsrouter_utils/math/math.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

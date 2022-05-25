@@ -79,20 +79,10 @@ bool match_pattern(
 #endif // defined(_WIN32)
 }
 
-void to_lowercase(
-        std::string& st) noexcept
-{
-    std::transform(st.begin(), st.end(), st.begin(),
-            [](unsigned char c)
-            {
-                return std::tolower(c);
-            });
-}
-
 void tsnh(
-        const Formatter& formatter)
+        const std::string& formatter)
 {
-    logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter.to_string());
+    logError(DDSROUTER_TSNH, "This Should Not Have Happened: " << formatter);
     Log::Flush();
 
     abort();

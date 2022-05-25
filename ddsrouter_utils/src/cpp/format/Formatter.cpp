@@ -13,32 +13,34 @@
 // limitations under the License.
 
 /**
- * @file Exception.cpp
+ * @file Formatter.cpp
+ *
  */
 
-#include <ddsrouter_utils/exception/Exception.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-Exception::Exception(
-        const char* message) noexcept
-    : message_(message)
+std::string Formatter::to_string() const noexcept
 {
+    return ss_.str();
 }
 
-Exception::Exception(
-        const std::string& message)
-    : message_(message)
+Formatter::operator std::string() const noexcept
 {
+    return ss_.str();
 }
 
-const char* Exception::what() const noexcept
+std::ostream& operator <<(
+        std::ostream& os,
+        const Formatter& f)
 {
-    return message_.c_str();
+    os << f.to_string();
+    return os;
 }
 
-} // namespace utils
-} // namespace ddsrouter
-} // namespace eprosima
+} /* namespace utils */
+} /* namespace ddsrouter */
+} /* namespace eprosima */

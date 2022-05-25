@@ -18,8 +18,8 @@
  * This file contains math generic functions
  */
 
-#ifndef _DDSROUTERUTILS_MATH_HPP_
-#define _DDSROUTERUTILS_MATH_HPP_
+#ifndef _DDSROUTERUTILS_MATH_MATH_HPP_
+#define _DDSROUTERUTILS_MATH_MATH_HPP_
 
 #include <ddsrouter_utils/library/library_dll.h>
 
@@ -50,4 +50,4 @@ DDSROUTER_UTILS_DllAPI unsigned int fast_module(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERUTILS_MATH_HPP_ */
+#endif /* _DDSROUTERUTILS_MATH_MATH_HPP_ */

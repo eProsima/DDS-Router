@@ -19,7 +19,7 @@
 #ifndef _DDSROUTERCORE_CONFIGURATION_BASECONFIGURATION_HPP_
 #define _DDSROUTERCORE_CONFIGURATION_BASECONFIGURATION_HPP_
 
-#include <ddsrouter_utils/Formatter.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 

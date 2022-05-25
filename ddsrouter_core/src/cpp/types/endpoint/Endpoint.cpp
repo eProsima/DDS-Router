@@ -19,6 +19,7 @@
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -112,9 +113,7 @@ std::ostream& operator <<(
 {
     try
     {
-
         os << ENDPOINT_KIND_STRINGS.at(static_cast<EndpointKindType>(kind));
-
     }
     catch (const std::out_of_range& oor)
     {

@@ -17,7 +17,7 @@ set(TEST_NAME ExceptionTest)
 set(TEST_SOURCES
         ExceptionTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/format/Formatter.cpp
     )
 
 set(TEST_LIST

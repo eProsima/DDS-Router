@@ -19,6 +19,7 @@
 
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 #include <core/ParticipantsDatabase.hpp>
 

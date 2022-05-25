@@ -17,6 +17,8 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddsrouter_utils/format/format_utils.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 using namespace eprosima::ddsrouter::utils;
@@ -334,7 +336,7 @@ TEST(utilsTest, to_lowercase)
 TEST(utilsTest, tsnh_call)
 {
     // Call tsnh
-    ASSERT_DEATH(tsnh(Formatter() << "Calling tsnh from test."), "");
+    ASSERT_DEATH(tsnh(STR_ENTRY << "Calling tsnh from test."), "");
 }
 
 /**

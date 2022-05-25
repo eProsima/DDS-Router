@@ -19,10 +19,9 @@
  */
 
 #include <ddsrouter_utils/exception/ValueNotAllowedException.hpp>
-#include <ddsrouter_utils/utils.hpp>
-
+#include <ddsrouter_utils/format/Formatter.hpp>
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
-
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

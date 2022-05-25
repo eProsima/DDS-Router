@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
+#include <ddsrouter_utils/format/format_utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
@@ -159,12 +160,12 @@ std::ostream& operator <<(
     os << "AllowedTopicList{";
 
     // Allowed topics
-    os << "allowed";
-    utils::ptr_container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.allowlist_);
+    os << "allowed{";
+    utils::container_to_stream<std::shared_ptr<FilterTopic>>(os, atl.allowlist_);
 
     // Blocked topics
-    os << "blocked";
-    utils::ptr_container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.blocklist_);
+    os << "} blocked{";
+    utils::container_to_stream<std::shared_ptr<FilterTopic>>(os, atl.blocklist_);
 
     os << "}";
 

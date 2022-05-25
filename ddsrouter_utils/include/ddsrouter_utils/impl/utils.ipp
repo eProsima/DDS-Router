@@ -24,61 +24,6 @@ namespace ddsrouter {
 namespace utils {
 
 template <typename T>
-std::ostream& pointer_to_stream(
-        std::ostream& os,
-        const T& element)
-{
-    // If pointer, print object and not address
-    os << (*element);
-    return os;
-}
-
-template <typename T>
-std::ostream& element_to_stream(
-        std::ostream& os,
-        const T& element)
-{
-    os << element;
-    return os;
-}
-
-template <typename T>
-std::ostream& ptr_container_to_stream(
-        std::ostream& os,
-        const std::vector<T>& list,
-        const std::string& separator /* = ";"*/)
-{
-    os << "{";
-
-    size_t size = list.size();
-
-    for (size_t i = 0; size != 0 && i < size - 1; ++i)
-    {
-        pointer_to_stream<T>(os, list[i]);
-        os << separator;
-    }
-
-    // For the last element, to avoid separator
-    if (size > 0)
-    {
-        pointer_to_stream<T>(os, list[size - 1]);
-    }
-
-    os << "}";
-
-    return os;
-}
-
-template <typename T>
-std::ostream& ptr_container_to_stream(
-        std::ostream& os,
-        const std::set<T>& list,
-        const std::string& separator /* = ";" */)
-{
-    return ptr_container_to_stream<T>(os, std::vector<T>(list.begin(), list.end()), separator);
-}
-
-template <typename T>
 bool set_of_ptr_contains(
         const std::set<std::shared_ptr<T>>& set,
         const std::shared_ptr<T>& element)
@@ -147,22 +92,6 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         result_set.insert(std::make_shared<Child>(element));
     }
     return result_set;
-}
-
-template <typename T>
-std::string to_string(
-        const T& element) noexcept
-{
-    std::ostringstream os;
-    element_to_stream<T>(os, element);
-    return os.str();
-}
-
-template <typename T>
-std::string to_string(
-        T&& element) noexcept
-{
-    return to_string<T>(element);
 }
 
 } /* namespace utils */

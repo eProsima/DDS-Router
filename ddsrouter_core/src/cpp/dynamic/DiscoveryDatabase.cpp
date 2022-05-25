@@ -19,6 +19,7 @@
 
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 #include <dynamic/DiscoveryDatabase.hpp>
 
@@ -181,7 +182,7 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
     if (erased == 0)
     {
         throw utils::InconsistencyException(
-                  utils::Formatter() <<
+                  STR_ENTRY <<
                       "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase <<
                       " from database. Endpoint entry not found.");
     }

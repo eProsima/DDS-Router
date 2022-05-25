@@ -18,8 +18,8 @@
  * This file contains class Formatter implementation.
  */
 
-#ifndef _DDSROUTERUTILS_FORMATTET_HPP_
-#define _DDSROUTERUTILS_FORMATTET_HPP_
+#ifndef _DDSROUTERUTILS_FORMAT_FORMATTET_HPP_
+#define _DDSROUTERUTILS_FORMAT_FORMATTET_HPP_
 
 #include <sstream>
 #include <string>
@@ -74,6 +74,6 @@ DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter_utils/impl/Formatter.ipp>
+#include <ddsrouter_utils/format/impl/Formatter.ipp>
 
-#endif /* _DDSROUTERUTILS_FORMATTET_HPP_ */
+#endif /* _DDSROUTERUTILS_FORMAT_FORMATTET_HPP_ */

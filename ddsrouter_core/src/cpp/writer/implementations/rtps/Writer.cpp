@@ -23,6 +23,7 @@
 #include <writer/implementations/rtps/Writer.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

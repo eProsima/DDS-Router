@@ -19,7 +19,7 @@
 
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/Formatter.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 #include <ddsrouter_utils/event/FileWatcherHandler.hpp>
 
 #include <event/FileWatcher.hpp>

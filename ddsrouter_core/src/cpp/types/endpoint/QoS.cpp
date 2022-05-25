@@ -79,7 +79,7 @@ std::ostream& operator <<(
             break;
 
         default:
-            utils::tsnh(utils::Formatter() << "Invalid Durability Kind.");
+            utils::tsnh("Invalid Durability Kind.");
             break;
     }
 
@@ -102,7 +102,7 @@ std::ostream& operator <<(
             break;
 
         default:
-            utils::tsnh(utils::Formatter() << "Invalid Reliability Kind.");
+            utils::tsnh("Invalid Reliability Kind.");
             break;
     }
 

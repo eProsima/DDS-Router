@@ -21,6 +21,7 @@
 
 #include <ddsrouter_yaml/YamlManager.hpp>
 #include <ddsrouter_yaml/Yaml.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -28,7 +28,6 @@
 #include <vector>
 
 #include <ddsrouter_utils/macros.hpp>
-#include <ddsrouter_utils/Formatter.hpp>
 #include <ddsrouter_utils/library/library_dll.h>
 
 namespace eprosima {
@@ -78,16 +77,6 @@ DDSROUTER_UTILS_DllAPI bool match_pattern(
         const std::string& str) noexcept;
 
 /**
- * @brief Convert every alphabetic char in string to lower case
- *
- * @attention This function modifies the object given
- *
- * @param [in,out] st : string to modify
- */
-DDSROUTER_UTILS_DllAPI void to_lowercase(
-        std::string& st) noexcept;
-
-/**
  * @brief This Should Not Happen.
  *
  * This method should be called when something that should not have happened at all happens.
@@ -99,7 +88,7 @@ DDSROUTER_UTILS_DllAPI void to_lowercase(
  * @param formatter msg of the unexpected case.
  */
 DDSROUTER_UTILS_DllAPI void tsnh(
-        const Formatter& formatter);
+        const std::string& formatter);
 
 /**
  * @brief Whether a file exist and/or is accessible with specific permissions
@@ -127,65 +116,6 @@ DDSROUTER_UTILS_DllAPI bool is_file_accessible(
 
 /////
 // TEMPLATE FUNCTIONS
-
-/**
- * @brief Concatenate an element \c element into a stream by operator <<
- *
- * @tparam T type of each element. This object must have an << operator
- * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
- *
- * @param os stream to store the concatenation result
- * @param element element to concatenate into stream
- *
- * @return stream object with the concatenation of \c os and \c element
- */
-template <typename T>
-std::ostream& element_to_stream(
-        std::ostream& os,
-        const T& element);
-
-template <typename T>
-std::ostream& pointer_to_stream(
-        std::ostream& os,
-        const T& element);
-
-/**
- * @brief Concatenate serialization of elements in a vector separated by \c separator .
- *
- * @tparam T type of each element. This object must have an << operator
- * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
- *
- * @param os stream to store the concatenation result
- * @param list vector of elements
- * @param separator char or string separator between elements
- *
- * @return stream object with the concatenation of \c os and \c element
- */
-template <typename T>
-std::ostream& ptr_container_to_stream(
-        std::ostream& os,
-        const std::vector<T>& list,
-        const std::string& separator = ";");
-
-/**
- * @brief Concatenate serialization of elements in a set separated by \c separator .
- *
- * The order of the elements in the final stream is not guaranteed.
- *
- * @tparam T type of each element. This object must have an << operator
- * @tparam Ptr whether \c T is a pointer. In case it is true, it is used the internal element and not the address
- *
- * @param os stream to store the concatenation result
- * @param list set of elements
- * @param separator char or string separator between elements
- *
- * @return stream object with the concatenation of \c os and \c element
- */
-template <typename T>
-std::ostream& ptr_container_to_stream(
-        std::ostream& os,
-        const std::set<T>& list,
-        const std::string& separator = ";");
 
 /**
  * @brief Check if an element contained in a shared ptr is contained in a set of shared pointers
@@ -218,14 +148,6 @@ bool are_set_of_ptr_equal(
 template <typename Parent, typename Child>
 std::set<std::shared_ptr<Parent>> convert_set_to_shared(
         const std::set<Child>& set);
-
-template <typename T>
-DDSROUTER_UTILS_DllAPI std::string to_string(
-        const T& element) noexcept;
-
-template <typename T>
-DDSROUTER_UTILS_DllAPI std::string to_string(
-        T&& element) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */
