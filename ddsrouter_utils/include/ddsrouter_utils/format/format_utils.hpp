@@ -100,7 +100,7 @@ std::ostream& container_to_stream(
         const std::string& separator = ";");
 
 template <typename T>
-DDSROUTER_UTILS_DllAPI std::string to_string(
+std::string to_string(
         const T& element) noexcept;
 
 } /* namespace utils */
