@@ -17,7 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_utils/Time.hpp>
+#include <ddsrouter_utils/time/Timer.hpp>
 
 using namespace eprosima::ddsrouter::utils;
 

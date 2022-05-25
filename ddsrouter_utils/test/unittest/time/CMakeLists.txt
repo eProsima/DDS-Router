@@ -16,7 +16,8 @@ set(TEST_NAME TimerTest)
 
 set(TEST_SOURCES
         TimerTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Time.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
     )
 
 set(TEST_LIST
@@ -30,9 +31,40 @@ set(TEST_EXTRA_LIBRARIES
         fastrtps
     )
 
+############################
+# PAUSABLE TIMER TEST
+############################
+
 add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
+
+    set(TEST_NAME PausableTimerTest)
+
+    set(TEST_SOURCES
+            PausableTimerTest.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+            ${PROJECT_SOURCE_DIR}/src/cpp/time/PausableTimer.cpp
+        )
+
+    set(TEST_LIST
+            create
+            repeat_play_pause
+            play_and_pause
+        )
+
+    set(TEST_EXTRA_LIBRARIES
+            fastcdr
+            fastrtps
+        )
+
+    add_unittest_executable(
+            "${TEST_NAME}"
+            "${TEST_SOURCES}"
+            "${TEST_LIST}"
+            "${TEST_EXTRA_LIBRARIES}"
+        )
