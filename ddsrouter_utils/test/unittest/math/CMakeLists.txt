@@ -12,10 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add test subdirectories
-add_subdirectory(exception)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(time)
-add_subdirectory(utils)
+set(TEST_NAME mathTest)
+
+set(TEST_SOURCES
+        mathTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math.cpp
+    )
+
+set(TEST_LIST
+        fast_module
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )

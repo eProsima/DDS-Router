@@ -18,6 +18,7 @@ set(TEST_SOURCES
         utilsTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
     )
 
