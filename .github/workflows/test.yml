@@ -232,7 +232,7 @@ jobs:
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_core
-          repetitions: 20000
+          repetitions: 1000
           filter: "DDSTestWAN"
         if: always()
         continue-on-error: true

@@ -367,108 +367,108 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
         types::IpVersion::IPv4);
 }
 
-// /**
-//  * Test communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through UDPv6.
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
-// {
-//     test::test_WAN_communication_all(
-//         types::TransportProtocol::UDP,
-//         types::IpVersion::IPv6);
-// }
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through UDPv6.
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
+{
+    test::test_WAN_communication_all(
+        types::TransportProtocol::UDP,
+        types::IpVersion::IPv6);
+}
 
-// /**
-//  * Test communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through TCPv4.
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
-// {
-//     test::test_WAN_communication_all(
-//         types::TransportProtocol::TCP,
-//         types::IpVersion::IPv4);
-// }
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TCPv4.
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
+{
+    test::test_WAN_communication_all(
+        types::TransportProtocol::TCP,
+        types::IpVersion::IPv4);
+}
 
-// /**
-//  * Test communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through TCPv6.
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
-// {
-//     test::test_WAN_communication_all(
-//         types::TransportProtocol::TCP,
-//         types::IpVersion::IPv6,
-//         true);
-// }
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TCPv6.
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
+{
+    test::test_WAN_communication_all(
+        types::TransportProtocol::TCP,
+        types::IpVersion::IPv6,
+        true);
+}
 
-// /**
-//  * Test communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through TLSv4.
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
-// {
-//     test::test_WAN_communication_all(
-//         types::TransportProtocol::TCP,
-//         types::IpVersion::IPv4,
-//         false,
-//         true);
-// }
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TLSv4.
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
+{
+    test::test_WAN_communication_all(
+        types::TransportProtocol::TCP,
+        types::IpVersion::IPv4,
+        false,
+        true);
+}
 
-// /**
-//  * Test communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through TLSv6.
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
-// {
-//     test::test_WAN_communication_all(
-//         types::TransportProtocol::TCP,
-//         types::IpVersion::IPv6,
-//         true,
-//         true);
-// }
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through TLSv6.
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
+{
+    test::test_WAN_communication_all(
+        types::TransportProtocol::TCP,
+        types::IpVersion::IPv6,
+        true,
+        true);
+}
 
-// /**
-//  * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
-//  * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
-//  * through UDPv4.
-//  *
-//  * PARAMETERS:
-//  * - Frequency: 1ms
-//  * - Sample size: 50K
-//  * -> Throughput: 50MBps
-//  */
-// TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
-// {
-//     test::test_WAN_communication(
-//         test::router_configuration(
-//             test::wan_participant_configuration(
-//                 true, // is server 1
-//                 test::SERVER,
-//                 types::TransportProtocol::UDP, // transport protocol
-//                 types::IpVersion::IPv4 // ip version
-//                 ),
-//             0 // domain
-//             ),
+/**
+ * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * through UDPv4.
+ *
+ * PARAMETERS:
+ * - Frequency: 1ms
+ * - Sample size: 50K
+ * -> Throughput: 50MBps
+ */
+TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
+{
+    test::test_WAN_communication(
+        test::router_configuration(
+            test::wan_participant_configuration(
+                true, // is server 1
+                test::SERVER,
+                types::TransportProtocol::UDP, // transport protocol
+                types::IpVersion::IPv4 // ip version
+                ),
+            0 // domain
+            ),
 
-//         test::router_configuration(
-//             test::wan_participant_configuration(
-//                 false, // is server 1
-//                 test::CLIENT,
-//                 types::TransportProtocol::UDP, // transport protocol
-//                 types::IpVersion::IPv4 // ip version
-//                 ),
-//             1 // domain
-//             ),
+        test::router_configuration(
+            test::wan_participant_configuration(
+                false, // is server 1
+                test::CLIENT,
+                types::TransportProtocol::UDP, // transport protocol
+                types::IpVersion::IPv4 // ip version
+                ),
+            1 // domain
+            ),
 
-//         500,
-//         1,
-//         1000); // 50K message size
-// }
+        500,
+        1,
+        1000); // 50K message size
+}
 
 int main(
         int argc,
