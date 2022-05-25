@@ -13,31 +13,39 @@
 // limitations under the License.
 
 /**
- * @file VoidWriter.cpp
+ * @file EmptyWriter.hpp
  */
 
-#include <writer/implementations/auxiliar/VoidWriter.hpp>
+#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
+#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
+
+#include <writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-
-void VoidWriter::enable() noexcept
+/**
+ * Writer that has an empty implementation.
+ * It does not send anything.
+ */
+class EmptyWriter : public IWriter
 {
-}
+public:
 
-void VoidWriter::disable() noexcept
-{
-}
+    //! Override enable() IWriter method
+    void enable() noexcept override;
 
-utils::ReturnCode VoidWriter::write(
-        std::unique_ptr<DataReceived>&) noexcept
-{
-    return utils::ReturnCode::RETCODE_OK;
-}
+    //! Override disable() IWriter method
+    void disable() noexcept override;
+
+    //! Override write() IWriter method
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data) noexcept override;
+};
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_ */

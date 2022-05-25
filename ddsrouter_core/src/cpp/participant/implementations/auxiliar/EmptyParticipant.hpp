@@ -30,8 +30,8 @@ namespace core {
  * Participant that has an empty implementation.
  * It does not discover anything.
  *
- * Writer: VoidWriter
- * Reader: VoidReader
+ * Writer: EmptyWriter
+ * Reader: EmptyReader
  */
 class EmptyParticipant : public IParticipant
 {

@@ -17,9 +17,9 @@
  */
 
 #include <participant/implementations/auxiliar/EmptyParticipant.hpp>
-#include <reader/implementations/auxiliar/VoidReader.hpp>
+#include <reader/implementations/auxiliar/EmptyReader.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <writer/implementations/auxiliar/VoidWriter.hpp>
+#include <writer/implementations/auxiliar/EmptyWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -46,13 +46,13 @@ ParticipantKind EmptyParticipant::kind() const noexcept
 std::shared_ptr<IWriter> EmptyParticipant::create_writer(
         RealTopic topic)
 {
-    return std::make_shared<VoidWriter>();
+    return std::make_shared<EmptyWriter>();
 }
 
 std::shared_ptr<IReader> EmptyParticipant::create_reader(
         RealTopic topic)
 {
-    return std::make_shared<VoidReader>();
+    return std::make_shared<EmptyReader>();
 }
 
 void EmptyParticipant::delete_writer(

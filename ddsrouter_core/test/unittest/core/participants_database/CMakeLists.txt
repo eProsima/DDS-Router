@@ -22,10 +22,10 @@ set(TEST_SOURCES
         ParticipantsDatabaseTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/participant/implementations/auxiliar/EmptyParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/core/ParticipantsDatabase.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/VoidReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/reader/implementations/auxiliar/EmptyReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/VoidWriter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/writer/implementations/auxiliar/EmptyWriter.cpp
     )
 all_header_sources("${TEST_SOURCES}")
 

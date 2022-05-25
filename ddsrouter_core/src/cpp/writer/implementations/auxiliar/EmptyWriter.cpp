@@ -13,10 +13,10 @@
 // limitations under the License.
 
 /**
- * @file VoidReader.cpp
+ * @file EmptyWriter.cpp
  */
 
-#include <reader/implementations/auxiliar/VoidReader.hpp>
+#include <writer/implementations/auxiliar/EmptyWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -24,27 +24,18 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-void VoidReader::enable() noexcept
+void EmptyWriter::enable() noexcept
 {
 }
 
-void VoidReader::disable() noexcept
+void EmptyWriter::disable() noexcept
 {
 }
 
-void VoidReader::set_on_data_available_callback(
-        std::function<void()>) noexcept
-{
-}
-
-void VoidReader::unset_on_data_available_callback() noexcept
-{
-}
-
-utils::ReturnCode VoidReader::take(
+utils::ReturnCode EmptyWriter::write(
         std::unique_ptr<DataReceived>&) noexcept
 {
-    return utils::ReturnCode::RETCODE_NO_DATA;
+    return utils::ReturnCode::RETCODE_OK;
 }
 
 } /* namespace core */
