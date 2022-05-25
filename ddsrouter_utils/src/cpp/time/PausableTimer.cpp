@@ -23,7 +23,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-PausableTimer::PausableTimer(bool play) noexcept
+PausableTimer::PausableTimer(
+        bool play) noexcept
     : playing_(play)
     , stored_time_elapsed_(0)
 {

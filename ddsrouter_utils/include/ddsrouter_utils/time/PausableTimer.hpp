@@ -47,7 +47,8 @@ public:
      *
      * @param play whether the times should start playing or else paused
      */
-    DDSROUTER_UTILS_DllAPI PausableTimer(bool play) noexcept;
+    DDSROUTER_UTILS_DllAPI PausableTimer(
+            bool play) noexcept;
 
     /**
      * @brief Replay a paused Timer.
