@@ -46,7 +46,7 @@ void ConsumerWaitHandler<T>::produce(
         T&& value)
 {
     add_value_(std::move(value));
-    this->operator++();
+    this->operator ++();
 }
 
 template <typename T>
@@ -54,7 +54,7 @@ void ConsumerWaitHandler<T>::produce(
         const T& value)
 {
     add_value_(value);
-    this->operator++();
+    this->operator ++();
 }
 
 template <typename T>
