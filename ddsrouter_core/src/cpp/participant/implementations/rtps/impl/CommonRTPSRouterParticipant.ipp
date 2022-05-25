@@ -219,7 +219,8 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
             "Creating Participant in domain " << domain);
 
-    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params, this);
+    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params);
+    rtps_participant_->set_listener(this);
     if (!rtps_participant_)
     {
         throw utils::InitializationException(
