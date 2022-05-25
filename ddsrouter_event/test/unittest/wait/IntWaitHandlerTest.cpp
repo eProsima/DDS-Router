@@ -21,7 +21,7 @@
 
 #include <TestLogHandler.hpp>
 
-#include <ddsrouter_event/wait/CounterWaitHandler.hpp>
+#include <ddsrouter_event/wait/IntWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -40,17 +40,17 @@ eprosima::ddsrouter::utils::Duration_ms LONG_TIME_TEST = 5000u;
 using namespace eprosima::ddsrouter::event;
 
 /**
- * Create a \c CounterWaitHandler and check its internal values with different numbers
+ * Create a \c IntWaitHandler and check its internal values with different numbers
  *
  * Change the internal values and check if the values are changed
  */
 TEST(CounterWaitHandlerTest, value_handler)
 {
-    std::vector<CounterType> counter_values = {0, 1, 12345, -1, -99999};
+    std::vector<IntWaitHandlerType> counter_values = {0, 1, 12345, -1, -99999};
 
-    for (CounterType i : counter_values)
+    for (IntWaitHandlerType i : counter_values)
     {
-        CounterWaitHandler waiter(i);
+        IntWaitHandler waiter(i);
 
         ASSERT_EQ(waiter.get_value(), i);
 
@@ -78,7 +78,7 @@ TEST(CounterWaitHandlerTest, wait_value)
 {
     // Wait for 1 and set value to 1.
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -102,7 +102,7 @@ TEST(CounterWaitHandlerTest, wait_value)
 
     // Wait for 2 and set value to 3, and close it by disabling
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -139,7 +139,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
 {
     // Wait for 3 and set value to 5.
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -163,7 +163,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
 
     // Wait for -1 and let it awake alone as initial is 0.
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -181,7 +181,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
 
     // Wait for ge 13 and set value to 13
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -200,7 +200,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
 
     //  Wait for 17 and set value to 13, and close it by disabling
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -237,7 +237,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
 {
     // Wait for 3 and set value to 5.
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -261,7 +261,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
 
     // Wait for -1 and let it awake alone as initial is 0.
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -279,7 +279,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
 
     // Wait for le 13 and set value to 13
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(
@@ -298,7 +298,7 @@ TEST(CounterWaitHandlerTest, wait_lower)
 
     // Wait for 2 and set value to 3, and close it by disabling
     {
-        CounterWaitHandler waiter(0); // It starts closed and enabled
+        IntWaitHandler waiter(0); // It starts closed and enabled
 
         // Create a thread that waits for the waiter to open
         std::thread waiting_thread(

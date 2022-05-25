@@ -23,6 +23,7 @@
 #include <condition_variable>
 #include <mutex>
 
+#include <ddsrouter_event/library/library_dll.h>
 #include <ddsrouter_event/wait/WaitHandler.hpp>
 
 namespace eprosima {
@@ -46,12 +47,12 @@ public:
      * @param opened whether the object starts opened or closed
      * @param enabled whether the object starts enabled or disabled
      */
-    BooleanWaitHandler(
+    DDSROUTER_EVENT_DllAPI BooleanWaitHandler(
             bool opened = false,
             bool enabled = true);
 
     //! Default constructor
-    ~BooleanWaitHandler();
+    DDSROUTER_EVENT_DllAPI ~BooleanWaitHandler();
 
     /////
     // Enabling methods
@@ -59,6 +60,7 @@ public:
     // Make this methods public
     using WaitHandler<bool>::enable;
     using WaitHandler<bool>::disable;
+    using WaitHandler<bool>::blocking_disable;
     using WaitHandler<bool>::enabled;
     using WaitHandler<bool>::stop_and_continue;
 
@@ -73,20 +75,20 @@ public:
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      * @return reason why thread was awake
      */
-    AwakeReason wait(
+    DDSROUTER_EVENT_DllAPI AwakeReason wait(
             const utils::Duration_ms& timeout = 0);
 
     /////
     // Value methods
 
     //! Set current status of \c this object as opened (awake every thread)
-    void open() noexcept;
+    DDSROUTER_EVENT_DllAPI void open() noexcept;
 
     //! Set current status of \c this object as closed (threads must wait)
-    void close() noexcept;
+    DDSROUTER_EVENT_DllAPI void close() noexcept;
 
     //! Check whether the object is currently opened
-    bool is_open() const noexcept;
+    DDSROUTER_EVENT_DllAPI bool is_open() const noexcept;
 };
 
 } /* namespace event */
