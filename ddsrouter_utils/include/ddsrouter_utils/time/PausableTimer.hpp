@@ -35,6 +35,8 @@ namespace utils {
  * It stores internally the amount of time that has been elapsed while the timer is playing.
  *
  * @note the internal \c Timer parent class actually counts the time since the state has changed.
+ *
+ * @warning This is not a thread-safe class.
  */
 class PausableTimer : public Timer
 {
@@ -51,13 +53,15 @@ public:
      * @brief Replay a paused Timer.
      *
      * If already playing, do nothing.
+     * If paused, reset internal timer and set state to playing.
      */
     DDSROUTER_UTILS_DllAPI void play() noexcept;
 
     /**
      * @brief Pause the timer. Time while paused does not count as elapsed.
      *
-     * If already paused, do nothing
+     * If already paused, do nothing.
+     * If playing, the time elapsed since last \c play is stored and the timer is paused.
      */
     DDSROUTER_UTILS_DllAPI void pause() noexcept;
 
@@ -85,7 +89,7 @@ protected:
     void reset_() noexcept;
 
     //! Whether the timer is paused or not
-    std::atomic<bool> playing_;
+    bool playing_;
 
     /**
      * @brief Time elapsed while object has been playing

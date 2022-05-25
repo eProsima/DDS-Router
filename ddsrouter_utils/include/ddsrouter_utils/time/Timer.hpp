@@ -33,6 +33,8 @@ namespace utils {
  *
  * When creating an object of this class stores the time \c now when it is created.
  * Using method \c elapsed / \c elapsed_ms gives the amount of time elapsed since its creation.
+ *
+ * @warning This is not a thread-safe class.
  */
 class Timer
 {

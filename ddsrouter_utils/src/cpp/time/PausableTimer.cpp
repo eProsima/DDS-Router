@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Time.cpp
+ * @file PausableTimer.cpp
  *
  */
 
@@ -23,7 +23,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-PausableTimer::PausableTimer(bool play /* = true */) noexcept
+PausableTimer::PausableTimer(bool play) noexcept
     : playing_(play)
     , stored_time_elapsed_(0)
 {
@@ -32,9 +32,10 @@ PausableTimer::PausableTimer(bool play /* = true */) noexcept
 void PausableTimer::play() noexcept
 {
     // If object was paused, reactivate the counter
-    if (!playing_.exchange(true))
+    if (!playing_)
     {
         reset_();
+        playing_ = true;
     }
 
     // If it was already playing, do nothing
@@ -42,11 +43,12 @@ void PausableTimer::play() noexcept
 
 void PausableTimer::pause() noexcept
 {
-    // If object was playing, store the amount of data elapsed and restore the counter
-    if (playing_.exchange(false))
+    // If object was playing, store the elapsed time and restore the counter
+    if (playing_)
     {
         stored_time_elapsed_ += Timer::elapsed();
         reset_();
+        playing_ = false;
     }
 
     // If it was already paused, do nothing
@@ -56,7 +58,7 @@ void PausableTimer::pause() noexcept
 double PausableTimer::elapsed() const noexcept
 {
     // If object is paused, return the amount of data elapsed
-    if (!playing_.load())
+    if (!playing_)
     {
         return stored_time_elapsed_;
     }
@@ -75,7 +77,7 @@ void PausableTimer::reset() noexcept
 
 bool PausableTimer::playing() const noexcept
 {
-    return playing_.load();
+    return playing_;
 }
 
 void PausableTimer::reset_() noexcept
