@@ -45,7 +45,7 @@ add_unittest_executable(
     )
 
 #############################################
-# COUNTER WAIT HANDLER TEST
+# INT WAIT HANDLER TEST
 #############################################
 
 set(TEST_NAME IntWaitHandlerTest)
