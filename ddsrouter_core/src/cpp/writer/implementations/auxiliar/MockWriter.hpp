@@ -22,7 +22,6 @@
 #include <condition_variable>
 #include <mutex>
 
-#include <ddsrouter_utils/Time.hpp>
 #include <ddsrouter_event/wait/CounterWaitHandler.hpp>
 
 #include <writer/implementations/auxiliar/BaseWriter.hpp>

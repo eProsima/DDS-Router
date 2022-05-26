@@ -12,6 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory(communication)
-add_subdirectory(first_approach)
-add_subdirectory(payload_pool)
+####################################
+# Mocked Dummy Performance Test
+####################################
+
+set(TEST_NAME
+    CommunicationMockPerformanceTest)
+
+set(TEST_SOURCES
+    communication_mock_performance_test.cpp)
+
+set(TEST_LIST
+    test_all
+    mem_copy)
+
+set(TEST_NEEDED_SOURCES
+    )
+
+set(TEST_EXTRA_HEADERS
+    )
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
