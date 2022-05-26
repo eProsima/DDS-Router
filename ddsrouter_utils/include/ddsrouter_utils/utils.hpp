@@ -38,10 +38,10 @@ namespace utils {
 using FileAccessModeType = int;
 
 /**
-  Enum for all possible access modes 
-  * Linux: See https://linux.die.net/man/2/access
-  * Windows: See https://docs.microsoft.com/es-es/cpp/c-runtime-library/reference/access-waccess?view=msvc-170
-  */
+   Enum for all possible access modes
+ * Linux: See https://linux.die.net/man/2/access
+ * Windows: See https://docs.microsoft.com/es-es/cpp/c-runtime-library/reference/access-waccess?view=msvc-170
+ */
 enum class FileAccessMode
 {
     exist               = 0,
@@ -55,10 +55,14 @@ enum class FileAccessMode
 };
 
 //! Overloaded '|' operator for composing permissions.
-FileAccessMode operator|(FileAccessMode mode_a, FileAccessMode mode_b);
+FileAccessMode operator |(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b);
 
 //! Overloaded '&' operator for matching permissions.
-FileAccessMode operator&(FileAccessMode mode_a, FileAccessMode mode_b);
+FileAccessMode operator &(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b);
 
 //! Perform the wildcard matching using file comparison method
 DDSROUTER_UTILS_DllAPI bool match_pattern(

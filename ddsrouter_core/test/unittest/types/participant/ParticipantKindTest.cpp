@@ -42,11 +42,13 @@ TEST(ParticipantKindTest, string_conversions)
     ASSERT_EQ(std::string(
                 PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::invalid)]),
             std::string("invalid"));
-    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::blank)]), std::string(
-                "empty"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::blank)]), std::string(
+                "blank"));
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::echo)]),
             std::string("echo"));
-    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
                 "dummy"));
     ASSERT_EQ(std::string(
                 PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),

@@ -63,10 +63,11 @@ ParticipantKind participant_kind_from_name(
     for (const auto& aliases : PARTICIPANT_KIND_ALIASES)
     {
         if (std::find_if(std::cbegin(aliases), std::cend(aliases),
-          [kind_str] (std::string str) {
-            utils::to_lowercase(str);
-            return kind_str == str;
-          }) != std::cend(aliases))
+                [kind_str](std::string str)
+                {
+                    utils::to_lowercase(str);
+                    return kind_str == str;
+                }) != std::cend(aliases))
         {
             // Alias match, since std::find returned iterator before end
             return ALL_PARTICIPANT_KINDS.at(kind_idx);

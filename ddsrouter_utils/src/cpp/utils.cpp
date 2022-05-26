@@ -49,15 +49,21 @@ namespace ddsrouter {
 namespace utils {
 
 //! Overloaded '|' operator for composing permissions.
-FileAccessMode operator|(FileAccessMode mode_a, FileAccessMode mode_b)
+FileAccessMode operator |(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b)
 {
-    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) | static_cast<FileAccessModeType>(mode_b));
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) |
+           static_cast<FileAccessModeType>(mode_b));
 }
 
 //! Overloaded '&' operator for matching permissions.
-FileAccessMode operator&(FileAccessMode mode_a, FileAccessMode mode_b)
+FileAccessMode operator &(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b)
 {
-    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) & static_cast<FileAccessModeType>(mode_b));
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) &
+           static_cast<FileAccessModeType>(mode_b));
 }
 
 bool match_pattern(
@@ -97,7 +103,7 @@ bool is_file_accessible(
         FileAccessMode access_mode) noexcept
 {
 #if defined(_WIN32)
-    if (FileAccessMode::exec & access_mode)
+    if (FileAccessMode::exec& access_mode)
     {
         logWarning(
             DDSROUTER_UTILS,
@@ -105,7 +111,7 @@ bool is_file_accessible(
         // Take out the FileAccess::exec bit
         access_mode = access_mode & ~FileAccess::exec;
     }
-#endif
+#endif // if defined(_WIN32)
     return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 
