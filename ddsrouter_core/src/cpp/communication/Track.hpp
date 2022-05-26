@@ -122,7 +122,7 @@ protected:
      *
      * This method is sent to the Reader so it could call it when there is new data.
      *
-     * This method will set the variable \c data_available_status_ to \c DataAvailableStatus::new_data_arrived and awake the transmit thread.
+     * This method will set the variable \c data_available_status_ to \c new_data_arrived and awake the transmit thread.
      * If Track is disabled, the callback will be lost.
      */
     void data_available_() noexcept;
@@ -130,7 +130,7 @@ protected:
     /**
      * @brief Whether there is data waiting to be taken in the Reader
      *
-     * The times there is data is when \c data_available_status_ is set as \c DataAvailableStatus::new_data_arrived or \c DataAvailableStatus::transmitting_data
+     * The times there is data is when \c data_available_status_ is set as \c new_data_arrived or \c transmitting_data
      *
      * @return true if there is available data
      * @return false otherwise

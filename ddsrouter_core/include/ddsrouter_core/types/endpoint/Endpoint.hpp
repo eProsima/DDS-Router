@@ -34,12 +34,16 @@ using EndpointKindType = unsigned int;
 //! Possible kinds of the endpoint
 enum class EndpointKind : EndpointKindType
 {
-    invalid = 0,
-    writer = 1,
-    reader = 2,
+    invalid = 0,  //! Invalid endpoint
+    writer = 1,   //! Writer endpoint
+    reader = 2,   //! Reader endpoint
 };
 
-constexpr std::array<const char*, 3> EndpointKindStrings =
+//! Number of endpoint kinds
+constexpr unsigned int ENDPOINT_KIND_COUNT = 3;
+
+//! Strings associated to each endpoint kind
+constexpr std::array<const char*, ENDPOINT_KIND_COUNT> ENDPOINT_KIND_STRINGS =
 {
     "invalid",
     "writer",

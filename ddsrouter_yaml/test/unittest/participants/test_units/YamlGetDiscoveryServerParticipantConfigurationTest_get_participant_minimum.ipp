@@ -34,7 +34,7 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum)
 {
-    for (core::types::ParticipantKind kind : core::types::AllValidParticipantKinds)
+    for (core::types::ParticipantKind kind : core::types::ALL_VALID_PARTICIPANT_KINDS)
     {
         for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {

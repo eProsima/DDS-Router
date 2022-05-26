@@ -263,7 +263,7 @@ ParticipantKind random_participant_kind(
         bool valid /* = true */,
         uint16_t seed /* = 0 */)
 {
-    std::vector<ParticipantKind> kinds(std::begin(AllValidParticipantKinds), std::end(AllValidParticipantKinds));
+    std::vector<ParticipantKind> kinds(std::begin(ALL_VALID_PARTICIPANT_KINDS), std::end(ALL_VALID_PARTICIPANT_KINDS));
     if (valid)
     {
         return kinds[seed % kinds.size()];

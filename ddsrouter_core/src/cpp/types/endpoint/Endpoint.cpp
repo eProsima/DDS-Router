@@ -113,7 +113,7 @@ std::ostream& operator <<(
     try
     {
 
-        os << EndpointKindStrings.at(static_cast<EndpointKindType>(kind));
+        os << ENDPOINT_KIND_STRINGS.at(static_cast<EndpointKindType>(kind));
 
     }
     catch (const std::out_of_range& oor)

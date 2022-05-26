@@ -24,9 +24,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace ui {
 
-using ProcessReturnCodeType = int;
-
-enum class ProcessReturnCode : ProcessReturnCodeType
+enum class ProcessReturnCode : int
 {
     success = 0,
     help_argument = 1,

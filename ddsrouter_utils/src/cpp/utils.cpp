@@ -48,6 +48,18 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//! Overloaded '|' operator for composing permissions.
+FileAccessMode operator|(FileAccessMode mode_a, FileAccessMode mode_b)
+{
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) | static_cast<FileAccessModeType>(mode_b));
+}
+
+//! Overloaded '&' operator for matching permissions.
+FileAccessMode operator&(FileAccessMode mode_a, FileAccessMode mode_b)
+{
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) & static_cast<FileAccessModeType>(mode_b));
+}
+
 bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept
@@ -84,6 +96,16 @@ bool is_file_accessible(
         const char* file_path,
         FileAccessMode access_mode) noexcept
 {
+#if defined(_WIN32)
+    if (FileAccessMode::exec & access_mode)
+    {
+        logWarning(
+            DDSROUTER_UTILS,
+            "Windows does not allow to check execution permission for file.");
+        // Take out the FileAccess::exec bit
+        access_mode = access_mode & ~FileAccess::exec;
+    }
+#endif
     return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 

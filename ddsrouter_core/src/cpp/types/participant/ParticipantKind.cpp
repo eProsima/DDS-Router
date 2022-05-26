@@ -36,9 +36,7 @@ std::ostream& operator <<(
 {
     try
     {
-
-        os << ParticipantKindStrings.at(static_cast<ParticipantKindType>(kind));
-
+        os << PARTICIPANT_KIND_STRINGS.at(static_cast<ParticipantKindType>(kind));
     }
     catch (const std::out_of_range& oor)
     {
@@ -48,24 +46,35 @@ std::ostream& operator <<(
 }
 
 ParticipantKind participant_kind_from_name(
-        std::string participantKindName)
+        std::string kind_str)
 {
 
-    if (participantKindName.size() == 0)
+    // Empty strings are always invalid
+    if (kind_str.size() == 0)
     {
         return ParticipantKind::invalid;
     }
 
-    ParticipantKindType pkId = 0u;
-    for (const auto& aliases : ParticipantKindAliases)
+    // Convert to lower case so that match is case-insensitive
+    utils::to_lowercase(kind_str);
+
+    // Loop over each participant kind aliases, returning at first alias match
+    ParticipantKindType kind_idx = 0u;
+    for (const auto& aliases : PARTICIPANT_KIND_ALIASES)
     {
-        if (std::find(std::cbegin(aliases), std::cend(aliases), participantKindName) != std::cend(aliases))
+        if (std::find_if(std::cbegin(aliases), std::cend(aliases),
+          [kind_str] (std::string str) {
+            utils::to_lowercase(str);
+            return kind_str == str;
+          }) != std::cend(aliases))
         {
             // Alias match, since std::find returned iterator before end
-            return AllParticipantKinds.at(pkId);
+            return ALL_PARTICIPANT_KINDS.at(kind_idx);
         }
-        pkId++;
+        kind_idx++;
     }
+
+    // No alias match, so input string is not a valid alias
     return ParticipantKind::invalid;
 }
 

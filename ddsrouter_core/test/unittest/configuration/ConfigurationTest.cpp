@@ -223,7 +223,7 @@ ParticipantKind random_participant_kind(
         uint16_t seed = 0)
 {
     // Avoid Invalid type
-    return AllValidParticipantKinds[seed % AllValidParticipantKinds.size()];
+    return ALL_VALID_PARTICIPANT_KINDS[seed % ALL_VALID_PARTICIPANT_KINDS.size()];
 }
 
 /*

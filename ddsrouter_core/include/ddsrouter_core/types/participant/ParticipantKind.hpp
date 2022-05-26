@@ -33,21 +33,21 @@ using ParticipantKindType = uint16_t;
 
 enum class ParticipantKind : ParticipantKindType
 {
-    invalid = 0,                    //! Invalid Participant Kind
-    empty = 1,                      //! Empty Participant Kind
-    echo = 2,                       //! Echo Participant Kind
-    dummy = 3,                      //! Dummy Participant Kind
-    simple_rtps = 4,                //! Simple RTPS Participant Kind
-    local_discovery_server = 5,     //! Discovery Server RTPS UDP Participant Kind
-    wan = 6,                        //! Discovery Server RTPS TCP Participant Kind
+    invalid,                    //! Invalid Participant Kind
+    empty,                      //! Empty/Void Participant Kind
+    echo,                       //! Echo Participant Kind
+    dummy,                      //! Dummy Participant Kind
+    simple_rtps,                //! Simple RTPS Participant Kind
+    local_discovery_server,     //! Discovery Server RTPS UDP Participant Kind
+    wan,                        //! Discovery Server RTPS TCP Participant Kind
 };
 
-static constexpr unsigned ParticipantKindCount = 7;
+static constexpr unsigned PARTICIPANT_KIND_COUNT = 7;
 
 /**
  * @brief All ParticipantKind enum values as a std::array.
  */
-constexpr std::array<ParticipantKind, ParticipantKindCount> AllParticipantKinds = {
+constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KINDS = {
     ParticipantKind::invalid,
     ParticipantKind::empty,
     ParticipantKind::echo,
@@ -60,7 +60,7 @@ constexpr std::array<ParticipantKind, ParticipantKindCount> AllParticipantKinds 
 /**
  * @brief All valid ParticipantKind enum values as a std::array.
  */
-constexpr std::array<ParticipantKind, ParticipantKindCount - 1> AllValidParticipantKinds = {
+constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PARTICIPANT_KINDS = {
     // ParticipantKind::invalid, // Not valid, so not included in this array
     ParticipantKind::empty,
     ParticipantKind::echo,
@@ -70,7 +70,7 @@ constexpr std::array<ParticipantKind, ParticipantKindCount - 1> AllValidParticip
     ParticipantKind::wan
 };
 
-constexpr std::array<const char*, ParticipantKindCount> ParticipantKindStrings = {
+constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRINGS = {
     "invalid",
     "empty",
     "echo",
@@ -80,16 +80,16 @@ constexpr std::array<const char*, ParticipantKindCount> ParticipantKindStrings =
     "wan",
 };
 
-static constexpr unsigned MaxParticipantKindAliases = 4;
+static constexpr unsigned MAX_PARTICIPANT_KIND_ALIASES = 4;
 
-using ParticipantKindAliasesType = std::array<const char*, MaxParticipantKindAliases>;
+using ParticipantKindAliasesType = std::array<const char*, MAX_PARTICIPANT_KIND_ALIASES>;
 
 /**
  * @brief All possible string aliases for each \c ParticipantKind.
  */
-constexpr std::array<ParticipantKindAliasesType, ParticipantKindCount> ParticipantKindAliases = {
+constexpr std::array<ParticipantKindAliasesType, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_ALIASES = {
     ParticipantKindAliasesType({"__invalid_participant_kind__", "", "", ""}),
-    ParticipantKindAliasesType({"empty", "", "", ""}),
+    ParticipantKindAliasesType({"void", "empty", "", ""}),
     ParticipantKindAliasesType({"echo", "", "", ""}),
     ParticipantKindAliasesType({"dummy", "", "", ""}),
     ParticipantKindAliasesType({"local", "simple", "", ""}),
@@ -108,13 +108,13 @@ DDSROUTER_CORE_DllAPI std::ostream& operator <<(
  *
  * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
  * matches any of them, return the ParticipantKind associated with that name.
- * It will return \c ParticipantKind::invalid in case no existing ParticipantKind name matches the argument.
+ * It will return \c ParticipantKind::invalid in case no existing ParticipantKind name matches the argument or the argument is empty.
  *
  * @param [in] kind : string with the name of the kind to build
  * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
  */
 DDSROUTER_CORE_DllAPI ParticipantKind participant_kind_from_name(
-        std::string participantKindName);
+        std::string participant_kind_str);
 
 } /* namespace types */
 } /* namespace core */

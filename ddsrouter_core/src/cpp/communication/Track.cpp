@@ -135,16 +135,16 @@ void Track::no_more_data_available_() noexcept
     std::lock_guard<std::mutex> lock(data_available_mutex_);
 
     // It may occur that within the process of set data_available_status, the actual status had changed
-    // Thus, it must take care that it is only set to NO_DATA when it comes from transmitting data
+    // Thus, it must take care that it is only set to no_data when it comes from transmitting data
     if (data_available_status_ == DataAvailableStatus::transmitting_data)
     {
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
         data_available_status_.store(DataAvailableStatus::no_more_data);
     }
-    // If it is DataAvailableStatus::new_data_arrived is that the Listener has notified new data AFTER Track has received a NO_DATA
+    // If it is new_data_arrived is that the Listener has notified new data AFTER Track has received a no_data
     // from the Reader. Very unlikely timing, but possible.
-    // In this occasion, it must not be set as DataAvailableStatus::no_more_data because THERE IS data.
-    // If it is DataAvailableStatus::no_more_data it does not need to be changed (however it should never happen)
+    // In this occasion, it must not be set as no_more_data because THERE IS data.
+    // If it is no_more_data it does not need to be changed (however it should never happen)
 }
 
 bool Track::should_transmit_() noexcept

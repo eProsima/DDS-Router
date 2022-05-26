@@ -149,7 +149,7 @@ void participantkind_to_yaml(
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(core::types::ParticipantKindAliases[static_cast<core::types::ParticipantKindType>(
+        test::YamlField<std::string>(core::types::PARTICIPANT_KIND_ALIASES[static_cast<core::types::ParticipantKindType>(
             kind)][0]),
         PARTICIPANT_KIND_TAG);
 }

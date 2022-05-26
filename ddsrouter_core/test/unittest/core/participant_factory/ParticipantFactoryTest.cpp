@@ -60,7 +60,7 @@ std::shared_ptr<IParticipant> create_participant(
 TEST(ParticipantFactoryTest, create_participant)
 {
     // For each Participant Type
-    for (ParticipantKind kind : AllValidParticipantKinds)
+    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
         std::shared_ptr<IParticipant> void_participant = test::create_participant(kind);
         ASSERT_EQ(void_participant->kind(), kind) << "Failed in " << kind;

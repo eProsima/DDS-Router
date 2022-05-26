@@ -27,9 +27,9 @@ using namespace eprosima::ddsrouter::core::types;
  */
 TEST(ParticipantKindTest, int_conversions)
 {
-    for (auto pk : AllParticipantKinds)
+    for (auto kind : ALL_PARTICIPANT_KINDS)
     {
-        ASSERT_EQ(AllParticipantKinds[static_cast<ParticipantKindType>(pk)], pk);
+        ASSERT_EQ(ALL_PARTICIPANT_KINDS[static_cast<ParticipantKindType>(kind)], kind);
     }
 }
 
@@ -40,39 +40,50 @@ TEST(ParticipantKindTest, string_conversions)
 {
     // Check consistency between enum value and its associated string.
     ASSERT_EQ(std::string(
-                ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::invalid)]),
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::invalid)]),
             std::string("invalid"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::empty)]), std::string(
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::blank)]), std::string(
                 "empty"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::echo)]),
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::echo)]),
             std::string("echo"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
                 "dummy"));
     ASSERT_EQ(std::string(
-                ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
             std::string("simple_rtps"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::
                     local_discovery_server)]), std::string("local_discovery_server"));
-    ASSERT_EQ(std::string(ParticipantKindStrings[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
             std::string("wan"));
 
     // Test all possible aliases for each participant kind
+
+    // Strings mapping to ParticipantKind::invalid
     ASSERT_EQ(participant_kind_from_name(""), ParticipantKind::invalid);
     ASSERT_EQ(participant_kind_from_name("unexisting-kind"), ParticipantKind::invalid);
     ASSERT_EQ(participant_kind_from_name("__invalid_participant_kind__"), ParticipantKind::invalid);
 
-    ASSERT_EQ(participant_kind_from_name("empty"), ParticipantKind::empty);
+    // Strings mapping to ParticipantKind::blank
+    ASSERT_EQ(participant_kind_from_name("blank"), ParticipantKind::blank);
+    ASSERT_EQ(participant_kind_from_name("void"), ParticipantKind::blank);
+
+    // Strings mapping to ParticipantKind::echo
     ASSERT_EQ(participant_kind_from_name("echo"), ParticipantKind::echo);
+
+    // Strings mapping to ParticipantKind::dummy
     ASSERT_EQ(participant_kind_from_name("dummy"), ParticipantKind::dummy);
 
+    // Strings mapping to ParticipantKind::simple_rtps
     ASSERT_EQ(participant_kind_from_name("local"), ParticipantKind::simple_rtps);
     ASSERT_EQ(participant_kind_from_name("simple"), ParticipantKind::simple_rtps);
 
+    // Strings mapping to ParticipantKind::local_discovery_server
     ASSERT_EQ(participant_kind_from_name("discovery-server"), ParticipantKind::local_discovery_server);
     ASSERT_EQ(participant_kind_from_name("ds"), ParticipantKind::local_discovery_server);
     ASSERT_EQ(participant_kind_from_name("local-ds"), ParticipantKind::local_discovery_server);
     ASSERT_EQ(participant_kind_from_name("local-discovery-server"), ParticipantKind::local_discovery_server);
 
+    // Strings mapping to ParticipantKind::wan
     ASSERT_EQ(participant_kind_from_name("wan"), ParticipantKind::wan);
     ASSERT_EQ(participant_kind_from_name("router"), ParticipantKind::wan);
 }

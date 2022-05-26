@@ -35,7 +35,7 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 {
-    for (core::types::ParticipantKind kind : core::types::AllValidParticipantKinds)
+    for (core::types::ParticipantKind kind : core::types::ALL_VALID_PARTICIPANT_KINDS)
     {
         for (int i = 0; i < TEST_ITERATION_MAX; i++)
         {
