@@ -47,8 +47,11 @@ Reader::Reader(
         rtps_participant,
         reader_att,
         payload_pool_,
-        rtps_history_,
-        this);
+        rtps_history_);
+
+    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
+    // invoked before the variable is fully set)
+    rtps_reader_->setListener(this);
 
     if (!rtps_reader_)
     {
