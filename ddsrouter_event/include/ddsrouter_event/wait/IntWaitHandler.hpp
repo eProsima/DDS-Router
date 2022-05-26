@@ -42,7 +42,7 @@ class IntWaitHandler : protected WaitHandler<IntWaitHandlerType>
 public:
 
     /**
-     * @brief Construct a new Counter Wait Handler object
+     * @brief Construct a new Int Wait Handler object
      *
      * @param value to initialize counter
      * @param enabled whether the object starts enabled or disabled

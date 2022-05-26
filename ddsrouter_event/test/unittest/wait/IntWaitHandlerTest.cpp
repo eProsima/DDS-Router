@@ -44,7 +44,7 @@ using namespace eprosima::ddsrouter::event;
  *
  * Change the internal values and check if the values are changed
  */
-TEST(CounterWaitHandlerTest, value_handler)
+TEST(IntWaitHandlerTest, value_handler)
 {
     std::vector<IntWaitHandlerType> counter_values = {0, 1, 12345, -1, -99999};
 
@@ -74,7 +74,7 @@ TEST(CounterWaitHandlerTest, value_handler)
  * Wait for 1 and set value to 1.
  * Wait for 2 and set value to 3, and close it by disabling
  */
-TEST(CounterWaitHandlerTest, wait_value)
+TEST(IntWaitHandlerTest, wait_value)
 {
     // Wait for 1 and set value to 1.
     {
@@ -135,7 +135,7 @@ TEST(CounterWaitHandlerTest, wait_value)
  * Wait for ge 13 and set value to 13
  * Wait for 17 and set value to 13, and close it by disabling
  */
-TEST(CounterWaitHandlerTest, wait_upper)
+TEST(IntWaitHandlerTest, wait_upper)
 {
     // Wait for 3 and set value to 5.
     {
@@ -233,7 +233,7 @@ TEST(CounterWaitHandlerTest, wait_upper)
  * Wait for le 13 and set value to 13
  * Wait for -17 and set value to -13, and close it by disabling
  */
-TEST(CounterWaitHandlerTest, wait_lower)
+TEST(IntWaitHandlerTest, wait_lower)
 {
     // Wait for 3 and set value to 5.
     {

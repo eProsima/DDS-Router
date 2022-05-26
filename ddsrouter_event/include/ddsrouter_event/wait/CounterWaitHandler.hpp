@@ -33,18 +33,18 @@ namespace event {
 using CounterType = unsigned int;
 
 /**
- * @brief This WaitHandler class wait threads for a counter value.
+ * @brief This WaitHandler class allows for threads to wait for a counter value.
  *
  * This class could be understood as: the difference between internal value - threshold is the number of threads
  * that could be awaken.
  *
  * This class holds an internal value that can be incremented or decremented one by one.
  * It also has a constant threshold value.
- * While the internal value overcome the threshold (higher), wait condition would be true for one of the threads.
+ * When the internal value surpasses the threshold (higher), wait condition would be true for one of the threads.
  * Once a thread has finished waiting, it decrements the internal value in 1.
  *
- * @note This is specialization of \c WaitHandler that is improved for be more efficient then \c IntWaitHandler
- * as it only notify threads when the actually need to wake up, and only one thread at a time.
+ * @note This is a specialization of \c WaitHandler that improves the efficiency of \c IntWaitHandler
+ * as it only notifies threads when they actually need to wake up, and only one thread at a time.
  * Very useful for consumer wait handlers.
  *
  * @note This class is thread safe and do work properly. Side cases could be:
@@ -60,7 +60,7 @@ public:
     /**
      * @brief Construct a new Counter Wait Handler object
      *
-     * @param threshold value that should be reached (equal or higher) to wake up
+     * @param threshold value that should be reached (strictly higher) to wake up
      * @param enabled whether the object starts enabled or disabled
      */
     DDSROUTER_EVENT_DllAPI CounterWaitHandler(
@@ -88,8 +88,8 @@ public:
     /**
      * @brief Wait current thread while counter does not reach \c threshold and decrease 1 counter in case it does.
      *
-     * This is a specialization of this class that allow to decrease -1 to the current counter if thread
-     * has been awaken by reaching the threshold.
+     * This is a specialization of this class that allows to decrease by 1 the current counter if thread
+     * has been awaken due to threshold being reached.
      *
      * @note Decrease is done only if awaken reason has been \c CONDITION_MET .
      *
@@ -115,7 +115,7 @@ public:
 protected:
 
     /**
-     * @brief Decrease in 1 the internal value and notify threads if is still higher than threshold
+     * @brief Decrease by 1 the internal value and notify threads if is still higher than threshold
      *
      * @warning this method does not lock any mutex. It should be called with \c wait_condition_variable_mutex_ locked.
      */
