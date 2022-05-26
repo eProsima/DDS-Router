@@ -5,8 +5,8 @@ version: v2.0
 
 participants:
 
-  - name: empty0
-    kind: empty
+  - name: void0
+    kind: void
 
-  - name: empty1
-    kind: empty
+  - name: void1
+    kind: void

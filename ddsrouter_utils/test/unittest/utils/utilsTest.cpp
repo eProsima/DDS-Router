@@ -389,31 +389,31 @@ TEST(utilsTest, combined_file_permissions)
     ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::exist, FileAccessMode::exist);
 
     // Match read
-    ASSERT_TRUE(FileAccessMode::read & FileAccessMode::read);
-    ASSERT_FALSE(FileAccessMode::write & FileAccessMode::read);
-    ASSERT_FALSE(FileAccessMode::exec & FileAccessMode::read);
-    ASSERT_TRUE(FileAccessMode::read_write & FileAccessMode::read);
-    ASSERT_TRUE(FileAccessMode::read_exec & FileAccessMode::read);
-    ASSERT_TRUE(FileAccessMode::read_write_exec & FileAccessMode::read);
-    ASSERT_FALSE(FileAccessMode::write_exec & FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::write & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_write & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::write_exec & FileAccessMode::read, FileAccessMode::read);
 
     // Match write
-    ASSERT_FALSE(FileAccessMode::read & FileAccessMode::write);
-    ASSERT_TRUE(FileAccessMode::write & FileAccessMode::write);
-    ASSERT_FALSE(FileAccessMode::exec & FileAccessMode::write);
-    ASSERT_TRUE(FileAccessMode::read_write & FileAccessMode::write);
-    ASSERT_FALSE(FileAccessMode::read_exec & FileAccessMode::write);
-    ASSERT_TRUE(FileAccessMode::read_write_exec & FileAccessMode::write);
-    ASSERT_TRUE(FileAccessMode::write_exec & FileAccessMode::write);
+    ASSERT_NE(FileAccessMode::read & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::write & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_NE(FileAccessMode::exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::read_write & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_NE(FileAccessMode::read_exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::write, FileAccessMode::write);
 
     // Match exec
-    ASSERT_FALSE(FileAccessMode::read & FileAccessMode::exec);
-    ASSERT_FALSE(FileAccessMode::write & FileAccessMode::exec);
-    ASSERT_TRUE(FileAccessMode::exec & FileAccessMode::exec);
-    ASSERT_FALSE(FileAccessMode::read_write & FileAccessMode::exec);
-    ASSERT_TRUE(FileAccessMode::read_exec & FileAccessMode::exec);
-    ASSERT_TRUE(FileAccessMode::read_write_exec & FileAccessMode::exec);
-    ASSERT_TRUE(FileAccessMode::write_exec & FileAccessMode::exec);
+    ASSERT_NE(FileAccessMode::read & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_NE(FileAccessMode::write & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_NE(FileAccessMode::read_write & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::read_exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::exec, FileAccessMode::exec);
 }
 
 int main(

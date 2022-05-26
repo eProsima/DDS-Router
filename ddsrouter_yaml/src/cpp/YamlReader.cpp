@@ -788,7 +788,7 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
 
     switch (kind)
     {
-        case types::ParticipantKind::empty:
+        case types::ParticipantKind::blank:
         case types::ParticipantKind::echo:
         case types::ParticipantKind::dummy:
             return std::make_shared<core::configuration::ParticipantConfiguration>(

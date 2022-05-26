@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file EmptyParticipant.hpp
+ * @file BlankParticipant.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_VOIDPARTICIPANT_HPP_
@@ -30,15 +30,15 @@ namespace core {
  * Participant that has an empty implementation.
  * It does not discover anything.
  *
- * Writer: EmptyWriter
- * Reader: EmptyReader
+ * Writer: BlankWriter
+ * Reader: BlankReader
  */
-class EmptyParticipant : public IParticipant
+class BlankParticipant : public IParticipant
 {
 public:
 
     //! Constructor with Id of this participant
-    EmptyParticipant(
+    BlankParticipant(
             const types::ParticipantId& id_);
 
     //! Override id() IParticipant method

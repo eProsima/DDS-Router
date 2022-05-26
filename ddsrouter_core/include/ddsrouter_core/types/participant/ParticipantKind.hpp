@@ -34,7 +34,7 @@ using ParticipantKindType = uint16_t;
 enum class ParticipantKind : ParticipantKindType
 {
     invalid,                    //! Invalid Participant Kind
-    empty,                      //! Empty/Void Participant Kind
+    blank,                      //! Blank/Void Participant Kind
     echo,                       //! Echo Participant Kind
     dummy,                      //! Dummy Participant Kind
     simple_rtps,                //! Simple RTPS Participant Kind
@@ -49,7 +49,7 @@ static constexpr unsigned PARTICIPANT_KIND_COUNT = 7;
  */
 constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KINDS = {
     ParticipantKind::invalid,
-    ParticipantKind::empty,
+    ParticipantKind::blank,
     ParticipantKind::echo,
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
@@ -62,7 +62,7 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KI
  */
 constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PARTICIPANT_KINDS = {
     // ParticipantKind::invalid, // Not valid, so not included in this array
-    ParticipantKind::empty,
+    ParticipantKind::blank,
     ParticipantKind::echo,
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
@@ -72,7 +72,7 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PART
 
 constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRINGS = {
     "invalid",
-    "empty",
+    "blank",
     "echo",
     "dummy",
     "simple_rtps",
@@ -89,7 +89,7 @@ using ParticipantKindAliasesType = std::array<const char*, MAX_PARTICIPANT_KIND_
  */
 constexpr std::array<ParticipantKindAliasesType, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_ALIASES = {
     ParticipantKindAliasesType({"__invalid_participant_kind__", "", "", ""}),
-    ParticipantKindAliasesType({"void", "empty", "", ""}),
+    ParticipantKindAliasesType({"blank", "void", "", ""}),
     ParticipantKindAliasesType({"echo", "", "", ""}),
     ParticipantKindAliasesType({"dummy", "", "", ""}),
     ParticipantKindAliasesType({"local", "simple", "", ""}),

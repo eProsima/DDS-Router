@@ -2,7 +2,7 @@
 # 2 Empty Participants
 
 participant1:
-  type: empty
+  type: void
 
 participant2:
-  type: empty
+  type: void

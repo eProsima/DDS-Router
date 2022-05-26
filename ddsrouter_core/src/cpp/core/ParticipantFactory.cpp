@@ -27,7 +27,7 @@
 #include <core/ParticipantFactory.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
-#include <participant/implementations/auxiliar/EmptyParticipant.hpp>
+#include <participant/implementations/auxiliar/BlankParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
 #include <participant/implementations/rtps/WANParticipant.hpp>
@@ -49,9 +49,9 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
     // Create a new Participant depending on the ParticipantKind specified by the configuration
     switch (participant_configuration->kind())
     {
-        case ParticipantKind::empty:
-            // EmptyParticipant
-            return std::make_shared<EmptyParticipant>(participant_configuration->id());
+        case ParticipantKind::blank:
+            // BlankParticipant
+            return std::make_shared<BlankParticipant>(participant_configuration->id());
 
         case ParticipantKind::echo:
             // EchoParticipant

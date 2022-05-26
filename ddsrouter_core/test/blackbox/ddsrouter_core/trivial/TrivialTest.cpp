@@ -53,11 +53,11 @@ configuration::DDSRouterConfiguration void_configuration()
     {
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId("ParticipantVoid1"),
-            ParticipantKind::empty
+            ParticipantKind::blank
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId("ParticipantVoid2"),
-            ParticipantKind::empty
+            ParticipantKind::blank
             )
     }
             ));

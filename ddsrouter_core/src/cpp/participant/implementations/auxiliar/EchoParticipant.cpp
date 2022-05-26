@@ -17,7 +17,7 @@
  */
 
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
-#include <reader/implementations/auxiliar/EmptyReader.hpp>
+#include <reader/implementations/auxiliar/BlankReader.hpp>
 #include <writer/implementations/auxiliar/EchoWriter.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 
@@ -36,7 +36,7 @@ std::shared_ptr<IWriter> EchoParticipant::create_writer_(
 std::shared_ptr<IReader> EchoParticipant::create_reader_(
         RealTopic)
 {
-    return std::make_shared<EmptyReader>();
+    return std::make_shared<BlankReader>();
 }
 
 } /* namespace core */

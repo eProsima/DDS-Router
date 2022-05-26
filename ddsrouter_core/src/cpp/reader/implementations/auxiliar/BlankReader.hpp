@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file EmptyReader.hpp
+ * @file BlankReader.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_VOIDREADER_HPP_
@@ -30,7 +30,7 @@ namespace core {
  * It does not receive anything.
  * It does not have messages to take.
  */
-class EmptyReader : public IReader
+class BlankReader : public IReader
 {
 public:
 
