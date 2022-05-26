@@ -54,7 +54,7 @@ AwakeReason CounterWaitHandler::wait_and_decrement(
         result);
 
     // Mutex is taken, decrease value by 1 if condition was met
-    if (result == AwakeReason::CONDITION_MET)
+    if (result == AwakeReason::condition_met)
     {
         decrease_1_nts_();
     }
