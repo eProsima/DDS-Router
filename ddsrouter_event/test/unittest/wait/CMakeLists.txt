@@ -45,14 +45,14 @@ add_unittest_executable(
     )
 
 #############################################
-# COUNTER WAIT HANDLER TEST
+# INT WAIT HANDLER TEST
 #############################################
 
-set(TEST_NAME CounterWaitHandlerTest)
+set(TEST_NAME IntWaitHandlerTest)
 
 set(TEST_SOURCES
-        CounterWaitHandlerTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        IntWaitHandlerTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
     )
 
 set(TEST_LIST

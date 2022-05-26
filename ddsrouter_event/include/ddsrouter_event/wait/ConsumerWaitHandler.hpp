@@ -19,7 +19,7 @@
 #ifndef _DDSROUTEREVENT_WAIT_CONSUMERWAITHANDLER_HPP_
 #define _DDSROUTEREVENT_WAIT_CONSUMERWAITHANDLER_HPP_
 
-#include <ddsrouter_event/wait/WaitHandler.hpp>
+#include <ddsrouter_event/wait/CounterWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -37,11 +37,12 @@ namespace event {
  * WARNING: The collection must be inside this handler object and should not be accessed outside this class methods.
  */
 template <typename T>
-class ConsumerWaitHandler : protected WaitHandler<uint32_t>
+class ConsumerWaitHandler : protected CounterWaitHandler
 {
 public:
 
-    ConsumerWaitHandler(
+    DDSROUTER_EVENT_DllAPI ConsumerWaitHandler(
+            CounterType initial_value = 0,
             bool enabled = true);
 
     // Make this parent methods public
@@ -52,33 +53,39 @@ public:
     using WaitHandler::stop_and_continue;
 
     /////
+    // Get internal values
+
+    //! Get the number of values ready for consumption
+    DDSROUTER_EVENT_DllAPI CounterType elements_ready_to_consume() const noexcept;
+
+    /////
     // Add values methods
 
     /**
      * @brief Add a new value to the consumer. Use move constructor.
      *
-     * This method will awake ONE thread waiting for data to be available if there is any waiting
-     * Otherwise it will store the data inside the collection.
-     *
+     * Store the data in the collection (without this class mutex taken).
      * @note this method calls \c add_value_ , method that must be overriden by the child class.
+     *
+     * This method will awake ONE thread waiting for data to be available if there is any waiting.
      *
      * @param value new data available
      */
-    void produce(
+    DDSROUTER_EVENT_DllAPI void produce(
             T&& value);
 
 
     /**
      * @brief Add a new value to the collection. Use copy constructor.
      *
-     * This method will awake ONE thread waiting for data to be available if there is any waiting
-     * Otherwise it will store the data inside the collection.
-     *
+     * Store the data in the collection (without this class mutex taken).
      * @note this method calls \c add_value_ , method that must be overriden by the child class.
+     *
+     * This method will awake ONE thread waiting for data to be available if there is any waiting.
      *
      * @param value new data available
      */
-    void produce(
+    DDSROUTER_EVENT_DllAPI void produce(
             const T& value);
 
     /////
@@ -99,7 +106,7 @@ public:
      * @throw \c DisabledException if the handler is disabled when calling this method or while waiting.
      * @throw \c TimeoutException if timeout is reached.
      */
-    T consume(
+    DDSROUTER_EVENT_DllAPI T consume(
             const utils::Duration_ms& timeout = 0);
 
 protected:

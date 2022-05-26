@@ -26,6 +26,8 @@
 
 #include <ddsrouter_utils/time/time_utils.hpp>
 
+#include <ddsrouter_event/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
@@ -62,7 +64,7 @@ public:
      *
      * @param enabled whether the WaitHandler should be initialized enabled
      */
-    WaitHandler(
+    DDSROUTER_EVENT_DllAPI WaitHandler(
             bool enabled = true);
 
     /**
@@ -71,7 +73,7 @@ public:
      * @param init_value initial value for the internal value that is checked in wait conditions
      * @param enabled whether the WaitHandler should be initialized enabled
      */
-    WaitHandler(
+    DDSROUTER_EVENT_DllAPI WaitHandler(
             T init_value,
             bool enabled = true);
 
@@ -80,7 +82,7 @@ public:
      *
      * It disables and blocks until every thread has finished.
      */
-    ~WaitHandler();
+    DDSROUTER_EVENT_DllAPI ~WaitHandler();
 
     /////
     // Enabling methods
@@ -92,7 +94,7 @@ public:
      *
      * @note: A WaitHandler not enabled will not wait.
      */
-    virtual void enable() noexcept;
+    DDSROUTER_EVENT_DllAPI virtual void enable() noexcept;
 
     /**
      * @brief Disable object
@@ -102,7 +104,7 @@ public:
      *
      * @note: A disabled WaitHandler  will not wait.
      */
-    virtual void disable() noexcept;
+    DDSROUTER_EVENT_DllAPI virtual void disable() noexcept;
 
     /**
      * @brief Disable object and wait till every thread has finished
@@ -110,10 +112,10 @@ public:
      * If object is enabled, disable it. Otherwise do nothing.
      * This method does not finish until every waiting thread has finished waiting.
      */
-    virtual void blocking_disable() noexcept;
+    DDSROUTER_EVENT_DllAPI virtual void blocking_disable() noexcept;
 
     //! Whether the object is enabled or disabled
-    virtual bool enabled() const noexcept;
+    DDSROUTER_EVENT_DllAPI virtual bool enabled() const noexcept;
 
     /////
     // Wait methods
@@ -127,28 +129,45 @@ public:
      * @param predicate lambda that will be called with internal \c value_ , must return \c true for values
      * that where the thread must awake
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
+     *
      * @return reason why thread was awake
      */
-    AwakeReason wait(
+    DDSROUTER_EVENT_DllAPI AwakeReason wait(
             std::function<bool(const T&)> predicate,
-            const utils::Duration_ms& timeout = 0);
+            const utils::Duration_ms& timeout = 0) noexcept;
 
     /////
     // Value methods
 
     //! Get current value
-    T get_value() const noexcept;
+    DDSROUTER_EVENT_DllAPI T get_value() const noexcept;
 
     //! Set new value
-    void set_value(
-            T new_value) noexcept;
+    DDSROUTER_EVENT_DllAPI void set_value(
+            T new_value,
+            bool notify = true) noexcept;
 
     /**
      * @brief Awake every waiting thread by disabling and set as enabled afterwards
      */
-    void stop_and_continue() noexcept;
+    DDSROUTER_EVENT_DllAPI void stop_and_continue() noexcept;
 
 protected:
+
+    /**
+     * @brief Perform wait action with predicate and return this object mutex's lock.
+     *
+     * @param predicate lambda that will be called with internal \c value_ , must return \c true for values
+     * that where the thread must awake
+     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
+     * @param reason [out] reason why thread was awake
+     *
+     * @return lock of this object mutex.
+     */
+    std::unique_lock<std::mutex> blocking_wait_(
+            std::function<bool(const T&)> predicate,
+            const utils::Duration_ms& timeout,
+            AwakeReason& reason) noexcept;
 
     /**
      * @brief  Current value

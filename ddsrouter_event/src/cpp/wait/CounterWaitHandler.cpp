@@ -26,9 +26,11 @@ namespace ddsrouter {
 namespace event {
 
 CounterWaitHandler::CounterWaitHandler(
-        CounterType value,
+        CounterType threshold,
+        CounterType initial_value,
         bool enabled /* = true */)
-    : WaitHandler<CounterType>(value, enabled)
+    : WaitHandler<CounterType>(initial_value, enabled)
+    , threshold_(threshold)
 {
 }
 
@@ -36,64 +38,28 @@ CounterWaitHandler::~CounterWaitHandler()
 {
 }
 
-AwakeReason CounterWaitHandler::wait_equal(
-        CounterType expected_value,
-        const utils::Duration_ms& timeout /* = 0 */)
+AwakeReason CounterWaitHandler::wait_and_decrement(
+        const utils::Duration_ms& timeout /* = 0 */) noexcept
 {
-    return WaitHandler<CounterType>::wait(
-        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
-        {
-            return value == expected_value;
-        }),
-        timeout);
-}
+    AwakeReason result; // Get value from wait
+    CounterType threshold_tmp = threshold_; // Require to set it in predicate
 
-AwakeReason CounterWaitHandler::wait_greater_than(
-        CounterType expected_value,
-        const utils::Duration_ms& timeout /* = 0 */)
-{
-    return WaitHandler<CounterType>::wait(
-        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
+    // Perform blocking wait
+    auto lock = blocking_wait_(
+        std::function<bool(const CounterType&)>([threshold_tmp](const CounterType& value)
         {
-            return value > expected_value;
+            return value > threshold_tmp;
         }),
-        timeout);
-}
+        timeout,
+        result);
 
-AwakeReason CounterWaitHandler::wait_greater_equal_than(
-        CounterType expected_value,
-        const utils::Duration_ms& timeout /* = 0 */)
-{
-    return WaitHandler<CounterType>::wait(
-        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
-        {
-            return value >= expected_value;
-        }),
-        timeout);
-}
+    // Mutex is taken, decrease value by 1 if condition was met
+    if (result == AwakeReason::CONDITION_MET)
+    {
+        decrease_1_nts_();
+    }
 
-AwakeReason CounterWaitHandler::wait_lower_than(
-        CounterType expected_value,
-        const utils::Duration_ms& timeout /* = 0 */)
-{
-    return WaitHandler<CounterType>::wait(
-        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
-        {
-            return value < expected_value;
-        }),
-        timeout);
-}
-
-AwakeReason CounterWaitHandler::wait_lower_equal_than(
-        CounterType expected_value,
-        const utils::Duration_ms& timeout /* = 0 */)
-{
-    return WaitHandler<CounterType>::wait(
-        std::function<bool(const CounterType&)>([expected_value](const CounterType& value)
-        {
-            return value <= expected_value;
-        }),
-        timeout);
+    return result;
 }
 
 CounterWaitHandler& CounterWaitHandler::operator ++()
@@ -105,27 +71,26 @@ CounterWaitHandler& CounterWaitHandler::operator ++()
         // Mutex must guard the modification of value_
         std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
         value_++;
-    }
 
-    wait_condition_variable_.notify_all();
+        // If threshold is reached, notify one waiter
+        if (value_ > threshold_)
+        {
+            wait_condition_variable_.notify_one();
+        }
+    }
 
     return *this;
 }
 
-CounterWaitHandler& CounterWaitHandler::operator --()
+void CounterWaitHandler::decrease_1_nts_()
 {
-    // NOTE: This operation could be done using the WaitHandler methods, but it will be less efficient than
-    // set the actual value directly.
+    value_--;
 
+    // If value is still higher than threshold, notify one waiter
+    if (value_ > threshold_)
     {
-        // Mutex must guard the modification of value_
-        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
-        value_--;
+        wait_condition_variable_.notify_one();
     }
-
-    wait_condition_variable_.notify_all();
-
-    return *this;
 }
 
 } /* namespace event */

@@ -103,7 +103,7 @@ void WaitHandler<T>::blocking_disable() noexcept
     // Wait till every thread has finished
     while (threads_waiting_.load() > 0)
     {
-        // Lock so this thread has no priority over closin threads
+        // Lock so this thread has no priority over closing threads
         {
             std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
         }
@@ -120,9 +120,10 @@ bool WaitHandler<T>::enabled() const noexcept
 }
 
 template <typename T>
-AwakeReason WaitHandler<T>::wait(
+std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
         std::function<bool(const T&)> predicate,
-        const utils::Duration_ms& timeout /* = 0 */)
+        const utils::Duration_ms& timeout,
+        AwakeReason& reason) noexcept
 {
     // Do wait with mutex taken
     std::unique_lock<std::mutex> lock(wait_condition_variable_mutex_);
@@ -130,7 +131,8 @@ AwakeReason WaitHandler<T>::wait(
     // Check if it is disabled and exit
     if (!enabled())
     {
-        return AwakeReason::DISABLED;
+        reason = AwakeReason::DISABLED;
+        return lock;
     }
 
     // Increment number of threads waiting
@@ -165,16 +167,32 @@ AwakeReason WaitHandler<T>::wait(
     // Check awake reason. Mutex is taken so it can not change while checking
     if (!enabled_.load())
     {
-        return AwakeReason::DISABLED;
+        reason = AwakeReason::DISABLED;
     }
     else if (finished_for_condition_met)
     {
-        return AwakeReason::CONDITION_MET;
+        reason = AwakeReason::CONDITION_MET;
     }
     else
     {
-        return AwakeReason::TIMEOUT;
+        reason = AwakeReason::TIMEOUT;
     }
+
+    // Return the lock so this mutex keeps being locked after this function exit
+    return lock;
+}
+
+template <typename T>
+AwakeReason WaitHandler<T>::wait(
+        std::function<bool(const T&)> predicate,
+        const utils::Duration_ms& timeout /* = 0 */) noexcept
+{
+    AwakeReason reason;
+
+    // Calling blocking wait and the let the mutex to unlock
+    blocking_wait_(predicate, timeout, reason);
+
+    return reason;
 }
 
 template <typename T>
@@ -186,7 +204,8 @@ T WaitHandler<T>::get_value() const noexcept
 
 template <typename T>
 void WaitHandler<T>::set_value(
-        T new_value) noexcept
+        T new_value,
+        bool notify /* = true */) noexcept
 {
     {
         // Mutex must guard the modification of value_
@@ -194,7 +213,10 @@ void WaitHandler<T>::set_value(
         value_ = new_value;
     }
 
-    wait_condition_variable_.notify_all();
+    if (notify)
+    {
+        wait_condition_variable_.notify_all();
+    }
 }
 
 template <typename T>

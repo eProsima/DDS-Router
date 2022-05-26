@@ -49,12 +49,14 @@ AwakeReason BooleanWaitHandler::wait(
 
 void BooleanWaitHandler::open() noexcept
 {
-    set_value(true);
+    // Change value and do notify
+    set_value(true, true);
 }
 
 void BooleanWaitHandler::close() noexcept
 {
-    set_value(false);
+    // Change value and do not notify
+    set_value(false, false);
 }
 
 bool BooleanWaitHandler::is_open() const noexcept

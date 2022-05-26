@@ -23,18 +23,35 @@
 #include <condition_variable>
 #include <mutex>
 
+#include <ddsrouter_event/library/library_dll.h>
 #include <ddsrouter_event/wait/WaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-using CounterType = int32_t;
+using CounterType = unsigned int;
 
 /**
- * @brief This WaitHandler allows to wait for an int value
+ * @brief This WaitHandler class allows for threads to wait for a counter value.
  *
- * This works as an int value that allows to wait for a specific value or threshold.
+ * This class could be understood as: the difference between internal value - threshold is the number of threads
+ * that could be awaken.
+ *
+ * This class holds an internal value that can be incremented or decremented one by one.
+ * It also has a constant threshold value.
+ * When the internal value surpasses the threshold (higher), wait condition would be true for one of the threads.
+ * Once a thread has finished waiting, it decrements the internal value in 1.
+ *
+ * @note This is a specialization of \c WaitHandler that improves the efficiency of \c IntWaitHandler
+ * as it only notifies threads when they actually need to wake up, and only one thread at a time.
+ * Very useful for consumer wait handlers.
+ *
+ * @note This class is thread safe and do work properly. Side cases could be:
+ * 1. Value is higher than 1+threshold -> the waiting thread that is awaken will
+ * decrease value by 1, and then next thread will be notified (one by one)
+ * 2. Value is higher than threshold before thread arrive to wait -> predicate is checked
+ * at the instantiation time, so it does not need a notify.
  */
 class CounterWaitHandler : protected WaitHandler<CounterType>
 {
@@ -43,15 +60,16 @@ public:
     /**
      * @brief Construct a new Counter Wait Handler object
      *
-     * @param value to initialize counter
+     * @param threshold value that should be reached (strictly higher) to wake up
      * @param enabled whether the object starts enabled or disabled
      */
-    CounterWaitHandler(
-            CounterType value,
+    DDSROUTER_EVENT_DllAPI CounterWaitHandler(
+            CounterType threshold,
+            CounterType initial_value,
             bool enabled = true);
 
     //! Default constructor
-    ~CounterWaitHandler();
+    DDSROUTER_EVENT_DllAPI ~CounterWaitHandler();
 
     /////
     // Enabling methods
@@ -59,8 +77,8 @@ public:
     // Make this methods public
     using WaitHandler<CounterType>::enable;
     using WaitHandler<CounterType>::disable;
+    using WaitHandler<CounterType>::blocking_disable;
     using WaitHandler<CounterType>::enabled;
-    using WaitHandler<CounterType>::set_value;
     using WaitHandler<CounterType>::get_value;
     using WaitHandler<CounterType>::stop_and_continue;
 
@@ -68,59 +86,42 @@ public:
     // Wait methods
 
     /**
-     * @brief Wait current thread while counter is not \c expected_value .
+     * @brief Wait current thread while counter does not reach \c threshold and decrease 1 counter in case it does.
      *
-     * @param expected_value value of counter for which the thread will awake
+     * This is a specialization of this class that allows to decrease by 1 the current counter if thread
+     * has been awaken due to threshold being reached.
+     *
+     * @note Decrease is done only if awaken reason has been \c CONDITION_MET .
+     *
      * @param timeout maximum time in milliseconds that should wait until awaking for timeout
      *
-     * @return reason why thread was awake
+     * @return reason why thread was awaken
      */
-    AwakeReason wait_equal(
-            CounterType expected_value,
-            const utils::Duration_ms& timeout = 0);
-
-    /**
-     * @brief Wait current thread while counter is lower or equal than \c upper_bound .
-     *
-     * @param upper_bound maximum value of counter with which the thread will not awake
-     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
-     *
-     * @return reason why thread was awake
-     */
-    AwakeReason wait_greater_than(
-            CounterType upper_bound,
-            const utils::Duration_ms& timeout = 0);
-
-    //! @brief Wait current thread while counter is lower than \c upper_bound .
-    AwakeReason wait_greater_equal_than(
-            CounterType upper_bound,
-            const utils::Duration_ms& timeout = 0);
-
-    /**
-     * @brief Wait current thread while counter is higher or equal than \c lower_bound .
-     *
-     * @param lower_bound minimum value of counter with which the thread will not awake
-     * @param timeout maximum time in milliseconds that should wait until awaking for timeout
-     *
-     * @return reason why thread was awake
-     */
-    AwakeReason wait_lower_than(
-            CounterType lower_bound,
-            const utils::Duration_ms& timeout = 0);
-
-    //! Wait current thread while counter is higher than \c lower_bound .
-    AwakeReason wait_lower_equal_than(
-            CounterType lower_bound,
-            const utils::Duration_ms& timeout = 0);
+    DDSROUTER_EVENT_DllAPI AwakeReason wait_and_decrement(
+            const utils::Duration_ms& timeout = 0) noexcept;
 
     /////
     // Value methods
 
-    //! Operator prefix ++ to add 1 to counter
-    CounterWaitHandler& operator ++();
+    /**
+     * @brief Operator prefix ++ to add 1 to counter
+     *
+     * It notifies one threads if internal value is higher than threshold.
+     *
+     * @return this object
+     */
+    DDSROUTER_EVENT_DllAPI CounterWaitHandler& operator ++();
 
-    //! Operator prefix -- to substract 1 to counter
-    CounterWaitHandler& operator --();
+protected:
+
+    /**
+     * @brief Decrease by 1 the internal value and notify threads if is still higher than threshold
+     *
+     * @warning this method does not lock any mutex. It should be called with \c wait_condition_variable_mutex_ locked.
+     */
+    void decrease_1_nts_();
+
+    const CounterType threshold_;
 };
 
 } /* namespace event */
