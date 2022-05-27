@@ -111,7 +111,7 @@ protected:
     std::set<std::shared_ptr<types::FilterTopic>> allowlist_;
 
     //! Mutex to restrict access to the class
-    mutable std::recursive_mutex mutex_;
+    mutable std::mutex mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

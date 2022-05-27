@@ -127,7 +127,7 @@ protected:
     bool enabled_;
 
     //! Mutex to prevent simultaneous calls to enable and/or disable
-    std::recursive_mutex mutex_;
+    std::mutex mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

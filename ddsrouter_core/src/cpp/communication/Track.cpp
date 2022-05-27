@@ -85,7 +85,7 @@ Track::~Track()
 
 void Track::enable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(track_mutex_);
+    std::lock_guard<std::mutex> lock(track_mutex_);
 
     if (!enabled_)
     {
@@ -106,7 +106,7 @@ void Track::enable() noexcept
 
 void Track::disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(track_mutex_);
+    std::lock_guard<std::mutex> lock(track_mutex_);
 
     if (enabled_)
     {

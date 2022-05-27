@@ -58,7 +58,7 @@ AllowedTopicList::~AllowedTopicList()
 
 void AllowedTopicList::clear() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     blocklist_.clear();
     allowlist_.clear();
@@ -67,7 +67,7 @@ void AllowedTopicList::clear() noexcept
 bool AllowedTopicList::is_topic_allowed(
         const RealTopic& topic) const noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // It is accepted by default if allowlist is empty, if not it should pass the allowlist filter
     bool accepted = allowlist_.empty();

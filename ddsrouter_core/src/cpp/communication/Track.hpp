@@ -205,7 +205,7 @@ protected:
      * Mutex to prevent simultaneous calls to \c enable and/or \c disable .
      * It manages access to variable \c enabled_ .
      */
-    std::recursive_mutex track_mutex_;
+    std::mutex track_mutex_;
 
     /////
     // Transmit thread part

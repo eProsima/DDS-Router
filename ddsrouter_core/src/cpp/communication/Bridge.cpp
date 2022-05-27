@@ -108,7 +108,7 @@ Bridge::~Bridge()
 
 void Bridge::enable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (!enabled_)
     {
@@ -126,7 +126,7 @@ void Bridge::enable() noexcept
 
 void Bridge::disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (enabled_)
     {
