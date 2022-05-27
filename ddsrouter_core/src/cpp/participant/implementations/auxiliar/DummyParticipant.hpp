@@ -126,12 +126,12 @@ public:
 
 protected:
 
-    //! Override create_writer_() BaseParticipant method
-    std::shared_ptr<IWriter> create_writer_(
+    //! Override create_writer_nts_() BaseParticipant method
+    std::shared_ptr<IWriter> create_writer_nts_(
             types::RealTopic topic) override;
 
-    //! Override create_reader_() BaseParticipant method
-    std::shared_ptr<IReader> create_reader_(
+    //! Override create_reader_nts_() BaseParticipant method
+    std::shared_ptr<IReader> create_reader_nts_(
             types::RealTopic topic) override;
 
     // Specific enable/disable do not need to be implemented

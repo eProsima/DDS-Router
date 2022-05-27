@@ -67,7 +67,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
+                    "Found in Participant " << this->id() << " new Participant " << info.info.m_guid << ".");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
@@ -144,7 +144,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
+                    "Found in Participant " << this->id() << " new Reader " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_reader);
         }
@@ -183,7 +183,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
+                    "Found in Participant " << this->id() << " new Writer " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_writer);
         }
@@ -233,7 +233,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
 }
 
 template <class ConfigurationType>
-std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_writer_(
+std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_writer_nts_(
         types::RealTopic topic)
 {
     return std::make_shared<Writer>(
@@ -242,7 +242,7 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
 }
 
 template <class ConfigurationType>
-std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
+std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_nts_(
         types::RealTopic topic)
 {
     return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, rtps_participant_);

@@ -40,7 +40,7 @@ BaseWriter::BaseWriter(
 
 void BaseWriter::enable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // If it is enabled, do nothing
     if (!enabled_.load())
@@ -48,13 +48,13 @@ void BaseWriter::enable() noexcept
         enabled_.store(true);
 
         // Call specific enable
-        enable_();
+        enable_nts_();
     }
 }
 
 void BaseWriter::disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // If it is not enabled, do nothing
     if (enabled_.load())
@@ -62,14 +62,14 @@ void BaseWriter::disable() noexcept
         enabled_.store(false);
 
         // Call specific disable
-        disable_();
+        disable_nts_();
     }
 }
 
 utils::ReturnCode BaseWriter::write(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (enabled_.load())
     {
@@ -83,12 +83,12 @@ utils::ReturnCode BaseWriter::write(
     }
 }
 
-void BaseWriter::enable_() noexcept
+void BaseWriter::enable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
-void BaseWriter::disable_() noexcept
+void BaseWriter::disable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }

@@ -93,15 +93,19 @@ protected:
      * @brief Do nothing
      *
      * Implement this method for a specific enable functionality.
+     *
+     * @note This method is called with \c mutex_ locked
      */
-    virtual void enable_() noexcept;
+    virtual void enable_nts_() noexcept;
 
     /**
      * @brief Do nothing
      *
      * Implement this method for a specific disable functionality.
+     *
+     * @note This method is called with \c mutex_ locked
      */
-    virtual void disable_() noexcept;
+    virtual void disable_nts_() noexcept;
 
     /**
      * @brief Write method to implement by each Writer implementation
@@ -124,7 +128,7 @@ protected:
     std::atomic<bool> enabled_;
 
     //! Mutex that guards every access to the Writer
-    mutable std::recursive_mutex mutex_;
+    mutable std::mutex mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

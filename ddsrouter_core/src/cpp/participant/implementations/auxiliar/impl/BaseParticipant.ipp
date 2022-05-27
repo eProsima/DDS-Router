@@ -66,16 +66,12 @@ BaseParticipant<ConfigurationType>::~BaseParticipant()
 template <class ConfigurationType>
 types::ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
-
     return configuration_.id();
 }
 
 template <class ConfigurationType>
 types::ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
-
     return configuration_.kind();
 }
 
@@ -83,7 +79,7 @@ template <class ConfigurationType>
 std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
         types::RealTopic topic)
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
+    std::lock_guard <std::mutex> lock(mutex_);
 
     if (writers_.find(topic) != writers_.end())
     {
@@ -93,7 +89,7 @@ std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
                       ". Writer already exists.");
     }
 
-    std::shared_ptr <IWriter> new_writer = create_writer_(topic);
+    std::shared_ptr <IWriter> new_writer = create_writer_nts_(topic);
 
     logInfo(DDSROUTER_BASEPARTICIPANT, "Created writer in Participant " << id() << " for topic " << topic);
 
@@ -107,7 +103,7 @@ template <class ConfigurationType>
 std::shared_ptr<IReader> BaseParticipant<ConfigurationType>::create_reader(
         types::RealTopic topic)
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
+    std::lock_guard <std::mutex> lock(mutex_);
 
     if (readers_.find(topic) != readers_.end())
     {
@@ -117,7 +113,7 @@ std::shared_ptr<IReader> BaseParticipant<ConfigurationType>::create_reader(
                       ". Reader already exists.");
     }
 
-    std::shared_ptr <IReader> new_reader = create_reader_(topic);
+    std::shared_ptr <IReader> new_reader = create_reader_nts_(topic);
 
     logInfo(DDSROUTER_BASEPARTICIPANT, "Created reader in Participant " << id() << " for topic " << topic);
 
@@ -131,14 +127,14 @@ template <class ConfigurationType>
 void BaseParticipant<ConfigurationType>::delete_writer(
         std::shared_ptr <IWriter> writer) noexcept
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
+    std::lock_guard <std::mutex> lock(mutex_);
 
     for (auto it_writer : writers_)
     {
         if (it_writer.second == writer)
         {
             writers_.erase(it_writer.first);
-            delete_writer_(writer);
+            delete_writer_nts_(writer);
             return;
         }
     }
@@ -148,37 +144,31 @@ template <class ConfigurationType>
 void BaseParticipant<ConfigurationType>::delete_reader(
         std::shared_ptr <IReader> reader) noexcept
 {
-    std::lock_guard <std::recursive_mutex> lock(mutex_);
+    std::lock_guard <std::mutex> lock(mutex_);
 
     for (auto it_reader : readers_)
     {
         if (it_reader.second == reader)
         {
             readers_.erase(it_reader.first);
-            delete_reader_(reader);
+            delete_reader_nts_(reader);
             return;
         }
     }
 }
 
 template <class ConfigurationType>
-void BaseParticipant<ConfigurationType>::delete_writer_(
+void BaseParticipant<ConfigurationType>::delete_writer_nts_(
         std::shared_ptr <IWriter>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
 template <class ConfigurationType>
-void BaseParticipant<ConfigurationType>::delete_reader_(
+void BaseParticipant<ConfigurationType>::delete_reader_nts_(
         std::shared_ptr <IReader>) noexcept
 {
     // It does nothing. Override this method so it has functionality.
-}
-
-template <class ConfigurationType>
-types::ParticipantId BaseParticipant<ConfigurationType>::id_nts_() const noexcept
-{
-    return configuration_.id();
 }
 
 template <class ConfigurationType>

@@ -34,7 +34,7 @@ namespace core {
 /**
  * Abstract Participant that implements generic methods for every Participant.
  *
- * In order to inherit from this class, create the protected methods create_writer_ and create_reader_
+ * In order to inherit from this class, create the protected methods create_writer_nts_ and create_reader_nts_
  *
  * This class stores every Endpoint created by this Participant.
  */
@@ -89,7 +89,7 @@ public:
     /**
      * @brief Override create_writer() IParticipant method
      *
-     * This method calls the protected method \c create_writer_ in order to create the actual Writer.
+     * This method calls the protected method \c create_writer_nts_ in order to create the actual Writer.
      * The Writer created is stored in a map.
      *
      * Thread safe with mutex \c mutex_ .
@@ -100,7 +100,7 @@ public:
     /**
      * @brief Override create_reader() IParticipant method
      *
-     * This method calls the protected method \c create_reader_ in order to create the actual Reader.
+     * This method calls the protected method \c create_reader_nts_ in order to create the actual Reader.
      * The Reader created is stored in a map.
      *
      * Thread safe with mutex \c mutex_ .
@@ -111,7 +111,7 @@ public:
     /**
      * @brief Override delete_writer() IParticipant method
      *
-     * This method calls the protected method \c delete_writer_ in order to delete the Writer.
+     * This method calls the protected method \c delete_writer_nts_ in order to delete the Writer.
      *
      * Thread safe with mutex \c mutex_ .
      */
@@ -121,7 +121,7 @@ public:
     /**
      * @brief Override delete_reader() IParticipant method
      *
-     * This method calls the protected method \c delete_reader_ in order to delete the Reader.
+     * This method calls the protected method \c delete_reader_nts_ in order to delete the Reader.
      *
      * Thread safe with mutex \c mutex_ .
      */
@@ -134,58 +134,50 @@ protected:
      * @brief Create a writer object
      *
      * @note Implement this method in every Participant in order to create a class specific Writer
+     * @note This method is called with \c mutex_ locked
      *
      * @param [in] topic : Topic that this Writer refers to.
      * @return Writer
      */
-    virtual std::shared_ptr<IWriter> create_writer_(
+    virtual std::shared_ptr<IWriter> create_writer_nts_(
             types::RealTopic topic) = 0;
 
     /**
      * @brief Create a reader object
      *
      * @note Implement this method in every Participant in order to create a class specific Reader
+     * @note This method is called with \c mutex_ locked
      *
      * @param [in] topic : Topic that this Reader refers to.
      * @return Reader
      */
-    virtual std::shared_ptr<IReader> create_reader_(
+    virtual std::shared_ptr<IReader> create_reader_nts_(
             types::RealTopic topic) = 0;
 
     /**
      * @brief Do nothing
      *
      * @note Implement this method in order to delete a class specific Writer
+     * @note This method is called with \c mutex_ locked
      *
      * @param [in] writer : Writer to delete
      */
-    virtual void delete_writer_(
+    virtual void delete_writer_nts_(
             std::shared_ptr<IWriter> writer) noexcept;
 
     /**
      * @brief Do nothing
      *
      * @note Implement this method in order to delete a class specific Reader
+     * @note This method is called with \c mutex_ locked
      *
      * @param [in] reader : Reader to delete
      */
-    virtual void delete_reader_(
+    virtual void delete_reader_nts_(
             std::shared_ptr<IReader> reader) noexcept;
 
-    /**
-     * @brief Get Id without locking a mutex
-     *
-     * It gets the id from the configuration.
-     *
-     * Not Thread safe.
-     *
-     * @warning this method is called from discovery callbacks, that could be called from Fast DDS while
-     * creating an endpoint. So it could lead to a dead lock. That is why it is not thread safe.
-     */
-    types::ParticipantId id_nts_() const noexcept;
-
     //! Participant configuration
-    ConfigurationType configuration_;
+    const ConfigurationType configuration_;
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;
@@ -200,7 +192,7 @@ protected:
     std::map<types::RealTopic, std::shared_ptr<IReader>> readers_;
 
     //! Mutex that guards every access to the Participant
-    mutable std::recursive_mutex mutex_;
+    mutable std::mutex mutex_;
 
     // Allow operator << to use private variables
     template <class C>

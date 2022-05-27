@@ -94,10 +94,10 @@ Reader::~Reader()
             participant_id_ << " for topic " << topic_);
 }
 
-utils::ReturnCode Reader::take_(
+utils::ReturnCode Reader::take_nts_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
+    std::lock_guard<std::mutex> lock(rtps_mutex_);
 
     // Check if there is data available
     if (!(rtps_reader_->get_unread_count() > 0))

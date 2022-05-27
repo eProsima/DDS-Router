@@ -48,7 +48,7 @@ BaseReader::BaseReader(
 
 void BaseReader::enable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // If it is enabled, do nothing
     if (!enabled_.load())
@@ -56,13 +56,13 @@ void BaseReader::enable() noexcept
         enabled_.store(true);
 
         // Call specific enable
-        enable_();
+        enable_nts_();
     }
 }
 
 void BaseReader::disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     // If it is not enabled, do nothing
     if (enabled_.load())
@@ -70,14 +70,14 @@ void BaseReader::disable() noexcept
         enabled_.store(false);
 
         // Call specific disable
-        disable_();
+        disable_nts_();
     }
 }
 
 void BaseReader::set_on_data_available_callback(
         std::function<void()> on_data_available_lambda) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (on_data_available_lambda_set_)
     {
@@ -91,7 +91,7 @@ void BaseReader::set_on_data_available_callback(
 
 void BaseReader::unset_on_data_available_callback() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (!on_data_available_lambda_set_)
     {
@@ -106,11 +106,11 @@ void BaseReader::unset_on_data_available_callback() noexcept
 utils::ReturnCode BaseReader::take(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    std::lock_guard<std::mutex> lock(mutex_);
 
     if (enabled_.load())
     {
-        return take_(data);
+        return take_nts_(data);
     }
     else
     {
@@ -133,12 +133,12 @@ void BaseReader::on_data_available_() const noexcept
     }
 }
 
-void BaseReader::enable_() noexcept
+void BaseReader::enable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
-void BaseReader::disable_() noexcept
+void BaseReader::disable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }

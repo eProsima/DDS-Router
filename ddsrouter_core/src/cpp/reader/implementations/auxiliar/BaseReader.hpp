@@ -58,7 +58,7 @@ public:
      * @brief Set this Reader as enabled
      *
      * It changes the \c enabled_ variable.
-     * Call protected method \c enable_() for a specific enable functionality.
+     * Call protected method \c enable_nts_() for a specific enable functionality.
      *
      * Override enable() IReader method
      *
@@ -70,7 +70,7 @@ public:
      * @brief Set this Reader as disabled
      *
      * It changes the \c enabled_ variable.
-     * Call protected method \c disable_() for a specific disable functionality.
+     * Call protected method \c disable_nts_() for a specific disable functionality.
      *
      * Override disable() IReader method
      *
@@ -104,7 +104,7 @@ public:
     /**
      * @brief Override take() IReader method
      *
-     * This method calls the protected method \c take_ to make the actual take function.
+     * This method calls the protected method \c take_nts_ to make the actual take function.
      * It only manages the enable/disable status.
      *
      * Thread safe with mutex \c mutex_ .
@@ -127,22 +127,28 @@ protected:
      * @brief Do nothing
      *
      * Implement this method class for a specific enable functionality.
+     *
+     * @note This method is called with \c mutex_ locked
      */
-    virtual void enable_() noexcept;
+    virtual void enable_nts_() noexcept;
 
     /**
      * @brief Do nothing
      *
      * Implement this method class for a specific disable functionality.
+     *
+     * @note This method is called with \c mutex_ locked
      */
-    virtual void disable_() noexcept;
+    virtual void disable_nts_() noexcept;
 
     /**
      * @brief Take method to implement by each Reader implementation
      *
      * Implement this method in every inherited Reader class with take functionality.
+     *
+     * @note This method is called with \c mutex_ locked
      */
-    virtual utils::ReturnCode take_(
+    virtual utils::ReturnCode take_nts_(
             std::unique_ptr<types::DataReceived>& data) noexcept = 0;
 
     //! Participant parent ID
@@ -164,7 +170,7 @@ protected:
     std::atomic<bool> enabled_;
 
     //! Mutex that guards every access to the Reader
-    mutable std::recursive_mutex mutex_;
+    mutable std::mutex mutex_;
 
     //! Default callback. It shows a warning that callback is not set
     static const std::function<void()> DEFAULT_ON_DATA_AVAILABLE_CALLBACK;

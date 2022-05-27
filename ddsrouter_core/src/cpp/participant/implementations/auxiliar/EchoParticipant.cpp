@@ -27,13 +27,13 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-std::shared_ptr<IWriter> EchoParticipant::create_writer_(
+std::shared_ptr<IWriter> EchoParticipant::create_writer_nts_(
         RealTopic topic)
 {
     return std::make_shared<EchoWriter>(id(), topic, payload_pool_);
 }
 
-std::shared_ptr<IReader> EchoParticipant::create_reader_(
+std::shared_ptr<IReader> EchoParticipant::create_reader_nts_(
         RealTopic)
 {
     return std::make_shared<VoidReader>();

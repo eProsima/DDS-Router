@@ -154,8 +154,22 @@ public:
 
 protected:
 
+    /**
+     * @brief Enable object if disabled
+     *
+     * Modify \c enabled_ value
+     *
+     * @warning not protected method. It must be called with \c status_mutex_ locked
+     */
     void enable_nts_() noexcept;
 
+    /**
+     * @brief Disable object if enabled
+     *
+     * Modify \c enabled_ value
+     *
+     * @warning not protected method. It must be called with \c status_mutex_ locked
+     */
     void disable_nts_() noexcept;
 
     /**

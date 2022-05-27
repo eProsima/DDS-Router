@@ -28,7 +28,7 @@ using namespace eprosima::ddsrouter::core::types;
 void DummyReader::simulate_data_reception(
         DummyDataReceived data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(dummy_mutex_);
+    std::lock_guard<std::mutex> lock(dummy_mutex_);
 
     // Even if disabled, the data will be stored
     data_to_send_.push(data);
@@ -37,10 +37,10 @@ void DummyReader::simulate_data_reception(
     on_data_available_();
 }
 
-utils::ReturnCode DummyReader::take_(
+utils::ReturnCode DummyReader::take_nts_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(dummy_mutex_);
+    std::lock_guard<std::mutex> lock(dummy_mutex_);
 
     // Enable check is done in BaseReader
 

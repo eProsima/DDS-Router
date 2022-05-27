@@ -70,14 +70,14 @@ protected:
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    utils::ReturnCode take_(
+    utils::ReturnCode take_nts_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     //! Stores the data that must be retrieved with \c take() method
     std::queue<DummyDataReceived> data_to_send_;
 
     //! Guard access to \c data_to_send_
-    mutable std::recursive_mutex dummy_mutex_;
+    mutable std::mutex dummy_mutex_;
 };
 
 } /* namespace core */

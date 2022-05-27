@@ -126,7 +126,7 @@ protected:
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    utils::ReturnCode take_(
+    utils::ReturnCode take_nts_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     /////
@@ -177,7 +177,7 @@ protected:
     fastrtps::rtps::ReaderHistory* rtps_history_;
 
     //! Mutex that guards every access to the RTPS Reader
-    mutable std::recursive_mutex rtps_mutex_;
+    mutable std::mutex rtps_mutex_;
 };
 
 } /* namespace rtps */

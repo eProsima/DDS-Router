@@ -71,10 +71,10 @@ protected:
 
     void create_participant_();
 
-    std::shared_ptr<IWriter> create_writer_(
+    std::shared_ptr<IWriter> create_writer_nts_(
             types::RealTopic topic) override;
 
-    std::shared_ptr<IReader> create_reader_(
+    std::shared_ptr<IReader> create_reader_nts_(
             types::RealTopic topic) override;
 
     template<class DiscoveryInfoKind>
@@ -89,9 +89,6 @@ protected:
     /////
     // VARIABLES
     eprosima::fastrtps::rtps::RTPSParticipant* rtps_participant_;
-
-    //! Mutex that guards every access to the RTPS Participant
-    mutable std::recursive_mutex rtps_mutex_;
 };
 
 } /* namespace rtps */

@@ -51,13 +51,13 @@ DummyParticipant::~DummyParticipant()
     participants_.erase(id());
 }
 
-std::shared_ptr<IWriter> DummyParticipant::create_writer_(
+std::shared_ptr<IWriter> DummyParticipant::create_writer_nts_(
         RealTopic topic)
 {
     return std::make_shared<DummyWriter>(id(), topic, payload_pool_);
 }
 
-std::shared_ptr<IReader> DummyParticipant::create_reader_(
+std::shared_ptr<IReader> DummyParticipant::create_reader_nts_(
         RealTopic topic)
 {
     return std::make_shared<DummyReader>(id(), topic, payload_pool_);
