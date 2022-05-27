@@ -16,8 +16,9 @@ runs:
   steps:
   - run: >
       cmake -DCMAKE_PREFIX_PATH='C:\Program Files\gtest;C:\Program Files\yamlcpp;C:\Program Files;${{ github.workspace }}\..\fastdds\install' `
-        -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_TOOL_TESTS=ON -DBUILD_LIBRARY_TESTS=ON `
+        -DCMAKE_CXX_FLAGS="/WX /EHsc" -DBUILD_TOOL_TESTS=ON -DBUILD_LIBRARY_TESTS=ON -DGTEST_LINKED_AS_SHARED_LIBRARY=ON `
         -B build\${{ inputs.subpackage }} -A x64 -T host=x64 DDS-Router/${{ inputs.subpackage_dir }};
       cmake --build build\${{ inputs.subpackage }} --config ${{ inputs.cmake_build_type }} --target install;
-
     shell: pwsh
+
+# NOTE: GTEST_LINKED_AS_SHARED_LIBRARY is required to avoid link error when using gmock
