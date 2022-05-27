@@ -199,7 +199,7 @@ protected:
     UniqueCallbackId current_last_id_;
 
     //! Guards access to singleton instance
-    static std::recursive_mutex instance_mutex_;
+    static std::mutex instance_mutex_;
 };
 
 } /* namespace event */

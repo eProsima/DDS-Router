@@ -50,12 +50,12 @@ template <typename ... Args>
 void EventHandler<Args...>::set_callback(
         std::function<void(Args...)> callback) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
+    std::lock_guard<std::mutex> lock(event_mutex_);
 
     bool was_callback_set_before;
 
     {
-        std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
+        std::lock_guard<std::mutex> lock(internal_callback_mutex_);
 
         {
             // Setting callback
@@ -82,7 +82,7 @@ void EventHandler<Args...>::set_callback(
 template <typename ... Args>
 void EventHandler<Args...>::unset_callback() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(event_mutex_);
+    std::lock_guard<std::mutex> lock(event_mutex_);
 
     bool was_callback_set_before = false;
 
@@ -90,7 +90,7 @@ void EventHandler<Args...>::unset_callback() noexcept
     {
         was_callback_set_before = true;
 
-        std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
+        std::lock_guard<std::mutex> lock(internal_callback_mutex_);
 
         {
             // Unsetting callback
@@ -163,7 +163,7 @@ void EventHandler<Args...>::event_occurred_(
         Args... args) noexcept
 {
     // While event occurred is being process, avoid setting/unsetting callback or destroying object
-    std::lock_guard<std::recursive_mutex> lock(internal_callback_mutex_);
+    std::lock_guard<std::mutex> lock(internal_callback_mutex_);
 
     if (is_callback_set_.load())
     {

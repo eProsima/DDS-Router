@@ -52,53 +52,24 @@ WaitHandler<T>::~WaitHandler()
 template <typename T>
 void WaitHandler<T>::enable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
-
-    // If disable, enable it. Otherwise do nothing
-    if (!enabled_.load())
-    {
-        // WARNING: enabled_ should be modified with mutex taken
-        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
-        logDebug(DDSROUTER_WAIT, "Enabling WaitHandler.");
-        enabled_.store(true);
-    }
-    else
-    {
-        logDebug(DDSROUTER_WAIT, "Enabling already enabled WaitHandler.");
-    }
+    std::lock_guard<std::mutex> lock(status_mutex_);
+    enable_nts_();
 }
 
 template <typename T>
 void WaitHandler<T>::disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
-
-    // If enable, disable it. Otherwise do nothing
-    if (enabled_.load())
-    {
-        {
-            // WARNING: enabled_ should be modified with mutex taken
-            std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
-            logDebug(DDSROUTER_WAIT, "Disabling WaitHandler.");
-            enabled_.store(false);
-        }
-
-        // Do not block for awaken
-        wait_condition_variable_.notify_all();
-    }
-    else
-    {
-        logDebug(DDSROUTER_WAIT, "Disabling already disabled WaitHandler.");
-    }
+    std::lock_guard<std::mutex> lock(status_mutex_);
+    disable_nts_();
 }
 
 template <typename T>
 void WaitHandler<T>::blocking_disable() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+    std::lock_guard<std::mutex> lock(status_mutex_);
 
     // Disable this object
-    disable();
+    disable_nts_();
 
     // Wait till every thread has finished
     while (threads_waiting_.load() > 0)
@@ -222,13 +193,53 @@ void WaitHandler<T>::set_value(
 template <typename T>
 void WaitHandler<T>::stop_and_continue() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(status_mutex_);
+    std::lock_guard<std::mutex> lock(status_mutex_);
 
     if (enabled())
     {
         blocking_disable();
     }
-    enable();
+    enable_nts_();
+}
+
+template <typename T>
+void WaitHandler<T>::enable_nts_() noexcept
+{
+    // If disable, enable it. Otherwise do nothing
+    if (!enabled_.load())
+    {
+        // WARNING: enabled_ should be modified with mutex taken
+        std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+        logDebug(DDSROUTER_WAIT, "Enabling WaitHandler.");
+        enabled_.store(true);
+        // It should not notify because no thread is waiting yet
+    }
+    else
+    {
+        logDebug(DDSROUTER_WAIT, "Enabling already enabled WaitHandler.");
+    }
+}
+
+template <typename T>
+void WaitHandler<T>::disable_nts_() noexcept
+{
+    // If enable, disable it. Otherwise do nothing
+    if (enabled_.load())
+    {
+        {
+            // WARNING: enabled_ should be modified with mutex taken
+            std::lock_guard<std::mutex> lock(wait_condition_variable_mutex_);
+            logDebug(DDSROUTER_WAIT, "Disabling WaitHandler.");
+            enabled_.store(false);
+        }
+
+        // Do not block for awaken
+        wait_condition_variable_.notify_all();
+    }
+    else
+    {
+        logDebug(DDSROUTER_WAIT, "Disabling already disabled WaitHandler.");
+    }
 }
 
 } /* namespace event */

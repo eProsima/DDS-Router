@@ -154,6 +154,10 @@ public:
 
 protected:
 
+    void enable_nts_() noexcept;
+
+    void disable_nts_() noexcept;
+
     /**
      * @brief Perform wait action with predicate and return this object mutex's lock.
      *
@@ -203,7 +207,7 @@ protected:
      *
      * Methods \c enable , \c disable , \c blocking_disable , and \c stop_and_continue
      */
-    mutable std::recursive_mutex status_mutex_;
+    mutable std::mutex status_mutex_;
 };
 
 } /* namespace event */

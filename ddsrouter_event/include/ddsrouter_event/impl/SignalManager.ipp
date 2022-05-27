@@ -30,7 +30,7 @@ namespace ddsrouter {
 namespace event {
 
 template <int SigNum>
-std::recursive_mutex SignalManager<SigNum>::instance_mutex_;
+std::mutex SignalManager<SigNum>::instance_mutex_;
 
 template <int SigNum>
 std::condition_variable SignalManager<SigNum>::signal_received_cv_;
@@ -41,7 +41,7 @@ std::atomic<uint32_t> SignalManager<SigNum>::signals_received_(0);
 template <int SigNum>
 SignalManager<SigNum>& SignalManager<SigNum>::get_instance() noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(instance_mutex_);
+    std::lock_guard<std::mutex> lock(instance_mutex_);
 
     static SignalManager<SigNum> instance_;
     return instance_;
