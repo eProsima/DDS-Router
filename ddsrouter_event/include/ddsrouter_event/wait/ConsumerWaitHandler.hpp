@@ -41,7 +41,7 @@ class ConsumerWaitHandler : protected CounterWaitHandler
 {
 public:
 
-    DDSROUTER_EVENT_DllAPI ConsumerWaitHandler(
+    ConsumerWaitHandler(
             CounterType initial_value = 0,
             bool enabled = true);
 
@@ -56,7 +56,7 @@ public:
     // Get internal values
 
     //! Get the number of values ready for consumption
-    DDSROUTER_EVENT_DllAPI CounterType elements_ready_to_consume() const noexcept;
+    CounterType elements_ready_to_consume() const noexcept;
 
     /////
     // Add values methods
@@ -71,7 +71,7 @@ public:
      *
      * @param value new data available
      */
-    DDSROUTER_EVENT_DllAPI void produce(
+    void produce(
             T&& value);
 
 
@@ -85,7 +85,7 @@ public:
      *
      * @param value new data available
      */
-    DDSROUTER_EVENT_DllAPI void produce(
+    void produce(
             const T& value);
 
     /////
@@ -106,7 +106,7 @@ public:
      * @throw \c DisabledException if the handler is disabled when calling this method or while waiting.
      * @throw \c TimeoutException if timeout is reached.
      */
-    DDSROUTER_EVENT_DllAPI T consume(
+    T consume(
             const utils::Duration_ms& timeout = 0);
 
 protected:
