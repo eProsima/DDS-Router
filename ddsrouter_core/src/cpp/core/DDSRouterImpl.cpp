@@ -28,7 +28,7 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
 #include <core/DDSRouterImpl.hpp>
-#include <efficiency/MapPayloadPool.hpp>
+#include <efficiency/FastPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -40,7 +40,7 @@ using namespace eprosima::ddsrouter::core::types;
 
 DDSRouterImpl::DDSRouterImpl(
         const configuration::DDSRouterConfiguration& configuration)
-    : payload_pool_(new MapPayloadPool())
+    : payload_pool_(new FastPayloadPool())
     , participants_database_(new ParticipantsDatabase())
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)

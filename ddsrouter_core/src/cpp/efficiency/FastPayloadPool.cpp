@@ -64,7 +64,7 @@ bool FastPayloadPool::get_payload(
     {
         // IMPORTANT: If payload has been reserved from this object, it must have the +4 bytes before data
         // We get this value and add a +1 to set that is referencing from one more payload
-        int* reference_place = reinterpret_cast<int *>(src_payload.data);
+        MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(src_payload.data);
         reference_place--;
         // Add reference
         (*reference_place)++;
@@ -82,7 +82,7 @@ bool FastPayloadPool::release_payload(
 {
     // IMPORTANT: If payload has been reserved from this object, it must have the +4 bytes before data
     // We get this value and add a -1 to set that is referencing from one less payload
-    int* reference_place = reinterpret_cast<int *>(payload.data);
+    MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(payload.data);
     reference_place--;
     // Add reference
     (*reference_place)--;
@@ -116,10 +116,10 @@ bool FastPayloadPool::reserve_(
     }
 
     // Allocate memory + 4 bytes for reference
-    void* memory_allocated = std::malloc(size + sizeof(uint32_t));
+    void* memory_allocated = std::malloc(size + sizeof(MetaInfoType));
 
     // Use reference space to set that this is referenced for the first time
-    int* reference_place = reinterpret_cast<int *>(memory_allocated);
+    MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(memory_allocated);
     (*reference_place) = 1;
 
     payload.data = reinterpret_cast<eprosima::fastrtps::rtps::octet *>(reference_place + 1);
@@ -134,14 +134,17 @@ bool FastPayloadPool::release_(
         types::Payload& payload)
 {
     // Free memory from the initial allocation, 4 bytes before
-    int* reference_place = reinterpret_cast<int *>(payload.data);
-    free(reference_place - 1);
+    MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(payload.data);
+    reference_place--;
+    free(reference_place);
 
     // Remove payload internal values
     payload.length = 0;
     payload.max_size = 0;
     payload.data = nullptr;
     payload.pos = 0;
+
+    add_release_payload_();
 
     return true;
 }
