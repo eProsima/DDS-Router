@@ -92,8 +92,7 @@ bool RealTopic::is_valid() const noexcept
 
 bool RealTopic::topic_reliable() const
 {
-    // return topic_reliable_;
-    return true;
+    return topic_reliable_;
 }
 
 std::ostream& operator <<(
