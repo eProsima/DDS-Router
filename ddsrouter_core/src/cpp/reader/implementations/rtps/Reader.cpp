@@ -16,6 +16,8 @@
  * @file Reader.cpp
  */
 
+#include <random>
+
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 
@@ -211,6 +213,7 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
     return att;
 }
 

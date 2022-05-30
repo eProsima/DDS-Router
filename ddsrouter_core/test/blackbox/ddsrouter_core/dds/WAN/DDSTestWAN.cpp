@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <TestLogHandler.hpp>
 
+#include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -474,6 +475,8 @@ int main(
         int argc,
         char** argv)
 {
+    eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Warning);
+
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }

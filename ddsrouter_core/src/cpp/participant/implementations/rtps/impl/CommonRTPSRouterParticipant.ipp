@@ -21,6 +21,7 @@
 
 #include <memory>
 
+#include <fastdds/rtps/common/Locator.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/RTPSDomain.h>
 
@@ -29,7 +30,7 @@
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
-#include <reader/implementations/rtps/Reader.hpp>
+#include <reader/implementations/rtps/CustomLocatorReader.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 
@@ -245,7 +246,7 @@ template <class ConfigurationType>
 std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
         types::RealTopic topic)
 {
-    return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, rtps_participant_);
+    return std::make_shared<CustomLocatorReader>(this->id(), topic, this->payload_pool_, rtps_participant_);
 }
 
 template <class ConfigurationType>
