@@ -64,7 +64,7 @@ public:
      *
      * @param enabled whether the WaitHandler should be initialized enabled
      */
-    DDSROUTER_EVENT_DllAPI WaitHandler(
+    WaitHandler(
             bool enabled = true);
 
     /**
@@ -73,7 +73,7 @@ public:
      * @param init_value initial value for the internal value that is checked in wait conditions
      * @param enabled whether the WaitHandler should be initialized enabled
      */
-    DDSROUTER_EVENT_DllAPI WaitHandler(
+    WaitHandler(
             T init_value,
             bool enabled = true);
 
@@ -82,7 +82,7 @@ public:
      *
      * It disables and blocks until every thread has finished.
      */
-    DDSROUTER_EVENT_DllAPI ~WaitHandler();
+    ~WaitHandler();
 
     /////
     // Enabling methods
@@ -94,7 +94,7 @@ public:
      *
      * @note: A WaitHandler not enabled will not wait.
      */
-    DDSROUTER_EVENT_DllAPI virtual void enable() noexcept;
+    virtual void enable() noexcept;
 
     /**
      * @brief Disable object
@@ -104,7 +104,7 @@ public:
      *
      * @note: A disabled WaitHandler  will not wait.
      */
-    DDSROUTER_EVENT_DllAPI virtual void disable() noexcept;
+    virtual void disable() noexcept;
 
     /**
      * @brief Disable object and wait till every thread has finished
@@ -112,10 +112,10 @@ public:
      * If object is enabled, disable it. Otherwise do nothing.
      * This method does not finish until every waiting thread has finished waiting.
      */
-    DDSROUTER_EVENT_DllAPI virtual void blocking_disable() noexcept;
+    virtual void blocking_disable() noexcept;
 
     //! Whether the object is enabled or disabled
-    DDSROUTER_EVENT_DllAPI virtual bool enabled() const noexcept;
+    virtual bool enabled() const noexcept;
 
     /////
     // Wait methods
@@ -132,7 +132,7 @@ public:
      *
      * @return reason why thread was awake
      */
-    DDSROUTER_EVENT_DllAPI AwakeReason wait(
+    AwakeReason wait(
             std::function<bool(const T&)> predicate,
             const utils::Duration_ms& timeout = 0) noexcept;
 
@@ -140,17 +140,17 @@ public:
     // Value methods
 
     //! Get current value
-    DDSROUTER_EVENT_DllAPI T get_value() const noexcept;
+    T get_value() const noexcept;
 
     //! Set new value
-    DDSROUTER_EVENT_DllAPI void set_value(
+    void set_value(
             T new_value,
             bool notify = true) noexcept;
 
     /**
      * @brief Awake every waiting thread by disabling and set as enabled afterwards
      */
-    DDSROUTER_EVENT_DllAPI void stop_and_continue() noexcept;
+    void stop_and_continue() noexcept;
 
 protected:
 
