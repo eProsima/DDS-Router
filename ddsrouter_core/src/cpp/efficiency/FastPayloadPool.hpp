@@ -25,6 +25,8 @@
 
 #include <efficiency/PayloadPool.hpp>
 
+typedef std::atomic<unsigned int> MetaInfoType;
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
