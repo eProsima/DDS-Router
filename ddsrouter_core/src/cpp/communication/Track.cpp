@@ -135,57 +135,75 @@ void Track::transmit_() noexcept
 
     // Lock Mutex on_transmition while a data is being transmitted
     // This prevents the Track to be disabled (and disable writers and readers) while sending a data
-    std::unique_lock<std::mutex> lock(on_transmission_mutex_);
-
-    // If this Track should exit, do nothing
-    if (exit_)
+    // std::unique_lock<std::mutex> lock(on_transmission_mutex_);
+    if (on_transmission_mutex_.try_lock())
     {
-        return;
-    }
-
-    // Get data received
-    std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
-    utils::ReturnCode ret = reader_->take(data);
-
-    if (ret == utils::ReturnCode::RETCODE_NO_DATA)
-    {
-        // Should not call this method if there is no data to read
-        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from reader without data.");
-        return;
-    }
-    else if (ret == utils::ReturnCode::RETCODE_NOT_ENABLED)
-    {
-        // Should not call this method if there is no data to read
-        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from not enabled reader.");
-        return;
-    }
-    else if (!ret)
-    {
-        // Error reading data
-        logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
-                                                                    << ". Skipping data and continue.");
-        return;
-    }
-
-    logDebug(DDSROUTER_TRACK,
-            "Track " << reader_participant_id_ << " for topic " << topic_ <<
-            " transmitting data from remote endpoint " << data->source_guid << ".");
-
-    // Send data through writers
-    for (auto& writer_it : writers_)
-    {
-        ret = writer_it.second->write(data);
-
-        if (!ret)
+        uint8_t n_iter = 0;
+        while (n_iter < 10)
         {
-            logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
-                                                                        << ret <<
-                    ". Skipping data for this writer and continue.");
-            continue;
+            // If this Track should exit, do nothing
+            if (exit_)
+            {
+                on_transmission_mutex_.unlock();
+                return;
+            }
+
+            // Get data received
+            std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
+            utils::ReturnCode ret = reader_->take(data);
+
+            if (ret == utils::ReturnCode::RETCODE_NO_DATA)
+            {
+                if (!n_iter)
+                {
+                    // Should not call this method if there is no data to read
+                    logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from reader without data.");
+                }
+                on_transmission_mutex_.unlock();
+                return;
+            }
+            else if (ret == utils::ReturnCode::RETCODE_NOT_ENABLED)
+            {
+                // Should not call this method if there is no data to read
+                logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << " from not enabled reader.");
+                on_transmission_mutex_.unlock();
+                return;
+            }
+            else if (!ret)
+            {
+                // Error reading data
+                logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
+                                                                            << ". Skipping data and continue.");
+                on_transmission_mutex_.unlock();
+                return;
+            }
+
+            logDebug(DDSROUTER_TRACK,
+                    "Track " << reader_participant_id_ << " for topic " << topic_ <<
+                    " transmitting data from remote endpoint " << data->source_guid << ".");
+
+            // Send data through writers
+            for (auto& writer_it : writers_)
+            {
+                ret = writer_it.second->write(data);
+
+                if (!ret)
+                {
+                    logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
+                                                                                << ret <<
+                            ". Skipping data for this writer and continue.");
+                    continue;
+                }
+            }
+
+            payload_pool_->release_payload(data->payload);
+            n_iter++;
         }
     }
-
-    payload_pool_->release_payload(data->payload);
+    else
+    {
+        return;
+    }
 }
 
 std::ostream& operator <<(

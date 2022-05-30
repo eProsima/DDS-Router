@@ -83,7 +83,7 @@ CounterWaitHandler& CounterWaitHandler::operator++()
         value_++;
     }
 
-    wait_condition_variable_.notify_all();
+    wait_condition_variable_.notify_one();
 
     return *this;
 }
@@ -99,7 +99,7 @@ CounterWaitHandler& CounterWaitHandler::operator--()
         value_--;
     }
 
-    wait_condition_variable_.notify_all();
+    wait_condition_variable_.notify_one();
 
     return *this;
 }
