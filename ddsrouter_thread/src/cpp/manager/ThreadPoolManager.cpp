@@ -44,13 +44,13 @@ ThreadPoolManager::~ThreadPoolManager()
 void ThreadPoolManager::emit(
         Task&& task)
 {
-    queue_->add_value(std::move(task));
+    queue_->produce(std::move(task));
 }
 
 void ThreadPoolManager::emit(
         const Task& task)
 {
-    queue_->add_value(task);
+    queue_->produce(task);
 }
 
 } /* namespace thread */

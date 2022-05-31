@@ -64,7 +64,7 @@ void ThreadPool::thread_routine_()
         while(true)
         {
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " free, getting new callback.");
-            Task task = task_queue_->wait_next_value();
+            Task task = task_queue_->consume();
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " executing callback.");
             task();
         }
