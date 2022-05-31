@@ -27,6 +27,7 @@
 #include <fastrtps/rtps/attributes/ReaderAttributes.h>
 #include <fastrtps/rtps/reader/RTPSReader.h>
 #include <fastrtps/rtps/reader/ReaderListener.h>
+#include <fastrtps/utils/DBQueue.h>
 
 #include <reader/implementations/auxiliar/BaseReader.hpp>
 
@@ -129,6 +130,8 @@ protected:
     utils::ReturnCode take_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
+    types::DataReceived take_from_reader_() noexcept;
+
     /////
     // RTPS specific methods
 
@@ -176,8 +179,20 @@ protected:
     //! RTPS Reader History associated to \c rtps_reader_
     fastrtps::rtps::ReaderHistory* rtps_history_;
 
+    /**
+     * @brief Custom Queue to store received data
+     *
+     * This allows to keep History clean and reduce the allocation of data.
+     * Data is not copied as it is referenced from the same PayloadPool
+     */
+    eprosima::fastrtps::DBQueue<types::DataReceived> custom_history_;
+
+    std::shared_ptr<PayloadPool> payload_pool_;
+
     //! Mutex that guards every access to the RTPS Reader
     mutable std::recursive_mutex rtps_mutex_;
+
+    mutable std::mutex write_queue_mutex_;
 };
 
 } /* namespace rtps */

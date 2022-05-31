@@ -26,6 +26,15 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
+// DataReceived::DataReceived()
+// {
+// }
+
+// DataReceived& DataReceived::operator =(DataReceived&& other)
+// {
+//     this->source_guid = std::move(other.source_guid);
+// }
+
 std::ostream& operator <<(
         std::ostream& os,
         const eprosima::fastrtps::rtps::octet& octet)

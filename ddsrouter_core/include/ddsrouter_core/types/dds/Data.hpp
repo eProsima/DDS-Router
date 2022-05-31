@@ -38,6 +38,16 @@ using Payload = eprosima::fastrtps::rtps::SerializedPayload_t;
 //! Structure of the Data received from a Reader containing the data itself and the attributes of the source
 struct DataReceived
 {
+public:
+
+    // DataReceived();
+
+    // DataReceived(const DataReceived& other);
+    // DataReceived(DataReceived&& other);
+
+    // DataReceived& operator =(const DataReceived& other);
+    // DataReceived& operator =(DataReceived&& other);
+
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
 

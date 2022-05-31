@@ -36,6 +36,7 @@ Reader::Reader(
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant)
     : BaseReader(participant_id, topic, payload_pool)
+    , payload_pool_(payload_pool)
 {
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
@@ -93,6 +94,8 @@ Reader::~Reader()
         delete rtps_history_;
     }
 
+    custom_history_.Clear();
+
     logInfo(DDSROUTER_RTPS_READER, "Deleting Reader created in Participant " <<
             participant_id_ << " for topic " << topic_);
 }
@@ -100,12 +103,62 @@ Reader::~Reader()
 utils::ReturnCode Reader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
+    std::lock_guard<std::mutex> lock(write_queue_mutex_);
+
+    // Check if there is data available
+    if (custom_history_.Empty())
+    {
+        custom_history_.Swap();
+    }
+
+    if (custom_history_.Empty())
+    {
+        return utils::ReturnCode::RETCODE_NO_DATA;
+    }
+
+    types::DataReceived& next_value = custom_history_.Front();
+
+    // Store the new data that has arrived in the Track data
+    // Get the writer guid
+    data->source_guid = next_value.source_guid;
+
+    // Store it in DDSRouter PayloadPool
+    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = static_cast<eprosima::fastrtps::rtps::IPayloadPool*>(payload_pool_.get());
+    payload_pool_->get_payload(
+        next_value.payload,
+        payload_owner,
+        data->payload);
+
+    logDebug(DEBUG,
+            "1 Data transmiting to track from Reader " << *this << " with payload " <<
+            data->payload << " from remote writer " << data->source_guid);
+
+    payload_pool_->release_payload(next_value.payload);
+
+    logDebug(DEBUG,
+            "2 Data transmiting to track from Reader " << *this << " with payload " <<
+            data->payload << " from remote writer " << data->source_guid);
+
+    custom_history_.Pop();
+
+    logDebug(DEBUG,
+            "3 Data transmiting to track from Reader " << *this << " with payload " <<
+            data->payload << " from remote writer " << data->source_guid);
+
+    return utils::ReturnCode::RETCODE_OK;
+}
+
+types::DataReceived Reader::take_from_reader_() noexcept
+{
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
+
+    types::DataReceived data;
+    data.payload.data = nullptr;
 
     // Check if there is data available
     if (!(rtps_reader_->get_unread_count() > 0))
     {
-        return utils::ReturnCode::RETCODE_NO_DATA;
+        return data;
     }
 
     fastrtps::rtps::CacheChange_t* received_change = nullptr;
@@ -115,7 +168,7 @@ utils::ReturnCode Reader::take_(
     if (!rtps_reader_->nextUntakenCache(&received_change, &wp))
     {
         // Error reading.
-        return utils::ReturnCode::RETCODE_ERROR;
+        return data;
     }
 
     // Check that the data is consistent
@@ -127,7 +180,7 @@ utils::ReturnCode Reader::take_(
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
 
-        return utils::ReturnCode::RETCODE_ERROR;
+        return data;
     }
 
     // Check that the guid is consistent
@@ -139,28 +192,36 @@ utils::ReturnCode Reader::take_(
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
 
-        return utils::ReturnCode::RETCODE_ERROR;
+        return data;
     }
 
     // Store the new data that has arrived in the Track data
     // Get the writer guid
-    data->source_guid = received_change->writerGUID;
+    data.source_guid = received_change->writerGUID;
 
     // Store it in DDSRouter PayloadPool
     eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
     payload_pool_->get_payload(
         received_change->serializedPayload,
         payload_owner,
-        data->payload);
+        data.payload);
 
-    logDebug(DDSROUTER_RTPS_READER_LISTENER,
-            "Data transmiting to track from Reader " << *this << " with payload " <<
+    logDebug(DDSROUTER_RTPS_READER,
+            "Data transmiting to internal History from Reader " << *this << " with payload " <<
             received_change->serializedPayload << " from remote writer " << received_change->writerGUID);
+
+    logDebug(DEBUG,
+            "0 Data transmiting to internal History from Reader " << *this << " with payload " <<
+            data.payload << " from remote writer " << data.source_guid);
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
 
-    return utils::ReturnCode::RETCODE_OK;
+    logDebug(DEBUG,
+            "1 Data transmiting to internal History from Reader " << *this << " with payload " <<
+            data.payload << " from remote writer " << data.source_guid);
+
+    return data;
 }
 
 void Reader::enable_() noexcept
@@ -264,6 +325,23 @@ void Reader::onNewCacheChangeAdded(
             logDebug(DDSROUTER_RTPS_READER_LISTENER,
                     "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
+
+            // TODO: this should be refactored when transparency is implemented
+            // Take the data in callback so history does not increase and preallocated memory is not used
+            auto data = take_from_reader_();
+
+
+            logDebug(DEBUG,
+                "3 Data transmiting to internal History from Reader " << *this << " with payload " <<
+                data.payload << " from remote writer " << data.source_guid);
+
+            if (data.payload.data != nullptr)
+            {
+                custom_history_.Push(data);
+                // WORKAROUND: horrible ad-hoc fix to avoid fastrtps SerializedPayload_t hateful class destructor
+                data.payload.data = nullptr;
+            }
+
             on_data_available_();
         }
         else

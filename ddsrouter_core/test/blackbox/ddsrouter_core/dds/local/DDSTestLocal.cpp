@@ -292,6 +292,7 @@ int main(
         int argc,
         char** argv)
 {
+    // eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();
