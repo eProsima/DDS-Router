@@ -60,7 +60,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access)
 
     // Access by lock
     {
-        std::shared_ptr<std::string> str_ptr = lessee.lock();
+        auto str_ptr = lessee.lock();
         ASSERT_EQ(0, std::strcmp(str_ptr->c_str(), internal_str));
     }
 }
