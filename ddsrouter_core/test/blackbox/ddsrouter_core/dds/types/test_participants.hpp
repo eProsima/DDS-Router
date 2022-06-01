@@ -57,6 +57,7 @@ namespace core {
 namespace test {
 
 constexpr const char* TOPIC_NAME = "DDS-Router-Test";
+constexpr const char* TOPIC_KEYED_NAME = "DDS-Router-Test-Key";
 
 /**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
@@ -135,7 +136,8 @@ public:
 
         // CREATE THE TOPIC
         std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
-        topic_ = participant_->create_topic(TOPIC_NAME, type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        std::string topic_name = keyed_ ? TOPIC_KEYED_NAME : TOPIC_NAME;
+        topic_ = participant_->create_topic(topic_name, type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -321,7 +323,8 @@ public:
 
         // CREATE THE TOPIC
         std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
-        topic_ = participant_->create_topic(TOPIC_NAME, type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
+        std::string topic_name = keyed_ ? TOPIC_KEYED_NAME : TOPIC_NAME;
+        topic_ = participant_->create_topic(topic_name, type_name, eprosima::fastdds::dds::TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {

@@ -129,21 +129,9 @@ utils::ReturnCode Reader::take_(
         payload_owner,
         data->payload);
 
-    logDebug(DEBUG,
-            "1 Data transmiting to track from Reader " << *this << " with payload " <<
-            data->payload << " from remote writer " << data->source_guid);
-
     payload_pool_->release_payload(next_value.payload);
 
-    logDebug(DEBUG,
-            "2 Data transmiting to track from Reader " << *this << " with payload " <<
-            data->payload << " from remote writer " << data->source_guid);
-
     custom_history_.Pop();
-
-    logDebug(DEBUG,
-            "3 Data transmiting to track from Reader " << *this << " with payload " <<
-            data->payload << " from remote writer " << data->source_guid);
 
     return utils::ReturnCode::RETCODE_OK;
 }
@@ -206,20 +194,8 @@ types::DataReceived Reader::take_from_reader_() noexcept
         payload_owner,
         data.payload);
 
-    logDebug(DDSROUTER_RTPS_READER,
-            "Data transmiting to internal History from Reader " << *this << " with payload " <<
-            received_change->serializedPayload << " from remote writer " << received_change->writerGUID);
-
-    logDebug(DEBUG,
-            "0 Data transmiting to internal History from Reader " << *this << " with payload " <<
-            data.payload << " from remote writer " << data.source_guid);
-
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
-
-    logDebug(DEBUG,
-            "1 Data transmiting to internal History from Reader " << *this << " with payload " <<
-            data.payload << " from remote writer " << data.source_guid);
 
     return data;
 }
@@ -318,22 +294,15 @@ void Reader::onNewCacheChangeAdded(
 {
     if (!come_from_this_participant_(change))
     {
-        // Do not remove previous received changes so they can be read when the reader is enabled
-        if (enabled_)
+        if (!enabled_ && !topic_.topic_reliable())
         {
-            // Call Track callback (by calling BaseReader callback method)
-            logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                    "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
-                    change->writerGUID);
-
+            rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+        }
+        else
+        {
             // TODO: this should be refactored when transparency is implemented
             // Take the data in callback so history does not increase and preallocated memory is not used
             auto data = take_from_reader_();
-
-
-            logDebug(DEBUG,
-                "3 Data transmiting to internal History from Reader " << *this << " with payload " <<
-                data.payload << " from remote writer " << data.source_guid);
 
             if (data.payload.data != nullptr)
             {
@@ -342,15 +311,8 @@ void Reader::onNewCacheChangeAdded(
                 data.payload.data = nullptr;
             }
 
+            // Call Track callback (by calling BaseReader callback method)
             on_data_available_();
-        }
-        else
-        {
-            // Remove received change if the Reader is disbled and the topic is not reliable
-            if (!topic_.topic_reliable())
-            {
-                rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
-            }
         }
     }
     else

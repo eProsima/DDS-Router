@@ -45,11 +45,19 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration(
         bool disable_dynamic_discovery = false,
-        bool reliable_readers = false)
+        bool reliable_readers = false,
+        bool keyed_topic = false)
 {
     // Always filter the test topics by topic name
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    if (!keyed_topic)
+    {
+        allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    }
+    else
+    {
+        allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_KEYED_NAME));
+    }
 
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
@@ -57,10 +65,16 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
 
     if (disable_dynamic_discovery || reliable_readers)
     {
-        builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
-        builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
+        if (!keyed_topic)
+        {
+            builtin_topics.insert(
+                std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
+        }
+        else
+        {
+            builtin_topics.insert(
+                std::make_shared<types::RealTopic>(TOPIC_KEYED_NAME, "HelloWorldKeyed", true, reliable_readers));
+        }
     }
 
     // Two simple participants
@@ -205,7 +219,7 @@ TEST(DDSTestLocal, end_to_end_local_communication)
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
     test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration());
+        test::dds_test_simple_configuration(false, false, true));
 }
 
 /**
@@ -222,7 +236,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
 {
     test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration(true));
+        test::dds_test_simple_configuration(true, false, true));
 }
 
 /**
@@ -281,7 +295,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
 TEST(DDSTestLocal, end_to_end_local_communication_reliable)
 {
     test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(true, true),
+        test::dds_test_simple_configuration(true, true, false),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         test::DEFAULT_MESSAGE_SIZE,
