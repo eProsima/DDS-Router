@@ -18,13 +18,14 @@
   <buildtool_depend>cmake</buildtool_depend>
 
   <depend>fastrtps</depend>
-  <depend>ddsrouter_utils</depend>
   <depend>ddsrouter_cmake</depend>
+  <depend>ddsrouter_utils</depend>
+  <depend>ddsrouter_event</depend>
+  <depend>ddsrouter_thread</depend>
 
   <doc_depend>doxygen</doc_depend>
 
   <test_depend>googletest-distribution</test_depend>
-  <test_depend>ddsrouter_event</test_depend>
 
   <export>
     <build_type>cmake</build_type>

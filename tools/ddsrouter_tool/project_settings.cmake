@@ -30,6 +30,7 @@ set(MODULE_FIND_PACKAGES
     ddsrouter_event
     ddsrouter_core
     ddsrouter_yaml
+    ddsrouter_thread
 )
 
 set(MODULE_DEPENDENCIES

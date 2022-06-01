@@ -27,6 +27,7 @@
 #include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
+#include <ddsrouter_thread/pool/SlotThreadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -56,6 +57,7 @@ public:
             std::shared_ptr<IReader> reader,
             std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<thread::SlotThreadPool> thread_pool,
             bool enable = false) noexcept;
 
     /**
@@ -110,11 +112,12 @@ protected:
      * be used to guard the access to the actual Track data available status.
      */
     //! Status of the data available in the Track's Reader
-    enum DataAvailableStatus
+    enum class DataAvailableStatus
     {
         NEW_DATA_ARRIVED,   //! Listener has announced that new data has arrived
         TRANSMITTING_DATA,  //! Track is taking data from the Reader, so it could or could not be data
         NO_MORE_DATA,       //! Track has announced that Reader has no more data, and Listener has not notified new data
+        STOPPED,            //! Track has announced that is stopped
     };
 
     /**
@@ -205,7 +208,7 @@ protected:
      * Mutex to prevent simultaneous calls to \c enable and/or \c disable .
      * It manages access to variable \c enabled_ .
      */
-    std::recursive_mutex track_mutex_;
+    std::mutex track_mutex_;
 
     /////
     // Transmit thread part
@@ -233,25 +236,15 @@ protected:
     std::atomic<DataAvailableStatus> data_available_status_;
 
     /**
-     * Condition variable to wait for new data available or track termination.
-     */
-    std::condition_variable data_available_condition_variable_;
-
-    /**
-     * Mutex to handle access to condition variable \c data_available_condition_variable_ .
-     * Mutex to manage access to variable \c data_available_status_ .
-     */
-    std::mutex data_available_mutex_;
-
-    /**
-     * Thread that will manage the transmission of the data
-     */
-    std::thread transmit_thread_;
-
-    /**
      * Mutex to guard while the Track is sending a message.
      */
     std::mutex on_transmission_mutex_;
+
+    thread::TaskId transmit_task_id_;
+
+    std::shared_ptr<thread::SlotThreadPool> thread_pool_;
+
+    static const unsigned int MAX_MESSAGES_TRANSMIT_LOOP_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(
