@@ -40,10 +40,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
-        ddsrouter_utils
-        ddsrouter_event
+        ${MODULE_FIND_PACKAGES}
     )
 
 add_unittest_executable(

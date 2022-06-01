@@ -21,6 +21,7 @@
   <depend>fastrtps</depend>
   <depend>ddsrouter_utils</depend>
   <depend>ddsrouter_event</depend>
+  <depend>ddsrouter_thread</depend>
   <depend>ddsrouter_core</depend>
   <depend>ddsrouter_yaml</depend>
 

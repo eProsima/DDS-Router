@@ -25,6 +25,7 @@
 #include <participant/IParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_thread/pool/SlotThreadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -58,6 +59,7 @@ public:
             const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<thread::SlotThreadPool> thread_pool,
             bool enable = false);
 
     /**

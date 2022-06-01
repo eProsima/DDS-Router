@@ -100,7 +100,7 @@ Reader::~Reader()
 utils::ReturnCode Reader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
+    // WARNING this method is not thread-safe. We asume only one thread arrives here at a time
 
     // Check if there is data available
     if (!(rtps_reader_->get_unread_count() > 0))
