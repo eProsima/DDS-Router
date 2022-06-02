@@ -49,16 +49,16 @@ Reader::Reader(
         payload_pool_,
         rtps_history_);
 
-    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
-    // invoked before the variable is fully set)
-    rtps_reader_->setListener(this);
-
     if (!rtps_reader_)
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
                       participant_id << " in topic " << topic << ".");
     }
+
+    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
+    // invoked before the variable is fully set)
+    rtps_reader_->setListener(this);
 
     // Register reader with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
@@ -188,6 +188,9 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
     fastrtps::rtps::HistoryAttributes att;
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+    // (jparisu) with performance propose
+    // This will discard new samples while there is no space
+    att.maximumReservedCaches = 500;
     return att;
 }
 
@@ -214,6 +217,7 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
     return att;
 }
 

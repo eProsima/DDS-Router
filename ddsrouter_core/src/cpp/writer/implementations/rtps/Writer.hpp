@@ -26,6 +26,7 @@
 #include <fastrtps/rtps/history/WriterHistory.h>
 #include <fastrtps/rtps/attributes/WriterAttributes.h>
 #include <fastrtps/rtps/writer/RTPSWriter.h>
+#include <fastrtps/rtps/writer/WriterListener.h>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
@@ -38,8 +39,11 @@ namespace rtps {
 
 /**
  * Standard RTPS Writer with less restrictive Attributes.
+ *
+ * (jparisu) with performance propose
+ * TODO WARNING: This class has been implemented with best effort writer and will not communicate with reliability
  */
-class Writer : public BaseWriter
+class Writer : public BaseWriter, public fastrtps::rtps::WriterListener
 {
 public:
 
@@ -70,6 +74,10 @@ public:
      * @todo Remove every change and release it in PayloadPool
      */
     virtual ~Writer();
+
+    virtual void onWriterMatched(
+            class eprosima::fastrtps::rtps::RTPSWriter* writer,
+            const eprosima::fastdds::dds::PublicationMatchedStatus& info) override;
 
 protected:
 

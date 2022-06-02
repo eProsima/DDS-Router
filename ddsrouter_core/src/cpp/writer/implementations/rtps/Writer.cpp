@@ -60,6 +60,8 @@ Writer::Writer(
                       participant_id << " in topic " << topic << ".");
     }
 
+    rtps_writer_->set_listener(this);
+
     // Register writer with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
     fastrtps::WriterQos writer_qos = writer_qos_();
@@ -139,7 +141,11 @@ utils::ReturnCode Writer::write_(
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
-    // TODO: Data is never removed till destruction
+    if (!topic_.topic_reliable())
+    {
+        // Change has been sent, remove it if best_effort (TODO: does this really work?)
+        rtps_history_->remove_change(new_change);
+    }
 
     return utils::ReturnCode::RETCODE_OK;
 }
@@ -155,9 +161,20 @@ fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-    att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+
+    if (topic_.topic_reliable())
+    {
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+        att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+    }
+    else
+    {
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+        att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
+    }
+
     if (topic_.topic_with_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -188,9 +205,32 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 fastrtps::WriterQos Writer::writer_qos_() const noexcept
 {
     fastrtps::WriterQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+    if (topic_.topic_reliable())
+    {
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    }
+    else
+    {
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+
+    }
+
     return qos;
+}
+
+void Writer::onWriterMatched(
+        class eprosima::fastrtps::rtps::RTPSWriter* writer,
+        const eprosima::fastdds::dds::PublicationMatchedStatus& info)
+{
+    // (jparisu) with performance propose
+    if(writer->getGuid().guidPrefix == fastrtps::rtps::iHandle2GUID(info.last_subscription_handle).guidPrefix)
+    {
+        // Come from this participant, remove match
+        writer->matched_reader_remove(fastrtps::rtps::iHandle2GUID(info.last_subscription_handle));
+    }
 }
 
 } /* namespace rtps */
