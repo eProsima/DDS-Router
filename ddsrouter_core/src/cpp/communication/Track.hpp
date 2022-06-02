@@ -117,7 +117,6 @@ protected:
         NEW_DATA_ARRIVED,   //! Listener has announced that new data has arrived
         TRANSMITTING_DATA,  //! Track is taking data from the Reader, so it could or could not be data
         NO_MORE_DATA,       //! Track has announced that Reader has no more data, and Listener has not notified new data
-        STOPPED,            //! Track has announced that is stopped
     };
 
     /**
@@ -234,6 +233,8 @@ protected:
      * This variable is protected by \c data_available_mutex_
      */
     std::atomic<DataAvailableStatus> data_available_status_;
+
+    std::mutex data_available_status_mutex_;
 
     /**
      * Mutex to guard while the Track is sending a message.
