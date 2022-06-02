@@ -131,21 +131,6 @@ void Track::disable() noexcept
     }
 }
 
-void Track::no_more_data_available_() noexcept
-{
-    // It may occur that within the process of set data_available_status, the actual status had changed
-    // Thus, it must take care that it is only set to no_data when it comes from transmitting data
-    if (data_available_status_ == DataAvailableStatus::transmitting_data)
-    {
-        logDebug(DDSROUTER_TRACK, "Track " << *this << " has no more data to send.");
-        data_available_status_.store(DataAvailableStatus::no_more_data);
-    }
-    // If it is new_data_arrived is that the Listener has notified new data AFTER Track has received a no_data
-    // from the Reader. Very unlikely timing, but possible.
-    // In this occasion, it must not be set as no_more_data because THERE IS data.
-    // If it is no_more_data it does not need to be changed (however it should never happen)
-}
-
 bool Track::should_transmit_() noexcept
 {
     return !exit_ && enabled_ && this->is_data_available_();
@@ -157,6 +142,9 @@ void Track::data_available_() noexcept
     if (enabled_)
     {
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has data ready to be sent.");
+
+        // Lock data_available_status_mutex_ to avoid changing the status while it is being checked
+        std::lock_guard<std::mutex> lock(data_available_status_mutex_);
 
         // This method will always be called from the Reader thread, so it is safe to set the status
         DataAvailableStatus current_status = data_available_status_.exchange(DataAvailableStatus::new_data_arrived);
@@ -181,19 +169,14 @@ void Track::transmit_() noexcept
     // Loop that ends if it should stop transmitting (should_transmit_nts_).
     // Called inside the loop so it is protected by a mutex that is freed in every iteration.
 
+    // Lock Mutex on_transmition while a data is being transmitted
+    // This prevents the Track to be disabled (and disable writers and readers) while sending a data
+    // enab led_ will be set to false before taking the mutex, so the track will finish after current iteration
+    std::unique_lock<std::mutex> lock(on_transmission_mutex_);
+
     // TODO: Count the times it loops to break it at some point if needed
     while(should_transmit_())
     {
-        // Lock Mutex on_transmition while a data is being transmitted
-        // This prevents the Track to be disabled (and disable writers and readers) while sending a data
-        std::unique_lock<std::mutex> lock(on_transmission_mutex_);
-
-        // If it must not keep transmitting, stop loop
-        if (!should_transmit_())
-        {
-            break;
-        }
-
         // It starts transmitting, so it sets the data available status as transmitting
         data_available_status_ = DataAvailableStatus::transmitting_data;
 
@@ -203,16 +186,22 @@ void Track::transmit_() noexcept
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
         {
+            // Lock data_available_status_mutex_ to avoid changing the status while it is being checked
+            std::lock_guard<std::mutex> lock(data_available_status_mutex_);
+
             // There is no more data, so finish loop and wait again for new data
-            no_more_data_available_();
-            break;
-        }
-        else if (ret == utils::ReturnCode::RETCODE_NOT_ENABLED)
-        {
-            // This may not happen because the Reader is only disabled from here, however
-            // it is better to cut it and set as no more data is available.
-            no_more_data_available_();
-            break;
+            DataAvailableStatus current_status = data_available_status_.exchange(DataAvailableStatus::no_more_data);
+            if (current_status == DataAvailableStatus::new_data_arrived)
+            {
+                // New data has arrived while setting no_more_data, so it should continues
+                data_available_status_.store(DataAvailableStatus::transmitting_data);
+                continue;
+            }
+            else
+            {
+                // no_more_data has been set, so if any other data arrives it will send a callback to thread pool
+                break;
+            }
         }
         else if (!ret)
         {
@@ -242,6 +231,8 @@ void Track::transmit_() noexcept
 
         payload_pool_->release_payload(data->payload);
     }
+
+    data_available_status_.store(DataAvailableStatus::no_more_data);
 }
 
 std::ostream& operator <<(
