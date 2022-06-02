@@ -94,7 +94,17 @@ Reader::~Reader()
         delete rtps_history_;
     }
 
-    custom_history_.Clear();
+    // Release all payloads in custom history in PayloadPool
+    while(!custom_history_.BothEmpty())
+    {
+        payload_pool_->release_payload(custom_history_.Front().payload);
+        custom_history_.Pop();
+
+        if (custom_history_.Empty())
+        {
+            custom_history_.Swap();
+        }
+    }
 
     logInfo(DDSROUTER_RTPS_READER, "Deleting Reader created in Participant " <<
             participant_id_ << " for topic " << topic_);
