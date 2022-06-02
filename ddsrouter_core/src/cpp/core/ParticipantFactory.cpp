@@ -29,6 +29,7 @@
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
+#include <participant/implementations/rtps/ShmParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
 #include <participant/implementations/rtps/WANParticipant.hpp>
 
@@ -75,6 +76,25 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             }
 
             return std::make_shared<rtps::SimpleParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
+
+        case ParticipantKind::SHM:
+            // Simple RTPS Participant
+        {
+            std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
+            {
+                throw utils::ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
+                              participant_configuration->kind());
+            }
+
+            return std::make_shared<rtps::ShmParticipant> (
                 (*conf_),
                 payload_pool,
                 discovery_database);

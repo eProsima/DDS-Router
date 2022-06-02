@@ -217,6 +217,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
     switch (kind())
     {
         case ParticipantKind::SIMPLE_RTPS:
+        case ParticipantKind::SHM:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,

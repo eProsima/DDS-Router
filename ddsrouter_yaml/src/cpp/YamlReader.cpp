@@ -795,6 +795,7 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 YamlReader::get<core::configuration::ParticipantConfiguration>(yml, version));
 
         case types::ParticipantKind::SIMPLE_RTPS:
+        case types::ParticipantKind::SHM:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
 

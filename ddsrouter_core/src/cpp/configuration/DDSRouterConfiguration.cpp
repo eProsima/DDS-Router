@@ -126,6 +126,7 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
     switch (configuration->kind()())
     {
         case ParticipantKind::SIMPLE_RTPS:
+        case ParticipantKind::SHM:
             return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
 
         case ParticipantKind::LOCAL_DISCOVERY_SERVER:

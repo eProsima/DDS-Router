@@ -39,6 +39,7 @@ const std::map<ParticipantKindType, std::vector<std::string>> ParticipantKind::p
     {SIMPLE_RTPS, {"local", "simple"}},
     {LOCAL_DISCOVERY_SERVER, {"discovery-server", "ds", "local-ds", "local-discovery-server"}},
     {WAN, {"wan", "router"}},
+    {SHM, {"shm", "shared-memory-transport"}},
 };
 
 ParticipantKind::ParticipantKind(
