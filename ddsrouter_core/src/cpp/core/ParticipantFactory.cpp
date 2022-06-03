@@ -27,6 +27,7 @@
 #include <core/ParticipantFactory.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
+#include <participant/implementations/auxiliar/MockParticipant.hpp>
 #include <participant/implementations/auxiliar/VoidParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
@@ -60,6 +61,10 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         case ParticipantKind::DUMMY:
             // DummyParticipant
             return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, discovery_database);
+
+        case ParticipantKind::MOCK:
+            // DummyParticipant
+            return std::make_shared<MockParticipant>((*participant_configuration), payload_pool, discovery_database);
 
         case ParticipantKind::SIMPLE_RTPS:
             // Simple RTPS Participant

@@ -35,6 +35,7 @@ const std::map<ParticipantKindType, std::vector<std::string>> ParticipantKind::p
     {PARTICIPANT_KIND_INVALID, {"__invalid_participant_kind__"}},
     {VOID, {"void"}},
     {ECHO, {"echo"}},
+    {MOCK, {"mock"}},
     {DUMMY, {"dummy"}},
     {SIMPLE_RTPS, {"local", "simple"}},
     {LOCAL_DISCOVERY_SERVER, {"discovery-server", "ds", "local-ds", "local-discovery-server"}},
