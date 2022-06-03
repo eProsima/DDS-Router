@@ -80,6 +80,12 @@ std::ostream& container_to_stream(
         std::vector<T> list,
         std::string separator = ";");
 
+template <typename T>
+std::ostream& element_container_to_stream(
+        std::ostream& os,
+        std::vector<T> list,
+        std::string separator = ";");
+
 //! Concatenate a set by converting to vector.
 template <typename T, bool Ptr = false>
 std::ostream& container_to_stream(

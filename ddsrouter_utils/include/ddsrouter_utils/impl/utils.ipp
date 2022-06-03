@@ -66,6 +66,27 @@ std::ostream& container_to_stream(
     return os;
 }
 
+template <typename T>
+std::ostream& element_container_to_stream(
+        std::ostream& os,
+        std::vector<T> list,
+        std::string separator /* = ";"*/)
+{
+    size_t size = list.size();
+
+    for (size_t i = 0; size != 0 && i < size - 1; ++i)
+    {
+        os << list[i] << separator;
+    }
+
+    if (size > 0)
+    {
+        os << list[size - 1];
+    }
+
+    return os;
+}
+
 template <typename T, bool Ptr /* = false */>
 std::ostream& container_to_stream(
         std::ostream& os,
