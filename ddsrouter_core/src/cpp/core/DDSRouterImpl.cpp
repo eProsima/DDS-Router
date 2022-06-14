@@ -36,7 +36,7 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const unsigned int DDSRouterImpl::THREAD_POOL_SIZE_ = 2;
+const unsigned int DDSRouterImpl::THREAD_POOL_SIZE_ = 10;
 
 // TODO: Use initial topics to start execution and start bridges
 
