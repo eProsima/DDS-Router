@@ -132,7 +132,7 @@ utils::ReturnCode Writer::write_(
         return utils::ReturnCode::RETCODE_ERROR;
     }
 
-    logDebug(DDSROUTER_RTPS_WRITER,
+    logWarning(DDSROUTER_RTPS_WRITER,
             "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
             data->source_guid);
 
