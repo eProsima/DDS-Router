@@ -36,7 +36,7 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const uint32_t DDSRouterImpl::N_THREADS_(1);
+const uint32_t DDSRouterImpl::N_THREADS_(10);
 
 // TODO: Use initial topics to start execution and start bridges
 
