@@ -16,95 +16,145 @@
  * @file IReader.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_READER_IDDS_ROUTERREADER_HPP_
-#define __SRC_DDSROUTERCORE_READER_IDDS_ROUTERREADER_HPP_
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_BASEREADER_HPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_BASEREADER_HPP_
 
-#include <functional>
+#include <atomic>
+#include <mutex>
+#include <vector>
 
+#include <writer/IWriter.hpp>
+#include <ddsrouter_core/types/endpoint/BaseWriterReader.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+namespace eprosima {
+namespace fastrtps {
+namespace rtps {
 
-#include <efficiency/PayloadPool.hpp>
+class IPayloadPool;
+
+} /* namespace rtps */
+} /* namespace fastrtps */
+} /* namespace eprosima */
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
+class DataForwardQueue;
+
 /**
- * Interface that represents a generic Reader as part of a DDSRouter.
+ * Base Reader that implements common methods for every Reader.
  *
- * This class manages the reception of new remote data in a specific topic.
- * It also calls the \c Track on_data_available callback whenever new data is received.
+ * Exposes enable() and disable() methods that express whether the given topic is enabled or not for this participant.
+ * Exposes register_writer() method to record the writers associated to this reader
  *
- * @note In order to implement new Readers, create a subclass of this Interface and implement every method.
- * @note Also it is needed to add the creation of the Reader in the Participant required.
- *
- * Readers will start being disabled.
+ * In order to inherit from this class:
+ * Implement public take_and_forward() method in derived specializations.
+ * Optionally implement protected methods enable_ and disable_ in derived specializations.
  */
-class IReader
+class IReader : public types::BaseWriterReader<types::EndpointKind::reader>
 {
 public:
 
     /**
-     * @brief Enable Reader
+     * @brief Construct a new Base Reader object
      *
-     * A Reader enabled will call on_data_available callback whenever new data is received.
-     *
-     * By default the Reader is disabled. Call this method to activate it.
+     * @param participant ID
+     * @param topic topic that this Reader will refer to
+     * @param payload_pool DDS Router shared IPayloadPool
+     * @param data_forward_queue storing data forward tasks
      */
-    virtual void enable() noexcept = 0;
+    IReader(
+            const types::ParticipantId& id,
+            const types::RealTopic& topic,
+            fastrtps::rtps::IPayloadPool* payload_pool,
+            DataForwardQueue& data_forward_queue);
+
+    virtual ~IReader();
 
     /**
-     * @brief Disable Reader
+     * @brief Register a Writer
      *
-     * A disabled Reader does not call on_data_available callback whenever new data is received.
-     * @note Disabling a Reader does not mean that messages should not arrive, that depends on the implementation.
+     * Incorporate this Writer in the list of writers to which messages received in this Reader are forwarded to.
      *
-     * @warning: This method should stop calling the callback \c on_data_available_lambda if more data arrives while
-     * disabled.
+     * @param writer Writer to register
+     *
+     * @throw InconsistencyException if input writer has already been introduced
+     * @throw InconsistencyException if input writer has Participant ID different than this Reader's
      */
-    virtual void disable() noexcept = 0;
+    void register_writer(
+            IWriter* writer);
 
     /**
-     * @brief Set the callback that should be called whenever a new message arrives
+     * @brief Set this Reader as enabled if previously disabled
      *
-     * Each Reader is associated with one \c Track . This Track has a callback that should be called whenever the
-     * Reader receives new data. This function sets this callback for the Reader.
+     * It changes the \c enabled_ variable.
+     * Call protected method \c enable_() for a specific enable functionality.
      *
-     * @param [in] on_data_available_lambda : \c Track callback
+     * Thread safe with CAS pattern .
      */
-    virtual void set_on_data_available_callback(
-            std::function<void()> on_data_available_lambda) noexcept = 0;
+    utils::ReturnCode enable() noexcept;
 
     /**
-     * @brief Unset the callback that should be called whenever a new message arrives.
+     * @brief Set this Reader as disabled
      *
-     * After this method, the Reader should not notify any message that arrives.
+     * It changes the \c enabled_ variable.
+     * Call protected method \c disable_() for a specific disable functionality.
+     *
+     * Thread safe with CAS pattern .
      */
-    virtual void unset_on_data_available_callback() noexcept = 0;
+    utils::ReturnCode disable() noexcept;
 
     /**
-     * @brief Take oldest received message from the Reader
+     * @brief Interface for taking data and forwarding to writers
      *
-     * This method will take the oldest sample received by the Reader and will set it to the argument \c data
-     * in a way that the payload in \c data must be inside the DDS Router PayloadPool.
-     * In \c data,  the Guid of the Endpoint that originally sent this data must be specified.
-     *
-     * @param [out] data : object where the payload received should be copied (referenced)
-     *
-     * @return \c RETCODE_OK if the data has been taken correctly
-     * @return \c RETCODE_NO_DATA if there is no more data to take
-     * @return \c RETCODE_ERROR if there has been any error while taking a sample
-     * @return \c RETCODE_NOT_ENABLED if the reader is not enabled (this should not happen)
+     * Thread safe with lock-free try-TAS semantics
      */
-    virtual utils::ReturnCode take(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+    virtual void take_and_forward() noexcept = 0;
+
+protected:
+
+    /**
+     * @brief Do nothing
+     *
+     * Implement this method class for a specific enable functionality. Only called from public enable() if enabled_ transition false -> true was effective.
+     */
+    virtual void enable_() noexcept;
+
+    /**
+     * @brief Do nothing
+     *
+     * Implement this method class for a specific enable functionality. Only called from public disable() if enabled_ transition true -> false was effective.
+     */
+    virtual void disable_() noexcept;
+
+
+    //! DDS Router Payload Pool, always outlive readers/writers in DDSRouter
+    fastrtps::rtps::IPayloadPool* payload_pool_;
+
+    //! Reference to queue of data forward tasks
+    DataForwardQueue& data_forward_queue_;
+
+    //! Writers to which messages received by this reader are forward to
+    std::vector<IWriter*> writers_;
+
+    //! Whether the Reader is currently enabled
+    std::atomic<bool> enabled_;
 };
+
+/**
+ * @brief \c IReader to stream serialization
+ *
+ * This method is merely a to_string of a IReader definition.
+ * It serialize the ParticipantId and topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const IReader& reader);
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_READER_IDDS_ROUTERREADER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_BASEREADER_HPP_ */

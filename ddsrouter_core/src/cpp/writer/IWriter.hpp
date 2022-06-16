@@ -16,75 +16,80 @@
  * @file IWriter.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_WRITER_IDDS_ROUTERWRITER_HPP_
-#define __SRC_DDSROUTERCORE_WRITER_IDDS_ROUTERWRITER_HPP_
+#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_BASEWRITER_HPP_
+#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_BASEWRITER_HPP_
 
+#include <atomic>
+#include <mutex>
+
+#include <ddsrouter_core/types/endpoint/BaseWriterReader.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+namespace eprosima {
+namespace fastrtps {
+namespace rtps {
 
-#include <efficiency/PayloadPool.hpp>
+class IPayloadPool;
+struct CacheChange_t;
+
+} /* namespace rtps */
+} /* namespace fastrtps */
+} /* namespace eprosima */
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
 /**
- * Interface that represents a generic Writer as part of a DDSRouter.
+ * Base Writer that implements for other Writer specializations
  *
- * This class manages the sending of data to remote endpoints in a specific topic.
- *
- * @note In order to implement new Writers, create a subclass of this Interface and implement every method.
- * @note Also it is needed to add the creation of the Writer in the Participant required.
- *
- * Writers will start being disabled.
+ * In order to inherit from this class:
+ * Implement public write() method in derived specializations.
  */
-class IWriter
+class IWriter : public types::BaseWriterReader<types::EndpointKind::writer>
 {
 public:
 
     /**
-     * @brief Enable Writer
+     * @brief Construct a new Base Writer object
      *
-     * A Writer enabled can send messages.
-     *
-     * By default the Writer is disabled. Call this method to activate it.
+     * @param participant ID
+     * @param topic topic that this Writer will refer to
+     * @param payload_pool DDS Router shared IPayloadPool
      */
-    virtual void enable() noexcept = 0;
+    IWriter(
+            const types::ParticipantId& id,
+            const types::RealTopic& topic,
+            fastrtps::rtps::IPayloadPool* payload_pool);
+
+    virtual ~IWriter();
 
     /**
-     * @brief Disable Writer
+     * @brief Abstract interface for forwarding a cache change into a writer history
      *
-     * A Writer disabled does not send data.
-     * @note Method \c write should never be called from a disabled writer
+     * @param reader_cache_change Reader cache change
      */
-    virtual void disable() noexcept = 0;
+    virtual void write(
+            fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept = 0;
 
-    /**
-     * @brief Asynchronously write a message for remote endpoints
-     *
-     * This method will take the data received by another Participant's Reader and should send it forward.
-     * In the variable \c data there is the \c Guid of the Endpoint that originally sent the data.
-     * In \c data there is also the payload of the data. This payload should be copied/moved from the DDSRouter's
-     * PayloadPool to the Writer's PayloadPool (in case it is the same Pool, the data will not be copied).
-     * The writer should write asynchronously. It should take the data and exit the function,
-     * and internally send the data.
-     *
-     * Once the data has been sent, the Writer should release the payload.
-     *
-     * @param [in] data : object containing the payload to be sent
-     *
-     * @return \c RETCODE_OK if the data has been written correctly
-     * @return \c RETCODE_ERROR if there has been any error while writing the sample
-     * @return \c RETCODE_NOT_ENABLED if the writer is not enabled (this should not happen)
-     */
-    virtual utils::ReturnCode write(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+protected:
+
+    //! Reference to Payload Pool, always outlive readers/writers in DDSRouter
+    fastrtps::rtps::IPayloadPool* payload_pool_;
 };
+
+/**
+ * @brief \c IWriter to stream serialization
+ *
+ * This method is merely a to_string of a IWriter definition.
+ * It serialize the ParticipantId and topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const IWriter& writer);
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_WRITER_IDDS_ROUTERWRITER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_BASEWRITER_HPP_ */

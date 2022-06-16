@@ -13,39 +13,26 @@
 // limitations under the License.
 
 /**
- * @file BlankWriter.hpp
+ * @file GenericReader.cpp
  */
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_IPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_IPP_
 
-#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
-#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
-
-#include <writer/IWriter.hpp>
+#include <reader/auxiliar/GenericReader.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-/**
- * Writer that has an empty implementation.
- * It does not send anything.
- */
-class BlankWriter : public IWriter
+template <types::ParticipantKind PartKind>
+void GenericReader<PartKind>::take_and_forward() noexcept
 {
-public:
-
-    //! Override enable() IWriter method
-    void enable() noexcept override;
-
-    //! Override disable() IWriter method
-    void disable() noexcept override;
-
-    //! Override write() IWriter method
-    utils::ReturnCode write(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
-};
+    // TODO
+}
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_IPP_ */

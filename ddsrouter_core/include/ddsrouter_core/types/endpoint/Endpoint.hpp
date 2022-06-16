@@ -22,7 +22,7 @@
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/endpoint/QoS.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -60,9 +60,6 @@ class Endpoint
 {
 public:
 
-    //! Default Endpoint that returns an invalid one
-    DDSROUTER_CORE_DllAPI Endpoint() noexcept;
-
     /**
      * Constructor with Endpoint information
      */
@@ -70,7 +67,7 @@ public:
             const EndpointKind& kind,
             const Guid& guid,
             const QoS& qos,
-            const RealTopic& topic) noexcept;
+            const RealTopic& topic);
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
@@ -90,9 +87,6 @@ public:
     //! Set active status of the Endpoint
     DDSROUTER_CORE_DllAPI void active(
             bool status) noexcept;
-
-    //! Whether the endpoint referenced is valid
-    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
 
     /********************
     * SPECIFIC GETTERS *

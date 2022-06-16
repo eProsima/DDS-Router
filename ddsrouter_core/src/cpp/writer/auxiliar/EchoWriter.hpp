@@ -19,39 +19,13 @@
 #ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_ECHOWRITER_HPP_
 #define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_ECHOWRITER_HPP_
 
-#include <atomic>
-
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-
-#include <writer/implementations/auxiliar/BaseWriter.hpp>
+#include <writer/auxiliar/GenericWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-/**
- * Writer Implementation that prints in stdout every message that is required to write.
- */
-class EchoWriter : public BaseWriter
-{
-public:
-
-    //! Using parent class constructors
-    using BaseWriter::BaseWriter;
-
-protected:
-
-    /**
-     * @brief Print data in a human friendly way.
-     *
-     * @param data : data to print
-     * @return RETCODE_OK always
-     */
-    virtual utils::ReturnCode write_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
-
-    // Specific enable/disable do not need to be implemented
-};
+using EchoWriter = GenericWriter<types::ParticipantKind::echo>;
 
 } /* namespace core */
 } /* namespace ddsrouter */

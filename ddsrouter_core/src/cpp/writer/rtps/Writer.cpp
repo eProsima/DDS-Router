@@ -20,7 +20,8 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
-#include <writer/implementations/rtps/Writer.hpp>
+#include <writer/rtps/Writer.hpp>
+#include <reader/IReader.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -31,117 +32,74 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-Writer::Writer(
-        const ParticipantId& participant_id,
-        const RealTopic& topic,
-        std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant)
-    : BaseWriter(participant_id, topic, payload_pool)
+void Writer::RTPSWriterDeleter::operator ()(
+        fastrtps::rtps::RTPSWriter* ptr) const
 {
-    // TODO Use payload pool for this writer, so change does not need to be copied
+    if (ptr)
+    {
+        fastrtps::rtps::RTPSDomain::removeRTPSWriter(ptr);
+    }
+}
 
+Writer::Writer(
+        const ParticipantId& id,
+        const RealTopic& topic,
+        std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool,
+        fastrtps::rtps::RTPSParticipant* rtps_participant)
+    : IWriter(id, topic, payload_pool.get())
+{
     // Create History
-    fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
-    rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
+    rtps_history_ = std::make_unique<fastrtps::rtps::WriterHistory>(history_attributes_());
 
     // Create Writer
     fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
-    rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
-        rtps_participant,
-        writer_att,
-        payload_pool_,
-        rtps_history_,
-        nullptr);
+    rtps_writer_ = std::unique_ptr<fastrtps::rtps::RTPSWriter, RTPSWriterDeleter>(
+        fastrtps::rtps::RTPSDomain::createRTPSWriter(
+            rtps_participant,
+            writer_att,
+            payload_pool,
+            rtps_history_.get(),
+            nullptr),
+        RTPSWriterDeleter()
+        );
 
     if (!rtps_writer_)
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
-                      participant_id << " in topic " << topic << ".");
+                      id << " in topic " << topic << ".");
     }
 
     // Register writer with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
     fastrtps::WriterQos writer_qos = writer_qos_();
 
-    if (!rtps_participant->registerWriter(rtps_writer_, topic_att, writer_qos))
+    if (!rtps_participant->registerWriter(rtps_writer_.get(), topic_att, writer_qos))
     {
-        // In case it fails, remove writer and throw exception
-        fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
         throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
-                      " for Simple RTPSWriter in Participant " << participant_id);
+                      " for Simple RTPSWriter in Participant " << id);
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
+    logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << id_ << " for topic " <<
             topic << " with guid " << rtps_writer_->getGuid());
+
 }
 
 Writer::~Writer()
 {
-    // This variables should be set, otherwise the creation should have fail
-    // Anyway, the if case is used for safety reasons
-
-    // Delete writer
-    if (rtps_writer_)
-    {
-        // Delete the Writer the History is cleaned
-        fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
-    }
-
-    // Delete History
-    if (rtps_history_)
-    {
-        delete rtps_history_;
-    }
-
     logInfo(DDSROUTER_RTPS_WRITER, "Deleting Writer created in Participant " <<
-            participant_id_ << " for topic " << topic_);
+            id_ << " for topic " << topic_);
 }
 
-// Specific enable/disable do not need to be implemented
-utils::ReturnCode Writer::write_(
-        std::unique_ptr<DataReceived>& data) noexcept
+void Writer::write(
+        fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept
 {
+    fastrtps::rtps::CacheChange_t* writer_cache_change = rtps_writer_->new_change(
+        eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
-    // Take new Change from history
-    fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+    payload_pool_->get_payload( reader_cache_change->serializedPayload, payload_pool_, *writer_cache_change );
 
-    // TODO : Set method to remove old changes in order to get a new one
-    // In case it fails, remove old changes from history and try again
-    // uint32_t data_size = data->payload.length;
-    // if (!new_change)
-    // {
-    //     rtps_writer_->remove_older_changes(1);
-    //     new_change = rtps_writer_->new_change([data_size]() -> uint32_t
-    //     {
-    //         return data_size;
-    //     }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
-    // }
-
-    // If still is not able to get a change, return an error code
-    if (!new_change)
-    {
-        return utils::ReturnCode::RETCODE_ERROR;
-    }
-
-    // Get the Payload (copying it)
-    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
-    if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
-    {
-        logDevError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
-        return utils::ReturnCode::RETCODE_ERROR;
-    }
-
-    logDebug(DDSROUTER_RTPS_WRITER,
-            "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
-            data->source_guid);
-
-    // Send data by adding it to Writer History
-    rtps_history_->add_change(new_change);
-
-    // TODO: Data is never removed till destruction
-
-    return utils::ReturnCode::RETCODE_OK;
+    rtps_history_->add_change(writer_cache_change);
 }
 
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
@@ -158,7 +116,7 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
-    if (topic_.topic_with_key())
+    if (topic_.has_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -172,7 +130,7 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    if (topic_.topic_with_key())
+    if (topic_.has_key())
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -180,8 +138,8 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     {
         att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
-    att.topicName = topic_.topic_name();
-    att.topicDataType = topic_.topic_type();
+    att.topicName = topic_.name();
+    att.topicDataType = topic_.type();
     return att;
 }
 

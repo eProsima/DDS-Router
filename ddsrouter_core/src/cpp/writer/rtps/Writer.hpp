@@ -29,7 +29,7 @@
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
-#include <writer/implementations/auxiliar/BaseWriter.hpp>
+#include <writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,8 +39,20 @@ namespace rtps {
 /**
  * Standard RTPS Writer with less restrictive Attributes.
  */
-class Writer : public BaseWriter
+class Writer : public IWriter
 {
+private:
+
+    struct RTPSWriterDeleter
+    {
+        RTPSWriterDeleter()
+        {
+        }
+
+        void operator ()(
+                fastrtps::rtps::RTPSWriter* ptr) const;
+    };
+
 public:
 
     /**
@@ -48,17 +60,17 @@ public:
      *
      * Get the Attributes and QoS and create the Writer History and the RTPS Writer.
      *
-     * @param participant_id    Router Id of the Participant that has created this Writer.
+     * @param participant_id    Participant Id of the Participant that has created this Writer.
      * @param topic             Topic that this Writer subscribes to.
      * @param payload_pool      Shared Payload Pool to received data and take it.
      * @param rtps_participant  RTPS Participant pointer (this is not stored).
      *
-     * @throw \c InitializationException in case any creation has failed
+     * @throw \c InitializationException in case initialization fails
      */
     Writer(
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
-            std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
@@ -67,31 +79,22 @@ public:
      * Remove Writer RTPS
      * Remove History
      *
-     * @todo Remove every change and release it in PayloadPool
+     * @todo Remove every change and release it in IPayloadPool
      */
     virtual ~Writer();
 
-protected:
-
-    // Specific enable/disable do not need to be implemented
+    /////
+    // DDS ROUTER METHODS
 
     /**
-     * @brief Write specific method
+     * @brief Write cache change in RTPSWriter's history
      *
-     * Store new data as message to send (asynchronously) (it could use PayloadPool to not copy payload).
-     * Take next Untaken Change.
-     * Set \c data with the message taken (data payload must be stored from PayloadPool).
-     * Remove this change from Reader History and release.
-     *
-     * It does not require mutex, it will be guarded by RTPS Writer mutex in internal methods.
-     *
-     * @param data : oldest data to take
-     * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @param reader_cache_change Cache change coming from a reader
      */
-    virtual utils::ReturnCode write_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    void write(
+            fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept override;
+
+private:
 
     /////
     // RTPS specific methods
@@ -125,11 +128,11 @@ protected:
     /////
     // VARIABLES
 
-    //! RTPS Writer pointer
-    fastrtps::rtps::RTPSWriter* rtps_writer_;
-
     //! RTPS Writer History associated to \c rtps_reader_
-    fastrtps::rtps::WriterHistory* rtps_history_;
+    std::unique_ptr<fastrtps::rtps::WriterHistory> rtps_history_;
+
+    //! RTPS Writer
+    std::unique_ptr<fastrtps::rtps::RTPSWriter, RTPSWriterDeleter> rtps_writer_;
 };
 
 } /* namespace rtps */

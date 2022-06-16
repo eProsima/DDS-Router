@@ -19,28 +19,28 @@
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-Endpoint::Endpoint() noexcept
-    : kind_(EndpointKind::invalid)
-{
-}
-
 Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
         const QoS& qos,
-        const RealTopic& topic) noexcept
+        const RealTopic& topic)
     : kind_(kind)
     , guid_(guid)
     , qos_(qos)
     , topic_(topic)
     , active_(true)
 {
+    if (kind == EndpointKind::invalid)
+    {
+        throw utils::InitializationException("Invalid endpoint");
+    }
 }
 
 EndpointKind Endpoint::kind() const noexcept
@@ -72,11 +72,6 @@ void Endpoint::active(
         bool status) noexcept
 {
     active_ = status;
-}
-
-bool Endpoint::is_valid() const noexcept
-{
-    return kind_ != EndpointKind::invalid;
 }
 
 bool Endpoint::is_writer() const noexcept

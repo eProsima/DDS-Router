@@ -28,7 +28,7 @@
 #include <fastrtps/rtps/reader/RTPSReader.h>
 #include <fastrtps/rtps/reader/ReaderListener.h>
 
-#include <reader/implementations/auxiliar/BaseReader.hpp>
+#include <reader/IReader.hpp>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
@@ -41,9 +41,22 @@ namespace rtps {
  * Standard RTPS Reader with less restrictive Attributes.
  *
  * It implements the ReaderListener for itself with \c onNewCacheChangeAdded and \c onReaderMatched callbacks.
+ * It implements \c take_and_forward which is the main function run by worker threads
  */
-class Reader : public BaseReader, public fastrtps::rtps::ReaderListener
+class Reader : public IReader, public fastrtps::rtps::ReaderListener
 {
+private:
+
+    struct RTPSReaderDeleter
+    {
+        RTPSReaderDeleter()
+        {
+        }
+
+        void operator ()(
+                fastrtps::rtps::RTPSReader* ptr) const;
+    };
+
 public:
 
     /**
@@ -54,6 +67,7 @@ public:
      * @param participant_id    Router Id of the Participant that has created this Reader.
      * @param topic             Topic that this Reader subscribes to.
      * @param payload_pool      Shared Payload Pool to received data and take it.
+     * @param data_forward_queue storing data forward tasks
      * @param rtps_participant  RTPS Participant pointer (this is not stored).
      *
      * @throw \c InitializationException in case any creation has failed
@@ -61,7 +75,8 @@ public:
     Reader(
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
-            std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool,
+            DataForwardQueue& data_forward_queue,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
@@ -79,7 +94,7 @@ public:
      *
      * This method is call every time a new CacheChange is received by this Reader.
      * Filter this same Participant messages.
-     * Call the on_data_available_ callback (method \c on_data_available_ from \c BaseReader ).
+     * Call the on_data_available_ callback (method \c on_data_available_ from \c IReader ).
      *
      * @param [in] change new change received
      */
@@ -99,35 +114,38 @@ public:
             fastrtps::rtps::RTPSReader*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
+    /**
+     * @brief Take data and forward to writers
+     *
+     * Take cache changes from the reader history and forward them to all the writers associated to this reader.
+     * For each cache change forwarded to writers, forwarded_ variable will be increased by one, so callers of this
+     * function will try to match forwarded_ to notified_.
+     * This function is accessed by worker threads, and the critical section is protected by a
+     * std::atomic_flag take_lock_.
+     * The concurrency behavior is equivalent to try-lock semantics, because in general it does not worth to make
+     * worker threads wait for the critical section within a reader to be available when there will be plenty of
+     * readers whose data is pending to be forwarded. More in detail, (1) a thread that sees the take_lock_ disabled
+     * will enable it and enter into de critical section and (2) a thread that sees the take_lock_ enabled will
+     * immediately return without trying again. Note that before testing the take_lock_, all threads will increase
+     * the notified_ atomic counter by one, so in case a thread fails to enter into the critical section, it would
+     * have notified the existence of a new cache change to be taken from the reader history. That means that the
+     * thread currently in the loop within the critical section will make an additional iteration for each thread
+     * that failed to acquire the take_lock_.
+     * In the rare event in which a thread failed to "acquire" the try_lock_ after the thread that acquired it left
+     * the loop, it will be a not-forwarded cache change left in the reader: all threads will left this function with
+     * a reader state having values of forwarded_ and notified_ such that [forwarded_ + 1 == notified_]. That is not
+     * a problem in routing scenarios in which a reader is in generally receiving a continuous stream of messages,
+     * because the next call to take_and_forward() will be aware of variables being [forwarded_ + 2 == notified_],
+     * so the previously unattended cache change will be finally forwarded.
+     */
+    void take_and_forward() noexcept override;
+
 protected:
 
-    // Specific enable/disable do not need to be implemented
+    /////
+    // Internal methods
 
-    /**
-     * @brief Enable specific method for RTPS reader
-     *
-     * Check if there is data available to read
-     */
-
-    void enable_() noexcept;
-
-    /**
-     * @brief Take specific method
-     *
-     * Check if there are messages to take.
-     * Take next Untaken Change.
-     * Set \c data with the message taken (data payload must be stored from PayloadPool).
-     * Remove this change from Reader History and release.
-     *
-     * @note guard by mutex \c rtps_mutex_
-     *
-     * @param data : oldest data to take
-     * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     */
-    utils::ReturnCode take_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    void enable_() noexcept override;
 
     /////
     // RTPS specific methods
@@ -157,27 +175,26 @@ protected:
     fastrtps::ReaderQos reader_qos_() const noexcept;
 
     /////
-    // Reader specific methods
-
-    //! Whether a change received is from this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(
-            const fastrtps::rtps::CacheChange_t* change) const noexcept;
-
-    //! Whether a guid references this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(
-            const fastrtps::rtps::GUID_t guid) const noexcept;
-
-    /////
     // VARIABLES
 
-    //! RTPS Reader pointer
-    fastrtps::rtps::RTPSReader* rtps_reader_;
-
     //! RTPS Reader History associated to \c rtps_reader_
-    fastrtps::rtps::ReaderHistory* rtps_history_;
+    std::unique_ptr<fastrtps::rtps::ReaderHistory> rtps_history_;
 
-    //! Mutex that guards every access to the RTPS Reader
-    mutable std::recursive_mutex rtps_mutex_;
+    //! RTPS Reader pointer
+    std::unique_ptr<fastrtps::rtps::RTPSReader, RTPSReaderDeleter> rtps_reader_;
+
+    //! Variable tracking the number of times onCacheChangeAdded (if topic reliable) was called while this reader (topic) was disabled
+    std::atomic<long> enqueued_while_disabled_;
+
+    //| Variable tracking the number of times take_and_forward is called. Only read and modified within the critical section protected by take_lock_
+    std::atomic<unsigned long> notified_;
+
+    //| Variable tracking the number of cache changes forwarded in this reader
+    unsigned long forwarded_;
+
+    //! Boolean to control the access to take_and_forward function. Its acquisition and release synchronizes with forwarded_ value
+    std::atomic_flag take_lock_;
+
 };
 
 } /* namespace rtps */

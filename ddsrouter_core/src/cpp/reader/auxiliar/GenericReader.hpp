@@ -13,40 +13,35 @@
 // limitations under the License.
 
 /**
- * @file BlankReader.cpp
+ * @file GenericReader.hpp
  */
 
-#include <reader/implementations/auxiliar/BlankReader.hpp>
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_HPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_HPP_
+
+#include <reader/IReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-
-void BlankReader::enable() noexcept
+/**
+ * Generic reader interface
+ */
+template <types::ParticipantKind PartKind>
+class GenericReader : public IReader
 {
-}
+public:
 
-void BlankReader::disable() noexcept
-{
-}
+    //! Use super-class constructors
+    using IReader::IReader;
 
-void BlankReader::set_on_data_available_callback(
-        std::function<void()>) noexcept
-{
-}
-
-void BlankReader::unset_on_data_available_callback() noexcept
-{
-}
-
-utils::ReturnCode BlankReader::take(
-        std::unique_ptr<DataReceived>&) noexcept
-{
-    return utils::ReturnCode::RETCODE_NO_DATA;
-}
+    void take_and_forward() noexcept override;
+};
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_GENERICREADER_HPP_ */
+

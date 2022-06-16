@@ -23,7 +23,8 @@
 #include <mutex>
 #include <queue>
 
-#include <reader/implementations/auxiliar/BaseReader.hpp>
+#include <reader/auxiliar/GenericReader.hpp>
+#include <reader/IReader.hpp>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
@@ -31,54 +32,60 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-//! Data that has been sent to a Dummy Reader in order to simulate data reception
-struct DummyDataReceived
-{
-    //! Payload in a format of vector of bytes
-    std::vector<types::PayloadUnit> payload;
-
-    //! Guid of the source entity that has transmitted the data
-    types::Guid source_guid;
-};
-
 /**
  * Reader implementation that allows to simulate data reception
  */
-class DummyReader : public BaseReader
+template <>
+class GenericReader<types::ParticipantKind::dummy> : public IReader
 {
 public:
 
     //! Use parent constructors
-    using BaseReader::BaseReader;
+    using IReader::IReader;
+
+    /**
+     * @brief Take received messages and forward to readers
+     *
+     */
+    void take_and_forward() noexcept override;
+
+    void initialize(
+            uint32_t guid_idx);
 
     /**
      * @brief Simulate data reception on Reader
      *
-     * @param data : The data received (by simulation)
+     * @param message : The data received (by simulation)
      */
-    void simulate_data_reception(
-            DummyDataReceived data) noexcept;
+    void mock_data_reception(
+            const std::string& message);
+
+    //! Return number of enqueued messages
+    unsigned long get_enqueued() const;
+
+    //! Getter for notified_
+    unsigned long get_notified() const;
+
+    //! Getter for forwarded_
+    unsigned long get_forwarded() const;
 
 protected:
 
-    /**
-     * @brief Take specific method
-     *
-     * After \c take method, the data will be removed from \c data_to_send_ .
-     *
-     * @param data : oldest data to take
-     * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     */
-    utils::ReturnCode take_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    fastrtps::rtps::GUID_t mock_guid_;
 
-    //! Stores the data that must be retrieved with \c take() method
-    std::queue<DummyDataReceived> data_to_send_;
+    mutable std::mutex history_mutex_;
 
-    //! Guard access to \c data_to_send_
-    mutable std::recursive_mutex dummy_mutex_;
+    std::queue<std::string> enqueued_messages_;
+
+    std::atomic<unsigned long> notified_;
+
+    unsigned long forwarded_;
+
+    std::atomic_flag take_lock_;
+
 };
+
+using DummyReader = GenericReader<types::ParticipantKind::dummy>;
 
 } /* namespace core */
 } /* namespace ddsrouter */

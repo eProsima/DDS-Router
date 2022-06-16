@@ -13,10 +13,14 @@
 // limitations under the License.
 
 /**
- * @file BlankWriter.cpp
+ * @file IWriter.cpp
  */
 
-#include <writer/implementations/auxiliar/BlankWriter.hpp>
+#include <ddsrouter_utils/Log.hpp>
+#include <writer/IWriter.hpp>
+#include <reader/IReader.hpp>
+#include <ddsrouter_core/types/endpoint/BaseWriterReader.ipp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -24,18 +28,27 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-void BlankWriter::enable() noexcept
+IWriter::IWriter(
+        const ParticipantId& id,
+        const RealTopic& topic,
+        fastrtps::rtps::IPayloadPool* payload_pool)
+    : BaseWriterReader<EndpointKind::writer>(id, topic)
+    , payload_pool_(payload_pool)
 {
+    logDebug(DDSROUTER_BASEWRITER, "Creating Writer " << *this << ".");
 }
 
-void BlankWriter::disable() noexcept
+IWriter::~IWriter()
 {
+    logDebug(DDSROUTER_BASEWRITER, "Destroying Writer " << *this << ".");
 }
 
-utils::ReturnCode BlankWriter::write(
-        std::unique_ptr<DataReceived>&) noexcept
+std::ostream& operator <<(
+        std::ostream& os,
+        const IWriter& writer)
 {
-    return utils::ReturnCode::RETCODE_OK;
+    os << "Writer{" << writer.id().name() << ";" << writer.topic() << "}";
+    return os;
 }
 
 } /* namespace core */

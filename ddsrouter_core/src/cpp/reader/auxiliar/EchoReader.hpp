@@ -13,26 +13,22 @@
 // limitations under the License.
 
 /**
- * @file EchoWriter.cpp
+ * @file EchoReader.hpp
  */
 
-#include <writer/implementations/auxiliar/EchoWriter.hpp>
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_ECHOREADER_HPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_ECHOREADER_HPP_
+
+#include <reader/auxiliar/GenericReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-
-utils::ReturnCode EchoWriter::write_(
-        std::unique_ptr<DataReceived>& data) noexcept
-{
-    std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
-              << " in topic: " << topic_ << " the following payload: <" << data->payload << ">" << std::endl;
-
-    return utils::ReturnCode::RETCODE_OK;
-}
+using EchoReader = GenericReader<types::ParticipantKind::echo>;
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_ECHOREADER_HPP_ */

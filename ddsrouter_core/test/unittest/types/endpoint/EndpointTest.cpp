@@ -71,7 +71,7 @@ RealTopic random_topic(
 }
 
 // Get a random topic name
-EndpointKind random_endpoint_kind(
+EndpointKind random_valid_endpoint_kind(
         uint16_t seed = 0)
 {
     if (seed % 2)
@@ -115,7 +115,7 @@ TEST(EndpointTest, string_conversions)
  */
 TEST(EndpointTest, constructor)
 {
-    EndpointKind kind;
+    EndpointKind kind = random_valid_endpoint_kind();
     Guid guid;
     QoS qos = random_qos();
     RealTopic topic = random_topic();
@@ -165,7 +165,7 @@ TEST(EndpointTest, guid_getter)
 {
     QoS qos = random_qos();
     RealTopic topic = random_topic();
-    EndpointKind kind = random_endpoint_kind();
+    EndpointKind kind = random_valid_endpoint_kind();
 
     // Default guid
     {
@@ -195,7 +195,7 @@ TEST(EndpointTest, qos_getter)
 {
     Guid guid = random_valid_guid();
     RealTopic topic = random_topic();
-    EndpointKind kind = random_endpoint_kind();
+    EndpointKind kind = random_valid_endpoint_kind();
 
     // Random guids
     {
@@ -217,7 +217,7 @@ TEST(EndpointTest, qos_getter)
 TEST(EndpointTest, topic_getter)
 {
     Guid guid = random_valid_guid();
-    EndpointKind kind = random_endpoint_kind();
+    EndpointKind kind = random_valid_endpoint_kind();
     QoS qos = random_qos();
 
     // Random guids
@@ -243,7 +243,7 @@ TEST(EndpointTest, active_getter)
 {
     Guid guid = random_valid_guid();
     RealTopic topic = random_topic();
-    EndpointKind kind = random_endpoint_kind();
+    EndpointKind kind = random_valid_endpoint_kind();
     QoS qos = random_qos();
 
     // Default value
@@ -281,7 +281,7 @@ TEST(EndpointTest, active_setter)
 {
     Guid guid = random_valid_guid();
     RealTopic topic = random_topic();
-    EndpointKind kind = random_endpoint_kind();
+    EndpointKind kind = random_valid_endpoint_kind();
     QoS qos = random_qos();
 
     // Default value
