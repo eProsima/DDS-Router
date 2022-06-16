@@ -19,7 +19,8 @@
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
@@ -30,85 +31,141 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 DDSRouterReloadConfiguration::DDSRouterReloadConfiguration(
-        std::set<std::shared_ptr<FilterTopic>> allowlist,
-        std::set<std::shared_ptr<FilterTopic>> blocklist,
-        std::set<std::shared_ptr<RealTopic>> builtin_topics)
+        TopicKeySet<FilterTopic> allowlist,
+        TopicKeySet<FilterTopic> blocklist,
+        TopicKeySet<RealTopic> builtin_topics)
     : allowlist_(allowlist)
     , blocklist_(blocklist)
     , builtin_topics_(builtin_topics)
 {
 }
 
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::allowlist() const noexcept
+const TopicKeySet<FilterTopic>& DDSRouterReloadConfiguration::allowlist() const noexcept
 {
     return allowlist_;
 }
 
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::blocklist() const noexcept
+const TopicKeySet<FilterTopic>& DDSRouterReloadConfiguration::blocklist() const noexcept
 {
     return blocklist_;
 }
 
-std::set<std::shared_ptr<RealTopic>> DDSRouterReloadConfiguration::builtin_topics() const noexcept
+const TopicKeySet<RealTopic>& DDSRouterReloadConfiguration::builtin_topics() const noexcept
 {
     return builtin_topics_;
 }
 
-bool DDSRouterReloadConfiguration::is_valid(
-        utils::Formatter& error_msg) const noexcept
+TopicKeySet<RealTopic> DDSRouterReloadConfiguration::reload(
+        const DDSRouterReloadConfiguration& new_configuration)
 {
-    // Check Allow list topics
-    for (std::shared_ptr<FilterTopic> topic : allowlist_)
+    // Check if there are any new builtin topics
+    TopicKeySet<RealTopic> new_builtin_topics;
+    for (const auto& builtin_topic : builtin_topics_)
     {
-        if (!topic)
+        if (builtin_topics_.find(builtin_topic) == builtin_topics_.end())
         {
-            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in allowlist topics.");
-            error_msg << "nullptr Filter Topic in allowlist. ";
-            return false;
+            new_builtin_topics.insert(builtin_topic);
         }
+    }
 
-        if (!topic->is_valid())
+    if (new_builtin_topics.empty() and new_configuration.allowlist() ==
+            this->allowlist_ and new_configuration.blocklist() == this->blocklist_)
+    {
+        logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
+        return new_builtin_topics;
+    }
+
+    allowlist_ = new_configuration.allowlist();
+    blocklist_ = new_configuration.blocklist();
+
+    logDebug(DDSROUTER, "New DDS Router allowed topics configuration.");
+
+    return new_builtin_topics;
+}
+
+bool DDSRouterReloadConfiguration::register_topic(
+        const RealTopic& topic)
+{
+    if (std::find(std::begin(builtin_topics_), std::end(builtin_topics_), topic) == std::end(builtin_topics_))
+    {
+        builtin_topics_.insert(topic);
+        return true;
+    }
+    return false;
+}
+
+bool DDSRouterReloadConfiguration::is_topic_registered(
+        const RealTopic& topic) const noexcept
+{
+    return std::find(std::begin(builtin_topics_), std::end(builtin_topics_), topic) != std::end(builtin_topics_);
+}
+
+bool DDSRouterReloadConfiguration::is_topic_allowed(
+        const RealTopic& topic) const noexcept
+{
+    bool accepted = allowlist_.empty();
+
+    // Check if allowlist filter it (this will do anything if empty and accepted will be true)
+    for (const auto& filter : allowlist_)
+    {
+        if (filter.matches(topic))
         {
-            error_msg << "Invalid Filter Topic " << topic << " in allowlist. ";
+            accepted = true;
+            break;
+        }
+    }
+
+    // Check if it has not passed the allowlist so blocklist is skipped
+    if (!accepted)
+    {
+        return false;
+    }
+
+    // Allowlist passed, check blocklist
+    for (const auto& filter : blocklist_)
+    {
+        if (filter.matches(topic))
+        {
             return false;
         }
     }
 
-    // Check Block list topics
-    for (std::shared_ptr<FilterTopic> topic : blocklist_)
-    {
-        if (!topic)
-        {
-            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in blocklist topics.");
-            error_msg << "nullptr Filter Topic in blocklist. ";
-            return false;
-        }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Filter Topic " << topic << " in blocklist. ";
-            return false;
-        }
-    }
-
-    // Check Builtin list topics
-    for (std::shared_ptr<RealTopic> topic : builtin_topics_)
-    {
-        if (!topic)
-        {
-            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in builtin topics.");
-            error_msg << "nullptr Topic in builtin. ";
-            return false;
-        }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Topic " << topic << " in Builtin list. ";
-            return false;
-        }
-    }
-
+    // Blocklist passed, the topic is allowed
     return true;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const DDSRouterReloadConfiguration& cfg)
+{
+    os << "AllowedTopicList{";
+
+    // Allowed topics
+    os << "allowed(";
+    for (const auto& filter_topic : cfg.allowlist())
+    {
+        os << filter_topic << ",";
+    }
+    os << ")";
+
+    // Blocked topics
+    os << "blocked(";
+    for (const auto& filter_topic : cfg.blocklist())
+    {
+        os << filter_topic << ",";
+    }
+    os << ")";
+
+    // Builtin topics
+    os << "builtin_topics(";
+    for (const auto& topic : cfg.builtin_topics())
+    {
+        os << topic << ",";
+    }
+    os << ")";
+
+    os << "}";
+    return os;
 }
 
 } /* namespace configuration */

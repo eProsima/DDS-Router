@@ -35,11 +35,15 @@ class SimpleParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
-    //! TODO
+    /**
+     * @brief Single constructor
+     *
+     * @param id Participant ID
+     * @param domain_id DomainId
+     */
     DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::ParticipantKind& kind = types::ParticipantKind::simple_rtps,
-            const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
+            const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_);
 
     /**
      * @brief Return domain set in the configuration
@@ -48,17 +52,12 @@ public:
      *
      * @return DomainId
      */
-    DDSROUTER_CORE_DllAPI types::DomainId domain() const noexcept;
-
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const SimpleParticipantConfiguration& other) const noexcept;
-
-    DDSROUTER_CORE_DllAPI virtual bool is_valid(
-            utils::Formatter& error_msg) const noexcept override;
+    DDSROUTER_CORE_DllAPI const types::DomainId& domain() const noexcept;
 
 protected:
 
-    types::DomainId domain_;
+    //! Owning DomainId
+    const types::DomainId domain_;
 
     DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DOMAIN_ID_; // 0
 };

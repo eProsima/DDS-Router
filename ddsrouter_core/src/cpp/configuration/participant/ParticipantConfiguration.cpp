@@ -18,8 +18,7 @@
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,45 +28,18 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 ParticipantConfiguration::ParticipantConfiguration(
-        const ParticipantId& id,
-        const ParticipantKind& kind) noexcept
+        const ParticipantId& id)
     : id_(id)
-    , kind_(kind)
 {
 }
 
-ParticipantKind ParticipantConfiguration::kind() const noexcept
+ParticipantConfiguration::~ParticipantConfiguration()
 {
-    return kind_;
 }
 
-ParticipantId ParticipantConfiguration::id() const noexcept
+const ParticipantId& ParticipantConfiguration::id() const noexcept
 {
     return id_;
-}
-
-bool ParticipantConfiguration::is_valid(
-        utils::Formatter& error_msg) const noexcept
-{
-    if (!id_.is_valid())
-    {
-        error_msg << "Non valid Participant Id " << id_ << ". ";
-        return false;
-    }
-
-    if (kind_ == ParticipantKind::invalid)
-    {
-        error_msg << "Non valid Participant kind " << kind_ << ". ";
-        return false;
-    }
-
-    return true;
-}
-
-bool ParticipantConfiguration::operator ==(
-        const ParticipantConfiguration& other) const noexcept
-{
-    return this->id() == other.id() && this->kind() == other.kind();
 }
 
 } /* namespace configuration */

@@ -21,19 +21,28 @@
 
 #include <memory>
 #include <set>
+#include <vector>
 
 #include <ddsrouter_utils/Formatter.hpp>
 
+#include <ddsrouter_core/configuration/payload_pool/PoolConfig.h>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace configuration {
+
+using PayloadPoolIndexHasher = std::hash<std::string>;
+
+using PoolConfigT = fastrtps::rtps::recycle::PoolConfig;
+
+constexpr unsigned int MAX_THREADS = 1024;
+constexpr unsigned int DEFAULT_THREADS = 4;
 
 /**
  * This class joins every DDSRouter feature configuration and includes methods
@@ -44,30 +53,56 @@ class DDSRouterConfiguration : public DDSRouterReloadConfiguration
 public:
 
     /**
-     * TODO
+     * Constructor from a set of allowed, blocked and builtin topics
+     *
+     * @param allowlist Allowed topics, forwarded to DDSRouterReloadConfiguration
+     * @param blocklist Blocked topics, forwarded to DDSRouterReloadConfiguration
+     * @param builtin_topics Builtin topics, forwarded to DDSRouterReloadConfiguration
+     *
+     * @throw ConfigurationException if there is an error with the input parameters
      */
     DDSROUTER_CORE_DllAPI DDSRouterConfiguration(
-            std::set<std::shared_ptr<types::FilterTopic>> allowlist,
-            std::set<std::shared_ptr<types::FilterTopic>> blocklist,
-            std::set<std::shared_ptr<types::RealTopic>> builtin_topics,
-            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-            unsigned int number_of_threads = default_number_of_threads());
+            types::TopicKeySet<types::FilterTopic> allowlist,
+            types::TopicKeySet<types::FilterTopic> blocklist,
+            types::TopicKeySet<types::RealTopic> builtin_topics,
+            types::ParticipantKeySet<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+            unsigned int threads = DEFAULT_THREADS,
+            unsigned int payload_pool_granularity = fastrtps::rtps::recycle::DEFAULT_GRANULARITY,
+            PoolConfigT payload_pool_config = PoolConfigT());
 
     /**
-     * @brief Return a set with the different \c ParticipantConfigurations in the yaml
+     * @brief Return a unique set with the different \c ParticipantConfigurations in the yaml
      *
      * Every participant configuration is an object of the specific class set in \c types::ParticipantKind .
      *
-     * @return Set of \c ParticipantConfigurations
+     * @return Set of not owned const \c ParticipantConfigurations instances
      */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const
-    noexcept;
+    DDSROUTER_CORE_DllAPI types::ParticipantKeySet<const ParticipantConfiguration*> participants_configurations() const;
 
-    DDSROUTER_CORE_DllAPI bool is_valid(
-            utils::Formatter& error_msg) const noexcept override;
+    /**
+     * @brief Return the number of threads
+     *
+     */
+    DDSROUTER_CORE_DllAPI unsigned int threads() const noexcept;
 
-    DDSROUTER_CORE_DllAPI void reload(
-            const DDSRouterReloadConfiguration& new_configuration);
+    /**
+     * @brief Return the payload pool granularity
+     *
+     */
+    DDSROUTER_CORE_DllAPI unsigned int payload_pool_granularity() const noexcept;
+
+    /**
+     * @brief Return a const reference to the pool configuration
+     *
+     */
+    DDSROUTER_CORE_DllAPI const PoolConfigT& payload_pool_configuration() const noexcept;
+
+    /**
+     * @brief Return a string index used to access a payload pool object
+     *
+     */
+    DDSROUTER_CORE_DllAPI std::string get_payload_pool_index(
+            const std::string& original_index) const noexcept;
 
     DDSROUTER_CORE_DllAPI unsigned int number_of_threads() const noexcept;
 
@@ -75,14 +110,25 @@ public:
 
 protected:
 
-    static bool check_correct_configuration_object_(
-            const std::shared_ptr<ParticipantConfiguration> configuration);
+    //! Owning set of participants configurations
+    types::ParticipantKeySet<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
 
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
+    //! Number of threads in the thread pool
+    unsigned int threads_;
 
-    unsigned int number_of_threads_;
+    //! Payload pool granularity
+    unsigned int payload_pool_granularity_;
 
-    static const unsigned int DEFAULT_NUMBER_OF_THREADS_;
+    //! Payload pool configuration
+    PoolConfigT payload_pool_config_;
+
+    //! Hasher functor to map topic to its associated payload pool
+    PayloadPoolIndexHasher payload_pool_index_hasher_;
+
+private:
+
+    //! Internal throwing validator
+    void check_valid_() const;
 };
 
 } /* namespace configuration */

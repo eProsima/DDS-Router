@@ -24,11 +24,9 @@
 
 #include <ddsrouter_utils/Formatter.hpp>
 
-#include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,46 +37,97 @@ namespace configuration {
  * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-class DDSRouterReloadConfiguration : public BaseConfiguration
+class DDSRouterReloadConfiguration
 {
 public:
 
     /**
-     * TODO
+     * @brief Constructor from a set of allowed, blocked and builtin topics
+     *
+     * @param allowlist Allowed topics
+     * @param blocklist Blocked topics
+     * @param builtin_topics Builtin topics
+     *
      */
     DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration(
-            std::set<std::shared_ptr<types::FilterTopic>> allowlist,
-            std::set<std::shared_ptr<types::FilterTopic>> blocklist,
-            std::set<std::shared_ptr<types::RealTopic>> builtin_topics);
+            types::TopicKeySet<types::FilterTopic> allowlist,
+            types::TopicKeySet<types::FilterTopic> blocklist,
+            types::TopicKeySet<types::RealTopic> builtin_topics);
 
     /**
      * @brief Return a set with the topics allowed in the configuration
      *
-     * @return Set of filters to get allowed topics
+     * @return Const reference of allowed topics
      */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> allowlist() const noexcept;
+    DDSROUTER_CORE_DllAPI const types::TopicKeySet<types::FilterTopic>& allowlist() const noexcept;
 
     /**
      * @brief Return a set with the topics blocked in the configuration
      *
-     * @return Set of filters to get blocked topics
+     * @return Const reference of blocked topics
      */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> blocklist() const noexcept;
+    DDSROUTER_CORE_DllAPI const types::TopicKeySet<types::FilterTopic>& blocklist() const noexcept;
 
     /**
-     * TODO
+     *@brief Return a set of all registered topics
+     *
+     * @return Const reference of builtin topics
      */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::RealTopic>> builtin_topics() const noexcept;
+    DDSROUTER_CORE_DllAPI const types::TopicKeySet<types::RealTopic>& builtin_topics() const noexcept;
 
-    DDSROUTER_CORE_DllAPI bool is_valid(
-            utils::Formatter& error_msg) const noexcept override;
+    /**
+     * @brief Register a new topic
+     *
+     * @return Set of filters to get blocked topics
+     */
+    DDSROUTER_CORE_DllAPI bool register_topic(
+            const types::RealTopic& topic);
+
+    /**
+     * @brief Check topic registration
+     *
+     * @return whether a topic has been registered.
+     */
+    DDSROUTER_CORE_DllAPI bool is_topic_registered(
+            const types::RealTopic& topic) const noexcept;
+
+    /**
+     * @brief Overwrite topics sets from an external configuration
+     *
+     */
+    DDSROUTER_CORE_DllAPI types::TopicKeySet<types::RealTopic> reload(
+            const DDSRouterReloadConfiguration& new_configuration);
+
+    /**
+     * @brief Return whether a topic is allowed.
+     *
+     */
+    DDSROUTER_CORE_DllAPI bool is_topic_allowed(
+            const types::RealTopic& topic) const noexcept;
+
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const DDSRouterReloadConfiguration& cfg);
 
 protected:
 
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist_;
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist_;
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics_;
+    //! Owned allow list of Filter Topics
+    types::TopicKeySet<types::FilterTopic> allowlist_;
+
+    //! Owned block list of Filter Topics
+    types::TopicKeySet<types::FilterTopic> blocklist_;
+
+    //! Owned list of Real Topics
+    types::TopicKeySet<types::RealTopic> builtin_topics_;
 };
+
+//! \c AllowedTopicList to stream serializator
+std::ostream& operator <<(
+        std::ostream& os,
+        const DDSRouterReloadConfiguration& cfg);
+
 
 } /* namespace configuration */
 } /* namespace core */

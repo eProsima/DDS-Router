@@ -22,8 +22,8 @@
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
@@ -33,111 +33,83 @@ namespace configuration {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const unsigned int DDSRouterConfiguration::DEFAULT_NUMBER_OF_THREADS_ = 12;
 
 DDSRouterConfiguration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>> allowlist,
-        std::set<std::shared_ptr<FilterTopic>> blocklist,
-        std::set<std::shared_ptr<RealTopic>> builtin_topics,
-        std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-        unsigned int number_of_threads /* = default_number_of_threads() */)
-    : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
-    , participants_configurations_(participants_configurations)
-    , number_of_threads_(number_of_threads)
+        TopicKeySet<FilterTopic> allowlist,
+        TopicKeySet<FilterTopic> blocklist,
+        TopicKeySet<RealTopic> builtin_topics,
+        ParticipantKeySet<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+        unsigned int threads,
+        unsigned int payload_pool_granularity,
+        PoolConfigT payload_pool_config)
+    : DDSRouterReloadConfiguration (std::move(allowlist), std::move(blocklist), std::move(builtin_topics))
+    , participants_configurations_(std::move(participants_configurations))
+    , threads_(threads)
+    , payload_pool_granularity_(payload_pool_granularity)
+    , payload_pool_config_(payload_pool_config)
 {
+    this->check_valid_();
 }
 
-std::set<std::shared_ptr<ParticipantConfiguration>> DDSRouterConfiguration::participants_configurations() const noexcept
+types::ParticipantKeySet<const ParticipantConfiguration*> DDSRouterConfiguration::participants_configurations() const
 {
-    return participants_configurations_;
-}
+    types::ParticipantKeySet<const ParticipantConfiguration*> raw_participants_configurations;
 
-bool DDSRouterConfiguration::is_valid(
-        utils::Formatter& error_msg) const noexcept
-{
-    // Check Allow list topics
-    if (!DDSRouterReloadConfiguration::is_valid(error_msg))
+    for (const auto& configuration : participants_configurations_)
     {
-        return false;
+        raw_participants_configurations.insert(configuration.get());
     }
 
+    return raw_participants_configurations;
+}
+
+DDSROUTER_CORE_DllAPI void DDSRouterConfiguration::check_valid_() const
+{
     // Check there are at least two participants
     if (participants_configurations_.size() < 2)
     {
-        error_msg << "There must be at least 2 participants. ";
-        return false;
+        throw utils::ConfigurationException( utils::Formatter() << "There must be at least 2 participants. ");
     }
 
-    // Check Participant Configurations AND
-    // check Participant Configuration IDs are not repeated
-    std::set<ParticipantId> ids;
-    for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations_)
+    if (threads_ > MAX_THREADS)
     {
-        // Check configuration is not null
-        if (!configuration)
-        {
-            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in participant configurations.");
-            error_msg << "nullptr ParticipantConfiguration in participant configurations. ";
-            return false;
-        }
-
-        // Check configuration is valid
-        if (!configuration->is_valid(error_msg))
-        {
-            error_msg << "Error in Participant " << configuration->id() << ". ";
-            return false;
-        }
-
-        // Check that the configuration is of type required
-        if (!check_correct_configuration_object_(configuration))
-        {
-            error_msg << "Participant " << configuration->id() << " is not of correct Configuration class. ";
-            return false;
-        }
-
-        // Store every id in a set to see if there are repetitions
-        ids.insert(configuration->id());
+        throw utils::ConfigurationException(
+                  utils::Formatter() << "Maximum number of threads " << MAX_THREADS << " exceeded: " <<
+                      threads_);
     }
 
-    // If the number of ids are not equal the number of configurations, is because they are repeated
-    if (ids.size() != participants_configurations_.size())
+    if (threads_ == 0)
     {
-        error_msg << "Participant ids are not unique. ";
-        return false;
+        throw utils::ConfigurationException(utils::Formatter() << "Expected non-zero threads");
     }
-
-    return true;
 }
 
-void DDSRouterConfiguration::reload(
-        const DDSRouterReloadConfiguration& new_configuration)
+DDSROUTER_CORE_DllAPI unsigned int DDSRouterConfiguration::threads() const noexcept
 {
-    this->allowlist_ = new_configuration.allowlist();
-    this->blocklist_ = new_configuration.blocklist();
-    this->builtin_topics_ = new_configuration.builtin_topics();
+    return threads_;
 }
 
-template <typename T>
-bool check_correct_configuration_object_by_type_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
+DDSROUTER_CORE_DllAPI unsigned int DDSRouterConfiguration::payload_pool_granularity() const noexcept
 {
-    return nullptr != std::dynamic_pointer_cast<T>(configuration);
+    return payload_pool_granularity_;
 }
 
-bool DDSRouterConfiguration::check_correct_configuration_object_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
+DDSROUTER_CORE_DllAPI const fastrtps::rtps::recycle::PoolConfig& DDSRouterConfiguration::payload_pool_configuration()
+const noexcept
 {
-    switch (configuration->kind())
+    return payload_pool_config_;
+}
+
+DDSROUTER_CORE_DllAPI std::string DDSRouterConfiguration::get_payload_pool_index(
+        const std::string& original_index) const noexcept
+{
+    if (payload_pool_granularity_ == 0)
     {
-        case ParticipantKind::simple_rtps:
-            return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
-
-        case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan:
-            return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
-
-        default:
-            return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
+        return original_index;
+    }
+    else
+    {
+        return std::to_string(payload_pool_index_hasher_(original_index) % payload_pool_granularity_) + "_h";
     }
 }
 

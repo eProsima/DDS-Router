@@ -23,11 +23,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
     )
 
 set(TEST_LIST

@@ -17,6 +17,7 @@
  */
 
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
 namespace eprosima {
@@ -30,41 +31,15 @@ const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
-        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
-    : ParticipantConfiguration(id, kind)
+        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */)
+    : ParticipantConfiguration(id)
     , domain_(domain_id)
 {
 }
 
-bool SimpleParticipantConfiguration::is_valid(
-        utils::Formatter& error_msg) const noexcept
-{
-    if (!ParticipantConfiguration::is_valid(error_msg))
-    {
-        return false;
-    }
-
-    if (!domain_.is_valid())
-    {
-        error_msg << "Incorrect domain " << domain_ << ". ";
-        return false;
-    }
-
-    return true;
-}
-
-DomainId SimpleParticipantConfiguration::domain() const noexcept
+const DomainId& SimpleParticipantConfiguration::domain() const noexcept
 {
     return domain_;
-}
-
-bool SimpleParticipantConfiguration::operator ==(
-        const SimpleParticipantConfiguration& other) const noexcept
-{
-    return ParticipantConfiguration::operator ==(
-        other) &&
-           this->domain_ == other.domain_;
 }
 
 } /* namespace configuration */

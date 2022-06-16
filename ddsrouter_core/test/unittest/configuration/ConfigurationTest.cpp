@@ -22,7 +22,7 @@
 #include <ddsrouter_utils/exception/utils::ConfigurationException.hpp>
 #include <ddsrouter_core/types/configuration_tags.hpp>
 #include <ddsrouter_core/types/RawConfiguration.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -104,7 +104,7 @@ bool topic_in_list(
  * Check if a topic is inside a list returned by real_topics DDSRouter methods
  */
 bool topic_in_real_list(
-        std::set<RealTopic> list,
+        TopicKeySet<RealTopic> list,
         RealTopic compared_topic)
 {
     for (RealTopic topic : list)
@@ -433,14 +433,10 @@ TEST(ConfigurationTest, real_topics)
     uint16_t real_topics = 0;
     for (auto random_topic : random_topic_names())
     {
-        bool real_topic = RealTopic::is_real_topic(random_topic.first, random_topic.second);
+        RealTopic topic(random_topic.first, random_topic.second);
 
-        if (real_topic)
-        {
-            ++real_topics;
-            RealTopic topic(random_topic.first, random_topic.second);
-            EXPECT_TRUE(topic_in_real_list(result5, topic)) << topic;
-        }
+        ++real_topics;
+        EXPECT_TRUE(topic_in_real_list(result5, topic)) << topic;
     }
     EXPECT_EQ(real_topics, result5.size());
 }

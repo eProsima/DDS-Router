@@ -19,10 +19,9 @@
 #ifndef _DDSROUTERCORE_CONFIGURATION_PARTICIPANT_PARTICIPANTCONFIGURATION_HPP_
 #define _DDSROUTERCORE_CONFIGURATION_PARTICIPANT_PARTICIPANTCONFIGURATION_HPP_
 
-#include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_utils/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,48 +29,33 @@ namespace core {
 namespace configuration {
 
 /**
- * TODO
+ * Base class for participants configurations
  */
-class ParticipantConfiguration : public BaseConfiguration
+class ParticipantConfiguration
 {
 public:
 
     /**
-     * TODO
+     * @brief Single constructor
+     *
+     * @param id Participant ID
      */
     DDSROUTER_CORE_DllAPI ParticipantConfiguration(
-            const types::ParticipantId& id,
-            const types::ParticipantKind& kind) noexcept;
+            const types::ParticipantId& id);
 
-    //! Participant Kind associated with this configuration
-    DDSROUTER_CORE_DllAPI types::ParticipantKind kind() const noexcept;
-
-    //! Participant Id associated with this configuration
-    DDSROUTER_CORE_DllAPI types::ParticipantId id() const noexcept;
+    virtual ~ParticipantConfiguration();
 
     /**
-     * @brief Equal comparator
+     * @brief Return Participant getter
      *
-     * This comparator should check if the id is equal to the other Configuration and check the yaml equality.
-     *
-     * @todo: check equality yaml and not identity yaml.
-     *
-     * @param [in] other: ParticipantConfiguration to compare.
-     * @return True if both configurations are the same, False otherwise.
+     * @return Const reference of participant id
      */
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const ParticipantConfiguration& other) const noexcept;
-
-    DDSROUTER_CORE_DllAPI virtual bool is_valid(
-            utils::Formatter& error_msg) const noexcept override;
+    DDSROUTER_CORE_DllAPI const types::ParticipantId& id() const noexcept;
 
 protected:
 
-    //! Participant Id associated with this configuration
+    //! Owning Participant Id associated with this configuration
     const types::ParticipantId id_;
-
-    //! Participant Kind of the Participant that this configuration refers.
-    const types::ParticipantKind kind_;
 };
 
 } /* namespace configuration */
