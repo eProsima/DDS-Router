@@ -17,18 +17,15 @@
  *
  */
 
-#include <set>
+#include <core/DDSRouterImpl.hpp>
 
-#include <ddsrouter_utils/exception/UnsupportedException.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/exception/InconsistencyException.hpp>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
+#include <ddsrouter_core/types/endpoint/BaseWriterReader.ipp>
 
-#include <core/DDSRouterImpl.hpp>
-#include <efficiency/FastPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -36,43 +33,31 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-// TODO: Use initial topics to start execution and start bridges
-
 DDSRouterImpl::DDSRouterImpl(
         const configuration::DDSRouterConfiguration& configuration)
-    : payload_pool_(new FastPayloadPool())
-    , participants_database_(new ParticipantsDatabase())
-    , discovery_database_(new DiscoveryDatabase())
-    , configuration_(configuration)
-    , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads()))
+    : router_configuration_(configuration)
+    , workers_thread_pool_(data_forward_queue_, configuration.threads())
+    , router_enabled_(false)
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
-    // Check that the configuration is correct
-    utils::Formatter error_msg;
-    if (!configuration_.is_valid(error_msg))
-    {
-        throw utils::ConfigurationException(
-                  utils::Formatter() <<
-                      "Configuration for DDS Router is invalid: " << error_msg);
-    }
-
     // Add callback to be called by the discovery database when an Endpoint is discovered
-    discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
+    discovery_database_.add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
             std::placeholders::_1));
 
-    // Init topic allowed
-    init_allowed_topics_();
     // Load Participants
     init_participants_();
-    // Create Bridges
-    init_bridges_();
+
+    for (const auto& topic : router_configuration_.builtin_topics())
+    {
+        this->register_topic_(topic);
+    }
+
     // Init discovery database
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
-    discovery_database_->enable();
+    discovery_database_.enable();
 
 
     logDebug(DDSROUTER, "DDS Router created.");
@@ -83,27 +68,20 @@ DDSRouterImpl::~DDSRouterImpl()
     logDebug(DDSROUTER, "Destroying DDS Router.");
 
     // Stop all communications
-    stop_();
-
-    // Destroy Bridges, so Writers and Readers are destroyed before the Databases
-    bridges_.clear();
+    stop();
 
     // Destroy Participants
-    while (!participants_database_->empty())
+    for (auto participant : participants_iterable_)
     {
-        auto participant = participants_database_->pop_();
+        auto owned_participant = participants_registry_.pop_participant(participant->id().name());
 
         if (!participant)
         {
             logDevError(DDSROUTER, "Error poping participant from database.");
         }
-        else
-        {
-            participant_factory_.remove_participant(participant);
-        }
-    }
 
-    // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
+        owned_participant.reset(); // Destructor invoked
+    }
 
     logDebug(DDSROUTER, "DDS Router destroyed.");
 }
@@ -111,129 +89,82 @@ DDSRouterImpl::~DDSRouterImpl()
 utils::ReturnCode DDSRouterImpl::reload_configuration(
         const configuration::DDSRouterReloadConfiguration& new_configuration)
 {
-    // Check that the configuration is correct
-    utils::Formatter error_msg;
-    if (!new_configuration.is_valid(error_msg))
-    {
-        throw utils::ConfigurationException(
-                  utils::Formatter() <<
-                      "Configuration for Reload DDS Router is invalid: " << error_msg);
-    }
-
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    if (enabled_.load())
+    utils::ReturnCode return_code = utils::ReturnCode::RETCODE_NO_DATA;
+
+    auto new_builtin_topics = router_configuration_.reload(new_configuration);
+
+    // 1. Register all new topics
+    for (const auto& new_topic : new_builtin_topics)
     {
-        logDebug(DDSROUTER, "Reloading DDS Router configuration...");
+        this->register_topic_(new_topic);
 
-        // Load new configuration and check it is okey
-        AllowedTopicList new_allowed_topic_list(
-            new_configuration.allowlist(),
-            new_configuration.blocklist());
+        return_code = utils::ReturnCode::RETCODE_OK;
+    }
 
-        // Check if there are any new builtin topics
-        std::set<RealTopic> new_builtin_topics;
-        for (auto builtin_topic : new_configuration.builtin_topics())
+    // 2. Allow and block lists may have changed, so enable/disable topics accordingly
+    // No effects will happen if already enabled/disabled
+    for (const auto& topic : router_configuration_.builtin_topics())
+    {
+        if (router_configuration_.is_topic_allowed(topic))
         {
-            if (current_topics_.find(*builtin_topic) == current_topics_.end())
+
+            // Topic allowed:
+
+            if (this->enable_topic_(topic) == utils::ReturnCode::RETCODE_OK)
             {
-                new_builtin_topics.insert(*builtin_topic);
-            }
-        }
 
-        // Check if it should change or is the same configuration
-        if (new_allowed_topic_list == allowed_topics_ && new_builtin_topics.empty())
-        {
-            logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
-            return utils::ReturnCode::RETCODE_NO_DATA;
-        }
+                logDebug(DDSROUTER, "Enabled previously disabled topic: " << topic << ".");
 
-        // Set new Allowed list
-        allowed_topics_ = new_allowed_topic_list;
+                return_code = utils::ReturnCode::RETCODE_OK;
 
-        logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
-
-        // It must change the configuration. Check every topic discovered and active if needed.
-        for (auto& topic_it : current_topics_)
-        {
-            // If topic is active and it is blocked, deactivate it
-            if (topic_it.second)
-            {
-                if (!allowed_topics_.is_topic_allowed(topic_it.first))
-                {
-                    deactivate_topic_(topic_it.first);
-                }
             }
             else
             {
-                // If topic is not active and it is allowed, activate it
-                if (allowed_topics_.is_topic_allowed(topic_it.first))
-                {
-                    activate_topic_(topic_it.first);
-                }
+
+                logDebug(DDSROUTER, "Topic was already enabled: " << topic << ".");
+            }
+
+        }
+        else
+        {
+
+            // Topic not allowed
+
+            if (this->disable_topic_(topic) == utils::ReturnCode::RETCODE_OK)
+            {
+
+                logDebug(DDSROUTER, "Disabled previously enabled topic: " << topic << ".");
+
+                return_code = utils::ReturnCode::RETCODE_OK;
+
+            }
+            else
+            {
+
+                logDebug(DDSROUTER, "Topic was already disabled: " << topic << ".");
             }
         }
-
-        // Create bridges for newly added builtin topics
-        for (RealTopic topic : new_builtin_topics)
-        {
-            discovered_topic_(topic);
-        }
-
-        configuration_.reload(new_configuration);
-
-        return utils::ReturnCode::RETCODE_OK;
     }
-    else
-    {
-        return utils::ReturnCode::RETCODE_NOT_ENABLED;
-    }
+
+    return return_code;
 }
 
 utils::ReturnCode DDSRouterImpl::start() noexcept
 {
-    utils::ReturnCode ret = start_();
-    if (ret == utils::ReturnCode::RETCODE_OK)
-    {
-        logInfo(DDSROUTER, "Starting DDS Router.");
-    }
-    else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
-    {
-        logInfo(DDSROUTER, "Trying to start an enabled DDS Router.");
-    }
-
-    return ret;
-}
-
-utils::ReturnCode DDSRouterImpl::stop() noexcept
-{
-    utils::ReturnCode ret = stop_();
-    if (ret == utils::ReturnCode::RETCODE_OK)
-    {
-        logInfo(DDSROUTER, "Stopping DDS Router.");
-    }
-    else if (ret == utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET)
-    {
-        logInfo(DDSROUTER, "Trying to stop a not enabled DDS Router.");
-    }
-
-    return ret;
-}
-
-utils::ReturnCode DDSRouterImpl::start_() noexcept
-{
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    if (!enabled_.load())
+    if (!router_enabled_.load())
     {
-        enabled_.store(true);
+        workers_thread_pool_.start_workers();
 
         logInfo(DDSROUTER, "Starting DDS Router.");
 
-        // Enable thread pool
-        thread_pool_->enable();
+        enable_all_topics_();
 
-        activate_all_topics_();
+        router_enabled_.store(true);
+
         return utils::ReturnCode::RETCODE_OK;
     }
     else
@@ -243,20 +174,20 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
     }
 }
 
-utils::ReturnCode DDSRouterImpl::stop_() noexcept
+utils::ReturnCode DDSRouterImpl::stop() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    if (enabled_.load())
+    if (router_enabled_.load())
     {
-        enabled_.store(false);
-
         logInfo(DDSROUTER, "Stopping DDS Router.");
 
-        // Disable thread pool so tasks running finish and new tasks are not taken by threads
-        thread_pool_->disable();
+        disable_all_topics_();
 
-        deactivate_all_topics_();
+        workers_thread_pool_.stop_workers();
+
+        router_enabled_.store(false);
+
         return utils::ReturnCode::RETCODE_OK;
     }
     else
@@ -266,96 +197,87 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
     }
 }
 
-void DDSRouterImpl::init_allowed_topics_()
-{
-    allowed_topics_ = AllowedTopicList(
-        configuration_.allowlist(),
-        configuration_.blocklist());
-
-    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
-}
-
 void DDSRouterImpl::init_participants_()
 {
-    for (std::shared_ptr<configuration::ParticipantConfiguration> participant_config :
-            configuration_.participants_configurations())
-    {
-        std::shared_ptr<IParticipant> new_participant;
+    // If DDS Router has not two or more Participants configured, it should fail
 
+    auto participants_configurations = router_configuration_.participants_configurations();
+
+    for (const auto& participant_config : participants_configurations)
+    {
         // Create participant
         // This should not be in try catch case as if it fails the whole init must fail
-        new_participant =
-                participant_factory_.create_participant(
-            participant_config,
-            payload_pool_,
-            discovery_database_);
 
-        // create_participant should throw an exception in fail, never return nullptr
-        if (!new_participant || !new_participant->id().is_valid() ||
-                new_participant->kind() == ParticipantKind::invalid)
-        {
-            // Failed to create participant
-            throw utils::InitializationException(utils::Formatter()
-                          << "Failed to create creating Participant " << participant_config->id());
-        }
-
-        logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-                                                           << " and kind " << new_participant->kind() << ".");
-
-        // Add this participant to the database. If it is repeated it will cause an exception
-        try
-        {
-            participants_database_->add_participant_(
-                new_participant->id(),
-                new_participant);
-        }
-        catch (const utils::InconsistencyException& )
-        {
-            throw utils::ConfigurationException(utils::Formatter()
-                          << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
-        }
-    }
-
-    // If DDS Router has not two or more Participants configured, it should fail
-    if (participants_database_->size() < 2)
-    {
-        logError(DDSROUTER, "At least two Participants are required to initialize a DDS Router.");
-        throw utils::InitializationException(utils::Formatter()
-                      << "DDS Router requires at least 2 Participants to start.");
+        participants_iterable_.insert( participants_registry_.add_participant( *participant_config,
+                discovery_database_));
     }
 }
 
-void DDSRouterImpl::init_bridges_()
+void DDSRouterImpl::register_topic_(
+        const RealTopic& topic)
 {
-    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics())
+
+    // Must be first registered in the configuration
+    if (not router_configuration_.is_topic_registered(topic))
     {
-        discovered_topic_(*topic);
-    }
-}
-
-void DDSRouterImpl::discovered_topic_(
-        const RealTopic& topic) noexcept
-{
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
-    logInfo(DDSROUTER, "Discovered topic: " << topic << ".");
-
-    // Check if topic already exists
-    auto find_it = current_topics_.find(topic);
-    if (find_it != current_topics_.end())
-    {
-        // If it already exists, do nothing
-        return;
+        throw utils::InconsistencyException("Cannot call register_topic_ before registration into configuration");
     }
 
-    // Add topic to current_topics as non activated
-    current_topics_.emplace(topic, false);
+    logDebug(DDSROUTER, "Registering topic into participants: " << topic << ".");
 
-    // If Router is enabled and topic allowed, activate it
-    if (enabled_.load() && allowed_topics_.is_topic_allowed(topic))
+    std::lock_guard<std::recursive_mutex> lck(mutex_);
+
+    // 1. Create (if not created before) payload pool for this topic
+    auto payload_pool = this->payload_pool_registry_.get(
+        router_configuration_.get_payload_pool_index(topic.name()),
+        router_configuration_.payload_pool_configuration());
+
+    if (!payload_pool)
     {
-        activate_topic_(topic);
+        throw utils::InconsistencyException("Payload pool registry returned null pool");
     }
+
+    if (payload_pool->payload_pool_allocated_size() == 0)
+    {
+        payload_pool->reserve_history(router_configuration_.payload_pool_configuration(), false);
+    }
+
+    // 2. Create all writers and readers for this topic, iterating over all participants
+    logDebug(DDSROUTER, "Creating all writers of " << topic << " for all participants");
+
+    std::vector<IWriter*> topic_writers;
+    std::vector<IReader*> topic_readers;
+
+    for (auto participant : participants_iterable_)
+    {
+
+        auto writer_reader_pair = participant->register_topic(topic, payload_pool, data_forward_queue_);
+
+        topic_writers.push_back( writer_reader_pair.first );
+        topic_readers.push_back( writer_reader_pair.second );
+    }
+
+
+    // 3. Bind all distinct writers and readers for this topic
+    logDebug(DDSROUTER, "Binding writers and readers for topic " << topic);
+
+    for (auto writer : topic_writers)
+    {
+        for (auto reader : topic_readers)
+        {
+            if (writer->id() != reader->id())
+            {
+                reader->register_writer(writer);
+            }
+        }
+    }
+
+    // 4. If Router is enabled and topic allowed, enable it
+    if (router_enabled_.load() && router_configuration_.is_topic_allowed(topic))
+    {
+        this->enable_topic_(topic);
+    }
+
 }
 
 void DDSRouterImpl::discovered_endpoint_(
@@ -363,93 +285,80 @@ void DDSRouterImpl::discovered_endpoint_(
 {
     logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
-    discovered_topic_(endpoint.topic());
-}
+    // Following actions can be called by an uncertain thread so protect
+    std::lock_guard<std::recursive_mutex> lck(mutex_);
 
-void DDSRouterImpl::create_new_bridge(
-        const RealTopic& topic,
-        bool enabled /*= false*/) noexcept
-{
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-
-    logInfo(DDSROUTER, "Creating Bridge for topic: " << topic << ".");
-
-    try
+    if (this->router_configuration_.register_topic(endpoint.topic()))
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, thread_pool_, enabled);
-    }
-    catch (const utils::InitializationException& e)
-    {
-        logError(DDSROUTER,
-                "Error creating Bridge for topic " << topic <<
-                ". Error code:" << e.what() << ".");
-    }
-}
+        // Topic inserted
 
-void DDSRouterImpl::activate_topic_(
-        const RealTopic& topic) noexcept
-{
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+        logDebug(DDSROUTER, "New topic registered: " << endpoint.topic());
 
-    logInfo(DDSROUTER, "Activating topic: " << topic << ".");
+        this->register_topic_(endpoint.topic());
 
-    // Modify current_topics_ and set this topic as active
-    current_topics_[topic] = true;
-
-    // Enable bridge. In case it is already enabled nothing should happen
-    auto it_bridge = bridges_.find(topic);
-
-    if (it_bridge == bridges_.end())
-    {
-        // The Bridge did not exist
-        create_new_bridge(topic, true);
     }
     else
     {
-        // The Bridge already exists
-        it_bridge->second->enable();
+        logDebug(DDSROUTER, "Topic already registered, skipped register: " << endpoint.topic());
     }
 }
 
-void DDSRouterImpl::deactivate_topic_(
+utils::ReturnCode DDSRouterImpl::enable_topic_(
         const RealTopic& topic) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    utils::ReturnCode return_code = utils::ReturnCode::RETCODE_NOT_ENABLED;
 
-    logInfo(DDSROUTER, "Deactivating topic: " << topic << ".");
+    logDebug(DDSROUTER, "Sending enable topic to participants: " << topic);
 
-    // Modify current_topics_ and set this topic as non active
-    current_topics_[topic] = false;
-
-    // Disable bridge. In case it is already disabled nothing should happen
-    auto it_bridge = bridges_.find(topic);
-
-    if (it_bridge != bridges_.end())
+    for (auto participant : participants_iterable_)
     {
-        // The Bridge already exists
-        it_bridge->second->disable();
+        if (participant->enable_topic(topic) == utils::ReturnCode::RETCODE_OK)
+        {
+            return_code = utils::ReturnCode::RETCODE_OK;
+        }
     }
-    // If the Bridge does not exist, is not need to create it
+
+    logDebug(DDSROUTER, "Any enabled ? " << return_code);
+
+    return return_code;
 }
 
-void DDSRouterImpl::activate_all_topics_() noexcept
+utils::ReturnCode DDSRouterImpl::disable_topic_(
+        const RealTopic& topic) noexcept
 {
-    for (auto it : current_topics_)
+    utils::ReturnCode return_code = utils::ReturnCode::RETCODE_NOT_ENABLED;
+
+    logDebug(DDSROUTER, "Sending disable topic to participants: " << topic);
+
+    for (auto participant : participants_iterable_)
     {
-        // Activate all topics allowed
-        if (allowed_topics_.is_topic_allowed(it.first))
+        if (participant->disable_topic(topic) == utils::ReturnCode::RETCODE_OK)
         {
-            activate_topic_(it.first);
+            return_code = utils::ReturnCode::RETCODE_OK;
+        }
+    }
+
+    logDebug(DDSROUTER, "Any disabled ? " << return_code);
+
+    return return_code;
+}
+
+void DDSRouterImpl::enable_all_topics_() noexcept
+{
+    for (const auto& topic : router_configuration_.builtin_topics())
+    {
+        if (router_configuration_.is_topic_allowed(topic))
+        {
+            this->enable_topic_(topic);
         }
     }
 }
 
-void DDSRouterImpl::deactivate_all_topics_() noexcept
+void DDSRouterImpl::disable_all_topics_() noexcept
 {
-    for (auto it : current_topics_)
+    for (const auto& topic : router_configuration_.builtin_topics())
     {
-        // Deactivate all topics
-        deactivate_topic_(it.first);
+        this->disable_topic_(topic);
     }
 }
 

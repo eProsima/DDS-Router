@@ -22,7 +22,7 @@
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/endpoint/QoS.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 using namespace eprosima::ddsrouter::test;
 using namespace eprosima::ddsrouter::utils;

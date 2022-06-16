@@ -35,7 +35,7 @@ namespace core {
 class DDSRouterImpl;
 
 /**
- * TODO
+ * DDSRouter instance to forward messages from Readers to Writers according to topics and configurations.
  */
 class DDSRouter
 {
@@ -46,8 +46,8 @@ public:
      *
      * Initialize a whole DDSRouter:
      * - Create its associated AllowedTopicList
-     * - Create Participants and add them to \c ParticipantsDatabase
-     * - Create the Bridges for RealTopics as disabled (TODO: remove when discovery is ready)
+     * - Create Participants and add them to \c ParticipantsRegistry
+     * - Create the Writers and Readers for RealTopics as disabled
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *
@@ -61,7 +61,7 @@ public:
      * @brief Destroy the DDSRouter object
      *
      * Stop the DDSRouter
-     * Destroy all Bridges
+     * Destroy all Writers and Readers
      * Destroy all Participants
      */
     DDSROUTER_CORE_DllAPI virtual ~DDSRouter();
@@ -84,7 +84,7 @@ public:
     /**
      * @brief Start communication in DDS Router
      *
-     * Enable every topic Bridge.
+     * Enable every topic.
      *
      * @note this method returns a ReturnCode for future possible errors
      *
@@ -95,7 +95,7 @@ public:
     /**
      * @brief Stop communication in DDS Router
      *
-     * Disable every topic Bridge.
+     * Disable every topic.
      *
      * @note this method returns a ReturnCode for future possible errors
      *

@@ -24,8 +24,6 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-// TODO: Use initial topics to start execution and start bridges
-
 DDSRouter::DDSRouter(
         const configuration::DDSRouterConfiguration& configuration)
     : ddsrouter_impl_(std::make_unique<DDSRouterImpl>(configuration))

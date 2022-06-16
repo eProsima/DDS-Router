@@ -33,7 +33,7 @@
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -23,26 +23,25 @@
 #include <map>
 #include <mutex>
 
-#include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
-
-#include <communication/Bridge.hpp>
-#include <dynamic/AllowedTopicList.hpp>
-#include <dynamic/DiscoveryDatabase.hpp>
 #include <library/library_dll.h>
+#include <dynamic/DiscoveryDatabase.hpp>
 #include <participant/IParticipant.hpp>
-#include <core/ParticipantsDatabase.hpp>
-#include <core/ParticipantFactory.hpp>
+#include <participant/ParticipantsRegistry.hpp>
+#include <communication/payload_pool/TopicPayloadPoolRegistry.hpp>
+#include <communication/ThreadPool.hpp>
+
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/topic/TopicKeyMap.hpp>
+#include <ddsrouter_utils/ReturnCode.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
 /**
- * TODO
+ * Implementation class of DDSRouter
  */
 class DDSRouterImpl
 {
@@ -53,8 +52,8 @@ public:
      *
      * Initialize a whole DDSRouterImpl:
      * - Create its associated AllowedTopicList
-     * - Create Participants and add them to \c ParticipantsDatabase
-     * - Create the Bridges for RealTopics as disabled (TODO: remove when discovery is ready)
+     * - Create Participants and add them to \c ParticipantsRegistry
+     * - Bind Participants Writers and Readers from givem Topics
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *
@@ -91,7 +90,7 @@ public:
     /**
      * @brief Start communication in DDS Router
      *
-     * Enable every topic Bridge.
+     * Enable every topic.
      *
      * @note this method returns a ReturnCode for future possible errors
      *
@@ -102,7 +101,7 @@ public:
     /**
      * @brief Stop communication in DDS Router
      *
-     * Disable every topic Bridge.
+     * Disable every topic.
      *
      * @note this method returns a ReturnCode for future possible errors
      *
@@ -112,73 +111,39 @@ public:
 
 protected:
 
-    /**
-     * @brief Internal Start method
-     *
-     * Enable every topic Bridge.
-     *
-     * @note this method returns a ReturnCode for future possible errors
-     *
-     * @return \c RETCODE_OK if ok
-     * @return \c RETCODE_PRECONDITION_NOT_MET if Router was not disabled
-     */
-    utils::ReturnCode start_() noexcept;
-
-    /**
-     * @brief Internal Stop method
-     *
-     * Disable every topic Bridge.
-     *
-     * @note this method returns a ReturnCode for future possible errors
-     *
-     * @return \c RETCODE_OK if ok
-     * @return \c RETCODE_PRECONDITION_NOT_MET if Router was not enabled
-     */
-    utils::ReturnCode stop_() noexcept;
-
     /////
     // INTERNAL INITIALIZATION METHODS
 
     /**
-     * @brief Load allowed topics from configuration
-     *
-     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
-     */
-    void init_allowed_topics_();
-
-    /**
-     * @brief  Create participants and add them to the participants database
+     * @brief  Create new participants in the participants registry
      *
      * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
      * @throw \c InitializationException in case \c IParticipants creation fails.
      */
     void init_participants_();
 
-    /**
-     * @brief  Create a disabled bridge for every real topic
-     */
-    void init_bridges_();
-
     /////
     // INTERNAL AUXILIAR METHODS
 
     /**
-     * @brief Method called every time a new endpoint has been discovered/updated
+     * @brief  Register a topic existing in the router_configuration_
      *
-     * This method is called with the topic of a new/updated \c Endpoint discovered.
-     * If the DDSRouterImpl is enabled, the new Bridge is created and enabled.
+     * @param [in] topic : Topic to register
      *
-     * @note This is the only method that adds topics to \c current_topics_
+     * Register a topic if not previously registered, possibly creating a IPayloadPool
+     * If the DDSRouterImpl is enabled and the topic is allowed, then the topic is enabled.
      *
-     * @param [in] topic : topic discovered
+     * @throw InconsistencyException if topic has not been inserted in router_configuration_
+     * @throw InconsistencyException if there is a failure getting the payload pool
+     * @throw InconsistencyException if called more than once for the same topic
      */
-    void discovered_topic_(
-            const types::RealTopic& topic) noexcept;
+    void register_topic_(
+            const types::RealTopic& topic);
 
     /**
      * @brief Method called every time a new endpoint has been discovered/updated
      *
-     * This method calls \c discovered_topic_ with the topic of \c endpoint as parameter.
+     * This method calls \c register_topic_ with the topic of \c endpoint as parameter if this topic was not registered before.
      *
      * @param [in] endpoint : endpoint discovered
      */
@@ -186,97 +151,77 @@ protected:
             const types::Endpoint& endpoint) noexcept;
 
     /**
-     * @brief Create a new \c Bridge object
-     *
-     * It is created enabled if the DDSRouterImpl is enabled.
-     *
-     * @param [in] topic : new topic
-     */
-    void create_new_bridge(
-            const types::RealTopic& topic,
-            bool enabled = false) noexcept;
-
-    /**
      * @brief Enable a specific topic
      *
      * If the topic did not exist before, the Bridge is created.
      *
      * @param [in] topic : Topic to be enabled
+     *
+     * @return \c RETCODE_OK if topic was enabled after being disabled
+     * @return \c RETCODE_NOT_ENABLED if topic was already enabled
      */
-    void activate_topic_(
+    utils::ReturnCode enable_topic_(
             const types::RealTopic& topic) noexcept;
 
     /**
      * @brief Disable a specific topic.
      *
-     * If the Bridge of the topic does not exist, do nothing.
-     *
      * @param [in] topic : Topic to be disabled
+     *
+     * @return \c RETCODE_OK if topic was disabled after being enabled
+     * @return \c RETCODE_NOT_ENABLED if topic was already disabled
      */
-    void deactivate_topic_(
+    utils::ReturnCode disable_topic_(
             const types::RealTopic& topic) noexcept;
 
     /**
      * @brief Activate all Topics that are allowed by the allowed topics list
      */
-    void activate_all_topics_() noexcept;
+    void enable_all_topics_() noexcept;
 
     /**
-     * @brief Disable all Bridges
+     * @brief Disable all Topics regardless allow or block lists
      */
-    void deactivate_all_topics_() noexcept;
+    void disable_all_topics_() noexcept;
 
     /////
-    // DATA STORAGE
+    // DATA MEMBERS
+    // NOTE: Beware of the order of the following members, as destruction order must be correct
 
-    /**
-     * @brief  Common payload pool where every payload will be stored
-     *
-     * This payload will be shared by every endpoint.
-     * Every reader will store its data in the pool, the track will pass this
-     * data to the writers, that will release it after used.
-     */
-    std::shared_ptr<PayloadPool> payload_pool_;
+    //! DDSRouterImpl configuration
+    configuration::DDSRouterConfiguration router_configuration_;
 
-    /**
-     * @brief Object that stores every Participant running in the DDSRouterImpl
-     */
-    std::shared_ptr<ParticipantsDatabase> participants_database_;
+    //! Registry storing all payload pools, from which payload pools are constructed
+    fastrtps::rtps::recycle::TopicPayloadPoolRegistry payload_pool_registry_;
+
+    //! Thread-safe registry for storing owned Participants running in the DDSRouterImpl
+    ParticipantsRegistry participants_registry_;
+
+    //! Iterable container having non-owned participants, just a proxy of participants_registry_ to iterate on participants when enabling/disabling topics.
+    types::ParticipantKeySet<IParticipant*> participants_iterable_;
 
     /**
      * @brief Common discovery database
      *
-     * This object is shared by every Participant.
+     * This object is referenced by every Participant.
      * Every time an endpoint is discovered by any Participant, it should be
      * added to the database.
      */
-    std::shared_ptr<DiscoveryDatabase> discovery_database_;
-
-    //! Map of bridges indexed by their topic
-    std::map<types::RealTopic, std::unique_ptr<Bridge>> bridges_;
+    DiscoveryDatabase discovery_database_;
 
     /**
-     * @brief List of topics discovered
-     *
-     * Every topic discovered would be added to this map.
-     * If the value is true, it means this topic is currently activated.
+     * @brief Object that stores the data forward tasks
      */
-    std::map<types::RealTopic, bool> current_topics_;
+    DataForwardQueue data_forward_queue_;
 
-    //! DDSRouterImpl configuration
-    configuration::DDSRouterConfiguration configuration_;
-
-    //! List of allowed and blocked topics
-    AllowedTopicList allowed_topics_;
-
-    //! Participant factory instance
-    ParticipantFactory participant_factory_;
+    //! Thread pool of workers running DataForwardTask instances
+    ThreadPool workers_thread_pool_;
 
     /////
     // AUXILIAR VARIABLES
 
     //! Whether the DDSRouterImpl is currently communicating data or not
-    std::atomic<bool> enabled_;
+    std::atomic<bool> router_enabled_;
 
     //! Internal mutex for concurrent calls
     std::recursive_mutex mutex_;
