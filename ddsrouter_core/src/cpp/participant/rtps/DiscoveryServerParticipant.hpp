@@ -24,7 +24,7 @@
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
-#include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <participant/rtps/CommonRTPSRouterParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -32,21 +32,18 @@ namespace core {
 namespace rtps {
 
 /**
- * TODO
+ * Intermediate class serving as a base class for ParticipantKind::local_discovery_server and ParticipantKind::wan
  */
-template <class ConfigurationType>
 class DiscoveryServerParticipant
-    : public CommonRTPSRouterParticipant<ConfigurationType>
+    : public CommonRTPSRouterParticipant
 {
 public:
 
-    // Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
-    FORCE_TEMPLATE_SUBCLASS(configuration::DiscoveryServerParticipantConfiguration, ConfigurationType);
+    using CommonRTPSRouterParticipant::CommonRTPSRouterParticipant;
 
     DiscoveryServerParticipant(
-            const ConfigurationType participant_configuration,
-            std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
+            const configuration::ParticipantConfiguration& participant_configuration,
+            DiscoveryDatabase& discovery_database);
 
     virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const override;
 
@@ -65,12 +62,9 @@ public:
             const types::security::TlsConfiguration& tls_configuration);
 };
 
-} /* namespace rpts */
+} /* namespace rtps */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-// Include implementation template file
-#include <participant/implementations/rtps/impl/DiscoveryServerParticipant.ipp>
 
 #endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERPARTICIPANT_HPP_ */

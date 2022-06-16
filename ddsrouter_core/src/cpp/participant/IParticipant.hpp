@@ -16,15 +16,16 @@
  * @file IParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_IPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_IPARTICIPANT_HPP_
 
-#include <ddsrouter_core/types/endpoint/Endpoint.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_utils/macros.hpp>
 
+#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
-#include <efficiency/PayloadPool.hpp>
+
+#include <ddsrouter_core/types/topic/TopicKeyMap.hpp>
+#include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
 
@@ -33,93 +34,150 @@ namespace ddsrouter {
 namespace core {
 
 /**
- * Interface that represents a generic Participant as part of a DDSRouter.
+ * Base Participant that implements common methods for every Participant.
  *
- * This class manages the discovery of new remote entities (that do not belong to the router).
- * It also works as a factory for Writers and Readers.
+ * In order to inherit from this class, create the protected methods create_writer_ and create_reader_
  *
- * Every Participant is associated to a \c ParticipantId that uniquely identifies it.
- * Every Participant is associated with a \c ParticipantKind depending on its implementation.
- *
- * @note In order to implement new Participants, create a subclass of this Interface and implement every method.
- * @note Also it is needed to add the creation of the Participant in the \c ParticipantFactory and a new type of
- * @note \c ParticipantKind .
+ * This class stores every Endpoint (Writers and Readers) created by this Participant.
  */
 class IParticipant
 {
+
 public:
 
     /**
-     * @brief Return the unique identifier of this Participant.
+     * @brief Simplest IParticipant constructor.
      *
-     * @return This Participant id
+     * Data members participant_configuration_ and discovery_database_ are nulled (nullptr).
+     *
+     * @param Participant ID.
+     *
      */
-    virtual types::ParticipantId id() const noexcept = 0;
+    IParticipant(
+            const types::ParticipantId& id);
 
     /**
-     * @brief Return the Participant kind
+     * @brief Generic constructor for a Participant
      *
-     * @return This Participant kind
+     * Id and kind are taken from the configuration.
+     *
+     * @param participant_configuration Configuration for the Participant. Participant Kind is taken from here.
+     * @param discovery_database Non-owning reference to Discovery Database
      */
-    virtual types::ParticipantKind kind() const noexcept = 0;
+    IParticipant(
+            const configuration::ParticipantConfiguration& participant_configuration,
+            DiscoveryDatabase& discovery_database);
 
     /**
-     * @brief Return a new Writer
+     * @brief Destroy the Base Participant object
      *
-     * Each writer is associated with a \c Bridge with the topic \c topic .
-     * This writer will forward messages in this topic.
-     *
-     * @param [in] topic : Topic that this Writer will work with.
-     *
-     * @return Writer in this Participant referring this topic
-     *
-     * @throw \c InitializationException in case the writer creation fails.
+     * If any writer or reader still exists, removes it and shows a warning
      */
-    virtual std::shared_ptr<IWriter> create_writer(
-            types::RealTopic topic) = 0;
+    virtual ~IParticipant();
 
     /**
-     * @brief Return a new Reader
-     *
-     * Each reader is associated with a \c Bridge with the topic \c topic .
-     * This reader will receive messages in this topic.
-     *
-     * @param [in] topic : Topic that this Reader will work with.
-     *
-     * @return Reader in this Participant referring this topic
-     *
-     * @throw \c InitializationException in case the reader creation fails.
+     * @brief Return ParticipantId
      */
-    virtual std::shared_ptr<IReader> create_reader(
-            types::RealTopic topic) = 0;
+    const types::ParticipantId& id() const noexcept;
 
     /**
-     * @brief Delete Writer
+     * @brief Create Writer and Reader for this topic
      *
-     * This method deletes a Writer that has been created by this Participant.
+     * Create Writer and Reader for this topic which will use a given .
      *
-     * @note This method should be able to destroy the Writer as it should not have any other reference.
+     * @param topic : Input topic
+     * @param payload_pool : Associated to the underlyint RTPS Writer and Reader
+     * @param  data_forward_queue : On which Reader will deposit DataForward tasks
      *
-     * @param [in] writer : Writer to delete
+     * @return A pair of raw pointers representing the creater Writer and Reader.
      */
-    virtual void delete_writer(
-            std::shared_ptr<IWriter> writer) noexcept = 0;
+    std::pair<IWriter*, IReader*> register_topic(
+            const types::RealTopic& topic,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool> payload_pool,
+            DataForwardQueue& data_forward_queue);
 
     /**
-     * @brief Delete Reader
+     * @brief Enable topic if disabled.
      *
-     * This method deletes a Reader that has been created by this Participant.
+     * @param [in] topic : Topic to be enabled.
      *
-     * @note This method should be able to destroy the Reader as it should not have any other reference.
-     *
-     * @param [in] writer : Reader to delete
+     * @return RETCODE_OK if changed from disabled to enabled
+     * @return RETCODE_NOT_ENABLED if already enabled
+     * @return RETCODE_NOT_ENABLED if reader not associated to topic exist
      */
-    virtual void delete_reader(
-            std::shared_ptr<IReader> reader) noexcept = 0;
+    utils::ReturnCode enable_topic(
+            const types::RealTopic& topic);
+
+    /**
+     * @brief Disable topic if enabled.
+     *
+     * @param [in] topic : Topic to be disabled
+     *
+     * @return RETCODE_OK if changed from enabled to disabled
+     * @return RETCODE_NOT_ENABLED if already disabled
+     * @return RETCODE_NOT_ENABLED if reader not associated to topic exist
+     */
+    utils::ReturnCode disable_topic(
+            const types::RealTopic& topic);
+
+protected:
+
+    /**
+     * @brief Create a writer object
+     *
+     * @note Implement this method in every Participant in order to create a class specific Writer
+     *
+     * @param [in] topic : Topic that this Writer refers to.
+     * @return Writer
+     */
+    virtual std::unique_ptr<IWriter> create_writer_(
+            const types::RealTopic& topic,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool) = 0;
+
+    /**
+     * @brief Create a reader object
+     *
+     * @note Implement this method in every Participant in order to create a class specific Reader
+     *
+     * @param [in] topic : Topic that this Reader refers to.
+     * @return Reader
+     */
+    virtual std::unique_ptr<IReader> create_reader_(
+            const types::RealTopic& topic,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool,
+            DataForwardQueue& data_forward_queue) = 0;
+
+    /////
+    // VARIABLES
+
+    //! Owned Participant ID, referenced by Writers and Readers
+    const types::ParticipantId id_;
+
+    //! Participant configuration, can be nullptr for some participant types not requiring any configuration
+    const configuration::ParticipantConfiguration* configuration_;
+
+    //! DDS Router reference to Discovery Database, can be nullptr for some participant types not requiring any discovery database
+    DiscoveryDatabase* discovery_database_;
+
+    //! Writers created by this Participant indexed by topic
+    types::TopicKeyMap<std::unique_ptr<IWriter>> writers_;
+
+    //! Readers created by this Participant indexed by topic
+    types::TopicKeyMap<std::unique_ptr<IReader>> readers_;
 };
+
+/**
+ * @brief \c IParticipant to stream serialization
+ *
+ * This method is merely a to_string of a IParticipant definition.
+ * It serialize the Participant ID
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const IParticipant& participant);
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_IPARTICIPANT_HPP_ */

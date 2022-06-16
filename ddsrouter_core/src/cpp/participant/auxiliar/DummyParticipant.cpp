@@ -13,29 +13,28 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.cpp
+ * @file DummyParticipant.cpp
  */
 
-#include <participant/implementations/rtps/WANParticipant.hpp>
+#include <participant/auxiliar/GenericParticipant.ipp>
+#include <participant/auxiliar/DummyParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
-namespace rtps {
 
-using namespace eprosima::ddsrouter::core::types;
-
-WANParticipant::WANParticipant(
-        const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+DummyReader* DummyParticipant::get_topic_reader(
+        const types::RealTopic& topic)
 {
-    create_participant_();
+    return static_cast<DummyReader*>(readers_.get(topic));
 }
 
-} /* namespace rtps */
+DummyWriter* DummyParticipant::get_topic_writer(
+        const types::RealTopic& topic)
+{
+    return static_cast<DummyWriter*>(writers_.get(topic));
+}
+
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

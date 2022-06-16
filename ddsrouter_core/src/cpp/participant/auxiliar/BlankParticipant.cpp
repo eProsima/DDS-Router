@@ -13,31 +13,18 @@
 // limitations under the License.
 
 /**
- * @file EchoParticipant.cpp
+ * @file BlankParticipant.cpp
  */
 
-#include <participant/implementations/auxiliar/EchoParticipant.hpp>
-#include <reader/implementations/auxiliar/BlankReader.hpp>
-#include <writer/implementations/auxiliar/EchoWriter.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <participant/auxiliar/GenericParticipant.ipp>
+#include <participant/auxiliar/BlankParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-
-std::shared_ptr<IWriter> EchoParticipant::create_writer_(
-        RealTopic topic)
-{
-    return std::make_shared<EchoWriter>(id(), topic, payload_pool_);
-}
-
-std::shared_ptr<IReader> EchoParticipant::create_reader_(
-        RealTopic)
-{
-    return std::make_shared<BlankReader>();
-}
+//! Explicit template instantiation so that BlankParticipant is linkable
+template class GenericParticipant<types::ParticipantKind::blank>;
 
 } /* namespace core */
 } /* namespace ddsrouter */

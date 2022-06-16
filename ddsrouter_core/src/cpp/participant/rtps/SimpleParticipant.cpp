@@ -13,27 +13,19 @@
 // limitations under the License.
 
 /**
- * @file LocalDiscoveryServerParticipant.cpp
+ * @file SimpleRTPSRouterParticipant.cpp
  */
 
-#include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
+#include <participant/rtps/GenericParticipant.ipp>
+#include <participant/rtps/SimpleParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-using namespace eprosima::ddsrouter::core::types;
-
-LocalDiscoveryServerParticipant::LocalDiscoveryServerParticipant(
-        const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
-{
-    create_participant_();
-}
+// Instantiate generic participant
+template class GenericParticipant<types::ParticipantKind::simple_rtps, CommonRTPSRouterParticipant>;
 
 } /* namespace rtps */
 } /* namespace core */

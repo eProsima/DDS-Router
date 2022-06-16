@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <algorithm>
+#include <array>
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -25,216 +25,107 @@ using namespace eprosima::ddsrouter::core::types;
 /*
  * List of valid names for participants
  */
-std::vector<std::string> random_valid_ids()
+constexpr std::array<const char*, 3> SomeValidNames =
 {
-    return
-        {
-            "BARRO_p",
-            "lan_participant",
-            "wan",
-        };
-}
+    "BARRO_p",
+    "lan_participant",
+    "wan",
+};
 
 /*
  * List of non valid names for participants
  */
-std::vector<std::string> random_non_valid_ids()
+constexpr std::array<const char*, 2> AllNonValidNames =
 {
-    return
-        {
-            "",
-            "__invalid_ddsrouter_participant__",
-        };
-}
-
-/****************
-* CONSTRUCTORS *
-****************/
-
-/**
- * Test ParticipantId constructor without arguments
- */
-TEST(ParticipantIdTest, default_constructor)
-{
-    ParticipantId pi;
-    ASSERT_FALSE(pi.is_valid());
-}
-
-/**
- * Test ParticipantId constructor with arguments
- */
-TEST(ParticipantIdTest, constructor)
-{
-    for (std::string id : random_valid_ids())
-    {
-        ParticipantId pi(id);
-        ASSERT_TRUE(pi.is_valid());
-    }
-}
+    "",
+    InvalidParticipantName,
+};
 
 /******************
-* STATIC METHODS *
+* POSITIVE/NEGATIVE CASES *
 ******************/
 
 /**
- * Test static \c ParticipantId \c is_valid_id method
+ * Test static \c ParticipantName \c is_valid_id method
  */
-TEST(ParticipantIdTest, invalid)
+TEST(ParticipantIdTest, check_name_valid_invalid)
 {
-    ParticipantId pi = ParticipantId::invalid();
-    ASSERT_FALSE(pi.is_valid());
-}
-
-/******************
-* POSITIVE CASES *
-******************/
-
-/**
- * Test static \c ParticipantId \c is_valid_id method
- */
-TEST(ParticipantIdTest, is_valid_id)
-{
-    for (std::string id : random_valid_ids())
+    for (auto id : SomeValidNames)
     {
-        ASSERT_TRUE(ParticipantId::is_valid_id(id));
+        ASSERT_TRUE(is_participant_name_valid(id));
+    }
+
+    for (auto id : AllNonValidNames)
+    {
+        ASSERT_FALSE(is_participant_name_valid(id));
     }
 }
 
-/**
- * Test \c ParticipantId \c is_valid method
- *
- * CASES:
- *  by default constructor
- *  by \c invalid getter
- *  by actual invalid name
+/*
+ * Test \c ParticipantKind arrays sizes
  */
-TEST(ParticipantIdTest, is_valid)
+TEST(ParticipantIdTest, kind_arrays_sizes)
 {
-    // By default constructor
-    {
-        ParticipantId pi;
-        ASSERT_FALSE(pi.is_valid());
-    }
+    ASSERT_EQ(ALL_PARTICIPANT_KINDS.size(), PARTICIPANT_KIND_STRINGS.size());
+    ASSERT_EQ(ALL_VALID_PARTICIPANT_KINDS.size() + 1, ALL_PARTICIPANT_KINDS.size());
+}
 
-    // By invalid getter
+/*
+ * Test \c ParticipantKind int conversions
+ */
+TEST(ParticipantIdTest, kind_int_conversions)
+{
+    for (auto pk : ALL_PARTICIPANT_KINDS)
     {
-        ParticipantId pi = ParticipantId::invalid();
-        ASSERT_FALSE(pi.is_valid());
-    }
-
-    // By actual invalid name
-    {
-        ParticipantId pi("__invalid_ddsrouter_participant__");
-        ASSERT_FALSE(pi.is_valid());
+        ASSERT_EQ(ALL_PARTICIPANT_KINDS[static_cast<ParticipantKindType>(pk)], pk);
     }
 }
 
-/**
- * Test  \c ParticipantId \c == operator
+/*
+ * Test \c ParticipantKind string conversions
  */
-TEST(ParticipantIdTest, equal_operator)
+TEST(ParticipantIdTest, kind_string_conversions)
 {
-    for (std::string id : random_valid_ids())
-    {
-        ParticipantId pi1(id);
-        ParticipantId pi2(id);
-        ASSERT_TRUE(pi1 == pi2);
-    }
-}
+    // Check consistency between enum value and its associated string.
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::invalid)]),
+            std::string("invalid"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::blank)]), std::string(
+                "blank"));
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::echo)]),
+            std::string("echo"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::dummy)]), std::string(
+                "dummy"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
+            std::string("simple_rtps"));
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::
+                    local_discovery_server)]), std::string("local_discovery_server"));
+    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
+            std::string("wan"));
 
-/**
- * Test  \c ParticipantId \c < operator
- */
-TEST(ParticipantIdTest, minor_operator)
-{
-    std::vector<std::string> ids = random_valid_ids();
+    // Test all possible aliases for each participant kind
+    ASSERT_EQ(participant_kind_from_string(""), ParticipantKind::invalid);
+    ASSERT_EQ(participant_kind_from_string("unexisting-kind"), ParticipantKind::invalid);
+    ASSERT_EQ(participant_kind_from_string("__invalid_participant_kind__"), ParticipantKind::invalid);
 
-    // Sort ids by string comparison
-    std::sort(ids.begin(), ids.end());
+    ASSERT_EQ(participant_kind_from_string("blank"), ParticipantKind::blank);
+    ASSERT_EQ(participant_kind_from_string("void"), ParticipantKind::blank);
+    ASSERT_EQ(participant_kind_from_string("echo"), ParticipantKind::echo);
+    ASSERT_EQ(participant_kind_from_string("dummy"), ParticipantKind::dummy);
 
-    for (int i = 0; i < ids.size(); ++i)
-    {
-        // Remove equal case
-        for (int j = (i + 1); j < ids.size(); ++j)
-        {
-            ParticipantId pi1(ids[i]);
-            ParticipantId pi2(ids[j]);
-            ASSERT_TRUE(pi1 < pi2);
-        }
-    }
-}
+    ASSERT_EQ(participant_kind_from_string("local"), ParticipantKind::simple_rtps);
+    ASSERT_EQ(participant_kind_from_string("simple"), ParticipantKind::simple_rtps);
 
-/******************
-* NEGATIVE CASES *
-******************/
+    ASSERT_EQ(participant_kind_from_string("discovery-server"), ParticipantKind::local_discovery_server);
+    ASSERT_EQ(participant_kind_from_string("ds"), ParticipantKind::local_discovery_server);
+    ASSERT_EQ(participant_kind_from_string("local-ds"), ParticipantKind::local_discovery_server);
+    ASSERT_EQ(participant_kind_from_string("local-discovery-server"), ParticipantKind::local_discovery_server);
 
-/**
- * Test static \c ParticipantId \c is_valid_id method in negative cases
- */
-TEST(ParticipantIdTest, is_non_valid_id)
-{
-    for (std::string id : random_non_valid_ids())
-    {
-        ASSERT_FALSE(ParticipantId::is_valid_id(id));
-    }
-}
-
-/**
- * Test \c ParticipantId \c is_valid method in negative cases
- *
- * NOTE: this test is the same as the non default constructor: \c constructor
- */
-TEST(ParticipantIdTest, is_non_valid)
-{
-    for (std::string id : random_valid_ids())
-    {
-        ParticipantId pi(id);
-        ASSERT_TRUE(pi.is_valid());
-    }
-}
-
-/**
- * Test  \c ParticipantId \c == operator in negative cases
- */
-TEST(ParticipantIdTest, non_equal_operator)
-{
-    std::vector<std::string> ids = random_valid_ids();
-
-    for (int i = 0; i < ids.size(); ++i)
-    {
-        for (int j = 0; j < ids.size(); ++j)
-        {
-            // Remove equal case
-            if (i != j)
-            {
-                ParticipantId pi1(ids[i]);
-                ParticipantId pi2(ids[j]);
-                ASSERT_FALSE(pi1 == pi2);
-            }
-        }
-    }
-}
-
-/**
- * Test  \c ParticipantId \c < operator in negative cases
- */
-TEST(ParticipantIdTest, non_minor_operator)
-{
-    std::vector<std::string> ids = random_valid_ids();
-
-    // Sort ids by string comparison
-    std::sort(ids.begin(), ids.end());
-
-    for (int i = 0; i < ids.size(); ++i)
-    {
-        // Remove equal case
-        for (int j = i; j < ids.size(); ++j)
-        {
-            ParticipantId pi1(ids[i]);
-            ParticipantId pi2(ids[j]);
-            ASSERT_FALSE(pi2 < pi1);
-        }
-    }
+    ASSERT_EQ(participant_kind_from_string("wan"), ParticipantKind::wan);
+    ASSERT_EQ(participant_kind_from_string("router"), ParticipantKind::wan);
 }
 
 int main(

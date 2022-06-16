@@ -17,7 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 // using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;

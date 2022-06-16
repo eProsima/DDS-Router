@@ -13,34 +13,30 @@
 // limitations under the License.
 
 /**
- * @file SimpleRTPSRouterParticipant.cpp
+ * @file SimpleParticipant.hpp
  */
 
-#include <memory>
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
 
-#include <fastrtps/rtps/participant/RTPSParticipant.h>
-#include <fastrtps/rtps/RTPSDomain.h>
-
-#include <participant/implementations/rtps/SimpleParticipant.hpp>
+#include <participant/rtps/GenericParticipant.hpp>
+#include <participant/rtps/CommonRTPSRouterParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-using namespace eprosima::ddsrouter::core::types;
-
-SimpleParticipant::SimpleParticipant(
-        const configuration::SimpleParticipantConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<configuration::SimpleParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
-{
-    create_participant_();
-}
+/**
+ * Participant with Simple Discovery Protocol.
+ *
+ * Standard RTPS Participant with Simple Discovery and default attributes.
+ */
+using SimpleParticipant = GenericParticipant<types::ParticipantKind::simple_rtps, CommonRTPSRouterParticipant>;
 
 } /* namespace rtps */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_ */

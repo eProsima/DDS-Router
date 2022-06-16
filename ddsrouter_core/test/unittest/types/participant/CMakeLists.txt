@@ -24,45 +24,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        default_constructor
-        constructor
-        invalid
-        is_valid_id
-        is_valid
-        equal_operator
-        minor_operator
-        is_non_valid_id
-        is_non_valid
-        non_equal_operator
-        non_minor_operator
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        ddsrouter_utils
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
-
-
-###################
-# ParticipantKind #
-###################
-
-set(TEST_NAME ParticipantKindTest)
-
-set(TEST_SOURCES
-        ParticipantKindTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-    )
-
-set(TEST_LIST
-        int_conversions
-        string_conversions
+        check_name_valid_invalid
+        kind_arryays_sizes
+        kind_int_conversions
+        kind_string_conversions
     )
 
 set(TEST_EXTRA_LIBRARIES

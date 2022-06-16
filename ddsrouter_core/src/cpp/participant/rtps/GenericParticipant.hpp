@@ -16,11 +16,20 @@
  * @file SimpleParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_GENERICPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_GENERICPARTICIPANT_HPP_
 
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+
+namespace eprosima {
+namespace ddsrouter {
+namespace core {
+
+class DiscoveryDatabase;
+
+} /* namespace core */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,16 +37,17 @@ namespace core {
 namespace rtps {
 
 /**
- * Participant with Simple Discovery Protocol.
- *
- * Standard RTPS Participant with Simple Discovery and default attributes.
+ * Generic participant interface templated with ParticipantKind
  */
-class SimpleParticipant : public CommonRTPSRouterParticipant<configuration::SimpleParticipantConfiguration>
+template <types::ParticipantKind PartKind, class SuperParticipantT>
+class GenericParticipant : public SuperParticipantT
 {
 public:
 
+    using SuperParticipantT::SuperParticipantT;
+
     /**
-     * @brief Construct a new Dummy Participant object
+     * @brief Construct a new Participant object
      *
      * It uses the \c BaseParticipant constructor.
      * Apart from BaseParticipant, it creates a new RTPSParticipant with default Attributes and domain given
@@ -46,10 +56,9 @@ public:
      * @throw \c InitializationException in case any internal error has ocurred while creating RTPSParticipant
      * @throw \c IConfigurationException in case configuration was incorrectly set
      */
-    SimpleParticipant(
-            const configuration::SimpleParticipantConfiguration participant_configuration,
-            std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
+    GenericParticipant(
+            const configuration::ParticipantConfiguration& participant_configuration,
+            DiscoveryDatabase& discovery_database);
 };
 
 } /* namespace rtps */
@@ -57,4 +66,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_GENERICPARTICIPANT_HPP_ */

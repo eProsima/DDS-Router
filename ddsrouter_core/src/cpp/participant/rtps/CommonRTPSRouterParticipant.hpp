@@ -29,9 +29,9 @@
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 
-#include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
+#include <participant/IParticipant.hpp>
+#include <reader/rtps/Reader.hpp>
+#include <writer/rtps/Writer.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -41,17 +41,40 @@ namespace rtps {
 /**
  * TODO
  */
-template <class ConfigurationType>
 class CommonRTPSRouterParticipant
-    : public BaseParticipant<ConfigurationType>
+    : public IParticipant
     , public fastrtps::rtps::RTPSParticipantListener
 {
+private:
+
+    //! RTPS Participant deleter functor to enable RAII on RTPSParticipant
+    struct RTPSParticipantDeleter
+    {
+        RTPSParticipantDeleter()
+        {
+        }
+
+        void operator ()(
+                fastrtps::rtps::RTPSParticipant* ptr) const;
+    };
+
 public:
 
+    /**
+     * @brief Illegal constructor that always throws.
+     *
+     * A RTPS always need a configuration and a discovery_database so this always throws.
+     * This constructor exists just to maintain a generic template interface for creating participants.
+     *
+     * @throw \c InitializationException always.
+     */
     CommonRTPSRouterParticipant(
-            const ConfigurationType participant_configuration,
-            std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
+            const types::ParticipantId& id);
+
+
+    CommonRTPSRouterParticipant(
+            const configuration::ParticipantConfiguration& participant_configuration,
+            DiscoveryDatabase& discovery_database);
 
     virtual ~CommonRTPSRouterParticipant();
 
@@ -71,11 +94,14 @@ protected:
 
     void create_participant_();
 
-    std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
+    std::unique_ptr<IWriter> create_writer_(
+            const types::RealTopic& topic,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool) override;
 
-    std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
+    std::unique_ptr<IReader> create_reader_(
+            const types::RealTopic& topic,
+            std::shared_ptr<fastrtps::rtps::IPayloadPool>& payload_pool,
+            DataForwardQueue& data_forward_queue) override;
 
     template<class DiscoveryInfoKind>
     types::Endpoint create_endpoint_from_info_(
@@ -88,18 +114,12 @@ protected:
 
     /////
     // VARIABLES
-    eprosima::fastrtps::rtps::RTPSParticipant* rtps_participant_;
-
-    //! Mutex that guards every access to the RTPS Participant
-    mutable std::recursive_mutex rtps_mutex_;
+    std::unique_ptr<fastrtps::rtps::RTPSParticipant, RTPSParticipantDeleter> rtps_participant_;
 };
 
 } /* namespace rtps */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-// Include implementation template file
-#include <participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp>
 
 #endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_HPP_ */

@@ -19,27 +19,15 @@
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <participant/implementations/rtps/DiscoveryServerParticipant.hpp>
+#include <participant/rtps/GenericParticipant.hpp>
+#include <participant/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-/**
- * TODO
- */
-class WANParticipant
-    : public DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-{
-public:
-
-    WANParticipant(
-            const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
-            std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
-};
+using WANParticipant = GenericParticipant<types::ParticipantKind::wan, DiscoveryServerParticipant>;
 
 } /* namespace rtps */
 } /* namespace core */

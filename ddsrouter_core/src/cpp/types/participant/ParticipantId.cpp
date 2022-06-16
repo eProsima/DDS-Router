@@ -19,7 +19,13 @@
 
 #include <set>
 #include <sstream>
+#include <algorithm>
+#include <assert.h>
+#include <set>
+#include <iostream>
 
+#include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -27,63 +33,153 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! INVALID_ID key
-const std::string ParticipantId::INVALID_ID = "__invalid_ddsrouter_participant__";
+// ###################
+// #                 #
+// # ParticipantName #
+// #                 #
+// ###################
+
+std::ostream& operator <<(
+        std::ostream& os,
+        ParticipantKind kind)
+{
+    try
+    {
+        os << PARTICIPANT_KIND_STRINGS.at(static_cast<ParticipantKindType>(kind));
+    }
+    catch (const std::out_of_range& oor)
+    {
+        utils::tsnh(utils::Formatter() << "Invalid Participant Kind." << static_cast<ParticipantKindType>(kind));
+    }
+    return os;
+}
+
+bool is_participant_name_valid(
+        const ParticipantName& name)
+{
+    return !name.empty() && name != std::string(InvalidParticipantName);
+}
+
+// ###################
+// #                 #
+// # ParticipantKind #
+// #                 #
+// ###################
+
+ParticipantKind participant_kind_from_string(
+        std::string kind_str)
+{
+
+    if (kind_str.size() == 0)
+    {
+        return ParticipantKind::invalid;
+    }
+
+    // Convert to lower case so that match is case-insensitive
+    utils::to_lowercase(kind_str);
+
+    // Loop over each participant kind aliases, returning at first alias match
+    ParticipantKindType kind_idx = 0u;
+    for (const auto& aliases : PARTICIPANT_KIND_ALIASES)
+    {
+        if (std::find_if(std::cbegin(aliases), std::cend(aliases),
+                [kind_str](std::string str)
+                {
+                    utils::to_lowercase(str);
+                    return kind_str == str;
+                }) != std::cend(aliases))
+        {
+            // Alias match, since std::find returned iterator before end
+            return ALL_PARTICIPANT_KINDS.at(kind_idx);
+        }
+        kind_idx++;
+    }
+
+    // No alias match, so input string is not a valid alias
+    return ParticipantKind::invalid;
+}
+
+// #################
+// #               #
+// # ParticipantId #
+// #               #
+// #################
 
 ParticipantId::ParticipantId(
-        const std::string& id) noexcept
-    : id_(id)
+        ParticipantName name)
+    : BaseT(std::make_pair(name, ParticipantKind::blank))
 {
-    // If the ID cannot be used as a ParticipantId, it must store the INVALID string
-    if (!ParticipantId::is_valid_id(id))
+
+    if (not is_participant_id_valid(*this))
     {
-        id_ = INVALID_ID;
+        throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
     }
 }
 
-ParticipantId::ParticipantId() noexcept
-    : id_(INVALID_ID)
+ParticipantId::ParticipantId(
+        ParticipantName name,
+        ParticipantKind kind)
+    : BaseT(std::make_pair(name, kind))
 {
+
+    if (not is_participant_id_valid(*this))
+    {
+        throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
+    }
 }
 
-ParticipantId ParticipantId::invalid() noexcept
+ParticipantId::ParticipantId(
+        ParticipantName name,
+        std::string kind_str)
+    : BaseT(std::make_pair(name, participant_kind_from_string(kind_str)))
 {
-    return ParticipantId();
+
+    if (not is_participant_id_valid(*this))
+    {
+        throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
+    }
 }
 
-bool ParticipantId::is_valid_id(
-        const std::string& tag) noexcept
+const ParticipantName& ParticipantId::name() const noexcept
 {
-    return !tag.empty() && tag != INVALID_ID;
+    return std::get<ParticipantName>(static_cast<const BaseT&>(*this));
 }
 
-bool ParticipantId::is_valid() const noexcept
+ParticipantKind ParticipantId::kind() const noexcept
 {
-    return is_valid_id(id_);
+    return std::get<ParticipantKind>(static_cast<const BaseT&>(*this));
 }
 
-std::string ParticipantId::id_name() const noexcept
+/**
+ * @brief Return reference to ParticipantName from a ParticipantId.
+ */
+const ParticipantName& get_participant_name(
+        const ParticipantId& id)
 {
-    return id_;
+    return std::get<ParticipantName>(id);
 }
 
-bool ParticipantId::operator ==(
-        const ParticipantId& other) const noexcept
+/**
+ * @brief Return ParticipantKind from a ParticipantId.
+ */
+ParticipantKind get_participant_kind(
+        const ParticipantId& id)
 {
-    return id_ == other.id_;
+    return std::get<ParticipantKind>(id);
 }
 
-bool ParticipantId::operator <(
-        const ParticipantId& other) const noexcept
+bool is_participant_id_valid(
+        const ParticipantId& p_id)
 {
-    return id_ < other.id_;
+    return is_participant_name_valid(get_participant_name(p_id)) &&
+           get_participant_kind(p_id) != ParticipantKind::invalid;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
         const ParticipantId& id)
 {
-    os << "ParticipantId{" << id.id_name() << "}";
+    os << "{" << id.name() << ";" << id.kind() << "}";
     return os;
 }
 

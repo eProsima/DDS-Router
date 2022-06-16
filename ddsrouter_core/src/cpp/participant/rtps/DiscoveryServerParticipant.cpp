@@ -16,9 +16,6 @@
  * @file DiscoveryServerParticipant.cpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
-
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/UDPv6TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
@@ -26,41 +23,47 @@
 
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/Log.hpp>
 
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
-#include <participant/implementations/rtps/DiscoveryServerParticipant.hpp>
+#include <participant/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-
-template <class ConfigurationType>
-DiscoveryServerParticipant<ConfigurationType>::DiscoveryServerParticipant(
-        const ConfigurationType participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<ConfigurationType>
-        (participant_configuration, payload_pool, discovery_database)
+DiscoveryServerParticipant::DiscoveryServerParticipant(
+        const configuration::ParticipantConfiguration& participant_configuration,
+        DiscoveryDatabase& discovery_database)
+    : CommonRTPSRouterParticipant(participant_configuration, discovery_database)
 {
+    if (dynamic_cast<const configuration::DiscoveryServerParticipantConfiguration*>(this->configuration_) == nullptr)
+    {
+        throw utils::InitializationException(
+                  utils::Formatter() <<
+                      "ParticipantConfiguration not castable to DiscoveryServerParticipantConfiguration");
+    }
 }
 
-template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
+DiscoveryServerParticipant::participant_attributes_() const
 {
+
+    const configuration::DiscoveryServerParticipantConfiguration& ds_config =
+            *static_cast<const configuration::DiscoveryServerParticipantConfiguration*>(this->
+                    configuration_);
+
     // Get Configuration information
-    std::set<types::Address> listening_addresses = this->configuration_.listening_addresses();
+    std::set<types::Address> listening_addresses = ds_config.listening_addresses();
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses =
-            this->configuration_.connection_addresses();
-    types::GuidPrefix discovery_server_guid_prefix = this->configuration_.discovery_server_guid_prefix();
-    const auto& tls_config = this->configuration_.tls_configuration();
+            ds_config.connection_addresses();
+    types::GuidPrefix discovery_server_guid_prefix = ds_config.discovery_server_guid_prefix();
+    const auto& tls_config = ds_config.tls_configuration();
 
     // Set attributes
     fastrtps::rtps::RTPSParticipantAttributes params;
-    // CommonRTPSRouterParticipant::participant_attributes(); // Use default as base attributes
 
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
@@ -76,16 +79,8 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set listening addresses
-    for (types::Address address : listening_addresses)
+    for (const auto& address : listening_addresses)
     {
-        if (!address.is_valid())
-        {
-            // Invalid address, continue with next one
-            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
-            continue;
-        }
-
         has_listening_addresses = true;
 
         // TCP Listening WAN address
@@ -95,8 +90,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             {
                 has_listening_tcp_ipv4 = true;
 
-                std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                        std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+                auto descriptor = std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
 
                 descriptor->add_listener_port(address.port());
                 descriptor->set_WAN_address(address.ip());
@@ -113,8 +107,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             {
                 has_listening_tcp_ipv6 = true;
 
-                std::shared_ptr<eprosima::fastdds::rtps::TCPv6TransportDescriptor> descriptor =
-                        std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
+                auto descriptor = std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
 
                 descriptor->add_listener_port(address.port());
 
@@ -124,7 +117,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
                     enable_tls(descriptor, tls_config);
                 }
 
-                params.userTransports.push_back(descriptor);
+                params.userTransports.push_back(std::move(descriptor));
             }
         }
         else
@@ -163,33 +156,14 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set connection addresses
-    for (types::DiscoveryServerConnectionAddress connection_address : connection_addresses)
+    for (const auto& connection_address : connection_addresses)
     {
-        if (!connection_address.is_valid())
-        {
-            // Invalid connection address, continue with next one
-            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Discard connection address with remote server: " <<
-                    connection_address.discovery_server_guid_prefix() <<
-                    " in Participant " << this->id() << " initialization.");
-            continue;
-        }
 
         // Set Server GUID
         types::GuidPrefix server_prefix = connection_address.discovery_server_guid_prefix();
 
         for (types::Address address : connection_address.addresses())
         {
-            if (!address.is_valid())
-            {
-                // Invalid ip address, continue with next one
-                logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                        "Discard connection address with remote server: " <<
-                        connection_address.discovery_server_guid_prefix() <<
-                        " due to invalid ip address " << address.ip() << " in Participant " << this->id() <<
-                        " initialization.");
-                continue;
-            }
 
             has_connection_addresses = true;
 
@@ -268,8 +242,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     // If has TCP connections but not TCP listening addresses, it must specify the TCP transport
     if (has_connection_tcp_ipv4 && !has_listening_tcp_ipv4)
     {
-        std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+        auto descriptor = std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
 
         // Enable TLS
         if (tls_config.is_active())
@@ -277,15 +250,14 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             enable_tls(descriptor, tls_config, true);
         }
 
-        params.userTransports.push_back(descriptor);
+        params.userTransports.push_back(std::move(descriptor));
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Adding TCPv4 Transport to Participant " << this->id() << ".");
     }
     if (has_connection_tcp_ipv6 && !has_listening_tcp_ipv6)
     {
-        std::shared_ptr<eprosima::fastdds::rtps::TCPv6TransportDescriptor> descriptor =
-                std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
+        auto descriptor = std::make_shared<eprosima::fastdds::rtps::TCPv6TransportDescriptor>();
 
         // Enable TLS
         if (tls_config.is_active())
@@ -293,7 +265,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             enable_tls(descriptor, tls_config, true);
         }
 
-        params.userTransports.push_back(descriptor);
+        params.userTransports.push_back(std::move(descriptor));
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Adding TCPv6 Transport to Participant " << this->id() << ".");
@@ -302,18 +274,16 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     // If has UDP, create descriptor because it has not been created yet
     if (has_udp_ipv4)
     {
-        std::shared_ptr<eprosima::fastdds::rtps::UDPv4TransportDescriptor> descriptor =
-                std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
-        params.userTransports.push_back(descriptor);
+        auto descriptor = std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
+        params.userTransports.push_back(std::move(descriptor));
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Adding UDPv4 Transport to Participant " << this->id() << ".");
     }
     if (has_udp_ipv6)
     {
-        std::shared_ptr<eprosima::fastdds::rtps::UDPv6TransportDescriptor> descriptor_v6 =
-                std::make_shared<eprosima::fastdds::rtps::UDPv6TransportDescriptor>();
-        params.userTransports.push_back(descriptor_v6);
+        auto descriptor_v6 = std::make_shared<eprosima::fastdds::rtps::UDPv6TransportDescriptor>();
+        params.userTransports.push_back(std::move(descriptor_v6));
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                 "Adding UDPv6 Transport to Participant " << this->id() << ".");
@@ -326,8 +296,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
     return params;
 }
 
-template <class ConfigurationType>
-void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
+void DiscoveryServerParticipant::enable_tls(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
         const types::security::TlsConfiguration& tls_configuration,
         bool client /* = false */)
@@ -355,10 +324,9 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
                     "TLS Configuration expected a Client configuration.");
             throw utils::ConfigurationException("TLS Configuration expected a Client configuration.");
         }
-        else
-        {
-            enable_tls_client(descriptor, tls_configuration, true);
-        }
+
+        enable_tls_client(descriptor, tls_configuration, true);
+
     }
     else
     {
@@ -385,8 +353,7 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls(
             "TLS configured.");
 }
 
-template <class ConfigurationType>
-void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
+void DiscoveryServerParticipant::enable_tls_client(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
         const types::security::TlsConfiguration& tls_configuration,
         bool only_client)
@@ -408,15 +375,15 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls_client(
     descriptor->tls_config.verify_file = tls_configuration.certificate_authority_file();
 }
 
-template <class ConfigurationType>
-void DiscoveryServerParticipant<ConfigurationType>::enable_tls_server(
+void DiscoveryServerParticipant::enable_tls_server(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
         const types::security::TlsConfiguration& tls_configuration)
 {
     if (!tls_configuration.compatible<types::security::TlsKind::server>())
     {
-        utils::tsnh(
-            utils::Formatter() << "Error, TlsConfiguration expected a Server-compatible configuration.");
+        logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                "TLS Configuration expected a Server configuration.");
+        throw utils::ConfigurationException("TLS Configuration expected a Server configuration.");
     }
 
     // Password
@@ -434,4 +401,3 @@ void DiscoveryServerParticipant<ConfigurationType>::enable_tls_server(
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_ */
