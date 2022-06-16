@@ -15,10 +15,12 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddsrouter::utils;
 
 using pair_topic_type = std::pair<std::string, std::string>;
 
@@ -39,7 +41,11 @@ TEST(RealTopicTest, is_real_topic)
 
     for (pair_topic_type topic : topics)
     {
-        ASSERT_TRUE(RealTopic::is_real_topic(topic.first, topic.second));
+        // Just verify it doesn't throw
+        RealTopic(topic.first, topic.second);
+
+        // Just verify it doesn't throw
+        FilterTopic(topic.first, topic.second);
     }
 }
 
@@ -74,7 +80,11 @@ TEST(RealTopicTest, is_non_real_topic)
 
     for (pair_topic_type topic : topics)
     {
-        ASSERT_FALSE(RealTopic::is_real_topic(topic.first, topic.second));
+        // Just verify it doesn't throw
+        FilterTopic(topic.first, topic.second);
+
+        // Verify it throws (invalid wildcard in real topic)
+        ASSERT_THROW(RealTopic(topic.first, topic.second), InitializationException);
     }
 }
 

@@ -78,8 +78,8 @@ TEST(TopicTest, constructor)
     for (pair_topic_type topic : random_topic_names())
     {
         Topic dt(topic.first, topic.second);
-        ASSERT_EQ(dt.topic_name(), topic.first);
-        ASSERT_EQ(dt.topic_type(), topic.second);
+        ASSERT_EQ(dt.name(), topic.first);
+        ASSERT_EQ(dt.type(), topic.second);
     }
 }
 
@@ -108,9 +108,11 @@ TEST(TopicTest, minor_operator)
         // Skip same topic
         for (int j = (i + 1); j < well_sorted_names.size(); ++j)
         {
-            Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
-            Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
-            ASSERT_TRUE(dt1 < dt2) << dt1 << " < " << dt2;
+            {
+                Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
+                Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
+                ASSERT_TRUE(dt1 < dt2) << dt1 << " < " << dt2;
+            }
         }
     }
 }
@@ -163,11 +165,11 @@ TEST(TopicTest, non_minor_operator)
 TEST(TopicTest, stdout_operator)
 {
     std::vector<pair_topic_type> topics = {{"topic1", "type1"}, {"topic2", "type2"}};
-    Topic dt("topic1", "type1");
+    RealTopic dt("topic1", "type1");
 
     std::stringstream ss;
     ss << dt;
-    ASSERT_EQ(ss.str(), "Topic{topic1;type1;no_key}");
+    ASSERT_EQ(ss.str(), "Topic{topic1;type1;no_key;best_effort}");
 }
 
 int main(

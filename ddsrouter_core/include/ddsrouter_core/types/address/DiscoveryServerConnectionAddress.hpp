@@ -57,15 +57,7 @@ public:
     DDSROUTER_CORE_DllAPI GuidPrefix discovery_server_guid_prefix() const noexcept;
 
     //! Addresses getter
-    DDSROUTER_CORE_DllAPI std::set<Address> addresses() const noexcept;
-
-    /**
-     * @brief Whether the address is correct
-     *
-     * Checks if GuidPrefix is correct.
-     * Checks if it has at least one correct address.
-     */
-    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI const std::set<Address>& addresses() const noexcept;
 
     //! Minor operator
     DDSROUTER_CORE_DllAPI bool operator <(

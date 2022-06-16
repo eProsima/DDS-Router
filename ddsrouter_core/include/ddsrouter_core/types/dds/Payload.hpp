@@ -13,16 +13,18 @@
 // limitations under the License.
 
 /**
- * @file Data.hpp
+ * @file DataForwardTask.hpp
  */
 
 #ifndef _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 #define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
-#include <fastdds/rtps/common/SerializedPayload.h>
+#include <fastdds/rtps/common/CacheChange.h>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
+
+#include <memory>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,16 +36,6 @@ using PayloadUnit = eprosima::fastrtps::rtps::octet;
 
 //! Payload references the raw data received.
 using Payload = eprosima::fastrtps::rtps::SerializedPayload_t;
-
-//! Structure of the Data received from a Reader containing the data itself and the attributes of the source
-struct DataReceived
-{
-    //! Payload of the data received. The data in this payload must belong to the PayloadPool.
-    Payload payload;
-
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
-};
 
 //! \c octet to stream serializator
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(

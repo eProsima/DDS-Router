@@ -77,7 +77,7 @@ public:
             const IpType& ip,
             const PortType& port,
             const IpVersion& ip_version,
-            const TransportProtocol& transport_protocol) noexcept;
+            const TransportProtocol& transport_protocol);
 
     /**
      * @brief Construct a new Address object using a DNS call to get IP from \c domain
@@ -91,7 +91,7 @@ public:
             const PortType& port,
             const IpVersion& ip_version,
             const DomainType& domain,
-            const TransportProtocol& transport_protocol) noexcept;
+            const TransportProtocol& transport_protocol);
 
     /**
      * @brief Construct Address and get IP version from IP format
@@ -103,7 +103,7 @@ public:
     DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
             const PortType& port,
-            const TransportProtocol& transport_protocol) noexcept;
+            const TransportProtocol& transport_protocol);
 
     /**
      * @brief Construct a new Address object using a DNS call to get IP from \c domain without specifying the IP version
@@ -115,7 +115,7 @@ public:
     DDSROUTER_CORE_DllAPI Address(
             const PortType& port,
             const DomainType& domain,
-            const TransportProtocol& transport_protocol) noexcept;
+            const TransportProtocol& transport_protocol);
 
     //! Construct a default IP by default values (set in this class)
     DDSROUTER_CORE_DllAPI Address();
@@ -140,7 +140,7 @@ public:
     DDSROUTER_CORE_DllAPI bool is_ipv6() const noexcept;
 
     //! Get FastDDS Locator kind
-    DDSROUTER_CORE_DllAPI LocatorType get_locator_kind() noexcept;
+    DDSROUTER_CORE_DllAPI LocatorType get_locator_kind() const noexcept;
 
     /**
      * @brief Whether the address is correct
@@ -148,7 +148,7 @@ public:
      * Checks if IP is in correct format regarding the IP version.
      * Checks if Port is correct.
      */
-    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
+    DDSROUTER_CORE_DllAPI void check_valid_() const;
 
     //! Minor operator
     DDSROUTER_CORE_DllAPI bool operator <(

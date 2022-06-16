@@ -22,6 +22,7 @@
 #include <ddsrouter_utils/exception/DNSException.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -43,7 +44,7 @@ Address::Address(
         const IpType& ip,
         const PortType& port,
         const IpVersion& ip_version,
-        const TransportProtocol& transport_protocol) noexcept
+        const TransportProtocol& transport_protocol)
     : ip_(ip)
     , domain_()
     , has_domain_(false)
@@ -52,13 +53,14 @@ Address::Address(
     , ip_version_(ip_version)
     , transport_protocol_(transport_protocol)
 {
+    this->check_valid_();
 }
 
 Address::Address(
         const PortType& port,
         const IpVersion& ip_version,
         const DomainType& domain,
-        const TransportProtocol& transport_protocol) noexcept
+        const TransportProtocol& transport_protocol)
     : ip_()
     , domain_(domain)
     , has_domain_(true)
@@ -77,24 +79,23 @@ Address::Address(
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
     }
+
+    this->check_valid_();
 }
 
 Address::Address(
         const IpType& ip,
         const PortType& port,
-        const TransportProtocol& transport_protocol) noexcept
-    : Address(ip, port, IpVersion::v4, transport_protocol)
+        const TransportProtocol& transport_protocol)
+    : Address(ip, port, (is_ipv6_correct(ip) ? IpVersion::v6 : IpVersion::v4), transport_protocol)
 {
-    if (is_ipv6_correct(ip_))
-    {
-        ip_version_ = IpVersion::v6;
-    }
+    this->check_valid_();
 }
 
 Address::Address(
         const PortType& port,
         const DomainType& domain,
-        const TransportProtocol& transport_protocol) noexcept
+        const TransportProtocol& transport_protocol)
     : ip_()
     , domain_(domain)
     , has_domain_(true)
@@ -114,6 +115,8 @@ Address::Address(
         logWarning(
             DDSROUTER_ADDRESS, "Address created without IP because given domain " << domain << " was not found.");
     }
+
+    this->check_valid_();
 }
 
 PortType Address::port() const noexcept
@@ -156,7 +159,7 @@ bool Address::is_ipv6() const noexcept
     return ip_version_ == IpVersion::v6;
 }
 
-LocatorType Address::get_locator_kind() noexcept
+LocatorType Address::get_locator_kind() const noexcept
 {
     if (ip_version_ == IpVersion::v4)
     {
@@ -184,26 +187,36 @@ LocatorType Address::get_locator_kind() noexcept
     return LOCATOR_KIND_INVALID;
 }
 
-bool Address::is_valid() const noexcept
+void Address::check_valid_() const
 {
     if (has_domain_ && !has_valid_domain_)
     {
-        return false;
+        throw utils::InitializationException("Invalid domain in address");
     }
 
     // TODO check port and maybe UDP/TCP specific rules
     switch (ip_version_)
     {
         case IpVersion::v4:
-            return is_ipv4_correct(ip_);
-
+        {
+            if (not is_ipv4_correct(ip_))
+            {
+                throw utils::InitializationException("Incorrect IPv4");
+            }
+            return;
+        }
         case IpVersion::v6:
-            return is_ipv6_correct(ip_);
-
+        {
+            if (not is_ipv6_correct(ip_))
+            {
+                throw utils::InitializationException("Incorrect IPv6");
+            }
+            return;
+        }
         default:
-            utils::tsnh(
-                utils::Formatter() << "Ip version value out of IpVersion.");
-            return false; // Unreachable code
+        {
+            throw utils::InitializationException("Unrecognized IpVersion");
+        }
     }
 }
 
@@ -256,8 +269,7 @@ bool Address::operator ==(
 {
     return this->ip() == other.ip() &&
            this->port() == other.port() &&
-           this->transport_protocol() == other.transport_protocol() &&
-           this->is_valid() == other.is_valid();
+           this->transport_protocol() == other.transport_protocol();
 }
 
 bool Address::is_ipv4_correct(

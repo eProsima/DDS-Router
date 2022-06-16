@@ -37,27 +37,9 @@ GuidPrefix DiscoveryServerConnectionAddress::discovery_server_guid_prefix() cons
     return discovery_server_guid_prefix_;
 }
 
-std::set<Address> DiscoveryServerConnectionAddress::addresses() const noexcept
+const std::set<Address>& DiscoveryServerConnectionAddress::addresses() const noexcept
 {
     return addresses_;
-}
-
-bool DiscoveryServerConnectionAddress::is_valid() const noexcept
-{
-    if (!discovery_server_guid_prefix_.is_valid())
-    {
-        return false;
-    }
-
-    for (auto address : addresses_)
-    {
-        if (address.is_valid())
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 bool DiscoveryServerConnectionAddress::operator <(

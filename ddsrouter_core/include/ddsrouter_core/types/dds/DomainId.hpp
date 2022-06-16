@@ -28,61 +28,11 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-// Use FastDDS Domain Id type
-using DomainIdType = eprosima::fastdds::dds::DomainId_t;
+using DomainId = eprosima::fastdds::dds::DomainId_t;
 
-/**
- * @brief RTPS Domain ID.
- */
-class DomainId
-{
-public:
-
-    /**
-     * @brief Domain ID by default for DDS Routers
-     *
-     * In case of Discovery Server, default domain is 66
-     * In case of Simple Discovery, default domain is 0
-     *
-     * @param discovery_server
-     */
-    DDSROUTER_CORE_DllAPI DomainId (
-            bool discovery_server = false) noexcept;
-
-    //! Standar constructor by number
-    DDSROUTER_CORE_DllAPI DomainId (
-            const DomainIdType& domain) noexcept;
-
-    //! Return Fast DDS value for Domain ID
-    DDSROUTER_CORE_DllAPI DomainIdType operator ()() const noexcept;
-
-    //! Return Fast DDS value for Domain ID
-    DDSROUTER_CORE_DllAPI DomainIdType domain_id() const noexcept;
-
-    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
-
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const DomainId& other) const noexcept;
-
-protected:
-
-    //! Value of Fast DDS Domain ID
-    DomainIdType domain_id_;
-
-    //! Default value for Simple Discovery
-    static const DomainIdType DEFAULT_DOMAIN_ID_;                   // 0
-
-    //! Default value for Discovery Server
-    static const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID_;  // 66
-
-    //! Maximum Domain Id valid
-    static const DomainIdType MAX_DOMAIN_ID_;  // 250
-};
-
-//! \c DomainId serializator
-DDSROUTER_CORE_DllAPI std::ostream& operator <<(
-        std::ostream& output,
-        const DomainId& domain);
+static constexpr DomainId DEFAULT_DOMAIN_ID = 0;
+static constexpr DomainId DEFAULT_DISCOVERY_SERVER_DOMAIN_ID = 66;
+static constexpr DomainId MAX_DOMAIN_ID = 230;
 
 } /* namespace types */
 } /* namespace core */

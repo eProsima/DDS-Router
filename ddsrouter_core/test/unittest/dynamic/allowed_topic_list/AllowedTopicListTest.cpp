@@ -15,54 +15,13 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <dynamic/AllowedTopicList.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+// #include <dynamic/AllowedTopicList.hpp> TOOD anton
+#include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
-
-using pair_topic_type = std::pair<std::string, std::string>;
-
-/******************
-* FILTER METHODS *
-******************/
-
-/*
- * Add a topic to a list
- *
- * TODO: Add regex when implemented
- */
-void add_topic_to_list(
-        std::set<std::shared_ptr<FilterTopic>>& list,
-        pair_topic_type topic_name,
-        bool wildcard = true)
-{
-    if (wildcard)
-    {
-        list.insert(
-            std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
-    }
-}
-
-/*
- * Add several topic to a list
- *
- * TODO: Add regex when implemented
- */
-void add_topics_to_list(
-        std::set<std::shared_ptr<FilterTopic>>& list,
-        std::vector<pair_topic_type> topic_names,
-        bool wildcard = true)
-{
-    if (wildcard)
-    {
-        for (pair_topic_type topic_name : topic_names)
-        {
-            list.insert(
-                std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
-        }
-    }
-}
+using namespace eprosima::ddsrouter::core::configuration;
 
 /*
  * Create an AllowedTopicList object with the allowlist and blocklist given by argument
@@ -70,32 +29,23 @@ void add_topics_to_list(
  * Check that all topics in real_topics_negative are not allowed by the AllowedTopicList
  */
 void generic_test(
-        const std::vector<pair_topic_type>& allowlist_topics,
-        const std::vector<pair_topic_type>& blocklist_topics,
-        const std::vector<pair_topic_type>& real_topics_positive,
-        const std::vector<pair_topic_type>& real_topics_negative)
+        const TopicKeySet<FilterTopic>& allowlist_topics,
+        const TopicKeySet<FilterTopic>& blocklist_topics,
+        const TopicKeySet<RealTopic>& real_topics_positive,
+        const TopicKeySet<RealTopic>& real_topics_negative)
 {
-    // Create AllowedTopicList object
-    std::set<std::shared_ptr<FilterTopic>> allowlist;
-    std::set<std::shared_ptr<FilterTopic>> blocklist;
-
-    add_topics_to_list(allowlist, allowlist_topics);
-    add_topics_to_list(blocklist, blocklist_topics);
-
-    AllowedTopicList atl(allowlist, blocklist);
+    DDSRouterReloadConfiguration cfg(allowlist_topics, blocklist_topics, real_topics_positive);
 
     // Test positive cases
-    for (pair_topic_type topic_name : real_topics_positive)
+    for (const auto& topic : real_topics_positive)
     {
-        RealTopic topic(topic_name.first, topic_name.second);
-        ASSERT_TRUE(atl.is_topic_allowed(topic));
+        ASSERT_TRUE(cfg.is_topic_allowed(topic));
     }
 
     // Test negative cases
-    for (pair_topic_type topic_name : real_topics_negative)
+    for (const auto& topic : real_topics_negative)
     {
-        RealTopic topic(topic_name.first, topic_name.second);
-        ASSERT_FALSE(atl.is_topic_allowed(topic));
+        ASSERT_FALSE(cfg.is_topic_allowed(topic));
     }
 }
 
@@ -106,9 +56,7 @@ void generic_test(
  */
 TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
 {
-    AllowedTopicList atl;
-
-    std::vector<pair_topic_type> real_topics =
+    TopicKeySet<RealTopic> real_topics =
     {
         {"topic1", "type1"},
         {"topic2", "type2"},
@@ -116,11 +64,11 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    for (pair_topic_type topic_name : real_topics)
-    {
-        RealTopic topic(topic_name.first, topic_name.second);
+    DDSRouterReloadConfiguration cfg({}, {}, std::move(real_topics));
 
-        ASSERT_TRUE(atl.is_topic_allowed(topic));
+    for (const auto& topic : real_topics)
+    {
+        ASSERT_TRUE(cfg.is_topic_allowed(topic));
     }
 }
 
@@ -131,11 +79,11 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
 {
-    std::vector<pair_topic_type> allowlist_topics;
-    std::vector<pair_topic_type> blocklist_topics;
-    std::vector<pair_topic_type> real_topics_negative;
+    TopicKeySet<FilterTopic> allowlist_topics;
+    TopicKeySet<FilterTopic> blocklist_topics;
+    TopicKeySet<RealTopic> real_topics_negative;
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"topic2", "type2"},
@@ -157,21 +105,21 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_blocklist)
 {
-    std::vector<pair_topic_type> allowlist_topics;
+    TopicKeySet<FilterTopic> allowlist_topics;
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic2", "type2"},
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
@@ -191,23 +139,23 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blocklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_blocklist)
 {
-    std::vector<pair_topic_type> allowlist_topics;
+    TopicKeySet<FilterTopic> allowlist_topics;
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic1", "*"},
         {"*", "HelloWorld"},
         {"rt/chatter*", "std::*"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic2", "type2"},
         {"rt/topic_info", "std::std_msgs::string"},
         {"rt/chatter/pub", "std_type"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type1"},
         {"topic1", "type2"},
@@ -230,21 +178,21 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_blocklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist)
 {
-    std::vector<pair_topic_type> blocklist_topics;
+    TopicKeySet<FilterTopic> blocklist_topics;
 
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type1_"},
         {"topic1_", "type1"},
@@ -266,16 +214,16 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist)
 {
-    std::vector<pair_topic_type> blocklist_topics;
+    TopicKeySet<FilterTopic> blocklist_topics;
 
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "*"},
         {"*", "HelloWorld"},
         {"rt/chatter*", "std::*"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"topic1", "type2"},
@@ -285,7 +233,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist)
         {"rt/chatter/pub", "std::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic2", "type1"},
         {"topic2", "type2"},
@@ -309,25 +257,25 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist)
 {
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic2", "type2"},
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type2"},
         {"topic2", "type1"},
@@ -352,21 +300,21 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist)
 {
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "*"},
         {"*", "HelloWorld"},
         {"rt/pub*", "std_type::*"},
     };
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic2", "*"},
         {"*", "HelloWorldType"},
         {"rt/chatter*", "std*"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"topic1", "type2"},
@@ -376,7 +324,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist)
         {"rt/pub", "std_type::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic2", "type1"},
         {"topic2", "type2"},
@@ -401,26 +349,26 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist)
  */
 TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist_entangled)
 {
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic2", "type2"},
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "type1"},
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type2"},
         {"topic2", "type1"},
@@ -445,21 +393,21 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist_enta
  */
 TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist_entangled)
 {
-    std::vector<pair_topic_type> allowlist_topics =
+    TopicKeySet<FilterTopic> allowlist_topics =
     {
         {"topic1", "*"},
         {"*", "HelloWorld"},
         {"rt*", "std*"},
     };
 
-    std::vector<pair_topic_type> blocklist_topics =
+    TopicKeySet<FilterTopic> blocklist_topics =
     {
         {"topic1", "type*"},
         {"*HelloWorld", "HelloWorld"},
         {"rt/chatter*", "std_type::std_msgs*"},
     };
 
-    std::vector<pair_topic_type> real_topics_positive =
+    TopicKeySet<RealTopic> real_topics_positive =
     {
         {"topic1", "wtype1"},
         {"topic1", "wtype2"},
@@ -469,7 +417,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist_ent
         {"rt/chatter", "std::string"},
     };
 
-    std::vector<pair_topic_type> real_topics_negative =
+    TopicKeySet<RealTopic> real_topics_negative =
     {
         {"topic1", "type1"},
         {"topic1", "type2"},

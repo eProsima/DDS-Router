@@ -17,107 +17,149 @@
  *
  */
 
-#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <types/topic/Topic.hpp>
+#include <ddsrouter_utils/utils.hpp>
+
+#include <array>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
+static constexpr std::array<const char*, 1> REAL_TOPIC_INVALID_SUBSTRINGS = {
+    "*", // Wildcard char
+};
+
 Topic::Topic(
-        std::string topic_name,
-        std::string topic_type,
-        bool topic_with_key /* = false */) noexcept
-    : topic_name_(topic_name)
-    , topic_type_(topic_type)
-    , topic_with_key_(topic_with_key)
+        std::string name,
+        std::string type,
+        bool with_key /*false*/)
+    : name_(name)
+    , type_(type)
+    , with_key_(with_key)
 {
 }
 
-Topic& Topic::operator =(
-        const Topic& other)
+const std::string& Topic::name() const noexcept
 {
-    this->topic_name_ = other.topic_name_;
-    this->topic_type_ = other.topic_type_;
-    this->topic_with_key_ = other.topic_with_key_;
-    return *this;
+    return name_;
 }
 
-const std::string& Topic::topic_name() const
+const std::string& Topic::type() const noexcept
 {
-    return topic_name_;
+    return type_;
 }
 
-const std::string& Topic::topic_type() const
+bool Topic::has_key() const noexcept
 {
-    return topic_type_;
-}
-
-bool Topic::topic_with_key() const
-{
-    return topic_with_key_;
+    return with_key_;
 }
 
 bool Topic::operator ==(
-        const Topic& other) const
+        const Topic& other) const noexcept
 {
-
-    return topic_name_ == other.topic_name_
-           && topic_type_ == other.topic_type_
-           && topic_with_key_ == other.topic_with_key_;
+    return name_ == other.name() && type_ == other.type();
 }
 
 bool Topic::operator <(
         const Topic& other) const
 {
-    int name_comparison = topic_name_.compare(other.topic_name_);
-    if (name_comparison < 0)
+    return std::make_pair(name_, type_) < std::make_pair(other.name(), other.type());
+}
+
+//// RealTopic
+
+RealTopic::RealTopic(
+        std::string name,
+        std::string type,
+        bool with_key,
+        bool is_reliable)
+    : Topic(name, type, with_key)
+    , reliable_(is_reliable)
+{
+    for (auto invalid_substring : REAL_TOPIC_INVALID_SUBSTRINGS)
     {
-        return true;
-    }
-    else if (name_comparison > 0)
-    {
-        return false;
-    }
-    else
-    {
-        // Equal name, compare type
-        // WARNING: do not return value from compare, as -1 != false
-        int topic_comparison = topic_type_.compare(other.topic_type_);
-        if (topic_comparison < 0)
+        if (name_.find(invalid_substring) != std::string::npos ||
+                type_.find(invalid_substring) != std::string::npos)
         {
-            return true;
-        }
-        else if (topic_comparison > 0)
-        {
-            return false;
-        }
-        else
-        {
-            // Equal type, compare keyed
-            if (topic_with_key_ == other.topic_with_key_)
-            {
-                return false;
-            }
-            else
-            {
-                return !topic_with_key_;
-            }
+            throw utils::InitializationException( utils::Formatter() << "Found invalid substring: " <<
+                          invalid_substring);
         }
     }
 }
 
-bool Topic::is_valid() const noexcept
+bool RealTopic::is_reliable() const noexcept
 {
-    return true;
+    return reliable_;
+}
+
+//// FilterTopic
+
+FilterTopic::FilterTopic(
+        std::string name,
+        std::string type,
+        bool with_key,
+        bool has_keyed_set)
+    : Topic(name, type, with_key)
+    , has_keyed_set_(has_keyed_set)
+{
+}
+
+bool FilterTopic::has_keyed_set() const noexcept
+{
+    return has_keyed_set_;
+}
+
+bool FilterTopic::matches(
+        const RealTopic& other) const noexcept
+{
+
+    return (!this->has_keyed_set() || (this->has_key() == other.has_key())) &&
+           utils::match_pattern(this->name(), other.name()) &&
+           utils::match_pattern(this->type(), other.type());
+}
+
+WildcardTopic::WildcardTopic(
+        std::string name,
+        std::string type, /* "*" */
+        bool topic_with_key /* = false */,
+        bool has_keyed_set /* = false */)
+    : FilterTopic(name, type, topic_with_key, has_keyed_set)
+{
+}
+
+bool WildcardTopic::contains(
+        const FilterTopic& other) const
+{
+    // TODO: implement
+    static_cast<void> (other);
+    return false;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
-        const Topic& a)
+        const Topic& topic)
 {
-    std::string keyed_str = a.topic_with_key() ? "keyed" : "no_key";
-    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << "}";
+    os << "Topic{" << topic.name() << ";" << topic.type() << "}";
+    return os;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const RealTopic& topic)
+{
+    os << "Topic{" << topic.name() << ";" << topic.type() << ";" << (topic.has_key()? "keyed" : "no_key") << ";" <<
+        (topic.is_reliable()? "reliable" : "best_effort") << "}";
+    return os;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const FilterTopic& topic)
+{
+    os << "FilterTopic(" << topic.name() << ";" << topic.type() << ";" << (topic.has_key()? "keyed" : "no_key") <<
+        ";" << (topic.has_keyed_set()? "keyed_set" : "no_keyed_set") << "}";
     return os;
 }
 
