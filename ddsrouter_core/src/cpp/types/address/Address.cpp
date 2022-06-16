@@ -199,7 +199,7 @@ void Address::check_valid_() const
     {
         case IpVersion::v4:
         {
-            if (not is_ipv4_correct(ip_))
+            if (!is_ipv4_correct(ip_))
             {
                 throw utils::InitializationException("Incorrect IPv4");
             }
@@ -207,7 +207,7 @@ void Address::check_valid_() const
         }
         case IpVersion::v6:
         {
-            if (not is_ipv6_correct(ip_))
+            if (!is_ipv6_correct(ip_))
             {
                 throw utils::InitializationException("Incorrect IPv6");
             }

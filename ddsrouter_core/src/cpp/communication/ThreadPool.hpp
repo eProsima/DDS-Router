@@ -172,7 +172,7 @@ private:
 
                 auto task = data_forward_queue_.wait_and_pop();
 
-                if (not DataForwardQueue::is_task_invalid(task))
+                if (!DataForwardQueue::is_task_invalid(task))
                 {
 
                     task->take_and_forward();

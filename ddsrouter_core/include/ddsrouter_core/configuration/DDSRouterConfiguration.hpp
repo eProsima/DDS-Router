@@ -128,7 +128,7 @@ protected:
 private:
 
     //! Internal throwing validator
-    void check_valid_() const;
+    DDSROUTER_CORE_DllAPI void check_valid_() const;
 };
 
 } /* namespace configuration */

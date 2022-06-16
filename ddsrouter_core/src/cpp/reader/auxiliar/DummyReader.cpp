@@ -34,7 +34,7 @@ void GenericReader<types::ParticipantKind::dummy>::take_and_forward() noexcept
 {
     notified_.fetch_add(1, std::memory_order_relaxed);
 
-    if (not take_lock_.test_and_set(std::memory_order_acquire))
+    if (!take_lock_.test_and_set(std::memory_order_acquire))
     {
 
         while (forwarded_ < notified_.load(std::memory_order_relaxed))

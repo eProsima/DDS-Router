@@ -54,8 +54,10 @@ Reader::Reader(
     , enqueued_while_disabled_(0)
     , notified_(0)
     , forwarded_(0)
-    , take_lock_(false)
 {
+    // Set take_lock_ flag to false
+    take_lock_.clear();
+
     // Create History
     rtps_history_ = std::make_unique<fastrtps::rtps::ReaderHistory>(history_attributes_());
 
@@ -182,12 +184,12 @@ void Reader::onNewCacheChangeAdded(
     if (in_change->writerGUID.guidPrefix != rtps_reader_->getGuid().guidPrefix)
     {
 
-        if (not this->enabled_.load(std::memory_order_acquire))
+        if (!this->enabled_.load(std::memory_order_acquire))
         {
 
             // Topic is disabled
 
-            if (not topic_.is_reliable())
+            if (!topic_.is_reliable())
             {
                 // Topic not reliable, so remove received change
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)in_change);
@@ -217,7 +219,7 @@ void Reader::take_and_forward() noexcept
     notified_.fetch_add(1, std::memory_order_relaxed);
 
     // Try to enter to the critical section, or leave
-    if (not take_lock_.test_and_set(std::memory_order_acquire))
+    if (!take_lock_.test_and_set(std::memory_order_acquire))
     {
 
         // take_lock_ was false, now set to true
@@ -251,7 +253,7 @@ void Reader::take_and_forward() noexcept
 
                 // nextUntakenCache failed or incoming payload has wrong size. Do nothing, just log
 
-                if (not nextUntakenCache_success)
+                if (!nextUntakenCache_success)
                 {
 
                     logWarning(DDSROUTER_RTPS_READER_LISTENER, "Error taking untaken cache");

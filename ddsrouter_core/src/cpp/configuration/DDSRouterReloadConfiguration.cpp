@@ -68,8 +68,8 @@ TopicKeySet<RealTopic> DDSRouterReloadConfiguration::reload(
         }
     }
 
-    if (new_builtin_topics.empty() and new_configuration.allowlist() ==
-            this->allowlist_ and new_configuration.blocklist() == this->blocklist_)
+    if (new_builtin_topics.empty() && (new_configuration.allowlist() ==
+            this->allowlist_) && (new_configuration.blocklist() == this->blocklist_))
     {
         logDebug(DDSROUTER, "Same configuration, do nothing in reload.");
         return new_builtin_topics;

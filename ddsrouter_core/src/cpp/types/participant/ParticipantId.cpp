@@ -110,7 +110,7 @@ ParticipantId::ParticipantId(
     : BaseT(std::make_pair(name, ParticipantKind::blank))
 {
 
-    if (not is_participant_id_valid(*this))
+    if (!is_participant_id_valid(*this))
     {
         throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
     }
@@ -122,7 +122,7 @@ ParticipantId::ParticipantId(
     : BaseT(std::make_pair(name, kind))
 {
 
-    if (not is_participant_id_valid(*this))
+    if (!is_participant_id_valid(*this))
     {
         throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
     }
@@ -134,7 +134,7 @@ ParticipantId::ParticipantId(
     : BaseT(std::make_pair(name, participant_kind_from_string(kind_str)))
 {
 
-    if (not is_participant_id_valid(*this))
+    if (!is_participant_id_valid(*this))
     {
         throw utils::InitializationException(utils::Formatter() << "Invalid participant ID" << *this);
     }

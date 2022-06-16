@@ -218,7 +218,7 @@ void DDSRouterImpl::register_topic_(
 {
 
     // Must be first registered in the configuration
-    if (not router_configuration_.is_topic_registered(topic))
+    if (!router_configuration_.is_topic_registered(topic))
     {
         throw utils::InconsistencyException("Cannot call register_topic_ before registration into configuration");
     }

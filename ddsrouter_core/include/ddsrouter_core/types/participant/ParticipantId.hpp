@@ -228,28 +228,28 @@ struct ParticipantCompare_
 {
     using is_transparent = void;
 
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const HoldParticipantIdPtrT& ptr_a,
             const HoldParticipantIdPtrT& ptr_b) const;
 
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const ParticipantId& id_a,
             const HoldParticipantIdPtrT& ptr_b) const;
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const HoldParticipantIdPtrT& ptr_a,
             const ParticipantId& id_b) const;
 
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const ParticipantName& name_a,
             const HoldParticipantIdPtrT& id_b) const;
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const HoldParticipantIdPtrT& id_a,
             const ParticipantName& name_b) const;
 
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const char* name_a,
             const HoldParticipantIdPtrT& ptr_b) const;
-    DDSROUTER_CORE_DllAPI bool operator ()(
+    bool operator ()(
             const HoldParticipantIdPtrT& ptr_a,
             const char* name_b) const;
 };

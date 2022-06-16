@@ -63,7 +63,7 @@ types::ParticipantKeySet<const ParticipantConfiguration*> DDSRouterConfiguration
     return raw_participants_configurations;
 }
 
-DDSROUTER_CORE_DllAPI void DDSRouterConfiguration::check_valid_() const
+void DDSRouterConfiguration::check_valid_() const
 {
     // Check there are at least two participants
     if (participants_configurations_.size() < 2)
@@ -84,23 +84,23 @@ DDSROUTER_CORE_DllAPI void DDSRouterConfiguration::check_valid_() const
     }
 }
 
-DDSROUTER_CORE_DllAPI unsigned int DDSRouterConfiguration::threads() const noexcept
+unsigned int DDSRouterConfiguration::threads() const noexcept
 {
     return threads_;
 }
 
-DDSROUTER_CORE_DllAPI unsigned int DDSRouterConfiguration::payload_pool_granularity() const noexcept
+unsigned int DDSRouterConfiguration::payload_pool_granularity() const noexcept
 {
     return payload_pool_granularity_;
 }
 
-DDSROUTER_CORE_DllAPI const fastrtps::rtps::recycle::PoolConfig& DDSRouterConfiguration::payload_pool_configuration()
+const fastrtps::rtps::recycle::PoolConfig& DDSRouterConfiguration::payload_pool_configuration()
 const noexcept
 {
     return payload_pool_config_;
 }
 
-DDSROUTER_CORE_DllAPI std::string DDSRouterConfiguration::get_payload_pool_index(
+std::string DDSRouterConfiguration::get_payload_pool_index(
         const std::string& original_index) const noexcept
 {
     if (payload_pool_granularity_ == 0)

@@ -76,11 +76,17 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                     }
         );
 
+    unsigned int threads = 2;
+    // Single payload pool for all topic names
+    unsigned int payload_pool_granularity = 1;
+
     return configuration::DDSRouterConfiguration(
         allowlist,
         blocklist,
         builtin_topics,
-        participants_configurations
+        participants_configurations,
+        threads,
+        payload_pool_granularity
         );
 }
 
