@@ -65,7 +65,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::ECHO);
+        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
     }
 }
 
@@ -124,7 +124,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::SIMPLE_RTPS);
+        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::simple_rtps);
     }
 }
 
@@ -166,7 +166,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::ECHO);
+        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
     }
 }
 
@@ -223,7 +223,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::ECHO);
+        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
     }
 }
 
@@ -273,7 +273,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
     for (std::shared_ptr<core::configuration::ParticipantConfiguration> participant : participant_configurations)
     {
         // If it is not the discovery server participant, continue
-        if (!(participant->kind() == core::types::ParticipantKind::LOCAL_DISCOVERY_SERVER))
+        if (!(participant->kind() == core::types::ParticipantKind::local_discovery_server))
         {
             continue;
         }

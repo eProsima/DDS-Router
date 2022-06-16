@@ -119,11 +119,11 @@ types::Endpoint CommonRTPSRouterParticipant<ConfigurationType>::create_endpoint_
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::READER, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic);
     }
     else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::WRITER, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic);
     }
     else
     {

@@ -131,7 +131,7 @@ std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
     // Check if it is disabled and exit
     if (!enabled())
     {
-        reason = AwakeReason::DISABLED;
+        reason = AwakeReason::disabled;
         return lock;
     }
 
@@ -167,15 +167,15 @@ std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
     // Check awake reason. Mutex is taken so it can not change while checking
     if (!enabled_.load())
     {
-        reason = AwakeReason::DISABLED;
+        reason = AwakeReason::disabled;
     }
     else if (finished_for_condition_met)
     {
-        reason = AwakeReason::CONDITION_MET;
+        reason = AwakeReason::condition_met;
     }
     else
     {
-        reason = AwakeReason::TIMEOUT;
+        reason = AwakeReason::timeout;
     }
 
     // Return the lock so this mutex keeps being locked after this function exit

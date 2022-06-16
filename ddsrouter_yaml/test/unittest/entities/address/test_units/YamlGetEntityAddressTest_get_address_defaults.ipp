@@ -64,6 +64,6 @@ TEST(YamlGetEntityAddressTest, get_address_defaults)
         ASSERT_EQ("::1", result.ip());
         ASSERT_EQ(core::types::Address::default_port(), result.port());
         ASSERT_EQ(core::types::Address::default_transport_protocol(), result.transport_protocol());
-        ASSERT_EQ(core::types::IpVersion::IPv6, result.ip_version());
+        ASSERT_EQ(core::types::IpVersion::v6, result.ip_version());
     }
 }

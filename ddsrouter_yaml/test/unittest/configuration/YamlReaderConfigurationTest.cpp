@@ -152,7 +152,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
               - name: "P1"
                 kind: "void"
               - name: "P2"
-                kind: "void
+                kind: void"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -187,7 +187,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
               - name: "P1"
                 kind: "void"
               - name: "P2"
-                kind: "void
+                kind: void"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
@@ -208,7 +208,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
               - name: "P1"
                 kind: "void"
               - name: "P2"
-                kind: "void
+                kind: void"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);

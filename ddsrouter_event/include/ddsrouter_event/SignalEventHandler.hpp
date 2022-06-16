@@ -51,18 +51,18 @@ public:
 };
 
 /**
- * It raises a callback each time the signal specified by \c SigNum is received.
+ * It raises a callback each time the signal specified by \c SigVal is received.
  *
  * This class uses \c SignalManager to handle the signal.
  * This registers a callback in \c SignalManager so each signal received calls \c event_occured_
  *
- * The template \c SigNum references the signal that the object will handle following the
- * values in \c Signals .
+ * The template \c SigVal references the signal that the object will handle following the
+ * values in \c Signal .
  * Be aware that objects for different signals are completely independent as they are different objects
  * that only share the same templatization.
  */
-template <int SigNum>
-class SignalEventHandler : public EventHandler<int>, public IBaseSignalEventHandler
+template <Signal SigVal>
+class SignalEventHandler : public EventHandler<Signal>, public IBaseSignalEventHandler
 {
 public:
 
@@ -83,7 +83,7 @@ public:
      * @param callback : function that will be called when the signal raises.
      */
     SignalEventHandler(
-            std::function<void(int)> callback) noexcept;
+            std::function<void(Signal)> callback) noexcept;
 
     /**
      * @brief Destroy Signal Handler object

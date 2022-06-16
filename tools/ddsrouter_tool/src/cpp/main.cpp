@@ -56,13 +56,13 @@ int main(
     ui::ProcessReturnCode arg_parse_result =
             ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
-    if (arg_parse_result == ui::ProcessReturnCode::HELP_ARGUMENT)
+    if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
-        return ui::ProcessReturnCode::SUCCESS;
+        return static_cast<int>(ui::ProcessReturnCode::success);
     }
-    else if (arg_parse_result != ui::ProcessReturnCode::SUCCESS)
+    else if (arg_parse_result != ui::ProcessReturnCode::success)
     {
-        return arg_parse_result;
+        return static_cast<int>(arg_parse_result);
     }
 
     // Check file is in args, else get the default file
@@ -77,12 +77,12 @@ int main(
 
     // Check file exists and it is readable
     // NOTE: this check is redundant with option parse arg check
-    if (!is_file_accessible(file_path.c_str(), utils::READ))
+    if (!is_file_accessible(file_path.c_str(), utils::FileAccessMode::read))
     {
         logError(
             DDSROUTER_ARGS,
             "File '" << file_path << "' does not exist or it is not accessible.");
-        return ui::ProcessReturnCode::REQUIRED_ARGUMENT_FAILED;
+        return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
     }
 
     // Activate Debug
@@ -105,10 +105,10 @@ int main(
         // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
         event::MultipleEventHandler signal_handlers;
 
-        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGINT>>());     // Add SIGINT
-        signal_handlers.register_event_handler<event::EventHandler<int>, int>(
-            std::make_unique<event::SignalEventHandler<event::SIGNAL_SIGTERM>>());    // Add SIGTERM
+        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+            std::make_unique<event::SignalEventHandler<event::Signal::sigint>>());     // Add SIGINT
+        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+            std::make_unique<event::SignalEventHandler<event::Signal::sigterm>>());    // Add SIGTERM
 
         /////
         // DDS Router Initialization
@@ -216,14 +216,14 @@ int main(
                 "Error Loading DDS Router Configuration from file " << file_path <<
                 ". Error message:\n " <<
                 e.what());
-        return ui::ProcessReturnCode::EXECUTION_FAILED;
+        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
     }
     catch (const utils::InitializationException& e)
     {
         logError(DDSROUTER_ERROR,
                 "Error Initializing DDS Router. Error message:\n " <<
                 e.what());
-        return ui::ProcessReturnCode::EXECUTION_FAILED;
+        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router Tool execution correctly.");
@@ -231,5 +231,5 @@ int main(
     // Force print every log before closing
     utils::Log::Flush();
 
-    return ui::ProcessReturnCode::SUCCESS;
+    return static_cast<int>(ui::ProcessReturnCode::success);
 }

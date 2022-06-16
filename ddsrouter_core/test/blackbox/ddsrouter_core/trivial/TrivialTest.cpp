@@ -53,11 +53,11 @@ configuration::DDSRouterConfiguration void_configuration()
     {
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId("ParticipantVoid1"),
-            ParticipantKind::VOID
+            ParticipantKind::blank
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId("ParticipantVoid2"),
-            ParticipantKind::VOID
+            ParticipantKind::blank
             )
     }
             ));
@@ -82,18 +82,18 @@ configuration::DDSRouterConfiguration simple_configuration(
     {
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId(participant_1_name),
-            ParticipantKind::DUMMY
+            ParticipantKind::dummy
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId(participant_2_name),
-            ParticipantKind::DUMMY
+            ParticipantKind::dummy
             )
     }
             ));
 }
 
 /**
- * Test Whole DDSRouter initialization by initializing two VoidParticipants
+ * Test Whole DDSRouter initialization by initializing two EmptyParticipants
  */
 TEST(TrivialTest, trivial_void_initialization)
 {

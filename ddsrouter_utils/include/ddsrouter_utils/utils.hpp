@@ -35,15 +35,34 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-enum FileAccessMode
-{
-    EXIST       = 0,
-    READ        = 4,
-    WRITE       = 2,
+using FileAccessModeType = int;
 
-    // Windoes does not have execution info of a file
-    EXECUTION   = 1,
+/**
+   Enum for all possible access modes
+ * Linux: See https://linux.die.net/man/2/access
+ * Windows: See https://docs.microsoft.com/es-es/cpp/c-runtime-library/reference/access-waccess?view=msvc-170
+ */
+enum class FileAccessMode
+{
+    exist               = 0,
+    read                = 4,
+    write               = 2,
+    exec                = 1,
+    read_write          = read | write,
+    read_exec           = read | exec,
+    read_write_exec     = read | write | exec,
+    write_exec          = write | exec,
 };
+
+//! Overloaded '|' operator for composing permissions.
+FileAccessMode operator |(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b);
+
+//! Overloaded '&' operator for matching permissions.
+FileAccessMode operator &(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b);
 
 //! Perform the wildcard matching using file comparison method
 DDSROUTER_UTILS_DllAPI bool match_pattern(
@@ -123,13 +142,13 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  *
  * The accessibility could be checked for different permissions regarding argument \c access_mode ,
  * and each of them are asked by a different \c FileAccessMode :
- * - \c EXIST       : check if the file exist (any argument check this)
- * - \c READ        : check if the file has read access
- * - \c WRITE       : check if the file has write access
- * - \c EXECUTION   : check if the file has execution access
+ * - \c FileAccessMode::exist       : check if the file exist (any argument check this)
+ * - \c FileAccessMode::read        : check if the file has read access
+ * - \c FileAccessMode::write       : check if the file has write access
+ * - \c FileAccessMode::exec        : check if the file has execution access
  *
  * This method could be used by OR \c FileAccessMode to check that file has all permissions in OR as:
- * access_mode = READ | WRITE -> check that file has read and write access permission.
+ * access_mode = FileAccessMode::read_write -> check that file has read and write access permission.
  *
  * @warning windows does not retrieve information about the execution permission on a file.
  *
@@ -140,7 +159,7 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
  */
 DDSROUTER_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
-        int access_mode = EXIST) noexcept;
+        FileAccessMode access_mode = FileAccessMode::exist) noexcept;
 
 } /* namespace utils */
 } /* namespace ddsrouter */

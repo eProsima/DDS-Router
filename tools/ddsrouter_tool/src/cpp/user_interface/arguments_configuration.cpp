@@ -131,7 +131,7 @@ ProcessReturnCode parse_arguments(
         if (parse.error())
         {
             option::printUsage(fwrite, stdout, usage, columns);
-            return ProcessReturnCode::INCORRECT_ARGUMENT;
+            return ProcessReturnCode::incorrect_argument;
         }
 
         // Unknown args provided
@@ -139,14 +139,14 @@ ProcessReturnCode parse_arguments(
         {
             logError(DDSROUTER_ARGS, "ERROR: Unknown argument: <" << parse.nonOption(0) << ">." );
             option::printUsage(fwrite, stdout, usage, columns);
-            return ProcessReturnCode::INCORRECT_ARGUMENT;
+            return ProcessReturnCode::incorrect_argument;
         }
 
         // Adding Help before every other check to show help in case an argument is incorrect
         if (options[optionIndex::HELP])
         {
             option::printUsage(fwrite, stdout, usage, columns);
-            return ProcessReturnCode::HELP_ARGUMENT;
+            return ProcessReturnCode::help_argument;
         }
 
         for (int i = 0; i < parse.optionsCount(); ++i)
@@ -169,7 +169,7 @@ ProcessReturnCode parse_arguments(
                 case optionIndex::UNKNOWN_OPT:
                     logError(DDSROUTER_ARGS, opt << " is not a valid argument.");
                     option::printUsage(fwrite, stdout, usage, columns);
-                    return ProcessReturnCode::INCORRECT_ARGUMENT;
+                    return ProcessReturnCode::incorrect_argument;
                     break;
 
                 default:
@@ -180,10 +180,10 @@ ProcessReturnCode parse_arguments(
     else
     {
         option::printUsage(fwrite, stdout, usage, columns);
-        return ProcessReturnCode::INCORRECT_ARGUMENT;
+        return ProcessReturnCode::incorrect_argument;
     }
 
-    return ProcessReturnCode::SUCCESS;
+    return ProcessReturnCode::success;
 }
 
 option::ArgStatus Arg::Unknown(
@@ -277,7 +277,7 @@ option::ArgStatus Arg::Readable_File(
     if (option.arg != 0)
     {
         // Windows has not unistd library, so to check if file is readable use a _access method (definition on top)
-        if (is_file_accessible(option.arg, utils::READ))
+        if (is_file_accessible(option.arg, utils::FileAccessMode::read))
         {
             return option::ARG_OK;
         }

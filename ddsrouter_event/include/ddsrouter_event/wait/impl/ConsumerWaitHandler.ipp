@@ -64,11 +64,11 @@ T ConsumerWaitHandler<T>::consume(
     AwakeReason reason = wait_and_decrement(timeout);
 
     // Check if reason has been condition met, else throw exception
-    if (reason == AwakeReason::DISABLED)
+    if (reason == AwakeReason::disabled)
     {
         throw utils::DisabledException("ConsumerWaitHandler has been disabled.");
     }
-    else if (reason == AwakeReason::TIMEOUT)
+    else if (reason == AwakeReason::timeout)
     {
         throw utils::TimeoutException("ConsumerWaitHandler awaken by timeout.");
     }

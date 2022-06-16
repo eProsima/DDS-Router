@@ -47,7 +47,7 @@ using namespace eprosima::ddsrouter::core::types;
 TEST(ImplementationsTest, solo_participant_implementation)
 {
     // For each Participant Kind
-    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind));
@@ -79,7 +79,7 @@ TEST(ImplementationsTest, pair_implementation)
     test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     // For each Participant Kind
-    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
@@ -120,7 +120,7 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
 
     // For each Participant kind
-    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
         std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
             {test::RealTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
@@ -174,7 +174,7 @@ TEST(ImplementationsTest, all_implementations)
         uint16_t participant_number = 0;
 
         // For each Participant Kind set it in configuration
-        for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+        for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
         {
             // Add participant
             participant_configurations.insert(test::random_participant_configuration(kind, participant_number++));
@@ -209,7 +209,7 @@ TEST(ImplementationsTest, all_implementations)
 TEST(ImplementationsTest, duplicated_ids)
 {
     // For each Participant Kind
-    for (ParticipantKind kind : ParticipantKind::all_valid_participant_kinds())
+    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind, 0));

@@ -29,40 +29,40 @@ namespace eprosima {
 namespace ddsrouter {
 namespace event {
 
-template <int SigNum>
-std::recursive_mutex SignalManager<SigNum>::instance_mutex_;
+template <Signal SigVal>
+std::recursive_mutex SignalManager<SigVal>::instance_mutex_;
 
-template <int SigNum>
-std::condition_variable SignalManager<SigNum>::signal_received_cv_;
+template <Signal SigVal>
+std::condition_variable SignalManager<SigVal>::signal_received_cv_;
 
-template <int SigNum>
-std::atomic<uint32_t> SignalManager<SigNum>::signals_received_(0);
+template <Signal SigVal>
+std::atomic<uint32_t> SignalManager<SigVal>::signals_received_(0);
 
-template <int SigNum>
-SignalManager<SigNum>& SignalManager<SigNum>::get_instance() noexcept
+template <Signal SigVal>
+SignalManager<SigVal>& SignalManager<SigVal>::get_instance() noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(instance_mutex_);
 
-    static SignalManager<SigNum> instance_;
+    static SignalManager<SigVal> instance_;
     return instance_;
 }
 
-template <int SigNum>
-SignalManager<SigNum>::SignalManager() noexcept
+template <Signal SigVal>
+SignalManager<SigVal>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
     , current_last_id_(0)
 {
-    signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
+    signal(static_cast<int>(SigVal), SignalManager<SigVal>::signal_handler_function_);
 
     logDebug(DDSROUTER_SIGNALMANAGER,
-            "Set SignalManager handling signal: " << SigNum << ".");
+            "Set SignalManager handling signal: " << SigVal << ".");
 
     signal_handler_thread_ = std::thread(
-        &SignalManager<SigNum>::signal_handler_thread_routine_, this);
+        &SignalManager<SigVal>::signal_handler_thread_routine_, this);
 }
 
-template <int SigNum>
-SignalManager<SigNum>::~SignalManager() noexcept
+template <Signal SigVal>
+SignalManager<SigVal>::~SignalManager() noexcept
 {
     {
         std::unique_lock<std::mutex> lock(signal_received_cv_mutex_);
@@ -73,11 +73,11 @@ SignalManager<SigNum>::~SignalManager() noexcept
     signal_handler_thread_.join();
 
     logDebug(DDSROUTER_SIGNALMANAGER,
-            "Destroying SignalManager in signal: " << SigNum << ".");
+            "Destroying SignalManager in signal: " << SigVal << ".");
 }
 
-template <int SigNum>
-UniqueCallbackId SignalManager<SigNum>::register_callback(
+template <Signal SigVal>
+UniqueCallbackId SignalManager<SigVal>::register_callback(
         std::function<void()> callback) noexcept
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
@@ -86,13 +86,13 @@ UniqueCallbackId SignalManager<SigNum>::register_callback(
     active_callbacks_[new_id] = callback;
 
     logDebug(DDSROUTER_SIGNALMANAGER,
-            "Add callback to signal " << SigNum << ".");
+            "Add callback to signal " << SigVal << ".");
 
     return new_id;
 }
 
-template <int SigNum>
-void SignalManager<SigNum>::unregister_callback(
+template <Signal SigVal>
+void SignalManager<SigVal>::unregister_callback(
         UniqueCallbackId id)
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
@@ -103,30 +103,30 @@ void SignalManager<SigNum>::unregister_callback(
     }
 
     logDebug(DDSROUTER_SIGNALHANDLER,
-            "Erase callback from signal " << SigNum << ".");
+            "Erase callback from signal " << SigVal << ".");
 }
 
-template <int SigNum>
-UniqueCallbackId SignalManager<SigNum>::new_unique_id_() noexcept
+template <Signal SigVal>
+UniqueCallbackId SignalManager<SigVal>::new_unique_id_() noexcept
 {
     std::lock_guard<std::mutex> lock(last_id_mutex_);
     current_last_id_++;
     return current_last_id_;
 }
 
-template <int SigNum>
-void SignalManager<SigNum>::signal_handler_function_(
-        int signal_number) noexcept
+template <Signal SigVal>
+void SignalManager<SigVal>::signal_handler_function_(
+        int sigval) noexcept
 {
 #ifdef _WIN32
     // Windows requires to handle again the signal once it has been handled
-    signal(SigNum, SignalManager<SigNum>::signal_handler_function_);
+    signal(static_cast<int>(SigVal), SignalManager<SigVal>::signal_handler_function_);
 #endif // _WIN32
     signal_received_();
 }
 
-template <int SigNum>
-void SignalManager<SigNum>::signal_received_() noexcept
+template <Signal SigVal>
+void SignalManager<SigVal>::signal_received_() noexcept
 {
     // Normally \c signals_received_ should be guarded by \c signal_received_cv_mutex_ in order to prevent
     // missing notifications. However here it is not possible as mutexes should not be taken from within
@@ -136,13 +136,13 @@ void SignalManager<SigNum>::signal_received_() noexcept
     signal_received_cv_.notify_one();
 }
 
-template <int SigNum>
-void SignalManager<SigNum>::signal_handler_routine_() noexcept
+template <Signal SigVal>
+void SignalManager<SigVal>::signal_handler_routine_() noexcept
 {
     std::lock_guard<std::mutex> lock(active_callbacks_mutex_);
 
     logInfo(DDSROUTER_SIGNALHANDLER,
-            "Received signal " << SigNum << ".");
+            "Received signal " << SigVal << ".");
 
     for (auto it : active_callbacks_)
     {
@@ -150,8 +150,8 @@ void SignalManager<SigNum>::signal_handler_routine_() noexcept
     }
 }
 
-template <int SigNum>
-void SignalManager<SigNum>::signal_handler_thread_routine_() noexcept
+template <Signal SigVal>
+void SignalManager<SigVal>::signal_handler_thread_routine_() noexcept
 {
     while (!signal_handler_thread_stop_.load())
     {
@@ -174,6 +174,14 @@ void SignalManager<SigNum>::signal_handler_thread_routine_() noexcept
             signal_handler_routine_();
         }
     }
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const Signal& sigval)
+{
+    os << static_cast<int>(sigval);
+    return os;
 }
 
 } /* namespace event */

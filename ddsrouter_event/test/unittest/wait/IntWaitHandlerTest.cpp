@@ -88,7 +88,7 @@ TEST(IntWaitHandlerTest, wait_value)
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
                 AwakeReason reason = waiter.wait_equal(1);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
 
@@ -110,7 +110,7 @@ TEST(IntWaitHandlerTest, wait_value)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_equal(2);
-                ASSERT_EQ(reason, AwakeReason::DISABLED);
+                ASSERT_EQ(reason, AwakeReason::disabled);
             }
             );
 
@@ -149,7 +149,7 @@ TEST(IntWaitHandlerTest, wait_upper)
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
                 AwakeReason reason = waiter.wait_greater_than(3);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
 
@@ -171,7 +171,7 @@ TEST(IntWaitHandlerTest, wait_upper)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_greater_than(-1);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
 
@@ -189,7 +189,7 @@ TEST(IntWaitHandlerTest, wait_upper)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_greater_equal_than(13);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
         waiter.set_value(13);
@@ -208,7 +208,7 @@ TEST(IntWaitHandlerTest, wait_upper)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_greater_than(17); // Wait for disable
-                ASSERT_EQ(reason, AwakeReason::DISABLED);
+                ASSERT_EQ(reason, AwakeReason::disabled);
             }
             );
 
@@ -247,7 +247,7 @@ TEST(IntWaitHandlerTest, wait_lower)
                 // Note that if this wait occurs after set_value
                 // it will jut not wait but awake reason will be correct.
                 AwakeReason reason = waiter.wait_lower_than(-3);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
 
@@ -269,7 +269,7 @@ TEST(IntWaitHandlerTest, wait_lower)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_lower_than(1);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
 
@@ -287,7 +287,7 @@ TEST(IntWaitHandlerTest, wait_lower)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_lower_equal_than(13);
-                ASSERT_EQ(reason, AwakeReason::CONDITION_MET);
+                ASSERT_EQ(reason, AwakeReason::condition_met);
             }
             );
         waiter.set_value(13);
@@ -306,7 +306,7 @@ TEST(IntWaitHandlerTest, wait_lower)
             {
                 // Wait in new thread
                 AwakeReason reason = waiter.wait_lower_than(-17); // Wait for disable
-                ASSERT_EQ(reason, AwakeReason::DISABLED);
+                ASSERT_EQ(reason, AwakeReason::disabled);
             }
             );
 

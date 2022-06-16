@@ -34,23 +34,23 @@ namespace ddsrouter {
 namespace core {
 namespace test {
 
-enum WanKind
+enum class WanKind
 {
-    SERVER,
-    CLIENT,
-    SERVER_AND_CLIENT
+    server,
+    client,
+    server_and_client
 };
 
 bool is_client(
         WanKind wan_kind)
 {
-    return wan_kind == CLIENT || wan_kind == SERVER_AND_CLIENT;
+    return wan_kind == WanKind::client || wan_kind == WanKind::server_and_client;
 }
 
 bool is_server(
         WanKind wan_kind)
 {
-    return wan_kind == SERVER || wan_kind == SERVER_AND_CLIENT;
+    return wan_kind == WanKind::server || wan_kind == WanKind::server_and_client;
 }
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
@@ -97,7 +97,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
                 types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
                         {
                             types::Address(
-                                (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
+                                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                                 11666 + (this_server_id_is_1 ? 0u : 1u),
                                 ip_version,
                                 transport_protocol)
@@ -110,7 +110,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         listening_addresses.insert(
             types::Address(
-                (ip_version == types::IpVersion::IPv4 ? "127.0.0.1" : "::1"),
+                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
                 transport_protocol)
@@ -124,7 +124,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::WAN),
+            types::ParticipantKind(types::ParticipantKind::wan),
             tls_configuration(wan_kind));
 
     }
@@ -135,7 +135,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::WAN)
+            types::ParticipantKind(types::ParticipantKind::wan)
             );
     }
 }
@@ -172,7 +172,7 @@ configuration::DDSRouterConfiguration router_configuration(
                         // simple
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("simple_participant"),
-                            types::ParticipantKind(types::ParticipantKind::SIMPLE_RTPS),
+                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             types::DomainId(domain)
                             ),
                     }
@@ -270,7 +270,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                SERVER,
+                WanKind::server,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -281,7 +281,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                CLIENT,
+                WanKind::client,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -295,7 +295,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                SERVER,
+                WanKind::server,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -306,7 +306,7 @@ void test_WAN_communication_all(
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                SERVER_AND_CLIENT,
+                WanKind::server_and_client,
                 transport_protocol, // transport protocol
                 ip_version, // ip version
                 tls // tls
@@ -325,7 +325,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     true, // is server 1
-                    SERVER_AND_CLIENT,
+                    WanKind::server_and_client,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -336,7 +336,7 @@ void test_WAN_communication_all(
             test::router_configuration(
                 test::wan_participant_configuration(
                     false, // is server 1
-                    SERVER_AND_CLIENT,
+                    WanKind::server_and_client,
                     transport_protocol, // transport protocol
                     ip_version, // ip version
                     tls // tls
@@ -363,8 +363,8 @@ using namespace eprosima::ddsrouter::core::types;
 TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::UDP,
-        types::IpVersion::IPv4);
+        types::TransportProtocol::udp,
+        types::IpVersion::v4);
 }
 
 /**
@@ -375,8 +375,8 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::UDP,
-        types::IpVersion::IPv6);
+        types::TransportProtocol::udp,
+        types::IpVersion::v6);
 }
 
 /**
@@ -387,8 +387,8 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
-        types::IpVersion::IPv4);
+        types::TransportProtocol::tcp,
+        types::IpVersion::v4);
 }
 
 /**
@@ -399,8 +399,8 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
-        types::IpVersion::IPv6,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v6,
         true);
 }
 
@@ -412,8 +412,8 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
-        types::IpVersion::IPv4,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v4,
         false,
         true);
 }
@@ -426,8 +426,8 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 {
     test::test_WAN_communication_all(
-        types::TransportProtocol::TCP,
-        types::IpVersion::IPv6,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v6,
         true,
         true);
 }
@@ -448,9 +448,9 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 true, // is server 1
-                test::SERVER,
-                types::TransportProtocol::UDP, // transport protocol
-                types::IpVersion::IPv4 // ip version
+                test::WanKind::server,
+                types::TransportProtocol::udp, // transport protocol
+                types::IpVersion::v4 // ip version
                 ),
             0 // domain
             ),
@@ -458,9 +458,9 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
         test::router_configuration(
             test::wan_participant_configuration(
                 false, // is server 1
-                test::CLIENT,
-                types::TransportProtocol::UDP, // transport protocol
-                types::IpVersion::IPv4 // ip version
+                test::WanKind::client,
+                types::TransportProtocol::udp, // transport protocol
+                types::IpVersion::v4 // ip version
                 ),
             1 // domain
             ),

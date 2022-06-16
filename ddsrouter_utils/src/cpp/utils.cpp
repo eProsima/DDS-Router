@@ -48,6 +48,24 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//! Overloaded '|' operator for composing FileAccessMode values.
+FileAccessMode operator |(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b)
+{
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) |
+           static_cast<FileAccessModeType>(mode_b));
+}
+
+//! Overloaded '&' operator for matching FileAccessMode values.
+FileAccessMode operator &(
+        FileAccessMode mode_a,
+        FileAccessMode mode_b)
+{
+    return static_cast<FileAccessMode>(static_cast<FileAccessModeType>(mode_a) &
+           static_cast<FileAccessModeType>(mode_b));
+}
+
 bool match_pattern(
         const std::string& pattern,
         const std::string& str) noexcept
@@ -80,23 +98,23 @@ void tsnh(
     abort();
 }
 
-// Windows specific access method
 bool is_file_accessible(
         const char* file_path,
-        int access_mode /* = EXIST */ ) noexcept
+        FileAccessMode access_mode) noexcept
 {
-
-    // Check windows does not ask for execution
 #if defined(_WIN32)
-    if (fast_module(access_mode, 2) == 1)
+    if ((FileAccessMode::exec& access_mode) == FileAccessMode::exec)
     {
         logWarning(
             DDSROUTER_UTILS,
             "Windows does not allow to check execution permission for file.");
-        access_mode = access_mode - 1;
+        // Take out the FileAccessMode::exec bit
+        access_mode =
+                static_cast<FileAccessMode>(static_cast<FileAccessModeType>(access_mode) &
+                ~static_cast<FileAccessModeType>(FileAccessMode::exec));
     }
 #endif // if defined(_WIN32)
-    return (access(file_path, access_mode) != -1);
+    return access(file_path, static_cast<FileAccessModeType>(access_mode)) != -1;
 }
 
 } /* namespace utils */

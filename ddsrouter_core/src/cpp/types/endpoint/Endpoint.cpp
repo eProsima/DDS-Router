@@ -26,7 +26,7 @@ namespace core {
 namespace types {
 
 Endpoint::Endpoint() noexcept
-    : kind_(EndpointKind::ENDPOINT_KIND_INVALID)
+    : kind_(EndpointKind::invalid)
 {
 }
 
@@ -76,17 +76,17 @@ void Endpoint::active(
 
 bool Endpoint::is_valid() const noexcept
 {
-    return kind_ != EndpointKind::ENDPOINT_KIND_INVALID;
+    return kind_ != EndpointKind::invalid;
 }
 
 bool Endpoint::is_writer() const noexcept
 {
-    return kind() == EndpointKind::WRITER;
+    return kind() == EndpointKind::writer;
 }
 
 bool Endpoint::is_reader() const noexcept
 {
-    return kind() == EndpointKind::READER;
+    return kind() == EndpointKind::reader;
 }
 
 Endpoint& Endpoint::operator =(
@@ -110,27 +110,17 @@ std::ostream& operator <<(
         std::ostream& os,
         const EndpointKind& kind)
 {
-    std::string kind_str;
-    switch (kind)
+    try
     {
-        case EndpointKind::ENDPOINT_KIND_INVALID:
-            kind_str = "ENDPOINT_KIND_INVALID";
-            break;
 
-        case EndpointKind::WRITER:
-            kind_str = "Writer";
-            break;
+        os << ENDPOINT_KIND_STRINGS.at(static_cast<EndpointKindType>(kind));
 
-        case EndpointKind::READER:
-            kind_str = "Reader";
-            break;
-
-        default:
-            utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind.");
-            break;
     }
-
-    return os << kind_str;
+    catch (const std::out_of_range& oor)
+    {
+        utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind." << static_cast<EndpointKindType>(kind));
+    }
+    return os;
 }
 
 std::ostream& operator <<(

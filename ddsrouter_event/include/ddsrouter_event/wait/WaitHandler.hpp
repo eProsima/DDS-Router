@@ -34,11 +34,11 @@ namespace event {
 
 
 //! Reasons why a thread waiting in a WaitHandler could have been awaken
-enum AwakeReason
+enum class AwakeReason
 {
-    DISABLED,       //! WaitHandler has been disabled
-    TIMEOUT,        //! Timeout set to wait has been reached
-    CONDITION_MET,  //! Awake condition has been met
+    disabled,       //! WaitHandler has been disabled
+    timeout,        //! Timeout set to wait has been reached
+    condition_met,  //! Awake condition has been met
 };
 
 /**
@@ -122,9 +122,9 @@ public:
 
     /**
      * @brief Wait the current thread until one of the awaken reasons happen:
-     * - DISABLED       : The object has been disabled while this thread was waiting
-     * - TIMEOUT        : Timeout has been reached
-     * - CONDITION_MET  : Condition set has been fulfilled
+     * - AwakeReason::disabled       : The object has been disabled while this thread was waiting
+     * - AwakeReason::timeout        : Timeout has been reached
+     * - AwakeReason::condition_met  : Condition set has been fulfilled
      *
      * @param predicate lambda that will be called with internal \c value_ , must return \c true for values
      * that where the thread must awake

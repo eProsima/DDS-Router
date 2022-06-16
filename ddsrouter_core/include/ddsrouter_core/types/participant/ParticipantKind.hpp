@@ -1,4 +1,3 @@
-
 // Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +19,8 @@
 #ifndef _DDSROUTERCORE_TYPES_PARTICIPANTKIND_HPP_
 #define _DDSROUTERCORE_TYPES_PARTICIPANTKIND_HPP_
 
-#include <map>
 #include <string>
-#include <vector>
+#include <array>
 
 #include <ddsrouter_core/library/library_dll.h>
 
@@ -32,92 +30,91 @@ namespace core {
 namespace types {
 
 using ParticipantKindType = uint16_t;
-/**
- * @brief Object that handles the creation of ParticipantKinds from a string
- */
-class ParticipantKind
+
+enum class ParticipantKind : ParticipantKindType
 {
-public:
-
-    /**
-     * @brief Participant kinds available
-     *
-     * This list must be extended for each new Participant that is implemented
-     */
-    enum
-    {
-        PARTICIPANT_KIND_INVALID,   //! Invalid Participant Kind
-        VOID,                       //! Void Participant Kind
-        ECHO,                       //! Echo Participant Kind
-        DUMMY,                      //! Dummy Participant Kind
-        SIMPLE_RTPS,                //! Simple RTPS Participant Kind
-        LOCAL_DISCOVERY_SERVER,     //! Discovery Server RTPS UDP Participant Kind
-        WAN,                        //! Discovery Server RTPS TCP Participant Kind
-    };
-
-    //! Default constructor that returns an Invalid Participant Kind
-    DDSROUTER_CORE_DllAPI ParticipantKind() noexcept;
-
-    //! Constructor by value of the ParticipantKind enum
-    DDSROUTER_CORE_DllAPI ParticipantKind(
-            ParticipantKindType value) noexcept;
-
-    /**
-     * @brief Whether this ParticipantKind is valid
-     *
-     * @return true if valid. False otherwise
-     */
-    DDSROUTER_CORE_DllAPI bool is_valid() const noexcept;
-
-    //! Convert this ParticipantKind to string using the << operator
-    DDSROUTER_CORE_DllAPI std::string to_string() const noexcept;
-
-    //! Return the enum value of this object
-    DDSROUTER_CORE_DllAPI ParticipantKindType operator ()() const noexcept;
-
-    //! Minor operator
-    DDSROUTER_CORE_DllAPI bool operator <(
-            const ParticipantKind& other) const noexcept;
-
-    //! Equal operator
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const ParticipantKind& other) const noexcept;
-
-    /**
-     * @brief Create a Participant Kind regarding the string argument in lower case
-     *
-     * @note Kind name is not case sensitive
-     *
-     * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
-     * matches any of them, return the ParticipantKind associated with that name.
-     * It will return \c INVALID in case no existing ParticipantKind name matches the argument.
-     *
-     * @param [in] kind : string with the name of the kind to build
-     * @return ParticipantKind value, \c INVALID if \c kind does not refer to any existing kind
-     */
-    DDSROUTER_CORE_DllAPI static ParticipantKind participant_kind_from_name(
-            std::string kind) noexcept;
-
-    DDSROUTER_CORE_DllAPI static std::vector<ParticipantKind> all_valid_participant_kinds() noexcept;
-
-protected:
-
-    //! Value that links with the enumeration ParticipantKind of this object
-    ParticipantKindType value_;
-
-    //! Map that link a \c ParticipantKind with its name to be created or deserialized
-    static const std::map<ParticipantKindType, std::vector<std::string>> participant_kind_with_aliases_;
-
-    // Allow operator << to use \c participant_kind_with_aliases_
-    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
-            std::ostream& os,
-            const ParticipantKind& kind);
+    invalid,                    //! Invalid Participant Kind
+    blank,                      //! Blank/Void Participant Kind
+    echo,                       //! Echo Participant Kind
+    dummy,                      //! Dummy Participant Kind
+    simple_rtps,                //! Simple RTPS Participant Kind
+    local_discovery_server,     //! Discovery Server RTPS UDP Participant Kind
+    wan,                        //! Discovery Server RTPS TCP Participant Kind
 };
 
-//! \c ParticipantKind to stream serializator
+static constexpr unsigned PARTICIPANT_KIND_COUNT = 7;
+
+/**
+ * @brief All ParticipantKind enum values as a std::array.
+ */
+constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KINDS = {
+    ParticipantKind::invalid,
+    ParticipantKind::blank,
+    ParticipantKind::echo,
+    ParticipantKind::dummy,
+    ParticipantKind::simple_rtps,
+    ParticipantKind::local_discovery_server,
+    ParticipantKind::wan
+};
+
+/**
+ * @brief All valid ParticipantKind enum values as a std::array.
+ */
+constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PARTICIPANT_KINDS = {
+    // ParticipantKind::invalid, // Not valid, so not included in this array
+    ParticipantKind::blank,
+    ParticipantKind::echo,
+    ParticipantKind::dummy,
+    ParticipantKind::simple_rtps,
+    ParticipantKind::local_discovery_server,
+    ParticipantKind::wan
+};
+
+constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRINGS = {
+    "invalid",
+    "blank",
+    "echo",
+    "dummy",
+    "simple_rtps",
+    "local_discovery_server",
+    "wan",
+};
+
+static constexpr unsigned MAX_PARTICIPANT_KIND_ALIASES = 4;
+
+using ParticipantKindAliasesType = std::array<const char*, MAX_PARTICIPANT_KIND_ALIASES>;
+
+/**
+ * @brief All possible string aliases for each \c ParticipantKind.
+ */
+constexpr std::array<ParticipantKindAliasesType, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_ALIASES = {
+    ParticipantKindAliasesType({"__invalid_participant_kind__", "", "", ""}),
+    ParticipantKindAliasesType({"blank", "void", "", ""}),
+    ParticipantKindAliasesType({"echo", "", "", ""}),
+    ParticipantKindAliasesType({"dummy", "", "", ""}),
+    ParticipantKindAliasesType({"local", "simple", "", ""}),
+    ParticipantKindAliasesType({"discovery-server", "ds", "local-ds", "local-discovery-server"}),
+    ParticipantKindAliasesType({"wan", "router", "", ""}),
+};
+
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const ParticipantKind& a);
+        ParticipantKind kind);
+
+/**
+ * @brief Create a Participant Kind regarding the string argument in lower case
+ *
+ * @note Kind name is case sensitive
+ *
+ * It compares the argument \c kind in lower case with any of the existing kind names, and in case it
+ * matches any of them, return the ParticipantKind associated with that name.
+ * It will return \c ParticipantKind::invalid in case no existing ParticipantKind name matches the argument or the argument is empty.
+ *
+ * @param [in] kind : string with the name of the kind to build
+ * @return ParticipantKind value, \c ParticipantKind::invalid if \c kind does not refer to any existing kind
+ */
+DDSROUTER_CORE_DllAPI ParticipantKind participant_kind_from_name(
+        std::string participant_kind_str);
 
 } /* namespace types */
 } /* namespace core */

@@ -199,19 +199,19 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
 void DiscoveryDatabase::add_endpoint(
         const Endpoint& new_endpoint) noexcept
 {
-    push_item_to_queue_(std::make_tuple(DatabaseOperation::ADD, new_endpoint));
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::add, new_endpoint));
 }
 
 void DiscoveryDatabase::update_endpoint(
         const Endpoint& endpoint_to_update) noexcept
 {
-    push_item_to_queue_(std::make_tuple(DatabaseOperation::UPDATE, endpoint_to_update));
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::update, endpoint_to_update));
 }
 
 void DiscoveryDatabase::erase_endpoint(
         const Endpoint& endpoint_to_erase) noexcept
 {
-    push_item_to_queue_(std::make_tuple(DatabaseOperation::ERASE, endpoint_to_erase));
+    push_item_to_queue_(std::make_tuple(DatabaseOperation::erase, endpoint_to_erase));
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
@@ -280,15 +280,15 @@ void DiscoveryDatabase::process_queue_() noexcept
         Endpoint entity = std::get<1>(queue_item);
         try
         {
-            if (db_operation == DatabaseOperation::ADD)
+            if (db_operation == DatabaseOperation::add)
             {
                 add_endpoint_(entity);
             }
-            else if (db_operation == DatabaseOperation::UPDATE)
+            else if (db_operation == DatabaseOperation::update)
             {
                 update_endpoint_(entity);
             }
-            else if (db_operation == DatabaseOperation::ERASE)
+            else if (db_operation == DatabaseOperation::erase)
             {
                 erase_endpoint_(entity.guid());
             }

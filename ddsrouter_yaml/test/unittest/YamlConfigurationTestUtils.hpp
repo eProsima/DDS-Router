@@ -102,14 +102,14 @@ void address_to_yaml(
         test::YamlField<core::types::PortType>(address.port()),
         ADDRESS_PORT_TAG);
 
-    if (address.transport_protocol() == core::types::TransportProtocol::UDP)
+    if (address.transport_protocol() == core::types::TransportProtocol::udp)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
     }
-    else if (address.transport_protocol() == core::types::TransportProtocol::TCP)
+    else if (address.transport_protocol() == core::types::TransportProtocol::tcp)
     {
         test::add_field_to_yaml(
             yml,
@@ -117,14 +117,14 @@ void address_to_yaml(
             ADDRESS_TRANSPORT_TAG);
     }
 
-    if (address.ip_version() == core::types::IpVersion::IPv4)
+    if (address.ip_version() == core::types::IpVersion::v4)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
-    else if (address.ip_version() == core::types::IpVersion::IPv6)
+    else if (address.ip_version() == core::types::IpVersion::v6)
     {
         test::add_field_to_yaml(
             yml,
@@ -149,7 +149,8 @@ void participantkind_to_yaml(
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(kind.to_string()),
+        test::YamlField<std::string>(core::types::PARTICIPANT_KIND_ALIASES[static_cast<core::types::ParticipantKindType>(
+            kind)][0]),
         PARTICIPANT_KIND_TAG);
 }
 

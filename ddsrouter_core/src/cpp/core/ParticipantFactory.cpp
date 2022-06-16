@@ -27,7 +27,7 @@
 #include <core/ParticipantFactory.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
-#include <participant/implementations/auxiliar/VoidParticipant.hpp>
+#include <participant/implementations/auxiliar/BlankParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
 #include <participant/implementations/rtps/WANParticipant.hpp>
@@ -47,21 +47,21 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
-    switch (participant_configuration->kind()())
+    switch (participant_configuration->kind())
     {
-        case ParticipantKind::VOID:
-            // VoidParticipant
-            return std::make_shared<VoidParticipant>(participant_configuration->id());
+        case ParticipantKind::blank:
+            // BlankParticipant
+            return std::make_shared<BlankParticipant>(participant_configuration->id());
 
-        case ParticipantKind::ECHO:
+        case ParticipantKind::echo:
             // EchoParticipant
             return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, discovery_database);
 
-        case ParticipantKind::DUMMY:
+        case ParticipantKind::dummy:
             // DummyParticipant
             return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, discovery_database);
 
-        case ParticipantKind::SIMPLE_RTPS:
+        case ParticipantKind::simple_rtps:
             // Simple RTPS Participant
         {
             std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
@@ -80,7 +80,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
+        case ParticipantKind::local_discovery_server:
             // Discovery Server RTPS Participant
         {
             std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
@@ -99,7 +99,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::WAN:
+        case ParticipantKind::wan:
             // Discovery Server RTPS Participant
         {
             std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
@@ -118,7 +118,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::PARTICIPANT_KIND_INVALID:
+        case ParticipantKind::invalid:
             throw utils::ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind()
                                                                    << " is not a valid participant kind name.");
 

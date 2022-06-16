@@ -298,6 +298,37 @@ TEST(utilsTest, are_set_of_ptr_equal_int)
 }
 
 /**
+ * Test \c to_lowercase call
+ */
+TEST(utilsTest, to_lowercase)
+{
+    // Uppercase
+    {
+        std::string str = "FOO";
+        to_lowercase(str);
+        ASSERT_EQ(str, "foo");
+    }
+    // Invariant
+    {
+        std::string str = "foo";
+        to_lowercase(str);
+        ASSERT_EQ(str, "foo");
+    }
+    // With non-letter characters
+    {
+        std::string str = "!_-.,FoO";
+        to_lowercase(str);
+        ASSERT_EQ(str, "!_-.,foo");
+    }
+    // Empty
+    {
+        std::string str = "";
+        to_lowercase(str);
+        ASSERT_EQ(str, "");
+    }
+}
+
+/**
  * Test \c tsnh call
  */
 TEST(utilsTest, tsnh_call)
@@ -307,42 +338,82 @@ TEST(utilsTest, tsnh_call)
 }
 
 /**
- * Test \c is_file_accesible method
+ * Test \c is_file_accessible method
  *
  * CASES:
  * - File exist
  * - File is readable
- * - File exist and it is readable
- * - File does not exist
+ * - File does not exist and not readable
  */
-TEST(utilsTest, is_file_accesible)
+TEST(utilsTest, is_file_accessible)
 {
+    // TODO. We should ideally change the RWX permissions with chmod and test all cases
+
     // File exist
     {
         // Default argument
         ASSERT_TRUE(is_file_accessible("resources/exist.test"));
 
         // Set argument
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST));
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", FileAccessMode::exist));
     }
 
     // File is readable
     {
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", READ));
+        ASSERT_TRUE(is_file_accessible("resources/exist.test", FileAccessMode::read));
     }
 
-    // File exist and it is readable
-    {
-        ASSERT_TRUE(is_file_accessible("resources/exist.test", EXIST | READ));
-    }
-
-    // File does not exist
+    // File does not exist and not readable
     {
         ASSERT_FALSE(is_file_accessible("resources/not_exist.test"));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", READ));
-        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", EXIST | READ));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::exist));
+        ASSERT_FALSE(is_file_accessible("resources/not_exist.test", FileAccessMode::read));
     }
+}
+
+TEST(utilsTest, combined_file_permissions)
+{
+    // Compositions with '|' operator
+    ASSERT_EQ(FileAccessMode::read | FileAccessMode::write, FileAccessMode::read_write);
+    ASSERT_EQ(FileAccessMode::read | FileAccessMode::exec, FileAccessMode::read_exec);
+    ASSERT_EQ(FileAccessMode::read | FileAccessMode::write | FileAccessMode::exec, FileAccessMode::read_write_exec);
+    ASSERT_EQ(FileAccessMode::write | FileAccessMode::exec, FileAccessMode::write_exec);
+
+    // Match exist
+    ASSERT_EQ(FileAccessMode::read & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::write & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::exist & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::read_write & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::read_exec & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::exist, FileAccessMode::exist);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::exist, FileAccessMode::exist);
+
+    // Match read
+    ASSERT_EQ(FileAccessMode::read & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::write & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_write & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::read, FileAccessMode::read);
+    ASSERT_NE(FileAccessMode::write_exec & FileAccessMode::read, FileAccessMode::read);
+
+    // Match write
+    ASSERT_NE(FileAccessMode::read & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::write & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_NE(FileAccessMode::exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::read_write & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_NE(FileAccessMode::read_exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::write, FileAccessMode::write);
+    ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::write, FileAccessMode::write);
+
+    // Match exec
+    ASSERT_NE(FileAccessMode::read & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_NE(FileAccessMode::write & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_NE(FileAccessMode::read_write & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::read_exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::read_write_exec & FileAccessMode::exec, FileAccessMode::exec);
+    ASSERT_EQ(FileAccessMode::write_exec & FileAccessMode::exec, FileAccessMode::exec);
 }
 
 int main(

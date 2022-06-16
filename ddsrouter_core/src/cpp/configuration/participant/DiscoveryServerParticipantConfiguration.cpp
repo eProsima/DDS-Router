@@ -35,7 +35,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
-        const ParticipantKind& kind /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
+        const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         std::shared_ptr<types::security::TlsConfiguration> tls_configuration /* = types::security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
     : SimpleParticipantConfiguration(id, kind, domain_id)
@@ -52,7 +52,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const DomainId& domain_id,
-        const ParticipantKind& kind /* = ParticipantKind::LOCAL_DISCOVERY_SERVER */,
+        const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         std::shared_ptr<types::security::TlsConfiguration> tls_configuration /* = types::security::TlsConfiguration() */)
     : DiscoveryServerParticipantConfiguration(
         id, discovery_server_guid_prefix, listening_addresses, connection_addresses, kind, tls_configuration, domain_id)

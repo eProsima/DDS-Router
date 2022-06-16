@@ -123,13 +123,13 @@ bool check_correct_configuration_object_by_type_(
 bool DDSRouterConfiguration::check_correct_configuration_object_(
         const std::shared_ptr<ParticipantConfiguration> configuration)
 {
-    switch (configuration->kind()())
+    switch (configuration->kind())
     {
-        case ParticipantKind::SIMPLE_RTPS:
+        case ParticipantKind::simple_rtps:
             return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
 
-        case ParticipantKind::LOCAL_DISCOVERY_SERVER:
-        case ParticipantKind::WAN:
+        case ParticipantKind::local_discovery_server:
+        case ParticipantKind::wan:
             return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
 
         default:

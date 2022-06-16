@@ -87,8 +87,8 @@ TEST(DiscoveryDatabaseTest, topic_exists)
     Guid guid_2 = random_guid(2);
     QoS qos;
     RealTopic topic("test", "test");
-    Endpoint endpoint_1(EndpointKind::READER, guid_1, qos, topic);
-    Endpoint endpoint_2(EndpointKind::READER, guid_2, qos, topic);
+    Endpoint endpoint_1(EndpointKind::reader, guid_1, qos, topic);
+    Endpoint endpoint_2(EndpointKind::reader, guid_2, qos, topic);
 
     ASSERT_FALSE(discovery_database.topic_exists(topic));
     discovery_database.add_endpoint_protected(endpoint_1);
@@ -114,7 +114,7 @@ TEST(DiscoveryDatabaseTest, endpoint_exists)
     Guid guid;
     QoS qos;
     RealTopic topic("test", "test");
-    Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+    Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
     ASSERT_FALSE(discovery_database.endpoint_exists(guid));
     discovery_database.add_endpoint_protected(endpoint);
@@ -138,10 +138,10 @@ TEST(DiscoveryDatabaseTest, add_endpoint)
     RealTopic topic("original", "original");
     // Create active endpoint
     Guid active_guid = random_guid(1);
-    Endpoint active_endpoint(EndpointKind::READER, active_guid, qos, topic);
+    Endpoint active_endpoint(EndpointKind::reader, active_guid, qos, topic);
     // Create inactive endpoint
     Guid inactive_guid = random_guid(2);
-    Endpoint inactive_endpoint(EndpointKind::READER, inactive_guid, qos, topic);
+    Endpoint inactive_endpoint(EndpointKind::reader, inactive_guid, qos, topic);
     inactive_endpoint.active(false);
 
     // Insert endpoints
@@ -153,12 +153,12 @@ TEST(DiscoveryDatabaseTest, add_endpoint)
     // Add new endpoint with same guid as already stored active endpoint
     // Should throw \c InconsistencyException
     RealTopic new_topic("new", "new");
-    Endpoint active_new_endpoint(EndpointKind::READER, active_guid, qos, new_topic);
+    Endpoint active_new_endpoint(EndpointKind::reader, active_guid, qos, new_topic);
     ASSERT_THROW(discovery_database.add_endpoint_protected(active_new_endpoint), InconsistencyException);
 
     // Add new endpoint with same guid as already stored inactive endpoint
     // Should update entry
-    Endpoint inactive_new_endpoint(EndpointKind::READER, inactive_guid, qos, new_topic);
+    Endpoint inactive_new_endpoint(EndpointKind::reader, inactive_guid, qos, new_topic);
     ASSERT_TRUE(discovery_database.add_endpoint_protected(inactive_new_endpoint));
     ASSERT_EQ(discovery_database.get_endpoint(inactive_guid), inactive_new_endpoint);
 }
@@ -176,9 +176,9 @@ TEST(DiscoveryDatabaseTest, update_endpoint)
     Guid guid = random_guid(1);
     QoS qos;
     RealTopic topic("original", "original");
-    Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+    Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
     RealTopic new_topic("new", "new");
-    Endpoint new_endpoint(EndpointKind::READER, guid, qos, new_topic);
+    Endpoint new_endpoint(EndpointKind::reader, guid, qos, new_topic);
     // Endpoint to be updated not yet inserted
     ASSERT_THROW(discovery_database.update_endpoint_protected(new_endpoint), InconsistencyException);
 
@@ -208,7 +208,7 @@ TEST(DiscoveryDatabaseTest, erase_endpoint)
     Guid guid = random_guid(1);
     QoS qos;
     RealTopic topic("test", "test");
-    Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+    Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
     // Endpoint to erase not yet inserted
     ASSERT_THROW(discovery_database.erase_endpoint_protected(guid), InconsistencyException);
@@ -235,7 +235,7 @@ TEST(DiscoveryDatabaseTest, get_endpoint)
     Guid guid = random_guid(1);
     QoS qos;
     RealTopic topic("test", "test");
-    Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+    Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
     // Try to fetch a not stored endpoint
     ASSERT_FALSE(discovery_database.endpoint_exists(guid));

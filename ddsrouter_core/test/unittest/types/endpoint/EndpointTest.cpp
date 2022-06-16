@@ -76,11 +76,11 @@ EndpointKind random_endpoint_kind(
 {
     if (seed % 2)
     {
-        return EndpointKind::READER;
+        return EndpointKind::reader;
     }
     else
     {
-        return EndpointKind::WRITER;
+        return EndpointKind::writer;
     }
 }
 
@@ -94,6 +94,21 @@ Guid random_valid_guid(
         guid_prefix,
         seed);
 }
+
+/**
+ * Test \c EndpointKind string conversions
+ */
+TEST(EndpointTest, string_conversions)
+{
+    ASSERT_EQ(ENDPOINT_KIND_STRINGS.size(), ENDPOINT_KIND_COUNT);
+    ASSERT_EQ(std::string(ENDPOINT_KIND_STRINGS[static_cast<EndpointKindType>(EndpointKind::invalid)]),
+            std::string("invalid"));
+    ASSERT_EQ(std::string(ENDPOINT_KIND_STRINGS[static_cast<EndpointKindType>(EndpointKind::writer)]),
+            std::string("writer"));
+    ASSERT_EQ(std::string(ENDPOINT_KIND_STRINGS[static_cast<EndpointKindType>(EndpointKind::reader)]),
+            std::string("reader"));
+}
+
 
 /**
  * Test \c Endpoint constructor
@@ -128,14 +143,14 @@ TEST(EndpointTest, kind_getter)
 
     // Writer
     {
-        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
-        ASSERT_EQ(endpoint.kind(), EndpointKind::WRITER);
+        Endpoint endpoint(EndpointKind::writer, guid, qos, topic);
+        ASSERT_EQ(endpoint.kind(), EndpointKind::writer);
     }
 
     // Reader
     {
-        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
-        ASSERT_EQ(endpoint.kind(), EndpointKind::READER);
+        Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
+        ASSERT_EQ(endpoint.kind(), EndpointKind::reader);
     }
 }
 
@@ -306,13 +321,13 @@ TEST(EndpointTest, is_writer)
 
     // Writer
     {
-        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
+        Endpoint endpoint(EndpointKind::writer, guid, qos, topic);
         ASSERT_TRUE(endpoint.is_writer());
     }
 
     // Reader
     {
-        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+        Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
         ASSERT_FALSE(endpoint.is_writer());
     }
 }
@@ -332,13 +347,13 @@ TEST(EndpointTest, is_reader)
 
     // Writer
     {
-        Endpoint endpoint(EndpointKind::WRITER, guid, qos, topic);
+        Endpoint endpoint(EndpointKind::writer, guid, qos, topic);
         ASSERT_FALSE(endpoint.is_reader());
     }
 
     // Reader
     {
-        Endpoint endpoint(EndpointKind::READER, guid, qos, topic);
+        Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
         ASSERT_TRUE(endpoint.is_reader());
     }
 }

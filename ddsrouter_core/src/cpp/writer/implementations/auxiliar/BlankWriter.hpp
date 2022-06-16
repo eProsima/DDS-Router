@@ -13,40 +13,39 @@
 // limitations under the License.
 
 /**
- * @file VoidReader.cpp
+ * @file BlankWriter.hpp
  */
 
-#include <reader/implementations/auxiliar/VoidReader.hpp>
+#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
+#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
+
+#include <writer/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-
-void VoidReader::enable() noexcept
+/**
+ * Writer that has an empty implementation.
+ * It does not send anything.
+ */
+class BlankWriter : public IWriter
 {
-}
+public:
 
-void VoidReader::disable() noexcept
-{
-}
+    //! Override enable() IWriter method
+    void enable() noexcept override;
 
-void VoidReader::set_on_data_available_callback(
-        std::function<void()>) noexcept
-{
-}
+    //! Override disable() IWriter method
+    void disable() noexcept override;
 
-void VoidReader::unset_on_data_available_callback() noexcept
-{
-}
-
-utils::ReturnCode VoidReader::take(
-        std::unique_ptr<DataReceived>&) noexcept
-{
-    return utils::ReturnCode::RETCODE_NO_DATA;
-}
+    //! Override write() IWriter method
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data) noexcept override;
+};
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_ */

@@ -110,11 +110,11 @@ protected:
      * be used to guard the access to the actual Track data available status.
      */
     //! Status of the data available in the Track's Reader
-    enum DataAvailableStatus
+    enum class DataAvailableStatus
     {
-        NEW_DATA_ARRIVED,   //! Listener has announced that new data has arrived
-        TRANSMITTING_DATA,  //! Track is taking data from the Reader, so it could or could not be data
-        NO_MORE_DATA,       //! Track has announced that Reader has no more data, and Listener has not notified new data
+        new_data_arrived,   //! Listener has announced that new data has arrived
+        transmitting_data,  //! Track is taking data from the Reader, so it could or could not be data
+        no_more_data,       //! Track has announced that Reader has no more data, and Listener has not notified new data
     };
 
     /**
@@ -122,7 +122,7 @@ protected:
      *
      * This method is sent to the Reader so it could call it when there is new data.
      *
-     * This method will set the variable \c data_available_status_ to \c NEW_DATA_ARRIVED and awake the transmit thread.
+     * This method will set the variable \c data_available_status_ to \c new_data_arrived and awake the transmit thread.
      * If Track is disabled, the callback will be lost.
      */
     void data_available_() noexcept;
@@ -130,7 +130,7 @@ protected:
     /**
      * @brief Whether there is data waiting to be taken in the Reader
      *
-     * The times there is data is when \c data_available_status_ is set as \c NEW_DATA_ARRIVED or \c TRANSMITTING_DATA
+     * The times there is data is when \c data_available_status_ is set as \c new_data_arrived or \c transmitting_data
      *
      * @return true if there is available data
      * @return false otherwise
@@ -224,9 +224,9 @@ protected:
      * Current status of the data available
      *
      * There are 3 states:
-     * \c NEW_DATA_ARRIVED  : Reader Listener has notified that there are new data
-     * \c TRANSMITTING_DATA : Track is currently taking data, so there may or may not be data available
-     * \c NO_MORE_DATA      : Track has received a NO_DATA from Reader
+     * \c DataAvailableStatus::new_data_arrived  : Reader Listener has notified that there are new data
+     * \c DataAvailableStatus::transmitting_data : Track is currently taking data, so there may or may not be data available
+     * \c DataAvailableStatus::no_more_data      : Track has received a NO_DATA from Reader
      *
      * This variable is protected by \c data_available_mutex_
      */

@@ -39,7 +39,7 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listening_addresses)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::LOCAL_DISCOVERY_SERVER);
+    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
     core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
     core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
 
