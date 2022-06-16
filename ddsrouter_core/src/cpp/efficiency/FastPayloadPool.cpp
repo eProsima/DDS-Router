@@ -66,6 +66,7 @@ bool FastPayloadPool::get_payload(
         // We get this value and add a +1 to set that is referencing from one more payload
         MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(src_payload.data);
         reference_place--;
+
         // Add reference
         (*reference_place)++;
 
@@ -84,7 +85,8 @@ bool FastPayloadPool::release_payload(
     // We get this value and add a -1 to set that is referencing from one less payload
     MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(payload.data);
     reference_place--;
-    // Add reference
+
+    // Remove reference
     (*reference_place)--;
 
     // In case it was the last reference, release payload

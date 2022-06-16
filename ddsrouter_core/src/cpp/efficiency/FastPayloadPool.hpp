@@ -25,14 +25,35 @@
 
 #include <efficiency/PayloadPool.hpp>
 
-typedef std::atomic<unsigned int> MetaInfoType;
-
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
 /**
- * TODO
+ * @brief This is the data type that is stored within the data allocated with the payload.
+ *
+ * It uses an atomic value so can be checked and modified in a single atomic operation.
+ */
+typedef std::atomic<unsigned int> MetaInfoType;
+
+/**
+ * This class implements the interface of PayloadPool and fulfilled with it the interface of IPayloadPool from fastrtps.
+ *
+ * This class is used to manage the allocation and release of the payloads used within the Router.
+ * The main target is not to copy or alloc data that is already in memory, but to reuse it safely.
+ *
+ * This implementation uses an idea get from TopicPayloadPool from fastrtps.
+ * This is, to alloc more space than required whenever a new payload is needed, and in this extra space (at the
+ * beginning of the data) stores the number of references this data has.
+ * As long as this number does not reach 0, the data is not deleted.
+ *
+ * This is a thread safe lock free (except for one atomic check) implementation.
+ *
+ * @warning this class requires for all the payloads to be released the same times they are got.
+ * In case this does not occur, this object does not guarantee that the data will be correctly released.
+ *
+ * @warning Payloads used within this class must be allocated from this object (in case of \c get_payload it is enough
+ * with using the correct \c data_owner as not this one. ) otherwise it will head to undefined behavior.
  */
 class FastPayloadPool : public PayloadPool
 {
@@ -42,7 +63,7 @@ public:
     using PayloadPool::PayloadPool;
 
     /**
-     * TODO
+     * Reserve a new space for the payload with the size given
      *
      * @param size size of the new chunk of data
      * @param payload object to store the new data
@@ -55,7 +76,10 @@ public:
             types::Payload& payload) override;
 
     /**
-     * TODO
+     * Reserve in \c target_payload the payload in \c src_payload .
+     *
+     * In case the src has been reserved from this object, the reference counter is increased and no data is copied.
+     * Otherwise, this pool alloc new memory and copy the data
      *
      * @param [in,out] src_payload     Payload to move to target
      * @param [in,out] data_owner      Payload pool owning incoming data \c src_payload
@@ -72,7 +96,9 @@ public:
             types::Payload& target_payload) override;
 
     /**
-     * TODO
+     * Release a payload that has been reserved from this pool.
+     *
+     * It decreases the reference counter of the data and if it reaches 0, the data is deleted.
      *
      * @param payload payload to release
      *
@@ -86,10 +112,32 @@ public:
 
 protected:
 
+    /**
+     * @brief Reimplement parent \c reserve_ method
+     *
+     * In this implementation, the data is allocated along with space for a \c MetaInfoType object
+     * that will count the times the payload is referenced
+     *
+     * @param size size of memory chunk to reserve
+     * @param payload object where introduce the new data pointer
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     */
     virtual bool reserve_(
             uint32_t size,
             types::Payload& payload) override;
 
+    /**
+     * @brief Reimplement parent \c release_ method
+     *
+     * Data must be released taking into account that the data is allocated with space for a \c MetaInfoType object.
+     *
+     * @param payload object to free the data from
+     *
+     * @return true if everything ok
+     * @return false if something went wrong
+     */
     virtual bool release_(
             types::Payload& payload) override;
 };
