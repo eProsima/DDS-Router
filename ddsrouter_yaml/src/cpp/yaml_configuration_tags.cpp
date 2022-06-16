@@ -65,6 +65,12 @@ std::set<std::string> ddsrouter_tags() noexcept
             VERSION_TAG_V_1_0,
             VERSION_TAG_V_2_0,
             PARTICIPANT_KIND_TAG_V1,
+            INTERNAL_TAG,
+            THREADS_COUNT_TAG,
+            MEMORY_GRANULARITY_TAG,
+            MEMORY_PREALLOC_PAYLOAD_SIZE_TAG,
+            MEMORY_PREALLOC_MIN_ELEMENTS_TAG,
+            MEMORY_PREALLOC_MAX_ELEMENTS_TAG,
         };
 }
 

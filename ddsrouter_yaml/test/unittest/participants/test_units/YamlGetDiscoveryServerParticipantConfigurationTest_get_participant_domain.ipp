@@ -16,7 +16,6 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -37,8 +36,8 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
+    core::types::ParticipantName name = eprosima::ddsrouter::test::random_participant_name();
+    core::types::ParticipantKind kind = core::types::ParticipantKind::local_discovery_server;
     core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
 
     // specify domain
@@ -47,9 +46,18 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
+
+        // Add addresses
+        Yaml yml_listening_addresses;
+        Yaml yml_address;
+        core::types::Address address = eprosima::ddsrouter::test::random_address();
+        yaml::test::address_to_yaml(yml_address, address);
+        yml_listening_addresses.push_back(yml_address);
+
+        yml_participant[LISTENING_ADDRESSES_TAG] = yml_listening_addresses;
 
         // Add domain
         core::types::DomainId domain = eprosima::ddsrouter::test::random_domain();
@@ -72,9 +80,16 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
+
+        // Add addresses
+        Yaml yml_listening_addresses;
+        Yaml yml_address;
+        core::types::Address address = eprosima::ddsrouter::test::random_address();
+        yaml::test::address_to_yaml(yml_address, address);
+        yml_listening_addresses.push_back(yml_address);
 
         // Add incorrect domain
         yml_participant["domain"] = "DOMAIN";

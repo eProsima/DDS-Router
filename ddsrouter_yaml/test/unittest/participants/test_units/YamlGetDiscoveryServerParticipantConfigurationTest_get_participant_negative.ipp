@@ -16,7 +16,6 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -37,8 +36,8 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negative)
 {
+    core::types::ParticipantName name(eprosima::ddsrouter::test::random_participant_name());
     core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::ParticipantId id(eprosima::ddsrouter::test::random_participant_id());
     core::types::GuidPrefix ds_guid = eprosima::ddsrouter::test::random_guid_prefix();
 
     // empty
@@ -75,7 +74,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
     {
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, ds_guid);
         yml["participant"] = yml_participant;
 
@@ -90,7 +89,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
     {
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yml["participant"] = yml_participant;
 

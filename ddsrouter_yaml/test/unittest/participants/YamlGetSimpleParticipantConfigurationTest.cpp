@@ -16,7 +16,6 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -39,7 +38,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
     {
         for (int i = 0; i < TEST_ITERATION_MAX; i++)
         {
-            core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
+            core::types::ParticipantName name = eprosima::ddsrouter::test::random_participant_name(i);
+            core::types::ParticipantId id({name, kind});
             for (int j = 0; j < TEST_ITERATION_MAX; j++)
             {
                 core::types::DomainId domain = eprosima::ddsrouter::test::random_domain(j);
@@ -48,7 +48,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
                 Yaml yml;
                 Yaml yml_participant;
 
-                yaml::test::participantid_to_yaml(yml_participant, id);
+                yaml::test::participantname_to_yaml(yml_participant, name);
                 yaml::test::participantkind_to_yaml(yml_participant, kind);
                 yaml::test::domain_to_yaml(yml_participant, domain);
 
@@ -61,7 +61,6 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 
                 // Check result
                 ASSERT_EQ(id, result.id());
-                ASSERT_EQ(kind, result.kind());
                 ASSERT_EQ(domain, result.domain());
             }
         }
@@ -78,8 +77,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
  */
 TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 {
+    core::types::ParticipantName name(eprosima::ddsrouter::test::random_participant_name());
     core::types::ParticipantKind kind(core::types::ParticipantKind::simple_rtps);
-    core::types::ParticipantId id(eprosima::ddsrouter::test::random_participant_id());
     core::types::DomainId domain(17u);
 
     // empty
@@ -116,7 +115,7 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
     {
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::domain_to_yaml(yml_participant, domain);
         yml["participant"] = yml_participant;
 

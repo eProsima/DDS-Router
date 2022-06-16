@@ -24,7 +24,6 @@
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
@@ -133,13 +132,13 @@ void address_to_yaml(
     }
 }
 
-void participantid_to_yaml(
+void participantname_to_yaml(
         Yaml& yml,
-        const core::types::ParticipantId& id)
+        const core::types::ParticipantName& name)
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(id.id_name()),
+        test::YamlField<std::string>(name),
         PARTICIPANT_NAME_TAG);
 }
 
@@ -160,7 +159,7 @@ void domain_to_yaml(
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<core::types::DomainIdType>(domain.domain_id()),
+        test::YamlField<core::types::DomainId>(domain),
         DOMAIN_ID_TAG);
 }
 

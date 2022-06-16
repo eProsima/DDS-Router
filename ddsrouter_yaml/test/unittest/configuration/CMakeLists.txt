@@ -32,7 +32,9 @@ set(TEST_LIST
         get_ddsrouter_configuration_v2
         get_ddsrouter_configuration_no_version
         version_negative_cases
-        number_of_threads
+        threads_count
+        payload_pool_configuration
+        t
     )
 
 set(TEST_EXTRA_LIBRARIES

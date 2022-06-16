@@ -25,11 +25,9 @@
 #include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
@@ -43,6 +41,15 @@ namespace yaml {
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
+
+struct InternalConfig
+{
+    unsigned int threads = core::configuration::DEFAULT_THREADS;
+    unsigned int payload_pool_granularity = fastrtps::rtps::recycle::DEFAULT_GRANULARITY;
+    unsigned int prealloc_payload_size = fastrtps::rtps::recycle::DEFAULT_PAYLOAD_SIZE;
+    unsigned int prealloc_min_elements = fastrtps::rtps::recycle::DEFAULT_MIN_ELEMENTS;
+    unsigned int prealloc_max_elements = fastrtps::rtps::recycle::DEFAULT_MAX_ELEMENTS;
+};
 
 /************************
 * GENERIC              *
@@ -160,21 +167,12 @@ IpType YamlReader::get<IpType>(
 }
 
 template <>
-ParticipantId YamlReader::get<ParticipantId>(
-        const Yaml& yml,
-        const YamlReaderVersion /* version */)
-{
-    // Participant name required
-    return ParticipantId(get_scalar<std::string>(yml));
-}
-
-template <>
 ParticipantKind YamlReader::get<ParticipantKind>(
         const Yaml& yml,
         const YamlReaderVersion /* version */)
 {
     // Participant kind required
-    return participant_kind_from_name(get_scalar<std::string>(yml));
+    return participant_kind_from_string(get_scalar<std::string>(yml));
 }
 
 template <>
@@ -183,7 +181,7 @@ DomainId YamlReader::get<DomainId>(
         const YamlReaderVersion /* version */)
 {
     // Domain id required
-    return DomainId(get_scalar<DomainIdType>(yml));
+    return DomainId(get_scalar<DomainId>(yml));
 }
 
 template <>
@@ -343,6 +341,51 @@ DiscoveryServerConnectionAddress _get_discovery_server_connection_address_latest
 }
 
 template <>
+InternalConfig YamlReader::get<InternalConfig>(
+        const Yaml& yml,
+        const YamlReaderVersion /* version */)
+{
+    InternalConfig internal_cfg;
+
+    // Threads
+    if (YamlReader::is_tag_present(yml, THREADS_COUNT_TAG))
+    {
+
+        internal_cfg.threads = YamlReader::get_scalar<unsigned int>(yml, THREADS_COUNT_TAG);
+
+    }
+
+    if (YamlReader::is_tag_present(yml, MEMORY_GRANULARITY_TAG))
+    {
+
+        internal_cfg.payload_pool_granularity = YamlReader::get_scalar<unsigned int>(yml, MEMORY_GRANULARITY_TAG);
+    }
+
+    if (YamlReader::is_tag_present(yml, MEMORY_PREALLOC_PAYLOAD_SIZE_TAG))
+    {
+
+        internal_cfg.prealloc_payload_size =
+                YamlReader::get_scalar<unsigned int>(yml, MEMORY_PREALLOC_PAYLOAD_SIZE_TAG);
+    }
+
+    if (YamlReader::is_tag_present(yml, MEMORY_PREALLOC_MIN_ELEMENTS_TAG))
+    {
+
+        internal_cfg.prealloc_min_elements =
+                YamlReader::get_scalar<unsigned int>(yml, MEMORY_PREALLOC_MIN_ELEMENTS_TAG);
+    }
+
+    if (YamlReader::is_tag_present(yml, MEMORY_PREALLOC_MAX_ELEMENTS_TAG))
+    {
+
+        internal_cfg.prealloc_max_elements =
+                YamlReader::get_scalar<unsigned int>(yml, MEMORY_PREALLOC_MAX_ELEMENTS_TAG);
+    }
+
+    return internal_cfg;
+}
+
+template <>
 DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddress>(
         const Yaml& yml,
         const YamlReaderVersion version)
@@ -399,7 +442,7 @@ RealTopic YamlReader::get<RealTopic>(
     {
         if (reliable_set)
         {
-            return RealTopic(reliable, name, type);
+            return RealTopic(name, type, keyed, reliable);
         }
         else
         {
@@ -409,7 +452,7 @@ RealTopic YamlReader::get<RealTopic>(
 }
 
 template <>
-WildcardTopic YamlReader::get<WildcardTopic>(
+FilterTopic YamlReader::get<FilterTopic>(
         const Yaml& yml,
         const YamlReaderVersion /* version */)
 {
@@ -437,22 +480,22 @@ WildcardTopic YamlReader::get<WildcardTopic>(
     {
         if (type_set)
         {
-            return WildcardTopic(name, type, true, keyed);
+            return FilterTopic(name, type, keyed, true);
         }
         else
         {
-            return WildcardTopic(name, true, keyed);
+            return FilterTopic(name, "*", keyed, true);
         }
     }
     else
     {
         if (type_set)
         {
-            return WildcardTopic(name, type, false);
+            return FilterTopic(name, type, false);
         }
         else
         {
-            return WildcardTopic(name, false);
+            return FilterTopic(name, "*", false);
         }
     }
 }
@@ -549,12 +592,12 @@ configuration::ParticipantConfiguration YamlReader::get<configuration::Participa
         const YamlReaderVersion version)
 {
     // Id required
-    types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    types::ParticipantName name = get<types::ParticipantName>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
     types::ParticipantKind kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
 
-    return configuration::ParticipantConfiguration(id, kind);
+    return configuration::ParticipantConfiguration({name, kind});
 }
 
 template <>
@@ -563,7 +606,7 @@ configuration::SimpleParticipantConfiguration YamlReader::get<configuration::Sim
         const YamlReaderVersion version)
 {
     // Id required
-    types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    types::ParticipantName name = get<types::ParticipantName>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
     types::ParticipantKind kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
@@ -578,11 +621,11 @@ configuration::SimpleParticipantConfiguration YamlReader::get<configuration::Sim
 
     if (has_domain)
     {
-        return configuration::SimpleParticipantConfiguration(id, kind, domain);
+        return configuration::SimpleParticipantConfiguration({name, kind}, domain);
     }
     else
     {
-        return configuration::SimpleParticipantConfiguration(id, kind);
+        return configuration::SimpleParticipantConfiguration({name, kind});
     }
 }
 
@@ -591,10 +634,12 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         const YamlReaderVersion version)
 {
     // Id required
-    types::ParticipantId id = YamlReader::get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    types::ParticipantName name = YamlReader::get<types::ParticipantName>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
     types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+
+    types::ParticipantId id(name, kind);
 
     // Guid Prefix required
     types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, version);
@@ -605,6 +650,10 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     if (has_domain)
     {
         domain = YamlReader::get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
+    }
+    else
+    {
+        domain = types::DEFAULT_DOMAIN_ID;
     }
 
     // Optional listening addresses
@@ -626,69 +675,32 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
 
     // Optional TLS
     types::security::TlsConfiguration tls;
-    bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
-    if (has_tls)
+
+    if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
         tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
-    if (has_domain)
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls,
-                domain);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                domain,
-                kind);
-        }
-    }
-    else
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind);
-        }
-    }
+    return configuration::DiscoveryServerParticipantConfiguration(
+        id,
+        guid,
+        listening_addresses,
+        connection_addresses,
+        domain,
+        tls);
 }
 
 configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_participant_configuration_latest(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    // Id required
-    types::ParticipantId id = YamlReader::get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    // Name required
+    types::ParticipantName name = YamlReader::get<types::ParticipantName>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
     types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+
+    types::ParticipantId id(name, kind);
 
     // Guid Prefix required
     types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
@@ -699,6 +711,10 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     if (has_domain)
     {
         domain = YamlReader::get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
+    }
+    else
+    {
+        domain = types::DEFAULT_DOMAIN_ID;
     }
 
     // Optional listening addresses
@@ -719,58 +735,19 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
 
     // Optional TLS
     types::security::TlsConfiguration tls;
-    bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
-    if (has_tls)
+
+    if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
         tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
-    if (has_domain)
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls,
-                domain);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                domain,
-                kind);
-        }
-    }
-    else
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind);
-        }
-    }
+    return configuration::DiscoveryServerParticipantConfiguration(
+        id,
+        guid,
+        listening_addresses,
+        connection_addresses,
+        domain,
+        tls);
 }
 
 template <>
@@ -833,40 +810,45 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
 {
     /////
     // Get optional allowlist
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;
+    types::TopicKeySet<types::FilterTopic> allowlist;
+
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
+        allowlist = YamlReader::get_set<types::FilterTopic>(yml, ALLOWLIST_TAG, version);
     }
 
     /////
     // Get optional blocklist
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;
+    types::TopicKeySet<types::FilterTopic> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
+        blocklist = YamlReader::get_set<types::FilterTopic>(yml, BLOCKLIST_TAG, version);
     }
 
     /////
     // Get builtin topics from allowlist
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
-    for (const std::shared_ptr<FilterTopic>& topic : allowlist)
+    types::TopicKeySet<types::RealTopic> builtin_topics;
+    for (const auto& topic : allowlist)
     {
-        if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
+        try
         {
+            RealTopic(topic.name(), topic.type());
+
             builtin_topics.emplace(
-                std::make_shared<types::RealTopic>(
-                    topic->topic_name(),
-                    topic->topic_type(),
-                    topic->topic_with_key()));
+                topic.name(),
+                topic.type(),
+                topic.has_key());
+
+        }
+        catch (const utils::InitializationException& exc)
+        {
+            // Not valid as a real topic, keep going
         }
     }
 
     /////
     // Get participants configurations from this yaml level
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
+    types::ParticipantKeySet<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
 
     for (Yaml::const_iterator participant_it = yml.begin();
             participant_it != yml.end();
@@ -915,11 +897,55 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
     /////
     // Construct object
     return core::configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations);
+        std::move(allowlist),
+        std::move(blocklist),
+        std::move(builtin_topics),
+        std::move(participants_configurations));
 }
+
+// unsigned int _get_ddsrouter_configuration_threads(
+//         const Yaml& yml,
+//         const YamlReaderVersion version)
+// {
+//     // Threads
+//     unsigned threads_count = core::configuration::DEFAULT_THREADS;
+//
+//     if (YamlReader::is_tag_present(yml, THREADS_COUNT_TAG)) {
+//         auto tc_str = YamlReader::get_scalar<std::string>(yml, THREADS_COUNT_TAG);
+//
+//         bool all_digits = tc_str.empty() ? false : true;
+//
+//         for (auto c : tc_str) {
+//             if (not std::isdigit(c)) { all_digits = false; }
+//         }
+//
+//         if (all_digits)
+//         {
+//             threads_count = std::stoul(tc_str);
+//         } else {
+//             throw utils::ConfigurationException(
+//                       utils::Formatter() <<
+//                           "Wrong format in threads count: '" << tc_str << "'" <<
+//                           THREADS_COUNT_TAG);
+//         }
+//     }
+//
+//     return threads_count;
+// }
+
+// std::pair<unsigned int, fastrtps::rtps::recycle::PoolConfig>
+// _get_ddsrouter_configuration_payload_pool(
+//         const Yaml& yml,
+//         const YamlReaderVersion version)
+// {
+//     unsigned int pp_granularity = fastrtps::rtps::recycle::DEFAULT_GRANULARITY;
+//
+//     fastrtps::rtps::recycle::PoolConfig payload_pool_configuration;
+//
+//
+//
+//     return std::make_pair(pp_granularity, payload_pool_configuration);
+// }
 
 core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
         const Yaml& yml,
@@ -927,34 +953,31 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
 {
     /////
     // Get optional allowlist
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;
+    types::TopicKeySet<types::FilterTopic> allowlist;
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
+        allowlist = YamlReader::get_set<types::FilterTopic>(yml, ALLOWLIST_TAG, version);
     }
 
     /////
     // Get optional blocklist
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;
+    types::TopicKeySet<types::FilterTopic> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
+        blocklist = YamlReader::get_set<types::FilterTopic>(yml, BLOCKLIST_TAG, version);
     }
 
     /////
     // Get optional builtin topics
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
+    types::TopicKeySet<types::RealTopic> builtin_topics;
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
-            YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
+        builtin_topics = YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version);
     }
 
     /////
     // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
+    types::ParticipantKeySet<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
     auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
 
     // TODO do it in a single instruction
@@ -973,6 +996,21 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
     }
 
+    ///// Get internal configuration parameters
+
+    InternalConfig internal_cfg;
+
+    fastrtps::rtps::recycle::PoolConfig pool_cfg;
+
+    if (YamlReader::is_tag_present(yml, INTERNAL_TAG))
+    {
+        internal_cfg = YamlReader::get<InternalConfig>(yml, INTERNAL_TAG, version);
+
+        pool_cfg.payload_initial_size = internal_cfg.prealloc_payload_size;
+        pool_cfg.initial_size = internal_cfg.prealloc_min_elements;
+        pool_cfg.maximum_size = internal_cfg.prealloc_max_elements;
+    }
+
     /////
     // Get optional number of threads
     int number_of_threads;
@@ -984,23 +1022,15 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
 
     /////
     // Construct object
-    if (has_number_of_threads)
-    {
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations,
-            number_of_threads);
-    }
-    else
-    {
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations);
-    }
+    return core::configuration::DDSRouterConfiguration(
+        std::move(allowlist),
+        std::move(blocklist),
+        std::move(builtin_topics),
+        std::move(participants_configurations),
+        internal_cfg.threads,
+        internal_cfg.payload_pool_granularity,
+        pool_cfg
+        );
 }
 
 template <>

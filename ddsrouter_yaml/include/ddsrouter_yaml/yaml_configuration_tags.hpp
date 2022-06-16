@@ -95,6 +95,19 @@ constexpr const char* NUMBER_THREADS_TAG("threads"); //! Number of threads to co
 // Old versions tags
 constexpr const char* PARTICIPANT_KIND_TAG_V1("type"); //! Participant Kind
 
+// Internal Router performance-sensitive application-dependent parameters
+constexpr const char* INTERNAL_TAG("internal");    //! Version v2.0
+
+// Threads to be deployed in the router side
+constexpr const char* THREADS_COUNT_TAG("threads");    //! Version v2.0
+
+// Parameters that define the payload pool behavior
+constexpr const char* MEMORY_GRANULARITY_TAG("payload_pool_granularity");    //! Version v2.0
+constexpr const char* MEMORY_PREALLOC_PAYLOAD_SIZE_TAG("prealloc_payload_size");    //! Version v2.0
+constexpr const char* MEMORY_PREALLOC_MIN_ELEMENTS_TAG("prealloc_min_elements");    //! Version v2.0
+constexpr const char* MEMORY_PREALLOC_MAX_ELEMENTS_TAG("prealloc_max_elements");    //! Version v2.0
+
+
 
 } /* namespace yaml */
 } /* namespace ddsrouter */

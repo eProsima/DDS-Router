@@ -16,7 +16,6 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -39,8 +38,8 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listening_addresses)
 {
+    core::types::ParticipantName name = eprosima::ddsrouter::test::random_participant_name();
     core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
     core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
 
     // 1 address
@@ -51,7 +50,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         Yaml yml_address;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
@@ -80,17 +79,17 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         Yaml yml_listening_addresses;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add addresses
-        std::vector<core::types::Address> addresses;
+        std::set<core::types::Address> addresses;
         for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
         {
             // Create new address
             core::types::Address address = eprosima::ddsrouter::test::random_address(i);
-            addresses.push_back(address);
+            addresses.insert(address);
 
             // Add it to yaml
             Yaml yml_address;
@@ -107,16 +106,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
                         LATEST);
 
         // Check result
-        ASSERT_EQ(addresses.size(), result.listening_addresses().size()) << yml;
-        // Check every address is inside listening addresses of the configuration
-        for (core::types::Address address : addresses)
-        {
-            // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
-            std::set<eprosima::ddsrouter::core::types::Address> addresses_result = result.listening_addresses();
-            ASSERT_NE(
-                addresses_result.find(address),
-                addresses_result.end());
-        }
+        ASSERT_EQ(addresses, result.listening_addresses()) << yml;
     }
 
     // not list format
@@ -125,7 +115,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
@@ -152,7 +142,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
+        yaml::test::participantname_to_yaml(yml_participant, name);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
         yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 

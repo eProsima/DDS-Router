@@ -17,6 +17,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddsrouter_core/configuration/payload_pool/PoolConfig.h>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 
@@ -53,9 +54,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
         core::configuration::DDSRouterConfiguration configuration_result =
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
-        // Check is valid
-        utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
+        // Is valid if it does not throw
     }
 }
 
@@ -107,9 +106,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
         core::configuration::DDSRouterConfiguration configuration_result =
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
-        // Check is valid
-        utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
+        // Is valid if it does not throw
     }
 }
 
@@ -139,9 +136,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
         core::configuration::DDSRouterConfiguration configuration_result =
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
-        // Check is valid
-        utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
+        // Is valid if it does not throw
     }
 
     // trivial configuration of v2.0 fails
@@ -158,12 +153,10 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check is not valid
-        utils::Formatter error_msg;
-        ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
+        ASSERT_THROW(
+            core::configuration::DDSRouterConfiguration configuration_result =
+            YamlReaderConfiguration::load_ddsrouter_configuration(yml)
+            , utils::ConfigurationException);
     }
 }
 
@@ -214,12 +207,10 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check is not valid
-        utils::Formatter error_msg;
-        ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
+        ASSERT_THROW(
+            core::configuration::DDSRouterConfiguration configuration_result =
+            YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
 
     // not correct version: specify v2.0 and is v1.0
@@ -243,39 +234,165 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
     }
 }
 
-/**
- * Test load the number of threads in the configuration
- *
- * CASES:
- * - trivial configuration
- */
-TEST(YamlReaderConfigurationTest, number_of_threads)
+core::configuration::DDSRouterConfiguration test_threads_aux(
+        std::string threads_str)
 {
-    const char* yml_configuration =
-            // trivial configuration
-            R"(
+    std::string yaml_str = std::string(
+        R"(
         version: v2.0
         participants:
           - name: "P1"
             kind: "void"
           - name: "P2"
             kind: "void"
-        )";
-    Yaml yml = YAML::Load(yml_configuration);
+        internal:
+            THREADS_KEY_VAL
+        )");
 
-    std::vector<unsigned int> test_cases = {1, 2, 10, 20, 42, 100};
+    const std::string key_str = "THREADS_KEY_VAL";
 
-    for (unsigned int test_case : test_cases)
+    yaml_str.replace(yaml_str.find(key_str), key_str.length(), threads_str);
+
+    Yaml yml = YAML::Load(yaml_str.c_str());
+
+    return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+}
+
+/**
+ * Test threads count
+ *
+ * CASES:
+ * - 1 thread
+ * - 27 thread
+ * - 0 threads throws
+ * - threads exceeding max throws
+ * - negative threads throws
+ * - empty threads string throws
+ * - not a number throws
+ * - threads not set implies default
+ */
+TEST(YamlReaderConfigurationTest, threads_count)
+{
+    // one
     {
-        yml[NUMBER_THREADS_TAG] = test_case;
-
-        // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check threads are correct
-        ASSERT_EQ(test_case, configuration_result.number_of_threads());
+        auto configuration = test_threads_aux("threads: 1");
+        ASSERT_EQ(configuration.threads(), 1);
     }
+    // specific non-one number
+    {
+        auto configuration = test_threads_aux("threads: 27");
+        ASSERT_EQ(configuration.threads(), 27);
+    }
+    // zero
+    {
+        ASSERT_THROW(
+            auto configuration = test_threads_aux("threads: 0"),
+            utils::ConfigurationException);
+    }
+    // greater than maximum
+    {
+        ASSERT_THROW(
+            auto configuration = test_threads_aux("threads: " + std::to_string(core::configuration::MAX_THREADS + 1)),
+            utils::ConfigurationException);
+    }
+    // negative:
+    {
+        ASSERT_THROW(
+            auto configuration = test_threads_aux("threads: -1"),
+            utils::ConfigurationException);
+    }
+    // empty:
+    {
+        ASSERT_THROW(
+            auto configuration = test_threads_aux("threads: "),
+            utils::ConfigurationException);
+    }
+    // not a number
+    {
+        ASSERT_THROW(
+            auto configuration = test_threads_aux("threads: nonumber"),
+            utils::ConfigurationException);
+    }
+    // unspecified is default
+    {
+        auto configuration = test_threads_aux("");
+        ASSERT_EQ(configuration.threads(), core::configuration::DEFAULT_THREADS);
+        ASSERT_EQ(configuration.payload_pool_granularity(), eprosima::fastrtps::rtps::recycle::DEFAULT_GRANULARITY);
+        ASSERT_EQ(
+            configuration.payload_pool_configuration().payload_initial_size,
+            eprosima::fastrtps::rtps::recycle::DEFAULT_PAYLOAD_SIZE);
+        ASSERT_EQ(
+            configuration.payload_pool_configuration().initial_size,
+            eprosima::fastrtps::rtps::recycle::DEFAULT_MIN_ELEMENTS);
+        ASSERT_EQ(
+            configuration.payload_pool_configuration().maximum_size,
+            eprosima::fastrtps::rtps::recycle::DEFAULT_MAX_ELEMENTS);
+    }
+}
+
+core::configuration::DDSRouterConfiguration test_payload_pool_config_aux(
+        unsigned int pp_granularity,
+        unsigned int prealloc_payload_size,
+        unsigned int prealloc_min_elements,
+        unsigned int prealloc_max_elements)
+{
+    std::string yaml_str = std::string(
+        R"(
+        version: v2.0
+        participants:
+          - name: "P1"
+            kind: "void"
+          - name: "P2"
+            kind: "void"
+        internal:
+            payload_pool_granularity: PAYLOAD_POOL_GRANULARITY
+            prealloc_payload_size: PREALLOC_PAYLOAD_SIZE
+            prealloc_min_elements: PREALLOC_MIN_ELEMENTS
+            prealloc_max_elements: PREALLOC_MAX_ELEMENTS
+        )");
+
+    const std::string granularity_key_str = "PAYLOAD_POOL_GRANULARITY";
+    const std::string prealloc_payload_size_key_str = "PREALLOC_PAYLOAD_SIZE";
+    const std::string prealloc_min_elements_key_str = "PREALLOC_MIN_ELEMENTS";
+    const std::string prealloc_max_elements_key_str = "PREALLOC_MAX_ELEMENTS";
+
+    yaml_str.replace(yaml_str.find(granularity_key_str), granularity_key_str.length(), std::to_string(pp_granularity));
+    yaml_str.replace(yaml_str.find(prealloc_payload_size_key_str),
+            prealloc_payload_size_key_str.length(), std::to_string(prealloc_payload_size));
+    yaml_str.replace(yaml_str.find(prealloc_min_elements_key_str),
+            prealloc_min_elements_key_str.length(), std::to_string(prealloc_min_elements));
+    yaml_str.replace(yaml_str.find(prealloc_max_elements_key_str),
+            prealloc_max_elements_key_str.length(), std::to_string(prealloc_max_elements));
+
+    Yaml yml = YAML::Load(yaml_str.c_str());
+
+    return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+}
+
+/**
+ * Test payload pool configuration parameters
+ *
+ * CASES:
+ * - 0 values
+ * - non-zero values
+ */
+TEST(YamlReaderConfigurationTest, payload_pool_configuration)
+{
+    {
+        auto configuration = test_payload_pool_config_aux(0, 0, 0, 0);
+        ASSERT_EQ(configuration.payload_pool_granularity(), 0);
+        ASSERT_EQ(configuration.payload_pool_configuration().payload_initial_size, 0);
+        ASSERT_EQ(configuration.payload_pool_configuration().initial_size, 0);
+        ASSERT_EQ(configuration.payload_pool_configuration().maximum_size, 0);
+    }
+    {
+        auto configuration = test_payload_pool_config_aux(13, 12, 27, 44);
+        ASSERT_EQ(configuration.payload_pool_granularity(), 13);
+        ASSERT_EQ(configuration.payload_pool_configuration().payload_initial_size, 12);
+        ASSERT_EQ(configuration.payload_pool_configuration().initial_size, 27);
+        ASSERT_EQ(configuration.payload_pool_configuration().maximum_size, 44);
+    }
+
 }
 
 int main(

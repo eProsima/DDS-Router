@@ -20,9 +20,7 @@
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 
 #include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>

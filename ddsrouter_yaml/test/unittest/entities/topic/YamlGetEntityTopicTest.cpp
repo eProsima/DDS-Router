@@ -16,8 +16,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 
@@ -65,24 +64,24 @@ void compare_topic(
         bool keyed,
         bool reliable = false)
 {
-    ASSERT_EQ(topic.topic_name(), name);
-    ASSERT_EQ(topic.topic_type(), type);
-    ASSERT_EQ(topic.topic_with_key(), keyed);
-    ASSERT_EQ(topic.topic_reliable(), reliable);
+    ASSERT_EQ(topic.name(), name);
+    ASSERT_EQ(topic.type(), type);
+    ASSERT_EQ(topic.has_key(), keyed);
+    ASSERT_EQ(topic.is_reliable(), reliable);
 }
 
 // Check the values of a wildcard topic are the expected ones
-void compare_wildcard_topic(
-        core::types::WildcardTopic topic,
+void compare_filter_topic(
+        core::types::FilterTopic topic,
         std::string name,
         std::string type,
-        bool key_set,
-        bool keyed)
+        bool has_key,
+        bool has_keyed_set)
 {
-    ASSERT_EQ(topic.topic_name(), name);
-    ASSERT_EQ(topic.topic_type(), type);
-    ASSERT_EQ(topic.has_keyed_set(), key_set);
-    ASSERT_EQ(topic.topic_with_key(), keyed);
+    ASSERT_EQ(topic.name(), name);
+    ASSERT_EQ(topic.type(), type);
+    ASSERT_EQ(topic.has_key(), has_key);
+    ASSERT_EQ(topic.has_keyed_set(), has_keyed_set);
 }
 
 } /* namespace test */
@@ -220,7 +219,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
 }
 
 /**
- * Test read correct core::types::WildcardTopic from yaml
+ * Test read correct core::types::FilterTopic from yaml
  *
  * POSITIVE CASES:
  * - Topic Std
@@ -246,9 +245,9 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
+        core::types::FilterTopic topic = YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST);
 
-        test::compare_wildcard_topic(topic, name, type, false, false); // By default no keyed
+        test::compare_filter_topic(topic, name, type, false, false); // By default no keyed
     }
 
     // Topic without type
@@ -263,9 +262,9 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
+        core::types::FilterTopic topic = YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST);
 
-        test::compare_wildcard_topic(topic, name, "*", false, false); // By default no keyed
+        test::compare_filter_topic(topic, name, "*", false, false); // By default no keyed
     }
 
     // Topic with key
@@ -280,9 +279,9 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
+        core::types::FilterTopic topic = YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST);
 
-        test::compare_wildcard_topic(topic, name, type, true, true);
+        test::compare_filter_topic(topic, name, type, true, true);
     }
 
     // Topic with no key
@@ -297,9 +296,9 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
+        core::types::FilterTopic topic = YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST);
 
-        test::compare_wildcard_topic(topic, name, type, true, false);
+        test::compare_filter_topic(topic, name, type, false, true);
     }
 
     // Topic with key without type
@@ -314,14 +313,14 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardTopic topic = YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST);
+        core::types::FilterTopic topic = YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST);
 
-        test::compare_wildcard_topic(topic, name, "*", true, true);
+        test::compare_filter_topic(topic, name, "*", true, true);
     }
 }
 
 /**
- * Test read correct core::types::WildcardTopic from yaml
+ * Test read correct core::types::FilterTopic from yaml
  *
  * NEGATIVE CASES:
  * - empty
@@ -338,7 +337,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 
     // Topic without type
@@ -353,7 +352,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::FilterTopic>(yml, "topic", LATEST), utils::ConfigurationException);
     }
 }
 
