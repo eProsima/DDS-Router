@@ -20,12 +20,14 @@ set(TEST_NAME
     TrivialTest)
 
 set(TEST_SOURCES
-    TrivialTest.cpp)
+    TrivialTest.cpp
+    )
 
 set(TEST_LIST
     trivial_void_initialization
     trivial_dummy_initialization
-    trivial_communication)
+    trivial_communication
+    )
 
 set(TEST_NEEDED_SOURCES
     )

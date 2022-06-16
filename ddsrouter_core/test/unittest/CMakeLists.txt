@@ -16,5 +16,4 @@
 # add_subdirectory(configuration)
 add_subdirectory(core)
 add_subdirectory(dynamic)
-add_subdirectory(efficiency)
 add_subdirectory(types)

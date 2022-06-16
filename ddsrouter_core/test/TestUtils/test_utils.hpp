@@ -25,9 +25,7 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
@@ -92,10 +90,10 @@ struct WildcardTopicInput : public TopicInput
     bool type_set;
 };
 
-std::set<std::shared_ptr<RealTopic>> topic_set(
+TopicKeySet<RealTopic> topic_set(
         std::vector<RealTopicInput> topics);
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(
+TopicKeySet<WildcardTopic> topic_set(
         std::vector<WildcardTopicInput> topics);
 
 DomainId random_domain(
@@ -117,7 +115,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
         ParticipantKind kind,
         uint16_t seed = 0);
 
-ParticipantId random_participant_id(
+ParticipantName random_participant_name(
         uint16_t seed = 0);
 
 ParticipantKind random_participant_kind(

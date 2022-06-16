@@ -24,7 +24,8 @@
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
 
 #include <test_participants.hpp>
 
@@ -119,22 +120,23 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     if (tls)
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0)),
+            types::ParticipantKind::wan),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::wan),
+            types::DEFAULT_DOMAIN_ID,
             tls_configuration(wan_kind));
 
     }
     else
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0)),
+            types::ParticipantKind::wan),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
-            connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::wan)
+            connection_addresses
             );
     }
 }
@@ -150,30 +152,29 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
  */
 configuration::DDSRouterConfiguration router_configuration(
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
-        types::DomainIdType domain)
+        types::DomainId domain)
 {
     // One topic
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist(
+    types::TopicKeySet<types::FilterTopic> allowlist(
                     {
-                        std::make_shared<types::WildcardTopic>(TOPIC_NAME, "HelloWorld"),
+                        types::FilterTopic(TOPIC_NAME, "HelloWorld"),
                     });
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    types::TopicKeySet<types::FilterTopic> blocklist;   // empty
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    types::TopicKeySet<types::RealTopic> builtin_topics;   // empty
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
+    types::ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
                     {
                         // custom
                         participant_configuration,
 
                         // simple
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("simple_participant"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            types::ParticipantId("simple_participant", types::ParticipantKind::simple_rtps),
                             types::DomainId(domain)
-                            ),
+                            )
                     }
         );
 

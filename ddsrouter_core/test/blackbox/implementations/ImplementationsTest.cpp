@@ -29,9 +29,8 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -49,18 +48,17 @@ TEST(ImplementationsTest, solo_participant_implementation)
     // For each Participant Kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind));
 
         // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
-
-        // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), utils::ConfigurationException) << kind;
+        ASSERT_THROW(
+            configuration::DDSRouterConfiguration configuration(
+                TopicKeySet<FilterTopic>(),
+                TopicKeySet<FilterTopic>(),
+                TopicKeySet<RealTopic>(),
+                std::move(participant_configurations))
+            , utils::ConfigurationException);
     }
 }
 
@@ -81,16 +79,16 @@ TEST(ImplementationsTest, pair_implementation)
     // For each Participant Kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
         participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            TopicKeySet<FilterTopic>(),
+            TopicKeySet<FilterTopic>(),
+            TopicKeySet<RealTopic>(),
+            std::move(participant_configurations));
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -122,19 +120,19 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     // For each Participant kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
-        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
+        TopicKeySet<RealTopic> builtin_topics = test::topic_set(
             {test::RealTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
 
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
         participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            builtin_topics,
-            participant_configurations);
+            TopicKeySet<FilterTopic>(),
+            TopicKeySet<FilterTopic>(),
+            std::move(builtin_topics),
+            std::move(participant_configurations));
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -166,10 +164,10 @@ TEST(ImplementationsTest, all_implementations)
 
     {
         // Set topic to active
-        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
+        TopicKeySet<RealTopic> builtin_topics = test::topic_set(
             {test::RealTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
 
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
 
         uint16_t participant_number = 0;
 
@@ -182,48 +180,29 @@ TEST(ImplementationsTest, all_implementations)
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            TopicKeySet<FilterTopic>(),
+            TopicKeySet<FilterTopic>(),
+            TopicKeySet<RealTopic>(),
+            std::move(participant_configurations));
 
-        // Create DDSRouter entity
-        DDSRouter router(configuration);
+        try
+        {
 
-        // Start DDSRouter
-        router.start();
+            // Create DDSRouter entity
+            DDSRouter router(configuration);
 
-        // Stop DDS Router
-        router.stop();
+            // Start DDSRouter
+            router.start();
 
-        // Let DDSRouter object destroy for the next iteration
-    }
-}
+            // Stop DDS Router
+            router.stop();
 
-/**
- * Test that creates a DDSRouter with 3 simple configurations, 2 of them with same id, fails
- *
- * There is no easy way to test this case as the yaml will be ill-formed with two keys.
- * Thus, it must be implemented from a yaml in string format.
- */
-TEST(ImplementationsTest, duplicated_ids)
-{
-    // For each Participant Kind
-    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
-    {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(test::random_participant_configuration(kind, 0));
-        participant_configurations.insert(test::random_participant_configuration(kind, 0));
-
-        // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
-
-        // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), eprosima::ddsrouter::utils::ConfigurationException) << kind;
+            // Let DDSRouter object destroy for the next iteration
+        }
+        catch (const std::exception& exc)
+        {
+            std::cout << "Exception within test: " << exc.what() << "\n";
+        }
     }
 }
 

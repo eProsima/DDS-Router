@@ -14,18 +14,25 @@
 
 #include <algorithm>
 #include <iostream>
+#include <chrono>
 
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
+#include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <participant/implementations/auxiliar/DummyParticipant.hpp>
+#include <participant/auxiliar/DummyParticipant.hpp>
+#include <reader/auxiliar/DummyReader.hpp>
+#include <writer/auxiliar/DummyWriter.hpp>
+#include <core/DDSRouterImpl.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
+#include <ddsrouter_core/types/dds/Payload.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/exception/InconsistencyException.hpp>
 
+using namespace eprosima::ddsrouter::utils;
 using namespace eprosima::ddsrouter::test;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -46,18 +53,16 @@ std::vector<PayloadUnit> random_payload(
 configuration::DDSRouterConfiguration void_configuration()
 {
     return configuration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<RealTopic>>(),
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
+        TopicKeySet<FilterTopic>(),
+        TopicKeySet<FilterTopic>(),
+        TopicKeySet<RealTopic>(),
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>>(
     {
         std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId("ParticipantVoid1"),
-            ParticipantKind::blank
+            ParticipantId("ParticipantVoid1", ParticipantKind::blank)
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId("ParticipantVoid2"),
-            ParticipantKind::blank
+            ParticipantId("ParticipantVoid2", ParticipantKind::blank)
             )
     }
             ));
@@ -75,28 +80,47 @@ configuration::DDSRouterConfiguration simple_configuration(
         const std::string& topic_type = "type_dummy")
 {
     return configuration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
+        TopicKeySet<FilterTopic>(),
+        TopicKeySet<FilterTopic>(),
+        TopicKeySet<RealTopic>({RealTopic(topic_name, topic_type)}),
+        ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>>(
     {
         std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId(participant_1_name),
-            ParticipantKind::dummy
+            ParticipantId(participant_1_name, ParticipantKind::dummy)
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId(participant_2_name),
-            ParticipantKind::dummy
+            ParticipantId(participant_2_name, ParticipantKind::dummy)
             )
     }
             ));
 }
+
+class TestDDSRouter : public DDSRouterImpl
+{
+public:
+
+    using DDSRouterImpl::DDSRouterImpl;
+
+    IParticipant* get_participant(
+            ParticipantName name)
+    {
+        auto found = participants_iterable_.find(name);
+
+        if (found == std::end(participants_iterable_))
+        {
+            throw InconsistencyException("Participant not existing");
+        }
+        return *found;
+    }
+
+};
 
 /**
  * Test Whole DDSRouter initialization by initializing two EmptyParticipants
  */
 TEST(TrivialTest, trivial_void_initialization)
 {
+    // test::TestLogHandler test_log_handler(utils::Log::Kind::Info);
     // Create DDSRouter entity
     DDSRouter router(void_configuration());
     router.start();
@@ -110,6 +134,7 @@ TEST(TrivialTest, trivial_void_initialization)
  */
 TEST(TrivialTest, trivial_dummy_initialization)
 {
+    // test::TestLogHandler test_log_handler(utils::Log::Kind::Info);
     // Create DDSRouter entity
     DDSRouter router(simple_configuration());
     router.start();
@@ -121,36 +146,73 @@ TEST(TrivialTest, trivial_dummy_initialization)
 /**
  * Test Whole DDSRouter interfaces by using two DummyParticipants and send one message from one to the other
  *
- * TODO
  */
 TEST(TrivialTest, trivial_communication)
 {
-    DDSRouter router(simple_configuration());
+    TestDDSRouter router(simple_configuration());
+
     router.start();
 
-    DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("Participant1"));
-    DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("Participant2"));
-    ASSERT_NE(participant_1, nullptr);
-    ASSERT_NE(participant_2, nullptr);
+    auto reader_1 =
+            static_cast<DummyParticipant*>(router.get_participant("Participant1"))->get_topic_reader(RealTopic(
+                        "topic_dummy",
+                        "type_dummy"));
+    auto writer_1 =
+            static_cast<DummyParticipant*>(router.get_participant("Participant1"))->get_topic_writer(RealTopic(
+                        "topic_dummy",
+                        "type_dummy"));
+    auto reader_2 =
+            static_cast<DummyParticipant*>(router.get_participant("Participant2"))->get_topic_reader(RealTopic(
+                        "topic_dummy",
+                        "type_dummy"));
+    auto writer_2 =
+            static_cast<DummyParticipant*>(router.get_participant("Participant2"))->get_topic_writer(RealTopic(
+                        "topic_dummy",
+                        "type_dummy"));
 
-    RealTopic topic("topic_dummy", "type_dummy");
-    Guid guid = random_guid();
-    std::vector<PayloadUnit> payload = random_payload(3);
+    reader_1->initialize(1);
 
-    DummyDataReceived data;
-    data.source_guid = guid;
-    data.payload = payload;
+    // Check readers initial values
+    ASSERT_EQ(reader_1->get_enqueued(), 0);
+    ASSERT_EQ(reader_1->get_notified(), 0);
+    ASSERT_EQ(reader_1->get_forwarded(), 0);
 
-    participant_1->simulate_data_reception(topic, data);
+    ASSERT_EQ(reader_2->get_enqueued(), 0);
+    ASSERT_EQ(reader_2->get_notified(), 0);
+    ASSERT_EQ(reader_2->get_forwarded(), 0);
 
-    // Sleep until first data arrives to the writer
-    participant_2->wait_until_n_data_sent(topic, 1);
+    // Check writers initial values
+    ASSERT_EQ(writer_1->get_received(), 0);
+    ASSERT_EQ(writer_2->get_received(), 0);
 
-    std::vector<DummyDataStored> data_received = participant_2->get_data_that_should_have_been_sent(topic);
+    std::string sample_message("my-message");
 
-    ASSERT_EQ(1, data_received.size());
-    ASSERT_EQ(data_received[0].source_guid, guid);
-    ASSERT_EQ(data_received[0].payload, payload);
+    const auto total = 10000u;
+
+    for (auto i = 0u; i < total; i++)
+    {
+        reader_1->mock_data_reception(sample_message);
+    }
+
+    while (reader_1->get_forwarded() < total)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    // Check readers counters are valid
+    ASSERT_EQ(reader_1->get_enqueued(), 0);
+    ASSERT_EQ(reader_1->get_notified(), total);
+    ASSERT_EQ(reader_1->get_forwarded(), total);
+
+    ASSERT_EQ(reader_2->get_enqueued(), 0);
+    ASSERT_EQ(reader_2->get_notified(), 0);
+    ASSERT_EQ(reader_2->get_forwarded(), 0);
+
+    // Check writers counters are valid
+    ASSERT_EQ(writer_1->get_received(), 0);
+
+    ASSERT_EQ(writer_2->get_received(), total);
+    ASSERT_TRUE(writer_2->check_content(sample_message));
 
     router.stop();
 }

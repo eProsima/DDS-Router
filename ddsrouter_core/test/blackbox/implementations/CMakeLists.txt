@@ -28,7 +28,6 @@ set(TEST_LIST
         pair_implementation_with_topic
         all_implementations
         solo_participant_implementation
-        duplicated_ids
     )
 
 set(TEST_NEEDED_SOURCES

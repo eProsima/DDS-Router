@@ -74,89 +74,91 @@ WildcardTopicInput::WildcardTopicInput(
 {
 }
 
-std::set<std::shared_ptr<RealTopic>> topic_set(
+TopicKeySet<RealTopic> topic_set(
         std::vector<RealTopicInput> topics)
 {
-    std::set<std::shared_ptr<RealTopic>> result;
+    TopicKeySet<RealTopic> result;
     for (RealTopicInput input : topics)
     {
         if (input.key_set)
         {
             if (input.reliable_set)
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            input.keyed,
-                            input.reliable));
+                result.emplace(
+                    input.name,
+                    input.type,
+                    input.keyed,
+                    input.reliable);
             }
             else
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            input.keyed));
+                result.emplace(
+                    input.name,
+                    input.type,
+                    input.keyed);
             }
         }
         else
         {
             if (input.reliable_set)
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            false,
-                            input.reliable));
+                result.emplace(
+                    input.name,
+                    input.type,
+                    false,
+                    input.reliable);
             }
             else
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type));
+                result.emplace(
+                    input.name,
+                    input.type);
             }
         }
     }
     return result;
 }
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(
+TopicKeySet<WildcardTopic> topic_set(
         std::vector<WildcardTopicInput> topics)
 {
-    std::set<std::shared_ptr<FilterTopic>> result;
+    TopicKeySet<WildcardTopic> result;
     for (WildcardTopicInput input : topics)
     {
         if (input.key_set)
         {
             if (input.type_set)
             {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            input.type,
-                            true,
-                            input.keyed));
+                result.emplace(
+                    input.name,
+                    input.type,
+                    true,
+                    input.keyed);
             }
             else
             {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            true,
-                            input.keyed));
+                result.emplace(
+                    input.name,
+                    "*",
+                    true,
+                    input.keyed);
             }
         }
         else
         {
             if (input.type_set)
             {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            input.type,
-                            false));
+                result.emplace(
+                    input.name,
+                    input.type,
+                    false);
             }
             else
             {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            false));
+                result.emplace(
+                    input.name,
+                    "*",
+                    false);
             }
         }
     }
@@ -166,7 +168,7 @@ std::set<std::shared_ptr<FilterTopic>> topic_set(
 DomainId random_domain(
         uint16_t seed /* = 0 */)
 {
-    return DomainId(static_cast<DomainIdType>(seed));
+    return DomainId(seed);
 }
 
 GuidPrefix random_guid_prefix(
@@ -212,14 +214,13 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
         ParticipantKind kind,
         uint16_t seed /* = 0 */)
 {
-    ParticipantId id("Participant" + std::to_string(seed));
+    ParticipantId id({"Participant" + std::to_string(seed), kind});
 
     switch (kind)
     {
         case ParticipantKind::simple_rtps:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
-                kind,
                 random_domain(seed));
 
         case ParticipantKind::local_discovery_server:
@@ -228,35 +229,34 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
         {
             // TODO get random values
             DiscoveryServerConnectionAddress connection_address = DiscoveryServerConnectionAddress(
-                GuidPrefix(),
+                random_guid_prefix(27, true),
                 std::set<Address>({Address()})
                 );
 
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 id,
-                random_guid_prefix(seed),
+                random_guid_prefix(27, true),
                 std::set<Address>(),
-                std::set<DiscoveryServerConnectionAddress>({connection_address}),
-                kind);
+                std::set<DiscoveryServerConnectionAddress>({connection_address}));
         }
 
         // Add cases where Participants need specific arguments
         default:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind);
+            return std::make_shared<core::configuration::ParticipantConfiguration>(id);
     }
 }
 
-ParticipantId random_participant_id(
+ParticipantName random_participant_name(
         uint16_t seed /* = 0 */)
 {
-    std::vector<std::string> names = {
+    std::array<std::string, 4> names = {
         "participant",
         "PART_1",
         "echo",
         "Barro_p",
     };
 
-    return ParticipantId(names[seed % names.size()] + std::to_string(seed));
+    return names[seed % names.size()] + std::to_string(seed);
 }
 
 ParticipantKind random_participant_kind(

@@ -20,7 +20,8 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/Topic.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.ipp>
 #include <ddsrouter_utils/Log.hpp>
 
 #include <test_participants.hpp>
@@ -48,32 +49,28 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
         bool reliable_readers = false)
 {
     // Always filter the test topics by topic name
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    types::TopicKeySet<types::FilterTopic> allowlist;   // empty
+    allowlist.emplace(TOPIC_NAME);
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    types::TopicKeySet<types::FilterTopic> blocklist;   // empty
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    types::TopicKeySet<types::RealTopic> builtin_topics;   // empty
 
     if (disable_dynamic_discovery || reliable_readers)
     {
-        builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
-        builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
+        builtin_topics.emplace(TOPIC_NAME, "HelloWorld", false, reliable_readers);
+        builtin_topics.emplace(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers);
     }
 
     // Two simple participants
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
+    types::ParticipantKeySet<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
                     {
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_0"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            types::ParticipantId("participant_0", types::ParticipantKind::simple_rtps),
                             types::DomainId(0u)
                             ),
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_1"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            types::ParticipantId("participant_1", types::ParticipantKind::simple_rtps),
                             types::DomainId(1u)
                             )
                     }
