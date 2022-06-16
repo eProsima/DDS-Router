@@ -141,11 +141,11 @@ utils::ReturnCode Writer::write_(
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
-    if (!topic_.topic_reliable())
-    {
-        // Change has been sent, remove it if best_effort (TODO: does this really work?)
-        rtps_history_->remove_change(new_change);
-    }
+    // if (!topic_.topic_reliable())
+    // {
+    //     // Change has been sent, remove it if best_effort (TODO: does this really work?)
+    //     rtps_history_->remove_change(new_change);
+    // }
 
     return utils::ReturnCode::RETCODE_OK;
 }
@@ -162,18 +162,23 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
 
-    if (topic_.topic_reliable())
-    {
-        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-        att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
-    }
-    else
-    {
-        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
-        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
-        att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
-    }
+    // Pseudo transparency
+    // if (topic_.topic_reliable())
+    // {
+    //     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+    //     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    //     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+    // }
+    // else
+    // {
+    //     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
+    //     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
+    //     att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
+    // }
+
+    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
 
     if (topic_.topic_with_key())
     {
@@ -206,17 +211,21 @@ fastrtps::WriterQos Writer::writer_qos_() const noexcept
 {
     fastrtps::WriterQos qos;
 
-    if (topic_.topic_reliable())
-    {
-        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
-    }
-    else
-    {
-        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
-        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+    // Pseudo transparency
+    // if (topic_.topic_reliable())
+    // {
+    //     qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+    //     qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    // }
+    // else
+    // {
+    //     qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+    //     qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
 
-    }
+    // }
+
+    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
 
     return qos;
 }

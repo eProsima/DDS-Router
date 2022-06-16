@@ -114,7 +114,8 @@ types::Endpoint CommonRTPSRouterParticipant<ConfigurationType>::create_endpoint_
 
     // Parse Topic
     types::RealTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()),
-            info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY);
+            info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY,
+            info_reliability_kind == fastrtps::rtps::RELIABLE);
 
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
