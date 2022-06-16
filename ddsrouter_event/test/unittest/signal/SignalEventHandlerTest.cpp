@@ -126,7 +126,7 @@ TEST(SignalEventHandlerTest, receive_signal_trivial)
             } );
 
     // Raise signal
-    raise(static_cast<SignalType>(Signal::sigint));
+    raise(static_cast<int>(Signal::sigint));
 
     // Force handler to wait for signal
     handler.wait_for_event();
@@ -162,7 +162,7 @@ TEST(SignalEventHandlerTest, receive_signal)
                 } );
 
         // Raise signal
-        raise(static_cast<SignalType>(Signal::sigint));
+        raise(static_cast<int>(Signal::sigint));
 
         // Force handler to wait for signal
         handler1.wait_for_event();
@@ -184,8 +184,8 @@ TEST(SignalEventHandlerTest, receive_signal)
                 } );
 
         // Raise signal
-        raise(static_cast<SignalType>(Signal::sigint));
-        raise(static_cast<SignalType>(Signal::sigint));
+        raise(static_cast<int>(Signal::sigint));
+        raise(static_cast<int>(Signal::sigint));
 
         // Force handler to wait for signal
         handler.wait_for_event(2);
@@ -206,7 +206,7 @@ TEST(SignalEventHandlerTest, receive_signal)
                 } );
 
         // Raise signal
-        raise(static_cast<SignalType>(Signal::sigint));
+        raise(static_cast<int>(Signal::sigint));
 
         // Force handler to wait for signal
         handler.wait_for_event();
@@ -219,7 +219,7 @@ TEST(SignalEventHandlerTest, receive_signal)
         handler.unset_callback();
 
         // Raise signal
-        raise(static_cast<SignalType>(Signal::sigint));
+        raise(static_cast<int>(Signal::sigint));
 
         // Check that signal has not been received
         ASSERT_EQ(1, calls);
@@ -233,7 +233,7 @@ TEST(SignalEventHandlerTest, receive_signal)
                     {
                         /* empty callback */ } );
 
-            raise(static_cast<SignalType>(Signal::sigint));
+            raise(static_cast<int>(Signal::sigint));
             // Destroying handler while Raise signal
         }
 
@@ -267,7 +267,7 @@ TEST(SignalEventHandlerTest, receive_n_signals)
         // Raise N signal
         for (uint32_t i = 0; i < number_signals; i++)
         {
-            raise(static_cast<SignalType>(Signal::sigint));
+            raise(static_cast<int>(Signal::sigint));
         }
 
         // Force handler to wait for signal
@@ -301,7 +301,7 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
             } );
 
     // Raise signal
-    raise(static_cast<SignalType>(Signal::sigint));
+    raise(static_cast<int>(Signal::sigint));
 
     // Force handler to wait for signal
     handler1.wait_for_event();
@@ -314,7 +314,7 @@ TEST(SignalEventHandlerTest, erase_callback_while_other_handling)
     handler1.unset_callback();
 
     // Raise signal
-    raise(static_cast<SignalType>(Signal::sigint));
+    raise(static_cast<int>(Signal::sigint));
 
     // Force handler2 (remaining) to wait for signal (2 because it is the second one)
     handler2.wait_for_event(2);

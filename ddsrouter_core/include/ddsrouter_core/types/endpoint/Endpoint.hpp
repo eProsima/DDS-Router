@@ -40,6 +40,7 @@ enum class EndpointKind : EndpointKindType
 };
 
 //! Number of endpoint kinds
+//! NOTE: Change ENDPOINT_KIND_COUNT if enums are modified
 constexpr unsigned int ENDPOINT_KIND_COUNT = 3;
 
 //! Strings associated to each endpoint kind

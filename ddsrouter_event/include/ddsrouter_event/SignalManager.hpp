@@ -152,7 +152,7 @@ protected:
 
     //! Static function to call from \c signal . It only calls singleton \c signal_received_ .
     static void signal_handler_function_(
-            SignalType sigval) noexcept;
+            int sigval) noexcept;
 
     //////
     // Callbacks registered

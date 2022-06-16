@@ -52,7 +52,7 @@ SignalManager<SigVal>::SignalManager() noexcept
     : signal_handler_thread_stop_(false)
     , current_last_id_(0)
 {
-    signal(static_cast<SignalType>(SigVal), SignalManager<SigVal>::signal_handler_function_);
+    signal(static_cast<int>(SigVal), SignalManager<SigVal>::signal_handler_function_);
 
     logDebug(DDSROUTER_SIGNALMANAGER,
             "Set SignalManager handling signal: " << SigVal << ".");
@@ -116,11 +116,11 @@ UniqueCallbackId SignalManager<SigVal>::new_unique_id_() noexcept
 
 template <Signal SigVal>
 void SignalManager<SigVal>::signal_handler_function_(
-        SignalType sigval) noexcept
+        int sigval) noexcept
 {
 #ifdef _WIN32
     // Windows requires to handle again the signal once it has been handled
-    signal(static_cast<SignalType>(SigVal), SignalManager<SigVal>::signal_handler_function_);
+    signal(static_cast<int>(SigVal), SignalManager<SigVal>::signal_handler_function_);
 #endif // _WIN32
     signal_received_();
 }
@@ -180,7 +180,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Signal& sigval)
 {
-    os << static_cast<SignalType>(sigval);
+    os << static_cast<int>(sigval);
     return os;
 }
 
