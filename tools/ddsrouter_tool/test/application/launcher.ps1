@@ -31,7 +31,6 @@ $test = Start-Process -Passthru -Wait `
         "--exe", $tool_path,
         "--config-file", $test_config_file,
         "--debug",
-        "--version",
         "--signal", "sigint") `
     -WindowStyle Hidden
 

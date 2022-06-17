@@ -64,10 +64,9 @@ macro(configure_project)
     endif()
 
     # Read git commit hash if not already set
-    if( NOT DEFINED MODULE_BRANCH OR
-        NOT DEFINED MODULE_COMMIT_HASH)
+    if( NOT DEFINED MODULE_COMMIT_HASH)
 
-        read_branch_commit_hash()
+        read_commit_hash()
     endif()
 
     # Set CMake options

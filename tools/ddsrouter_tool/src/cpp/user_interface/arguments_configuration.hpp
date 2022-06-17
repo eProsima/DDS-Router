@@ -115,13 +115,17 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug,
-        bool& print_version);
+        bool& activate_debug);
 
 //! \c Option to stream serializator
 std::ostream& operator <<(
         std::ostream& output,
         const option::Option& option);
+
+/**
+ * @brief Print version in console.
+ */
+void print_version();
 
 } /* namespace ui */
 } /* namespace ddsrouter */

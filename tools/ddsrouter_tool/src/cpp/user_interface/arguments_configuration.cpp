@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include <ddsrouter_core/library/config.h>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
@@ -99,13 +100,18 @@ const option::Descriptor usage[] = {
     { 0, 0, 0, 0, 0, 0 }
 };
 
+void print_version()
+{
+    std::cout << "DDSRouter " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH <<
+        std::endl;
+}
+
 ProcessReturnCode parse_arguments(
         int argc,
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug,
-        bool& print_version)
+        bool& activate_debug)
 {
     // Variable to pretty print usage help
     int columns;
@@ -159,6 +165,12 @@ ProcessReturnCode parse_arguments(
             return ProcessReturnCode::help_argument;
         }
 
+        if (options[optionIndex::VERSION])
+        {
+            print_version();
+            return ProcessReturnCode::version_argument;
+        }
+
         for (int i = 0; i < parse.optionsCount(); ++i)
         {
             option::Option& opt = buffer[i];
@@ -174,10 +186,6 @@ ProcessReturnCode parse_arguments(
 
                 case optionIndex::ACTIVATE_DEBUG:
                     activate_debug = true;
-                    break;
-
-                case optionIndex::VERSION:
-                    print_version = true;
                     break;
 
                 case optionIndex::UNKNOWN_OPT:

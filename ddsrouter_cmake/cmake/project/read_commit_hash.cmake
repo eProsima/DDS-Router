@@ -15,25 +15,16 @@
 ###############################################################################
 # Commit hash Reader macro
 ###############################################################################
-
 # Load commit hash
 
 # 
 # RETURN VARIABLES:
 # - MODULE_COMMIT_HASH    : commit-hash
 
-# Arguments:
+# No arguments
 
 
-macro(read_branch_commit_hash)
-
-    execute_process(COMMAND
-        git rev-parse --abbrev-ref HEAD
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        OUTPUT_VARIABLE MODULE_BRANCH
-        ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-    message(STATUS "Read branch ${MODULE_BRANCH}")
+macro(read_commit_hash)
 
     execute_process(COMMAND
         git rev-parse HEAD
@@ -42,6 +33,5 @@ macro(read_branch_commit_hash)
         ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
     message(STATUS "Read commit hash ${MODULE_COMMIT_HASH}")
-    
 
 endmacro()

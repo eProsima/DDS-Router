@@ -19,7 +19,6 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/library/config.h>
 #include <ddsrouter_event/FileWatcherHandler.hpp>
 #include <ddsrouter_event/MultipleEventHandler.hpp>
 #include <ddsrouter_event/PeriodicEventHandler.hpp>
@@ -30,7 +29,6 @@
 #include <ddsrouter_utils/time/time_utils.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
-#include <ddsrouter_yaml/YamlManager.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>
 
 #include "user_interface/constants.hpp"
@@ -52,27 +50,21 @@ int main(
     // Debug option active
     bool activate_debug = false;
 
-    // Print version
-    bool print_version = false;
-
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug, print_version);
+            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
+    {
+        return static_cast<int>(ui::ProcessReturnCode::success);
+    }
+    else if (arg_parse_result == ui::ProcessReturnCode::version_argument)
     {
         return static_cast<int>(ui::ProcessReturnCode::success);
     }
     else if (arg_parse_result != ui::ProcessReturnCode::success)
     {
         return static_cast<int>(arg_parse_result);
-    }
-
-    if (print_version)
-    {
-        std::cout << "DDSRouter v" << DDSROUTER_CORE_VERSION_STR << ", branch: " << DDSROUTER_CORE_BRANCH <<
-                ", commit hash: " DDSROUTER_CORE_COMMIT_HASH << "\n";
-        return static_cast<int>(ui::ProcessReturnCode::success);
     }
 
     // Check file is in args, else get the default file

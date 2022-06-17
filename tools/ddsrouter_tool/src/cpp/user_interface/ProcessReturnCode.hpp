@@ -28,6 +28,7 @@ enum class ProcessReturnCode : int
 {
     success = 0,
     help_argument = 1,
+    version_argument = 2,
     incorrect_argument = 10,
     required_argument_failed = 11,
     execution_failed = 20,

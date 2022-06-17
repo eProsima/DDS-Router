@@ -138,7 +138,6 @@ if(PYTHONINTERP_FOUND)
                                     "--exe" $<TARGET_FILE:ddsrouter_tool>
                                     "--config-file" ${CMAKE_CURRENT_BINARY_DIR}/configurations/${TEST}.yaml
                                     "--debug"
-                                    "--version"
                                     "--signal" ${SIGNAL_ARG}
                         )
 
