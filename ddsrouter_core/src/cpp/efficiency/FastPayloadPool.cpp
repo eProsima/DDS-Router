@@ -123,7 +123,7 @@ bool FastPayloadPool::reserve_(
     MetaInfoType* reference_place = reinterpret_cast<MetaInfoType*>(memory_allocated);
     (*reference_place) = 1;
 
-    payload.data = reinterpret_cast<eprosima::fastrtps::rtps::octet *>(reference_place + 1);
+    payload.data = reinterpret_cast<eprosima::fastrtps::rtps::octet*>(reference_place + 1);
     payload.max_size = size;
 
     add_reserved_payload_();

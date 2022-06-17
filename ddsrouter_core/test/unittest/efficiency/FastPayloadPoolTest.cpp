@@ -48,13 +48,15 @@ public:
         return reserve_count_ - release_count_;
     }
 
-    void release_all(std::vector<Payload>& payloads)
+    void release_all(
+            std::vector<Payload>& payloads)
     {
         for (auto& payload : payloads)
         {
             release_payload(payload);
         }
     }
+
 };
 
 } /* namespace test */
