@@ -31,7 +31,6 @@
 #
 # The main job is ubuntu-main-test which compiles all packages (including documentation), run every test and calculates coverage.
 # This main job uses ubuntu 20.04 LTS (focal fossa).
-#
 
 name: test
 
@@ -54,6 +53,9 @@ jobs:
         cmake-config:
           - 'Release'
           - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-latest'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -90,7 +92,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: ${{ github.workspace }}\..\fastdds\install
-          name: windows_${{ matrix.cmake-config }}_fastdds_install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Install ddsrouter_cmake
