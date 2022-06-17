@@ -92,10 +92,9 @@ bool FastPayloadPool::release_payload(
     // In case it was the last reference, release payload
     if ((*reference_place) == 0)
     {
-        if (!release_(payload))
-        {
-            return false;
-        }
+        // Release payload
+        // NOTE: There is no need to check as release cannot return false
+        release_(payload);
     }
 
     payload.length = 0;

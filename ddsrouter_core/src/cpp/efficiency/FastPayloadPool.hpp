@@ -37,7 +37,8 @@ namespace core {
 typedef std::atomic<unsigned int> MetaInfoType;
 
 /**
- * This class implements the interface of PayloadPool and fulfilled with it the interface of IPayloadPool from fastrtps.
+ * This class implements the interface of PayloadPool and fulfilled with it the interface of IPayloadPool from
+ * eProsima Fast DDS.
  *
  * This class is used to manage the allocation and release of the payloads used within the Router.
  * The main target is not to copy or alloc data that is already in memory, but to reuse it safely.
@@ -49,11 +50,11 @@ typedef std::atomic<unsigned int> MetaInfoType;
  *
  * This is a thread safe lock free (except for one atomic check) implementation.
  *
- * @warning this class requires for all the payloads to be released the same times they are got.
+ * @warning this class requires for all the payloads to be released the same times they are retrieved.
  * In case this does not occur, this object does not guarantee that the data will be correctly released.
  *
  * @warning Payloads used within this class must be allocated from this object (in case of \c get_payload it is enough
- * with using the correct \c data_owner as not this one. ) otherwise it will head to undefined behavior.
+ * to use the correct \c data_owner as not this one. ) otherwise it will head to undefined behavior.
  */
 class FastPayloadPool : public PayloadPool
 {
