@@ -11,16 +11,6 @@
                 "-DCMAKE_CXX_FLAGS='-Werror'"
             ]
         },
-        "ddsrouter_event":
-        {
-            "cmake-args":
-            [
-                "-DCMAKE_BUILD_TYPE=Debug",
-                "-DBUILD_TESTS=ON",
-                "-DCODE_COVERAGE=ON",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
-            ]
-        },
         "ddsrouter_core":
         {
             "cmake-args":

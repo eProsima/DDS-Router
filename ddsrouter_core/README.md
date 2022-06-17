@@ -41,10 +41,6 @@ router.stop();
 * `fastrtps`
 * `ddsrouter_utils`
 
-Only for test:
-
-* `ddsrouter_event`
-
 ---
 
 ## How to use it in your project
