@@ -21,6 +21,7 @@
 #ifndef _DDSROUTERTHREAD__SRC_CPP_POOL_SLOTTHREADPOOL_HPP_
 #define _DDSROUTERTHREAD__SRC_CPP_POOL_SLOTTHREADPOOL_HPP_
 
+#include <map>
 #include <thread>
 #include <vector>
 
