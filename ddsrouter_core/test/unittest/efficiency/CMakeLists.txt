@@ -84,3 +84,40 @@ add_unittest_executable(
         "${TEST_LIST}"
         "${TEST_EXTRA_LIBRARIES}"
     )
+
+########################
+# Fast PayloadPool Test #
+########################
+
+set(TEST_NAME FastPayloadPoolTest)
+
+set(TEST_SOURCES
+        FastPayloadPoolTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/FastPayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/FastPayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Data.cpp
+    )
+
+set(TEST_LIST
+        get_payload
+        get_payload_from_src
+        get_payload_from_src_no_owner
+        get_payload_from_src_negative
+        release_payload
+        release_payload_negative
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
+        ddsrouter_utils
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+    )
