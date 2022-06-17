@@ -17,7 +17,7 @@
 
 #include <ddsrouter_utils/wait/IntWaitHandler.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils//time/Timer.hpp>
+#include <ddsrouter_utils/time/Timer.hpp>
 
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 

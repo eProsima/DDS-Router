@@ -21,8 +21,15 @@ set(TEST_NAME
 
 set(TEST_SOURCES
         thread_pool_test.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/ThreadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
     )
-all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
         pool_creation
@@ -31,14 +38,16 @@ set(TEST_LIST
         pool_n_threads_emit
     )
 
-set(TEST_NEEDED_SOURCES
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
     )
 
-add_blackbox_executable(
+add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
-        "${TEST_NEEDED_SOURCES}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
 
 ###################################
@@ -50,8 +59,17 @@ set(TEST_NAME
 
 set(TEST_SOURCES
         slot_thread_pool_test.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/ThreadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/SlotThreadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/task/TaskId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
     )
-all_library_sources("${TEST_SOURCES}")  # It requires several files
 
 set(TEST_LIST
         pool_one_thread_one_slot
@@ -59,12 +77,15 @@ set(TEST_LIST
         pool_n_threads_one_slot
     )
 
-set(TEST_NEEDED_SOURCES
+set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
     )
 
-add_blackbox_executable(
+
+add_unittest_executable(
         "${TEST_NAME}"
         "${TEST_SOURCES}"
         "${TEST_LIST}"
-        "${TEST_NEEDED_SOURCES}"
+        "${TEST_EXTRA_LIBRARIES}"
     )
