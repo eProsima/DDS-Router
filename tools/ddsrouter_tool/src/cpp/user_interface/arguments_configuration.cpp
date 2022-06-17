@@ -86,6 +86,15 @@ const option::Descriptor usage[] = {
         "  -d \t--debug\t  \t" \
         "Activate debug Logs (be aware that some logs may require specific CMAKE compilation options)." \
     },
+    {
+        optionIndex::VERSION,
+        0,
+        "v",
+        "version",
+        Arg::None,
+        "  -v \t--version\t  \t" \
+        "Print version, branch and commit hash." \
+    },
 
     { 0, 0, 0, 0, 0, 0 }
 };
@@ -95,7 +104,8 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug)
+        bool& activate_debug,
+        bool& print_version)
 {
     // Variable to pretty print usage help
     int columns;
@@ -164,6 +174,10 @@ ProcessReturnCode parse_arguments(
 
                 case optionIndex::ACTIVATE_DEBUG:
                     activate_debug = true;
+                    break;
+
+                case optionIndex::VERSION:
+                    print_version = true;
                     break;
 
                 case optionIndex::UNKNOWN_OPT:

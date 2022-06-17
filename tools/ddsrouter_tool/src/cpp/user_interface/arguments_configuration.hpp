@@ -84,6 +84,7 @@ enum  optionIndex
     CONFIGURATION_FILE,
     RELOAD_TIME,
     ACTIVATE_DEBUG,
+    VERSION,
 };
 
 /**
@@ -114,7 +115,8 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug);
+        bool& activate_debug,
+        bool& print_version);
 
 //! \c Option to stream serializator
 std::ostream& operator <<(

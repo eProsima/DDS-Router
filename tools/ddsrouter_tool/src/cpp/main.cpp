@@ -19,16 +19,18 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_utils/event/FileWatcherHandler.hpp>
-#include <ddsrouter_utils/event/MultipleEventHandler.hpp>
-#include <ddsrouter_utils/event/PeriodicEventHandler.hpp>
-#include <ddsrouter_utils/event/SignalEventHandler.hpp>
+#include <ddsrouter_core/library/config.h>
+#include <ddsrouter_event/FileWatcherHandler.hpp>
+#include <ddsrouter_event/MultipleEventHandler.hpp>
+#include <ddsrouter_event/PeriodicEventHandler.hpp>
+#include <ddsrouter_event/SignalEventHandler.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
 #include <ddsrouter_utils/time/time_utils.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
+#include <ddsrouter_yaml/YamlManager.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>
 
 #include "user_interface/constants.hpp"
@@ -41,8 +43,6 @@ int main(
         int argc,
         char** argv)
 {
-    logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
-
     // Configuration File path
     std::string file_path = "";
 
@@ -52,9 +52,12 @@ int main(
     // Debug option active
     bool activate_debug = false;
 
+    // Print version
+    bool print_version = false;
+
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
+            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug, print_version);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
@@ -63,6 +66,13 @@ int main(
     else if (arg_parse_result != ui::ProcessReturnCode::success)
     {
         return static_cast<int>(arg_parse_result);
+    }
+
+    if (print_version)
+    {
+        std::cout << "DDSRouter v" << DDSROUTER_CORE_VERSION_STR << ", branch: " << DDSROUTER_CORE_BRANCH <<
+                ", commit hash: " DDSROUTER_CORE_COMMIT_HASH << "\n";
+        return static_cast<int>(ui::ProcessReturnCode::success);
     }
 
     // Check file is in args, else get the default file
@@ -85,6 +95,8 @@ int main(
         return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
     }
 
+    logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
+
     // Activate Debug
     if (activate_debug)
     {
@@ -98,7 +110,6 @@ int main(
         // Change it when Log Module is independent and with more extensive API.
         // Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
-
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {

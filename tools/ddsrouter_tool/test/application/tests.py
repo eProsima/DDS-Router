@@ -26,6 +26,8 @@ Arguments:
 
     Run test in Debug mode          : -d | --debug
 
+    Run test with version           : -v | --version
+
     Use SIGINT or SIGTERM           : -s | --signal sigint|sigterm
 """
 
@@ -133,6 +135,12 @@ def parse_options():
         '--debug',
         action='store_true',
         help='Print test debugging info.'
+    )
+    parser.add_argument(
+        '-v',
+        '--version',
+        action='store_true',
+        help='Print version, branch and commit hash.'
     )
     parser.add_argument(
         '-s',

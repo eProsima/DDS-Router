@@ -21,6 +21,7 @@ ddsrouter --help
 # -r --reload-time  Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link).
 #                     Value 0 does not reload file. [Default: 0].
 # -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
+# -v --version      Print version, branch and commit hash
 ```
 
 ---
