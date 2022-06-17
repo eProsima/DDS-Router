@@ -36,6 +36,8 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
+const unsigned int DDSRouterImpl::THREAD_POOL_SIZE_ = 2;
+
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouterImpl::DDSRouterImpl(
@@ -45,6 +47,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(THREAD_POOL_SIZE_))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -368,7 +371,7 @@ void DDSRouterImpl::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, enabled);
+        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, thread_pool_, enabled);
     }
     catch (const utils::InitializationException& e)
     {

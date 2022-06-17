@@ -31,6 +31,7 @@ Bridge::Bridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<utils::SlotThreadPool> thread_pool,
         bool enable /* = false */)
     : topic_(topic)
     , participants_(participants_database)
@@ -62,7 +63,13 @@ Bridge::Bridge(
         // This insert is required as there is no copy method for Track
         // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
-                std::make_unique<Track>(topic_, id, readers_[id], std::move(writers_except_one), payload_pool_, false);
+                std::make_unique<Track>(
+                    topic_,
+                    id,
+                    readers_[id], std::move(writers_except_one),
+                    payload_pool_,
+                    thread_pool,
+                    false);
     }
 
     if (enable)
