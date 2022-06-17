@@ -13,6 +13,7 @@ This release includes the following **major changes**:
 * New DDS Router library that provides the DDS Router features through a C++ API.
 * Division of DDS Router application into several packages.
 
+  - `ddsrouter_event`: C++ library which implements System Operating (SO)-dependent signal handlers.
   - `ddsrouter_utils`:  C++ library which implements various utility functions.
   - `ddsrouter_core`: C++ library which implements the DDS Router operation and exports the DDS Router C++ API.
   - `ddsrouter_yaml`:  C++ library to parse the DDS Router *yaml* configuration files.
