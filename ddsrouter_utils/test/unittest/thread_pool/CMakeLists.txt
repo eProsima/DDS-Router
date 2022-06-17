@@ -39,8 +39,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
+        ${MODULE_DEPENDENCIES}
     )
 
 add_unittest_executable(
@@ -78,10 +77,8 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
+        ${MODULE_DEPENDENCIES}
     )
-
 
 add_unittest_executable(
         "${TEST_NAME}"
