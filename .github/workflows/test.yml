@@ -301,8 +301,7 @@ jobs:
 
   ubuntu-release-test:
     runs-on: ubuntu-latest
-    environment:
-      name: codecov
+    strategy:
       matrix:
         ubuntu-version:
           - 'ubuntu-20.04'
