@@ -36,8 +36,6 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const unsigned int DDSRouterImpl::THREAD_POOL_SIZE_ = 2;
-
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouterImpl::DDSRouterImpl(
@@ -47,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(THREAD_POOL_SIZE_))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads()))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 

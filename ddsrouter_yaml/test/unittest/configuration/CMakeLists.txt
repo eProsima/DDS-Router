@@ -32,6 +32,7 @@ set(TEST_LIST
         get_ddsrouter_configuration_v2
         get_ddsrouter_configuration_no_version
         version_negative_cases
+        number_of_threads
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -39,7 +40,6 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         ddsrouter_utils
-
         ddsrouter_core
     )
 

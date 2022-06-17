@@ -282,8 +282,6 @@ protected:
     std::recursive_mutex mutex_;
 
     std::shared_ptr<utils::SlotThreadPool> thread_pool_;
-
-    static const unsigned int THREAD_POOL_SIZE_;
 };
 
 } /* namespace core */

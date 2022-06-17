@@ -243,6 +243,41 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
     }
 }
 
+/**
+ * Test load the number of threads in the configuration
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, number_of_threads)
+{
+    const char* yml_configuration =
+        // trivial configuration
+        R"(
+        version: v2.0
+        participants:
+          - name: "P1"
+            kind: "void"
+          - name: "P2"
+            kind: "void"
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    std::vector<unsigned int> test_cases = {1, 2, 10, 20, 42, 100};
+
+    for (unsigned int test_case : test_cases)
+    {
+        yml[NUMBER_THREADS_TAG] = test_case;
+
+        // Load configuration
+        core::configuration::DDSRouterConfiguration configuration_result =
+                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        // Check threads are correct
+        ASSERT_EQ(test_case, configuration_result.number_of_threads());
+    }
+}
+
 int main(
         int argc,
         char** argv)

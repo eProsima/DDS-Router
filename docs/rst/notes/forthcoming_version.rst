@@ -11,6 +11,7 @@ Next release will include the following **improvementes**:
 
 * New :code:`ThreadPool` class for handling parallel processing.
   This allow to limit the number of threads spawned by the DDS Router, improving the performance of the application.
+  This could be configured by the user using the YAML configuration :ref:`thread_configuration`.
 
 Next release will include the following **major changes**:
 

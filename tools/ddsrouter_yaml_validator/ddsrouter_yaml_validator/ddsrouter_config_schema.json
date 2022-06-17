@@ -6,6 +6,9 @@
             "type":"object",
             "additionalProperties":false,
             "properties":{
+                "threads":{
+                    "type":"integer"
+                },
                 "version":{
                     "type":"string",
                     "enum":[

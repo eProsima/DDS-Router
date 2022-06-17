@@ -50,7 +50,8 @@ public:
             std::set<std::shared_ptr<types::FilterTopic>> allowlist,
             std::set<std::shared_ptr<types::FilterTopic>> blocklist,
             std::set<std::shared_ptr<types::RealTopic>> builtin_topics,
-            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations);
+            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+            unsigned int number_of_threads = default_number_of_threads());
 
     /**
      * @brief Return a set with the different \c ParticipantConfigurations in the yaml
@@ -68,12 +69,20 @@ public:
     DDSROUTER_CORE_DllAPI void reload(
             const DDSRouterReloadConfiguration& new_configuration);
 
+    DDSROUTER_CORE_DllAPI unsigned int number_of_threads() const noexcept;
+
+    DDSROUTER_CORE_DllAPI static unsigned int default_number_of_threads() noexcept;
+
 protected:
 
     static bool check_correct_configuration_object_(
             const std::shared_ptr<ParticipantConfiguration> configuration);
 
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
+
+    unsigned int number_of_threads_;
+
+    static const unsigned int DEFAULT_NUMBER_OF_THREADS_;
 };
 
 } /* namespace configuration */

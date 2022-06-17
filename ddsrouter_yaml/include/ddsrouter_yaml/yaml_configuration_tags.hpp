@@ -89,8 +89,12 @@ constexpr const char* DISCOVERY_SERVER_GUID_TAG("guid"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO: add comment
 
+// Advance configuration
+constexpr const char* NUMBER_THREADS_TAG("threads"); //! Number of threads to configure the thread pool
+
 // Old versions tags
 constexpr const char* PARTICIPANT_KIND_TAG_V1("type"); //! Participant Kind
+
 
 } /* namespace yaml */
 } /* namespace ddsrouter */

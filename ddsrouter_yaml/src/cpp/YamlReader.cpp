@@ -95,6 +95,26 @@ YamlReaderVersion YamlReader::get<YamlReaderVersion>(
 }
 
 /************************
+* STANDARD             *
+************************/
+
+template <>
+int YamlReader::get<int>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    return get_scalar<int>(yml);
+}
+
+template <>
+unsigned int YamlReader::get<unsigned int>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    return get_scalar<unsigned int>(yml);
+}
+
+/************************
 * ENTITIES             *
 ************************/
 
@@ -957,12 +977,33 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
     }
 
     /////
+    // Get optional number of threads
+    int number_of_threads;
+    bool has_number_of_threads = YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG);
+    if (has_number_of_threads)
+    {
+        number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+    }
+
+    /////
     // Construct object
-    return core::configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations);
+    if (has_number_of_threads)
+    {
+        return core::configuration::DDSRouterConfiguration(
+            allowlist,
+            blocklist,
+            builtin_topics,
+            participants_configurations,
+            number_of_threads);
+    }
+    else
+    {
+        return core::configuration::DDSRouterConfiguration(
+            allowlist,
+            blocklist,
+            builtin_topics,
+            participants_configurations);
+    }
 }
 
 template <>
