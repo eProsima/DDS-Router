@@ -28,7 +28,10 @@ namespace ddsrouter {
 namespace utils {
 
 /**
- * TODO
+ * This class represents a thread that can be executed by a Thread Pool.
+ *
+ * @note this first implementation only uses this class as a \c std::thread for simplicity.
+ * In future implementations, this could be a more complex class.
  */
 class CustomThread : public std::thread
 {

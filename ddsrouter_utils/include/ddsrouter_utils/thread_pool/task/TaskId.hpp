@@ -27,8 +27,16 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//! Type of the task ID.
 using TaskId = unsigned int;
 
+/**
+ * @brief Get a new unique task ID.
+ *
+ * It uses a random number to generate a new ID.
+ *
+ * @return new unique TaskId
+ */
 TaskId new_unique_task_id();
 
 } /* namespace utils */

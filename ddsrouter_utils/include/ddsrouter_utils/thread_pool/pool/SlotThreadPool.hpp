@@ -36,34 +36,105 @@ namespace ddsrouter {
 namespace utils {
 
 /**
- * TODO
+ * This class represents a thread pool that can register tasks inside.
+ *
+ * This is another implementation of \c ThreadPool but with the difference that if does not contain actual
+ * task objects, but only task ids. These ids are much more efficient than actual task objects in order to copy
+ * or store them. Each id identifies one and only one task. By adding an id to the queue, the thread that consumes
+ * it will execute the task associated, that must be previously registered.
+ *
+ * @note Qt notation is used for this implementation, so \c emit means to add a task to the queue and
+ * \c slot means to register a task.
+ *
+ * @note This class does not inherit from \c ThreadPool as methods and internal variables are not shared,
+ * even when both solve the same problem in similar ways.
  */
 class SlotThreadPool
 {
 public:
 
+    /**
+     * @brief Construct a new Slot Thread Pool object
+     *
+     * This creates the internal threads in the pool and make them wait for tasks.
+     * Each thread is executed with function \c thread_routine_ .
+     *
+     * @param n_threads number of threads in the pool
+     */
     SlotThreadPool(
         const uint32_t n_threads);
 
+    /**
+     * @brief Destroy the Thread Pool object
+     *
+     * It disables the queue, what makes the threads to stop to finish their tasks and exit.
+     */
     ~SlotThreadPool();
 
+    /**
+     * @brief Add a task Id (that represents a registered Task) to be executed by the threads in the pool
+     *
+     * This add \c task_id to the queue, and the task identified will be executed by the threads in the pool.
+     *
+     * @pre \c task_id must identify a registered task.
+     *
+     * @param task_id task Id to be added to the queue so task identified is executed.
+     */
     void emit(
         const TaskId& task_id);
 
+    /**
+     * @brief Register a new task identified by a task Id.
+     *
+     * This method registers a new task that will be executed when its task Id is added to the queue.
+     *
+     * @param task_id task Id that identifies the task.
+     * @param task task to be registered.
+     */
     void slot(
         const TaskId& task_id,
         Task&& task);
 
 protected:
 
+    /**
+     * @brief This is the function that every thread in the pool executes.
+     *
+     * This function enters an infinite loop where it \c consume an element <TaskId> from the queue (this means it will
+     * wait for an element to be added to the queue in case it is empty, and it will take one if any available).
+     * Once a task id is available, it will get the task refering this id and execute it
+     * Afterwards it will return to consume another task id.
+     * This will be repeated until the queue is disabled, what is communicated by a \c DisabledException .
+     */
     void thread_routine_();
 
+    /**
+     * @brief Double Queue Wait Handler to store task ids
+     *
+     * This double queue implement methods \c produce , to add tasks to the queue, and \c consume to wait until any
+     * task is available, and return the next task available.
+     *
+     * It will retrieve tasks in FIFO order.
+     * Produce and consume methods are not reciprocally blocking.
+     */
     event::DBQueueWaitHandler<TaskId> task_queue_;
 
-    std::map<TaskId, Task> slots_;
-
+    /**
+     * @brief Threads container
+     *
+     * @note \c CustomThread are used instead of \c std::thread so some extra logic could be added to threads
+     * in future implementation (e.g. performance info).
+     */
     std::vector<CustomThread> threads_;
 
+    /**
+     * @brief Map of tasks indexed by their task Id.
+     *
+     * This object is protected by the \c slots_mutex_ mutex.
+     */
+    std::map<TaskId, Task> slots_;
+
+    //! Protects access to \c slots_ .
     std::mutex slots_mutex_;
 
 };
