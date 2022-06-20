@@ -84,6 +84,7 @@ enum  optionIndex
     CONFIGURATION_FILE,
     RELOAD_TIME,
     ACTIVATE_DEBUG,
+    VERSION,
 };
 
 /**
@@ -120,6 +121,11 @@ ProcessReturnCode parse_arguments(
 std::ostream& operator <<(
         std::ostream& output,
         const option::Option& option);
+
+/**
+ * @brief Print version in console.
+ */
+void print_version();
 
 } /* namespace ui */
 } /* namespace ddsrouter */

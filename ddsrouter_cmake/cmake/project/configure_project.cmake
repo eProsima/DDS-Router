@@ -63,6 +63,12 @@ macro(configure_project)
         read_version(${MODULE_VERSION_FILE_PATH})
     endif()
 
+    # Read git commit hash if not already set
+    if( NOT DEFINED MODULE_COMMIT_HASH)
+
+        read_commit_hash()
+    endif()
+
     # Set CMake options
     configure_cmake_options()
 

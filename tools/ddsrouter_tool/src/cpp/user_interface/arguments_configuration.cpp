@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 
+#include <ddsrouter_core/library/config.h>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
@@ -86,9 +87,24 @@ const option::Descriptor usage[] = {
         "  -d \t--debug\t  \t" \
         "Activate debug Logs (be aware that some logs may require specific CMAKE compilation options)." \
     },
+    {
+        optionIndex::VERSION,
+        0,
+        "v",
+        "version",
+        Arg::None,
+        "  -v \t--version\t  \t" \
+        "Print version, branch and commit hash." \
+    },
 
     { 0, 0, 0, 0, 0, 0 }
 };
+
+void print_version()
+{
+    std::cout << "DDSRouter " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH <<
+        std::endl;
+}
 
 ProcessReturnCode parse_arguments(
         int argc,
@@ -147,6 +163,12 @@ ProcessReturnCode parse_arguments(
         {
             option::printUsage(fwrite, stdout, usage, columns);
             return ProcessReturnCode::help_argument;
+        }
+
+        if (options[optionIndex::VERSION])
+        {
+            print_version();
+            return ProcessReturnCode::version_argument;
         }
 
         for (int i = 0; i < parse.optionsCount(); ++i)

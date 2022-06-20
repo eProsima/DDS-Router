@@ -74,7 +74,7 @@ Those variables which default is `x` must be set, and those with `-` are not req
 | MODULE_VERSION_MINOR         | x (if not set, are taken from VERSION file)                             | Minor version                                                                                      |
 | MODULE_VERSION_PATCH         | x (if not set, are taken from VERSION file)                             | Patch version                                                                                      |
 | MODULE_VERSION               | ${MODULE_VERSION_MAJOR}.${MODULE_VERSION_MINOR}.${MODULE_VERSION_PATCH} | Module version                                                                                     |
-| MODULE_VERSION_STRING        | ${MODULE_VERSION}                                                       | Module version                                                                                     |
+| MODULE_VERSION_STRING        | v${MODULE_VERSION}                                                      | Module version                                                                                     |
 |------------------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
 | MODULE_LICENSE_FILE_PATH     | ../LICENSE                                                              | Path to the license file                                                                           |
 | MODULE_RESOURCES_PATH        | (if not given, no resources will be installed)                          | Path of the resources to install                                                                   |

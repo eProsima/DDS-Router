@@ -51,7 +51,8 @@ macro(read_version VERSION_FILE_NAME)
     endif()
 
     if(NOT DEFINED MODULE_VERSION_STRING)
-        set (MODULE_VERSION_STRING ${MODULE_VERSION})
+        set (MODULE_VERSION_STRING "v${MODULE_VERSION}")
+        message(STATUS "Set module version string ${MODULE_VERSION_STRING}")
     endif()
 
     # Finish macro

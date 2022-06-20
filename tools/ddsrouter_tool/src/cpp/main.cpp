@@ -41,8 +41,6 @@ int main(
         int argc,
         char** argv)
 {
-    logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
-
     // Configuration File path
     std::string file_path = "";
 
@@ -57,6 +55,10 @@ int main(
             ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
+    {
+        return static_cast<int>(ui::ProcessReturnCode::success);
+    }
+    else if (arg_parse_result == ui::ProcessReturnCode::version_argument)
     {
         return static_cast<int>(ui::ProcessReturnCode::success);
     }
@@ -85,6 +87,8 @@ int main(
         return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
     }
 
+    logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
+
     // Activate Debug
     if (activate_debug)
     {
@@ -98,7 +102,6 @@ int main(
         // Change it when Log Module is independent and with more extensive API.
         // Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
-
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
