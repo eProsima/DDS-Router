@@ -28,7 +28,6 @@ ddsrouter --help
 ## Dependencies
 
 * `ddsrouter_utils`
-* `ddsrouter_event`
 * `ddsrouter_core`
 * `ddsrouter_yaml`
 

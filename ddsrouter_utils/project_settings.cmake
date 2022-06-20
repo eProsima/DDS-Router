@@ -31,3 +31,6 @@ set(MODULE_DEPENDENCIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
         ${MODULE_FIND_PACKAGES}
     )
+
+set(MODULE_THIRDPARTY_HEADERONLY
+    filewatch)

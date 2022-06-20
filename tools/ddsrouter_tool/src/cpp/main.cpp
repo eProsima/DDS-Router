@@ -19,10 +19,10 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_event/FileWatcherHandler.hpp>
-#include <ddsrouter_event/MultipleEventHandler.hpp>
-#include <ddsrouter_event/PeriodicEventHandler.hpp>
-#include <ddsrouter_event/SignalEventHandler.hpp>
+#include <ddsrouter_utils/event/FileWatcherHandler.hpp>
+#include <ddsrouter_utils/event/MultipleEventHandler.hpp>
+#include <ddsrouter_utils/event/PeriodicEventHandler.hpp>
+#include <ddsrouter_utils/event/SignalEventHandler.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>

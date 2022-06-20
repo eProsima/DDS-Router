@@ -27,7 +27,6 @@ set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
     ddsrouter_utils
-    ddsrouter_event
     ddsrouter_core)
 
 set(MODULE_DEPENDENCIES

@@ -40,7 +40,7 @@
 #include <unistd.h>
 #endif // if defined(_WIN32)
 
-#include <ddsrouter_utils/math.hpp>
+#include <ddsrouter_utils/math/math.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 

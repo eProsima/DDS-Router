@@ -29,9 +29,6 @@ core::configuration::DDSRouterConfiguration router_configuration =
 * `ddsrouter_utils`
 * `ddsrouter_core`
 
-Only for test:
-
-* `ddsrouter_event`
 
 ---
 

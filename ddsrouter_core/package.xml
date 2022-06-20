@@ -24,7 +24,6 @@
   <doc_depend>doxygen</doc_depend>
 
   <test_depend>googletest-distribution</test_depend>
-  <test_depend>ddsrouter_event</test_depend>
 
   <export>
     <build_type>cmake</build_type>

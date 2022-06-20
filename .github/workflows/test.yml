@@ -72,13 +72,6 @@ jobs:
           subpackage: ddsrouter_utils
           subpackage_dir: ddsrouter_utils
 
-      - name: Install ddsrouter_event
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_event
-          subpackage_dir: ddsrouter_event
-
       - name: Install ddsrouter_core
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
@@ -104,13 +97,6 @@ jobs:
         uses: ./DDS-Router/.github/actions/run-test-windows
         with:
           package_name: ddsrouter_utils
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_event
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_event
           cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
@@ -190,12 +176,6 @@ jobs:
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_utils
-        if: always()
-
-      - name: Run tests ddsrouter_event
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_event
         if: always()
 
       - name: Run tests ddsrouter_core

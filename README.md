@@ -186,7 +186,6 @@ This repository holds several colcon packages.
 These packages are:
 
 * `ddsrouter_utils`: library with generic utils and functions (Log, Time, etc.).
-* `ddsrouter_event`: library for handling events.
 * `ddsrouter_core`: library with the main functionality of the DDS Router.
 * `ddsrouter_yaml`: library to configure a DDS Router from a YAML.
 * `ddsrouter_tool`: application to execute a DDS Router from a YAML configuration file.

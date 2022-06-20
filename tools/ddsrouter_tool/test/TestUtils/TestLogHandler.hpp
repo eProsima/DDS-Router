@@ -21,7 +21,7 @@
 
 #include <memory>
 
-#include <ddsrouter_event/LogSevereEventHandler.hpp>
+#include <ddsrouter_utils/event/LogSevereEventHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

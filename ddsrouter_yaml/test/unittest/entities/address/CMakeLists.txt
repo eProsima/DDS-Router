@@ -42,7 +42,7 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         ddsrouter_utils
-        ddsrouter_event
+
         ddsrouter_core
     )
 
@@ -75,7 +75,7 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         ddsrouter_utils
-        ddsrouter_event
+
         ddsrouter_core
     )
 

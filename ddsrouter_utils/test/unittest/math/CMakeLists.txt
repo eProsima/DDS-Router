@@ -16,7 +16,7 @@ set(TEST_NAME mathTest)
 
 set(TEST_SOURCES
         mathTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/math.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
     )
 
 set(TEST_LIST

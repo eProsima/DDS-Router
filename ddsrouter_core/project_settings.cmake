@@ -25,8 +25,7 @@ set(MODULE_SUMMARY
 set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
-    ddsrouter_utils
-    ddsrouter_event)
+    ddsrouter_utils)
 
 set(MODULE_DEPENDENCIES
     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>

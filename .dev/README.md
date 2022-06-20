@@ -33,15 +33,6 @@ The modules contained in this repository are the following:
   * `Types`: generic types, as Time, ReturnCode or serialization helpers
   * `utils`: generic methods
 
-* **ddsrouter_event** This is intend to be a generic utils library to handle a generic event. This classes could be
-  inherited so they handle different events.
-  An EventHandler listens to a specific event and raises a callback when it is call.
-  It also provides functionality to wait till the event has occurred.
-  * `Signal`: raise with Operating System (SO)-dependent signals
-  * `FileWatcher`: watch a specific file and raise when it has been written up / modified
-  * `PeriodicTimer`: raise every periodic time
-  * `Log`: raise with every log consumed (could change the verbosity listened) (very useful for testing).
-
 * **ddsrouter_core** This is the main library that implements the operation of the DDS Router.
   The `DDSRouter` class could be instantiate and has some methods to handle the operation of a DDS Router
   (e.g `start`, `reload`, `stop`).
@@ -66,13 +57,12 @@ This is the dependency graph of the packages:
 #  *  = dependency
 # (*) = test dependency
 
-ddsrouter_cmake  +  *  *  *  *  *  *
+ddsrouter_cmake  +  *  *  *  *  *
 ddsrouter_docs      +
-ddsrouter_utils        +  *  *  *  *
-ddsrouter_event           + (*)(*) *
-ddsrouter_core               +  *  *
-ddsrouter_yaml                  +  *
-ddsrouter_tool                     +
+ddsrouter_utils        +  *  *  *
+ddsrouter_core            +  *  *
+ddsrouter_yaml               +  *
+ddsrouter_tool                  +
 ```
 
 The reasons of the packages division are:
