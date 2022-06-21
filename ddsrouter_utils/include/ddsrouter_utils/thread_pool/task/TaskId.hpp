@@ -21,6 +21,8 @@
 #ifndef _DDSROUTERTHREAD_TASK_TASKID_HPP_
 #define _DDSROUTERTHREAD_TASK_TASKID_HPP_
 
+#include <ddsrouter_utils/library/library_dll.h>
+
 #include <functional>
 
 namespace eprosima {
@@ -37,7 +39,7 @@ using TaskId = unsigned int;
  *
  * @return new unique TaskId
  */
-TaskId new_unique_task_id();
+DDSROUTER_UTILS_DllAPI TaskId new_unique_task_id();
 
 } /* namespace utils */
 } /* namespace ddsrouter */

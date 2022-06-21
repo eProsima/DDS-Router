@@ -25,11 +25,11 @@
 #include <thread>
 #include <vector>
 
-#include <ddsrouter_utils/wait/DBQueueWaitHandler.hpp>
-
+#include <ddsrouter_utils/library/library_dll.h>
 #include <ddsrouter_utils/thread_pool/task/Task.hpp>
 #include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
 #include <ddsrouter_utils/thread_pool/thread/CustomThread.hpp>
+#include <ddsrouter_utils/wait/DBQueueWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -61,7 +61,7 @@ public:
      *
      * @param n_threads number of threads in the pool
      */
-    SlotThreadPool(
+    DDSROUTER_UTILS_DllAPI SlotThreadPool(
         const uint32_t n_threads);
 
     /**
@@ -69,7 +69,7 @@ public:
      *
      * It disables the queue, what makes the threads to stop to finish their tasks and exit.
      */
-    ~SlotThreadPool();
+    DDSROUTER_UTILS_DllAPI ~SlotThreadPool();
 
     /**
      * @brief Add a task Id (that represents a registered Task) to be executed by the threads in the pool
@@ -80,7 +80,7 @@ public:
      *
      * @param task_id task Id to be added to the queue so task identified is executed.
      */
-    void emit(
+    DDSROUTER_UTILS_DllAPI void emit(
         const TaskId& task_id);
 
     /**
@@ -91,7 +91,7 @@ public:
      * @param task_id task Id that identifies the task.
      * @param task task to be registered.
      */
-    void slot(
+    DDSROUTER_UTILS_DllAPI void slot(
         const TaskId& task_id,
         Task&& task);
 
