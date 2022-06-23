@@ -74,6 +74,7 @@ DDSRouterImpl::DDSRouterImpl(
     // than the one specified in the yaml configuration file.
     discovery_database_->enable();
 
+
     logDebug(DDSROUTER, "DDS Router created.");
 }
 
@@ -229,6 +230,9 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
 
         logInfo(DDSROUTER, "Starting DDS Router.");
 
+        // Enable thread pool
+        thread_pool_->enable();
+
         activate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
     }
@@ -248,6 +252,9 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
         enabled_.store(false);
 
         logInfo(DDSROUTER, "Stopping DDS Router.");
+
+        // Disable thread pool so tasks rnuning are finished and new tasks are not taken by threads
+        thread_pool_->disable();
 
         deactivate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;

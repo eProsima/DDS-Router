@@ -30,27 +30,51 @@ namespace utils {
 
 SlotThreadPool::SlotThreadPool(
         const uint32_t n_threads)
+    : number_of_threads_(n_threads)
+    , enabled_(false)
 {
     logDebug(DDSROUTER_THREAD_POOL, "Creating Thread Pool with " << n_threads << " threads.");
-
-    for (uint32_t i = 0; i < n_threads; ++i)
-    {
-        threads_.emplace_back(
-            CustomThread(
-                std::bind(&SlotThreadPool::thread_routine_, this)));
-    }
-
-    logDebug(DDSROUTER_THREAD_POOL, "Thread Pool created.");
 }
 
 SlotThreadPool::~SlotThreadPool()
 {
+    disable();
     // Disable queue in case it has not been stopped yet.
     task_queue_.disable();
 
     for (auto& thread : threads_)
     {
         thread.join();
+    }
+}
+
+void SlotThreadPool::enable() noexcept
+{
+    if (!enabled_.exchange(true))
+    {
+        // Execute threads
+        for (uint32_t i = 0; i < number_of_threads_; ++i)
+        {
+            threads_.emplace_back(
+                CustomThread(
+                    std::bind(&SlotThreadPool::thread_routine_, this)));
+        }
+    }
+}
+
+void SlotThreadPool::disable() noexcept
+{
+    if (enabled_.exchange(false))
+    {
+        // Disable Task Queue, so threads will stop eventually when their current task is finished
+        task_queue_.disable();
+
+        for (auto& thread : threads_)
+        {
+            thread.join();
+        }
+
+        threads_.clear();
     }
 }
 

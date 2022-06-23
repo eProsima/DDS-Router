@@ -56,6 +56,7 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
 {
     // Create thread_pool
     SlotThreadPool thread_pool(1);
+    thread_pool.enable();
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);
@@ -88,9 +89,9 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
  */
 TEST(slot_thread_pool_test, pool_one_thread_n_slots)
 {
-
     // Create thread_pool
     SlotThreadPool thread_pool(1);
+    thread_pool.enable();
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);
@@ -128,9 +129,9 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
  */
 TEST(slot_thread_pool_test, pool_n_threads_one_slot)
 {
-
     // Create thread_pool
     SlotThreadPool thread_pool(test::N_THREADS_IN_TEST);
+    thread_pool.enable();
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);

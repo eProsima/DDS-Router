@@ -72,6 +72,25 @@ public:
     DDSROUTER_UTILS_DllAPI ~SlotThreadPool();
 
     /**
+     * Enable Slot Thread Pool in case it is not enabled
+     * Does nothing if it is already enabled
+     */
+    void enable() noexcept;
+
+    /**
+     * Disable Slot Thread Pool in case it is enabled
+     * Does nothing if it is already disabled
+     *
+     * It stops all the threads running, not allowing them to take new tasks.
+     * It blocks until every thread has finished executing.
+     * It does not remove tasks from queue.
+     *
+     * @todo this is a first approach, a new design should be taken into account to not block until threads finish
+     * when disabling the thread pool, but joining them afterwards.
+     */
+    void disable() noexcept;
+
+    /**
      * @brief Add a task Id (that represents a registered Task) to be executed by the threads in the pool
      *
      * This add \c task_id to the queue, and the task identified will be executed by the threads in the pool.
@@ -108,6 +127,8 @@ protected:
      */
     void thread_routine_();
 
+    unsigned int number_of_threads_;
+
     /**
      * @brief Double Queue Wait Handler to store task ids
      *
@@ -136,6 +157,9 @@ protected:
 
     //! Protects access to \c slots_ .
     std::mutex slots_mutex_;
+
+    //! Whether the object is currently enabled
+    std::atomic<bool> enabled_;
 
 };
 
