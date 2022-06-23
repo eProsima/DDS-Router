@@ -5,14 +5,14 @@
 # so they do not have to compile the whole fastrtps project. This saves huge amount of time.
 #
 # JOBS:
+#   - windows-build-test
+#     - [ windows-2019 | windows-2022 ]
+#     - [ Debug | Release ]
+#     - compile up-to ddsrouter_tool ; run tests
 #   - ubuntu-main-test
 #     - ubuntu-20.04
 #     - Debug
 #     - compile all ; run tests ; calculate coverage
-#   - windows-build-test
-#     - windows-latest
-#     - [Debug | Release]
-#     - compile up-to ddsrouter_tool ; run tests
 #   - ubuntu-release-test
 #     - [ ubuntu-20.04 | ubuntu-22.04 ]
 #     - Release
@@ -44,6 +44,120 @@ on:
     - cron: '0 1 * * *'
 
 jobs:
+
+  windows-build-test:
+    runs-on: ${{ matrix.windows-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        cmake-config:
+          - 'Release'
+          - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-2022'
+    env:
+      CXXFLAGS: /MP
+      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: DDS-Router
+
+      - name: Install OpenSSL
+        uses: ./DDS-Router/.github/actions/install-openssl-windows
+
+      - name: Install GTest
+        uses: ./DDS-Router/.github/actions/install-gtest-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+
+      - name: Install yaml-cpp
+        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+
+      - name: Get build eProsima dependencies Job Id
+        shell: pwsh
+        run: |
+          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
+          Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
+          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
+          echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: ${{ github.workspace }}\..\fastdds\install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Install ddsrouter_cmake
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddsrouter_cmake
+          subpackage_dir: ddsrouter_cmake
+
+      - name: Install ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddsrouter_utils
+          subpackage_dir: ddsrouter_utils
+
+      - name: Install ddsrouter_core
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddsrouter_core
+          subpackage_dir: ddsrouter_core
+
+      - name: Install ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddsrouter_yaml
+          subpackage_dir: ddsrouter_yaml
+
+      - name: Install ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddsrouter_tool
+          subpackage_dir: tools/ddsrouter_tool
+
+      - name: Run tests ddsrouter_utils
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_utils
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      - name: Run tests ddsrouter_core
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_core
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_yaml
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddsrouter_tool
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
 
   ubuntu-main-test:
     runs-on: ubuntu-20.04
@@ -183,120 +297,6 @@ jobs:
         with:
           name: colcon-logs-ubuntu
           path: log/
-        if: always()
-
-
-  windows-build-test:
-    runs-on: ${{ matrix.windows-version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        cmake-config:
-          - 'Release'
-          - 'Debug'
-        windows-version:
-          - 'windows-2019'
-          - 'windows-2022'
-    env:
-      CXXFLAGS: /MP
-      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
-
-    steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
-        with:
-          path: DDS-Router
-
-      - name: Install OpenSSL
-        uses: ./DDS-Router/.github/actions/install-openssl-windows
-
-      - name: Install GTest
-        uses: ./DDS-Router/.github/actions/install-gtest-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-
-      - name: Install yaml-cpp
-        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-
-      - name: Get build eProsima dependencies Job Id
-        shell: pwsh
-        run: |
-          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
-          Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
-          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
-          echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build_fastdds.yml
-          path: ${{ github.workspace }}\..\fastdds\install
-          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Install ddsrouter_cmake
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_cmake
-          subpackage_dir: ddsrouter_cmake
-
-      - name: Install ddsrouter_utils
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_utils
-          subpackage_dir: ddsrouter_utils
-
-      - name: Install ddsrouter_core
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_core
-          subpackage_dir: ddsrouter_core
-
-      - name: Install ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_yaml
-          subpackage_dir: ddsrouter_yaml
-
-      - name: Install ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_tool
-          subpackage_dir: tools/ddsrouter_tool
-
-      - name: Run tests ddsrouter_utils
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_utils
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_core
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_core
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_yaml
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_tool
-          cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
 

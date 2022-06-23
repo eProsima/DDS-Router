@@ -16,7 +16,7 @@ jobs:
           - 'Debug'
         windows-version:
           - 'windows-2019'
-          - 'windows-latest'
+          - 'windows-2022'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
