@@ -75,7 +75,7 @@ public:
      * Enable Slot Thread Pool in case it is not enabled
      * Does nothing if it is already enabled
      */
-    void enable() noexcept;
+    DDSROUTER_UTILS_DllAPI void enable() noexcept;
 
     /**
      * Disable Slot Thread Pool in case it is enabled
@@ -88,7 +88,7 @@ public:
      * @todo this is a first approach, a new design should be taken into account to not block until threads finish
      * when disabling the thread pool, but joining them afterwards.
      */
-    void disable() noexcept;
+    DDSROUTER_UTILS_DllAPI void disable() noexcept;
 
     /**
      * @brief Add a task Id (that represents a registered Task) to be executed by the threads in the pool
