@@ -6,8 +6,8 @@
 #
 # JOBS:
 #   - windows-build-test
-#     - windows-latest
-#     - [Debug | Release]
+#     - [ windows-2019 | windows-2022 ]
+#     - [ Debug | Release ]
 #     - compile up-to ddsrouter_tool ; run tests
 #   - ubuntu-main-test
 #     - ubuntu-20.04
@@ -46,7 +46,7 @@ on:
 jobs:
 
   windows-build-test:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.windows-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +55,7 @@ jobs:
           - 'Debug'
         windows-version:
           - 'windows-2019'
-          - 'windows-latest'
+          - 'windows-2022'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -157,6 +157,7 @@ jobs:
           package_name: ddsrouter_tool
           cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
+
 
   ubuntu-main-test:
     runs-on: ubuntu-20.04
@@ -302,6 +303,7 @@ jobs:
   ubuntu-release-test:
     runs-on: ${{ matrix.ubuntu-version }}
     strategy:
+      fail-fast: false
       matrix:
         ubuntu-version:
           - 'ubuntu-20.04'
