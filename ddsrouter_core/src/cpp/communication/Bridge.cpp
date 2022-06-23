@@ -64,12 +64,12 @@ Bridge::Bridge(
         // Tracks are always created disabled and then enabled with Bridge enable() method
         tracks_[id] =
                 std::make_unique<Track>(
-                    topic_,
-                    id,
-                    readers_[id], std::move(writers_except_one),
-                    payload_pool_,
-                    thread_pool,
-                    false);
+            topic_,
+            id,
+            readers_[id], std::move(writers_except_one),
+            payload_pool_,
+            thread_pool,
+            false);
     }
 
     if (enable)

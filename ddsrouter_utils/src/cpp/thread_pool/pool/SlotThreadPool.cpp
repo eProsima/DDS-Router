@@ -121,7 +121,7 @@ void SlotThreadPool::thread_routine_()
 
     try
     {
-        while(true)
+        while (true)
         {
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " free, getting new callback.");
             TaskId task_id = task_queue_.consume();
@@ -144,7 +144,7 @@ void SlotThreadPool::thread_routine_()
             task();
         }
     }
-    catch(const utils::DisabledException& e)
+    catch (const utils::DisabledException& e)
     {
         logDebug(DDSROUTER_THREAD_POOL, "Stopping thread: " << std::this_thread::get_id() << ".");
     }

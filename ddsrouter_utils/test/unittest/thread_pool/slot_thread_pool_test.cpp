@@ -32,7 +32,9 @@ eprosima::ddsrouter::utils::Duration_ms RESIDUAL_TIME_TEST = DEFAULT_TIME_TEST /
 uint32_t N_THREADS_IN_TEST = 10;
 uint32_t N_EXECUTIONS_IN_TEST = 5;
 
-void test_lambda_increase_waiter(eprosima::ddsrouter::event::IntWaitHandler& counter, unsigned int increase = 1)
+void test_lambda_increase_waiter(
+        eprosima::ddsrouter::event::IntWaitHandler& counter,
+        unsigned int increase = 1)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_TIME_TEST));
 
@@ -66,11 +68,11 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
     thread_pool.slot(
         task_id,
         [&waiter]
-        ()
+            ()
         {
             test::test_lambda_increase_waiter(waiter);
         }
-    );
+        );
 
     // Emit task n times
     for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
@@ -105,11 +107,11 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
         thread_pool.slot(
             task_id,
             [&waiter, &i]
-            ()
+                ()
             {
                 test::test_lambda_increase_waiter(waiter, i);
             }
-        );
+            );
     }
 
     // Emit every task 1 time
@@ -119,9 +121,9 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     }
 
     // Wait for counter value to be M being M = N*(N+1)/2 that is the increase value that should be achieved
-    waiter.wait_greater_equal_than((test::N_EXECUTIONS_IN_TEST * (test::N_EXECUTIONS_IN_TEST + 1))/2);
+    waiter.wait_greater_equal_than((test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
 
-    ASSERT_EQ(waiter.get_value(), (test::N_EXECUTIONS_IN_TEST * (test::N_EXECUTIONS_IN_TEST + 1))/2);
+    ASSERT_EQ(waiter.get_value(), (test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
 }
 
 /**
@@ -143,28 +145,28 @@ TEST(slot_thread_pool_test, pool_n_threads_one_slot)
     thread_pool.slot(
         task_id,
         [&waiter]
-        ()
+            ()
         {
             test::test_lambda_increase_waiter(waiter);
         }
-    );
+        );
 
     // Emit task n times
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST * test::N_THREADS_IN_TEST; ++i)
+    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST; ++i)
     {
         thread_pool.emit(task_id);
     }
 
     // Wait for counter value to be greater than 0 (so 1 task is being executed)
-    waiter.wait_greater_equal_than(test::N_EXECUTIONS_IN_TEST * test::N_THREADS_IN_TEST);
+    waiter.wait_greater_equal_than(test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST);
 
     auto time_elapsed = timer.elapsed();
 
     // Check that the task has been executed in more than waiting time and less than waiting time + residual time
     // and that function has been called exactly once
-    ASSERT_GE(time_elapsed, test::DEFAULT_TIME_TEST * test::N_EXECUTIONS_IN_TEST);
-    ASSERT_LE(time_elapsed, test::DEFAULT_TIME_TEST * test::N_EXECUTIONS_IN_TEST + test::RESIDUAL_TIME_TEST);
-    ASSERT_EQ(waiter.get_value(), test::N_EXECUTIONS_IN_TEST * test::N_THREADS_IN_TEST);
+    ASSERT_GE(time_elapsed, test::DEFAULT_TIME_TEST* test::N_EXECUTIONS_IN_TEST);
+    ASSERT_LE(time_elapsed, test::DEFAULT_TIME_TEST* test::N_EXECUTIONS_IN_TEST + test::RESIDUAL_TIME_TEST);
+    ASSERT_EQ(waiter.get_value(), test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST);
 }
 
 int main(

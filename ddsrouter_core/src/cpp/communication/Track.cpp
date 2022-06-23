@@ -58,8 +58,8 @@ Track::Track(
 
     // Set slot in thread pool
     thread_pool_->slot(
-            transmit_task_id_,
-            std::bind(&Track::transmit_, this));
+        transmit_task_id_,
+        std::bind(&Track::transmit_, this));
 
     if (enable)
     {
@@ -177,7 +177,7 @@ void Track::transmit_() noexcept
     std::unique_lock<std::mutex> lock(on_transmission_mutex_);
 
     // TODO: Count the times it loops to break it at some point if needed
-    while(should_transmit_())
+    while (should_transmit_())
     {
         // It starts transmitting, so it sets the data available status as transmitting
         data_available_status_ = DataAvailableStatus::transmitting_data;

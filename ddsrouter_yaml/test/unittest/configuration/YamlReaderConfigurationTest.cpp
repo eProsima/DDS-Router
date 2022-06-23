@@ -252,8 +252,8 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
 TEST(YamlReaderConfigurationTest, number_of_threads)
 {
     const char* yml_configuration =
-        // trivial configuration
-        R"(
+            // trivial configuration
+            R"(
         version: v2.0
         participants:
           - name: "P1"

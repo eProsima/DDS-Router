@@ -62,7 +62,7 @@ public:
      * @param n_threads number of threads in the pool
      */
     DDSROUTER_UTILS_DllAPI SlotThreadPool(
-        const uint32_t n_threads);
+            const uint32_t n_threads);
 
     /**
      * @brief Destroy the Thread Pool object
@@ -100,7 +100,7 @@ public:
      * @param task_id task Id to be added to the queue so task identified is executed.
      */
     DDSROUTER_UTILS_DllAPI void emit(
-        const TaskId& task_id);
+            const TaskId& task_id);
 
     /**
      * @brief Register a new task identified by a task Id.
@@ -111,8 +111,8 @@ public:
      * @param task task to be registered.
      */
     DDSROUTER_UTILS_DllAPI void slot(
-        const TaskId& task_id,
-        Task&& task);
+            const TaskId& task_id,
+            Task&& task);
 
 protected:
 
