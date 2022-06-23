@@ -7,13 +7,16 @@ on:
 
 jobs:
   windows-build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.windows-version }}
     strategy:
       fail-fast: false
       matrix:
         cmake-config:
           - 'Release'
           - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-latest'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -35,13 +38,17 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v3
         with:
-          name: windows_${{ matrix.cmake-config }}_fastdds_install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
           path: ${{ github.workspace }}\eprosima\install
 
   ubuntu-build:
-    runs-on: ubuntu-latest
-    environment:
-      name: codecov
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
 
     steps:
       - name: Sync eProsima/DDS-Router repository
@@ -69,5 +76,5 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v3
         with:
-          name: ubuntu_fastdds_install
+          name: ${{ matrix.ubuntu-version }}_fastdds_install
           path: install
