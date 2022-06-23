@@ -173,7 +173,7 @@ void Track::transmit_() noexcept
 
     // Lock Mutex on_transmition while a data is being transmitted
     // This prevents the Track to be disabled (and disable writers and readers) while sending a data
-    // enab led_ will be set to false before taking the mutex, so the track will finish after current iteration
+    // enabled_ will be set to false before taking the mutex, so the track will finish after current iteration
     std::unique_lock<std::mutex> lock(on_transmission_mutex_);
 
     // TODO: Count the times it loops to break it at some point if needed

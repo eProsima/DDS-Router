@@ -64,7 +64,7 @@ In case this value is not set, the default number of threads used is :code:`12`.
 .. note::
 
     The number of threads set by this configuration does not affect the total number of thread used by the application.
-    Internal library dependencies can also create additional threads.
+    Internal library dependencies will create additional threads.
 
 
 .. _topic_filtering:

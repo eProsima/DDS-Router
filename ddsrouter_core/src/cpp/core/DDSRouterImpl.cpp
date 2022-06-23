@@ -253,7 +253,7 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
 
         logInfo(DDSROUTER, "Stopping DDS Router.");
 
-        // Disable thread pool so tasks rnuning are finished and new tasks are not taken by threads
+        // Disable thread pool so tasks running finish and new tasks are not taken by threads
         thread_pool_->disable();
 
         deactivate_all_topics_();
