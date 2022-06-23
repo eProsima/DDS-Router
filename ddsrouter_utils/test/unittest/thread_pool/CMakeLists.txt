@@ -12,43 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-##############################
-# Thread Pool execution Test
-##############################
-
-set(TEST_NAME
-    thread_pool_test)
-
-set(TEST_SOURCES
-        thread_pool_test.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/ThreadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
-    )
-
-set(TEST_LIST
-        pool_creation
-        pool_one_thread_emit_one
-        pool_one_thread_emit_multiple
-        pool_n_threads_emit
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        ${MODULE_DEPENDENCIES}
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
-
 ###################################
 # Slot Thread Pool execution Test
 ###################################
@@ -58,7 +21,6 @@ set(TEST_NAME
 
 set(TEST_SOURCES
         slot_thread_pool_test.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/ThreadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/SlotThreadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/task/TaskId.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
