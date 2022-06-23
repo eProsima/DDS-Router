@@ -1,3 +1,37 @@
+# Main CI for DDS Router repository
+# This is executed with every PullRequest (new or update), any merge in main and every night
+#
+# These jobs that require to install fastrtps library uses the artifact generated for the nightly job
+# so they do not have to compile the whole fastrtps project. This saves huge amount of time.
+#
+# JOBS:
+#   - windows-build-test
+#     - windows-latest
+#     - [Debug | Release]
+#     - compile up-to ddsrouter_tool ; run tests
+#   - ubuntu-main-test
+#     - ubuntu-20.04
+#     - Debug
+#     - compile all ; run tests ; calculate coverage
+#   - ubuntu-release-test
+#     - [ ubuntu-20.04 | ubuntu-22.04 ]
+#     - Release
+#     - compile all ; run tests
+#   - ubuntu-build-test-flaky
+#     - ubuntu-20.04
+#     - Debug
+#     - compile all ; run flaky tests
+#   - clang-tidy
+#     - ubuntu-20.04
+#     - Release
+#     - compile all ; test clang-tidy
+#   - uncrustify
+#     - ubuntu-20.04
+#     - test uncrustify
+#
+# The main job is ubuntu-main-test which compiles all packages (including documentation), run every test and calculates coverage.
+# This main job uses ubuntu 20.04 LTS (focal fossa).
+
 name: test
 
 on:
@@ -19,6 +53,9 @@ jobs:
         cmake-config:
           - 'Release'
           - 'Debug'
+        windows-version:
+          - 'windows-2019'
+          - 'windows-latest'
     env:
       CXXFLAGS: /MP
       OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
@@ -55,7 +92,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: ${{ github.workspace }}\..\fastdds\install
-          name: windows_${{ matrix.cmake-config }}_fastdds_install
+          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Install ddsrouter_cmake
@@ -121,8 +158,8 @@ jobs:
           cmake_build_type: ${{ matrix.cmake-config }}
         if: always()
 
-  ubuntu-build-test:
-    runs-on: ubuntu-latest
+  ubuntu-main-test:
+    runs-on: ubuntu-20.04
     environment:
       name: codecov
 
@@ -153,7 +190,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu_fastdds_install
+          name: ubuntu-20.04_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -261,10 +298,14 @@ jobs:
           path: log/
         if: always()
 
+
   ubuntu-release-test:
-    runs-on: ubuntu-latest
-    environment:
-      name: codecov
+    runs-on: ${{ matrix.ubuntu-version }}
+    strategy:
+      matrix:
+        ubuntu-version:
+          - 'ubuntu-20.04'
+          - 'ubuntu-22.04'
 
     steps:
       - name: Sync eProsima/DDS-Router repository
@@ -293,7 +334,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu_fastdds_install
+          name: ${{ matrix.ubuntu-version }}_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -330,8 +371,9 @@ jobs:
           path: log/
         if: always()
 
+
   ubuntu-build-test-flaky:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment:
       name: codecov
 
@@ -360,7 +402,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu_fastdds_install
+          name: ubuntu-20.04_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
@@ -392,7 +434,7 @@ jobs:
               --timeout 60
 
   clang-tidy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
@@ -418,7 +460,7 @@ jobs:
         with:
           workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu_fastdds_install
+          name: ubuntu-20.04_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Build workspace
@@ -443,7 +485,7 @@ jobs:
           path: ${{ github.workspace }}/clang_results.yml
 
   uncrustify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
