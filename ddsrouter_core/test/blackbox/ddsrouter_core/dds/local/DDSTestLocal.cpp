@@ -51,6 +51,8 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
     allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
 
+    bool is_repeater = false;
+
     std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
@@ -69,11 +71,13 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("participant_0"),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            is_repeater,
                             types::DomainId(0u)
                             ),
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("participant_1"),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            is_repeater,
                             types::DomainId(1u)
                             )
                     }

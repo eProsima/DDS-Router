@@ -51,6 +51,7 @@ constexpr const char* TOPIC_RELIABLE_TAG("reliable"); //! The DataReaders of tha
 
 constexpr const char* PARTICIPANT_KIND_TAG("kind");   //! Participant Kind
 constexpr const char* PARTICIPANT_NAME_TAG("name");   //! Participant Name
+constexpr const char* IS_REPEATER_TAG("repeater");   //! Is participant a repeater
 constexpr const char* COLLECTION_PARTICIPANTS_TAG("participants"); //! TODO: add comment
 
 // RTPS related tags

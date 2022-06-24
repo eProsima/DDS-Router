@@ -87,6 +87,11 @@ public:
     types::ParticipantKind kind() const noexcept override;
 
     /**
+     * @brief Return whether participant is repeater
+     */
+    bool is_repeater() const noexcept final override;
+
+    /**
      * @brief Override create_writer() IParticipant method
      *
      * This method calls the protected method \c create_writer_ in order to create the actual Writer.

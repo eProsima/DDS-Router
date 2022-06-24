@@ -63,6 +63,12 @@ public:
      */
     virtual types::ParticipantKind kind() const noexcept = 0;
 
+
+    /**
+     * @brief Return whether participant is repeater
+     */
+    virtual bool is_repeater() const noexcept = 0;
+
     /**
      * @brief Return a new Writer
      *

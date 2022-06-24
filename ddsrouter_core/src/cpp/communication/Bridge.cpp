@@ -58,7 +58,9 @@ Bridge::Bridge(
                 writers_; // Create a copy of the map
 
         // Get this Track source participant before removing it from map
-        writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+        if (!participants_->get_participant(id)->is_repeater()) {
+            writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+        }
 
         // This insert is required as there is no copy method for Track
         // Tracks are always created disabled and then enabled with Bridge enable() method

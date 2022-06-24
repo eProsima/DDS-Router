@@ -241,9 +241,13 @@ template <class ConfigurationType>
 std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_writer_(
         types::RealTopic topic)
 {
-    return std::make_shared<Writer>(
+    auto new_writer = std::make_shared<Writer>(
         this->id(), topic,
-        this->payload_pool_, rtps_participant_);
+        this->payload_pool_, rtps_participant_,
+        this->configuration_.is_repeater()
+        );
+
+    return new_writer;
 }
 
 template <class ConfigurationType>

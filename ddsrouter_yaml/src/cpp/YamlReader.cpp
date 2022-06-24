@@ -187,6 +187,29 @@ DomainId YamlReader::get<DomainId>(
 }
 
 template <>
+bool YamlReader::get<bool>(
+        const Yaml& yml,
+        const YamlReaderVersion /* version */)
+{
+    // Domain id required
+    auto bool_str = get_scalar<std::string>(yml);
+
+    if (bool_str == "true" || bool_str == "True" || bool_str == "TRUE" || bool_str == "t" || bool_str == "T" || bool_str == "1")
+    {
+        return true;
+    }
+    else if (bool_str == "false" || bool_str == "False" || bool_str == "FALSE" || bool_str == "f" || bool_str == "F" || bool_str == "0")
+    {
+        return false;
+    }
+    else
+    {
+        throw utils::ConfigurationException(
+                  utils::Formatter() << "Error reading boolean field: " << bool_str);
+    }
+}
+
+template <>
 GuidPrefix YamlReader::get<GuidPrefix>(
         const Yaml& yml,
         const YamlReaderVersion /* version */)
@@ -578,7 +601,7 @@ configuration::SimpleParticipantConfiguration YamlReader::get<configuration::Sim
 
     if (has_domain)
     {
-        return configuration::SimpleParticipantConfiguration(id, kind, domain);
+        return configuration::SimpleParticipantConfiguration(id, kind, false /* is_repeater */, domain);
     }
     else
     {
@@ -606,6 +629,9 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     {
         domain = YamlReader::get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
     }
+
+    // is_repeater. Not enabled in v1
+    bool is_repeater = false;
 
     // Optional listening addresses
     std::set<types::Address> listening_addresses;
@@ -638,6 +664,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -649,6 +676,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -662,6 +690,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -672,6 +701,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -692,6 +722,20 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
 
     // Guid Prefix required
     types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
+
+    // Is repeater option
+    bool is_repeater = false;
+    if (YamlReader::is_tag_present(yml, IS_REPEATER_TAG))
+    {
+        is_repeater = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
+    }
+
+    if (is_repeater && kind != types::ParticipantKind::wan)
+    {
+        is_repeater = false;
+        logWarning(DDSROUTER_YAML,
+                "Value in tag <" << IS_REPEATER_TAG << "> ignored, as participant kind " << kind << " is not compatible.");
+    }
 
     // Domain option
     types::DomainId domain;
@@ -731,6 +775,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -742,6 +787,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -755,6 +801,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,
@@ -765,6 +812,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
         {
             return configuration::DiscoveryServerParticipantConfiguration(
                 id,
+                is_repeater,
                 guid,
                 listening_addresses,
                 connection_addresses,

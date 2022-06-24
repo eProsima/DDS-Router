@@ -36,6 +36,8 @@ namespace ddsrouter {
 namespace core {
 namespace rtps {
 
+class RepeaterDataFilter;
+
 /**
  * Standard RTPS Writer with less restrictive Attributes.
  */
@@ -48,10 +50,11 @@ public:
      *
      * Get the Attributes and QoS and create the Writer History and the RTPS Writer.
      *
-     * @param participant_id    Router Id of the Participant that has created this Writer.
-     * @param topic             Topic that this Writer subscribes to.
-     * @param payload_pool      Shared Payload Pool to received data and take it.
-     * @param rtps_participant  RTPS Participant pointer (this is not stored).
+     * @param participant_id        Router Id of the Participant that has created this Writer.
+     * @param topic                 Topic that this Writer subscribes to.
+     * @param payload_pool          Shared Payload Pool to received data and take it.
+     * @param rtps_participant      RTPS Participant pointer (this is not stored).
+     * @param belongs_to_repeater   Whether writer belongs to a repeater participant.
      *
      * @throw \c InitializationException in case any creation has failed
      */
@@ -59,7 +62,8 @@ public:
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
-            fastrtps::rtps::RTPSParticipant* rtps_participant);
+            fastrtps::rtps::RTPSParticipant* rtps_participant,
+            bool belongs_to_repeater);
 
     /**
      * @brief Destroy the Writer object
@@ -130,6 +134,9 @@ protected:
 
     //! RTPS Writer History associated to \c rtps_reader_
     fastrtps::rtps::WriterHistory* rtps_history_;
+
+    //! Repeater Data Filter used to filter cache changes at the RTPSWriter level. Can be null
+    std::unique_ptr<RepeaterDataFilter> repeater_data_filter_;
 };
 
 } /* namespace rtps */

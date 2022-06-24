@@ -21,6 +21,7 @@
 #include <fastrtps/rtps/common/CacheChange.h>
 
 #include <writer/implementations/rtps/Writer.hpp>
+#include <writer/implementations/rtps/RepeaterDataFilter.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -35,7 +36,8 @@ Writer::Writer(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant)
+        fastrtps::rtps::RTPSParticipant* rtps_participant,
+        bool belongs_to_repeater)
     : BaseWriter(participant_id, topic, payload_pool)
 {
     // TODO Use payload pool for this writer, so change does not need to be copied
@@ -59,7 +61,6 @@ Writer::Writer(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
                       participant_id << " in topic " << topic << ".");
     }
-
     // Register writer with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
     fastrtps::WriterQos writer_qos = writer_qos_();
@@ -71,6 +72,24 @@ Writer::Writer(
         throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
                       " for Simple RTPSWriter in Participant " << participant_id);
     }
+
+
+    logInfo(DDSROUTER_RTPS_WRITER,
+            "Belongs to repeater participant " << (belongs_to_repeater ? "true" : "false"));
+
+    if (belongs_to_repeater) {
+
+        logInfo(DDSROUTER_RTPS_WRITER,
+                "Setting reader data filter into writer of " << participant_id << " with topic" << topic);
+
+        repeater_data_filter_ = std::make_unique<RepeaterDataFilter>();
+
+        rtps_writer_->reader_data_filter(repeater_data_filter_.get());
+
+        logInfo( DDSROUTER_RTPS_WRITER, "After set in constructor, ReaderDataFilter " << rtps_writer_->reader_data_filter() );
+
+    } // else, rtps_writer_ won't have any filter associated, which is fine
+
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
             topic << " with guid " << rtps_writer_->getGuid());
@@ -102,9 +121,18 @@ Writer::~Writer()
 utils::ReturnCode Writer::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+
+    //// Copy source writer GUID into inline_qos
+    // First reserve memory for guidPrefix and EntityId
+    new_change->inline_qos.reserve(fastrtps::rtps::GuidPrefix_t::size + fastrtps::rtps::EntityId_t::size);
+
+    // Copy GuidPrefix (relevant for comparison) to the first GuidPrefix_t::size bytes of inline_qos
+    std::memcpy(new_change->inline_qos.data, data->source_guid.guidPrefix.value, fastrtps::rtps::GuidPrefix_t::size);
+
+    // Copy EntityId to the last EntityId_t::size bytes of inline_qos (not needed for filtering though, but copied for completeness)
+    std::memcpy(new_change->inline_qos.data + fastrtps::rtps::GuidPrefix_t::size, data->source_guid.entityId.value, fastrtps::rtps::EntityId_t::size);
 
     // TODO : Set method to remove old changes in order to get a new one
     // In case it fails, remove old changes from history and try again

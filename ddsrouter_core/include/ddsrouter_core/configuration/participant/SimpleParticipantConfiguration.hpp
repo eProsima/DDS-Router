@@ -39,6 +39,7 @@ public:
     DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind = types::ParticipantKind::simple_rtps,
+            bool is_repeater = false,
             const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
 
     /**

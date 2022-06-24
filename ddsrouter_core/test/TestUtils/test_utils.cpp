@@ -220,6 +220,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,
+                false, /*is_repeater*/
                 random_domain(seed));
 
         case ParticipantKind::local_discovery_server:
@@ -234,6 +235,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
 
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 id,
+                false, /*is_repeater*/
                 random_guid_prefix(seed),
                 std::set<Address>(),
                 std::set<DiscoveryServerConnectionAddress>({connection_address}),

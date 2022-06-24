@@ -43,6 +43,7 @@ public:
     // TODO
     DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
+            bool is_repeater,
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
@@ -53,6 +54,7 @@ public:
     // TODO
     DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
+            bool is_repeater,
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,

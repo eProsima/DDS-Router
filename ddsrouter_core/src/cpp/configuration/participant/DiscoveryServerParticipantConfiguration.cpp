@@ -32,13 +32,14 @@ const DomainId DiscoveryServerParticipantConfiguration::DEFAULT_DS_DOMAIN_ID_(66
 
 DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
         const ParticipantId& id,
+        bool is_repeater,
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
-    : SimpleParticipantConfiguration(id, kind, domain_id)
+    : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
     , discovery_server_guid_prefix_(discovery_server_guid_prefix)
     , listening_addresses_(listening_addresses)
     , connection_addresses_(connection_addresses)
@@ -48,6 +49,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
 
 DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
         const ParticipantId& id,
+        bool is_repeater,
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
@@ -55,7 +57,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */)
     : DiscoveryServerParticipantConfiguration(
-        id, discovery_server_guid_prefix, listening_addresses, connection_addresses, kind, tls_configuration, domain_id)
+        id, is_repeater, discovery_server_guid_prefix, listening_addresses, connection_addresses, kind, tls_configuration, domain_id)
 {
 }
 

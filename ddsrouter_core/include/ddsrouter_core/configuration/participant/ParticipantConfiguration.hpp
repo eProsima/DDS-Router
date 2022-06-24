@@ -41,7 +41,8 @@ public:
      */
     DDSROUTER_CORE_DllAPI ParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::ParticipantKind& kind) noexcept;
+            const types::ParticipantKind& kind,
+            bool is_repeater = false) noexcept;
 
     //! Participant Kind associated with this configuration
     DDSROUTER_CORE_DllAPI types::ParticipantKind kind() const noexcept;
@@ -65,6 +66,8 @@ public:
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
+    DDSROUTER_CORE_DllAPI bool is_repeater() const noexcept;
+
 protected:
 
     //! Participant Id associated with this configuration
@@ -72,6 +75,9 @@ protected:
 
     //! Participant Kind of the Participant that this configuration refers.
     const types::ParticipantKind kind_;
+
+    //! Whether participant is repeater or not.
+    const bool is_repeater_;
 };
 
 } /* namespace configuration */

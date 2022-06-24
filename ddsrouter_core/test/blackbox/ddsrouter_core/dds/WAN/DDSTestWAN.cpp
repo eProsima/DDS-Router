@@ -120,6 +120,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            false, /* is_repeater */
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
@@ -131,6 +132,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            false, /* is_repeater */
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
@@ -172,6 +174,7 @@ configuration::DDSRouterConfiguration router_configuration(
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("simple_participant"),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            false, /*is_repeater*/
                             types::DomainId(domain)
                             ),
                     }

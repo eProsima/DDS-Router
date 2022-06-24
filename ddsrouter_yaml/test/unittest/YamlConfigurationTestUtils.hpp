@@ -154,6 +154,16 @@ void participantkind_to_yaml(
         PARTICIPANT_KIND_TAG);
 }
 
+void participantrepeater_to_yaml(
+        Yaml& yml,
+        bool is_repeater)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<bool>(is_repeater),
+        IS_REPEATER_TAG);
+}
+
 void domain_to_yaml(
         Yaml& yml,
         const core::types::DomainId& domain)
