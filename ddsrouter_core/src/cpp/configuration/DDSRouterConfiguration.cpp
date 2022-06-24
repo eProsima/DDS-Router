@@ -33,13 +33,17 @@ namespace configuration {
 
 using namespace eprosima::ddsrouter::core::types;
 
+const unsigned int DDSRouterConfiguration::DEFAULT_NUMBER_OF_THREADS_ = 12;
+
 DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<FilterTopic>> allowlist,
         std::set<std::shared_ptr<FilterTopic>> blocklist,
         std::set<std::shared_ptr<RealTopic>> builtin_topics,
-        std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations)
+        std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+        unsigned int number_of_threads /* = default_number_of_threads() */)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations_(participants_configurations)
+    , number_of_threads_(number_of_threads)
 {
 }
 
@@ -135,6 +139,16 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
         default:
             return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
     }
+}
+
+unsigned int DDSRouterConfiguration::number_of_threads() const noexcept
+{
+    return number_of_threads_;
+}
+
+unsigned int DDSRouterConfiguration::default_number_of_threads() noexcept
+{
+    return DEFAULT_NUMBER_OF_THREADS_;
 }
 
 } /* namespace configuration */

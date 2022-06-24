@@ -45,6 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads()))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -72,6 +73,7 @@ DDSRouterImpl::DDSRouterImpl(
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
     discovery_database_->enable();
+
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
@@ -228,6 +230,9 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
 
         logInfo(DDSROUTER, "Starting DDS Router.");
 
+        // Enable thread pool
+        thread_pool_->enable();
+
         activate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
     }
@@ -247,6 +252,9 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
         enabled_.store(false);
 
         logInfo(DDSROUTER, "Stopping DDS Router.");
+
+        // Disable thread pool so tasks running finish and new tasks are not taken by threads
+        thread_pool_->disable();
 
         deactivate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
@@ -368,7 +376,7 @@ void DDSRouterImpl::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, enabled);
+        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, thread_pool_, enabled);
     }
     catch (const utils::InitializationException& e)
     {

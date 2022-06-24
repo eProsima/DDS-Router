@@ -83,8 +83,8 @@ set(TEST_NAME DBQueueWaitHandlerTest)
 
 set(TEST_SOURCES
         DBQueueWaitHandlerTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
     )
+all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
         push_pop_one_thread_int

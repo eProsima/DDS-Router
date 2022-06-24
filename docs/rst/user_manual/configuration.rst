@@ -47,6 +47,26 @@ This is the configuration version that is described along this page.
     **Deprecation Warning**.
     In future releases tag ``version`` will be mandatory.
 
+
+.. _thread_configuration:
+
+Number of Threads
+=================
+
+The YAML Configuration support a ``threads`` **optional** value that allows the user to set a maximum number of threads
+for the internal :code:`ThreadPool`.
+This ThreadPool allows to limit the number of threads spawned by the application.
+This improves the performance of the data transmission between Participants.
+
+This value should be set by each user depending on each system characteristics.
+In case this value is not set, the default number of threads used is :code:`12`.
+
+.. note::
+
+    The number of threads set by this configuration does not affect the total number of thread used by the application.
+    Internal library dependencies will create additional threads.
+
+
 .. _topic_filtering:
 
 Topic Filtering

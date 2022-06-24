@@ -1,5 +1,7 @@
 version: v2.0 # Required
 
+threads: 32 # Optional
+
 allowlist:
 - name: rt/chatter # Required
   type: std_msgs::msg::dds_::String_
