@@ -36,7 +36,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
-        std::shared_ptr<types::security::TlsConfiguration> tls_configuration /* = types::security::TlsConfiguration() */,
+        const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
     : SimpleParticipantConfiguration(id, kind, domain_id)
     , discovery_server_guid_prefix_(discovery_server_guid_prefix)
@@ -53,7 +53,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const DomainId& domain_id,
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
-        std::shared_ptr<types::security::TlsConfiguration> tls_configuration /* = types::security::TlsConfiguration() */)
+        const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */)
     : DiscoveryServerParticipantConfiguration(
         id, discovery_server_guid_prefix, listening_addresses, connection_addresses, kind, tls_configuration, domain_id)
 {
@@ -77,10 +77,10 @@ DiscoveryServerParticipantConfiguration::connection_addresses() const noexcept
 
 bool DiscoveryServerParticipantConfiguration::tls_active() const noexcept
 {
-    return tls_configuration_->is_active();
+    return tls_configuration_.is_active();
 }
 
-std::shared_ptr<types::security::TlsConfiguration> DiscoveryServerParticipantConfiguration::tls_configuration() const
+const types::security::TlsConfiguration& DiscoveryServerParticipantConfiguration::tls_configuration() const noexcept
 {
     return tls_configuration_;
 }
@@ -121,27 +121,13 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
         return false;
     }
 
-    // Check TLS
-    if (!tls_configuration_)
-    {
-        logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in tls configurations.");
-        error_msg << "nullptr TlsConfiguration in participant configuration. ";
-        return false;
-    }
-
     // If active, check it is valid
-    if (tls_configuration_->is_active())
+    if (tls_configuration_.is_active())
     {
-        if (!tls_configuration_->is_valid())
-        {
-            error_msg << "Incorrect TLS Configuration. ";
-            return false;
-        }
-
         // If has listening addresses, it should be able to provide TLS server configuration
         if (!listening_addresses_.empty())
         {
-            if (!tls_configuration_->can_be_server())
+            if (!tls_configuration_.compatible<types::security::TlsKind::server>())
             {
                 error_msg << "TLS requires to support Server Configuration if listening addresses set. ";
                 return false;
@@ -151,7 +137,7 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
         // If has connection addresses, it should be able to provide TLS client configuration
         if (!connection_addresses_.empty())
         {
-            if (!tls_configuration_->can_be_client())
+            if (!tls_configuration_.compatible<types::security::TlsKind::client>())
             {
                 error_msg << "TLS requires to support Client Configuration if connection addresses set. ";
                 return false;

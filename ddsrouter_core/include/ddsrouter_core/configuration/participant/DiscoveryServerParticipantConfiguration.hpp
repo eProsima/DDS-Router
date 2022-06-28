@@ -47,8 +47,7 @@ public:
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
             const types::ParticipantKind& kind = types::ParticipantKind::local_discovery_server,
-            std::shared_ptr<types::security::TlsConfiguration> tls_configuration =
-            std::make_shared<types::security::TlsConfiguration>(),
+            const types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration(),
             const types::DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
 
     // TODO
@@ -59,8 +58,7 @@ public:
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
             const types::DomainId& domain_id,
             const types::ParticipantKind& kind = types::ParticipantKind::local_discovery_server,
-            std::shared_ptr<types::security::TlsConfiguration> tls_configuration =
-            std::make_shared<types::security::TlsConfiguration>());
+            const types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration());
 
     DDSROUTER_CORE_DllAPI types::GuidPrefix discovery_server_guid_prefix() const noexcept;
 
@@ -70,7 +68,7 @@ public:
 
     DDSROUTER_CORE_DllAPI bool tls_active() const noexcept;
 
-    DDSROUTER_CORE_DllAPI std::shared_ptr<types::security::TlsConfiguration> tls_configuration() const;
+    DDSROUTER_CORE_DllAPI const types::security::TlsConfiguration& tls_configuration() const noexcept;
 
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
@@ -85,7 +83,7 @@ protected:
     types::GuidPrefix discovery_server_guid_prefix_;
     std::set<types::Address> listening_addresses_;
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses_;
-    std::shared_ptr<types::security::TlsConfiguration> tls_configuration_;
+    const types::security::TlsConfiguration tls_configuration_;
 
     DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DS_DOMAIN_ID_; // 66
 };
