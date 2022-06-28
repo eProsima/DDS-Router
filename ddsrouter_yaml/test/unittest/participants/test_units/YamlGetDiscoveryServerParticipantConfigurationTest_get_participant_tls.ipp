@@ -62,7 +62,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     ASSERT_THROW(tls_configuration.private_key_file(), utils::InconsistencyException);
     ASSERT_THROW(tls_configuration.certificate_chain_file(), utils::InconsistencyException);
     ASSERT_THROW(tls_configuration.dh_params_file(), utils::InconsistencyException);
-}    
+}
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_server)
 {
@@ -90,7 +90,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_serve
     ASSERT_EQ(tls_configuration.certificate_chain_file(), "cert-chain-file");
     ASSERT_EQ(tls_configuration.dh_params_file(), "dhp-file");
 }
-    
+
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_client_server)
 {
@@ -166,7 +166,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inact
     ASSERT_THROW(ds_participant_cfg.tls_configuration().private_key_file(), utils::InconsistencyException);
     ASSERT_THROW(ds_participant_cfg.tls_configuration().certificate_chain_file(), utils::InconsistencyException);
     ASSERT_THROW(ds_participant_cfg.tls_configuration().dh_params_file(), utils::InconsistencyException);
-} 
+}
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incorrect_empty)
 {
@@ -181,7 +181,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incor
             yml, TLS_TAG,
             LATEST),
         utils::ConfigurationException);
-} 
+}
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incorrect_format)
 {
