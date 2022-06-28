@@ -41,7 +41,7 @@ template <>
 void TlsConfiguration::check_valid_<TlsKind::server>() const
 {
     // TODO check every file is correct
-    if ( private_key_file_.empty() or certificate_chain_file_.empty() or dh_params_file_.empty())
+    if (private_key_file_.empty() || certificate_chain_file_.empty() || dh_params_file_.empty())
     {
         throw utils::InitializationException(utils::Formatter() << "At least one invalid file");
     }
@@ -110,7 +110,7 @@ template <TlsKind Kind>
 bool TlsConfiguration::compatible() const noexcept
 {
     return this->kind_ != TlsKind::inactive &&
-           (Kind == this->kind_ or (this->kind_ == TlsKind::both && Kind != TlsKind::inactive));
+           (Kind == this->kind_ || (this->kind_ == TlsKind::both && Kind != TlsKind::inactive));
 }
 
 // Explicit method instantiations
@@ -129,7 +129,7 @@ const std::string& TlsConfiguration::certificate_authority_file() const
     }
     else
     {
-        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::client");
+        throw utils::InconsistencyException("Cannot get certificate_authority_file: incompatible with TlsKind::client");
     }
 }
 
@@ -141,7 +141,7 @@ const std::string& TlsConfiguration::private_key_file_password() const
     }
     else
     {
-        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
+        throw utils::InconsistencyException("Cannot get private_key_file_password: incompatible with TlsKind::server");
     }
 }
 
@@ -153,7 +153,7 @@ const std::string& TlsConfiguration::private_key_file() const
     }
     else
     {
-        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
+        throw utils::InconsistencyException("Cannot get private_key_file: incompatible with TlsKind::server");
     }
 }
 
@@ -165,7 +165,7 @@ const std::string& TlsConfiguration::certificate_chain_file() const
     }
     else
     {
-        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
+        throw utils::InconsistencyException("Cannot get certificate_chain_file: incompatible with TlsKind::server");
     }
 }
 
