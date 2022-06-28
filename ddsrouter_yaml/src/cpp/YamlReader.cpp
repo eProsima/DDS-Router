@@ -28,9 +28,6 @@
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfigurationBoth.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfigurationClient.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfigurationServer.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 #include <ddsrouter_core/types/topic/WildcardTopic.hpp>
 #include <ddsrouter_utils/Log.hpp>
@@ -461,7 +458,7 @@ WildcardTopic YamlReader::get<WildcardTopic>(
 }
 
 template <>
-std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<security::TlsConfiguration>>(
+security::TlsConfiguration YamlReader::get<security::TlsConfiguration>(
         const Yaml& yml,
         const YamlReaderVersion /* version */)
 {
@@ -510,17 +507,17 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         if (has_certificate_authority_file)
         {
             // Both TLS configuration
-            return std::make_shared<security::TlsConfigurationBoth>(
+            return security::TlsConfiguration(
+                certificate_authority_file,
                 private_key_file_password,
                 private_key_file,
-                certificate_authority_file,
                 certificate_chain_file,
                 dh_params_file);
         }
         else
         {
             // Server TLS configuration
-            return std::make_shared<security::TlsConfigurationServer>(
+            return security::TlsConfiguration(
                 private_key_file_password,
                 private_key_file,
                 certificate_chain_file,
@@ -532,7 +529,7 @@ std::shared_ptr<security::TlsConfiguration> YamlReader::get<std::shared_ptr<secu
         if (has_certificate_authority_file)
         {
             // Client TLS configuration
-            return std::make_shared<security::TlsConfigurationClient>(certificate_authority_file);
+            return security::TlsConfiguration(certificate_authority_file);
         }
         else
         {
@@ -628,11 +625,11 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     }
 
     // Optional TLS
-    std::shared_ptr<types::security::TlsConfiguration> tls;
+    types::security::TlsConfiguration tls;
     bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
     if (has_tls)
     {
-        tls = YamlReader::get<std::shared_ptr<types::security::TlsConfiguration>>(yml, TLS_TAG, version);
+        tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
     if (has_domain)
@@ -721,11 +718,11 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
     }
 
     // Optional TLS
-    std::shared_ptr<types::security::TlsConfiguration> tls;
+    types::security::TlsConfiguration tls;
     bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
     if (has_tls)
     {
-        tls = YamlReader::get<std::shared_ptr<types::security::TlsConfiguration>>(yml, TLS_TAG, version);
+        tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
     if (has_domain)
