@@ -23,8 +23,7 @@
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfigurationBoth.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfigurationServer.hpp>
+#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/topic/WildcardTopic.hpp>
 
 #include <test_participants.hpp>
@@ -57,14 +56,14 @@ constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
-std::shared_ptr<types::security::TlsConfiguration> tls_configuration(
+types::security::TlsConfiguration tls_configuration(
         WanKind wan_kind)
 {
     // TODO: test that using server with only Server required files works
     // It fails when connecting to other server
     if (is_server(wan_kind))
     {
-        return std::make_shared<types::security::TlsConfigurationBoth>(
+        return types::security::TlsConfiguration(
             "../../resources/tls/ca.crt", // ca
             "", // private key password
             "../../resources/tls/ddsrouter.key", // private key
@@ -74,7 +73,7 @@ std::shared_ptr<types::security::TlsConfiguration> tls_configuration(
     }
     else
     {
-        return std::make_shared<types::security::TlsConfigurationClient>(
+        return types::security::TlsConfiguration(
             "../../resources/tls/ca.crt" // ca
             );
     }

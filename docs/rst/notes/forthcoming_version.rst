@@ -21,3 +21,4 @@ Next release will include the following **major changes**:
 Next release will fix the following **minor bugs**:
 
 * Fix race condition occurred when handling signals (due to concurrent access to *SignalManager* singleton).
+* Bug in TLS Configuration initialization when setting server configuration files.

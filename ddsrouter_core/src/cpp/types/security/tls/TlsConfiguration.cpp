@@ -18,6 +18,8 @@
  */
 
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
+#include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <ddsrouter_utils/exception/InconsistencyException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -25,40 +27,143 @@ namespace core {
 namespace types {
 namespace security {
 
+template <>
+void TlsConfiguration::check_valid_<TlsKind::client>() const
+{
+    if (certificate_authority_file_.empty())
+    {
+        // TODO check it is a correct file
+        throw utils::InitializationException(utils::Formatter() << "Invalid certificate_authority_file");
+    }
+}
+
+template <>
+void TlsConfiguration::check_valid_<TlsKind::server>() const
+{
+    // TODO check every file is correct
+    if (private_key_file_.empty() || certificate_chain_file_.empty() || dh_params_file_.empty())
+    {
+        throw utils::InitializationException(utils::Formatter() << "At least one invalid file");
+    }
+}
+
+template <>
+void TlsConfiguration::check_valid_<TlsKind::both>() const
+{
+    this->check_valid_<TlsKind::client>();
+    this->check_valid_<TlsKind::server>();
+}
+
+// Inactive constructor
 TlsConfiguration::TlsConfiguration()
-    : kind_(TLS_INVALID)
+    : kind_(TlsKind::inactive)
 {
 }
 
+// Client constructor
 TlsConfiguration::TlsConfiguration(
-        TlsConfigurationKind kind)
-    : kind_(kind)
+        std::string certificate_authority_file)
+    : kind_(TlsKind::client)
+    , certificate_authority_file_(certificate_authority_file)
 {
+    this->check_valid_<TlsKind::client>();
 }
 
-bool TlsConfiguration::is_valid() const noexcept
+// Server constructor
+TlsConfiguration::TlsConfiguration(
+        std::string private_key_file_password,
+        std::string private_key_file,
+        std::string certificate_chain_file,
+        std::string dh_params_file)
+    : kind_(TlsKind::server)
+    , private_key_file_password_(private_key_file_password)
+    , private_key_file_(private_key_file)
+    , certificate_chain_file_(certificate_chain_file)
+    , dh_params_file_(dh_params_file)
 {
-    return true;
+    this->check_valid_<TlsKind::server>();
+}
+
+// Server & client constructor
+TlsConfiguration::TlsConfiguration(
+        std::string certificate_authority_file,
+        std::string private_key_file_password,
+        std::string private_key_file,
+        std::string certificate_chain_file,
+        std::string dh_params_file)
+    : kind_(TlsKind::both)
+    , certificate_authority_file_(certificate_authority_file)
+    , private_key_file_password_(private_key_file_password)
+    , private_key_file_(private_key_file)
+    , certificate_chain_file_(certificate_chain_file)
+    , dh_params_file_(dh_params_file)
+{
+    this->check_valid_<TlsKind::both>();
 }
 
 bool TlsConfiguration::is_active() const noexcept
 {
-    return false;
+    return this->kind_ != TlsKind::inactive;
 }
 
-bool TlsConfiguration::can_be_client() const noexcept
+const std::string& TlsConfiguration::certificate_authority_file() const
 {
-    return false;
+    if (this->compatible<TlsKind::client>())
+    {
+        return certificate_authority_file_;
+    }
+    else
+    {
+        throw utils::InconsistencyException("Cannot get certificate_authority_file: incompatible with TlsKind::client");
+    }
 }
 
-bool TlsConfiguration::can_be_server() const noexcept
+const std::string& TlsConfiguration::private_key_file_password() const
 {
-    return false;
+    if (this->compatible<TlsKind::server>())
+    {
+        return private_key_file_password_;
+    }
+    else
+    {
+        throw utils::InconsistencyException("Cannot get private_key_file_password: incompatible with TlsKind::server");
+    }
 }
 
-TlsConfigurationKind TlsConfiguration::tls_kind() const noexcept
+const std::string& TlsConfiguration::private_key_file() const
 {
-    return kind_;
+    if (this->compatible<TlsKind::server>())
+    {
+        return private_key_file_;
+    }
+    else
+    {
+        throw utils::InconsistencyException("Cannot get private_key_file: incompatible with TlsKind::server");
+    }
+}
+
+const std::string& TlsConfiguration::certificate_chain_file() const
+{
+    if (this->compatible<TlsKind::server>())
+    {
+        return certificate_chain_file_;
+    }
+    else
+    {
+        throw utils::InconsistencyException("Cannot get certificate_chain_file: incompatible with TlsKind::server");
+    }
+}
+
+const std::string& TlsConfiguration::dh_params_file() const
+{
+    if (this->compatible<TlsKind::server>())
+    {
+        return dh_params_file_;
+    }
+    else
+    {
+        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
+    }
 }
 
 } /* namespace security */

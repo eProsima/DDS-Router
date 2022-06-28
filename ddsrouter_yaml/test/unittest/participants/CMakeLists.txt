@@ -97,8 +97,13 @@ set(TEST_LIST
         get_participant_domain
         get_participant_listening_addresses
         get_participant_connection_addresses
-        get_participant_tls
         get_participant_negative
+        tls_configuration_client
+        tls_configuration_server
+        tls_configuration_client_server
+        tls_configuration_inactive
+        tls_configuration_incorrect_empty
+        tls_configuration_incorrect_format
     )
 
 set(TEST_EXTRA_LIBRARIES
