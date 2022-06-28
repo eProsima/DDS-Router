@@ -111,7 +111,11 @@ public:
      * @return Whether configuration is compatible with parameter \c TlsKind
      */
     template <TlsKind Kind>
-    DDSROUTER_CORE_DllAPI bool compatible() const noexcept;
+    bool compatible() const noexcept
+    {
+        return this->kind_ != TlsKind::inactive &&
+               (Kind == this->kind_ || (this->kind_ == TlsKind::both && Kind != TlsKind::inactive));
+    }
 
     /**
      * @brief certificate_authority_file getter

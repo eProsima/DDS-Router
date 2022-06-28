@@ -106,21 +106,6 @@ bool TlsConfiguration::is_active() const noexcept
     return this->kind_ != TlsKind::inactive;
 }
 
-template <TlsKind Kind>
-bool TlsConfiguration::compatible() const noexcept
-{
-    return this->kind_ != TlsKind::inactive &&
-           (Kind == this->kind_ || (this->kind_ == TlsKind::both && Kind != TlsKind::inactive));
-}
-
-// Explicit method instantiations
-template bool TlsConfiguration::compatible<TlsKind::client>() const noexcept;
-template bool TlsConfiguration::compatible<TlsKind::server>() const noexcept;
-template bool TlsConfiguration::compatible<TlsKind::both>() const noexcept;
-// NOTE: Not instantiated because not callable:
-// template TlsConfiguration::compatible<TlsKind::compatible<TlsKind::inactive>();
-
-
 const std::string& TlsConfiguration::certificate_authority_file() const
 {
     if (this->compatible<TlsKind::client>())
