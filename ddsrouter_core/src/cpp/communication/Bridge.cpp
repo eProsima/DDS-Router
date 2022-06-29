@@ -57,9 +57,9 @@ Bridge::Bridge(
         std::map<ParticipantId, std::shared_ptr<IWriter>> writers_except_one =
                 writers_; // Create a copy of the map
 
-        // Get this Track source participant before removing it from map
+        // Remove this track's participant if not a remeater
         if (!participants_->get_participant(id)->is_repeater()) {
-            writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+            writers_except_one.erase(id);
         }
 
         // This insert is required as there is no copy method for Track
