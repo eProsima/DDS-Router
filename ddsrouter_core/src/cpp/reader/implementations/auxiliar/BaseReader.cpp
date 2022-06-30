@@ -104,13 +104,14 @@ void BaseReader::unset_on_data_available_callback() noexcept
 }
 
 utils::ReturnCode BaseReader::take(
-        std::unique_ptr<DataReceived>& data) noexcept
+        fastrtps::rtps::SerializedPayload_t& payload,
+        fastrtps::rtps::CDRMessage_t& source_guid) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
-        return take_(data);
+        return take_(payload, source_guid);
     }
     else
     {

@@ -18,6 +18,8 @@
 
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
+#include <fastdds/dds/core/policy/ParameterTypes.hpp>
+#include <fastdds/core/policy/ParameterSerializer.hpp> // XXX?
 
 #include <reader/implementations/rtps/Reader.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
@@ -98,7 +100,8 @@ Reader::~Reader()
 }
 
 utils::ReturnCode Reader::take_(
-        std::unique_ptr<DataReceived>& data) noexcept
+    fastrtps::rtps::SerializedPayload_t& payload,
+    fastrtps::rtps::CDRMessage_t& source_guid)
 {
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
 
@@ -142,16 +145,16 @@ utils::ReturnCode Reader::take_(
         return utils::ReturnCode::RETCODE_ERROR;
     }
 
-    // Store the new data that has arrived in the Track data
-    // Get the writer guid
-    data->source_guid = received_change->writerGUID;
+    // Set guid of the incoming payload into CDRMessage
+    fastdds::dds::ParameterGuid_t parameter_guid(fastdds::dds::ParameterId_t::PID_ENDPOINT_GUID, PARAMETER_GUID_LENGTH, received_change->writerGUID);
+    fastdds::dds::ParameterSerializer<fastdds::dds::ParameterGuid_t>::add_to_cdr_message(parameter_guid, source_guid);
 
     // Store it in DDSRouter PayloadPool
     eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
     payload_pool_->get_payload(
         received_change->serializedPayload,
         payload_owner,
-        data->payload);
+        payload);
 
     logDebug(DDSROUTER_RTPS_READER_LISTENER,
             "Data transmiting to track from Reader " << *this << " with payload " <<

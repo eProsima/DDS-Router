@@ -118,21 +118,19 @@ Writer::~Writer()
 }
 
 // Specific enable/disable do not need to be implemented
-utils::ReturnCode Writer::write_(
-        std::unique_ptr<DataReceived>& data) noexcept
+utils::ReturnCode Writer::write_( fastrtps::rtps::SerializedPayload_t& received_payload, const fastrtps::rtps::CDRMessage_t& source_guid) noexcept
 {
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
-    //// Copy source writer GUID into inline_qos
-    // First reserve memory for guidPrefix and EntityId
-    new_change->inline_qos.reserve(fastrtps::rtps::GuidPrefix_t::size + fastrtps::rtps::EntityId_t::size);
+    // Copy source writer GUID into inline_qos, so that internal RTPSWriter can filter the messages
 
-    // Copy GuidPrefix (relevant for comparison) to the first GuidPrefix_t::size bytes of inline_qos
-    std::memcpy(new_change->inline_qos.data, data->source_guid.guidPrefix.value, fastrtps::rtps::GuidPrefix_t::size);
+    if (repeater_data_filter_)
+    {
+        new_change->inline_qos.reserve(fastrtps::rtps::GuidPrefix_t::size + fastrtps::rtps::EntityId_t::size);
 
-    // Copy EntityId to the last EntityId_t::size bytes of inline_qos (not needed for filtering though, but copied for completeness)
-    std::memcpy(new_change->inline_qos.data + fastrtps::rtps::GuidPrefix_t::size, data->source_guid.entityId.value, fastrtps::rtps::EntityId_t::size);
+        std::memcpy(new_change->inline_qos.data, source_guid.buffer, source_guid.length);
+    }
 
     // TODO : Set method to remove old changes in order to get a new one
     // In case it fails, remove old changes from history and try again

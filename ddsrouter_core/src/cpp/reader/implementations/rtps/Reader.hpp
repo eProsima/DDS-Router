@@ -116,18 +116,21 @@ protected:
      *
      * Check if there are messages to take.
      * Take next Untaken Change.
-     * Set \c data with the message taken (data payload must be stored from PayloadPool).
+     * Set \c payload with the message taken (data payload must be stored from PayloadPool).
+     * Set \c source_guid with the GUID of the original writer.
      * Remove this change from Reader History and release.
      *
      * @note guard by mutex \c rtps_mutex_
      *
-     * @param data : oldest data to take
+     * @param payload : data payload of the incoming message
+     * @param source_guid : guid of the original writer
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    utils::ReturnCode take_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    utils::ReturnCode Reader::take_(
+        fastrtps::rtps::SerializedPayload_t& payload,
+        fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
 
     /////
     // RTPS specific methods

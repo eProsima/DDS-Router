@@ -110,7 +110,8 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     utils::ReturnCode take(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+        fastrtps::rtps::SerializedPayload_t& payload,
+        fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
 
 protected:
 
@@ -142,8 +143,9 @@ protected:
      *
      * Implement this method in every inherited Reader class with take functionality.
      */
-    virtual utils::ReturnCode take_(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+    utils::ReturnCode Reader::take_(
+        fastrtps::rtps::SerializedPayload_t& payload,
+        fastrtps::rtps::CDRMessage_t& source_guid) noexcept = 0;
 
     //! Participant parent ID
     types::ParticipantId participant_id_;

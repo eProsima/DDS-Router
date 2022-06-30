@@ -38,14 +38,19 @@ bool RepeaterDataFilter::is_relevant(
     const fastrtps::rtps::GUID_t& reader_guid
     ) const
 {
-    // First fastrtps::rtps::GuidPrefix_t::size bytes of inline_qos.data correspond to the GuidPrefix
-    // Compare them with the Guid prefix of the reader. If they are equal, the change was originally written by a RTPSWriter paired with the RTPSReader, so change is not relevant. Otherwise, the change has been originally written by a distinct writer, so change is relevant.
+    // Create change_source_guid as a CDRMessage from the inline_qos, in which the source writer guid is stored
+    fastrtps::rtps::CDRMessage_t change_source_guid(change.inline_qos);
 
-    bool ret = std::memcmp(change.inline_qos.data, reader_guid.guidPrefix.value, fastrtps::rtps::GuidPrefix_t::size) != 0;
+    // Set a parameter_guid from it...
+    fastdds::dds::ParameterGuid_t parameter_source_guid;
+    fastdds::dds::ParameterSerializer<fastdds::dds::ParameterGuid_t>::read_from_cdr_message(parameter_source_guid, change_source_guid);
 
-    logDebug(REPEATER_DATA_FILTER, "Evaluating whether Change with origin writer GUID is relevant for reader GUID " << reader_guid << "? " << (ret ? "TRUE" : "FALSE"));
+    // ...so that we can directly compare the guidPrefixes
+    bool is_relevant = parameter_source_guid.guid.guidPrefix != reader_guid.guidPrefix;
+    
+    logDebug(REPEATER_DATA_FILTER, "Evaluating whether Change with origin writer GUID " << parameter_source_guid.guid << " is relevant for reader GUID " << reader_guid << "? " << (is_relevant ? "TRUE" : "FALSE"));
 
-    return ret;
+    return is_relevant;
 }
 
 } /* namespace rtps */

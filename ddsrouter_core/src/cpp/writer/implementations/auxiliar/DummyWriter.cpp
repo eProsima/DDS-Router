@@ -18,6 +18,9 @@
 
 #include <writer/implementations/auxiliar/DummyWriter.hpp>
 
+#include <fastdds/dds/core/policy/ParameterTypes.hpp>
+#include <fastdds/core/policy/ParameterSerializer.hpp> // XXX?
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -25,7 +28,8 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 
 utils::ReturnCode DummyWriter::write_(
-        std::unique_ptr<DataReceived>& data) noexcept
+        fastrtps::rtps::SerializedPayload_t& payload,
+        fastrtps::rtps::CDRMessage_t& source_guid) noexcept
 {
     {
         std::lock_guard<std::mutex> lock(dummy_mutex_);
@@ -33,12 +37,16 @@ utils::ReturnCode DummyWriter::write_(
         // Fill the data to store
         DummyDataStored new_data_to_store;
         new_data_to_store.timestamp = utils::now();
-        new_data_to_store.source_guid = data->source_guid;
+
+        fastdds::dds::ParameterGuid_t parameter_source_guid;
+        fastdds::dds::ParameterSerializer<fastdds::dds::ParameterGuid_t>::read_from_cdr_message(parameter_source_guid, change_source_guid);
+
+        new_data_to_store.source_guid = parameter_source_guid.guid;
 
         // Copying data as it should not be stored in PayloadPool
-        for (uint32_t i = 0; i < data->payload.length; i++)
+        for (uint32_t i = 0; i < payload.length; i++)
         {
-            new_data_to_store.payload.push_back(data->payload.data[i]);
+            new_data_to_store.payload.push_back(payload.data[i]);
         }
 
         data_stored_.push_back(new_data_to_store);

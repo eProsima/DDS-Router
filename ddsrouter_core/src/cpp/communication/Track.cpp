@@ -183,8 +183,10 @@ void Track::transmit_() noexcept
         data_available_status_ = DataAvailableStatus::transmitting_data;
 
         // Get data received
-        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
-        utils::ReturnCode ret = reader_->take(data);
+        fastrtps::rtps::SerializedPayload_t payload;
+        fastrtps::rtps::CDRMessage_t source_guid;
+
+        utils::ReturnCode ret = reader_->take(payload, source_guid);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
         {
@@ -214,13 +216,12 @@ void Track::transmit_() noexcept
         }
 
         logDebug(DDSROUTER_TRACK,
-                "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->source_guid << ".");
+                "Track " << reader_participant_id_ << " transmitting data for topic " << topic_);
 
         // Send data through writers
         for (auto& writer_it : writers_)
         {
-            ret = writer_it.second->write(data);
+            ret = writer_it.second->write(payload, source_guid);
 
             if (!ret)
             {
@@ -231,7 +232,7 @@ void Track::transmit_() noexcept
             }
         }
 
-        payload_pool_->release_payload(data->payload);
+        payload_pool_->release_payload(payload);
     }
 
     data_available_status_.store(DataAvailableStatus::no_more_data);

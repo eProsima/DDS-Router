@@ -89,13 +89,15 @@ protected:
      *
      * It does not require mutex, it will be guarded by RTPS Writer mutex in internal methods.
      *
-     * @param data : oldest data to take
+     * @param received_payload : incoming data payload to forward to writer
+     * @param source_guid : original source GUID
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     virtual utils::ReturnCode write_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+        fastrtps::rtps::SerializedPayload_t& received_payload,
+        const fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
 
     /////
     // RTPS specific methods
