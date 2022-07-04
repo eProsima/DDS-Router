@@ -83,12 +83,13 @@ It shows the usage information of the application.
     It will build a communication bridge between the different Participants included in the provided configuration file.
     To stop the execution gracefully use SIGINT (C^) or SIGTERM (kill) signals.
     General options:
-    -h --help         Print this help message.
-    -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
-    -r --reload-time  Time period in seconds to reload configuration file. This is needed when File Watcher
-                      functionality is not available (e.g. config file is a symbolic link).
-                      Value 0 does not reload file. [Default: 0].
-    -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
+      -h --help         Print this help message.
+      -c --config-path  Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
+      -r --reload-time  Time period in seconds to reload configuration file. This is needed when File Watcher
+                        functionality is not available (e.g. config file is a symbolic link).
+                        Value 0 does not reload file. [Default: 0].
+      -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
+      -v --version      Print version, branch and commit hash.
 
 
 .. _user_manual_user_interface_configuration_file_argument:
@@ -124,6 +125,13 @@ or compiled with CMake option ``LOG_INFO=ON``.
     In order to skip Fast DDS logs, compile ``fastrtps`` library with CMake option ``-DLOG_NO_INFO=ON``
     or ``CMAKE_BUILD_TYPE`` different to ``Debug``.
 
+
+.. _user_manual_user_interface_version_argument:
+
+Version Argument
+^^^^^^^^^^^^^^^^
+
+It shows the current version of the DDS Router and the hash of the last commit of the compiled code.
 
 
 .. _user_manual_user_interface_configuration_file:
