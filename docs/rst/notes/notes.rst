@@ -27,7 +27,7 @@ This release includes the following **improvementes**:
 
 This release includes the following **major changes**:
 
-* New auxiliary package :code:`ddsrouter_cmake` to implement general CMake functions and utils.
+* New auxiliary package :code:`ddsrouter_cmake` to implement general CMake functions and tools.
 * The internal package :code:`ddsrouter_event` is joint within the internal package :code:`ddsrouter_utils`.
 
 This release includes the following **minor changes**:
