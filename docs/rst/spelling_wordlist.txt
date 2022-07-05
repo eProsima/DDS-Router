@@ -15,6 +15,7 @@ entrypoint
 eProsima
 executables
 fastcdr
+fastdds
 fastrtps
 github
 gMock
