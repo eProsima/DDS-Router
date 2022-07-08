@@ -22,6 +22,8 @@
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 #include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
 
+#include <fastdds/rtps/history/IChangePool.h>
+
 #include <communication/Track.hpp>
 
 namespace eprosima {
@@ -37,17 +39,17 @@ Track::Track(
         ParticipantId reader_participant_id,
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
-        std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<utils::SlotThreadPool> thread_pool,
         bool enable /* = false */) noexcept
     : reader_participant_id_(reader_participant_id)
     , topic_(topic)
     , reader_(reader)
     , writers_(writers)
-    , payload_pool_(payload_pool)
     , enabled_(false)
     , exit_(false)
     , data_available_status_(DataAvailableStatus::no_more_data)
+    , cache_change_pool_(cache_change_pool)
     , thread_pool_(thread_pool)
     , transmit_task_id_(utils::new_unique_task_id())
 {
@@ -183,10 +185,9 @@ void Track::transmit_() noexcept
         data_available_status_ = DataAvailableStatus::transmitting_data;
 
         // Get data received
-        fastrtps::rtps::SerializedPayload_t payload;
-        fastrtps::rtps::CDRMessage_t source_guid;
+        fastrtps::rtps::CacheChange_t * reader_cache_change = nullptr;
 
-        utils::ReturnCode ret = reader_->take(payload, source_guid);
+        utils::ReturnCode ret = reader_->take(reader_cache_change);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
         {
@@ -219,9 +220,9 @@ void Track::transmit_() noexcept
                 "Track " << reader_participant_id_ << " transmitting data for topic " << topic_);
 
         // Send data through writers
-        for (auto& writer_it : writers_)
+        for (const auto& [participant_id, writer] : writers_)
         {
-            ret = writer_it.second->write(payload, source_guid);
+            ret = writer->write(reader_cache_change);
 
             if (!ret)
             {
@@ -232,7 +233,7 @@ void Track::transmit_() noexcept
             }
         }
 
-        payload_pool_->release_payload(payload);
+        cache_change_pool_->release_cache(reader_cache_change);
     }
 
     data_available_status_.store(DataAvailableStatus::no_more_data);

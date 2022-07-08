@@ -59,6 +59,7 @@ public:
             const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             std::shared_ptr<utils::SlotThreadPool> thread_pool,
             bool enable = false);
 
@@ -112,6 +113,8 @@ protected:
 
     //! Common shared payload pool
     std::shared_ptr<PayloadPool> payload_pool_;
+
+    std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool_;
 
     /**
      * Inside \c Tracks

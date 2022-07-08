@@ -30,6 +30,16 @@
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 namespace eprosima {
+namespace fastrtps {
+namespace rtps {
+
+class IChangePool;
+
+} /* namespace rtps */
+} /* namespace fastrtps */
+} /* namespace eprosima */
+
+namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
@@ -56,7 +66,7 @@ public:
             types::ParticipantId reader_participant_id,
             std::shared_ptr<IReader> reader,
             std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
-            std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             std::shared_ptr<utils::SlotThreadPool> thread_pool,
             bool enable = false) noexcept;
 
@@ -199,6 +209,9 @@ protected:
 
     //! Common shared payload pool
     std::shared_ptr<PayloadPool> payload_pool_;
+
+    //! Common shared payload pool
+    std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool_;
 
     //! Whether the Track is currently enabled
     std::atomic<bool> enabled_;

@@ -31,11 +31,13 @@ Bridge::Bridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<utils::SlotThreadPool> thread_pool,
         bool enable /* = false */)
     : topic_(topic)
     , participants_(participants_database)
     , payload_pool_(payload_pool)
+    , cache_change_pool_(cache_change_pool)
     , enabled_(false)
 {
     logDebug(DDSROUTER_BRIDGE, "Creating Bridge " << *this << ".");
@@ -69,7 +71,7 @@ Bridge::Bridge(
             topic_,
             id,
             readers_[id], std::move(writers_except_one),
-            payload_pool_,
+            cache_change_pool_,
             thread_pool,
             false);
     }
