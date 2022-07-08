@@ -36,6 +36,7 @@ Writer::Writer(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
         bool belongs_to_repeater)
     : BaseWriter(participant_id, topic, payload_pool)
@@ -52,6 +53,7 @@ Writer::Writer(
         rtps_participant,
         writer_att,
         payload_pool_,
+        cache_change_pool,
         rtps_history_,
         nullptr);
 
@@ -118,18 +120,15 @@ Writer::~Writer()
 }
 
 // Specific enable/disable do not need to be implemented
-utils::ReturnCode Writer::write_( fastrtps::rtps::SerializedPayload_t& received_payload, const fastrtps::rtps::CDRMessage_t& source_guid) noexcept
+utils::ReturnCode Writer::write_(fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept
 {
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
-    // Copy source writer GUID into inline_qos, so that internal RTPSWriter can filter the messages
-
     if (repeater_data_filter_)
     {
-        new_change->inline_qos.reserve(fastrtps::rtps::GuidPrefix_t::size + fastrtps::rtps::EntityId_t::size);
-
-        std::memcpy(new_change->inline_qos.data, source_guid.buffer, source_guid.length);
+        // TODO anton. Copy originalWriterGuidPrefix of reader cache change into new_change
+        static_cast<types::RouterCacheChange_t*>(new_change)->originalWriterGuidPrefix = reader_cache_change->originalWriterGuidPrefix;
     }
 
     // TODO : Set method to remove old changes in order to get a new one

@@ -62,6 +62,7 @@ public:
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> change_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     /**
@@ -128,9 +129,7 @@ protected:
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    utils::ReturnCode Reader::take_(
-        fastrtps::rtps::SerializedPayload_t& payload,
-        fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
+    utils::ReturnCode take_(fastrtps::rtps::CacheChange_t*& cache_change) noexcept override;
 
     /////
     // RTPS specific methods

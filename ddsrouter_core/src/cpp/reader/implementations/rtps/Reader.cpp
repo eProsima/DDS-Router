@@ -36,6 +36,7 @@ Reader::Reader(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePoolIChangePool> change_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant)
     : BaseReader(participant_id, topic, payload_pool)
 {
@@ -49,6 +50,7 @@ Reader::Reader(
         rtps_participant,
         reader_att,
         payload_pool_,
+        change_pool,
         rtps_history_);
 
     // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
@@ -100,25 +102,26 @@ Reader::~Reader()
 }
 
 utils::ReturnCode Reader::take_(
-    fastrtps::rtps::SerializedPayload_t& payload,
-    fastrtps::rtps::CDRMessage_t& source_guid)
+    fastrtps::rtps::CacheChange_t*& cache_change) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
 
     // Check if there is data available
     if (!(rtps_reader_->get_unread_count() > 0))
     {
-        return utils::ReturnCode::RETCODE_NO_DATA;
+        return nullptr;
     }
 
-    fastrtps::rtps::CacheChange_t* received_change = nullptr;
     fastrtps::rtps::WriterProxy* wp = nullptr;
 
     // Read first change of the history
-    if (!rtps_reader_->nextUntakenCache(&received_change, &wp))
+    if (!rtps_reader_->nextUntakenCache(&cache_change, &wp))
     {
         // Error reading.
-        return utils::ReturnCode::RETCODE_ERROR;
+        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+                "Error taking next untaken cache ");
+
+        return nullptr;
     }
 
     // Check that the data is consistent
@@ -130,7 +133,7 @@ utils::ReturnCode Reader::take_(
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
 
-        return utils::ReturnCode::RETCODE_ERROR;
+        return nullptr;
     }
 
     // Check that the guid is consistent
@@ -142,23 +145,15 @@ utils::ReturnCode Reader::take_(
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
 
-        return utils::ReturnCode::RETCODE_ERROR;
+        return nullptr;
     }
 
     // Set guid of the incoming payload into CDRMessage
-    fastdds::dds::ParameterGuid_t parameter_guid(fastdds::dds::ParameterId_t::PID_ENDPOINT_GUID, PARAMETER_GUID_LENGTH, received_change->writerGUID);
-    fastdds::dds::ParameterSerializer<fastdds::dds::ParameterGuid_t>::add_to_cdr_message(parameter_guid, source_guid);
-
-    // Store it in DDSRouter PayloadPool
-    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
-    payload_pool_->get_payload(
-        received_change->serializedPayload,
-        payload_owner,
-        payload);
-
-    logDebug(DDSROUTER_RTPS_READER_LISTENER,
-            "Data transmiting to track from Reader " << *this << " with payload " <<
-            received_change->serializedPayload << " from remote writer " << received_change->writerGUID);
+    fastdds::dds::ParameterOriginalWriterInfo_t parameter_original_writer_info(
+        fastdds::dds::ParameterId_t::PID_ORIGINAL_WRITER_INFO,
+        PARAMETER_ORIGINAL_WRITER_INFO_LENGTH,
+        received_change->writerGUID,
+        received_change->sequenceNumber);
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
@@ -268,6 +263,8 @@ void Reader::onNewCacheChangeAdded(
                     "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
             on_data_available_();
+
+            thread_pool_->emit(this); // TODO anton. Consider replacing current thread_pool_ by perf thread pool + task queue
         }
         else
         {

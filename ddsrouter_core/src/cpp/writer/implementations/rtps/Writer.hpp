@@ -62,6 +62,7 @@ public:
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             bool belongs_to_repeater);
 
@@ -89,15 +90,13 @@ protected:
      *
      * It does not require mutex, it will be guarded by RTPS Writer mutex in internal methods.
      *
-     * @param received_payload : incoming data payload to forward to writer
-     * @param source_guid : original source GUID
+     * @param reader_cache_change : cache change of the reader
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     virtual utils::ReturnCode write_(
-        fastrtps::rtps::SerializedPayload_t& received_payload,
-        const fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
+        fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept override;
 
     /////
     // RTPS specific methods
