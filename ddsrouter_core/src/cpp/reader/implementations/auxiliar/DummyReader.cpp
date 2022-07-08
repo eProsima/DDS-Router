@@ -38,7 +38,7 @@ void DummyReader::simulate_data_reception(
 }
 
 utils::ReturnCode DummyReader::take_(
-        std::unique_ptr<DataReceived>& data) noexcept
+        fastrtps::rtps::CacheChange_t*& cache_change) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(dummy_mutex_);
 
@@ -50,12 +50,13 @@ utils::ReturnCode DummyReader::take_(
         return utils::ReturnCode::RETCODE_NO_DATA;
     }
 
-    // Get next data received
-    DummyDataReceived next_data_to_send = data_to_send_.front();
-    data_to_send_.pop();
+    // TMP TODO anton, once interfaces are clarified
+    // // Get next data received
+    // DummyDataReceived next_data_to_send = data_to_send_.front();
+    // data_to_send_.pop();
 
-    // Write (copy) values in data
-    data->source_guid = next_data_to_send.source_guid;
+    // // Write (copy) values in data
+    // data->source_guid = next_data_to_send.source_guid;
 
     // Move Payload to DDSRouter Payload Pool
     payload_pool_->get_payload(

@@ -85,7 +85,7 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     virtual utils::ReturnCode write(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+            fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept override;
 
 protected:
 
@@ -109,7 +109,7 @@ protected:
      * Implement this method in every inherited Writer class with write functionality.
      */
     virtual utils::ReturnCode write_(
-            std::unique_ptr<types::DataReceived>& data) noexcept  = 0;
+        fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept = 0;
 
     //! Participant parent ID
     types::ParticipantId participant_id_;

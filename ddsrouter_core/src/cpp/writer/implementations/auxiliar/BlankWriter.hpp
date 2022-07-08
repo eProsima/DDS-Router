@@ -41,7 +41,7 @@ public:
 
     //! Override write() IWriter method
     utils::ReturnCode write(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+            fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept override;
 };
 
 } /* namespace core */

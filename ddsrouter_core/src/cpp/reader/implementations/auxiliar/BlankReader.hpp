@@ -48,8 +48,7 @@ public:
     void unset_on_data_available_callback() noexcept override;
 
     //! Override take() IReader method
-    utils::ReturnCode take(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    utils::ReturnCode take(fastrtps::rtps::CacheChange_t*& cache_change) noexcept override;
 };
 
 } /* namespace core */

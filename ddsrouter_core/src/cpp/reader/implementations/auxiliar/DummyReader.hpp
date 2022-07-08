@@ -71,8 +71,7 @@ protected:
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     utils::ReturnCode take_(
-        fastrtps::rtps::SerializedPayload_t& payload,
-        fastrtps::rtps::CDRMessage_t& source_guid) noexcept override;
+        fastrtps::rtps::CacheChange_t*& cache_change) noexcept override;
 
     //! Stores the data that must be retrieved with \c take() method
     std::queue<DummyDataReceived> data_to_send_;

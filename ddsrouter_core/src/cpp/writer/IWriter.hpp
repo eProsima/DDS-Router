@@ -79,8 +79,7 @@ public:
      * @return \c RETCODE_ERROR if there has been any error while writing the sample
      * @return \c RETCODE_NOT_ENABLED if the writer is not enabled (this should not happen)
      */
-    virtual utils::ReturnCode write(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+    virtual utils::ReturnCode write(fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept = 0;
 };
 
 } /* namespace core */

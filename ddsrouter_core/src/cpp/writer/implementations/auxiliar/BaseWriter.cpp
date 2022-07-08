@@ -66,14 +66,13 @@ void BaseWriter::disable() noexcept
     }
 }
 
-utils::ReturnCode BaseWriter::write(
-        std::unique_ptr<DataReceived>& data) noexcept
+utils::ReturnCode BaseWriter::write(fastrtps::rtps::CacheChange_t* reader_cache_change)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
-        return write_(data);
+        return write_(reader_cache_change);
     }
     else
     {

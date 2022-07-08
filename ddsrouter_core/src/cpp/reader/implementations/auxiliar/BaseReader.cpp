@@ -104,14 +104,13 @@ void BaseReader::unset_on_data_available_callback() noexcept
 }
 
 utils::ReturnCode BaseReader::take(
-        fastrtps::rtps::SerializedPayload_t& payload,
-        fastrtps::rtps::CDRMessage_t& source_guid) noexcept
+        fastrtps::rtps::CacheChange_t*& cache_change)
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
-        return take_(payload, source_guid);
+        return take_(cache_change);
     }
     else
     {

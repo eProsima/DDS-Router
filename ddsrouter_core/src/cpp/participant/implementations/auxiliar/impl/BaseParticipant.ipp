@@ -35,9 +35,11 @@ template <class ConfigurationType>
 BaseParticipant<ConfigurationType>::BaseParticipant(
         const ConfigurationType participant_configuration,
         std::shared_ptr <PayloadPool> payload_pool,
+        std::shared_ptr <fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr <DiscoveryDatabase> discovery_database)
     : configuration_(participant_configuration)
     , payload_pool_(payload_pool)
+    , cache_change_pool_(cache_change_pool)
     , discovery_database_(discovery_database)
 {
     logDebug(DDSROUTER_TRACK, "Creating Participant " << *this << ".");

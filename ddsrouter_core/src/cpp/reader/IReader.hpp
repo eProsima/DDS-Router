@@ -92,15 +92,14 @@ public:
      * in a way that the payload in \c data must be inside the DDS Router PayloadPool.
      * In \c data,  the Guid of the Endpoint that originally sent this data must be specified.
      *
-     * @param [out] data : object where the payload received should be copied (referenced)
+     * @param [out] cache_change : object where the payload received should be copied (referenced)
      *
      * @return \c RETCODE_OK if the data has been taken correctly
      * @return \c RETCODE_NO_DATA if there is no more data to take
      * @return \c RETCODE_ERROR if there has been any error while taking a sample
      * @return \c RETCODE_NOT_ENABLED if the reader is not enabled (this should not happen)
      */
-    virtual utils::ReturnCode take(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+    virtual utils::ReturnCode take(fastrtps::rtps::CacheChange_t*& cache_change) noexcept = 0;
 };
 
 } /* namespace core */

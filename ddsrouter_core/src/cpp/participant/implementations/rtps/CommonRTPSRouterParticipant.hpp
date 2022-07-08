@@ -51,6 +51,7 @@ public:
     CommonRTPSRouterParticipant(
             const ConfigurationType participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     virtual ~CommonRTPSRouterParticipant();

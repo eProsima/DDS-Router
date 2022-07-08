@@ -34,8 +34,9 @@ std::map<ParticipantId, DummyParticipant*> DummyParticipant::participants_;
 DummyParticipant::DummyParticipant(
         const configuration::ParticipantConfiguration participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : BaseParticipant(participant_configuration, payload_pool, discovery_database)
+    : BaseParticipant(participant_configuration, payload_pool, cache_change_pool, discovery_database)
 {
     std::unique_lock<std::mutex> lock(static_mutex_);
 

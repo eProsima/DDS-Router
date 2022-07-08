@@ -42,8 +42,9 @@ template <class ConfigurationType>
 CommonRTPSRouterParticipant<ConfigurationType>::CommonRTPSRouterParticipant(
         const ConfigurationType participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, discovery_database)
+    : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, cache_change_pool, discovery_database)
 {
     // init_();
 }
@@ -244,6 +245,7 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
     return std::make_shared<Writer>(
         this->id(), topic,
         this->payload_pool_,
+        this->cache_change_pool_,
         rtps_participant_,
         this->configuration_.is_repeater()
         );
@@ -253,7 +255,7 @@ template <class ConfigurationType>
 std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
         types::RealTopic topic)
 {
-    return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, rtps_participant_);
+    return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, this->cache_change_pool_, rtps_participant_);
 }
 
 template <class ConfigurationType>

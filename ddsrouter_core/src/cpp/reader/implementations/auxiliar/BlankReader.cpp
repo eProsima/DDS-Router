@@ -42,7 +42,7 @@ void BlankReader::unset_on_data_available_callback() noexcept
 }
 
 utils::ReturnCode BlankReader::take(
-        std::unique_ptr<DataReceived>&) noexcept
+        fastrtps::rtps::CacheChange_t*& cache_change) noexcept
 {
     return utils::ReturnCode::RETCODE_NO_DATA;
 }

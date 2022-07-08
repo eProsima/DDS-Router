@@ -83,7 +83,7 @@ protected:
      * @return RETCODE_OK always
      */
     utils::ReturnCode write_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+        fastrtps::rtps::CacheChange_t* reader_cache_change) noexcept override;
 
     //! Stores the data that should have been published
     std::vector<DummyDataStored> data_stored_;

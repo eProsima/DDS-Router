@@ -33,7 +33,7 @@ void BlankWriter::disable() noexcept
 }
 
 utils::ReturnCode BlankWriter::write(
-        std::unique_ptr<DataReceived>&) noexcept
+        fastrtps::rtps::CacheChange_t*) noexcept
 {
     return utils::ReturnCode::RETCODE_OK;
 }

@@ -28,6 +28,18 @@
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 
 namespace eprosima {
+namespace fastrtps {
+namespace rtps {
+
+class IChangePool;
+
+} /* namespace eprosima */
+} /* namespace fastrtps */
+} /* namespace rtps */
+
+
+
+namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
@@ -59,6 +71,7 @@ public:
     BaseParticipant(
             const ConfigurationType participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     /**
@@ -194,6 +207,9 @@ protected:
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;
+
+    //! DDS Router shared Payload Pool
+    std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool_;
 
     //! DDS Router shared Discovery Database
     std::shared_ptr<DiscoveryDatabase> discovery_database_;

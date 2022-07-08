@@ -28,9 +28,10 @@ using namespace eprosima::ddsrouter::core::types;
 LocalDiscoveryServerParticipant::LocalDiscoveryServerParticipant(
         const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+        (participant_configuration, payload_pool, cache_change_pool, discovery_database)
 {
     create_participant_();
 }
