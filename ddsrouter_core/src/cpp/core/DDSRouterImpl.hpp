@@ -27,6 +27,7 @@
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 #include <communication/Bridge.hpp>
+#include <efficiency/RouterCacheChangePool.hpp>
 #include <dynamic/AllowedTopicList.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <library/library_dll.h>
@@ -237,6 +238,15 @@ protected:
      * data to the writers, that will release it after used.
      */
     std::shared_ptr<PayloadPool> payload_pool_;
+
+    /**
+     * @brief  Common cache change pool where every cache change will be stored
+     *
+     * This cache change pool will be shared by every endpoint.
+     * Every reader will store its change in the pool, the track will pass this
+     * change to the writers, that will release it after used.
+     */
+    std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool_;
 
     /**
      * @brief Object that stores every Participant running in the DDSRouterImpl

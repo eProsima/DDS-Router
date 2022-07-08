@@ -44,6 +44,7 @@ using namespace eprosima::ddsrouter::core::configuration;
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
+        std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
@@ -55,11 +56,11 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         case ParticipantKind::echo:
             // EchoParticipant
-            return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, discovery_database);
+            return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, cache_change_pool, discovery_database);
 
         case ParticipantKind::dummy:
             // DummyParticipant
-            return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, discovery_database);
+            return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, cache_change_pool, discovery_database);
 
         case ParticipantKind::simple_rtps:
             // Simple RTPS Participant
@@ -77,6 +78,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return std::make_shared<rtps::SimpleParticipant> (
                 (*conf_),
                 payload_pool,
+                cache_change_pool,
                 discovery_database);
         }
 
@@ -96,6 +98,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
                 (*conf_),
                 payload_pool,
+                cache_change_pool,
                 discovery_database);
         }
 
@@ -115,6 +118,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return std::make_shared<rtps::WANParticipant> (
                 (*conf_),
                 payload_pool,
+                cache_change_pool,
                 discovery_database);
         }
 

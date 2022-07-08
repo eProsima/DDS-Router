@@ -24,6 +24,16 @@
 #include <participant/IParticipant.hpp>
 
 namespace eprosima {
+namespace fastrtps {
+namespace rtps {
+
+class IChangePool;
+
+} /* namespace eprosima */
+} /* namespace fastrtps */
+} /* namespace rtps */
+
+namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
@@ -45,6 +55,7 @@ public:
     std::shared_ptr<IParticipant> create_participant(
             std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload,
+            std::shared_ptr<fastrtps::rtps::IChangePool> cache_change_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     /**

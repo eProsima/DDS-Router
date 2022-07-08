@@ -45,6 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
+    , cache_change_pool_(std::make_shared<RouterCacheChangePool>())
     , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads()))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
@@ -376,7 +377,7 @@ void DDSRouterImpl::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, thread_pool_, enabled);
+        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, cache_change_pool_, thread_pool_, enabled);
     }
     catch (const utils::InitializationException& e)
     {

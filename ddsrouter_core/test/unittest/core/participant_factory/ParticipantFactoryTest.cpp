@@ -17,6 +17,7 @@
 #include <test_utils.hpp>
 
 #include <efficiency/MapPayloadPool.hpp>
+#include <efficiency/RouterCacheChangePool.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
@@ -43,11 +44,12 @@ std::shared_ptr<IParticipant> create_participant(
     ParticipantFactory participant_factory;
     std::shared_ptr<PayloadPool> payload_pool = std::make_shared<MapPayloadPool>();
     std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
+    auto router_cache_change_pool = std::make_shared<RouterCacheChangePool>();
     discovery_database->enable();
     std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration =
             random_participant_configuration(kind);
 
-    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database);
+    return participant_factory.create_participant(participant_configuration, payload_pool, router_cache_change_pool, discovery_database);
 }
 
 } /* namespace test */
