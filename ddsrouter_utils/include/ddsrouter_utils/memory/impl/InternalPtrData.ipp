@@ -26,6 +26,10 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+///////////////////////
+// CONSTRUCTORS
+///////////////////////
+
 template<typename T>
 InternalPtrData<T>::InternalPtrData()
     : reference_(nullptr)
@@ -41,11 +45,15 @@ InternalPtrData<T>::InternalPtrData(InternalPtrData&& other)
 }
 
 template<typename T>
-InternalPtrData<T>::InternalPtrData(T* reference, const std::function<void(T*)>& deleter)
-    : reference_(reference)
-    , deleter_(deleter)
+InternalPtrData<T>::~InternalPtrData()
 {
+    // Release data in case it still exists
+    dereference();
 }
+
+///////////////////////
+// INTERACTION METHODS
+///////////////////////
 
 template<typename T>
 void InternalPtrData<T>::lock_shared()
@@ -59,17 +67,9 @@ void InternalPtrData<T>::unlock_shared()
     shared_mutex_.unlock_shared();
 }
 
-template<typename T>
-void InternalPtrData<T>::dereference()
-{
-    shared_mutex_.lock();
-    if (reference_ != nullptr)
-    {
-        deleter_(reference_);
-        reference_ = nullptr;
-    }
-    shared_mutex_.unlock();
-}
+///////////////////////
+// ACCESS DATA METHODS
+///////////////////////
 
 template<typename T>
 T* InternalPtrData<T>::operator ->()
@@ -93,6 +93,31 @@ template<typename T>
 InternalPtrData<T>::operator bool() const noexcept
 {
     return reference_ != nullptr;
+}
+
+//////////////////////////////////
+// PROTECTED METHODS FOR OWNERPTR
+//////////////////////////////////
+
+template<typename T>
+InternalPtrData<T>::InternalPtrData(
+        T* reference,
+        const std::function<void(T*)>& deleter)
+    : reference_(reference)
+    , deleter_(deleter)
+{
+}
+
+template<typename T>
+void InternalPtrData<T>::dereference()
+{
+    shared_mutex_.lock();
+    if (reference_ != nullptr)
+    {
+        deleter_(reference_);
+        reference_ = nullptr;
+    }
+    shared_mutex_.unlock();
 }
 
 } /* namespace utils */

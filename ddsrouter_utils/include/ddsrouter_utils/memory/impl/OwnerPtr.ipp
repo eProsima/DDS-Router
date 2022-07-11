@@ -26,11 +26,19 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//////////////////////////////
+// STATIC AUXILIARY VARIABLES
+//////////////////////////////
+
 template<typename T>
 const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value)
         {
             delete value;
         };
+
+///////////////////////
+// CONSTRUCTORS
+///////////////////////
 
 template<typename T>
 OwnerPtr<T>::OwnerPtr()
@@ -49,6 +57,7 @@ OwnerPtr<T>::OwnerPtr(
                   "Trying to create an OwnerPtr from a nullptr.");
     }
 
+    // NOTE: This cannot use make_shared because shared_ptr is not friend of InternalPtrData
     data_reference_ = std::shared_ptr<InternalPtrData<T>>(
             new InternalPtrData<T>(reference, deleter));
 }
@@ -79,6 +88,10 @@ OwnerPtr<T>& OwnerPtr<T>::operator =(
 
     return *this;
 }
+
+///////////////////////
+// INTERACTION METHODS
+///////////////////////
 
 template<typename T>
 LesseePtr<T> OwnerPtr<T>::lease()
@@ -116,6 +129,10 @@ void OwnerPtr<T>::reset(
     }
 }
 
+///////////////////////
+// ACCESS DATA METHODS
+///////////////////////
+
 template<typename T>
 T* OwnerPtr<T>::operator ->()
 {
@@ -129,6 +146,12 @@ T& OwnerPtr<T>::operator *()
 }
 
 template<typename T>
+T* OwnerPtr<T>::get()
+{
+    return data_reference_->get();
+}
+
+template<typename T>
 OwnerPtr<T>::operator bool() const noexcept
 {
     return
@@ -136,11 +159,19 @@ OwnerPtr<T>::operator bool() const noexcept
         data_reference_->operator bool();
 }
 
+////////////////////////////
+// STATIC AUXILIARY METHODS
+////////////////////////////
+
 template<typename T>
 std::function<void(T*)> OwnerPtr<T>::default_deleter()
 {
     return OwnerPtr<T>::DEFAULT_DELETER_;
 }
+
+////////////////////////////
+// EXTERNAL OPERATORS
+////////////////////////////
 
 template<class T>
 bool operator ==(

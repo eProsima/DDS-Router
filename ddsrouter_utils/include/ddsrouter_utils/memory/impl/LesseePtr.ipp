@@ -25,16 +25,24 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template<typename T>
-LesseePtr<T>::LesseePtr()
-    : data_reference_()
-{
-}
+////////////////////////////
+// PROTECTED CONSTRUCTOR
+////////////////////////////
 
 template<typename T>
 LesseePtr<T>::LesseePtr(
         std::shared_ptr<InternalPtrData<T>> data_reference)
     : data_reference_(data_reference)
+{
+}
+
+///////////////////////
+// CONSTRUCTORS
+///////////////////////
+
+template<typename T>
+LesseePtr<T>::LesseePtr()
+    : data_reference_()
 {
 }
 
@@ -79,6 +87,10 @@ LesseePtr<T>& LesseePtr<T>::operator =(
     return *this;
 }
 
+///////////////////////
+// ACCESS DATA METHODS
+///////////////////////
+
 template<typename T>
 T* LesseePtr<T>::operator ->()
 {
@@ -108,6 +120,10 @@ LesseePtr<T>::operator bool() const noexcept
 {
     return data_reference_ && data_reference_->operator bool();
 }
+
+////////////////////////////
+// AUXILIARY METHODS
+////////////////////////////
 
 template<typename T>
 GuardedPtr<T> LesseePtr<T>::lock_(
