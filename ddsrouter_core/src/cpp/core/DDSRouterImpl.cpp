@@ -28,7 +28,7 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
 #include <core/DDSRouterImpl.hpp>
-#include <efficiency/FastPayloadPool.hpp>
+#include <efficiency/payload/FastPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

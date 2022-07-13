@@ -20,7 +20,7 @@
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

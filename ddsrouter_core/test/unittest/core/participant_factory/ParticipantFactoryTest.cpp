@@ -16,7 +16,7 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <efficiency/MapPayloadPool.hpp>
+#include <efficiency/payload/MapPayloadPool.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
