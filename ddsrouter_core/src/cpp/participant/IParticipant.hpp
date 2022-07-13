@@ -24,7 +24,7 @@
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 
 #include <dynamic/DiscoveryDatabase.hpp>
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
 

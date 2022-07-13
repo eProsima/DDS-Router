@@ -19,7 +19,7 @@
 #include <fastdds/rtps/common/CacheChange.h>
 #include <fastdds/rtps/common/SerializedPayload.h>
 
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_core/types/dds/Data.hpp>
 

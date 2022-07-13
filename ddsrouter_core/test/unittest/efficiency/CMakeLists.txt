@@ -20,8 +20,8 @@ set(TEST_NAME PayloadPoolTest)
 
 set(TEST_SOURCES
         PayloadPoolTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.hpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Data.cpp
     )
 
@@ -56,10 +56,10 @@ set(TEST_NAME MapPayloadPoolTest)
 
 set(TEST_SOURCES
         MapPayloadPoolTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.hpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/MapPayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/MapPayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/MapPayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/MapPayloadPool.hpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Data.cpp
     )
 
@@ -93,10 +93,10 @@ set(TEST_NAME FastPayloadPoolTest)
 
 set(TEST_SOURCES
         FastPayloadPoolTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/PayloadPool.hpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/FastPayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/FastPayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.hpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/FastPayloadPool.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/FastPayloadPool.hpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Data.cpp
     )
 

@@ -17,8 +17,8 @@
 
 #include <fastdds/rtps/common/CacheChange.h>
 
-#include <efficiency/PayloadPool.hpp>
-#include <efficiency/MapPayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
+#include <efficiency/payload/MapPayloadPool.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 
 using namespace eprosima::ddsrouter;
