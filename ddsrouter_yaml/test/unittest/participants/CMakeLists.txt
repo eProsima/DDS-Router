@@ -23,7 +23,6 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
         YamlGetCommonParticipantConfigurationTest.cpp
-        YamlGetCommonParticipantConfigurationTest.cpp
     )
 
 set(TEST_LIST
@@ -36,7 +35,6 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         ddsrouter_utils
-
         ddsrouter_core
     )
 

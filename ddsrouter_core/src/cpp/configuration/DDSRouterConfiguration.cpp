@@ -57,8 +57,13 @@ bool DDSRouterConfiguration::is_valid(
     // Check there are at least two participants
     if (participants_configurations_.size() < 2)
     {
-        error_msg << "There must be at least 2 participants. ";
-        return false;
+        // It is allowed a one participant router as far as it is a repeater
+        if (participants_configurations_.size() < 1 ||
+            !(*participants_configurations_.begin())->is_repeater())
+        {
+            error_msg << "There must be at least 2 participants or 1 repeater. ";
+            return false;
+        }
     }
 
     // Check Participant Configurations AND
