@@ -270,6 +270,25 @@ Be aware that some Participants (e.g. Discovery Servers) does not need a Domain 
     domain: 101
 
 
+.. _user_manual_configuration_repeater:
+
+Repeater Participant
+====================
+
+Optional tag ``repeater`` configures a :ref:`WAN Participant <user_manual_participants_wan>` as a *Repeater* point.
+This means that this Participant will forward all the information received from its Readers by its Writer.
+
+Check the following :ref:`use_case_repeater` to know how to use the ``repeater`` Participant attribute.
+
+.. code-block:: yaml
+
+    repeater: true
+
+.. note::
+
+    This tag is only supported in configuration versions above v2.0.
+
+
 .. _user_manual_configuration_network_address:
 
 Network Address
