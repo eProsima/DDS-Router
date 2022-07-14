@@ -112,6 +112,17 @@ unsigned int YamlReader::get<unsigned int>(
     return get_scalar<unsigned int>(yml);
 }
 
+template <>
+bool YamlReader::get<bool>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    bool value = get_scalar<bool>(yml);
+    logDebug(MANUAL_DEBUG_TODO, "!!! YamlReader::get<bool> " << yml << " value: " << value);
+
+    return get_scalar<bool>(yml);
+}
+
 /************************
 * ENTITIES             *
 ************************/
@@ -684,6 +695,12 @@ void YamlReader::fill(
     if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
         object.tls_configuration_ = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+    }
+
+    // Optional Repeater
+    if (YamlReader::is_tag_present(yml, IS_REPEATER_TAG))
+    {
+        object.is_repeater_ = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
     }
 }
 

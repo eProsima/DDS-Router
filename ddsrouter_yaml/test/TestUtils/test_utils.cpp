@@ -236,6 +236,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 id,
                 kind,
                 random_domain(seed),
+                false,
                 random_guid_prefix(seed),
                 std::set<Address>(),
                 std::set<DiscoveryServerConnectionAddress>({connection_address}),
@@ -249,6 +250,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 id,
                 kind,
                 random_domain(seed),
+                false,
                 std::set<Address>(),
                 std::set<Address>({Address()}),
                 security::TlsConfiguration());

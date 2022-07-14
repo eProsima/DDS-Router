@@ -125,6 +125,11 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
+<<<<<<< HEAD
+=======
+            false,
+            types::ParticipantKind(types::ParticipantKind::wan),
+>>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
             tls_configuration(wan_kind));
 
     }
@@ -137,7 +142,13 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
+<<<<<<< HEAD
             types::security::TlsConfiguration());
+=======
+            false,
+            types::ParticipantKind(types::ParticipantKind::wan)
+            );
+>>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
     }
 }
 

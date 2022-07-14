@@ -28,9 +28,10 @@ using namespace eprosima::ddsrouter::core::types;
 
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
-        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
-    : ParticipantConfiguration(id, kind)
+        const ParticipantKind& kind,
+        const DomainId& domain_id,
+        const bool is_repeater) noexcept
+    : ParticipantConfiguration(id, kind, is_repeater)
     , domain(domain_id)
 {
 }

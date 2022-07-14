@@ -20,9 +20,14 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
-#include <writer/implementations/rtps/Writer.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <efficiency/cache_change/CacheChangePool.hpp>
+#include <efficiency/cache_change/CacheChangePoolConfiguration.hpp>
+#include <writer/implementations/rtps/Writer.hpp>
+#include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
+#include <writer/implementations/rtps/filter/OriginDataFilter.hpp>
+#include <types/dds/RouterCacheChange.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,8 +40,10 @@ Writer::Writer(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant)
+        fastrtps::rtps::RTPSParticipant* rtps_participant,
+        const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
+    , repeater_(repeater)
 {
     // TODO Use payload pool for this writer, so change does not need to be copied
 
@@ -46,12 +53,29 @@ Writer::Writer(
 
     // Create Writer
     fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
-    rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
-        rtps_participant,
-        writer_att,
-        payload_pool_,
-        rtps_history_,
-        nullptr);
+
+    if (repeater)
+    {
+        logDebug(DDSROUTER_RTPS_WRITER, "Writer created with origin filter");
+
+        CacheChangePoolConfiguration pool_config = cache_change_pool_configuration_();
+        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+            rtps_participant,
+            writer_att,
+            payload_pool_,
+            std::make_shared<CacheChangePool>(pool_config),
+            rtps_history_,
+            nullptr);
+    }
+    else
+    {
+        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+            rtps_participant,
+            writer_att,
+            payload_pool_,
+            rtps_history_,
+            nullptr);
+    }
 
     if (!rtps_writer_)
     {
@@ -71,6 +95,19 @@ Writer::Writer(
         throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
                       " for Simple RTPSWriter in Participant " << participant_id);
     }
+
+    if (repeater)
+    {
+        // Use filter writer of origin
+        repeater_data_filter_ = std::make_unique<RepeaterDataFilter>();
+    }
+    else
+    {
+        // Use defualt filter
+        repeater_data_filter_ = std::make_unique<OriginDataFilter>();
+    }
+
+    rtps_writer_->reader_data_filter(repeater_data_filter_.get());
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
             topic << " with guid " << rtps_writer_->getGuid());
@@ -136,6 +173,13 @@ utils::ReturnCode Writer::write_(
             "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
             data->source_guid);
 
+    if (repeater_)
+    {
+        // Add origin to change in case the cache change is RouterCacheChange (only in repeater mode)
+        types::RouterCacheChange& change_ref = static_cast<types::RouterCacheChange&>(*new_change);
+        change_ref.last_writer_guid_prefix = data->source_guid.guidPrefix;
+    }
+
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
@@ -191,6 +235,17 @@ fastrtps::WriterQos Writer::writer_qos_() const noexcept
     qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
     qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
     return qos;
+}
+
+CacheChangePoolConfiguration Writer::cache_change_pool_configuration_() const noexcept
+{
+    CacheChangePoolConfiguration config;
+    config.maximum_size = 1000; // No maximum
+    config.initial_size = 20;
+    config.batch_size = 20;
+    // NOTE: Not use of memory policy yet
+
+    return config;
 }
 
 } /* namespace rtps */

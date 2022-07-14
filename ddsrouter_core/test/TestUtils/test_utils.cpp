@@ -239,6 +239,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 random_guid_prefix(seed),
                 std::set<Address>(),
                 std::set<DiscoveryServerConnectionAddress>({connection_address}),
+<<<<<<< HEAD
                 security::TlsConfiguration());
         }
 
@@ -252,6 +253,10 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 std::set<Address>(),
                 std::set<Address>({Address()}),
                 security::TlsConfiguration());
+=======
+                false,
+                kind);
+>>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
         }
 
         // Add cases where Participants need specific arguments

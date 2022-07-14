@@ -64,6 +64,11 @@ public:
     virtual types::ParticipantKind kind() const noexcept = 0;
 
     /**
+     * @brief Whether the Participant is repeater or not.
+     */
+    virtual bool is_repeater() const noexcept = 0;
+
+    /**
      * @brief Return a new Writer
      *
      * Each writer is associated with a \c Bridge with the topic \c topic .
