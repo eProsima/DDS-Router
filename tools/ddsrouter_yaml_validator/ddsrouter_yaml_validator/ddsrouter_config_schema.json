@@ -35,7 +35,7 @@
                 },
                 "participants":{
                     "type":"array",
-                    "minItems":2,
+                    "minItems":1,
                     "items":{
                         "$ref":"#/definitions/Participant"
                     },
@@ -120,6 +120,9 @@
                     "minimum":0,
                     "maximum":230
                 },
+                "repeater":{
+                    "type":"boolean"
+                },
                 "discovery-server-guid":{
                     "$ref":"#/definitions/DiscoveryServerGUID"
                 },
@@ -185,6 +188,11 @@
                                 "not":{
 
                                 }
+                            },
+                            "repeater":{
+                                "not":{
+
+                                }
                             }
                         }
                     }
@@ -211,6 +219,11 @@
                                         }
                                     },
                                     "tls":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "repeater":{
                                         "not":{
 
                                         }
