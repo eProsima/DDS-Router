@@ -234,7 +234,8 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
             "New Participant " << this->configuration_.kind() <<
             " created with id " << this->id() <<
-            " in domain " << domain << " with guid " << rtps_participant_->getGuid());
+            " in domain " << domain << " with guid " << rtps_participant_->getGuid() <<
+            (this->is_repeater() ? " (repeater)" : " (non repeater)"));
 }
 
 template <class ConfigurationType>
@@ -242,15 +243,22 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
         types::RealTopic topic)
 {
     return std::make_shared<Writer>(
-        this->id(), topic,
-        this->payload_pool_, rtps_participant_);
+        this->id(),
+        topic,
+        this->payload_pool_,
+        rtps_participant_,
+        this->configuration_.is_repeater());
 }
 
 template <class ConfigurationType>
 std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
         types::RealTopic topic)
 {
-    return std::make_shared<Reader>(this->id(), topic, this->payload_pool_, rtps_participant_);
+    return std::make_shared<Reader>(
+        this->id(),
+        topic,
+        this->payload_pool_,
+        rtps_participant_);
 }
 
 template <class ConfigurationType>

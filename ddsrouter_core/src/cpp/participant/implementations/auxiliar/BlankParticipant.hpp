@@ -47,6 +47,9 @@ public:
     //! Override kind() IParticipant method
     types::ParticipantKind kind() const noexcept override;
 
+    //! Override is_repeater() IParticipant method
+    bool is_repeater() const noexcept override;
+
     //! Override create_writer() IParticipant method
     std::shared_ptr<IWriter> create_writer(
             types::RealTopic topic) override;

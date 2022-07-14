@@ -111,6 +111,17 @@ unsigned int YamlReader::get<unsigned int>(
     return get_scalar<unsigned int>(yml);
 }
 
+template <>
+bool YamlReader::get<bool>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    bool value = get_scalar<bool>(yml);
+    logDebug(MANUAL_DEBUG_TODO, "!!! YamlReader::get<bool> " << yml << " value: " << value);
+
+    return get_scalar<bool>(yml);
+}
+
 /************************
 * ENTITIES             *
 ************************/
@@ -641,6 +652,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                false, // is_repeater
                 kind,
                 tls,
                 domain);
@@ -653,6 +665,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 listening_addresses,
                 connection_addresses,
                 domain,
+                false, // is_repeater
                 kind);
         }
     }
@@ -665,6 +678,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                false, // is_repeater
                 kind,
                 tls);
         }
@@ -675,6 +689,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                false, // is_repeater
                 kind);
         }
     }
@@ -692,6 +707,17 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
 
     // Guid Prefix required
     types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
+
+    // Optional repeater att
+    // TODO: this is assuming the default value for this parameter to avoid creating too many constructors for
+    // DiscoveryServerParticipantConfiguration. In the future it may change to use data structs instead of
+    // closed classes, so this would be easier.
+    bool is_repeater = false;
+    bool has_is_repeater = YamlReader::is_tag_present(yml, IS_REPEATER_TAG);
+    if (has_is_repeater)
+    {
+        is_repeater = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
+    }
 
     // Domain option
     types::DomainId domain;
@@ -734,6 +760,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                is_repeater,
                 kind,
                 tls,
                 domain);
@@ -746,6 +773,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 listening_addresses,
                 connection_addresses,
                 domain,
+                is_repeater,
                 kind);
         }
     }
@@ -758,6 +786,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                is_repeater,
                 kind,
                 tls);
         }
@@ -768,6 +797,7 @@ configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_par
                 guid,
                 listening_addresses,
                 connection_addresses,
+                is_repeater,
                 kind);
         }
     }

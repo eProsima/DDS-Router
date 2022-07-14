@@ -220,6 +220,10 @@ void Track::transmit_() noexcept
         // Send data through writers
         for (auto& writer_it : writers_)
         {
+            logDebug(
+                DDSROUTER_TRACK,
+                "Forwarding data to writer " << writer_it.first << ".");
+
             ret = writer_it.second->write(data);
 
             if (!ret)

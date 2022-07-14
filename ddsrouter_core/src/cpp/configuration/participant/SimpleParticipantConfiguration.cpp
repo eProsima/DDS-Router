@@ -31,7 +31,8 @@ const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
         const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
-        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
+        const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */,
+        const bool is_relevant /* = false */) noexcept
     : ParticipantConfiguration(id, kind)
     , domain_(domain_id)
 {

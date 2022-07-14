@@ -31,6 +31,26 @@
 
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 
+/////
+// Forward declarations
+namespace eprosima {
+namespace ddsrouter {
+namespace core {
+
+struct CacheChangePoolConfiguration;
+
+} /* namespace core */
+} /* namespace ddsrouter */
+
+namespace fastdds {
+namespace rtps {
+
+struct IReaderDataFilter;
+
+} /* namespace rtps */
+} /* namespace fastdds */
+} /* namespace eprosima */
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -59,7 +79,8 @@ public:
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
-            fastrtps::rtps::RTPSParticipant* rtps_participant);
+            fastrtps::rtps::RTPSParticipant* rtps_participant,
+            const bool repeater = false);
 
     /**
      * @brief Destroy the Writer object
@@ -122,6 +143,9 @@ protected:
     //! Default QoS Writer (must be the same as the attributes)
     fastrtps::WriterQos writer_qos_() const noexcept;
 
+    //! Default Cache Change Pool Configuration
+    CacheChangePoolConfiguration cache_change_pool_configuration_() const noexcept;
+
     /////
     // VARIABLES
 
@@ -130,6 +154,11 @@ protected:
 
     //! RTPS Writer History associated to \c rtps_reader_
     fastrtps::rtps::WriterHistory* rtps_history_;
+
+    //! Repeater Data Filter used to filter cache changes at the RTPSWriter level. Can be null
+    std::unique_ptr<fastdds::rtps::IReaderDataFilter> repeater_data_filter_;
+
+    bool repeater_;
 };
 
 } /* namespace rtps */

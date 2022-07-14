@@ -123,6 +123,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
+            false,
             types::ParticipantKind(types::ParticipantKind::wan),
             tls_configuration(wan_kind));
 
@@ -134,6 +135,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
+            false,
             types::ParticipantKind(types::ParticipantKind::wan)
             );
     }

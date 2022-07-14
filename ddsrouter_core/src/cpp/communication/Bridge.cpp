@@ -48,6 +48,10 @@ Bridge::Bridge(
         std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
         writers_[id] = participant->create_writer(topic);
         readers_[id] = participant->create_reader(topic);
+
+        logDebug(
+            DEBUG,
+            "!!! " << id << " " << participant->is_repeater());
     }
 
     // Generate tracks
@@ -57,8 +61,15 @@ Bridge::Bridge(
         std::map<ParticipantId, std::shared_ptr<IWriter>> writers_except_one =
                 writers_; // Create a copy of the map
 
-        // Get this Track source participant before removing it from map
-        writers_except_one.erase(id); // TODO: check if this element is removed in erase or if source is still valid
+        if (!participants_->get_participant(id)->is_repeater())
+        {
+            // Remove this Track source participant because it is not repeater
+            writers_except_one.erase(id);
+
+            logDebug(
+                DDSROUTER_BRIDGE,
+                "Not adding own Writer to Track in " << *this << " in Participant " << id << ".");
+        }
 
         // This insert is required as there is no copy method for Track
         // Tracks are always created disabled and then enabled with Bridge enable() method

@@ -43,6 +43,11 @@ ParticipantKind BlankParticipant::kind() const noexcept
     return ParticipantKind::blank;
 }
 
+bool BlankParticipant::is_repeater() const noexcept
+{
+    return false;
+}
+
 std::shared_ptr<IWriter> BlankParticipant::create_writer(
         RealTopic topic)
 {

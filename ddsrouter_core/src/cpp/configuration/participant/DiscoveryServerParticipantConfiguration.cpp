@@ -35,10 +35,11 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
+        const bool is_repeater /* = false */,
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */,
         const DomainId& domain_id /* = DEFAULT_DS_DOMAIN_ID_ */)
-    : SimpleParticipantConfiguration(id, kind, domain_id)
+    : SimpleParticipantConfiguration(id, kind, domain_id, is_repeater)
     , discovery_server_guid_prefix_(discovery_server_guid_prefix)
     , listening_addresses_(listening_addresses)
     , connection_addresses_(connection_addresses)
@@ -52,10 +53,18 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const DomainId& domain_id,
+        const bool is_repeater /* = false */,
         const ParticipantKind& kind /* = ParticipantKind::local_discovery_server */,
         const types::security::TlsConfiguration tls_configuration /* = types::security::TlsConfiguration() */)
     : DiscoveryServerParticipantConfiguration(
-        id, discovery_server_guid_prefix, listening_addresses, connection_addresses, kind, tls_configuration, domain_id)
+        id,
+        discovery_server_guid_prefix,
+        listening_addresses,
+        connection_addresses,
+        is_repeater,
+        kind,
+        tls_configuration,
+        domain_id)
 {
 }
 

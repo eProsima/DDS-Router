@@ -237,6 +237,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 random_guid_prefix(seed),
                 std::set<Address>(),
                 std::set<DiscoveryServerConnectionAddress>({connection_address}),
+                false,
                 kind);
         }
 
