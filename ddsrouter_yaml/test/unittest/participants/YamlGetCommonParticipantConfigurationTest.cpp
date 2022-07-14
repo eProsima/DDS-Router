@@ -118,6 +118,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
             utils::ConfigurationException);
     }
 }
+
 int main(
         int argc,
         char** argv)

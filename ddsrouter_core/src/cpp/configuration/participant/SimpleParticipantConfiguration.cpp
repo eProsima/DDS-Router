@@ -32,8 +32,8 @@ SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
         const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
         const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */,
-        const bool is_relevant /* = false */) noexcept
-    : ParticipantConfiguration(id, kind)
+        const bool is_repeater /* = false */) noexcept
+    : ParticipantConfiguration(id, kind, is_repeater)
     , domain_(domain_id)
 {
 }

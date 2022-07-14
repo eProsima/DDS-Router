@@ -16,32 +16,15 @@
 # DDSRouter Configuration Test #
 ################################
 
-set(TEST_NAME ConfigurationTest)
+set(TEST_NAME ValidConfigurationTest)
 
 set(TEST_SOURCES
-        ConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/DDSRouterConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/configuration/ParticipantConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantKind.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
+        ValidConfigurationTest.cpp
     )
+all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
-        constructor
-        participants_configurations
-        real_topics
-        allowlist_wildcard
-        blocklist_wildcard
-        allowlist_and_blocklist
-        constructor_fail
-        participants_configurations_fail
-        real_topics_fail
-        allowlist_wildcard_fail
-        blocklist_wildcard_fail
+        number_of_participants
     )
 
 set(TEST_EXTRA_LIBRARIES
