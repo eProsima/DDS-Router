@@ -28,8 +28,8 @@
 #include <fastrtps/rtps/writer/RTPSWriter.h>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
+#include <efficiency/cache_change/CacheChangePool.hpp>
 
 /////
 // Forward declarations
@@ -144,7 +144,7 @@ protected:
     fastrtps::WriterQos writer_qos_() const noexcept;
 
     //! Default Cache Change Pool Configuration
-    CacheChangePoolConfiguration cache_change_pool_configuration_() const noexcept;
+    utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
 
     /////
     // VARIABLES

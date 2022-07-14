@@ -23,7 +23,6 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
-#include <efficiency/cache_change/CacheChangePoolConfiguration.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
 #include <writer/implementations/rtps/filter/OriginDataFilter.hpp>
@@ -58,7 +57,7 @@ Writer::Writer(
     {
         logDebug(DDSROUTER_RTPS_WRITER, "Writer created with origin filter");
 
-        CacheChangePoolConfiguration pool_config = cache_change_pool_configuration_();
+        utils::PoolConfiguration pool_config = cache_change_pool_configuration_();
         rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
             rtps_participant,
             writer_att,
@@ -237,10 +236,10 @@ fastrtps::WriterQos Writer::writer_qos_() const noexcept
     return qos;
 }
 
-CacheChangePoolConfiguration Writer::cache_change_pool_configuration_() const noexcept
+utils::PoolConfiguration Writer::cache_change_pool_configuration_() const noexcept
 {
-    CacheChangePoolConfiguration config;
-    config.maximum_size = 1000; // No maximum
+    utils::PoolConfiguration config;
+    config.maximum_size = 0; // No maximum
     config.initial_size = 20;
     config.batch_size = 20;
     // NOTE: Not use of memory policy yet

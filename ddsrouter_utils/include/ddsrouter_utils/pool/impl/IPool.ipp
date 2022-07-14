@@ -13,27 +13,32 @@
 // limitations under the License.
 
 /**
- * @file CacheChangePoolConfiguration.cpp
+ * @file IPool.ipp
  */
 
-#include <efficiency/cache_change/CacheChangePoolConfiguration.hpp>
+#ifndef __DDSROUTERUTILS_POOL_IPOOL_IMPL_IPP_
+#define __DDSROUTERUTILS_POOL_IPOOL_IMPL_IPP_
+
+#include <ddsrouter_utils/pool/LimitlessPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace core {
+namespace utils {
 
-CacheChangePoolConfiguration::CacheChangePoolConfiguration(
-        utils::MemoryManagementPolicy memory_policy /* = utils::MemoryManagementPolicy::DYNAMIC_RESERVE_MEMORY_MODE */,
-        unsigned int initial_size /* = 0 */,
-        unsigned int maximum_size /* = 0 */,
-        unsigned int batch_size /* = 1 */ ) noexcept
-    : memory_policy(memory_policy)
-    , initial_size(initial_size)
-    , maximum_size(maximum_size)
-    , batch_size(batch_size)
+template <typename T>
+class LimitlessPool;
+
+template <typename T>
+static IPool<T>* create_pool(
+        PoolConfiguration configuration)
 {
+    // Create pool depending on the configuration
+    // TODO: change it depending on the configuration
+    return new LimitlessPool<T>(configuration);
 }
 
-} /* namespace core */
+} /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
+
+#endif /* __DDSROUTERUTILS_POOL_IPOOL_IMPL_IPP_ */

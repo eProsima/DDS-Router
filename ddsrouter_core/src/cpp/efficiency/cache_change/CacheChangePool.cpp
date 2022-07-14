@@ -16,9 +16,6 @@
  * @file CacheChangePool.cpp
  */
 
-#include <ddsrouter_utils/utils.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
-
 #include <efficiency/cache_change/CacheChangePool.hpp>
 #include <types/dds/RouterCacheChange.hpp>
 
@@ -26,78 +23,27 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-CacheChangePool::CacheChangePool(
-        CacheChangePoolConfiguration memory_policy)
-    : free_values_(memory_policy.maximum_size)
-    , reserved_(memory_policy.initial_size)
-    , index_first_free_available_(memory_policy.initial_size)
-    , configuration_(memory_policy)
+CacheChangePool::CacheChangePool(utils::PoolConfiguration configuration)
+    : utils::LimitlessPool<fastrtps::rtps::CacheChange_t>(configuration)
 {
-    // Create the initial values
-    for (unsigned int i = 0; i < memory_policy.initial_size; ++i)
-    {
-        free_values_[i] = new types::RouterCacheChange();
-    }
-}
-
-CacheChangePool::~CacheChangePool()
-{
-    // Check that every element has been released
-    if (reserved_ != index_first_free_available_)
-    {
-        utils::InconsistencyException("More Elements released than reserved.");
-    }
-
-    // Delete the values
-    for (unsigned int i = 0; i < reserved_; ++i)
-    {
-        delete free_values_[i];
-    }
+    initialize_vector_();
 }
 
 bool CacheChangePool::reserve_cache(
         fastrtps::rtps::CacheChange_t*& cache_change)
 {
-    if (index_first_free_available_ == 0)
-    {
-        // It requires to allocate a new value
-        if (reserved_ == configuration_.maximum_size)
-        {
-            // The pool is full
-            return false;
-        }
-        else
-        {
-            // Allocate a new value
-            ++reserved_;
-            cache_change = new types::RouterCacheChange();
-        }
-    }
-    else
-    {
-        // It uses an existing already allocated value
-        cache_change = free_values_[index_first_free_available_ - 1];
-        --index_first_free_available_;
-    }
-
-    return true;
+    return reserve(cache_change);
 }
 
-//! Override \c IChangePool \c release_cache to release the cache change to the pool.
 bool CacheChangePool::release_cache(
         fastrtps::rtps::CacheChange_t* cache_change)
 {
-    // This only could happen if more cache changes are released than reserved.
-    if(index_first_free_available_ == free_values_.size())
-    {
-        utils::tsnh(STR_ENTRY << "CacheChangePool::release_cache: More cache changes are released than reserved.");
-    }
+    return release(cache_change);
+}
 
-    // Add it to vector
-    free_values_[index_first_free_available_] = cache_change;
-    ++index_first_free_available_;
-
-    return true;
+fastrtps::rtps::CacheChange_t* CacheChangePool::new_element_()
+{
+    return new types::RouterCacheChange();
 }
 
 } /* namespace core */

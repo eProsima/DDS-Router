@@ -13,30 +13,26 @@
 // limitations under the License.
 
 /**
- * @file PoolConfiguration.hpp
+ * @file CacheChangePool.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_EFFICIENCY_CACHECHANGE_CACHACHANGEPOOL_HPP_
 #define __SRC_DDSROUTERCORE_EFFICIENCY_CACHECHANGE_CACHACHANGEPOOL_HPP_
 
-#include <vector>
-
 #include <fastdds/rtps/history/IChangePool.h>
 
-#include <efficiency/cache_change/CacheChangePoolConfiguration.hpp>
+#include <ddsrouter_utils/pool/LimitlessPool.hpp>
+#include <ddsrouter_utils/pool/IPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-class CacheChangePool : public fastrtps::rtps::IChangePool // public ChangeChangePool TODO anton see if we can reuse some code from it
+class CacheChangePool : public fastrtps::rtps::IChangePool, public utils::LimitlessPool<fastrtps::rtps::CacheChange_t>
 {
 public:
 
-    CacheChangePool(
-            CacheChangePoolConfiguration configuration);
-
-    ~CacheChangePool();
+    CacheChangePool(utils::PoolConfiguration configuration);
 
     virtual bool reserve_cache(
             fastrtps::rtps::CacheChange_t*& cache_change) override;
@@ -46,13 +42,8 @@ public:
 
 protected:
 
-    std::vector<fastrtps::rtps::CacheChange_t*> free_values_;
+    virtual fastrtps::rtps::CacheChange_t* new_element_() override;
 
-    unsigned int reserved_;
-
-    unsigned int index_first_free_available_;
-
-    CacheChangePoolConfiguration configuration_;
 };
 
 } /* namespace core */
