@@ -64,7 +64,7 @@ public:
     virtual types::ParticipantKind kind() const noexcept = 0;
 
     /**
-     * @brief Whether the Participant is repeater or not.
+     * @brief Whether this Participant requires to connect ist own readers with its own writers.
      */
     virtual bool is_repeater() const noexcept = 0;
 

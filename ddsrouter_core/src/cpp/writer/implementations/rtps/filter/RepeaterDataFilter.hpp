@@ -27,8 +27,10 @@ namespace core {
 namespace rtps {
 
 /**
- * TODO
+ * This filter allows to not send messages from this Writer to the Readers belonging to the source Participant.
+ * This is used to "repeat" messages to all connected Readers but the one that has send it previously.
  *
+ * This uses the RouterCacheChange extra information.
  */
 class RepeaterDataFilter : public OriginDataFilter
 {
@@ -36,7 +38,9 @@ public:
 
     /**
      * @brief Whether incoming change is relevant for this reader.
-     * TODO
+     *
+     * @return true if the reader does not belong to Participant that previously sent this message.
+     * @return false otherwise.
      */
     bool is_relevant(
             const fastrtps::rtps::CacheChange_t& change,

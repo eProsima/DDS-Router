@@ -66,6 +66,7 @@ public:
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
+    //! Whether this Participant has to have its own writers connected to its readers.
     DDSROUTER_CORE_DllAPI virtual bool is_repeater() const noexcept;
 
 protected:

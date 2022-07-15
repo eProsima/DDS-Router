@@ -26,19 +26,19 @@ namespace core {
 CacheChangePool::CacheChangePool(utils::PoolConfiguration configuration)
     : utils::LimitlessPool<fastrtps::rtps::CacheChange_t>(configuration)
 {
-    initialize_vector_();
+    initialize_queue_();
 }
 
 bool CacheChangePool::reserve_cache(
         fastrtps::rtps::CacheChange_t*& cache_change)
 {
-    return reserve(cache_change);
+    return loan(cache_change);
 }
 
 bool CacheChangePool::release_cache(
         fastrtps::rtps::CacheChange_t* cache_change)
 {
-    return release(cache_change);
+    return return_loan(cache_change);
 }
 
 fastrtps::rtps::CacheChange_t* CacheChangePool::new_element_()

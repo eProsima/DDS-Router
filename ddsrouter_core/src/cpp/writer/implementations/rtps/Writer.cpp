@@ -242,7 +242,7 @@ utils::PoolConfiguration Writer::cache_change_pool_configuration_() const noexce
     config.maximum_size = 0; // No maximum
     config.initial_size = 20;
     config.batch_size = 20;
-    // NOTE: Not use of memory policy yet
+    // NOTE: Not use of memory policy or maximum yet
 
     return config;
 }

@@ -34,7 +34,26 @@ static IPool<T>* create_pool(
 {
     // Create pool depending on the configuration
     // TODO: change it depending on the configuration
+    // So far only one specialization exists
     return new LimitlessPool<T>(configuration);
+}
+
+template <typename T>
+T* IPool<T>::new_element_()
+{
+    return new T();
+}
+
+template <typename T>
+void IPool<T>::delete_element_(T* element)
+{
+    delete element;
+}
+
+template <typename T>
+void IPool<T>::reset_element_(T* element)
+{
+    // Do nothing
 }
 
 } /* namespace utils */

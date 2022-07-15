@@ -40,7 +40,7 @@ namespace core {
 namespace rtps {
 
 /**
- * TODO
+ * This filter allows to not send messages from this Writer to the Readers in the same Participant.
  */
 class OriginDataFilter : public fastdds::rtps::IReaderDataFilter
 {
@@ -48,7 +48,9 @@ public:
 
     /**
      * @brief Whether incoming change is relevant for this reader.
-     * TODO
+     *
+     * @return true if the reader does not belong to same Participant.
+     * @return false otherwise.
      */
     bool is_relevant(
             const fastrtps::rtps::CacheChange_t& change,
