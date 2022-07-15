@@ -28,20 +28,37 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
+/**
+ * @brief This class implements a pool of CacheChange objects specialized as RouterCacheChanges.
+ *
+ * It reuses the LimitlessPool implementation, what allow to create a limitless reusable pool.
+ *
+ * TODO: implement this class as an IPool (or having an internal pool), without being force to be limitless.
+ */
 class CacheChangePool : public fastrtps::rtps::IChangePool, public utils::LimitlessPool<fastrtps::rtps::CacheChange_t>
 {
 public:
 
+    /**
+     * @brief Construct a new Cache Change Pool object from a Pool Configuration
+     *
+     * @param configuration pool configuration
+     *
+     * @warning max size will not be used as it is Limitedless
+     */
     CacheChangePool(utils::PoolConfiguration configuration);
 
+    //! Call LimitlessPool::reserve
     virtual bool reserve_cache(
             fastrtps::rtps::CacheChange_t*& cache_change) override;
 
+    //! Call LimitlessPool::release
     virtual bool release_cache(
             fastrtps::rtps::CacheChange_t* cache_change) override;
 
 protected:
 
+    //! Override the LimitlessPool::create_element method to create a RouterCacheChange object.
     virtual fastrtps::rtps::CacheChange_t* new_element_() override;
 
 };

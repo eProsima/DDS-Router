@@ -29,7 +29,15 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Unique Id of every Endpoint
+/**
+ * @brief Specialization of CacheChange for DDS Router.
+ *
+ * It adds the following attributes:
+ * - last_writer_guid_prefix: store last jump of message Participant GuidPrefix
+ *
+ * This Change is required to be used for features:
+ * - Repeater participant: avoid redirecting the message to the source participant.
+ */
 struct RouterCacheChange : public fastrtps::rtps::CacheChange_t
 {
 public:
@@ -37,6 +45,11 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::CacheChange_t::CacheChange_t;
 
+    /**
+     * @brief GuidPrefix of the Participant that has sent this message through the router.
+     *
+     * @note it is not the same as origin writer, as could be more routers in the path.
+     */
     fastrtps::rtps::GuidPrefix_t last_writer_guid_prefix;
 };
 
