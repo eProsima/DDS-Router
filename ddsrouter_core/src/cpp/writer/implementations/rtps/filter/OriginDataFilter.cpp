@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file RepeaterParticipant.cpp
+ * @file OriginDataFilter.cpp
  */
 
 #include <fastrtps/rtps/common/CacheChange.h>

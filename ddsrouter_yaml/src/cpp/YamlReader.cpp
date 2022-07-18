@@ -118,8 +118,6 @@ bool YamlReader::get<bool>(
         const YamlReaderVersion version /* version */)
 {
     bool value = get_scalar<bool>(yml);
-    logDebug(MANUAL_DEBUG_TODO, "!!! YamlReader::get<bool> " << yml << " value: " << value);
-
     return get_scalar<bool>(yml);
 }
 

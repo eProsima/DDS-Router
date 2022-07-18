@@ -55,7 +55,7 @@ Writer::Writer(
 
     if (repeater)
     {
-        logDebug(DDSROUTER_RTPS_WRITER, "Writer created with origin filter");
+        logDebug(DDSROUTER_RTPS_WRITER, "Writer created with repeater filter");
 
         utils::PoolConfiguration pool_config = cache_change_pool_configuration_();
         rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
@@ -98,15 +98,15 @@ Writer::Writer(
     if (repeater)
     {
         // Use filter writer of origin
-        repeater_data_filter_ = std::make_unique<RepeaterDataFilter>();
+        data_filter_ = std::make_unique<RepeaterDataFilter>();
     }
     else
     {
-        // Use defualt filter
-        repeater_data_filter_ = std::make_unique<OriginDataFilter>();
+        // Use default filter
+        data_filter_ = std::make_unique<OriginDataFilter>();
     }
 
-    rtps_writer_->reader_data_filter(repeater_data_filter_.get());
+    rtps_writer_->reader_data_filter(data_filter_.get());
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
             topic << " with guid " << rtps_writer_->getGuid());

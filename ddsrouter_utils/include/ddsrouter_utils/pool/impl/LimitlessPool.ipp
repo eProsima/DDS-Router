@@ -34,11 +34,11 @@ LimitlessPool<T>::LimitlessPool(
     : reserved_(0)
     , configuration_(configuration)
 {
-    // Call initialize_queue_ in every child constructor
+    // Call initialize_vector_ in every child constructor
 
     // Check Configuration consistency
     // Check batch size
-    if (configuration.batch_size < 0)
+    if (configuration.batch_size < 1)
     {
         throw utils::InitializationException("Batch size must be at least 1.");
     }
@@ -56,8 +56,8 @@ LimitlessPool<T>::~LimitlessPool()
     // Delete the values
     for (unsigned int i = 0; i < elements_.size(); ++i)
     {
-        auto& element = elements_.front();
-        elements_.pop();
+        auto& element = elements_.back();
+        elements_.pop_back();
         this->delete_element_(element);
     }
 }
@@ -74,8 +74,8 @@ bool LimitlessPool<T>::loan(
 
     // There are already free values available
     // It uses an existing already allocated value
-    element = elements_.front();
-    elements_.pop();
+    element = elements_.back();
+    elements_.pop_back();
 
     return true;
 }
@@ -88,12 +88,12 @@ bool LimitlessPool<T>::return_loan(
     // TODO: this should be a performance test, not in production. It does not affect behaviour.
     if(reserved_ == elements_.size())
     {
-        throw InconsistencyException("release_cache: More elements are released than reserved.");
+        throw InconsistencyException("return_loan: More elements are released than reserved.");
     }
 
-    // Return it to the queue
+    // Return it to the vector
     this->reset_element_(element);
-    elements_.push(element);
+    elements_.push_back(element);
 
     return true;
 }
@@ -103,18 +103,18 @@ void LimitlessPool<T>::augment_free_values_()
 {
     for (unsigned int i = 0; i < this->configuration_.batch_size; ++i)
     {
-        this->elements_.push(this->new_element_());
+        this->elements_.push_back(this->new_element_());
     }
     reserved_ += this->configuration_.batch_size;
     logDebug(LIMITLESS_POOL, "Pool " << TYPE_NAME(T) << " augmented to " << reserved_ << " elements.");
 }
 
 template <typename T>
-void LimitlessPool<T>::initialize_queue_()
+void LimitlessPool<T>::initialize_vector_()
 {
     for (unsigned int i = 0; i < this->configuration_.initial_size; ++i)
     {
-        elements_.push(this->new_element_());
+        elements_.push_back(this->new_element_());
     }
     reserved_ = this->configuration_.initial_size;
     logDebug(LIMITLESS_POOL, "Pool " << TYPE_NAME(T) << " initialized with " << reserved_ << " elements.");

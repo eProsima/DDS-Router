@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public:
     /**
      * @brief GuidPrefix of the Participant that has sent this message through the router.
      *
-     * @note it is not the same as origin writer, as could be more routers in the path.
+     * @note it is not the same as origin writer, as there could be more routers in the path.
      */
     fastrtps::rtps::GuidPrefix_t last_writer_guid_prefix;
 };

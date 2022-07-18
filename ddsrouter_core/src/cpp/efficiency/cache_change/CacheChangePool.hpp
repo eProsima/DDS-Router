@@ -44,7 +44,7 @@ public:
      *
      * @param configuration pool configuration
      *
-     * @warning max size will not be used as it is Limitedless
+     * @warning max size will not be used as it is Limitless
      */
     CacheChangePool(utils::PoolConfiguration configuration);
 

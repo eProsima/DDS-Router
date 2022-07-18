@@ -48,10 +48,6 @@ Bridge::Bridge(
         std::shared_ptr<IParticipant> participant = participants_->get_participant(id);
         writers_[id] = participant->create_writer(topic);
         readers_[id] = participant->create_reader(topic);
-
-        logDebug(
-            DEBUG,
-            "!!! " << id << " " << participant->is_repeater());
     }
 
     // Generate tracks

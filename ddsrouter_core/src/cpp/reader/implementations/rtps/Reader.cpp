@@ -277,7 +277,7 @@ void Reader::onNewCacheChangeAdded(
     }
     else
     {
-        logDebug(
+        logWarning(
             DDSROUTER_RTPS_READER_LISTENER,
             "Ignoring data from this same Participant in reader " << *this << ".");
 

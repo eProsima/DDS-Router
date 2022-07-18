@@ -19,7 +19,7 @@
 #ifndef _DDSROUTERUTILS_POOL_LIMITLESSPOOL_HPP_
 #define _DDSROUTERUTILS_POOL_LIMITLESSPOOL_HPP_
 
-#include <queue>
+#include <vector>
 
 #include <ddsrouter_utils/pool/IPool.hpp>
 
@@ -32,12 +32,12 @@ namespace utils {
  *
  * ATTRIBUTES:
  * - Reuse freed elements without allocation.
- * - Not thread sage
- * - Not pool limit
+ * - Not thread safe
+ * - No pool size limit
  *
- * This implementation uses an internal queue where new elements are stored.
+ * This implementation uses an internal vector where new elements are stored.
  * Whenever it runs out of free (not loaned) elements, it allocates more following configuration batch.
- * Whenever an element is returned, it turns back to the queue to be reused.
+ * Whenever an element is returned, it turns back to the vector to be reused.
  *
  * @warning This class is not thread safe.
  *
@@ -54,9 +54,11 @@ public:
      * It initializes the internal vector with the given initial size, using \c new_element_ .
      *
      * @note Whenever this class is inherited, the constructor must call \c initialize_vector_ ,
-     * as this class cannot because \c new_element_ must be override by the child class.
+     * as this class cannot because \c new_element_ must be overriden by the child class.
      *
      * @param configuration Pool Configuration
+     *
+     * @throw InitializationException if the pool configuration is not correct.
      */
     LimitlessPool(
             PoolConfiguration configuration);
@@ -70,7 +72,7 @@ public:
      * @brief Override IPool::loan
      *
      * If there are elements not in use in the vector, it returns one of them in \c element .
-     * Otherwise, it allocates more elements and take the next free one.
+     * Otherwise, it allocates more elements and takes the next free one.
      */
     virtual bool loan(
             T*& element) override;
@@ -88,25 +90,25 @@ public:
 protected:
 
     /**
-     * @brief Initialize the internal queue with the given initial size in configuration.
+     * @brief Initialize the internal vector with the given initial size in configuration.
      *
      * This method must be called in every final child class constructor.
      */
-    virtual void initialize_queue_();
+    virtual void initialize_vector_();
 
     /**
-     * @brief Augment the internal queue with \c batch new elements using \c new_element_ function for each of them.
+     * @brief Augment the internal vector with \c batch new elements using \c new_element_ function for each of them.
      */
     void augment_free_values_();
 
     /**
-     * @brief queue where elements are stored.
+     * @brief vector where elements are stored.
      *
-     * Each element of the queue has been initialized with \c new_element_
+     * Each element of the vector has been initialized with \c new_element_
      * or returned to the pool after calling \c reset_element_ .
-     * The elements are consumed in queue order.
+     * The elements are added and consumed at the back.
      */
-    std::queue<T*> elements_;
+    std::vector<T*> elements_;
 
     /**
      * @brief Total number of elements reserved by the pool.

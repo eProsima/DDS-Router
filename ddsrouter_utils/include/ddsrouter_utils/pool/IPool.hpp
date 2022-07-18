@@ -50,8 +50,9 @@ struct PoolConfiguration
  * Whenever a new element wants to be used, \c loan is called.
  * Every element must be returned to the pool when it is not used anymore by \c return_loan .
  *
- * This Pools are meant to efficiently manage allocations and memory, so loan and return_loan could not reserve
- * or release any memory, but to manage to reuse, reallocate, move element, etc.
+ * This object is meant to efficiently manage allocations and memory, so loan and return_loan
+ * does not force to allocate or free memory.
+ * Depending on the implementation, this memory could be allocated/freed or reused.
  *
  * @tparam T Type of elements that the Pool will manage.
  */

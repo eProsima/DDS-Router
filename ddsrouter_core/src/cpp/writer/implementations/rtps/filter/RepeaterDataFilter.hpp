@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file RepeaterParticipant.hpp
+ * @file RepeaterDataFilter.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_REPEATERDATAFILTER_HPP_
@@ -28,7 +28,9 @@ namespace rtps {
 
 /**
  * This filter allows to not send messages from this Writer to the Readers belonging to the source Participant.
- * This is used to "repeat" messages to all connected Readers but the one that has send it previously.
+ * It is used in "repeater" participants in order to propagate information to external participants
+ * (participants not belonging to the same DDS-Router instance),
+ * leaving out the participant from which this information was received.
  *
  * This uses the RouterCacheChange extra information.
  */

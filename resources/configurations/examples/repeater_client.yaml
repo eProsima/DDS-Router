@@ -30,20 +30,18 @@ participants:
 # ROS DISCOVERY CLIENT
 # This participant will subscribe to topics in allowlist using Discovery Server protocol as Super Client
 
-  - name: ClientROS2                                              # 5
-    kind: local-discovery-server                                  # 6
-    discovery-server-guid:
-      ros-discovery-server: true                                  # 7
-      id: 2                                                       # 8
-    connection-addresses:                                         # 9
+  - name: Client                                                  # 5
+    kind: wan                                                     # 6
+    discovery-server-guid:                                        # 7
+      id: 2
+    connection-addresses:
       - discovery-server-guid:
-          ros-discovery-server: true                              # 10
-          id: 1                                                   # 11
+          id: 1
         addresses:
-          - domain: 1.1.1.1                                       # 12
-            port: 11666                                           # 13
-            transport: tcp                                        # 14
-                                                                  # 15
+          - domain: 1.1.1.1
+            port: 11666
+            transport: tcp
+
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -69,26 +67,6 @@ participants:
 
 # 5: New Participant with name <ClientROS2>.
 
-# 6: Kind of ClientROS2: <local-discovery-server>.
-# If not listening address are set for this Participant, it acts as SuperClient of Discovery Server Discovery Protocol.
+# 6: Kind of ClientROS2: <WAN>.
 
-# 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41>.
-
-# 8: Set this Discovery Server GuidPrefix to <44.53.02.5f.45.50.52.4f.53.49.4d.41>.
-
-# 9: Add the addresses where this Client will try to reach a Discovery Server.
-
-# 10: Connecting to a Discovery Server with ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41>.
-
-# 11: Set the Remote Discovery Server GuidPrefix to <44.53.01.5f.45.50.52.4f.53.49.4d.41>.
-
-# 12: Connect to a Discovery Server in IP localhost listening. This domain will be translated as ip: "127.0.0.1"
-
-# 13: Discovery Server listening port is 11888.
-
-# 14: Using TCP transport.
-
-# 15: This is the same configuration as the result using Fast DDS environment variable:
-# $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11888"
-# Add every other address where trying to reach this same remote Discovery Server,
-# or add every other Discovery Server connection required.
+# 7: Add the configuration to connect with the DiscoveryServer of the Repeater Participant raised in the other side.
