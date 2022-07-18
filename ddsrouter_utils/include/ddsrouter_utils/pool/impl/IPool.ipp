@@ -19,14 +19,14 @@
 #ifndef __DDSROUTERUTILS_POOL_IPOOL_IMPL_IPP_
 #define __DDSROUTERUTILS_POOL_IPOOL_IMPL_IPP_
 
-#include <ddsrouter_utils/pool/LimitlessPool.hpp>
+#include <ddsrouter_utils/pool/UnboundedPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
 template <typename T>
-class LimitlessPool;
+class UnboundedPool;
 
 template <typename T>
 static IPool<T>* create_pool(
@@ -35,7 +35,7 @@ static IPool<T>* create_pool(
     // Create pool depending on the configuration
     // TODO: change it depending on the configuration
     // So far only one specialization exists
-    return new LimitlessPool<T>(configuration);
+    return new UnboundedPool<T>(configuration);
 }
 
 template <typename T>

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file LimitlessPool.ipp
+ * @file UnboundedPool.ipp
  */
 
-#ifndef __DDSROUTERUTILS_POOL_LIMITLESSPOOL_IMPL_IPP_
-#define __DDSROUTERUTILS_POOL_LIMITLESSPOOL_IMPL_IPP_
+#ifndef __DDSROUTERUTILS_POOL_UnboundedPool_IMPL_IPP_
+#define __DDSROUTERUTILS_POOL_UnboundedPool_IMPL_IPP_
 
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
@@ -29,7 +29,7 @@ namespace ddsrouter {
 namespace utils {
 
 template <typename T>
-LimitlessPool<T>::LimitlessPool(
+UnboundedPool<T>::UnboundedPool(
         PoolConfiguration configuration)
     : reserved_(0)
     , configuration_(configuration)
@@ -45,7 +45,7 @@ LimitlessPool<T>::LimitlessPool(
 }
 
 template <typename T>
-LimitlessPool<T>::~LimitlessPool()
+UnboundedPool<T>::~UnboundedPool()
 {
     // Check that every element has been released
     if (elements_.size() != reserved_)
@@ -63,7 +63,7 @@ LimitlessPool<T>::~LimitlessPool()
 }
 
 template <typename T>
-bool LimitlessPool<T>::loan(
+bool UnboundedPool<T>::loan(
         T*& element)
 {
     if (elements_.size() == 0)
@@ -81,7 +81,7 @@ bool LimitlessPool<T>::loan(
 }
 
 template <typename T>
-bool LimitlessPool<T>::return_loan(
+bool UnboundedPool<T>::return_loan(
         T* element)
 {
     // This only could happen if more elements are released than reserved.
@@ -99,7 +99,7 @@ bool LimitlessPool<T>::return_loan(
 }
 
 template <typename T>
-void LimitlessPool<T>::augment_free_values_()
+void UnboundedPool<T>::augment_free_values_()
 {
     for (unsigned int i = 0; i < this->configuration_.batch_size; ++i)
     {
@@ -110,7 +110,7 @@ void LimitlessPool<T>::augment_free_values_()
 }
 
 template <typename T>
-void LimitlessPool<T>::initialize_vector_()
+void UnboundedPool<T>::initialize_vector_()
 {
     for (unsigned int i = 0; i < this->configuration_.initial_size; ++i)
     {
@@ -124,4 +124,4 @@ void LimitlessPool<T>::initialize_vector_()
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __DDSROUTERUTILS_POOL_LIMITLESSPOOL_IMPL_IPP_ */
+#endif /* __DDSROUTERUTILS_POOL_UnboundedPool_IMPL_IPP_ */

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file OriginDataFilter.hpp
+ * @file SelfParticipantDataFilter.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_ORIGINDATAFILTER_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_ORIGINDATAFILTER_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_
 
 #include <fastdds/rtps/interfaces/IReaderDataFilter.hpp>
 
@@ -42,7 +42,7 @@ namespace rtps {
 /**
  * This filter allows to not send messages from this Writer to the Readers in the same Participant.
  */
-class OriginDataFilter : public fastdds::rtps::IReaderDataFilter
+class SelfParticipantDataFilter : public fastdds::rtps::IReaderDataFilter
 {
 public:
 
@@ -63,5 +63,5 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_ORIGINDATAFILTER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_ */
 

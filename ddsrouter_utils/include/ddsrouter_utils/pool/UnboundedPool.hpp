@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file LimitlessPool.hpp
+ * @file UnboundedPool.hpp
  */
 
-#ifndef _DDSROUTERUTILS_POOL_LIMITLESSPOOL_HPP_
-#define _DDSROUTERUTILS_POOL_LIMITLESSPOOL_HPP_
+#ifndef _DDSROUTERUTILS_POOL_UnboundedPool_HPP_
+#define _DDSROUTERUTILS_POOL_UnboundedPool_HPP_
 
 #include <vector>
 
@@ -44,12 +44,12 @@ namespace utils {
  * @tparam T Type of the elements in the pool.
  */
 template <typename T>
-class LimitlessPool : IPool<T>
+class UnboundedPool : IPool<T>
 {
 public:
 
     /**
-     * @brief Create a new LimitlessPool object by a Pool Configuration given.
+     * @brief Create a new UnboundedPool object by a Pool Configuration given.
      *
      * It initializes the internal vector with the given initial size, using \c new_element_ .
      *
@@ -60,13 +60,13 @@ public:
      *
      * @throw InitializationException if the pool configuration is not correct.
      */
-    LimitlessPool(
+    UnboundedPool(
             PoolConfiguration configuration);
 
     /**
      * @brief Destroy the Limitless Pool object and all its reserved elements.
      */
-    ~LimitlessPool();
+    ~UnboundedPool();
 
     /**
      * @brief Override IPool::loan
@@ -126,6 +126,6 @@ protected:
 } /* namespace eprosima */
 
 // Include implementation template file
-#include <ddsrouter_utils/pool/impl/LimitlessPool.ipp>
+#include <ddsrouter_utils/pool/impl/UnboundedPool.ipp>
 
-#endif /* _DDSROUTERUTILS_POOL_LIMITLESSPOOL_HPP_ */
+#endif /* _DDSROUTERUTILS_POOL_UnboundedPool_HPP_ */

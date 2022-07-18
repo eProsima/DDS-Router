@@ -24,9 +24,9 @@ namespace ddsrouter {
 namespace core {
 
 CacheChangePool::CacheChangePool(utils::PoolConfiguration configuration)
-    : utils::LimitlessPool<fastrtps::rtps::CacheChange_t>(configuration)
+    : utils::UnboundedPool<fastrtps::rtps::CacheChange_t>(configuration)
 {
-    initialize_queue_();
+    initialize_vector_();
 }
 
 bool CacheChangePool::reserve_cache(

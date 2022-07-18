@@ -21,7 +21,7 @@
 
 #include <fastdds/rtps/history/IChangePool.h>
 
-#include <ddsrouter_utils/pool/LimitlessPool.hpp>
+#include <ddsrouter_utils/pool/UnboundedPool.hpp>
 #include <ddsrouter_utils/pool/IPool.hpp>
 
 namespace eprosima {
@@ -31,11 +31,11 @@ namespace core {
 /**
  * @brief This class implements a pool of CacheChange objects specialized as RouterCacheChanges.
  *
- * It reuses the LimitlessPool implementation, what allow to create a limitless reusable pool.
+ * It reuses the UnboundedPool implementation, what allow to create a limitless reusable pool.
  *
  * TODO: implement this class as an IPool (or having an internal pool), without being force to be limitless.
  */
-class CacheChangePool : public fastrtps::rtps::IChangePool, public utils::LimitlessPool<fastrtps::rtps::CacheChange_t>
+class CacheChangePool : public fastrtps::rtps::IChangePool, public utils::UnboundedPool<fastrtps::rtps::CacheChange_t>
 {
 public:
 
@@ -48,17 +48,17 @@ public:
      */
     CacheChangePool(utils::PoolConfiguration configuration);
 
-    //! Call LimitlessPool::reserve
+    //! Call UnboundedPool::reserve
     virtual bool reserve_cache(
             fastrtps::rtps::CacheChange_t*& cache_change) override;
 
-    //! Call LimitlessPool::release
+    //! Call UnboundedPool::release
     virtual bool release_cache(
             fastrtps::rtps::CacheChange_t* cache_change) override;
 
 protected:
 
-    //! Override the LimitlessPool::create_element method to create a RouterCacheChange object.
+    //! Override the UnboundedPool::create_element method to create a RouterCacheChange object.
     virtual fastrtps::rtps::CacheChange_t* new_element_() override;
 
 };

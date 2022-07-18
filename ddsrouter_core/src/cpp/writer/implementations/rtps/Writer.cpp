@@ -25,7 +25,7 @@
 #include <efficiency/cache_change/CacheChangePool.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
-#include <writer/implementations/rtps/filter/OriginDataFilter.hpp>
+#include <writer/implementations/rtps/filter/SelfParticipantDataFilter.hpp>
 #include <types/dds/RouterCacheChange.hpp>
 
 namespace eprosima {
@@ -103,7 +103,7 @@ Writer::Writer(
     else
     {
         // Use default filter
-        data_filter_ = std::make_unique<OriginDataFilter>();
+        data_filter_ = std::make_unique<SelfParticipantDataFilter>();
     }
 
     rtps_writer_->reader_data_filter(data_filter_.get());
