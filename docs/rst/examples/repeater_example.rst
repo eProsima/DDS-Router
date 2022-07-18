@@ -98,16 +98,18 @@ the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is access
 Hosts *H*:sub:`B` and *H*:sub:`C`
 ---------------------------------
 
-These host run the |ddsrouter| WAN Clients, which will connect to the previously launched Repeater Server.
+These hosts run the |ddsrouter| WAN Clients, which will connect to the previously launched Repeater Server.
 Execute |ddsrouter| using file
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_client.yaml``.
 Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`.
-**In this example the port forwarding is not required, as the Repeater will allow the communication through it**.
+**In this example the port forwarding is not required, as the Repeater will allow the communication through it,
+and TCP protocol is being used.**.
 
 Both clients can execute ROS 2 demo nodes, which will publish and subscribe in topic ``rt/chatter``.
 Execute a ``talker`` in one of them and a ``listener`` in the other.
 It is recommended to use different ``ROS_DOMAIN_ID`` in each node, so in case both nodes are accessible
 (under same network) no loop is created.
+In order to do so, change the YAML configuration files to use different domains, and use the following ROS2 commands:
 
 .. code-block:: bash
 

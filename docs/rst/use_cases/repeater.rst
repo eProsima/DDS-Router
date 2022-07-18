@@ -20,7 +20,7 @@ The use of a :term:`TURN` Server is very useful in the following scenarios:
   connected in different private networks, etc.) cannot reach each other.
 
 The following figure exemplifies these use cases.
-When the communication between edge routers are not possible, a Repeater can be set in the middle to forward data
+When the communication between edge routers is not possible, a Repeater can be set in the middle to forward data
 and make the communication possible.
 
 .. figure:: /rst/figures/repeater.png
