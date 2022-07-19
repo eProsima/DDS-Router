@@ -156,7 +156,7 @@ bool Address::is_ipv6() const noexcept
     return ip_version_ == IpVersion::v6;
 }
 
-LocatorType Address::get_locator_kind() noexcept
+LocatorType Address::get_locator_kind() const noexcept
 {
     if (ip_version_ == IpVersion::v4)
     {

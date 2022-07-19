@@ -17,9 +17,13 @@
  *
  */
 
-#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
+#include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
+
+#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -164,6 +168,103 @@ const std::string& TlsConfiguration::dh_params_file() const
     {
         throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
     }
+}
+
+void TlsConfiguration::enable_tls(
+        std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+        bool client /* = false */) const
+{
+    // Apply security ON
+    descriptor->apply_security = true;
+
+    // Options
+    descriptor->tls_config.add_option(
+        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::DEFAULT_WORKAROUNDS);
+    descriptor->tls_config.add_option(
+        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::SINGLE_DH_USE);
+    descriptor->tls_config.add_option(
+        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
+
+    // Perform verification of the server
+    descriptor->tls_config.add_verify_mode(
+        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
+
+    if (client)
+    {
+        if (!compatible<types::security::TlsKind::client>())
+        {
+            logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                    "TLS Configuration expected a Client configuration.");
+            throw utils::ConfigurationException("TLS Configuration expected a Client configuration.");
+        }
+        else
+        {
+            enable_tls_client(descriptor,  true);
+        }
+    }
+    else
+    {
+        if (!compatible<types::security::TlsKind::server>())
+        {
+            logError(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+                    "TLS Configuration expected a Server configuration.");
+            throw utils::ConfigurationException("TLS Configuration expected a Server configuration.");
+        }
+        else
+        {
+            // Add configuration for server
+            enable_tls_server(descriptor);
+
+            // In case it could also be client, add tls config
+            if (compatible<types::security::TlsKind::client>())
+            {
+                enable_tls_client(descriptor,  false);
+            }
+        }
+    }
+
+    logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            "TLS configured.");
+}
+
+void TlsConfiguration::enable_tls_client(
+        std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+        bool only_client) const
+{
+    if (!compatible<types::security::TlsKind::client>())
+    {
+        utils::tsnh(
+            utils::Formatter() << "Error, TlsConfiguration expected a Client-compatible configuration.");
+    }
+
+    if (only_client)
+    {
+        // Fail verification if the server has no certificate
+        descriptor->tls_config.add_verify_mode(
+            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_FAIL_IF_NO_PEER_CERT);
+    }
+
+    // CA certificate
+    descriptor->tls_config.verify_file = certificate_authority_file();
+}
+
+void TlsConfiguration::enable_tls_server(
+        std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor) const
+{
+    if (!compatible<types::security::TlsKind::server>())
+    {
+        utils::tsnh(
+            utils::Formatter() << "Error, TlsConfiguration expected a Server-compatible configuration.");
+    }
+
+    // Password
+    descriptor->tls_config.password = private_key_file_password();
+    // Private key
+    descriptor->tls_config.private_key_file = private_key_file();
+    // DDS-Router certificate
+    descriptor->tls_config.cert_chain_file = certificate_chain_file();
+    // DH
+    descriptor->tls_config.tmp_dh_file = dh_params_file();
 }
 
 } /* namespace security */
