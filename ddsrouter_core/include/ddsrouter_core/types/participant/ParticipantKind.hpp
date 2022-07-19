@@ -39,10 +39,11 @@ enum class ParticipantKind : ParticipantKindType
     dummy,                      //! Dummy Participant Kind
     simple_rtps,                //! Simple RTPS Participant Kind
     local_discovery_server,     //! Discovery Server RTPS UDP Participant Kind
-    wan,                        //! Discovery Server RTPS TCP Participant Kind
+    wan,                        //! Discovery Server Inter Router Participant Kind
+    initial_peers,              //! Initial Peers discovery Participant Kind
 };
 
-static constexpr unsigned PARTICIPANT_KIND_COUNT = 7;
+static constexpr unsigned PARTICIPANT_KIND_COUNT = 8;
 
 /**
  * @brief All ParticipantKind enum values as a std::array.
@@ -54,7 +55,8 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KI
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
     ParticipantKind::local_discovery_server,
-    ParticipantKind::wan
+    ParticipantKind::wan,
+    ParticipantKind::initial_peers,
 };
 
 /**
@@ -78,6 +80,7 @@ constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRIN
     "simple_rtps",
     "local_discovery_server",
     "wan",
+    "initial_peers",
 };
 
 static constexpr unsigned MAX_PARTICIPANT_KIND_ALIASES = 4;
@@ -95,6 +98,7 @@ constexpr std::array<ParticipantKindAliasesType, PARTICIPANT_KIND_COUNT> PARTICI
     ParticipantKindAliasesType({"local", "simple", "", ""}),
     ParticipantKindAliasesType({"discovery-server", "ds", "local-ds", "local-discovery-server"}),
     ParticipantKindAliasesType({"wan", "router", "", ""}),
+    ParticipantKindAliasesType({"initial_peers", "direct", "repeater", ""}),
 };
 
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(

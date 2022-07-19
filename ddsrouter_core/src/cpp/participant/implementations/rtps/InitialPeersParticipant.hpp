@@ -13,15 +13,15 @@
 // limitations under the License.
 
 /**
- * @file DiscoveryServerParticipant.hpp
+ * @file InitialPeersParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_INITIALPEERSPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_INITIALPEERSPARTICIPANT_HPP_
 
 #include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
 #include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
@@ -34,17 +34,13 @@ namespace rtps {
 /**
  * TODO
  */
-template <class ConfigurationType>
-class DiscoveryServerParticipant
-    : public CommonRTPSRouterParticipant<ConfigurationType>
+class InitialPeersParticipant
+    : public CommonRTPSRouterParticipant<configuration::InitialPeersParticipantConfiguration>
 {
 public:
 
-    // Force ConfigurationType to be subclass of DiscoveryServerParticipantConfiguration
-    FORCE_TEMPLATE_SUBCLASS(configuration::DiscoveryServerParticipantConfiguration, ConfigurationType);
-
-    DiscoveryServerParticipant(
-            const ConfigurationType participant_configuration,
+    InitialPeersParticipant(
+            const configuration::InitialPeersParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
@@ -57,7 +53,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-// Include implementation template file
-#include <participant/implementations/rtps/impl/DiscoveryServerParticipant.ipp>
-
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_INITIALPEERSPARTICIPANT_HPP_ */

@@ -31,6 +31,7 @@
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
 #include <participant/implementations/rtps/WANParticipant.hpp>
+#include <participant/implementations/rtps/InitialPeersParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -111,6 +112,25 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             }
 
             return std::make_shared<rtps::WANParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
+
+        case ParticipantKind::initial_peers:
+            // Initial Peers RTPS Participant
+        {
+            std::shared_ptr<configuration::InitialPeersParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::InitialPeersParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
+            {
+                throw utils::ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id_ << " is not for Participant Kind: " <<
+                              participant_configuration->kind_);
+            }
+
+            return std::make_shared<rtps::InitialPeersParticipant> (
                 (*conf_),
                 payload_pool,
                 discovery_database);

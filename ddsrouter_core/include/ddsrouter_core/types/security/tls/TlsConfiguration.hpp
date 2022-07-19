@@ -20,6 +20,9 @@
 #define _DDSROUTERCORE_SECURITY_TLS_TLSCONFIGURATION_HPP_
 
 #include <string>
+#include <memory>
+
+#include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
 #include <ddsrouter_core/library/library_dll.h>
 
@@ -151,6 +154,20 @@ public:
      * @throw \c InconsistencyException if configuration is not server-compatible
      */
     DDSROUTER_CORE_DllAPI const std::string& dh_params_file() const;
+
+    //! Activate TLS configuration in a TCP transport descriptor
+    DDSROUTER_CORE_DllAPI void enable_tls(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+            bool client = false) const;
+
+    //! Activate TLS client configuration in a TCP transport descriptor
+    DDSROUTER_CORE_DllAPI void enable_tls_client(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
+            bool only_client) const;
+
+    //! Activate TLS server configuration in a TCP transport descriptor
+    DDSROUTER_CORE_DllAPI void enable_tls_server(
+            std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor) const;
 
 private:
 
