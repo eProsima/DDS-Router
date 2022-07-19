@@ -39,19 +39,17 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 using namespace eprosima::ddsrouter::core::configuration;
 
-// TODO: Add logs
-
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
-    switch (participant_configuration->kind())
+    switch (participant_configuration->kind_)
     {
         case ParticipantKind::blank:
             // BlankParticipant
-            return std::make_shared<BlankParticipant>(participant_configuration->id());
+            return std::make_shared<BlankParticipant>(participant_configuration->id_);
 
         case ParticipantKind::echo:
             // EchoParticipant
@@ -70,8 +68,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             if (!conf_)
             {
                 throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
-                              participant_configuration->kind());
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id_ <<
+                          " is not for Participant Kind: " << participant_configuration->kind_);
             }
 
             return std::make_shared<rtps::SimpleParticipant> (
@@ -89,8 +87,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             if (!conf_)
             {
                 throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
-                              participant_configuration->kind());
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id_ << " is not for Participant Kind: " <<
+                              participant_configuration->kind_);
             }
 
             return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
@@ -108,8 +106,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             if (!conf_)
             {
                 throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id() << " is not for Participant Kind: " <<
-                              participant_configuration->kind());
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id_ << " is not for Participant Kind: " <<
+                              participant_configuration->kind_);
             }
 
             return std::make_shared<rtps::WANParticipant> (
@@ -119,7 +117,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         }
 
         case ParticipantKind::invalid:
-            throw utils::ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind()
+            throw utils::ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind_
                                                                    << " is not a valid participant kind name.");
 
         default:

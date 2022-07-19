@@ -39,21 +39,6 @@ DDSRouterReloadConfiguration::DDSRouterReloadConfiguration(
 {
 }
 
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::allowlist() const noexcept
-{
-    return allowlist_;
-}
-
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::blocklist() const noexcept
-{
-    return blocklist_;
-}
-
-std::set<std::shared_ptr<RealTopic>> DDSRouterReloadConfiguration::builtin_topics() const noexcept
-{
-    return builtin_topics_;
-}
-
 bool DDSRouterReloadConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {

@@ -45,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads()))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads_))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -128,12 +128,12 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
 
         // Load new configuration and check it is okey
         AllowedTopicList new_allowed_topic_list(
-            new_configuration.allowlist(),
-            new_configuration.blocklist());
+            new_configuration.allowlist_,
+            new_configuration.blocklist_);
 
         // Check if there are any new builtin topics
         std::set<RealTopic> new_builtin_topics;
-        for (auto builtin_topic : new_configuration.builtin_topics())
+        for (auto builtin_topic : new_configuration.builtin_topics_)
         {
             if (current_topics_.find(*builtin_topic) == current_topics_.end())
             {
@@ -269,8 +269,8 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
 void DDSRouterImpl::init_allowed_topics_()
 {
     allowed_topics_ = AllowedTopicList(
-        configuration_.allowlist(),
-        configuration_.blocklist());
+        configuration_.allowlist_,
+        configuration_.blocklist_);
 
     logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
 }
@@ -278,7 +278,7 @@ void DDSRouterImpl::init_allowed_topics_()
 void DDSRouterImpl::init_participants_()
 {
     for (std::shared_ptr<configuration::ParticipantConfiguration> participant_config :
-            configuration_.participants_configurations())
+            configuration_.participants_configurations_)
     {
         std::shared_ptr<IParticipant> new_participant;
 
@@ -296,7 +296,7 @@ void DDSRouterImpl::init_participants_()
         {
             // Failed to create participant
             throw utils::InitializationException(utils::Formatter()
-                          << "Failed to create creating Participant " << participant_config->id());
+                          << "Failed to create creating Participant " << participant_config->id_);
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
@@ -327,7 +327,7 @@ void DDSRouterImpl::init_participants_()
 
 void DDSRouterImpl::init_bridges_()
 {
-    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics())
+    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics_)
     {
         discovered_topic_(*topic);
     }

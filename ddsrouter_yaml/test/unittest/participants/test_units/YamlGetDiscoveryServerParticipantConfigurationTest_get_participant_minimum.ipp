@@ -61,17 +61,17 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                     LATEST);
 
                 // Check result
-                ASSERT_EQ(id, result.id());
-                ASSERT_EQ(kind, result.kind());
-                ASSERT_EQ(guid, result.discovery_server_guid_prefix());
+                ASSERT_EQ(id, result.id_);
+                ASSERT_EQ(kind, result.kind_);
+                ASSERT_EQ(guid, result.discovery_server_guid_prefix_);
 
                 // Check default values
-                ASSERT_EQ(0, result.connection_addresses().size());
-                ASSERT_EQ(0, result.listening_addresses().size());
-                ASSERT_FALSE(result.tls_active());
+                ASSERT_EQ(0, result.connection_addresses_.size());
+                ASSERT_EQ(0, result.listening_addresses_.size());
+                ASSERT_FALSE(result.tls_configuration_.is_active());
                 ASSERT_EQ(
-                    core::configuration::DiscoveryServerParticipantConfiguration::default_domain_id(),
-                    result.domain());
+                    core::configuration::DiscoveryServerParticipantConfiguration().domain_,
+                    result.domain_);
             }
         }
     }

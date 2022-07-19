@@ -159,3 +159,16 @@ These are the log levels and when to use them
 | User            | logUser     | always               | std::cout      | showing message to the user                           |
 | Info            | logInfo     | only debug -d option | logInfo        | showing important information about the execution     |
 | Debug           | logDebug    | only debug -d option | logInfo        | showing non important information                     |
+
+### Configurations
+
+Configurations are data structures with public access to their internal values.
+This makes it easier to work with them: to create, manage and copy them.
+The default values will be defined in the header, so every used could know which are them, and always
+have a default constructor.
+
+From every internal object that requires a configuration to be created, the configuration argument
+must be created as an internal value and/or const to the object,
+or create some way that the configuration cannot be changed from outside without the internal object notice it.
+
+Also, configurations must support an `is_valid` method to check that it is in a coherent state.

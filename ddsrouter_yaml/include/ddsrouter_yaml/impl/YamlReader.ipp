@@ -32,7 +32,7 @@ template <typename T>
 T YamlReader::get(
         const Yaml& yml,
         const TagType& tag,
-        const YamlReaderVersion version /* = LATEST */)
+        const YamlReaderVersion version)
 {
     // ATTENTION: This try catch can be avoided, it is only used to add verbose information
     try
@@ -46,9 +46,27 @@ T YamlReader::get(
                       "Error getting required value of type <" << TYPE_NAME(T) <<
                       "> in tag <" << tag << "> :\n " << e.what());
     }
+}
 
-    utils::tsnh(utils::Formatter() << "Impossible to arrive to this point.");
-    return get<T>(yml, version); // Unreachable code
+template <typename T>
+void YamlReader::fill(
+        T& object,
+        const Yaml& yml,
+        const TagType& tag,
+        const YamlReaderVersion version)
+{
+    // ATTENTION: This try catch can be avoided, it is only used to add verbose information
+    try
+    {
+        return fill<T>(get_value_in_tag(yml, tag), object, version);
+    }
+    catch (const std::exception& e)
+    {
+        throw utils::ConfigurationException(
+                  utils::Formatter() <<
+                      "Error filing object of type <" << TYPE_NAME(T) <<
+                      "> in tag <" << tag << "> :\n " << e.what());
+    }
 }
 
 template <typename T>
@@ -94,7 +112,7 @@ template <typename T>
 std::list<T> YamlReader::get_list(
         const Yaml& yml,
         const TagType& tag,
-        const YamlReaderVersion version /* = LATEST */)
+        const YamlReaderVersion version)
 {
     try
     {
@@ -110,7 +128,7 @@ std::list<T> YamlReader::get_list(
 template <typename T>
 std::list<T> YamlReader::get_list(
         const Yaml& yml,
-        const YamlReaderVersion version /* = LATEST */)
+        const YamlReaderVersion version)
 {
     if (!yml.IsSequence())
     {
@@ -141,7 +159,7 @@ template <typename T>
 std::set<T> YamlReader::get_set(
         const Yaml& yml,
         const TagType& tag,
-        const YamlReaderVersion version /* = LATEST */)
+        const YamlReaderVersion version)
 {
     std::list<T> elements_list = get_list<T>(yml, tag, version);
     return std::set<T>(elements_list.begin(), elements_list.end());

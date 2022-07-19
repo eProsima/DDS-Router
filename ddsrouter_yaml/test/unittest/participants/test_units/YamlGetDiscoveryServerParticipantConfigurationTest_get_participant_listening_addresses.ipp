@@ -69,8 +69,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.listening_addresses().size());
-        ASSERT_EQ(address, *result.listening_addresses().begin());
+        ASSERT_EQ(1, result.listening_addresses_.size());
+        ASSERT_EQ(address, *result.listening_addresses_.begin());
     }
 
     // N addresses
@@ -107,12 +107,12 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
                         LATEST);
 
         // Check result
-        ASSERT_EQ(addresses.size(), result.listening_addresses().size()) << yml;
+        ASSERT_EQ(addresses.size(), result.listening_addresses_.size()) << yml;
         // Check every address is inside listening addresses of the configuration
         for (core::types::Address address : addresses)
         {
             // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
-            std::set<eprosima::ddsrouter::core::types::Address> addresses_result = result.listening_addresses();
+            std::set<eprosima::ddsrouter::core::types::Address> addresses_result = result.listening_addresses_;
             ASSERT_NE(
                 addresses_result.find(address),
                 addresses_result.end());

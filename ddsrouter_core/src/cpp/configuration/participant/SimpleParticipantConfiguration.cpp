@@ -26,8 +26,6 @@ namespace configuration {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const DomainId SimpleParticipantConfiguration::DEFAULT_DOMAIN_ID_(0u);
-
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
         const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
@@ -52,11 +50,6 @@ bool SimpleParticipantConfiguration::is_valid(
     }
 
     return true;
-}
-
-DomainId SimpleParticipantConfiguration::domain() const noexcept
-{
-    return domain_;
 }
 
 bool SimpleParticipantConfiguration::operator ==(

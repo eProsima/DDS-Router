@@ -21,19 +21,21 @@
 
 #include <ddsrouter_utils/Formatter.hpp>
 
+#include <ddsrouter_core/library/library_dll.h>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace configuration {
 
 /**
- * This is an Interface class that force every configuration in ddsrouter to have a \c is_valid method.
+ * Configurations in DDS Router are data structures with public access to its internal methods.
+ * Thus, they are not forced to be correct in construction.
+ * This is an Interface class that forces every configuration in ddsrouter to have a \c is_valid method.
  */
-class BaseConfiguration
+struct BaseConfiguration
 {
-public:
-
-    virtual bool is_valid(
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept = 0;
 };
 
