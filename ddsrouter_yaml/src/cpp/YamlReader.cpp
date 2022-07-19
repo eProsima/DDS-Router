@@ -729,6 +729,10 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
 
+        case types::ParticipantKind::initial_peers:
+            return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
+                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
+
         default:
             throw utils::ConfigurationException(
                       utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
