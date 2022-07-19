@@ -52,11 +52,14 @@ TEST(ParticipantKindTest, string_conversions)
                 "dummy"));
     ASSERT_EQ(std::string(
                 PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
-            std::string("simple_rtps"));
+            std::string("simple-rtps"));
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::
-                    local_discovery_server)]), std::string("local_discovery_server"));
+                    local_discovery_server)]), std::string("local-discovery-server"));
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
             std::string("wan"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::initial_peers)]),
+            std::string("initial-peers"));
 
     // Test all possible aliases for each participant kind
 

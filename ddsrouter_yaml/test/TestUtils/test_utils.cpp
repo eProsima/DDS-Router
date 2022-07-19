@@ -242,6 +242,18 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 security::TlsConfiguration());
         }
 
+        case ParticipantKind::initial_peers:
+
+        {
+            return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
+                id,
+                kind,
+                random_domain(seed),
+                std::set<Address>(),
+                std::set<Address>({Address()}),
+                security::TlsConfiguration());
+        }
+
         // Add cases where Participants need specific arguments
         default:
             return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind);

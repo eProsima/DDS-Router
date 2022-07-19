@@ -69,7 +69,8 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PART
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
     ParticipantKind::local_discovery_server,
-    ParticipantKind::wan
+    ParticipantKind::wan,
+    ParticipantKind::initial_peers
 };
 
 constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRINGS = {
@@ -77,10 +78,10 @@ constexpr std::array<const char*, PARTICIPANT_KIND_COUNT> PARTICIPANT_KIND_STRIN
     "blank",
     "echo",
     "dummy",
-    "simple_rtps",
-    "local_discovery_server",
+    "simple-rtps",
+    "local-discovery-server",
     "wan",
-    "initial_peers",
+    "initial-peers",
 };
 
 static constexpr unsigned MAX_PARTICIPANT_KIND_ALIASES = 4;

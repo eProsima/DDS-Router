@@ -20,6 +20,8 @@
 #include <gtest/gtest.h>
 #include <TestLogHandler.hpp>
 
+#include <ddsrouter_utils/Log.hpp>
+
 #include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -88,6 +90,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
 {
     std::set<types::Address> listening_addresses;
     std::set<types::Address> connection_addresses;
+    types::DomainId domain(60u);
 
     if (is_client(wan_kind))
     {
@@ -116,7 +119,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::initial_peers,
-            types::DomainId(0u),
+            domain,
             listening_addresses,
             connection_addresses,
             tls_configuration(wan_kind));
@@ -127,7 +130,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::initial_peers,
-            types::DomainId(0u),
+            domain,
             listening_addresses,
             connection_addresses,
             types::security::TlsConfiguration());
@@ -165,7 +168,7 @@ configuration::DDSRouterConfiguration router_configuration(
 
                         // simple
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("simple_participant"),
+                            types::ParticipantId("simple_participant_" + std::to_string(domain)),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             types::DomainId(domain)
                             ),
@@ -177,7 +180,7 @@ configuration::DDSRouterConfiguration router_configuration(
         blocklist,
         builtin_topics,
         participants_configurations,
-        1);
+        2);
 }
 
 /**
@@ -285,6 +288,7 @@ void test_InitialPeers_communication_all(
         );
 
     // Test architecture server <-> server-client
+    std::cout << "DEBUG Testing..." << std::endl;
     test::test_InitialPeers_communication(
         test::router_configuration(
             test::wan_participant_configuration(
@@ -315,6 +319,7 @@ void test_InitialPeers_communication_all(
     if (!basic_only)
     {
         // Test architecture server-client <-> server-client
+        std::cout << "DEBUG Testing..." << std::endl;
         test::test_InitialPeers_communication(
             test::router_configuration(
                 test::wan_participant_configuration(
@@ -469,5 +474,8 @@ int main(
         char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
+
+    // eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
+
     return RUN_ALL_TESTS();
 }

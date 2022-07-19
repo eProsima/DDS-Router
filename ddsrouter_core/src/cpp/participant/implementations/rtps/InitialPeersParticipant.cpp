@@ -56,6 +56,8 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
     bool has_listening_tcp_ipv6 = false;
     bool has_connection_tcp_ipv4 = false;
     bool has_connection_tcp_ipv6 = false;
+    bool has_connection_udp_ipv4 = false;
+    bool has_connection_udp_ipv6 = false;
     bool has_udp_ipv4 = false;
     bool has_udp_ipv6 = false;
 
@@ -68,7 +70,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
         if (!address.is_valid())
         {
             // Invalid address, continue with next one
-            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            logWarning(DDSROUTER_INITIALPEERS_PARTICIPANT,
                     "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
             continue;
         }
@@ -136,15 +138,20 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
             eprosima::fastrtps::rtps::IPLocator::setIPv6(locator, address.ip());
         }
 
-        // Port
+        // Set Logical port for every locator
         eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
+
+        // In TCP case, set Physical port
+        if (address.is_tcp())
+        {
+            eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.port());
+        }
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
         params.defaultUnicastLocatorList.push_back(locator);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Add listening address " << address << " to Participant " << this->id() << ".");
     }
 
@@ -155,7 +162,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
         if (!connection_address.is_valid())
         {
             // Invalid connection address, continue with next one
-            logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+            logWarning(DDSROUTER_INITIALPEERS_PARTICIPANT,
                     "Discard connection address: " << connection_address <<
                     " in Participant " << this->id() << " initialization.");
             continue;
@@ -163,6 +170,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
         has_connection_addresses = true;
 
+        // Create Locator for connection initial peers
         eprosima::fastrtps::rtps::Locator_t locator;
 
         // KIND
@@ -176,6 +184,8 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
         }
         else
         {
+            has_connection_udp_ipv4 = connection_address.is_ipv4();
+            has_connection_udp_ipv6 = !connection_address.is_ipv4();
             has_udp_ipv4 = connection_address.is_ipv4();
             has_udp_ipv6 = !connection_address.is_ipv4();
         }
@@ -190,16 +200,19 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
             eprosima::fastrtps::rtps::IPLocator::setIPv6(locator, connection_address.ip());
         }
 
-        // PORT
+        // Set Logical port for every locator
         eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, connection_address.port());
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, connection_address.port());
-        // Warning: Logical port is not needed unless domain could change
+
+        // In TCP case, set Physical port
+        if (connection_address.is_tcp())
+        {
+            eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, connection_address.port());
+        }
 
         // Add it to builtin
-        params.builtin.metatrafficUnicastLocatorList.push_back(locator);
-        params.defaultUnicastLocatorList.push_back(locator);
+        params.builtin.initialPeersList.push_back(locator);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Add connection address " << connection_address <<
                 " to Participant " << this->id() << ".");
     }
@@ -221,7 +234,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
         params.userTransports.push_back(descriptor);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Adding TCPv4 Transport to Participant " << this->id() << ".");
     }
 
@@ -238,7 +251,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
         params.userTransports.push_back(descriptor);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Adding TCPv6 Transport to Participant " << this->id() << ".");
     }
 
@@ -249,7 +262,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
                 std::make_shared<eprosima::fastdds::rtps::UDPv4TransportDescriptor>();
         params.userTransports.push_back(descriptor);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Adding UDPv4 Transport to Participant " << this->id() << ".");
     }
 
@@ -259,11 +272,30 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
                 std::make_shared<eprosima::fastdds::rtps::UDPv6TransportDescriptor>();
         params.userTransports.push_back(descriptor_v6);
 
-        logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+        logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Adding UDPv6 Transport to Participant " << this->id() << ".");
     }
 
-    logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
+    // To avoid creating a multicast transport in UDP when non listening addresses
+    // Fast requires an empty locator that will be set by default afterwards
+    if (!has_listening_addresses)
+    {
+        if (has_connection_udp_ipv4)
+        {
+            eprosima::fastrtps::rtps::Locator_t locator;
+            locator.kind = LOCATOR_KIND_UDPv4;
+            params.builtin.metatrafficUnicastLocatorList.push_back(locator);
+        }
+
+        if (has_connection_udp_ipv6)
+        {
+            eprosima::fastrtps::rtps::Locator_t locator;
+            locator.kind = LOCATOR_KIND_UDPv6;
+            params.builtin.metatrafficUnicastLocatorList.push_back(locator);
+        }
+    }
+
+    logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
             "Configured Participant " << this->id());
 
     return params;
