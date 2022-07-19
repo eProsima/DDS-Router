@@ -37,7 +37,7 @@ def test_valid_yamls():
     """Assert given configuration files are valid."""
     validator = YamlValidator()
     for valid_files_dir in VALID_CONFIGURATION_FILES:
-        assert validator.validate(valid_files_dir, SCHEMA_PATH, logout=False)
+        assert validator.validate(valid_files_dir, SCHEMA_PATH, logout=False), "Test error: " + valid_files_dir
 
 
 def test_invalid_yamls():
