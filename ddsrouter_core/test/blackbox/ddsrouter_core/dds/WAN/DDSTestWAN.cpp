@@ -120,10 +120,11 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan,
+            types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::wan),
             tls_configuration(wan_kind));
 
     }
@@ -131,11 +132,12 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan,
+            types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-            types::ParticipantKind(types::ParticipantKind::wan)
-            );
+            types::security::TlsConfiguration());
     }
 }
 
@@ -181,8 +183,8 @@ configuration::DDSRouterConfiguration router_configuration(
         allowlist,
         blocklist,
         builtin_topics,
-        participants_configurations
-        );
+        participants_configurations,
+        1);
 }
 
 /**

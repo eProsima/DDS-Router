@@ -60,9 +60,9 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
                                 LATEST);
 
                 // Check result
-                ASSERT_EQ(id, result.id());
-                ASSERT_EQ(kind, result.kind());
-                ASSERT_EQ(domain, result.domain());
+                ASSERT_EQ(id, result.id_);
+                ASSERT_EQ(kind, result.kind_);
+                ASSERT_EQ(domain, result.domain_);
             }
         }
     }

@@ -52,11 +52,11 @@ fastrtps::rtps::RTPSParticipantAttributes
 DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 {
     // Get Configuration information
-    std::set<types::Address> listening_addresses = this->configuration_.listening_addresses();
+    std::set<types::Address> listening_addresses = this->configuration_.listening_addresses_;
     std::set<types::DiscoveryServerConnectionAddress> connection_addresses =
-            this->configuration_.connection_addresses();
-    types::GuidPrefix discovery_server_guid_prefix = this->configuration_.discovery_server_guid_prefix();
-    const auto& tls_config = this->configuration_.tls_configuration();
+            this->configuration_.connection_addresses_;
+    types::GuidPrefix discovery_server_guid_prefix = this->configuration_.discovery_server_guid_prefix_;
+    const auto& tls_config = this->configuration_.tls_configuration_;
 
     // Set attributes
     fastrtps::rtps::RTPSParticipantAttributes params;

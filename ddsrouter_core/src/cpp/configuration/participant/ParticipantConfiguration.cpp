@@ -36,16 +36,6 @@ ParticipantConfiguration::ParticipantConfiguration(
 {
 }
 
-ParticipantKind ParticipantConfiguration::kind() const noexcept
-{
-    return kind_;
-}
-
-ParticipantId ParticipantConfiguration::id() const noexcept
-{
-    return id_;
-}
-
 bool ParticipantConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
@@ -67,7 +57,7 @@ bool ParticipantConfiguration::is_valid(
 bool ParticipantConfiguration::operator ==(
         const ParticipantConfiguration& other) const noexcept
 {
-    return this->id() == other.id() && this->kind() == other.kind();
+    return this->id_ == other.id_ && this->kind_ == other.kind_;
 }
 
 } /* namespace configuration */

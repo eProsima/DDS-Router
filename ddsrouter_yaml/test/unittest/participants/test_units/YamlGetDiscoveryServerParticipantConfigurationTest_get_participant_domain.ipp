@@ -63,7 +63,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
                         LATEST);
 
         // Check result
-        ASSERT_EQ(domain, result.domain());
+        ASSERT_EQ(domain, result.domain_);
     }
 
     // incorrect domain format

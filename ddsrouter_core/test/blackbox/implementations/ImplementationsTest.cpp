@@ -35,6 +35,16 @@
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
+namespace eprosima {
+namespace ddsrouter {
+namespace test {
+
+constexpr const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
+
+} /* namespace test */
+} /* namespace ddsrouter */
+} /* namespace eprosima */
+
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -57,7 +67,8 @@ TEST(ImplementationsTest, solo_participant_implementation)
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            participant_configurations,
+            test::DEFAULT_THREAD_POOL_SIZE);
 
         // Create DDSRouter entity
         ASSERT_THROW(DDSRouter router(configuration), utils::ConfigurationException) << kind;
@@ -90,7 +101,8 @@ TEST(ImplementationsTest, pair_implementation)
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            participant_configurations,
+            test::DEFAULT_THREAD_POOL_SIZE);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -134,7 +146,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<FilterTopic>>(),
             builtin_topics,
-            participant_configurations);
+            participant_configurations,
+            test::DEFAULT_THREAD_POOL_SIZE);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -185,7 +198,8 @@ TEST(ImplementationsTest, all_implementations)
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            participant_configurations,
+            test::DEFAULT_THREAD_POOL_SIZE);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -220,7 +234,8 @@ TEST(ImplementationsTest, duplicated_ids)
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<FilterTopic>>(),
             std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations);
+            participant_configurations,
+            test::DEFAULT_THREAD_POOL_SIZE);
 
         // Create DDSRouter entity
         ASSERT_THROW(DDSRouter router(configuration), eprosima::ddsrouter::utils::ConfigurationException) << kind;

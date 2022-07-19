@@ -39,45 +39,36 @@ namespace configuration {
  * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-class DDSRouterReloadConfiguration : public BaseConfiguration
+struct DDSRouterReloadConfiguration : public BaseConfiguration
 {
-public:
 
-    /**
-     * TODO
-     */
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+
+    DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration() = default;
+
     DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration(
             std::set<std::shared_ptr<types::FilterTopic>> allowlist,
             std::set<std::shared_ptr<types::FilterTopic>> blocklist,
             std::set<std::shared_ptr<types::RealTopic>> builtin_topics);
 
-    /**
-     * @brief Return a set with the topics allowed in the configuration
-     *
-     * @return Set of filters to get allowed topics
-     */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> allowlist() const noexcept;
-
-    /**
-     * @brief Return a set with the topics blocked in the configuration
-     *
-     * @return Set of filters to get blocked topics
-     */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::FilterTopic>> blocklist() const noexcept;
-
-    /**
-     * TODO
-     */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<types::RealTopic>> builtin_topics() const noexcept;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     DDSROUTER_CORE_DllAPI bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-protected:
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist_;
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist_;
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics_;
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist_ = {};
+
+    std::set<std::shared_ptr<types::FilterTopic>> blocklist_ = {};
+
+    std::set<std::shared_ptr<types::RealTopic>> builtin_topics_ = {};
 };
 
 } /* namespace configuration */

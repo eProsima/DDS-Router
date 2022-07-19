@@ -29,32 +29,25 @@ namespace ddsrouter {
 namespace core {
 namespace configuration {
 
-/**
- * TODO
- */
-class ParticipantConfiguration : public BaseConfiguration
+struct ParticipantConfiguration : public BaseConfiguration
 {
-public:
 
-    /**
-     * TODO
-     */
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+
+    DDSROUTER_CORE_DllAPI ParticipantConfiguration() = default;
+
     DDSROUTER_CORE_DllAPI ParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind) noexcept;
 
-    //! Participant Kind associated with this configuration
-    DDSROUTER_CORE_DllAPI types::ParticipantKind kind() const noexcept;
-
-    //! Participant Id associated with this configuration
-    DDSROUTER_CORE_DllAPI types::ParticipantId id() const noexcept;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     /**
      * @brief Equal comparator
-     *
-     * This comparator should check if the id is equal to the other Configuration and check the yaml equality.
-     *
-     * @todo: check equality yaml and not identity yaml.
      *
      * @param [in] other: ParticipantConfiguration to compare.
      * @return True if both configurations are the same, False otherwise.
@@ -65,13 +58,15 @@ public:
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-protected:
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
     //! Participant Id associated with this configuration
-    const types::ParticipantId id_;
+    types::ParticipantId id_;
 
     //! Participant Kind of the Participant that this configuration refers.
-    const types::ParticipantKind kind_;
+    types::ParticipantKind kind_;
 };
 
 } /* namespace configuration */

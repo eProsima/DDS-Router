@@ -83,7 +83,8 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
         allowlist,
         blocklist,
         builtin_topics,
-        participants_configurations
+        participants_configurations,
+        1
         );
 }
 

@@ -39,50 +39,39 @@ namespace configuration {
  * This class joins every DDSRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-class DDSRouterConfiguration : public DDSRouterReloadConfiguration
+struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
 {
-public:
 
-    /**
-     * TODO
-     */
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+
+    DDSROUTER_CORE_DllAPI DDSRouterConfiguration() = default;
+
     DDSROUTER_CORE_DllAPI DDSRouterConfiguration(
             std::set<std::shared_ptr<types::FilterTopic>> allowlist,
             std::set<std::shared_ptr<types::FilterTopic>> blocklist,
             std::set<std::shared_ptr<types::RealTopic>> builtin_topics,
             std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-            unsigned int number_of_threads = default_number_of_threads());
+            unsigned int number_of_threads);
 
-    /**
-     * @brief Return a set with the different \c ParticipantConfigurations in the yaml
-     *
-     * Every participant configuration is an object of the specific class set in \c types::ParticipantKind .
-     *
-     * @return Set of \c ParticipantConfigurations
-     */
-    DDSROUTER_CORE_DllAPI std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations() const
-    noexcept;
-
-    DDSROUTER_CORE_DllAPI bool is_valid(
-            utils::Formatter& error_msg) const noexcept override;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     DDSROUTER_CORE_DllAPI void reload(
             const DDSRouterReloadConfiguration& new_configuration);
 
-    DDSROUTER_CORE_DllAPI unsigned int number_of_threads() const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
-    DDSROUTER_CORE_DllAPI static unsigned int default_number_of_threads() noexcept;
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
-protected:
+    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_ = {};
 
-    static bool check_correct_configuration_object_(
-            const std::shared_ptr<ParticipantConfiguration> configuration);
-
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_;
-
-    unsigned int number_of_threads_;
-
-    static const unsigned int DEFAULT_NUMBER_OF_THREADS_;
+    unsigned int number_of_threads_ = 10;
 };
 
 } /* namespace configuration */

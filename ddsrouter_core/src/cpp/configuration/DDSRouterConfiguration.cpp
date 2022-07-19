@@ -33,8 +33,6 @@ namespace configuration {
 
 using namespace eprosima::ddsrouter::core::types;
 
-const unsigned int DDSRouterConfiguration::DEFAULT_NUMBER_OF_THREADS_ = 12;
-
 DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<FilterTopic>> allowlist,
         std::set<std::shared_ptr<FilterTopic>> blocklist,
@@ -45,11 +43,6 @@ DDSRouterConfiguration::DDSRouterConfiguration(
     , participants_configurations_(participants_configurations)
     , number_of_threads_(number_of_threads)
 {
-}
-
-std::set<std::shared_ptr<ParticipantConfiguration>> DDSRouterConfiguration::participants_configurations() const noexcept
-{
-    return participants_configurations_;
 }
 
 bool DDSRouterConfiguration::is_valid(
@@ -84,19 +77,12 @@ bool DDSRouterConfiguration::is_valid(
         // Check configuration is valid
         if (!configuration->is_valid(error_msg))
         {
-            error_msg << "Error in Participant " << configuration->id() << ". ";
-            return false;
-        }
-
-        // Check that the configuration is of type required
-        if (!check_correct_configuration_object_(configuration))
-        {
-            error_msg << "Participant " << configuration->id() << " is not of correct Configuration class. ";
+            error_msg << "Error in Participant " << configuration->id_ << ". ";
             return false;
         }
 
         // Store every id in a set to see if there are repetitions
-        ids.insert(configuration->id());
+        ids.insert(configuration->id_);
     }
 
     // If the number of ids are not equal the number of configurations, is because they are repeated
@@ -112,43 +98,9 @@ bool DDSRouterConfiguration::is_valid(
 void DDSRouterConfiguration::reload(
         const DDSRouterReloadConfiguration& new_configuration)
 {
-    this->allowlist_ = new_configuration.allowlist();
-    this->blocklist_ = new_configuration.blocklist();
-    this->builtin_topics_ = new_configuration.builtin_topics();
-}
-
-template <typename T>
-bool check_correct_configuration_object_by_type_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
-{
-    return nullptr != std::dynamic_pointer_cast<T>(configuration);
-}
-
-bool DDSRouterConfiguration::check_correct_configuration_object_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
-{
-    switch (configuration->kind())
-    {
-        case ParticipantKind::simple_rtps:
-            return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
-
-        case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan:
-            return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
-
-        default:
-            return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
-    }
-}
-
-unsigned int DDSRouterConfiguration::number_of_threads() const noexcept
-{
-    return number_of_threads_;
-}
-
-unsigned int DDSRouterConfiguration::default_number_of_threads() noexcept
-{
-    return DEFAULT_NUMBER_OF_THREADS_;
+    this->allowlist_ = new_configuration.allowlist_;
+    this->blocklist_ = new_configuration.blocklist_;
+    this->builtin_topics_ = new_configuration.builtin_topics_;
 }
 
 } /* namespace configuration */
