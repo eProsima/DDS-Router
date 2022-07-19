@@ -112,7 +112,10 @@
                         "local-ds",
                         "local-discovery-server",
                         "wan",
-                        "router"
+                        "router",
+                        "initial_peers",
+                        "direct",
+                        "repeater"
                     ]
                 },
                 "domain":{
@@ -133,7 +136,14 @@
                 "connection-addresses":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/definitions/ConnectionAddress"
+                        "anyOf":[
+                            {
+                                "$ref":"#/definitions/DsConnectionAddress"
+                            },
+                            {
+                                "$ref":"#/definitions/Address"
+                            }
+                        ]
                     },
                     "minItems": 1
                 },
@@ -268,6 +278,47 @@
                             }
                         ]
                     }
+                },
+                {
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "initial-peers",
+                                    "direct",
+                                    "repeater"
+                                ]
+                            }
+                        }
+                    },
+                    "then":{
+                        "allOf":[
+                            {
+                                "properties":{
+                                    "discovery-server-guid":{
+                                        "not":{
+
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "anyOf":[
+                                    {
+                                        "required":[
+                                            "listening-addresses"
+                                        ]
+                                    },
+                                    {
+                                        "required":[
+                                            "connection-addresses"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 }
             ],
             "title":"Participant"
@@ -300,7 +351,7 @@
             ],
             "title":"DiscoveryServerGUID"
         },
-        "ConnectionAddress":{
+        "DsConnectionAddress":{
             "type":"object",
             "additionalProperties":false,
             "properties":{
@@ -318,7 +369,7 @@
                 "addresses",
                 "discovery-server-guid"
             ],
-            "title":"ConnectionAddress"
+            "title":"DsConnectionAddress"
         },
         "TLS":{
             "type":"object",

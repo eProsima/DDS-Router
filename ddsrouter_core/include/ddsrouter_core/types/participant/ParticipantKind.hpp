@@ -98,7 +98,7 @@ constexpr std::array<ParticipantKindAliasesType, PARTICIPANT_KIND_COUNT> PARTICI
     ParticipantKindAliasesType({"local", "simple", "", ""}),
     ParticipantKindAliasesType({"discovery-server", "ds", "local-ds", "local-discovery-server"}),
     ParticipantKindAliasesType({"wan", "router", "", ""}),
-    ParticipantKindAliasesType({"initial_peers", "direct", "repeater", ""}),
+    ParticipantKindAliasesType({"initial-peers", "direct", "repeater", ""}),
 };
 
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
