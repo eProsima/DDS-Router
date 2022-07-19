@@ -111,7 +111,37 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         ddsrouter_utils
+        ddsrouter_core
+    )
 
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+##########################################################
+# Yaml GetConfigurations InitialPeersParticipant Test #
+##########################################################
+
+set(TEST_NAME YamlGetInitialPeersParticipantConfigurationTest)
+
+set(TEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
+        YamlGetInitialPeersParticipantConfigurationTest.cpp
+    )
+
+set(TEST_LIST
+        get_participant_minimum
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        yaml-cpp
+        fastcdr
+        fastrtps
+        ddsrouter_utils
         ddsrouter_core
     )
 

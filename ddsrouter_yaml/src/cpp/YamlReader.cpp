@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
@@ -650,6 +651,49 @@ configuration::DiscoveryServerParticipantConfiguration YamlReader::get(
 {
     configuration::DiscoveryServerParticipantConfiguration object;
     fill<configuration::DiscoveryServerParticipantConfiguration>(object, yml, version);
+    return object;
+}
+
+//////////////////////////////////
+// InitialPeersParticipantConfiguration
+template <>
+void YamlReader::fill(
+        configuration::InitialPeersParticipantConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Parent class fill
+    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+
+    // Optional listening addresses
+    if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
+    {
+        object.listening_addresses_ = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
+    }
+
+    // Optional connection addresses
+    if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
+    {
+        object.connection_addresses_ = YamlReader::get_set<types::Address>(
+            yml,
+            CONNECTION_ADDRESSES_TAG,
+            version);
+    }
+
+    // Optional TLS
+    if (YamlReader::is_tag_present(yml, TLS_TAG))
+    {
+        object.tls_configuration_ = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+    }
+}
+
+template <>
+configuration::InitialPeersParticipantConfiguration YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    configuration::InitialPeersParticipantConfiguration object;
+    fill<configuration::InitialPeersParticipantConfiguration>(object, yml, version);
     return object;
 }
 
