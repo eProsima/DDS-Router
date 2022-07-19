@@ -113,7 +113,7 @@
                         "local-discovery-server",
                         "wan",
                         "router",
-                        "initial_peers",
+                        "initial-peers",
                         "direct",
                         "repeater"
                     ]
