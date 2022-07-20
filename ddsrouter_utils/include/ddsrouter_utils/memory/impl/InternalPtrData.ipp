@@ -48,7 +48,7 @@ template<typename T>
 InternalPtrData<T>::~InternalPtrData()
 {
     // Release data in case it still exists
-    dereference();
+    release_reference_();
 }
 
 ///////////////////////
@@ -109,7 +109,7 @@ InternalPtrData<T>::InternalPtrData(
 }
 
 template<typename T>
-void InternalPtrData<T>::dereference()
+void InternalPtrData<T>::release_reference_()
 {
     shared_mutex_.lock();
     if (reference_ != nullptr)

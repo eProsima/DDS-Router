@@ -26,7 +26,7 @@ namespace ddsrouter {
 namespace utils {
 
 /**
- * @brief Exception thrown when not trying to reference a non valid value.
+ * @brief Exception thrown when trying to reference a non valid value.
  *
  * Most common case is when trying to access an already erased pointer.
  */

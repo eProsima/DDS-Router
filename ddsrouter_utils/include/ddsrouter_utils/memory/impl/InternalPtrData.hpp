@@ -18,8 +18,8 @@
  * This file contains class InternalPtrData definition.
  */
 
-#ifndef _DDSROUTERUTILS_MEMORY_IMPL_INTERNALDATAPTR_HPP_
-#define _DDSROUTERUTILS_MEMORY_IMPL_INTERNALDATAPTR_HPP_
+#ifndef _DDSROUTERUTILS_MEMORY_IMPL_INTERNALPTRDATA_HPP_
+#define _DDSROUTERUTILS_MEMORY_IMPL_INTERNALPTRDATA_HPP_
 
 #include <memory>
 #include <mutex>
@@ -120,7 +120,7 @@ protected:
      * It deletes the internal ptr using the specific deleter and locking the mutex (unique lock) so
      * it assures no other ptr is using the data at that time.
      */
-    void dereference();
+    void release_reference_();
 
     ////////////////////////////
     // INTERNAL VARIABLES
@@ -143,4 +143,4 @@ protected:
 // Include implementation template file
 #include <ddsrouter_utils/memory/impl/InternalPtrData.ipp>
 
-#endif /* _DDSROUTERUTILS_MEMORY_IMPL_INTERNALDATAPTR_HPP_ */
+#endif /* _DDSROUTERUTILS_MEMORY_IMPL_INTERNALPTRDATA_HPP_ */

@@ -105,8 +105,8 @@ void OwnerPtr<T>::reset()
 {
     if (this->operator bool())
     {
-        // In case the data is valid, it dereferences it and erase the shared ptr
-        data_reference_->dereference();
+        // In case the data is valid, it releases reference and erase the shared ptr
+        data_reference_->release_reference_();
         data_reference_.reset();
     }
 }

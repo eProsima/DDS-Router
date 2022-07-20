@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file OwnerPtr.hpp
+ * @file owner_ptr.hpp
  *
  * This file contains class OwnerPtr and LesseePtr implementation.
  */
@@ -39,10 +39,10 @@
  * This object can access the data by operators -> and * and will throw an exception in case the data is not
  * valid anymore (it has been deleted from the owner). While using the data, the owner will not be able to remove it.
  * This object can also "lock" the data, creating a \c GuardedPtr that will force the data to not be removed
- * while the object exist.
+ * while the object exists.
  *
  * - GUARDED PTR
- * This object force the internal data to exist while this object exists (locks de data destruction).
+ * This object forces the internal data to exist while this object exists (locks data destruction).
  * Thus, it is recommended to use this object as soon as possible and remove it afterwards, letting the ownership
  * again to the owner of the data.
  *

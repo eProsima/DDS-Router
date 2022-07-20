@@ -36,9 +36,10 @@ namespace utils {
 /**
  * Class that contains a reference (ptr) for an object whose ownership is \c this .
  * When \c this is destroyed, the object is destroyed too (using the deleter function given).
- * In order to use the object from another context, it must be by using a \c LesseePtr ,
+ * In order to use the object from another context, it must be by locking a \c LesseePtr ,
  * that is allowed to use it and assures the object is not destroyed while it is being used.
- * But LesseePtr does not own the object, which could only be destroyed when no lessee is using it.
+ * But LesseePtr does not own the object,
+ * which could only be destroyed when no lessee is using it (and thus locking it).
  *
  * @tparam T Type of the data referenced by this ptr.
  */
@@ -107,7 +108,7 @@ public:
      * This makes this object to have no data, and it releases the old data.
      * Thus, it must wait if the data is locked by lessees.
      *
-     * Using this method, the lessees created so far will be detached (this is, the mutex is not longer shared).
+     * Using this method, the lessees created so far will be detached (this is, the mutex is no longer shared).
      */
     void reset();
 
@@ -117,7 +118,7 @@ public:
      * This makes this object to destroy the old data.
      * Thus, it must wait if the data is locked by lessees.
      *
-     * Using this method, the lessees created so far will be detached (this is, the mutex is not longer shared).
+     * Using this method, the lessees created so far will be detached (this is, the mutex is no longer shared).
      */
     void reset(
             T* reference,
@@ -166,7 +167,7 @@ public:
     /**
      * @brief Default deleter lambda used if deleter is not given
      *
-     * This deleter use \c delete to destroy the internal data.
+     * This deleter uses \c delete to destroy the internal data.
      * This is commonly used if the data is passed to this ptr by using \c new .
      */
     static std::function<void(T*)> default_deleter();

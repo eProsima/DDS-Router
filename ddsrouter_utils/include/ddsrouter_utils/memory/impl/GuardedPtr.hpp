@@ -84,7 +84,7 @@ public:
      * @brief Access to raw ptr of the data (do not check if the internal data is valid)
      *
      * @warning This method is NOT RECOMMENDED as the idea of this object is to exist the minimum possible
-     * and using the ptr outside this object could left the ptr unprotected.
+     * and using the ptr outside this object could leave the ptr unprotected.
      *
      * @return T* raw ptr to data
      */
@@ -125,13 +125,13 @@ protected:
 // EXTERNAL OPERATORS
 ////////////////////////////
 
-//! Allow to compare an GuardedPtr with nullptr
+//! Allow to compare a GuardedPtr with nullptr
 template<class T>
 bool operator ==(
         const GuardedPtr<T>& lhs,
         std::nullptr_t) noexcept;
 
-//! Allow to compare an GuardedPtr with nullptr in the other direction (from C++20 this is not needed)
+//! Allow to compare a GuardedPtr with nullptr in the other direction (from C++20 this is not needed)
 template<class T>
 bool operator ==(
         std::nullptr_t,
