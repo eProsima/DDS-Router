@@ -43,8 +43,8 @@ public:
     DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind,
-            const types::DomainId& domain_id,
-            const bool is_repeater) noexcept;
+            const bool is_repeater,
+            const types::DomainId& domain_id) noexcept;
 
     /////////////////////////
     // METHODS

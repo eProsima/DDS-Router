@@ -45,22 +45,22 @@ std::vector<PayloadUnit> random_payload(
 
 configuration::DDSRouterConfiguration void_configuration()
 {
-    return configuration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<RealTopic>>(),
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
-    {
-        std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId("ParticipantVoid1"),
-            ParticipantKind::blank
-            ),
-        std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId("ParticipantVoid2"),
-            ParticipantKind::blank
-            )
-    }),
-        1);
+    configuration::DDSRouterConfiguration configuration;
+    configuration.participants_configurations =
+        {
+            std::make_shared<configuration::ParticipantConfiguration>(
+                ParticipantId("ParticipantVoid1"),
+                ParticipantKind::blank,
+                false
+                ),
+            std::make_shared<configuration::ParticipantConfiguration>(
+                ParticipantId("ParticipantVoid2"),
+                ParticipantKind::blank,
+                false
+                )
+        };
+
+    return configuration;
 }
 
 /**
@@ -79,6 +79,7 @@ configuration::DDSRouterConfiguration simple_configuration(
         std::set<std::shared_ptr<FilterTopic>>(),
         std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
+<<<<<<< HEAD
     {
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId(participant_1_name),
@@ -89,6 +90,20 @@ configuration::DDSRouterConfiguration simple_configuration(
             ParticipantKind::dummy
             )
     }),
+=======
+            {
+                std::make_shared<configuration::ParticipantConfiguration>(
+                    ParticipantId(participant_1_name),
+                    ParticipantKind::dummy,
+                    false
+                    ),
+                std::make_shared<configuration::ParticipantConfiguration>(
+                    ParticipantId(participant_2_name),
+                    ParticipantKind::dummy,
+                    false
+                    )
+            }),
+>>>>>>> 70bbd0f... Refs #14951: Rebase over initial peers
         1);
 }
 

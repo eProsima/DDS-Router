@@ -87,7 +87,7 @@ public:
     types::ParticipantKind kind() const noexcept override;
 
     /**
-     * @brief Override is_repeater() IParticipant method
+     * @brief Override is_repeater_ IParticipant method
      *
      * It gets the kind from the configuration.
      *

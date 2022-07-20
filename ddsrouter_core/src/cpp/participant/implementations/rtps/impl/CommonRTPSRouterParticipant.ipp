@@ -247,7 +247,7 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
         topic,
         this->payload_pool_,
         rtps_participant_,
-        this->configuration_.is_repeater());
+        this->configuration_.is_repeater_);
 }
 
 template <class ConfigurationType>

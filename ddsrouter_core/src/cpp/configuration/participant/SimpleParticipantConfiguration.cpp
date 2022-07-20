@@ -29,8 +29,8 @@ using namespace eprosima::ddsrouter::core::types;
 SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantId& id,
         const ParticipantKind& kind,
-        const DomainId& domain_id,
-        const bool is_repeater) noexcept
+        const bool is_repeater,
+        const DomainId& domain_id) noexcept
     : ParticipantConfiguration(id, kind, is_repeater)
     , domain(domain_id)
 {

@@ -48,6 +48,7 @@ struct InitialPeersParticipantConfiguration : public SimpleParticipantConfigurat
     DDSROUTER_CORE_DllAPI InitialPeersParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind,
+            const bool is_repeater,
             const types::DomainId& domain_id,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::Address>& connection_addresses,

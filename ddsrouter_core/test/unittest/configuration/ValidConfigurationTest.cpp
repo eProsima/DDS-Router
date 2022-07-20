@@ -53,7 +53,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 {},
                 {},
                 {},
-                participant_configurations
+                participant_configurations,
+                1
             );
 
         utils::Formatter formatter;
@@ -73,7 +74,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 {},
                 {},
                 {},
-                participant_configurations
+                participant_configurations,
+                1
             );
 
         utils::Formatter formatter;
@@ -88,8 +90,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 (
                     test::random_participant_id(),
                     core::types::ParticipantKind::simple_rtps,
-                    test::random_domain(),
-                    true
+                    true,
+                    test::random_domain()
                 )
             );
 
@@ -97,7 +99,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 {},
                 {},
                 {},
-                participant_configurations
+                participant_configurations,
+                1
             );
 
         utils::Formatter formatter;
@@ -113,7 +116,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 {},
                 {},
                 {},
-                participant_configurations
+                participant_configurations,
+                1
             );
 
         utils::Formatter formatter;
@@ -130,7 +134,8 @@ TEST(ValidConfigurationTest, number_of_participants)
                 {},
                 {},
                 {},
-                participant_configurations
+                participant_configurations,
+                1
             );
 
         utils::Formatter formatter;

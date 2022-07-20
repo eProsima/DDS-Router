@@ -119,6 +119,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::initial_peers,
+            false,
             domain,
             listening_addresses,
             connection_addresses,
@@ -130,6 +131,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::initial_peers,
+            false,
             domain,
             listening_addresses,
             connection_addresses,
@@ -170,6 +172,7 @@ configuration::DDSRouterConfiguration router_configuration(
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("simple_participant_" + std::to_string(domain)),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            false,
                             types::DomainId(domain)
                             ),
                     }

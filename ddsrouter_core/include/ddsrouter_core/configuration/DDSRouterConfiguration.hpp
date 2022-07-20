@@ -69,7 +69,7 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     // VARIABLES
     /////////////////////////
 
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_ = {};
+    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations = {};
 
     unsigned int number_of_threads = 12;
 

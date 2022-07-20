@@ -39,7 +39,7 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeater)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
+    core::types::ParticipantKind kind(core::types::ParticipantKind::initial_peers);
     core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
     core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
 
@@ -61,7 +61,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_FALSE(result.is_repeater());
+        ASSERT_FALSE(result.is_repeater_);
     }
 
     // true
@@ -85,7 +85,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_TRUE(result.is_repeater());
+        ASSERT_TRUE(result.is_repeater_);
     }
 
     // false
@@ -109,7 +109,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_FALSE(result.is_repeater());
+        ASSERT_FALSE(result.is_repeater_);
     }
 
     // incorrect bool format

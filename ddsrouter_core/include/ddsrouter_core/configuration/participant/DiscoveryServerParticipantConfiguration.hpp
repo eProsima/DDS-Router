@@ -48,8 +48,8 @@ struct DiscoveryServerParticipantConfiguration : public SimpleParticipantConfigu
     DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
             const types::ParticipantKind& kind,
-            const types::DomainId& domain_id,
             const bool is_repeater,
+            const types::DomainId& domain_id,
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,

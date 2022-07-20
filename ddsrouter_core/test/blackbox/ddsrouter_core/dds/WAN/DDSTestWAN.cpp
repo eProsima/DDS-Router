@@ -121,15 +121,11 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::wan,
+            false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-<<<<<<< HEAD
-=======
-            false,
-            types::ParticipantKind(types::ParticipantKind::wan),
->>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
             tls_configuration(wan_kind));
 
     }
@@ -138,17 +134,12 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
             types::ParticipantKind::wan,
+            false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
             listening_addresses,
             connection_addresses,
-<<<<<<< HEAD
             types::security::TlsConfiguration());
-=======
-            false,
-            types::ParticipantKind(types::ParticipantKind::wan)
-            );
->>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
     }
 }
 
@@ -185,6 +176,7 @@ configuration::DDSRouterConfiguration router_configuration(
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
                             types::ParticipantId("simple_participant"),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
+                            false,
                             types::DomainId(domain)
                             ),
                     }

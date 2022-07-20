@@ -31,11 +31,12 @@ using namespace eprosima::ddsrouter::core::types;
 InitialPeersParticipantConfiguration::InitialPeersParticipantConfiguration(
         const types::ParticipantId& id,
         const types::ParticipantKind& kind,
+        const bool is_repeater,
         const types::DomainId& domain_id,
         const std::set<types::Address>& listening_addresses,
         const std::set<types::Address>& connection_addresses,
         const types::security::TlsConfiguration tls_configuration)
-    : SimpleParticipantConfiguration(id, kind, domain_id)
+    : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
     , listening_addresses_(listening_addresses)
     , connection_addresses_(connection_addresses)
     , tls_configuration_(tls_configuration)

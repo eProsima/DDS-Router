@@ -220,6 +220,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,
+                false,
                 random_domain(seed));
 
         case ParticipantKind::local_discovery_server:
@@ -235,11 +236,11 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 id,
                 kind,
+                false,
                 random_domain(seed),
                 random_guid_prefix(seed),
                 std::set<Address>(),
                 std::set<DiscoveryServerConnectionAddress>({connection_address}),
-<<<<<<< HEAD
                 security::TlsConfiguration());
         }
 
@@ -249,19 +250,16 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
                 id,
                 kind,
+                false,
                 random_domain(seed),
                 std::set<Address>(),
                 std::set<Address>({Address()}),
                 security::TlsConfiguration());
-=======
-                false,
-                kind);
->>>>>>> b9128bc... Refs #14951: Implement Repeater Participant
         }
 
         // Add cases where Participants need specific arguments
         default:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind);
+            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind, false);
     }
 }
 
