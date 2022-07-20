@@ -59,7 +59,7 @@ OwnerPtr<T>::OwnerPtr(
 
     // NOTE: This cannot use make_shared because shared_ptr is not friend of InternalPtrData
     data_reference_ = std::shared_ptr<InternalPtrData<T>>(
-            new InternalPtrData<T>(reference, deleter));
+        new InternalPtrData<T>(reference, deleter));
 }
 
 template<typename T>

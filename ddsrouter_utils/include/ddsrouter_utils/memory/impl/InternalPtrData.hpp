@@ -58,7 +58,8 @@ public:
     InternalPtrData();
 
     //! Move constructor
-    InternalPtrData(InternalPtrData&& other);
+    InternalPtrData(
+            InternalPtrData&& other);
 
     /**
      * @brief Destruct object
@@ -111,8 +112,8 @@ protected:
      * @param deleter Deleter to use when dereferencing the data.
      */
     InternalPtrData(
-        T* reference,
-        const std::function<void(T*)>& deleter);
+            T* reference,
+            const std::function<void(T*)>& deleter);
 
     /**
      * @brief Delete the internal data

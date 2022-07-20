@@ -43,7 +43,8 @@ GuardedPtr<T>::~GuardedPtr()
 }
 
 template<typename T>
-GuardedPtr<T>::GuardedPtr(GuardedPtr&& other)
+GuardedPtr<T>::GuardedPtr(
+        GuardedPtr&& other)
     : data_reference_(std::move(other.data_reference_))
 {
 }

@@ -54,10 +54,12 @@ public:
     ///////////////////////
 
     //! Move constructor
-    GuardedPtr(GuardedPtr&&);
+    GuardedPtr(
+            GuardedPtr&&);
 
     //! Copy constructor not allowed
-    GuardedPtr(const GuardedPtr&) = delete;
+    GuardedPtr(
+            const GuardedPtr&) = delete;
 
     //! Copy operator not allowed
     GuardedPtr<T>& operator =(

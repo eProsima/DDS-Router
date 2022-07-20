@@ -37,7 +37,8 @@ InternalPtrData<T>::InternalPtrData()
 }
 
 template<typename T>
-InternalPtrData<T>::InternalPtrData(InternalPtrData&& other)
+InternalPtrData<T>::InternalPtrData(
+        InternalPtrData&& other)
     : reference_(std::move(other.reference_))
     , shared_mutex_(std::move(other.shared_mutex_))
     , deleter_(std::move(other.deleter_))

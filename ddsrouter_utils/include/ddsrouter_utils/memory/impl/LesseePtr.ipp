@@ -142,7 +142,7 @@ GuardedPtr<T> LesseePtr<T>::lock_(
             data_reference_->unlock_shared();
 
             throw ValueAccessException(
-                        "Trying to access a data not available anymore.");
+                      "Trying to access a data not available anymore.");
         }
     }
 
