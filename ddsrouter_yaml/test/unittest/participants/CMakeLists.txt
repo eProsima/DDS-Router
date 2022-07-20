@@ -102,7 +102,6 @@ set(TEST_LIST
         tls_configuration_inactive
         tls_configuration_incorrect_empty
         tls_configuration_incorrect_format
-        get_participant_repeater
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -134,6 +133,7 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         get_participant_minimum
+        get_participant_repeater
     )
 
 set(TEST_EXTRA_LIBRARIES

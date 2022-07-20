@@ -23,7 +23,6 @@
 #include "test_units/YamlGetDiscoveryServerParticipantConfigurationTest_get_participant_listening_addresses.ipp"
 #include "test_units/YamlGetDiscoveryServerParticipantConfigurationTest_get_participant_connection_addresses.ipp"
 #include "test_units/YamlGetDiscoveryServerParticipantConfigurationTest_get_participant_tls.ipp"
-#include "test_units/YamlGetDiscoveryServerParticipantConfigurationTest_get_participant_repeater.ipp"
 #include "test_units/YamlGetDiscoveryServerParticipantConfigurationTest_get_participant_negative.ipp"
 
 int main(
