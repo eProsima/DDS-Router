@@ -20,7 +20,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_utils/memory/OwnerPtr.hpp>
+#include <ddsrouter_utils/memory/owner_ptr.hpp>
 
 using namespace eprosima::ddsrouter::utils;
 
@@ -60,7 +60,7 @@ TEST(LesseePtrTest, lessee_ptr_string_access)
 
     // Access by lock
     {
-        std::shared_ptr<std::string> str_ptr = lessee.lock();
+        auto str_ptr = lessee.lock();
         ASSERT_EQ(0, std::strcmp(str_ptr->c_str(), internal_str));
     }
 }

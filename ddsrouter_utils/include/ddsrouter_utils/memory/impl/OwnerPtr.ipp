@@ -20,130 +20,15 @@
 #define _DDSROUTERUTILS_IMPL_MEMORY_OWNERPTR_IPP_
 
 #include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <ddsrouter_utils/exception/ValueAccessException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template<typename T>
-LesseePtr<T>::LesseePtr()
-    : shared_mutex_()
-{
-}
-
-template<typename T>
-LesseePtr<T>::LesseePtr(
-        std::weak_ptr<T> data,
-        std::shared_ptr<std::shared_timed_mutex> shared_mutex)
-    : data_reference_(data)
-    , shared_mutex_(shared_mutex)
-{
-}
-
-template<typename T>
-LesseePtr<T>::~LesseePtr()
-{
-    if (shared_mutex_)
-    {
-        // It waits in case there are still some locked references
-        std::lock_guard<std::shared_timed_mutex> lock(*shared_mutex_);
-    }
-}
-
-template<typename T>
-LesseePtr<T>::LesseePtr(
-        const LesseePtr<T>& other)
-{
-    this->data_reference_ = other.data_reference_;
-    this->shared_mutex_ = other.shared_mutex_;
-}
-
-template<typename T>
-LesseePtr<T>::LesseePtr(
-        LesseePtr<T>&& other)
-{
-    this->data_reference_ = std::move(other.data_reference_);
-    this->shared_mutex_ = std::move(other.shared_mutex_);
-}
-
-template<typename T>
-LesseePtr<T>& LesseePtr<T>::operator =(
-        const LesseePtr<T>& other)
-{
-    this->data_reference_ = other.data_reference_;
-    this->shared_mutex_ = other.shared_mutex_;
-
-    return *this;
-}
-
-template<typename T>
-LesseePtr<T>& LesseePtr<T>::operator =(
-        LesseePtr<T>&& other)
-{
-    this->data_reference_ = std::move(other.data_reference_);
-    this->shared_mutex_ = std::move(other.shared_mutex_);
-
-    return *this;
-}
-
-template<typename T>
-std::shared_ptr<T> LesseePtr<T>::lock() noexcept
-{
-    return lock_(false);
-}
-
-template<typename T>
-std::shared_ptr<T> LesseePtr<T>::lock_with_exception()
-{
-    return lock_(true);
-}
-
-template<typename T>
-std::shared_ptr<T> LesseePtr<T>::lock_(
-        bool throw_exception)
-{
-    if (!shared_mutex_)
-    {
-        if (throw_exception)
-        {
-            throw InitializationException(
-                      "Trying to access a data from a non initialized LesseePtr.");
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    else
-    {
-        shared_mutex_->lock_shared();
-
-        std::shared_ptr<T> locked_ptr = data_reference_.lock();
-
-        if (!locked_ptr)
-        {
-            this->shared_mutex_->unlock_shared();
-
-            if (throw_exception)
-            {
-                throw InitializationException(
-                          "Trying to access a data not available anymore.");
-            }
-            else
-            {
-                return nullptr;
-            }
-        }
-
-        // Create a different shared_ptr that points to the same element
-        return std::shared_ptr<T> (
-            locked_ptr.get(),
-            [this](T* ptr)
-            {
-                this->shared_mutex_->unlock_shared();
-            });
-    }
-}
+//////////////////////////////
+// STATIC AUXILIARY VARIABLES
+//////////////////////////////
 
 template<typename T>
 const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value)
@@ -151,8 +36,13 @@ const std::function<void(T*)> OwnerPtr<T>::DEFAULT_DELETER_ = [](T* value)
             delete value;
         };
 
+///////////////////////
+// CONSTRUCTORS
+///////////////////////
+
 template<typename T>
 OwnerPtr<T>::OwnerPtr()
+    : data_reference_()
 {
 }
 
@@ -164,12 +54,12 @@ OwnerPtr<T>::OwnerPtr(
     if (nullptr == reference)
     {
         throw InitializationException(
-                  "Trying to create an OwnerPtr without a nullptr.");
+                  "Trying to create an OwnerPtr from a nullptr.");
     }
-    else
-    {
-        data_reference_ = std::shared_ptr<T>(reference, deleter);
-    }
+
+    // NOTE: This cannot use make_shared because shared_ptr is not friend of InternalPtrData
+    data_reference_ = std::shared_ptr<InternalPtrData<T>>(
+        new InternalPtrData<T>(reference, deleter));
 }
 
 template<typename T>
@@ -183,47 +73,42 @@ OwnerPtr<T>::OwnerPtr(
         OwnerPtr<T>&& other)
 {
     this->data_reference_ = std::move(other.data_reference_);
-    this->leases_mutexes_ = std::move(other.leases_mutexes_);
+    // Move a shared ptr reset the internal ptr, so it points to null
 }
 
 template<typename T>
 OwnerPtr<T>& OwnerPtr<T>::operator =(
         OwnerPtr<T>&& other)
 {
+    // In case this Ptr had data inside, it must be deleted
+    reset();
+
     this->data_reference_ = std::move(other.data_reference_);
-    this->leases_mutexes_ = std::move(other.leases_mutexes_);
+    // Move a shared ptr reset the internal ptr, so it points to null
 
     return *this;
 }
 
+///////////////////////
+// INTERACTION METHODS
+///////////////////////
+
 template<typename T>
 LesseePtr<T> OwnerPtr<T>::lease()
 {
-    std::shared_ptr<std::shared_timed_mutex> new_mutex = std::make_shared<std::shared_timed_mutex>();
-
-    leases_mutexes_.push_back(new_mutex);
-
     return LesseePtr<T>(
-        data_reference_,
-        new_mutex);
+        data_reference_);
 }
 
 template<typename T>
 void OwnerPtr<T>::reset()
 {
-    for (std::shared_ptr<std::shared_timed_mutex> mutex : leases_mutexes_)
+    if (this->operator bool())
     {
-        mutex->lock();
+        // In case the data is valid, it releases reference and erase the shared ptr
+        data_reference_->release_reference_();
+        data_reference_.reset();
     }
-
-    data_reference_.reset();
-
-    for (std::shared_ptr<std::shared_timed_mutex> mutex : leases_mutexes_)
-    {
-        mutex->unlock();
-    }
-
-    leases_mutexes_.clear();
 }
 
 template<typename T>
@@ -240,33 +125,53 @@ void OwnerPtr<T>::reset(
     }
     else
     {
-        data_reference_ = std::shared_ptr<T>(reference, deleter);
+        data_reference_.reset(new InternalPtrData<T>(reference, deleter));
     }
 }
+
+///////////////////////
+// ACCESS DATA METHODS
+///////////////////////
 
 template<typename T>
 T* OwnerPtr<T>::operator ->()
 {
-    return data_reference_.operator ->();
+    return data_reference_->operator ->();
 }
 
 template<typename T>
 T& OwnerPtr<T>::operator *()
 {
-    return data_reference_.operator *();
+    return data_reference_->operator *();
+}
+
+template<typename T>
+T* OwnerPtr<T>::get()
+{
+    return data_reference_->get();
 }
 
 template<typename T>
 OwnerPtr<T>::operator bool() const noexcept
 {
-    return data_reference_.operator bool();
+    return
+        data_reference_ &&
+        data_reference_->operator bool();
 }
+
+////////////////////////////
+// STATIC AUXILIARY METHODS
+////////////////////////////
 
 template<typename T>
 std::function<void(T*)> OwnerPtr<T>::default_deleter()
 {
     return OwnerPtr<T>::DEFAULT_DELETER_;
 }
+
+////////////////////////////
+// EXTERNAL OPERATORS
+////////////////////////////
 
 template<class T>
 bool operator ==(

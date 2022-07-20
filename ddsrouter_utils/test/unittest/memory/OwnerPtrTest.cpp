@@ -19,7 +19,7 @@
 
 #include <climits>
 
-#include <ddsrouter_utils/memory/OwnerPtr.hpp>
+#include <ddsrouter_utils/memory/owner_ptr.hpp>
 
 using namespace eprosima::ddsrouter::utils;
 
