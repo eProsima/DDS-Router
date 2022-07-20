@@ -23,26 +23,6 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-//! Data structure to store values for a Memory Pool Configuration.
-struct PoolConfiguration
-{
-    //! Default constructor with default values.
-    PoolConfiguration() = default;
-
-    //! Constructor with parameters.
-    PoolConfiguration(
-            unsigned int initial_size,
-            unsigned int maximum_size,
-            unsigned int batch_size) noexcept;
-
-    //! Initial number of elements when preallocating data.
-    unsigned int initial_size = 0;
-    //! Maximum of allocated elements. 0 = No limit.
-    unsigned int maximum_size = 0;
-    //! Number of elements to allocate when no free elements are available (without exceeding maximum).
-    unsigned int batch_size = 1;
-};
-
 /**
  * @brief Memory Pool interface.
  *
@@ -84,42 +64,7 @@ public:
     virtual bool return_loan(
             T* element) = 0;
 
-protected:
-
-    /**
-     * @brief Construct a new non-initialized element.
-     *
-     * By default, it calls \c new with default constructor.
-     */
-    virtual T* new_element_();
-
-    /**
-     * @brief Delete an element initialized with \c new_element_ .
-     *
-     * By default, it calls \c delete on the element.
-     */
-    virtual void delete_element_(T* element);
-
-    /**
-     * @brief Reset internal element information to reuse it.
-     *
-     * By default, it does nothing.
-     */
-    virtual void reset_element_(T* element);
 };
-
-/**
- * @brief Create a pool object depending on the configuration given.
- *
- * It creates the IPool specialization that better implements the given configuration.
- *
- * @tparam T Type of elements that the Pool will manage.
- * @param configuration Pool Configuration
- * @return IPool<T>* new Pool object.
- */
-template <typename T>
-static IPool<T>* create_pool(
-        PoolConfiguration configuration);
 
 } /* namespace utils */
 } /* namespace ddsrouter */
