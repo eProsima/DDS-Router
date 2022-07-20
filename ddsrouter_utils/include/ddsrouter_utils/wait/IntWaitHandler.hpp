@@ -48,8 +48,8 @@ public:
      * @param enabled whether the object starts enabled or disabled
      */
     DDSROUTER_UTILS_DllAPI IntWaitHandler(
-            IntWaitHandlerType value,
-            bool enabled = true);
+            const IntWaitHandlerType& value,
+            const bool enabled = true);
 
     //! Default constructor
     DDSROUTER_UTILS_DllAPI ~IntWaitHandler();
@@ -78,7 +78,7 @@ public:
      * @return reason why thread was awake
      */
     DDSROUTER_UTILS_DllAPI AwakeReason wait_equal(
-            IntWaitHandlerType expected_value,
+            const IntWaitHandlerType& expected_value,
             const utils::Duration_ms& timeout = 0);
 
     /**
@@ -90,12 +90,12 @@ public:
      * @return reason why thread was awake
      */
     DDSROUTER_UTILS_DllAPI AwakeReason wait_greater_than(
-            IntWaitHandlerType upper_bound,
+            const IntWaitHandlerType& upper_bound,
             const utils::Duration_ms& timeout = 0);
 
     //! @brief Wait current thread while counter is lower than \c upper_bound .
     DDSROUTER_UTILS_DllAPI AwakeReason wait_greater_equal_than(
-            IntWaitHandlerType upper_bound,
+            const IntWaitHandlerType& upper_bound,
             const utils::Duration_ms& timeout = 0);
 
     /**
@@ -107,12 +107,12 @@ public:
      * @return reason why thread was awake
      */
     DDSROUTER_UTILS_DllAPI AwakeReason wait_lower_than(
-            IntWaitHandlerType lower_bound,
+            const IntWaitHandlerType& lower_bound,
             const utils::Duration_ms& timeout = 0);
 
     //! Wait current thread while counter is higher than \c lower_bound .
     DDSROUTER_UTILS_DllAPI AwakeReason wait_lower_equal_than(
-            IntWaitHandlerType lower_bound,
+            const IntWaitHandlerType& lower_bound,
             const utils::Duration_ms& timeout = 0);
 
     /////

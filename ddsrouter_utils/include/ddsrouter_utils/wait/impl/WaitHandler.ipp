@@ -27,16 +27,18 @@ namespace event {
 
 template <typename T>
 WaitHandler<T>::WaitHandler(
-        bool enabled /* = true */)
+        T&& init_value,
+        const bool enabled /* = true */)
     : enabled_(enabled)
     , threads_waiting_(0)
+    , value_(std::move(init_value))
 {
 }
 
 template <typename T>
 WaitHandler<T>::WaitHandler(
-        T init_value,
-        bool enabled /* = true */)
+        const T& init_value,
+        const bool enabled /* = true */)
     : enabled_(enabled)
     , threads_waiting_(0)
     , value_(init_value)
@@ -121,7 +123,7 @@ bool WaitHandler<T>::enabled() const noexcept
 
 template <typename T>
 std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
-        std::function<bool(const T&)> predicate,
+        const std::function<bool(const T&)>& predicate,
         const utils::Duration_ms& timeout,
         AwakeReason& reason) noexcept
 {
@@ -184,7 +186,7 @@ std::unique_lock<std::mutex> WaitHandler<T>::blocking_wait_(
 
 template <typename T>
 AwakeReason WaitHandler<T>::wait(
-        std::function<bool(const T&)> predicate,
+        const std::function<bool(const T&)>& predicate,
         const utils::Duration_ms& timeout /* = 0 */) noexcept
 {
     AwakeReason reason;
@@ -204,8 +206,15 @@ T WaitHandler<T>::get_value() const noexcept
 
 template <typename T>
 void WaitHandler<T>::set_value(
-        T new_value,
-        bool notify /* = true */) noexcept
+        const T& new_value) noexcept
+{
+    set_value_(new_value, true);
+}
+
+template <typename T>
+void WaitHandler<T>::set_value_(
+        const T& new_value,
+        bool notify) noexcept
 {
     {
         // Mutex must guard the modification of value_

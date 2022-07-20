@@ -60,12 +60,14 @@ public:
     /**
      * @brief Construct a new Wait Handler object
      *
-     * In this case, the variable \c value_ will be initialized by default.
+     * In this case, the variable \c value_ will be moved from \c init_value.
      *
+     * @param init_value initialize \c value_ by moving this object.
      * @param enabled whether the WaitHandler should be initialized enabled
      */
     WaitHandler(
-            bool enabled = true);
+            T&& init_value,
+            const bool enabled = true);
 
     /**
      * @brief Construct a new Wait Handler object
@@ -74,8 +76,8 @@ public:
      * @param enabled whether the WaitHandler should be initialized enabled
      */
     WaitHandler(
-            T init_value,
-            bool enabled = true);
+            const T& init_value,
+            const bool enabled = true);
 
     /**
      * @brief Destroy the Wait Handler object
@@ -92,7 +94,7 @@ public:
      *
      * If object is disabled, enable it. Otherwise do nothing.
      *
-     * @note: A WaitHandler not enabled will not wait.
+     * @note: A WaitHandler not enabled will not support wait call.
      */
     virtual void enable() noexcept;
 
@@ -102,7 +104,7 @@ public:
      * If object is enabled, disable it. Otherwise do nothing.
      * This method may finish before the rest of threads have finished.
      *
-     * @note: A disabled WaitHandler  will not wait.
+     * @note: A disabled WaitHandler will not support wait call.
      */
     virtual void disable() noexcept;
 
@@ -133,7 +135,7 @@ public:
      * @return reason why thread was awake
      */
     AwakeReason wait(
-            std::function<bool(const T&)> predicate,
+            const std::function<bool(const T&)>& predicate,
             const utils::Duration_ms& timeout = 0) noexcept;
 
     /////
@@ -142,10 +144,15 @@ public:
     //! Get current value
     T get_value() const noexcept;
 
-    //! Set new value
+    /**
+     * @brief Set new value and notify awaiting threads.
+     *
+     * @note uses \c set_value_ with \c notify = true .
+     *
+     * @param new_value new value to store
+     */
     void set_value(
-            T new_value,
-            bool notify = true) noexcept;
+            const T& new_value) noexcept;
 
     /**
      * @brief Awake every waiting thread by disabling and set as enabled afterwards
@@ -165,9 +172,22 @@ protected:
      * @return lock of this object mutex.
      */
     std::unique_lock<std::mutex> blocking_wait_(
-            std::function<bool(const T&)> predicate,
+            const std::function<bool(const T&)>& predicate,
             const utils::Duration_ms& timeout,
             AwakeReason& reason) noexcept;
+
+    /**
+     * @brief Set new value
+     *
+     * This method is intended to be called from child classes whenever want to
+     * set a new value without notifying it.
+     *
+     * @param new_value new value to store
+     * @param notify wether to notify all waiting threads
+     */
+    void set_value_(
+            const T& new_value,
+            bool notify) noexcept;
 
     /**
      * @brief  Current value

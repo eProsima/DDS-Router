@@ -30,6 +30,7 @@ namespace utils {
 SlotThreadPool::SlotThreadPool(
         const uint32_t n_threads)
     : number_of_threads_(n_threads)
+    , task_queue_(0, false)
     , enabled_(false)
 {
     logDebug(DDSROUTER_THREAD_POOL, "Creating Thread Pool with " << n_threads << " threads.");
@@ -51,6 +52,8 @@ void SlotThreadPool::enable() noexcept
 {
     if (!enabled_.exchange(true))
     {
+        task_queue_.enable();
+
         // Execute threads
         for (uint32_t i = 0; i < number_of_threads_; ++i)
         {

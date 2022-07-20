@@ -71,6 +71,8 @@ protected:
      */
     T get_next_value_() override;
 
+    void get_next_value_(T& value) override;
+
     //! \c DBQueue variable that stores the data
     fastrtps::DBQueue<T> queue_;
 

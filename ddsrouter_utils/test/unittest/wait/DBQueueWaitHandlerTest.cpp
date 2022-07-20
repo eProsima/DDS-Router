@@ -46,14 +46,14 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_int)
 {
     // Push and pop one value
     {
-        DBQueueWaitHandler<int> handler;
+        DBQueueWaitHandler<int> handler(0, true);
         handler.produce(1);
         EXPECT_EQ(handler.consume(), 1);
     }
 
     // Push and pop multiple values
     {
-        DBQueueWaitHandler<int> handler;
+        DBQueueWaitHandler<int> handler(0, true);
 
         handler.produce(1);
         handler.produce(2);
@@ -81,7 +81,7 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_int)
  */
 TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
 {
-    DBQueueWaitHandler<std::string> handler;
+    DBQueueWaitHandler<std::string> handler(0, true);
 
     std::string source_value("test_data");
     std::string lvalue(source_value);
@@ -105,7 +105,7 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
  */
 TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_copy)
 {
-    DBQueueWaitHandler<std::string> handler;
+    DBQueueWaitHandler<std::string> handler(0, true);
 
     std::string lvalue("test_data");
 
@@ -140,7 +140,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
     {
         bool popped_1 = false;
         bool popped_2 = false;
-        DBQueueWaitHandler<int> handler;
+        DBQueueWaitHandler<int> handler(0, true);
 
         // Create 3 threads. A & B will read wait handler, and C will write
         std::thread thread_A([&]()
@@ -189,7 +189,7 @@ TEST(DBQueueWaitHandlerTest, push_one_thread_pop_many_int)
         int popped_2 = 0;
         int popped_3 = 0;
         int stopped_by_exception = 0;
-        DBQueueWaitHandler<int> handler;
+        DBQueueWaitHandler<int> handler(0, true);
 
         auto lambda_for_A_and_B =
                 [&popped_1, &popped_2, &popped_3, &stopped_by_exception, &handler]

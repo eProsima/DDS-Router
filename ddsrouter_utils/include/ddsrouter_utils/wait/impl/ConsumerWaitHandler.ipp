@@ -28,7 +28,7 @@ namespace event {
 
 template <typename T>
 ConsumerWaitHandler<T>::ConsumerWaitHandler(
-        CounterType initial_value /* = 0 */,
+        const CounterType& initial_value,
         bool enabled /* = true */)
     : CounterWaitHandler(0, initial_value, enabled)
 {
@@ -77,6 +77,22 @@ T ConsumerWaitHandler<T>::consume(
         // This is taken without mutex protection
         return get_next_value_();
     }
+}
+
+template <typename T>
+AwakeReason ConsumerWaitHandler<T>::consume(
+        T& value,
+        const utils::Duration_ms& timeout /* = 0 */)
+{
+    AwakeReason reason = wait_and_decrement(timeout);
+
+    // Check if reason has been condition met, else throw exception
+    if (reason == AwakeReason::condition_met)
+    {
+        get_next_value_(value);
+    }
+
+    return reason;
 }
 
 } /* namespace event */

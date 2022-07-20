@@ -26,8 +26,8 @@ namespace ddsrouter {
 namespace event {
 
 IntWaitHandler::IntWaitHandler(
-        IntWaitHandlerType value,
-        bool enabled /* = true */)
+        const IntWaitHandlerType& value,
+        const bool enabled /* = true */)
     : WaitHandler<IntWaitHandlerType>(value, enabled)
 {
 }
@@ -37,7 +37,7 @@ IntWaitHandler::~IntWaitHandler()
 }
 
 AwakeReason IntWaitHandler::wait_equal(
-        IntWaitHandlerType expected_value,
+        const IntWaitHandlerType& expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<IntWaitHandlerType>::wait(
@@ -49,7 +49,7 @@ AwakeReason IntWaitHandler::wait_equal(
 }
 
 AwakeReason IntWaitHandler::wait_greater_than(
-        IntWaitHandlerType expected_value,
+        const IntWaitHandlerType& expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<IntWaitHandlerType>::wait(
@@ -61,7 +61,7 @@ AwakeReason IntWaitHandler::wait_greater_than(
 }
 
 AwakeReason IntWaitHandler::wait_greater_equal_than(
-        IntWaitHandlerType expected_value,
+        const IntWaitHandlerType& expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<IntWaitHandlerType>::wait(
@@ -73,7 +73,7 @@ AwakeReason IntWaitHandler::wait_greater_equal_than(
 }
 
 AwakeReason IntWaitHandler::wait_lower_than(
-        IntWaitHandlerType expected_value,
+        const IntWaitHandlerType& expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<IntWaitHandlerType>::wait(
@@ -85,7 +85,7 @@ AwakeReason IntWaitHandler::wait_lower_than(
 }
 
 AwakeReason IntWaitHandler::wait_lower_equal_than(
-        IntWaitHandlerType expected_value,
+        const IntWaitHandlerType& expected_value,
         const utils::Duration_ms& timeout /* = 0 */)
 {
     return WaitHandler<IntWaitHandlerType>::wait(

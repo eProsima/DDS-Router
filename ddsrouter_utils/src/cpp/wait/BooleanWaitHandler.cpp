@@ -26,8 +26,8 @@ namespace ddsrouter {
 namespace event {
 
 BooleanWaitHandler::BooleanWaitHandler(
-        bool opened /* = false */,
-        bool enabled /* = true */)
+        const bool opened,
+        const bool enabled /* = true */)
     : WaitHandler<bool>(opened, enabled)
 {
 }
@@ -50,13 +50,13 @@ AwakeReason BooleanWaitHandler::wait(
 void BooleanWaitHandler::open() noexcept
 {
     // Change value and do notify
-    set_value(true, true);
+    set_value_(true, true);
 }
 
 void BooleanWaitHandler::close() noexcept
 {
     // Change value and do not notify
-    set_value(false, false);
+    set_value_(false, false);
 }
 
 bool BooleanWaitHandler::is_open() const noexcept

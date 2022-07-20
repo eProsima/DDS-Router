@@ -48,8 +48,8 @@ public:
      * @param enabled whether the object starts enabled or disabled
      */
     DDSROUTER_UTILS_DllAPI BooleanWaitHandler(
-            bool opened = false,
-            bool enabled = true);
+            const bool opened,
+            const bool enabled = true);
 
     //! Default constructor
     DDSROUTER_UTILS_DllAPI ~BooleanWaitHandler();

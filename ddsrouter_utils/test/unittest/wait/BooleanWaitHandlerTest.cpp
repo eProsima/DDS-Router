@@ -43,7 +43,6 @@ using namespace eprosima::ddsrouter::event;
  * \c Create a BooleanWaitHandler and check its internal values
  *
  * CASES:
- * - default values
  * - open enable
  * - open disable
  * - close enable
@@ -51,14 +50,6 @@ using namespace eprosima::ddsrouter::event;
  */
 TEST(BooleanWaitHandlerTest, create_wait_handler)
 {
-    // default values
-    {
-        BooleanWaitHandler waiter;
-
-        ASSERT_FALSE(waiter.is_open());
-        ASSERT_TRUE(waiter.enabled());
-    }
-
     // open enable
     {
         BooleanWaitHandler waiter(true, true);
@@ -103,7 +94,7 @@ TEST(BooleanWaitHandlerTest, create_wait_handler)
  */
 TEST(BooleanWaitHandlerTest, open_close)
 {
-    BooleanWaitHandler waiter;
+    BooleanWaitHandler waiter(false);
 
     // open
     waiter.open();
@@ -130,7 +121,7 @@ TEST(BooleanWaitHandlerTest, open_close)
  */
 TEST(BooleanWaitHandlerTest, wait_for_open)
 {
-    BooleanWaitHandler waiter; // It starts closed and enabled
+    BooleanWaitHandler waiter(false); // It starts closed and enabled
 
     // Create a thread that waits for the waiter to open
     std::thread waiting_thread(
@@ -155,7 +146,7 @@ TEST(BooleanWaitHandlerTest, wait_for_open)
  */
 TEST(BooleanWaitHandlerTest, wait_for_timeout)
 {
-    BooleanWaitHandler waiter; // It starts closed and enabled
+    BooleanWaitHandler waiter(false); // It starts closed and enabled
 
     // Wait for a small amount of time
     AwakeReason reason = waiter.wait(test::RESIDUAL_TIME_TEST);
@@ -169,7 +160,7 @@ TEST(BooleanWaitHandlerTest, wait_for_timeout)
  */
 TEST(BooleanWaitHandlerTest, wait_for_disable)
 {
-    BooleanWaitHandler waiter; // It starts closed and enabled
+    BooleanWaitHandler waiter(false); // It starts closed and enabled
 
     // Create a thread that waits for the waiter to open
     std::thread waiting_thread(

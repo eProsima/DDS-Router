@@ -42,7 +42,7 @@ class ConsumerWaitHandler : protected CounterWaitHandler
 public:
 
     ConsumerWaitHandler(
-            CounterType initial_value = 0,
+            const CounterType& initial_value,
             bool enabled = true);
 
     // Make this parent methods public
@@ -109,6 +109,23 @@ public:
     T consume(
             const utils::Duration_ms& timeout = 0);
 
+    /**
+     * @brief Wait until there is data available in the internal collection and retrieve the first one.
+     *
+     * This method will wait until there is data available in the internal collection.
+     * In case there are data (or some data is stored while waiting) the internal collection is the one that decides
+     * which data is returned (if FIFO, LIFO, etc. depending on the collection type).
+     *
+     * @note this method calls \c get_next_value_ , method that must be overriden by the child class.
+     *
+     * @param [out] value reference to the variable where to store the next element.
+     * @param [in] timeout maximum time to wait for data in milliseconds. If 0, not time limit. [default 0].
+     * @return awaking reason
+     */
+    AwakeReason consume(
+            T& value,
+            const utils::Duration_ms& timeout = 0);
+
 protected:
 
     /**
@@ -153,6 +170,13 @@ protected:
      * This should not happen and is a bug from the child implementation.
      */
     virtual T get_next_value_() = 0;
+
+    /**
+     * Reimplementation of \c get_next_value_ passing a variable where to store the reference.
+     *
+     * This method avoid the creation of a new value T.
+     */
+    virtual void get_next_value_(T& value) = 0;
 };
 
 } /* namespace event */

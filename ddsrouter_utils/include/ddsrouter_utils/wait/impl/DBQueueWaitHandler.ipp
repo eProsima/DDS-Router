@@ -59,11 +59,35 @@ T DBQueueWaitHandler<T>::get_next_value_()
         throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
     }
 
-    // TODO: Do it without copy
+    // TODO: Do it without creating a new value
     auto value = queue_.Front();
     queue_.Pop();
 
     return value;
+}
+
+template <typename T>
+void DBQueueWaitHandler<T>::get_next_value_(T& value)
+{
+    // Assure that only one thread check if queue must be swapped
+    std::unique_lock<std::mutex> lock(pop_queue_mutex_);
+
+    // If front is empty, swap to back queue
+    if (queue_.Empty())
+    {
+        logDebug(DDSROUTER_WAIT_DBQUEUE, "Swapping DBQueue to get element.");
+        queue_.Swap();
+    }
+
+    // If queue is empty, there is a synchronization problem
+    if (queue_.Empty())
+    {
+        throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
+    }
+
+    // Move value from queue to parameter
+    value = std::move(queue_.Front());
+    queue_.Pop();
 }
 
 } /* namespace event */

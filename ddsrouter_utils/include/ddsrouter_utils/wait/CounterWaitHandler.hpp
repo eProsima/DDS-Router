@@ -64,9 +64,9 @@ public:
      * @param enabled whether the object starts enabled or disabled
      */
     DDSROUTER_UTILS_DllAPI CounterWaitHandler(
-            CounterType threshold,
-            CounterType initial_value,
-            bool enabled = true);
+            const CounterType& threshold,
+            const CounterType& initial_value,
+            const bool enabled = true);
 
     //! Default constructor
     DDSROUTER_UTILS_DllAPI ~CounterWaitHandler();

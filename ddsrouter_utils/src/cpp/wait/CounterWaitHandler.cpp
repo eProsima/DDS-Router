@@ -26,9 +26,9 @@ namespace ddsrouter {
 namespace event {
 
 CounterWaitHandler::CounterWaitHandler(
-        CounterType threshold,
-        CounterType initial_value,
-        bool enabled /* = true */)
+        const CounterType& threshold,
+        const CounterType& initial_value,
+        const bool enabled /* = true */)
     : WaitHandler<CounterType>(initial_value, enabled)
     , threshold_(threshold)
 {
