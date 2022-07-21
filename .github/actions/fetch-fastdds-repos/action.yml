@@ -1,5 +1,10 @@
 name: 'fetch-fastdds-repos'
 description: 'Fetch Fast DDS and its dependencies'
+inputs:
+  fastdds_branch:
+    description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+    required: true
+    default: 'master'
 runs:
   using: "composite"
   steps:
@@ -7,4 +12,5 @@ runs:
       run: |
         wget https://raw.githubusercontent.com/eProsima/Fast-DDS/master/fastrtps.repos
         vcs import src <  fastrtps.repos
+        cd src/fastrtps && git checkout fastdds_branch && cd ../..
       shell: bash
