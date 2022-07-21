@@ -1,0 +1,21 @@
+version: v2.0
+
+participants:
+
+  - name: Cloud_Participant_1
+    kind: router
+    discovery-server-guid:
+      id: 0
+    listening-addresses:
+      - domain: ddsrouter_cloud.edge_1
+        port: 11666
+        transport: tcp
+
+  - name: Cloud_Participant_2
+    kind: router
+    discovery-server-guid:
+      id: 1
+    listening-addresses:
+      - domain: ddsrouter_cloud.edge_2
+        port: 21666
+        transport: tcp

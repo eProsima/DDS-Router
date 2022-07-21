@@ -1,0 +1,14 @@
+version: v2.0
+
+participants:
+
+  - name: Simple_Participant
+    kind: local
+    domain: 0
+
+  - name: Edge_1_Participant
+    kind: initial-peers
+    connection-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: udp
