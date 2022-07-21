@@ -2,8 +2,14 @@ name: build_fastdds
 
 on:
   workflow_dispatch:
+    inputs:
+      fastdds_branch:
+        description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+        required: true
+        default: 'master'
   schedule:
     - cron: '0 0 * * *'
+
 
 jobs:
   windows-build:
@@ -34,6 +40,7 @@ jobs:
         uses: ./DDS-Router/.github/actions/install-eprosima-dependencies-windows
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
+          fastdds_branch: ${{ github.event.inputs.fastdds_branch }}
 
       - name: Upload binaries
         uses: actions/upload-artifact@v3
@@ -68,6 +75,8 @@ jobs:
 
       - name: Fetch Fast DDS repositories
         uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
+        with:
+          fastdds_branch: ${{ github.event.inputs.fastdds_branch }}
 
       - name: Build workspace
         run: |

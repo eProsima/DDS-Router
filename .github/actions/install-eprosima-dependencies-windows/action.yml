@@ -5,6 +5,10 @@ inputs:
     description: 'Specifies the build type on single-configuration generators'
     required: true
     default: 'Release'
+  fastdds_branch:
+    description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+    required: true
+    default: 'master'
 runs:
   using: composite
   steps:
