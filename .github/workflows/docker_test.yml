@@ -1,0 +1,43 @@
+name: docker_test
+
+on:
+  workflow_dispatch:
+    inputs:
+      fastdds_branch:
+        description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+        required: true
+        default: 'master'
+      ddsrouter_branch:
+        description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
+        required: true
+        default: 'main'
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  docker_test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: src/DDS-Router
+
+      - name: Build DDS Router Docker image
+        run: |
+          cd src/DDS-Router/.github/docker
+          docker build \
+            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch }} \
+            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch }} \
+            -t ddsrouter \
+            -f Dockerfile .
+
+      - name: List Docker images
+        run: |
+          docker images
+
+      - name: Run tests
+        run: |
+          cd src/DDS-Router/tools/ddsrouter_tool/test/compose/repeater
+          export DOCKER_IMAGE=ddsrouter
+          docker-compose up

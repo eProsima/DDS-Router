@@ -45,7 +45,7 @@ ARG ddsrouter_branch=main
 ARG fastdds_branch=feature/change-pool-api
 
 RUN mkdir src && \
-    wget https://raw.githubusercontent.com/eProsima/DDS-Router/${BRANCH}/ddsrouter.repos && \
+    wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
     vcs import src < ddsrouter.repos && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
