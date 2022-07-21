@@ -12,5 +12,5 @@ runs:
       run: |
         wget https://raw.githubusercontent.com/eProsima/Fast-DDS/master/fastrtps.repos
         vcs import src <  fastrtps.repos
-        cd src/fastrtps && git checkout fastdds_branch && cd ../..
+        cd src/fastrtps && git checkout ${{ inputs.fastdds_branch }} && cd ../..
       shell: bash
