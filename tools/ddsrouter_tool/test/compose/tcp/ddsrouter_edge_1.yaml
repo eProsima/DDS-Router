@@ -1,0 +1,19 @@
+version: v2.0
+
+participants:
+
+  - name: Simple_Participant
+    kind: local
+    domain: 0
+
+  - name: Edge_1_Participant
+    kind: router
+    discovery-server-guid:
+      id: 2
+    connection-addresses:
+      - discovery-server-guid:
+          id: 0
+        addresses:
+          - domain: ddsrouter_cloud
+            port: 11666
+            transport: tcp

@@ -1,0 +1,17 @@
+version: v2.0
+
+participants:
+
+  - name: Void_Participant
+    kind: void
+
+  - name: Cloud_Participant
+    kind: initial-peers
+    repeater: true
+    listening-addresses:
+      - domain: ddsrouter_cloud.edge_1
+        port: 11666
+        transport: udp
+      - domain: ddsrouter_cloud.edge_2
+        port: 21666
+        transport: udp
