@@ -90,7 +90,7 @@ void tsnh(
 
 bool is_file_accessible(
         const char* file_path,
-        const FileAccessMode& access_mode) noexcept
+        FileAccessMode access_mode) noexcept
 {
 #if defined(_WIN32)
     if ((FileAccessMode::exec& access_mode) == FileAccessMode::exec)

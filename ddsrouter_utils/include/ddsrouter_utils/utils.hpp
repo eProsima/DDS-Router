@@ -105,14 +105,15 @@ DDSROUTER_UTILS_DllAPI void tsnh(
  *
  * @warning windows does not retrieve information about the execution permission on a file.
  *
- * @param file_path path to the file to check
- * @param access_mode access permission(s) to check in the file
+ * @param [in] file_path path to the file to check
+ * @param [in] access_mode access permission(s) to check in the file
+ *
  * @return true if file is accessible regarding the permissions given
  * @return false otherwise
  */
 DDSROUTER_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
-        const FileAccessMode& access_mode) noexcept;
+        FileAccessMode access_mode) noexcept;
 
 /////
 // TEMPLATE FUNCTIONS
