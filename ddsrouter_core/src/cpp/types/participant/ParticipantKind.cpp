@@ -24,6 +24,8 @@
 
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_utils/format/format_utils.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

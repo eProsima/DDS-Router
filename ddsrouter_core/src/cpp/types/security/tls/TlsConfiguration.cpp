@@ -20,6 +20,7 @@
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <ddsrouter_utils/format/Formatter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
