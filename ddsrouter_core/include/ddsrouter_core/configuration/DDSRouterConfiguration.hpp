@@ -71,7 +71,13 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
 
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations_ = {};
 
-    unsigned int number_of_threads_ = 12;
+    unsigned int number_of_threads = 12;
+
+protected:
+
+    static bool check_correct_configuration_object_(
+            const std::shared_ptr<ParticipantConfiguration> configuration);
+
 };
 
 } /* namespace configuration */

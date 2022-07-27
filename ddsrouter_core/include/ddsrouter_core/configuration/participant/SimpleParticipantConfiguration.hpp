@@ -29,7 +29,7 @@ namespace core {
 namespace configuration {
 
 /**
- * This dat struct represents a configuration for a SimpleParticipant
+ * This data struct represents a configuration for a SimpleParticipant
  */
 struct SimpleParticipantConfiguration : public ParticipantConfiguration
 {

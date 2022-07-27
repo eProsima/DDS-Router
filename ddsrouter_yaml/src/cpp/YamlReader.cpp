@@ -701,7 +701,7 @@ void _fill_ddsrouter_configuration_v1(
     // Get optional allowlist
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        object.allowlist_ = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
@@ -709,17 +709,17 @@ void _fill_ddsrouter_configuration_v1(
     // Get optional blocklist
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        object.blocklist_ = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
     /////
     // Get builtin topics from allowlist
-    for (const std::shared_ptr<FilterTopic>& topic : object.allowlist_)
+    for (const std::shared_ptr<FilterTopic>& topic : object.allowlist)
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
-            object.builtin_topics_.emplace(
+            object.builtin_topics.emplace(
                 std::make_shared<types::RealTopic>(
                     topic->topic_name(),
                     topic->topic_type(),
@@ -783,7 +783,7 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional allowlist
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        object.allowlist_ = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
@@ -791,7 +791,7 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional blocklist
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        object.blocklist_ = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
@@ -799,7 +799,7 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics_ = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
+        object.builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
             YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
     }
 
@@ -827,7 +827,7 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional number of threads
     if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
     {
-        object.number_of_threads_ = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
     }
 
 }

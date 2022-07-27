@@ -53,9 +53,9 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics_, std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
@@ -104,11 +104,11 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
-    ASSERT_EQ(configuration_result.allowlist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics_;
+    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1);
     std::shared_ptr<core::types::RealTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name(), "rt/chatter");
@@ -154,9 +154,9 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics_, std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
@@ -201,14 +201,14 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check block Topics are empty
-    ASSERT_EQ(configuration_result.blocklist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
 
     // Check allowlist has 2 topics
-    std::set<std::shared_ptr<core::types::FilterTopic>> allowlist_result = configuration_result.allowlist_;
+    std::set<std::shared_ptr<core::types::FilterTopic>> allowlist_result = configuration_result.allowlist;
     ASSERT_EQ(allowlist_result.size(), 2);
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics_;
+    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1);
     std::shared_ptr<core::types::RealTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name(), "topic1");
@@ -260,9 +260,9 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist_, std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics_, std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>

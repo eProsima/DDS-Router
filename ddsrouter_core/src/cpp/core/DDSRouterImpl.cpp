@@ -45,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads_))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -128,12 +128,12 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
 
         // Load new configuration and check it is okey
         AllowedTopicList new_allowed_topic_list(
-            new_configuration.allowlist_,
-            new_configuration.blocklist_);
+            new_configuration.allowlist,
+            new_configuration.blocklist);
 
         // Check if there are any new builtin topics
         std::set<RealTopic> new_builtin_topics;
-        for (auto builtin_topic : new_configuration.builtin_topics_)
+        for (auto builtin_topic : new_configuration.builtin_topics)
         {
             if (current_topics_.find(*builtin_topic) == current_topics_.end())
             {
@@ -269,8 +269,8 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
 void DDSRouterImpl::init_allowed_topics_()
 {
     allowed_topics_ = AllowedTopicList(
-        configuration_.allowlist_,
-        configuration_.blocklist_);
+        configuration_.allowlist,
+        configuration_.blocklist);
 
     logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
 }
@@ -327,7 +327,7 @@ void DDSRouterImpl::init_participants_()
 
 void DDSRouterImpl::init_bridges_()
 {
-    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics_)
+    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics)
     {
         discovered_topic_(*topic);
     }

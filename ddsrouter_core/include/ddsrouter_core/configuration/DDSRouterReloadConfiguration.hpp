@@ -64,11 +64,11 @@ struct DDSRouterReloadConfiguration : public BaseConfiguration
     // VARIABLES
     /////////////////////////
 
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist_ = {};
+    std::set<std::shared_ptr<types::FilterTopic>> allowlist = {};
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist_ = {};
+    std::set<std::shared_ptr<types::FilterTopic>> blocklist = {};
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics_ = {};
+    std::set<std::shared_ptr<types::RealTopic>> builtin_topics = {};
 };
 
 } /* namespace configuration */

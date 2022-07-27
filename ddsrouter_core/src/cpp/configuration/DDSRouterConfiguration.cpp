@@ -41,7 +41,7 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         unsigned int number_of_threads /* = default_number_of_threads() */)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations_(participants_configurations)
-    , number_of_threads_(number_of_threads)
+    , number_of_threads(number_of_threads)
 {
 }
 
@@ -81,6 +81,13 @@ bool DDSRouterConfiguration::is_valid(
             return false;
         }
 
+        // Check that the configuration is of type required
+        if (!check_correct_configuration_object_(configuration))
+        {
+            error_msg << "Participant " << configuration->id << " is not of correct Configuration class. ";
+            return false;
+        }
+
         // Store every id in a set to see if there are repetitions
         ids.insert(configuration->id);
     }
@@ -98,9 +105,33 @@ bool DDSRouterConfiguration::is_valid(
 void DDSRouterConfiguration::reload(
         const DDSRouterReloadConfiguration& new_configuration)
 {
-    this->allowlist_ = new_configuration.allowlist_;
-    this->blocklist_ = new_configuration.blocklist_;
-    this->builtin_topics_ = new_configuration.builtin_topics_;
+    this->allowlist = new_configuration.allowlist;
+    this->blocklist = new_configuration.blocklist;
+    this->builtin_topics = new_configuration.builtin_topics;
+}
+
+template <typename T>
+bool check_correct_configuration_object_by_type_(
+        const std::shared_ptr<ParticipantConfiguration> configuration)
+{
+    return nullptr != std::dynamic_pointer_cast<T>(configuration);
+}
+
+bool DDSRouterConfiguration::check_correct_configuration_object_(
+        const std::shared_ptr<ParticipantConfiguration> configuration)
+{
+    switch (configuration->kind)
+    {
+        case ParticipantKind::simple_rtps:
+            return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
+
+        case ParticipantKind::local_discovery_server:
+        case ParticipantKind::wan:
+            return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
+
+        default:
+            return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
+    }
 }
 
 } /* namespace configuration */
