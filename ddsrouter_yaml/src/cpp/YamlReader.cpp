@@ -89,6 +89,7 @@ YamlReaderVersion YamlReader::get<YamlReaderVersion>(
                 {
                     {VERSION_TAG_V_1_0, YamlReaderVersion::V_1_0},
                     {VERSION_TAG_V_2_0, YamlReaderVersion::V_2_0},
+                    {VERSION_TAG_V_3_0, YamlReaderVersion::V_3_0},
                 });
 }
 
@@ -181,10 +182,18 @@ ParticipantId YamlReader::get<ParticipantId>(
 template <>
 ParticipantKind YamlReader::get<ParticipantKind>(
         const Yaml& yml,
-        const YamlReaderVersion /* version */)
+        const YamlReaderVersion version)
 {
     // Participant kind required
-    return participant_kind_from_name(get_scalar<std::string>(yml));
+    ParticipantKind kind = participant_kind_from_name(get_scalar<std::string>(yml));
+
+    // In version lower than 3.0 wan means wan_ds
+    if (version <= V_2_0 && kind == ParticipantKind::wan)
+    {
+        kind = ParticipantKind::wan_ds;
+    }
+
+    return kind;
 }
 
 template <>
@@ -740,11 +749,11 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
 
         case types::ParticipantKind::local_discovery_server:
-        case types::ParticipantKind::wan:
+        case types::ParticipantKind::wan_ds:
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
 
-        case types::ParticipantKind::initial_peers:
+        case types::ParticipantKind::wan:
             return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
                 YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
 
@@ -928,8 +937,12 @@ std::ostream& operator <<(
             os << VERSION_TAG_V_2_0;
             break;
 
+        case V_3_0:
+            os << VERSION_TAG_V_3_0;
+            break;
+
         case LATEST:
-            os << VERSION_TAG_V_2_0;
+            os << VERSION_TAG_V_3_0;
             break;
 
         default:

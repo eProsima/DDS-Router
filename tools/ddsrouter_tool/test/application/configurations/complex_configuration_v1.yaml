@@ -1,0 +1,33 @@
+
+# 1 Echo Participant
+# 2 Simple Participants in domains 0 and 1
+# 1 Local Discovery Server Participant with listening address
+# 1 WAN Participant with connection address
+# 2 topics, one with key and one without
+
+
+version: v1.0
+
+participant1:
+  type: "echo"
+
+participant2:
+  type: "discovery-server"
+  id: 3
+  ros-discovery-server: true
+  connection-addresses:
+    - guid: "01.0f.00.00.00.00.00.00.00.00.00.00"
+      addresses:
+        - ip: 127.0.0.1
+          port: 3333
+
+simple_participant:
+  type: simple
+  domain: 1
+
+wan:
+  type: wan
+  id: 2
+  listening-addresses:
+    - ip: 127.0.0.1
+      port: 3334

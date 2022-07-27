@@ -4,7 +4,7 @@
 
 ##################################
 # CONFIGURATION VERSION
-version: v2.0                                                     # 0
+version: v3.0                                                     # 0
 
 ##################################
 # ALLOWED TOPICS
@@ -30,16 +30,13 @@ participants:
 
 ##################################
 # WAN SERVER
-# This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
+# This participant will subscribe to topics in allowlist using Initial Peers Discovery protocol awaiting connections.
 
-  - name: WANServer                                               # 6
+  - name: WanParticipant                                          # 6
     kind: wan                                                     # 7
-    discovery-server-guid:
-      id: 1                                                       # 8
-    listening-addresses:                                          # 9
-      - ip: 1.1.1.1                                               # 10
-        port: 11666                                               # 11
-        transport: udp                                            # 12
+    listening-addresses:                                          # 8
+      - domain: localhost
+        port: 12666
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -52,7 +49,7 @@ participants:
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
 
-# 0: Use YAML configuration version v2.0
+# 0: Use YAML configuration version v3.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
@@ -65,22 +62,11 @@ participants:
 
 # 5: SimpleParticipant will use DDS Domain ID <0>.
 
-# 6: New Participant with name <WANServer>.
+# 6: New Participant with name <WanParticipant>.
 
-# 7: Kind of WANServer: <wan>.
-# WAN communication with another DDS Router.
+# 7: Kind of WANClient: <wan>.
+# InitialPeers discovery to discover and communicate with another WAN DDS Router.
 
-# 8: Set this Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe> for WANServer.
-# This GuidPrefix is needed in order from a remote DDS Router to connect with this one.
-
-# 9: Add the interfaces where this Participant will listen in WAN.
+# 8: Add the listening addresses where this DDS Routers will be available
+# In this case using localhost (127.0.0.1) port 12666 (UDP by default).
 # Add as many listening-addresses as needed.
-
-# 10: Listen in public IP (1.1.1.1) for remote traffic.
-# This IP must be set to the public IP of the host where this DDS Router will run.
-
-# 11: Listening port is 11666.
-# Remember that if the host is under a NAT, the IP must be the public one and must be forwarded from network
-# router to this host to the same port.
-
-# 12: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".

@@ -118,7 +118,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::initial_peers,
+            types::ParticipantKind::wan,
             false,
             domain,
             listening_addresses,
@@ -130,7 +130,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::initial_peers,
+            types::ParticipantKind::wan,
             false,
             domain,
             listening_addresses,
@@ -291,7 +291,6 @@ void test_InitialPeers_communication_all(
         );
 
     // Test architecture server <-> server-client
-    std::cout << "DEBUG Testing..." << std::endl;
     test::test_InitialPeers_communication(
         test::router_configuration(
             test::wan_participant_configuration(
@@ -322,7 +321,6 @@ void test_InitialPeers_communication_all(
     if (!basic_only)
     {
         // Test architecture server-client <-> server-client
-        std::cout << "DEBUG Testing..." << std::endl;
         test::test_InitialPeers_communication(
             test::router_configuration(
                 test::wan_participant_configuration(

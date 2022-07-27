@@ -119,8 +119,8 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     if (tls)
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan,
+            types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan_ds,
             false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
@@ -132,8 +132,8 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     else
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan,
+            types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan_ds,
             false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),

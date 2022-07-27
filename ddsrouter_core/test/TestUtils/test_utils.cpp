@@ -224,7 +224,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 random_domain(seed));
 
         case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_ds:
 
         {
             // TODO get random values
@@ -244,7 +244,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 security::TlsConfiguration());
         }
 
-        case ParticipantKind::initial_peers:
+        case ParticipantKind::wan:
 
         {
             return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(

@@ -43,13 +43,3 @@ participants:
         - ip: "127.0.0.1"
           port: 11667
           transport: tcp
-
-  - name: initial-peers
-    kind: initial-peers
-    connection-addresses:
-      - ip: "127.0.0.1"
-        port: 11668
-        transport: tcp
-    listening-addresses:
-      - ip: "127.0.0.1"
-        port: 11669

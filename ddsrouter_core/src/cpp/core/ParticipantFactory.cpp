@@ -98,7 +98,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_ds:
             // Discovery Server RTPS Participant
         {
             std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
@@ -117,7 +117,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::initial_peers:
+        case ParticipantKind::wan:
             // Initial Peers RTPS Participant
         {
             std::shared_ptr<configuration::InitialPeersParticipantConfiguration> conf_ =

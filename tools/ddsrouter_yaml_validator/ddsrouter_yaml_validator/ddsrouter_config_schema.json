@@ -12,7 +12,7 @@
                 "version":{
                     "type":"string",
                     "enum":[
-                        "v2.0"
+                        "v3.0"
                     ]
                 },
                 "allowlist":{
@@ -111,11 +111,10 @@
                         "ds",
                         "local-ds",
                         "local-discovery-server",
+                        "wan-ds",
+                        "wan-discovery-server",
                         "wan",
-                        "router",
-                        "initial-peers",
-                        "direct",
-                        "repeater"
+                        "router"
                     ]
                 },
                 "domain":{
@@ -253,8 +252,8 @@
                                     "ds",
                                     "local-ds",
                                     "local-discovery-server",
-                                    "wan",
-                                    "router"
+                                    "wan-ds",
+                                    "wan-discovery-server"
                                 ]
                             }
                         }
@@ -298,9 +297,8 @@
                             "kind":{
                                 "type":"string",
                                 "enum":[
-                                    "initial-peers",
-                                    "direct",
-                                    "repeater"
+                                    "wan",
+                                    "router"
                                 ]
                             }
                         }
