@@ -64,7 +64,7 @@ void YamlReader::fill(
     {
         throw utils::ConfigurationException(
                   utils::Formatter() <<
-                      "Error filing object of type <" << TYPE_NAME(T) <<
+                      "Error filling object of type <" << TYPE_NAME(T) <<
                       "> in tag <" << tag << "> :\n " << e.what());
     }
 }

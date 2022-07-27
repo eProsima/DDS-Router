@@ -164,7 +164,7 @@ These are the log levels and when to use them
 
 Configurations are data structures with public access to their internal values.
 This makes it easier to work with them: to create, manage and copy them.
-The default values will be defined in the header, so every used could know which are them, and always
+The default values will be defined in the header, so every user could know which are them, and always
 have a default constructor.
 
 From every internal object that requires a configuration to be created, the configuration argument

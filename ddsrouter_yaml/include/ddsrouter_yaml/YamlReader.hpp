@@ -140,11 +140,11 @@ public:
     /**
      * @brief Fill an element given by parameter with the values inside \c yml
      *
-     * This method simplifies the process of retrieving an object which parent has its own \c fill method,
+     * This method simplifies the process of retrieving an object whose parent has its own \c fill method,
      * as the code is reused from one another calling parent \c fill in child.
      * It is also very helpful to handle default creation values. Without this, every different default value
-     * must have its own it-else clause, forcing to create the respective constructor. With this method,
-     * the default values are initialized in with the default constructor, and then are overwritten by the yaml.
+     * must have its own if-else clause, forcing to create the respective constructor. With this method,
+     * the default values are initialized with the default constructor, and then are overwritten by the yaml.
      * [this problem arises because C++ does not allow different order of parameters in method call]
      */
     template <typename T>

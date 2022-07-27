@@ -31,7 +31,7 @@ namespace configuration {
 /**
  * Configurations in DDS Router are data structures with public access to its internal methods.
  * Thus, they are not forced to be correct in construction.
- * This is an Interface class that forces every configuration in ddsrouter to have a \c is_valid method.
+ * This is an Interface class that forces every configuration in ddsrouter to have an \c is_valid method.
  */
 struct BaseConfiguration
 {

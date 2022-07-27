@@ -29,9 +29,9 @@ namespace core {
 namespace configuration {
 
 /**
- * This class joins Simple Participant Configuration features and give methods to interact with it.
+ * This dat struct represents a configuration for a SimpleParticipant
  */
-class SimpleParticipantConfiguration : public ParticipantConfiguration
+struct SimpleParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 

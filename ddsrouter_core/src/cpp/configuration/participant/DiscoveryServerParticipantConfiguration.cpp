@@ -61,6 +61,57 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
         return false;
     }
 
+    // Check listening addresses
+    for (Address address : listening_addresses_)
+    {
+        if (!address.is_valid())
+        {
+            error_msg << "Incorrect address " << address << " in listening addresses. ";
+            return false;
+        }
+    }
+
+    // Check connection addresses
+    for (DiscoveryServerConnectionAddress address : connection_addresses_)
+    {
+        if (!address.is_valid())
+        {
+            error_msg << "Incorrect address " << address << " in connection addresses. ";
+            return false;
+        }
+    }
+
+    // Check exist at least one address
+    if (listening_addresses_.empty() && connection_addresses_.empty())
+    {
+        error_msg << "No listening or connection address specified. ";
+        return false;
+    }
+
+    // If active, check it is valid
+    if (tls_configuration_.is_active())
+    {
+        // If has listening addresses, it should be able to provide TLS server configuration
+        if (!listening_addresses_.empty())
+        {
+            if (!tls_configuration_.compatible<types::security::TlsKind::server>())
+            {
+                error_msg << "TLS requires to support Server Configuration if listening addresses set. ";
+                return false;
+            }
+        }
+
+        // If has connection addresses, it should be able to provide TLS client configuration
+        if (!connection_addresses_.empty())
+        {
+            if (!tls_configuration_.compatible<types::security::TlsKind::client>())
+            {
+                error_msg << "TLS requires to support Client Configuration if connection addresses set. ";
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 
