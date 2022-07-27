@@ -81,10 +81,10 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.connection_addresses_.size());
-        ASSERT_EQ(1, result.connection_addresses_.begin()->addresses().size());
-        ASSERT_EQ(connection_guid, result.connection_addresses_.begin()->discovery_server_guid_prefix());
-        ASSERT_EQ(address, *result.connection_addresses_.begin()->addresses().begin());
+        ASSERT_EQ(1, result.connection_addresses.size());
+        ASSERT_EQ(1, result.connection_addresses.begin()->addresses().size());
+        ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
+        ASSERT_EQ(address, *result.connection_addresses.begin()->addresses().begin());
     }
 
     // 1 connection N addresses
@@ -130,15 +130,15 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.connection_addresses_.size());
-        ASSERT_EQ(addresses.size(), result.connection_addresses_.begin()->addresses().size());
-        ASSERT_EQ(connection_guid, result.connection_addresses_.begin()->discovery_server_guid_prefix());
+        ASSERT_EQ(1, result.connection_addresses.size());
+        ASSERT_EQ(addresses.size(), result.connection_addresses.begin()->addresses().size());
+        ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
         // Check every address is inside connection addresses of the configuration
         for (core::types::Address address : addresses)
         {
             // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
             std::set<eprosima::ddsrouter::core::types::Address> addresses_result =
-                    result.connection_addresses_.begin()->addresses();
+                    result.connection_addresses.begin()->addresses();
             ASSERT_NE(
                 addresses_result.find(address),
                 addresses_result.end());
@@ -191,9 +191,9 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         LATEST);
 
         // Check result
-        ASSERT_EQ(connection_guids.size(), result.connection_addresses_.size());
+        ASSERT_EQ(connection_guids.size(), result.connection_addresses.size());
         // Check that every connection has a correct number of addresses and a guid given
-        for (core::types::DiscoveryServerConnectionAddress connection : result.connection_addresses_)
+        for (core::types::DiscoveryServerConnectionAddress connection : result.connection_addresses)
         {
             ASSERT_NE(
                 std::find(connection_guids.begin(), connection_guids.end(), connection.discovery_server_guid_prefix())

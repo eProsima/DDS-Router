@@ -65,7 +65,7 @@ public:
     // VARIABLES
     /////////////////////////
 
-    types::DomainId domain_ = types::DomainId(0u);
+    types::DomainId domain = types::DomainId(0u);
 };
 
 } /* namespace configuration */

@@ -37,10 +37,10 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
         const types::security::TlsConfiguration tls_configuration)
     : SimpleParticipantConfiguration(id, kind, domain_id)
-    , discovery_server_guid_prefix_(discovery_server_guid_prefix)
-    , listening_addresses_(listening_addresses)
-    , connection_addresses_(connection_addresses)
-    , tls_configuration_(tls_configuration)
+    , discovery_server_guid_prefix(discovery_server_guid_prefix)
+    , listening_addresses(listening_addresses)
+    , connection_addresses(connection_addresses)
+    , tls_configuration(tls_configuration)
 {
     // Do nothing
 }
@@ -55,14 +55,14 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
     }
 
     // Check DS Guid Prefix
-    if (!discovery_server_guid_prefix_.is_valid())
+    if (!discovery_server_guid_prefix.is_valid())
     {
-        error_msg << "Non valid Participant Guid Prefix " << discovery_server_guid_prefix_ << ". ";
+        error_msg << "Non valid Participant Guid Prefix " << discovery_server_guid_prefix << ". ";
         return false;
     }
 
     // Check listening addresses
-    for (Address address : listening_addresses_)
+    for (Address address : listening_addresses)
     {
         if (!address.is_valid())
         {
@@ -72,7 +72,7 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
     }
 
     // Check connection addresses
-    for (DiscoveryServerConnectionAddress address : connection_addresses_)
+    for (DiscoveryServerConnectionAddress address : connection_addresses)
     {
         if (!address.is_valid())
         {
@@ -82,19 +82,19 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
     }
 
     // Check exist at least one address
-    if (listening_addresses_.empty() && connection_addresses_.empty())
+    if (listening_addresses.empty() && connection_addresses.empty())
     {
         error_msg << "No listening or connection address specified. ";
         return false;
     }
 
     // If active, check it is valid
-    if (tls_configuration_.is_active())
+    if (tls_configuration.is_active())
     {
         // If has listening addresses, it should be able to provide TLS server configuration
-        if (!listening_addresses_.empty())
+        if (!listening_addresses.empty())
         {
-            if (!tls_configuration_.compatible<types::security::TlsKind::server>())
+            if (!tls_configuration.compatible<types::security::TlsKind::server>())
             {
                 error_msg << "TLS requires to support Server Configuration if listening addresses set. ";
                 return false;
@@ -102,9 +102,9 @@ bool DiscoveryServerParticipantConfiguration::is_valid(
         }
 
         // If has connection addresses, it should be able to provide TLS client configuration
-        if (!connection_addresses_.empty())
+        if (!connection_addresses.empty())
         {
-            if (!tls_configuration_.compatible<types::security::TlsKind::client>())
+            if (!tls_configuration.compatible<types::security::TlsKind::client>())
             {
                 error_msg << "TLS requires to support Client Configuration if connection addresses set. ";
                 return false;

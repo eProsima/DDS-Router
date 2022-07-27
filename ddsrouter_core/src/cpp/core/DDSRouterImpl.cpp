@@ -296,7 +296,7 @@ void DDSRouterImpl::init_participants_()
         {
             // Failed to create participant
             throw utils::InitializationException(utils::Formatter()
-                          << "Failed to create creating Participant " << participant_config->id_);
+                          << "Failed to create creating Participant " << participant_config->id);
         }
 
         logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()

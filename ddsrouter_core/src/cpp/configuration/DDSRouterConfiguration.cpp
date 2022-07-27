@@ -77,12 +77,12 @@ bool DDSRouterConfiguration::is_valid(
         // Check configuration is valid
         if (!configuration->is_valid(error_msg))
         {
-            error_msg << "Error in Participant " << configuration->id_ << ". ";
+            error_msg << "Error in Participant " << configuration->id << ". ";
             return false;
         }
 
         // Store every id in a set to see if there are repetitions
-        ids.insert(configuration->id_);
+        ids.insert(configuration->id);
     }
 
     // If the number of ids are not equal the number of configurations, is because they are repeated

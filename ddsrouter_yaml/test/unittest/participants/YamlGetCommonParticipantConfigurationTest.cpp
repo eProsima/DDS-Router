@@ -54,8 +54,8 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant)
                     YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST);
 
             // Check result
-            ASSERT_EQ(id, result.id_);
-            ASSERT_EQ(kind, result.kind_);
+            ASSERT_EQ(id, result.id);
+            ASSERT_EQ(kind, result.kind);
         }
     }
 }

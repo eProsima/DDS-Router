@@ -31,7 +31,7 @@ SimpleParticipantConfiguration::SimpleParticipantConfiguration(
         const ParticipantKind& kind /* = ParticipantKind::simple_rtps */,
         const DomainId& domain_id /* = DEFAULT_DOMAIN_ID_ */) noexcept
     : ParticipantConfiguration(id, kind)
-    , domain_(domain_id)
+    , domain(domain_id)
 {
 }
 
@@ -43,9 +43,9 @@ bool SimpleParticipantConfiguration::is_valid(
         return false;
     }
 
-    if (!domain_.is_valid())
+    if (!domain.is_valid())
     {
-        error_msg << "Incorrect domain " << domain_ << ". ";
+        error_msg << "Incorrect domain " << domain << ". ";
         return false;
     }
 
@@ -57,7 +57,7 @@ bool SimpleParticipantConfiguration::operator ==(
 {
     return ParticipantConfiguration::operator ==(
         other) &&
-           this->domain_ == other.domain_;
+           this->domain == other.domain;
 }
 
 } /* namespace configuration */

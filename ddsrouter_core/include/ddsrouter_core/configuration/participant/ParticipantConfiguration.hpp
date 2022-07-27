@@ -63,10 +63,10 @@ struct ParticipantConfiguration : public BaseConfiguration
     /////////////////////////
 
     //! Participant Id associated with this configuration
-    types::ParticipantId id_;
+    types::ParticipantId id;
 
     //! Participant Kind of the Participant that this configuration refers.
-    types::ParticipantKind kind_;
+    types::ParticipantKind kind;
 };
 
 } /* namespace configuration */

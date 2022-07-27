@@ -213,7 +213,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
 template <class ConfigurationType>
 void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
 {
-    types::DomainId domain = this->configuration_.domain_;
+    types::DomainId domain = this->configuration_.domain;
     fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes_();
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
@@ -232,7 +232,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     }
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-            "New Participant " << this->configuration_.kind_ <<
+            "New Participant " << this->configuration_.kind <<
             " created with id " << this->id() <<
             " in domain " << domain << " with guid " << rtps_participant_->getGuid());
 }

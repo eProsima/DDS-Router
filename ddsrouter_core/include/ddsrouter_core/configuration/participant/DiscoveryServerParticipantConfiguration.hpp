@@ -68,13 +68,13 @@ struct DiscoveryServerParticipantConfiguration : public SimpleParticipantConfigu
     // VARIABLES
     /////////////////////////
 
-    types::GuidPrefix discovery_server_guid_prefix_ = types::GuidPrefix();
+    types::GuidPrefix discovery_server_guid_prefix = types::GuidPrefix();
 
-    std::set<types::Address> listening_addresses_ = {};
+    std::set<types::Address> listening_addresses = {};
 
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses_ = {};
+    std::set<types::DiscoveryServerConnectionAddress> connection_addresses = {};
 
-    types::security::TlsConfiguration tls_configuration_ = types::security::TlsConfiguration();
+    types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration();
 };
 
 } /* namespace configuration */

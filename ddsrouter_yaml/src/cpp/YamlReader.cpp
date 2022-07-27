@@ -552,10 +552,10 @@ void YamlReader::fill(
         const YamlReaderVersion version)
 {
     // Id required
-    object.id_ = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    object.id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
-    object.kind_ = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+    object.kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
 }
 
 template <>
@@ -582,7 +582,7 @@ void YamlReader::fill(
     // Domain optional
     if (is_tag_present(yml, DOMAIN_ID_TAG))
     {
-        object.domain_ = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
+        object.domain = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
     }
 }
 
@@ -610,13 +610,13 @@ void YamlReader::fill(
     // Optional listening addresses
     if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
     {
-        object.listening_addresses_ = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
+        object.listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
     }
 
     // Optional connection addresses
     if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
     {
-        object.connection_addresses_ = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(
+        object.connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(
             yml,
             CONNECTION_ADDRESSES_TAG,
             version);
@@ -625,19 +625,19 @@ void YamlReader::fill(
     // Optional TLS
     if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
-        object.tls_configuration_ = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
     // NOTE: The only field that change regarding the version is the GuidPrefix.
     switch (version)
     {
         case V_1_0:
-            object.discovery_server_guid_prefix_ =
+            object.discovery_server_guid_prefix =
                 YamlReader::get<types::GuidPrefix>(yml, version);
             break;
 
         default:
-            object.discovery_server_guid_prefix_ =
+            object.discovery_server_guid_prefix =
                 YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
             break;
     }
