@@ -53,19 +53,19 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics(), std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations_;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
     }
 }
 
@@ -104,11 +104,11 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
-    ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics();
+    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1);
     std::shared_ptr<core::types::RealTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name(), "rt/chatter");
@@ -118,13 +118,13 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations_;
 
     ASSERT_EQ(participant_configurations.size(), 3);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::simple_rtps);
+        ASSERT_EQ(participant->kind, core::types::ParticipantKind::simple_rtps);
     }
 }
 
@@ -154,19 +154,19 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics(), std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations_;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
     }
 }
 
@@ -201,14 +201,14 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check block Topics are empty
-    ASSERT_EQ(configuration_result.blocklist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
 
     // Check allowlist has 2 topics
-    std::set<std::shared_ptr<core::types::FilterTopic>> allowlist_result = configuration_result.allowlist();
+    std::set<std::shared_ptr<core::types::FilterTopic>> allowlist_result = configuration_result.allowlist;
     ASSERT_EQ(allowlist_result.size(), 2);
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics();
+    std::set<std::shared_ptr<core::types::RealTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1);
     std::shared_ptr<core::types::RealTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name(), "topic1");
@@ -217,13 +217,13 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations_;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind(), core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
     }
 }
 
@@ -260,20 +260,20 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist(), std::set<std::shared_ptr<core::types::FilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics(), std::set<std::shared_ptr<core::types::RealTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::FilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::RealTopic>>());
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations();
+    participant_configurations = configuration_result.participants_configurations_;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
     for (std::shared_ptr<core::configuration::ParticipantConfiguration> participant : participant_configurations)
     {
         // If it is not the discovery server participant, continue
-        if (!(participant->kind() == core::types::ParticipantKind::local_discovery_server))
+        if (!(participant->kind == core::types::ParticipantKind::local_discovery_server))
         {
             continue;
         }
@@ -284,18 +284,18 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
                     std::dynamic_pointer_cast<core::configuration::DiscoveryServerParticipantConfiguration>(participant);
 
             // Check Name
-            ASSERT_EQ(ds_participant->id(), core::types::ParticipantId("participant2"));
+            ASSERT_EQ(ds_participant->id, core::types::ParticipantId("participant2"));
 
             // Check GuidPrefix
             ASSERT_EQ(
-                ds_participant->discovery_server_guid_prefix(),
+                ds_participant->discovery_server_guid_prefix,
                 core::types::GuidPrefix(true, 3));
 
             // Check Connection addresses
             ASSERT_EQ(
-                ds_participant->connection_addresses().size(),
+                ds_participant->connection_addresses.size(),
                 1);
-            core::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses().begin();
+            core::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses.begin();
             ASSERT_EQ(
                 address,
                 (core::types::DiscoveryServerConnectionAddress(

@@ -68,7 +68,7 @@ types::ParticipantId BaseParticipant<ConfigurationType>::id() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.id();
+    return configuration_.id;
 }
 
 template <class ConfigurationType>
@@ -76,7 +76,7 @@ types::ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
-    return configuration_.kind();
+    return configuration_.kind;
 }
 
 template <class ConfigurationType>
@@ -178,7 +178,7 @@ void BaseParticipant<ConfigurationType>::delete_reader_(
 template <class ConfigurationType>
 types::ParticipantId BaseParticipant<ConfigurationType>::id_nts_() const noexcept
 {
-    return configuration_.id();
+    return configuration_.id;
 }
 
 template <class ConfigurationType>
@@ -186,7 +186,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const BaseParticipant<ConfigurationType>& participant)
 {
-    os << "{" << participant.id() << ";" << participant.configuration_.kind() << "}";
+    os << "{" << participant.id() << ";" << participant.configuration_.kind << "}";
     return os;
 }
 

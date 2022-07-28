@@ -31,33 +31,23 @@ using namespace eprosima::ddsrouter::core::types;
 ParticipantConfiguration::ParticipantConfiguration(
         const ParticipantId& id,
         const ParticipantKind& kind) noexcept
-    : id_(id)
-    , kind_(kind)
+    : id(id)
+    , kind(kind)
 {
-}
-
-ParticipantKind ParticipantConfiguration::kind() const noexcept
-{
-    return kind_;
-}
-
-ParticipantId ParticipantConfiguration::id() const noexcept
-{
-    return id_;
 }
 
 bool ParticipantConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
-    if (!id_.is_valid())
+    if (!id.is_valid())
     {
-        error_msg << "Non valid Participant Id " << id_ << ". ";
+        error_msg << "Non valid Participant Id " << id << ". ";
         return false;
     }
 
-    if (kind_ == ParticipantKind::invalid)
+    if (kind == ParticipantKind::invalid)
     {
-        error_msg << "Non valid Participant kind " << kind_ << ". ";
+        error_msg << "Non valid Participant kind " << kind << ". ";
         return false;
     }
 
@@ -67,7 +57,7 @@ bool ParticipantConfiguration::is_valid(
 bool ParticipantConfiguration::operator ==(
         const ParticipantConfiguration& other) const noexcept
 {
-    return this->id() == other.id() && this->kind() == other.kind();
+    return this->id == other.id && this->kind == other.kind;
 }
 
 } /* namespace configuration */

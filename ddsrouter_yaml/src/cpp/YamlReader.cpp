@@ -543,249 +543,114 @@ security::TlsConfiguration YamlReader::get<security::TlsConfiguration>(
 * PARTICIPANTS         *
 ************************/
 
+//////////////////////////////////
+// ParticipantConfiguration
 template <>
-configuration::ParticipantConfiguration YamlReader::get<configuration::ParticipantConfiguration>(
+void YamlReader::fill(
+        configuration::ParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Id required
-    types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    object.id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
 
     // Kind required
-    types::ParticipantKind kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
-
-    return configuration::ParticipantConfiguration(id, kind);
+    object.kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
 }
 
 template <>
-configuration::SimpleParticipantConfiguration YamlReader::get<configuration::SimpleParticipantConfiguration>(
+configuration::ParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    // Id required
-    types::ParticipantId id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    configuration::ParticipantConfiguration object;
+    fill<configuration::ParticipantConfiguration>(object, yml, version);
+    return object;
+}
 
-    // Kind required
-    types::ParticipantKind kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+//////////////////////////////////
+// SimpleParticipantConfiguration
+template <>
+void YamlReader::fill(
+        configuration::SimpleParticipantConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Parent class fill
+    fill<configuration::ParticipantConfiguration>(object, yml, version);
 
     // Domain optional
-    types::DomainId domain;
-    bool has_domain = is_tag_present(yml, DOMAIN_ID_TAG);
-    if (has_domain)
+    if (is_tag_present(yml, DOMAIN_ID_TAG))
     {
-        domain = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
-    }
-
-    if (has_domain)
-    {
-        return configuration::SimpleParticipantConfiguration(id, kind, domain);
-    }
-    else
-    {
-        return configuration::SimpleParticipantConfiguration(id, kind);
+        object.domain = get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
     }
 }
 
-configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_participant_configuration_v1(
+template <>
+configuration::SimpleParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    // Id required
-    types::ParticipantId id = YamlReader::get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
+    configuration::SimpleParticipantConfiguration object;
+    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+    return object;
+}
 
-    // Kind required
-    types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
-
-    // Guid Prefix required
-    types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, version);
-
-    // Domain option
-    types::DomainId domain;
-    bool has_domain = YamlReader::is_tag_present(yml, DOMAIN_ID_TAG);
-    if (has_domain)
-    {
-        domain = YamlReader::get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
-    }
+//////////////////////////////////
+// DiscoveryServerParticipantConfiguration
+template <>
+void YamlReader::fill(
+        configuration::DiscoveryServerParticipantConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Parent class fill
+    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
 
     // Optional listening addresses
-    std::set<types::Address> listening_addresses;
     if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
     {
-        listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
+        object.listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
     }
 
     // Optional connection addresses
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses;
     if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
     {
-        connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(
+        object.connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(
             yml,
             CONNECTION_ADDRESSES_TAG,
             version);
     }
 
     // Optional TLS
-    types::security::TlsConfiguration tls;
-    bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
-    if (has_tls)
+    if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
-        tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
-    if (has_domain)
+    // NOTE: The only field that change regarding the version is the GuidPrefix.
+    switch (version)
     {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls,
-                domain);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                domain,
-                kind);
-        }
-    }
-    else
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind);
-        }
-    }
-}
+        case V_1_0:
+            object.discovery_server_guid_prefix =
+                    YamlReader::get<types::GuidPrefix>(yml, version);
+            break;
 
-configuration::DiscoveryServerParticipantConfiguration _get_discovery_server_participant_configuration_latest(
-        const Yaml& yml,
-        const YamlReaderVersion version)
-{
-    // Id required
-    types::ParticipantId id = YamlReader::get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
-
-    // Kind required
-    types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
-
-    // Guid Prefix required
-    types::GuidPrefix guid = YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
-
-    // Domain option
-    types::DomainId domain;
-    bool has_domain = YamlReader::is_tag_present(yml, DOMAIN_ID_TAG);
-    if (has_domain)
-    {
-        domain = YamlReader::get<types::DomainId>(yml, DOMAIN_ID_TAG, version);
-    }
-
-    // Optional listening addresses
-    std::set<types::Address> listening_addresses;
-    if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
-    {
-        listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
-    }
-
-    // Optional connection addresses
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses;
-    if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
-    {
-        connection_addresses = YamlReader::get_set<types::DiscoveryServerConnectionAddress>(yml,
-                        CONNECTION_ADDRESSES_TAG,
-                        version);
-    }
-
-    // Optional TLS
-    types::security::TlsConfiguration tls;
-    bool has_tls = YamlReader::is_tag_present(yml, TLS_TAG);
-    if (has_tls)
-    {
-        tls = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
-    }
-
-    if (has_domain)
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls,
-                domain);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                domain,
-                kind);
-        }
-    }
-    else
-    {
-        if (has_tls)
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind,
-                tls);
-        }
-        else
-        {
-            return configuration::DiscoveryServerParticipantConfiguration(
-                id,
-                guid,
-                listening_addresses,
-                connection_addresses,
-                kind);
-        }
+        default:
+            object.discovery_server_guid_prefix =
+                    YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
+            break;
     }
 }
 
 template <>
-configuration::DiscoveryServerParticipantConfiguration YamlReader::get<configuration::DiscoveryServerParticipantConfiguration>(
+configuration::DiscoveryServerParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    switch (version)
-    {
-        case V_1_0:
-            return _get_discovery_server_participant_configuration_v1(yml, version);
-
-        default:
-            return _get_discovery_server_participant_configuration_latest(yml, version);
-    }
+    configuration::DiscoveryServerParticipantConfiguration object;
+    fill<configuration::DiscoveryServerParticipantConfiguration>(object, yml, version);
+    return object;
 }
 
 /***************************
@@ -827,36 +692,34 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
     }
 }
 
-core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
+void _fill_ddsrouter_configuration_v1(
+        core::configuration::DDSRouterConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     /////
     // Get optional allowlist
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
     /////
     // Get optional blocklist
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
     /////
     // Get builtin topics from allowlist
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
-    for (const std::shared_ptr<FilterTopic>& topic : allowlist)
+    for (const std::shared_ptr<FilterTopic>& topic : object.allowlist)
     {
         if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
         {
-            builtin_topics.emplace(
+            object.builtin_topics.emplace(
                 std::make_shared<types::RealTopic>(
                     topic->topic_name(),
                     topic->topic_type(),
@@ -866,8 +729,6 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
 
     /////
     // Get participants configurations from this yaml level
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
-
     for (Yaml::const_iterator participant_it = yml.begin();
             participant_it != yml.end();
             ++participant_it)
@@ -906,55 +767,44 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_v1(
         participant_yml[PARTICIPANT_KIND_TAG] = participant_yml[PARTICIPANT_KIND_TAG_V1];
 
         // Add new Participant with its configuration
-        participants_configurations.insert(
+        object.participants_configurations_.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 participant_yml,
                 version));
     }
-
-    /////
-    // Construct object
-    return core::configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations);
 }
 
-core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
+void _fill_ddsrouter_configuration_latest(
+        core::configuration::DDSRouterConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     /////
     // Get optional allowlist
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
     }
 
     /////
     // Get optional blocklist
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
+        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
             YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
     }
 
     /////
     // Get optional builtin topics
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
+        object.builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
             YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
     }
 
     /////
     // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participants_configurations;
     auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
 
     // TODO do it in a single instruction
@@ -969,38 +819,17 @@ core::configuration::DDSRouterConfiguration _get_ddsrouter_configuration_latest(
 
     for (auto conf : participants_configurations_yml)
     {
-        participants_configurations.insert(
+        object.participants_configurations_.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
     }
 
     /////
     // Get optional number of threads
-    int number_of_threads;
-    bool has_number_of_threads = YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG);
-    if (has_number_of_threads)
+    if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
     {
-        number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
     }
 
-    /////
-    // Construct object
-    if (has_number_of_threads)
-    {
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations,
-            number_of_threads);
-    }
-    else
-    {
-        return core::configuration::DDSRouterConfiguration(
-            allowlist,
-            blocklist,
-            builtin_topics,
-            participants_configurations);
-    }
 }
 
 template <>
@@ -1008,14 +837,18 @@ core::configuration::DDSRouterConfiguration YamlReader::get<core::configuration:
         const Yaml& yml,
         const YamlReaderVersion version)
 {
+    core::configuration::DDSRouterConfiguration object;
     switch (version)
     {
         case V_1_0:
-            return _get_ddsrouter_configuration_v1(yml, version);
+            _fill_ddsrouter_configuration_v1(object, yml, version);
+            break;
 
         default:
-            return _get_ddsrouter_configuration_latest(yml, version);
+            _fill_ddsrouter_configuration_latest(object, yml, version);
+            break;
     }
+    return object;
 }
 
 std::ostream& operator <<(

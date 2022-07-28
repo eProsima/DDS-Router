@@ -59,8 +59,8 @@ configuration::DDSRouterConfiguration void_configuration()
             ParticipantId("ParticipantVoid2"),
             ParticipantKind::blank
             )
-    }
-            ));
+    }),
+        1);
 }
 
 /**
@@ -88,8 +88,8 @@ configuration::DDSRouterConfiguration simple_configuration(
             ParticipantId(participant_2_name),
             ParticipantKind::dummy
             )
-    }
-            ));
+    }),
+        1);
 }
 
 /**

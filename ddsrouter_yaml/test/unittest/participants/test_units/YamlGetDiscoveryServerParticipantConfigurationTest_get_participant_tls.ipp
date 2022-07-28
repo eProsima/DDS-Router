@@ -156,16 +156,16 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inact
                     LATEST);
 
     // Check tls_configuration
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration().compatible<core::types::security::TlsKind::client>());
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration().compatible<core::types::security::TlsKind::both>());
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration().compatible<core::types::security::TlsKind::server>());
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration().is_active());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::client>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::both>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::server>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.is_active());
 
-    ASSERT_THROW(ds_participant_cfg.tls_configuration().certificate_authority_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration().private_key_file_password(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration().private_key_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration().certificate_chain_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration().dh_params_file(), utils::InconsistencyException);
+    ASSERT_THROW(ds_participant_cfg.tls_configuration.certificate_authority_file(), utils::InconsistencyException);
+    ASSERT_THROW(ds_participant_cfg.tls_configuration.private_key_file_password(), utils::InconsistencyException);
+    ASSERT_THROW(ds_participant_cfg.tls_configuration.private_key_file(), utils::InconsistencyException);
+    ASSERT_THROW(ds_participant_cfg.tls_configuration.certificate_chain_file(), utils::InconsistencyException);
+    ASSERT_THROW(ds_participant_cfg.tls_configuration.dh_params_file(), utils::InconsistencyException);
 }
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incorrect_empty)

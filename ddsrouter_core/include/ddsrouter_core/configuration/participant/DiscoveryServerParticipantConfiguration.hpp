@@ -36,39 +36,27 @@ namespace configuration {
 /**
  * This class joins Discovery Server Participant Configuration features and gives methods to interact with it.
  */
-class DiscoveryServerParticipantConfiguration : public SimpleParticipantConfiguration
+struct DiscoveryServerParticipantConfiguration : public SimpleParticipantConfiguration
 {
-public:
 
-    // TODO
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+
+    DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration() = default;
+
     DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::GuidPrefix& discovery_server_guid_prefix,
-            const std::set<types::Address>& listening_addresses,
-            const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
-            const types::ParticipantKind& kind = types::ParticipantKind::local_discovery_server,
-            const types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration(),
-            const types::DomainId& domain_id = DEFAULT_DS_DOMAIN_ID_);
-
-    // TODO
-    DDSROUTER_CORE_DllAPI DiscoveryServerParticipantConfiguration(
-            const types::ParticipantId& id,
-            const types::GuidPrefix& discovery_server_guid_prefix,
-            const std::set<types::Address>& listening_addresses,
-            const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
+            const types::ParticipantKind& kind,
             const types::DomainId& domain_id,
-            const types::ParticipantKind& kind = types::ParticipantKind::local_discovery_server,
-            const types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration());
+            const types::GuidPrefix& discovery_server_guid_prefix,
+            const std::set<types::Address>& listening_addresses,
+            const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
+            const types::security::TlsConfiguration tls_configuration);
 
-    DDSROUTER_CORE_DllAPI types::GuidPrefix discovery_server_guid_prefix() const noexcept;
-
-    DDSROUTER_CORE_DllAPI std::set<types::Address> listening_addresses() const noexcept;
-
-    DDSROUTER_CORE_DllAPI std::set<types::DiscoveryServerConnectionAddress> connection_addresses() const noexcept;
-
-    DDSROUTER_CORE_DllAPI bool tls_active() const noexcept;
-
-    DDSROUTER_CORE_DllAPI const types::security::TlsConfiguration& tls_configuration() const noexcept;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
@@ -76,16 +64,17 @@ public:
     DDSROUTER_CORE_DllAPI bool operator ==(
             const DiscoveryServerParticipantConfiguration& other) const noexcept;
 
-    DDSROUTER_CORE_DllAPI static types::DomainId default_domain_id() noexcept;
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
-protected:
+    types::GuidPrefix discovery_server_guid_prefix = types::GuidPrefix();
 
-    types::GuidPrefix discovery_server_guid_prefix_;
-    std::set<types::Address> listening_addresses_;
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses_;
-    const types::security::TlsConfiguration tls_configuration_;
+    std::set<types::Address> listening_addresses = {};
 
-    DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DS_DOMAIN_ID_; // 66
+    std::set<types::DiscoveryServerConnectionAddress> connection_addresses = {};
+
+    types::security::TlsConfiguration tls_configuration = types::security::TlsConfiguration();
 };
 
 } /* namespace configuration */

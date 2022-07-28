@@ -33,32 +33,17 @@ DDSRouterReloadConfiguration::DDSRouterReloadConfiguration(
         std::set<std::shared_ptr<FilterTopic>> allowlist,
         std::set<std::shared_ptr<FilterTopic>> blocklist,
         std::set<std::shared_ptr<RealTopic>> builtin_topics)
-    : allowlist_(allowlist)
-    , blocklist_(blocklist)
-    , builtin_topics_(builtin_topics)
+    : allowlist(allowlist)
+    , blocklist(blocklist)
+    , builtin_topics(builtin_topics)
 {
-}
-
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::allowlist() const noexcept
-{
-    return allowlist_;
-}
-
-std::set<std::shared_ptr<FilterTopic>> DDSRouterReloadConfiguration::blocklist() const noexcept
-{
-    return blocklist_;
-}
-
-std::set<std::shared_ptr<RealTopic>> DDSRouterReloadConfiguration::builtin_topics() const noexcept
-{
-    return builtin_topics_;
 }
 
 bool DDSRouterReloadConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
     // Check Allow list topics
-    for (std::shared_ptr<FilterTopic> topic : allowlist_)
+    for (std::shared_ptr<FilterTopic> topic : allowlist)
     {
         if (!topic)
         {
@@ -75,7 +60,7 @@ bool DDSRouterReloadConfiguration::is_valid(
     }
 
     // Check Block list topics
-    for (std::shared_ptr<FilterTopic> topic : blocklist_)
+    for (std::shared_ptr<FilterTopic> topic : blocklist)
     {
         if (!topic)
         {
@@ -92,7 +77,7 @@ bool DDSRouterReloadConfiguration::is_valid(
     }
 
     // Check Builtin list topics
-    for (std::shared_ptr<RealTopic> topic : builtin_topics_)
+    for (std::shared_ptr<RealTopic> topic : builtin_topics)
     {
         if (!topic)
         {

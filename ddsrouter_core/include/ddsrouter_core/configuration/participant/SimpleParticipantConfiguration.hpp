@@ -29,38 +29,43 @@ namespace core {
 namespace configuration {
 
 /**
- * This class joins Simple Participant Configuration features and give methods to interact with it.
+ * This data struct represents a configuration for a SimpleParticipant
  */
-class SimpleParticipantConfiguration : public ParticipantConfiguration
+struct SimpleParticipantConfiguration : public ParticipantConfiguration
 {
 public:
 
-    //! TODO
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+    DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration() = default;
+
     DDSROUTER_CORE_DllAPI SimpleParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::ParticipantKind& kind = types::ParticipantKind::simple_rtps,
-            const types::DomainId& domain_id = DEFAULT_DOMAIN_ID_) noexcept;
+            const types::ParticipantKind& kind,
+            const types::DomainId& domain_id) noexcept;
 
-    /**
-     * @brief Return domain set in the configuration
-     *
-     * In case domain is not set in Configuration, it returns the default DomainID = 0
-     *
-     * @return DomainId
-     */
-    DDSROUTER_CORE_DllAPI types::DomainId domain() const noexcept;
-
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const SimpleParticipantConfiguration& other) const noexcept;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-protected:
+    /**
+     * @brief Equal comparator
+     *
+     * @param [in] other: SimpleParticipantConfiguration to compare.
+     * @return True if both configurations are the same, False otherwise.
+     */
+    DDSROUTER_CORE_DllAPI bool operator ==(
+            const SimpleParticipantConfiguration& other) const noexcept;
 
-    types::DomainId domain_;
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
-    DDSROUTER_CORE_DllAPI static const types::DomainId DEFAULT_DOMAIN_ID_; // 0
+    types::DomainId domain = types::DomainId(0u);
 };
 
 } /* namespace configuration */
