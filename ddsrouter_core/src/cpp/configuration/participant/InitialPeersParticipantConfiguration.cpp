@@ -37,9 +37,9 @@ InitialPeersParticipantConfiguration::InitialPeersParticipantConfiguration(
         const std::set<types::Address>& connection_addresses,
         const types::security::TlsConfiguration tls_configuration)
     : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
-    , listening_addresses_(listening_addresses)
-    , connection_addresses_(connection_addresses)
-    , tls_configuration_(tls_configuration)
+    , listening_addresses(listening_addresses)
+    , connection_addresses(connection_addresses)
+    , tls_configuration(tls_configuration)
 {
     // Do nothing
 }
@@ -54,7 +54,7 @@ bool InitialPeersParticipantConfiguration::is_valid(
     }
 
     // Check listening addresses
-    for (Address address : listening_addresses_)
+    for (Address address : listening_addresses)
     {
         if (!address.is_valid())
         {
@@ -64,7 +64,7 @@ bool InitialPeersParticipantConfiguration::is_valid(
     }
 
     // Check connection addresses
-    for (Address address : connection_addresses_)
+    for (Address address : connection_addresses)
     {
         if (!address.is_valid())
         {
@@ -74,19 +74,19 @@ bool InitialPeersParticipantConfiguration::is_valid(
     }
 
     // Check exist at least one address
-    if (listening_addresses_.empty() && connection_addresses_.empty())
+    if (listening_addresses.empty() && connection_addresses.empty())
     {
         error_msg << "No listening or connection address specified. ";
         return false;
     }
 
     // If active, check it is valid
-    if (tls_configuration_.is_active())
+    if (tls_configuration.is_active())
     {
         // If has listening addresses, it should be able to provide TLS server configuration
-        if (!listening_addresses_.empty())
+        if (!listening_addresses.empty())
         {
-            if (!tls_configuration_.compatible<types::security::TlsKind::server>())
+            if (!tls_configuration.compatible<types::security::TlsKind::server>())
             {
                 error_msg << "TLS requires to support Server Configuration if listening addresses set. ";
                 return false;
@@ -94,9 +94,9 @@ bool InitialPeersParticipantConfiguration::is_valid(
         }
 
         // If has connection addresses, it should be able to provide TLS client configuration
-        if (!connection_addresses_.empty())
+        if (!connection_addresses.empty())
         {
-            if (!tls_configuration_.compatible<types::security::TlsKind::client>())
+            if (!tls_configuration.compatible<types::security::TlsKind::client>())
             {
                 error_msg << "TLS requires to support Client Configuration if connection addresses set. ";
                 return false;

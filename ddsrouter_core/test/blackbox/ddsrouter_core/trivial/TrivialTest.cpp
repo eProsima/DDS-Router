@@ -74,37 +74,28 @@ configuration::DDSRouterConfiguration simple_configuration(
         const std::string& topic_name = "topic_dummy",
         const std::string& topic_type = "type_dummy")
 {
-    return configuration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>>(),
-        std::set<std::shared_ptr<FilterTopic>>(),
+    configuration::DDSRouterConfiguration configuration;
+
+    configuration.builtin_topics =
+    {
         std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
-<<<<<<< HEAD
+    };
+
+    configuration.participants_configurations =
     {
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId(participant_1_name),
-            ParticipantKind::dummy
+            ParticipantKind::dummy,
+            false
             ),
         std::make_shared<configuration::ParticipantConfiguration>(
             ParticipantId(participant_2_name),
-            ParticipantKind::dummy
+            ParticipantKind::dummy,
+            false
             )
-    }),
-=======
-            {
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId(participant_1_name),
-                    ParticipantKind::dummy,
-                    false
-                    ),
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId(participant_2_name),
-                    ParticipantKind::dummy,
-                    false
-                    )
-            }),
->>>>>>> 70bbd0f... Refs #14951: Rebase over initial peers
-        1);
+    };
+
+    return configuration;
 }
 
 /**

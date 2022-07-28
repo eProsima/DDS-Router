@@ -686,13 +686,13 @@ void YamlReader::fill(
     // Optional listening addresses
     if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
     {
-        object.listening_addresses_ = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
+        object.listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
     }
 
     // Optional connection addresses
     if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
     {
-        object.connection_addresses_ = YamlReader::get_set<types::Address>(
+        object.connection_addresses = YamlReader::get_set<types::Address>(
             yml,
             CONNECTION_ADDRESSES_TAG,
             version);
@@ -701,13 +701,13 @@ void YamlReader::fill(
     // Optional TLS
     if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
-        object.tls_configuration_ = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
     }
 
     // Optional Repeater
     if (YamlReader::is_tag_present(yml, IS_REPEATER_TAG))
     {
-        object.is_repeater_ = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
+        object.is_repeater = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
     }
 }
 
@@ -839,7 +839,7 @@ void _fill_ddsrouter_configuration_v1(
         participant_yml[PARTICIPANT_KIND_TAG] = participant_yml[PARTICIPANT_KIND_TAG_V1];
 
         // Add new Participant with its configuration
-        object.participants_configurations_.insert(
+        object.participants_configurations.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 participant_yml,
                 version));
@@ -891,7 +891,7 @@ void _fill_ddsrouter_configuration_latest(
 
     for (auto conf : participants_configurations_yml)
     {
-        object.participants_configurations_.insert(
+        object.participants_configurations.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
     }
 

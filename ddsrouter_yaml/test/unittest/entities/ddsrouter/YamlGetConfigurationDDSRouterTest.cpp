@@ -59,7 +59,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations_;
+    participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
@@ -118,7 +118,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations_;
+    participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 3);
 
@@ -160,7 +160,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations_;
+    participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
@@ -217,7 +217,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations_;
+    participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 
@@ -266,7 +266,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
 
     // Check Participant configurations
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
-    participant_configurations = configuration_result.participants_configurations_;
+    participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2);
 

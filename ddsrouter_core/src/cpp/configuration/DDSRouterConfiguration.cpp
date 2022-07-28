@@ -19,6 +19,7 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_utils/Log.hpp>
@@ -40,7 +41,7 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
         unsigned int number_of_threads /* = default_number_of_threads() */)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
-    , participants_configurations_(participants_configurations)
+    , participants_configurations(participants_configurations)
     , number_of_threads(number_of_threads)
 {
 }
@@ -55,11 +56,11 @@ bool DDSRouterConfiguration::is_valid(
     }
 
     // Check there are at least two participants
-    if (participants_configurations_.size() < 2)
+    if (participants_configurations.size() < 2)
     {
         // It is allowed a one participant router as far as it is a repeater
-        if (participants_configurations_.size() < 1 ||
-            !(*participants_configurations_.begin())->is_repeater_)
+        if (participants_configurations.size() < 1 ||
+            !(*participants_configurations.begin())->is_repeater)
         {
             error_msg << "There must be at least 2 participants or 1 repeater. ";
             return false;
@@ -69,7 +70,7 @@ bool DDSRouterConfiguration::is_valid(
     // Check Participant Configurations AND
     // check Participant Configuration IDs are not repeated
     std::set<ParticipantId> ids;
-    for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations_)
+    for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations)
     {
         // Check configuration is not null
         if (!configuration)
@@ -98,7 +99,7 @@ bool DDSRouterConfiguration::is_valid(
     }
 
     // If the number of ids are not equal the number of configurations, is because they are repeated
-    if (ids.size() != participants_configurations_.size())
+    if (ids.size() != participants_configurations.size())
     {
         error_msg << "Participant ids are not unique. ";
         return false;
@@ -131,8 +132,11 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
             return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
 
         case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_ds:
             return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
+
+        case ParticipantKind::wan:
+            return check_correct_configuration_object_by_type_<InitialPeersParticipantConfiguration>(configuration);
 
         default:
             return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);

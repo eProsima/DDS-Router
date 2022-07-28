@@ -60,16 +60,16 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
                 LATEST);
 
             // Check result
-            ASSERT_EQ(id, result.id_);
-            ASSERT_EQ(kind, result.kind_);
+            ASSERT_EQ(id, result.id);
+            ASSERT_EQ(kind, result.kind);
 
             // Check default values
-            ASSERT_EQ(0, result.connection_addresses_.size());
-            ASSERT_EQ(0, result.listening_addresses_.size());
-            ASSERT_FALSE(result.tls_configuration_.is_active());
+            ASSERT_EQ(0, result.connection_addresses.size());
+            ASSERT_EQ(0, result.listening_addresses.size());
+            ASSERT_FALSE(result.tls_configuration.is_active());
             ASSERT_EQ(
-                core::configuration::InitialPeersParticipantConfiguration().domain_,
-                result.domain_);
+                core::configuration::InitialPeersParticipantConfiguration().domain,
+                result.domain);
         }
     }
 }
@@ -109,7 +109,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_FALSE(result.is_repeater_);
+        ASSERT_FALSE(result.is_repeater);
     }
 
     // true
@@ -133,7 +133,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_TRUE(result.is_repeater_);
+        ASSERT_TRUE(result.is_repeater);
     }
 
     // false
@@ -157,7 +157,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
                         LATEST);
 
         // Check result
-        ASSERT_FALSE(result.is_repeater_);
+        ASSERT_FALSE(result.is_repeater);
     }
 
     // incorrect bool format

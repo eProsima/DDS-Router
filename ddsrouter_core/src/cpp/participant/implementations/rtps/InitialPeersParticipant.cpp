@@ -43,7 +43,7 @@ InitialPeersParticipant::InitialPeersParticipant(
 fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_attributes_() const
 {
     // Auxiliary variable to save characters and improve readability
-    const auto& tls_config = this->configuration_.tls_configuration_;
+    const auto& tls_config = this->configuration_.tls_configuration;
 
     // Set attributes
     fastrtps::rtps::RTPSParticipantAttributes params;
@@ -65,7 +65,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
     /////
     // Set listening addresses
-    for (const types::Address& address : this->configuration_.listening_addresses_)
+    for (const types::Address& address : this->configuration_.listening_addresses)
     {
         if (!address.is_valid())
         {
@@ -157,7 +157,7 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
     /////
     // Set connection addresses
-    for (const types::Address& connection_address : this->configuration_.connection_addresses_)
+    for (const types::Address& connection_address : this->configuration_.connection_addresses)
     {
         if (!connection_address.is_valid())
         {
