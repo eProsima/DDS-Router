@@ -633,12 +633,12 @@ void YamlReader::fill(
     {
         case V_1_0:
             object.discovery_server_guid_prefix =
-                YamlReader::get<types::GuidPrefix>(yml, version);
+                    YamlReader::get<types::GuidPrefix>(yml, version);
             break;
 
         default:
             object.discovery_server_guid_prefix =
-                YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
+                    YamlReader::get<types::GuidPrefix>(yml, DISCOVERY_SERVER_GUID_PREFIX_TAG, version);
             break;
     }
 }

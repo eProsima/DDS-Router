@@ -69,7 +69,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             {
                 throw utils::ConfigurationException(
                           utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
-                          " is not for Participant Kind: " << participant_configuration->kind);
+                              " is not for Participant Kind: " << participant_configuration->kind);
             }
 
             return std::make_shared<rtps::SimpleParticipant> (

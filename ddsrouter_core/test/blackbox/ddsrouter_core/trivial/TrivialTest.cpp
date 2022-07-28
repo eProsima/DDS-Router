@@ -50,16 +50,16 @@ configuration::DDSRouterConfiguration void_configuration()
         std::set<std::shared_ptr<FilterTopic>>(),
         std::set<std::shared_ptr<RealTopic>>(),
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
-            {
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId("ParticipantVoid1"),
-                    ParticipantKind::blank
-                    ),
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId("ParticipantVoid2"),
-                    ParticipantKind::blank
-                    )
-            }),
+    {
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid1"),
+            ParticipantKind::blank
+            ),
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid2"),
+            ParticipantKind::blank
+            )
+    }),
         1);
 }
 
@@ -79,16 +79,16 @@ configuration::DDSRouterConfiguration simple_configuration(
         std::set<std::shared_ptr<FilterTopic>>(),
         std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>>(
-            {
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId(participant_1_name),
-                    ParticipantKind::dummy
-                    ),
-                std::make_shared<configuration::ParticipantConfiguration>(
-                    ParticipantId(participant_2_name),
-                    ParticipantKind::dummy
-                    )
-            }),
+    {
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId(participant_1_name),
+            ParticipantKind::dummy
+            ),
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId(participant_2_name),
+            ParticipantKind::dummy
+            )
+    }),
         1);
 }
 
