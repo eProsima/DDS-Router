@@ -14,3 +14,4 @@
 
 # Add subdirectory with tests
 add_subdirectory(application)
+add_subdirectory(compose)

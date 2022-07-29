@@ -1,16 +1,5 @@
 services:
 
-  build_image:
-    image: ddsrouter-repeater-ds
-    # build:
-    #   context: ..
-    #   dockerfile: Dockerfile
-    #   args:
-    #     - BRANCH=${BRANCH}
-    # image: ddsrouter_image
-    networks:
-      - cloud_edge_1_net
-
   ddsrouter_cloud:
     image: ddsrouter-repeater-ds
     container_name: ddsrouter_cloud
