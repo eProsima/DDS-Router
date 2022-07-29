@@ -33,7 +33,7 @@ runs:
     - name: Install Fast DDS
       shell: pwsh
       run: >
-        git clone https://github.com/eProsima/Fast-DDS.git;
+        git clone https://github.com/eProsima/Fast-DDS.git --branch ${{ inputs.fastdds_branch }};
         cmake -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\eprosima\install `
           -DCMAKE_PREFIX_PATH=${{ github.workspace }}\eprosima\install `
           -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
