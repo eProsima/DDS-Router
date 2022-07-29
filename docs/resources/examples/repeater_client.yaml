@@ -1,6 +1,6 @@
-#######################################
-# ROS DISCOVERY SERVER CLIENT EXAMPLE #
-#######################################
+###############
+# WAN EXAMPLE #
+###############
 
 ##################################
 # CONFIGURATION VERSION
@@ -27,25 +27,24 @@ participants:
     domain: 0                                                     # 4
 
 ##################################
-# ROS DISCOVERY CLIENT
-# This participant will subscribe to topics in allowlist using Discovery Server protocol as Super Client
+# WAN CLIENT
+# This participant will subscribe to topics in allowlist using Initial Peers Participant
 
   - name: Client                                                  # 5
     kind: wan                                                     # 6
     connection-addresses:
-        addresses:
-          - domain: 1.1.1.1
-            port: 11666
-            transport: tcp
+      - domain: 1.1.1.1
+        port: 11666
+        transport: tcp
 
 
 ##################################
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topic
-# rt/chatter from ROS2 demo_nodes, and to transmit these messages through a Discovery Server (configured as
-# Super Client) to another Discovery Server (configured as Server).
-# The other direction of communication is also possible; receive messages at the Discovery Server and locally
+# rt/chatter from ROS2 demo_nodes, and to transmit these messages through a WAN
+# to a WAN DDS Router (this configuration is independent to the remote Participant to be repeater or not).
+# The other direction of communication is also possible; receive messages at the WAN Participant and locally
 # publish them in domain 0.
 
 # 0: Use YAML configuration version v3.0
@@ -65,4 +64,4 @@ participants:
 
 # 6: Kind of ClientROS2: <WAN>.
 
-# 7: Add the configuration to connect with the DiscoveryServer of the Repeater Participant raised in the other side.
+# 7: Add the configuration to connect with the WAN Repeater Participant raised in the other side.

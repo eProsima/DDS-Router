@@ -14,7 +14,7 @@ Use case
 
 The use of a :term:`TURN` Server is very useful in the following scenarios:
 
-- **:term:`NAT` Traversal**: If the edge devices are under different NATs, they cannot access each other if no
+- **NAT Traversal**: If the edge devices are under different NATs, they cannot access each other if no
   ports are opened in their respective internet access points.
 - **Unreachable Network**: If edge devices work under different networks (e.g. using different transport protocols,
   connected in different private networks, etc.) cannot reach each other.

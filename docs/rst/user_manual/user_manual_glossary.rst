@@ -96,8 +96,8 @@ DDS nomenclature
         Identifies uniquely a DDS Participant.
 
     Initial Peers
-        It is a Fast DDS Discovery Protocol that enables a Discovery mechanism based on a
-        sending the discovery information directly to the participants configured.
+        It is a Fast DDS Discovery Protocol that allows to send the discovery information directly
+        to the participants configured.
         This is highly recommended for static networks where multicast is not available (e.g. WAN).
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html#initial-peers>`__

@@ -3,7 +3,7 @@
 # 2 Simple Participants in domains 0 and 1
 # 1 Local Discovery Server Participant with listening address
 # 1 WAN DS Participant with connection address
-# 1 Initial Peers Participant with connection address
+# 1 Initial Peers repeater Participant with connection and listening addresses
 # 2 topics, one with key and one without
 
 version: v3.0
@@ -47,6 +47,7 @@ participants:
 
   - name: initial-peers
     kind: router
+    repeater: true
     connection-addresses:
       - ip: "127.0.0.1"
         port: 11668
