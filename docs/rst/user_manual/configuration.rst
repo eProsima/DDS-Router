@@ -383,13 +383,13 @@ Default value for ``id`` is ``0``.
       id: 13                                  # GuidPrefix = 44.53.0d.5f.45.50.52.4f.53.49.4d.41
 
 
-.. _user_manual_configuration_discovery_server_listening_addresses:
+.. _user_manual_configuration_listening_addresses:
 
-Discovery Server Listening Addresses
-====================================
+Listening Addresses
+===================
 
-Tag ``listening-addresses`` configures the network addresses where the Discovery Server configured is going to
-listen for remote clients or servers.
+Tag ``listening-addresses`` configures the network addresses where this Participant is going to
+listen for remote Participants.
 ``listening-addresses`` is *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
 
 .. code-block:: yaml
@@ -398,6 +398,24 @@ listen for remote clients or servers.
       - ip: 127.0.0.1                # UDP by default
         port: 11667
       - ip: 2001:4860:4860::8844     # Recognized as IPv6
+        port: 11668
+        transport: tcp
+
+
+.. _user_manual_configuration_initial_peers_connection_addresses:
+
+Initial Peers Connection Addresses
+==================================
+
+Tag ``connection-addresses`` configure a connection with one or multiple remote WAN Participants.
+``connection-addresses`` is *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
+
+.. code-block:: yaml
+
+    connection-addresses:
+      - ip: 127.0.0.1
+        port: 11666
+      - ip: 2001:4860:4860::8844
         port: 11668
         transport: tcp
 
@@ -441,7 +459,7 @@ A complete example of all the configurations described on this page can be found
 .. code-block:: yaml
 
     # Version Latest
-    version: v2.0
+    version: v3.0
 
     # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
     # Relay topic HelloWorldTopic and type HelloWorld
@@ -490,7 +508,9 @@ A complete example of all the configurations described on this page can be found
     # Participant that will communicate with a DDS Router in a different LAN.
     # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
 
-      - name: Wan                       # Participant Name = Wan ; if kind is not specified, this value is used to determine the Participant Kind
+      - name: Wan                       # Participant Name = Wan
+
+        kind: wan-ds                    # Participant Kind = Discovery Server WAN
 
         discovery-server-guid:
           id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe

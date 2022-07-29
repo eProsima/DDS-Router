@@ -56,7 +56,7 @@ TEST(ParticipantKindTest, string_conversions)
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::
                     local_discovery_server)]), std::string("local-discovery-server"));
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_initial_peers)]),
-            std::string("wan"));
+            std::string("wan-initial-peers"));
     ASSERT_EQ(std::string(
                 PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_discovery_server)]),
             std::string("wan-ds"));

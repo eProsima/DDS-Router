@@ -29,4 +29,10 @@ and make the communication possible.
 How to configure
 ================
 
-In order to know how to configure this kind of |ddsrouter|, access to the following example :ref:`example_repeater`.
+This |ddsrouter| configuration is very simple, as all it needs is a :ref:`user_manual_participants_wan` and
+adding to its configuration the tag `repeater: true`.
+There could be more Participants in this |ddsrouter| and topic filtering is also available.
+The Repeater Participant only works as other normal Participant,
+with the particularity that resend forward the data that receives.
+
+In order to see an example of this configuration, access to the following example :ref:`example_repeater`.

@@ -35,7 +35,7 @@ participants:
   - name: WanParticipant                                          # 6
     kind: wan                                                     # 7
     listening-addresses:                                          # 8
-      - domain: localhost
+      - ip: 1.1.1.1
         port: 12666
 
 ##################################

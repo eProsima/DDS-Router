@@ -4,7 +4,7 @@
 
 ##################################
 # CONFIGURATION VERSION
-version: v2.0                                                     # 0
+version: v3.0                                                     # 0
 
 ##################################
 # ALLOWED TOPICS
@@ -27,8 +27,6 @@ participants:
   - name: RepeaterParticipant                                     # 3
     kind: wan                                                     # 4
     repeater: true                                                # 5
-    discovery-server-guid:                                        # 6
-      id: 1
     listening-addresses:
       - ip: 1.1.1.1
         port: 11666
@@ -45,7 +43,7 @@ participants:
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
 
-# 0: Use YAML configuration version v2.0
+# 0: Use YAML configuration version v3.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
@@ -57,5 +55,3 @@ participants:
 # WAN communication with other DDS Routers.
 
 # 5: RepeaterParticipant will repeat messages that arrive to it to the rest of DDS Routers connected.
-
-# 6: Connectivity configuration of RepeaterParticipant.

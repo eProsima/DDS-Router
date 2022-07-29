@@ -1,6 +1,6 @@
 # client-ddsrouter.yaml
 
-version: v2.0
+version: v3.0
 
 allowlist:
   - name: Square
@@ -12,7 +12,7 @@ participants:
     domain: 0
 
   - name: ClientWAN
-    kind: wan
+    kind: wan-ds
     discovery-server-guid:
       id: 1
     connection-addresses:

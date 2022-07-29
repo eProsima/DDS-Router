@@ -35,8 +35,11 @@ participants:
   - name: WanParticipant                                          # 6
     kind: wan                                                     # 7
     connection-addresses:                                         # 8
-      - domain: localhost
+      - ip: 1.1.1.1
         port: 12666
+    listening-addresses:                                          # 9
+      - ip: 2.2.2.2
+        port: 12670
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -70,3 +73,5 @@ participants:
 # 8: Add the connection addresses where to reach the remote DDS Routers to connect with_
 # In this case using localhost (127.0.0.1) port 12666 (UDP by default).
 # Add as many connection-addresses as needed.
+
+# 9: In case of using UDP in WAN, at least one listening address is required

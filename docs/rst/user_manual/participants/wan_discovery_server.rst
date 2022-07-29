@@ -1,12 +1,12 @@
 .. include:: ../../exports/alias.include
 
-.. _user_manual_participants_wan:
+.. _user_manual_participants_discovery_server_wan:
 
-###############
-WAN Participant
-###############
+################################
+Discovery Server WAN Participant
+################################
 
-This type of :term:`Participant` refers to a :term:`Initial Peers` :term:`DomainParticipant` that communicates
+This type of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant` that communicates
 with other **WAN** Participants in different networks.
 This Participant will work as bridge for every Participant working locally in the LAN and any other LAN that has
 a |ddsrouter| with an active WAN Participant.
@@ -27,33 +27,27 @@ another depending on the topics filtered by each of them.
 Kind aliases
 ============
 
-* ``wan``
-* ``router``
-* ``initial-peers``
+* ``wan-discovery-server``
+* ``wan-ds``
 
 
 Configuration
 =============
 
-WAN Participant allow configure the listening and connection addresses, whether if it should be located from
-remote Participants or it should locate others remote Participants:
+WAN Discovery Server Participant allow configure the standard attributes of a Discovery Server.
 
-* To configure the listening addresses, check the following section
+* To configure the Discovery Server :term:`GuidPrefix`, check the following section
+  :ref:`Configuration section <user_manual_configuration_domain_id>`.
+* To configure the Discovery Server listening addresses, check the following section
   :ref:`Configuration section <user_manual_configuration_listening_addresses>`.
-* To configure the connection addresses to connect with other Wan Participant,
+* To configure the Discovery Server connection addresses to connect with other Discovery Servers,
   check the following section
-  :ref:`Configuration section <user_manual_configuration_initial_peers_connection_addresses>`.
+  :ref:`Configuration section <user_manual_configuration_discovery_server_connection_addresses>`.
 
 .. note::
 
     The network addresses set in *listening-addresses* and *connection-addresses* use ``UDP`` transport by default
     if the transport is not specified in the address configuration.
-
-Repeater
---------
-
-This Participant allows a tag ``repeater`` to be used as a :term:`TURN` server.
-Please refer to section :ref:`use_case_repeater` for more information.
 
 WAN Configuration
 -----------------
@@ -64,10 +58,10 @@ the |ddsrouter| for WAN communication.
 Configuration Example
 =====================
 
-Configure a WAN Participant.
+Configure a WAN Discovery Server with GuidPrefix id ``2`` (``01.0f.02.00.00.00.00.00.00.00.ca.fe``).
 It listens for clients in public IP ``82.0.0.1`` in port ``11600`` in ``TCP``.
-It connects with a remote Participant in IPv6 address ``2001:4860:4860::8888`` and port ``11666``
-using ``TCP`` transport.
+It connects with a remote WAN Participant in IPv6 address ``2001:4860:4860::8888`` and port ``11666`` which Discovery
+Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` transport.
 
 .. code-block:: yaml
 
@@ -75,11 +69,17 @@ using ``TCP`` transport.
 
       kind: wan
 
-      listening-addresses:                        # WAN Participant Listening Addresses
+      discovery-server-guid:
+        id: 2                                     # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
+
+      listening-addresses:                        # WAN Discovery Server Listening Addresses
         - ip: 82.0.0.1                            # Use UDP by default
           port: 11600
 
       connection-addresses:                       # Another WAN Participant Listening Addresses
-        - ip: 2001:4860:4860::8888
-          port: 11666
-          transport: tcp                          # Use UDP transport
+        - discovery-server-guid:
+            id: 4                                 # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
+          addresses:
+            - ip: 2001:4860:4860::8888
+              port: 11666
+              transport: udp                      # Use UDP transport

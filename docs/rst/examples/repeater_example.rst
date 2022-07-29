@@ -16,7 +16,7 @@ Configuration
 Version
 -------
 
-The version attribute is required, as the :code:`repeater` tag is only supported from v2.0 configuration version.
+The version attribute is required, as the :code:`repeater` tag is only supported from v3.0 configuration version.
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml
@@ -44,7 +44,7 @@ It must be a :code:`WAN` Participant and be configured as so with *Discovery Ser
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml
-    :lines: 27-35
+    :lines: 27-33
 
 
 Client Participants
@@ -56,7 +56,7 @@ or similar configuration to communicate across it.
 
 .. literalinclude:: ../../resources/examples/repeater_client.yaml
     :language: yaml
-    :lines: 33-45
+    :lines: 33-39
 
 
 Execute example
