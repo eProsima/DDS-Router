@@ -85,6 +85,7 @@ enum  optionIndex
     RELOAD_TIME,
     ACTIVATE_DEBUG,
     VERSION,
+    TIMEOUT,
 };
 
 /**
@@ -102,8 +103,9 @@ extern const option::Descriptor usage[];
  * @param [in] argc number of process arguments
  * @param [in] argv process arguments array (with size \c argc )
  * @param [out] file_path path to the configuration file
- * @param [out] reload_time time in seconds to reload the configuration file
+ * @param [out] reload_time time in milliseconds to reload the configuration file
  * @param [out] activate_debug activate log info
+ * @param [out] timeout time in milliseconds to maximum router execution time
  *
  * @return \c SUCCESS if everything OK
  * @return \c INCORRECT_ARGUMENT if arguments were incorrect (unknown or incorrect value)
@@ -115,7 +117,8 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug);
+        bool& activate_debug,
+        utils::Duration_ms& timeout);
 
 //! \c Option to stream serializator
 std::ostream& operator <<(

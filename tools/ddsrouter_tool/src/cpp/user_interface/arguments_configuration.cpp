@@ -96,6 +96,16 @@ const option::Descriptor usage[] = {
         "  -v \t--version\t  \t" \
         "Print version, branch and commit hash." \
     },
+    {
+        optionIndex::TIMEOUT,
+        0,
+        "t",
+        "timeout",
+        Arg::Numeric,
+        "  -t \t--timeout\t  \t" \
+        "Set a maximum time in seconds for the Router to run. " \
+        "Value 0 does not set maximum. [Default: 0]."
+    },
 
     { 0, 0, 0, 0, 0, 0 }
 };
@@ -111,7 +121,8 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug)
+        bool& activate_debug,
+        utils::Duration_ms& timeout)
 {
     // Variable to pretty print usage help
     int columns;
@@ -186,6 +197,10 @@ ProcessReturnCode parse_arguments(
 
                 case optionIndex::ACTIVATE_DEBUG:
                     activate_debug = true;
+                    break;
+
+                case optionIndex::TIMEOUT:
+                    timeout = std::stol(opt.arg) * 1000; // pass to milliseconds
                     break;
 
                 case optionIndex::UNKNOWN_OPT:
