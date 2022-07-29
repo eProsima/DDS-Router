@@ -122,7 +122,9 @@ int main(
         {
             close_handler.register_event_handler<event::PeriodicEventHandler>(
                 std::make_unique<event::PeriodicEventHandler>(
-                    [](){ /* Do nothing */ },
+                    []()
+                    {
+                        /* Do nothing */ },
                     timeout));
         }
 
