@@ -130,7 +130,7 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
         case ParticipantKind::wan_discovery_server:
             return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
 
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_initial_peers:
             return check_correct_configuration_object_by_type_<InitialPeersParticipantConfiguration>(configuration);
 
         default:

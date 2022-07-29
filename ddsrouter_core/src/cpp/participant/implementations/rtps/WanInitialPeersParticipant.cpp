@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file InitialPeersParticipant.cpp
+ * @file WanInitialPeersParticipant.cpp
  */
 
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
@@ -21,7 +21,7 @@
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
-#include <participant/implementations/rtps/InitialPeersParticipant.hpp>
+#include <participant/implementations/rtps/WanInitialPeersParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,7 +30,7 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-InitialPeersParticipant::InitialPeersParticipant(
+WanInitialPeersParticipant::WanInitialPeersParticipant(
         const configuration::InitialPeersParticipantConfiguration participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
@@ -40,7 +40,7 @@ InitialPeersParticipant::InitialPeersParticipant(
     create_participant_();
 }
 
-fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_attributes_() const
+fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participant_attributes_() const
 {
     // Auxiliary variable to save characters and improve readability
     const auto& tls_config = this->configuration_.tls_configuration;

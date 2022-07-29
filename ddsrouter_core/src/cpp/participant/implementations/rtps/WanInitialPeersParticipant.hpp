@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file InitialPeersParticipant.hpp
+ * @file WanInitialPeersParticipant.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_INITIALPEERSPARTICIPANT_HPP_
@@ -34,12 +34,12 @@ namespace rtps {
 /**
  * TODO
  */
-class InitialPeersParticipant
+class WanInitialPeersParticipant
     : public CommonRTPSRouterParticipant<configuration::InitialPeersParticipantConfiguration>
 {
 public:
 
-    InitialPeersParticipant(
+    WanInitialPeersParticipant(
             const configuration::InitialPeersParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);

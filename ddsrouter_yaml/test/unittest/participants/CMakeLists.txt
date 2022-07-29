@@ -119,7 +119,7 @@ add_unittest_executable(
     "${TEST_EXTRA_LIBRARIES}")
 
 ##########################################################
-# Yaml GetConfigurations InitialPeersParticipant Test #
+# Yaml GetConfigurations WanInitialPeersParticipant Test #
 ##########################################################
 
 set(TEST_NAME YamlGetInitialPeersParticipantConfigurationTest)

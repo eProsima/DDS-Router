@@ -13,10 +13,10 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.cpp
+ * @file WanDiscoveryServerParticipant.cpp
  */
 
-#include <participant/implementations/rtps/WANParticipant.hpp>
+#include <participant/implementations/rtps/WanDiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -25,7 +25,7 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-WANParticipant::WANParticipant(
+WanDiscoveryServerParticipant::WanDiscoveryServerParticipant(
         const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)

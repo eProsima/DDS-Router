@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.hpp
+ * @file WanDiscoveryServerParticipant.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_
@@ -30,12 +30,12 @@ namespace rtps {
 /**
  * TODO
  */
-class WANParticipant
+class WanDiscoveryServerParticipant
     : public DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
 {
 public:
 
-    WANParticipant(
+    WanDiscoveryServerParticipant(
             const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);

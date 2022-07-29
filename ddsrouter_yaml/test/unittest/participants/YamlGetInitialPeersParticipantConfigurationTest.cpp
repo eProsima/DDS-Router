@@ -35,7 +35,7 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::wan);
+    core::types::ParticipantKind kind(core::types::ParticipantKind::wan_initial_peers);
     for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
     {
         core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
@@ -85,7 +85,7 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
  */
 TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::wan);
+    core::types::ParticipantKind kind(core::types::ParticipantKind::wan_initial_peers);
     core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
 
     // default

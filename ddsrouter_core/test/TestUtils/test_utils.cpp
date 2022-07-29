@@ -244,7 +244,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 security::TlsConfiguration());
         }
 
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_initial_peers:
 
         {
             return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(

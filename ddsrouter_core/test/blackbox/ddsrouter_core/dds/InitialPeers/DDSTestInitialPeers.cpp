@@ -118,7 +118,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan,
+            types::ParticipantKind::wan_initial_peers,
             false,
             domain,
             listening_addresses,
@@ -130,7 +130,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
             types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan,
+            types::ParticipantKind::wan_initial_peers,
             false,
             domain,
             listening_addresses,
