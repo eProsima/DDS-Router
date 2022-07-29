@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SelfParticipantDataFilter.hpp
+ * @file SelfDataFilter.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_
@@ -42,7 +42,7 @@ namespace rtps {
 /**
  * This filter allows to not send messages from this Writer to the Readers in the same Participant.
  */
-class SelfParticipantDataFilter : public fastdds::rtps::IReaderDataFilter
+class SelfDataFilter : public fastdds::rtps::IReaderDataFilter
 {
 public:
 

@@ -58,7 +58,7 @@ TEST(ParticipantKindTest, string_conversions)
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
             std::string("wan"));
     ASSERT_EQ(std::string(
-                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_ds)]),
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_discovery_server)]),
             std::string("wan-ds"));
 
     // Test all possible aliases for each participant kind
@@ -92,9 +92,9 @@ TEST(ParticipantKindTest, string_conversions)
     ASSERT_EQ(participant_kind_from_name("wan"), ParticipantKind::wan);
     ASSERT_EQ(participant_kind_from_name("router"), ParticipantKind::wan);
 
-    // Strings mapping to ParticipantKind::wan_ds
-    ASSERT_EQ(participant_kind_from_name("wan-ds"), ParticipantKind::wan_ds);
-    ASSERT_EQ(participant_kind_from_name("wan-discovery-server"), ParticipantKind::wan_ds);
+    // Strings mapping to ParticipantKind::wan_discovery_server
+    ASSERT_EQ(participant_kind_from_name("wan-ds"), ParticipantKind::wan_discovery_server);
+    ASSERT_EQ(participant_kind_from_name("wan-discovery-server"), ParticipantKind::wan_discovery_server);
 }
 
 int main(

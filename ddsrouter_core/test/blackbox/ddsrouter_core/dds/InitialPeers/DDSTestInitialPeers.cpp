@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -178,12 +178,11 @@ configuration::DDSRouterConfiguration router_configuration(
                     }
         );
 
-    return configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations,
-        2);
+    configuration::DDSRouterConfiguration configuration;
+    configuration.allowlist = allowlist;
+    configuration.participants_configurations = participants_configurations;
+
+    return configuration;
 }
 
 /**

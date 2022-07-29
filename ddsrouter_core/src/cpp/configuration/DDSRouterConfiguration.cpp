@@ -56,15 +56,10 @@ bool DDSRouterConfiguration::is_valid(
     }
 
     // Check there are at least two participants
-    if (participants_configurations.size() < 2)
+    if (participants_configurations.size() < 1)
     {
-        // It is allowed a one participant router as far as it is a repeater
-        if (participants_configurations.size() < 1 ||
-            !(*participants_configurations.begin())->is_repeater)
-        {
-            error_msg << "There must be at least 2 participants or 1 repeater. ";
-            return false;
-        }
+        error_msg << "There must be at least 1 participant.";
+        return false;
     }
 
     // Check Participant Configurations AND
@@ -132,7 +127,7 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
             return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
 
         case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan_ds:
+        case ParticipantKind::wan_discovery_server:
             return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
 
         case ParticipantKind::wan:

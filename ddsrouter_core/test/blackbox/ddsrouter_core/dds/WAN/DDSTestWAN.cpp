@@ -120,7 +120,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_ds,
+            types::ParticipantKind::wan_discovery_server,
             false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
@@ -133,7 +133,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     {
         return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
             types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_ds,
+            types::ParticipantKind::wan_discovery_server,
             false,
             types::DomainId(0u),
             types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),

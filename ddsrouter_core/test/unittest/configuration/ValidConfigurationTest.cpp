@@ -33,11 +33,10 @@ using namespace eprosima::ddsrouter;
  * POSITIVE CASES:
  * - 2 participants
  * - N participants
- * - 1 participant repeater
+ * - 1 participant
  *
  * NEGATIVE CASES:
  * - 0 participants
- * - 1 participant no repeater
  */
 TEST(ValidConfigurationTest, number_of_participants)
 {
@@ -82,7 +81,7 @@ TEST(ValidConfigurationTest, number_of_participants)
         ASSERT_TRUE(configuration.is_valid(formatter));
     }
 
-    // 1 participant repeater
+    // 1 participant
     {
         std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(
@@ -90,7 +89,7 @@ TEST(ValidConfigurationTest, number_of_participants)
                 (
                     test::random_participant_id(),
                     core::types::ParticipantKind::simple_rtps,
-                    true,
+                    false,
                     test::random_domain()
                 )
             );
@@ -111,24 +110,6 @@ TEST(ValidConfigurationTest, number_of_participants)
     {
         // Empty participant_configurations
         std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participant_configurations;
-
-        core::configuration::DDSRouterConfiguration configuration(
-                {},
-                {},
-                {},
-                participant_configurations,
-                1
-            );
-
-        utils::Formatter formatter;
-        ASSERT_FALSE(configuration.is_valid(formatter));
-    }
-
-    // 1 participant no repeater
-    {
-        std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(
-            test::random_participant_configuration(core::types::ParticipantKind::blank, 0));
 
         core::configuration::DDSRouterConfiguration configuration(
                 {},

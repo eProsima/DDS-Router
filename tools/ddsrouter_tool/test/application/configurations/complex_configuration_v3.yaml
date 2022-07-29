@@ -2,7 +2,8 @@
 # 1 Echo Participant
 # 2 Simple Participants in domains 0 and 1
 # 1 Local Discovery Server Participant with listening address
-# 1 WAN Participant with connection address
+# 1 WAN DS Participant with connection address
+# 1 Initial Peers Participant with connection address
 # 2 topics, one with key and one without
 
 version: v3.0

@@ -187,10 +187,10 @@ ParticipantKind YamlReader::get<ParticipantKind>(
     // Participant kind required
     ParticipantKind kind = participant_kind_from_name(get_scalar<std::string>(yml));
 
-    // In version lower than 3.0 wan means wan_ds
+    // In version lower than 3.0 wan means wan_discovery_server
     if (version <= V_2_0 && kind == ParticipantKind::wan)
     {
-        kind = ParticipantKind::wan_ds;
+        kind = ParticipantKind::wan_discovery_server;
     }
 
     return kind;
@@ -749,7 +749,7 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
 
         case types::ParticipantKind::local_discovery_server:
-        case types::ParticipantKind::wan_ds:
+        case types::ParticipantKind::wan_discovery_server:
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
 

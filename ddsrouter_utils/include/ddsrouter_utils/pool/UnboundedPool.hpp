@@ -16,8 +16,8 @@
  * @file UnboundedPool.hpp
  */
 
-#ifndef _DDSROUTERUTILS_POOL_UnboundedPool_HPP_
-#define _DDSROUTERUTILS_POOL_UnboundedPool_HPP_
+#ifndef _DDSROUTERUTILS_POOL_UNBOUNDEDPOOL_HPP_
+#define _DDSROUTERUTILS_POOL_UNBOUNDEDPOOL_HPP_
 
 #include <vector>
 
@@ -128,4 +128,4 @@ protected:
 // Include implementation template file
 #include <ddsrouter_utils/pool/impl/UnboundedPool.ipp>
 
-#endif /* _DDSROUTERUTILS_POOL_UnboundedPool_HPP_ */
+#endif /* _DDSROUTERUTILS_POOL_UNBOUNDEDPOOL_HPP_ */

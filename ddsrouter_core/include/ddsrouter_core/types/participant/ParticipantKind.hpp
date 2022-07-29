@@ -39,7 +39,7 @@ enum class ParticipantKind : ParticipantKindType
     dummy,                      //! Dummy Participant Kind
     simple_rtps,                //! Simple RTPS Participant Kind
     local_discovery_server,     //! Discovery Server RTPS Participant Kind
-    wan_ds,                     //! Discovery Server Inter Router Participant Kind
+    wan_discovery_server,       //! Discovery Server Inter Router Participant Kind
     wan,                        //! Initial Peers Inter Router Participant Kind
 };
 
@@ -55,7 +55,7 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT> ALL_PARTICIPANT_KI
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
     ParticipantKind::local_discovery_server,
-    ParticipantKind::wan_ds,
+    ParticipantKind::wan_discovery_server,
     ParticipantKind::wan,
 };
 
@@ -69,7 +69,7 @@ constexpr std::array<ParticipantKind, PARTICIPANT_KIND_COUNT - 1> ALL_VALID_PART
     ParticipantKind::dummy,
     ParticipantKind::simple_rtps,
     ParticipantKind::local_discovery_server,
-    ParticipantKind::wan_ds,
+    ParticipantKind::wan_discovery_server,
     ParticipantKind::wan,
 };
 

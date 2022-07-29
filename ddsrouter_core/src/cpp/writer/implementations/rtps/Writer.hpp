@@ -155,7 +155,7 @@ protected:
     //! RTPS Writer History associated to \c rtps_reader_
     fastrtps::rtps::WriterHistory* rtps_history_;
 
-    //! Repeater Data Filter used to filter cache changes at the RTPSWriter level. Can be null
+    //! Data Filter used to filter cache changes at the RTPSWriter level.
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
     bool repeater_;

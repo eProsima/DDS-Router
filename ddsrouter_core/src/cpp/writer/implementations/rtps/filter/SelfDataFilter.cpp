@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SelfParticipantDataFilter.cpp
+ * @file SelfDataFilter.cpp
  */
 
 #include <fastrtps/rtps/common/CacheChange.h>
@@ -21,14 +21,14 @@
 #include <ddsrouter_utils/Log.hpp>
 
 #include <types/dds/RouterCacheChange.hpp>
-#include <writer/implementations/rtps/filter/SelfParticipantDataFilter.hpp>
+#include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-bool SelfParticipantDataFilter::is_relevant(
+bool SelfDataFilter::is_relevant(
     const fastrtps::rtps::CacheChange_t& change,
     const fastrtps::rtps::GUID_t& reader_guid) const
 {

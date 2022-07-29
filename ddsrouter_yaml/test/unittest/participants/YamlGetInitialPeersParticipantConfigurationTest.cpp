@@ -29,9 +29,9 @@ using namespace eprosima::ddsrouter::yaml;
 
 /**
  * Test get Participant Configuration from yaml
- * with id, kind and ds-guid
+ * with id, kind
  *
- * Try random ids, random kinds and random guids
+ * Try random ids
  */
 TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
 {
@@ -41,8 +41,6 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
         core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
         for (int j = 0; j < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; j++)
         {
-            core::types::GuidPrefix guid = eprosima::ddsrouter::test::random_guid_prefix(j);
-
             // Create a configuration with this kind and this id
             Yaml yml;
             Yaml yml_participant;
@@ -85,11 +83,10 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
  * NEGATIVE CASES:
  * - incorrect bool format
  */
-TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeater)
+TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
 {
     core::types::ParticipantKind kind(core::types::ParticipantKind::wan);
     core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
-    core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
 
     // default
     {
@@ -99,7 +96,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
         // Add required fields
         yaml::test::participantid_to_yaml(yml_participant, id);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         yml["participant"] = yml_participant;
 
@@ -120,7 +116,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
         // Add required fields
         yaml::test::participantid_to_yaml(yml_participant, id);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add repeater attribute
         yaml::test::repeater_to_yaml(yml_participant, true);
@@ -144,7 +139,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
         // Add required fields
         yaml::test::participantid_to_yaml(yml_participant, id);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add repeater attribute
         yaml::test::repeater_to_yaml(yml_participant, false);
@@ -168,7 +162,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_repeate
         // Add required fields
         yaml::test::participantid_to_yaml(yml_participant, id);
         yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add incorrect repeater
         yml_participant[IS_REPEATER_TAG] = "ERROR";

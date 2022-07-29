@@ -31,9 +31,9 @@ namespace core {
 /**
  * @brief This class implements a pool of CacheChange objects specialized as RouterCacheChanges.
  *
- * It reuses the UnboundedPool implementation, what allow to create a limitless reusable pool.
+ * It reuses the UnboundedPool implementation, what allow to create an unbounded reusable pool.
  *
- * TODO: implement this class as an IPool (or having an internal pool), without being force to be limitless.
+ * TODO: implement this class as an IPool (or having an internal pool), without being force to be unbounded.
  */
 class CacheChangePool : public fastrtps::rtps::IChangePool, public utils::UnboundedPool<fastrtps::rtps::CacheChange_t>
 {
@@ -44,7 +44,7 @@ public:
      *
      * @param configuration pool configuration
      *
-     * @warning max size will not be used as it is Limitless
+     * @warning max size will not be used as it is Unbounded
      */
     CacheChangePool(utils::PoolConfiguration configuration);
 

@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ namespace core {
 namespace configuration {
 
 /**
- * This class joins Discovery Server Participant Configuration features and gives methods to interact with it.
+ * This data struct joins Initial Peers Participant Configuration features
  */
 struct InitialPeersParticipantConfiguration : public SimpleParticipantConfiguration
 {
