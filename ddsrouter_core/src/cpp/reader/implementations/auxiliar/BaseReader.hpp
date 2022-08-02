@@ -112,6 +112,10 @@ public:
     utils::ReturnCode take(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
+    types::ParticipantId participant_id() const noexcept;
+
+    types::RealTopic topic() const noexcept;
+
 protected:
 
     /**

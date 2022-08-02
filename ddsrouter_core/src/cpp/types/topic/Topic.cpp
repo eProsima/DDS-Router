@@ -48,9 +48,19 @@ const std::string& Topic::topic_name() const
     return topic_name_;
 }
 
+void Topic::topic_name(const std::string& topic_name)
+{
+    topic_name_ = topic_name;
+}
+
 const std::string& Topic::topic_type() const
 {
     return topic_type_;
+}
+
+void Topic::topic_type(const std::string& topic_type)
+{
+    topic_type_ = topic_type;
 }
 
 bool Topic::topic_with_key() const

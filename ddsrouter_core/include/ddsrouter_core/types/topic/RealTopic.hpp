@@ -65,6 +65,9 @@ struct RealTopic : public Topic
     //! Topic reliability getter
     DDSROUTER_CORE_DllAPI bool topic_reliable() const;
 
+    //! Topic reliability setter
+    DDSROUTER_CORE_DllAPI void topic_reliable(bool new_val);
+
 protected:
 
     static const char* INVALID_TOPIC_NAME;  // __invalid_topic_name__

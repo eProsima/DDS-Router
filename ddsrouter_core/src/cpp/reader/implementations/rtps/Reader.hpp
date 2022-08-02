@@ -19,6 +19,8 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
 
+#include <mutex>
+
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
 #include <fastrtps/attributes/TopicAttributes.h>
@@ -30,6 +32,7 @@
 
 #include <reader/implementations/auxiliar/BaseReader.hpp>
 
+#include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -99,6 +102,10 @@ public:
             fastrtps::rtps::RTPSReader*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
+    types::Guid guid() const noexcept;
+
+    std::recursive_timed_mutex& get_internal_mutex() const noexcept;
+
 protected:
 
     // Specific enable/disable do not need to be implemented
@@ -148,13 +155,17 @@ protected:
      *
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    // fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::rtps::ReaderAttributes reader_attributes_() noexcept;
 
     //! Default Topic Attributes to create Reader
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
     //! Default QoS Reader (must be the same as the attributes)
-    fastrtps::ReaderQos reader_qos_() const noexcept;
+    // fastrtps::ReaderQos reader_qos_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::ReaderQos reader_qos_() noexcept;
 
     /////
     // Reader specific methods

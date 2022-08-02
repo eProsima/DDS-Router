@@ -20,6 +20,7 @@
 #define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
+#include <fastdds/rtps/common/WriteParams.h>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
@@ -47,6 +48,10 @@ struct DataReceived
 
     //! Id of the participant from which the Reader has received the data.
     ParticipantId participant_receiver;
+
+    eprosima::fastrtps::rtps::SequenceNumber_t sequenceNumber;
+
+    eprosima::fastrtps::rtps::WriteParams write_params;
 };
 
 //! \c octet to stream serializator

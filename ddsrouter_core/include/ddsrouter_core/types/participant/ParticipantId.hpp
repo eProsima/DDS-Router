@@ -82,6 +82,9 @@ public:
     DDSROUTER_CORE_DllAPI bool operator ==(
             const ParticipantId& other) const noexcept;
 
+    DDSROUTER_CORE_DllAPI bool operator !=(
+            const ParticipantId& other) const noexcept;
+
     /**
      * @brief Minor operator
      *

@@ -28,6 +28,7 @@
 #include <ddsrouter_core/types/topic/Topic.hpp>
 #include <ddsrouter_core/types/topic/FilterTopic.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/RPCTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -77,6 +78,9 @@ public:
      */
     bool is_topic_allowed(
             const types::RealTopic& topic) const noexcept;
+
+    bool is_service_allowed(
+            const types::RPCTopic& topic) const noexcept;
 
     /**
      * Equal operator.

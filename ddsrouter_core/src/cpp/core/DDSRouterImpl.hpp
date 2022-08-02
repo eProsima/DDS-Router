@@ -22,11 +22,13 @@
 #include <atomic>
 #include <map>
 #include <mutex>
+#include <set>
 
 #include <ddsrouter_utils/ReturnCode.hpp>
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 
-#include <communication/Bridge.hpp>
+#include <communication/DDSBridge.hpp>
+#include <communication/rpc/RPCBridge.hpp>
 #include <dynamic/AllowedTopicList.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <library/library_dll.h>
@@ -35,7 +37,7 @@
 #include <core/ParticipantFactory.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -175,6 +177,16 @@ protected:
     void discovered_topic_(
             const types::RealTopic& topic) noexcept;
 
+    void discovered_service_(
+            const types::RPCTopic& topic,
+            const types::GuidPrefix& server_guid_prefix,
+            const types::ParticipantId& server_participant_id) noexcept;
+
+    void removed_service_(
+            const types::RPCTopic& topic,
+            const types::GuidPrefix& server_guid_prefix,
+            const types::ParticipantId& server_participant_id) noexcept;
+
     /**
      * @brief Method called every time a new endpoint has been discovered/updated
      *
@@ -183,6 +195,9 @@ protected:
      * @param [in] endpoint : endpoint discovered
      */
     void discovered_endpoint_(
+            const types::Endpoint& endpoint) noexcept;
+
+    void removed_endpoint_(
             const types::Endpoint& endpoint) noexcept;
 
     /**
@@ -195,6 +210,9 @@ protected:
     void create_new_bridge(
             const types::RealTopic& topic,
             bool enabled = false) noexcept;
+
+    void create_new_service(
+            const types::RPCTopic& topic) noexcept;
 
     /**
      * @brief Enable a specific topic
@@ -253,7 +271,9 @@ protected:
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
     //! Map of bridges indexed by their topic
-    std::map<types::RealTopic, std::unique_ptr<Bridge>> bridges_;
+    std::map<types::RealTopic, std::unique_ptr<DDSBridge>> bridges_;
+
+    std::map<types::RPCTopic, std::unique_ptr<RPCBridge>> rpc_bridges_;
 
     /**
      * @brief List of topics discovered
@@ -262,6 +282,9 @@ protected:
      * If the value is true, it means this topic is currently activated.
      */
     std::map<types::RealTopic, bool> current_topics_;
+
+    // keep track of discovered servers and their status
+    std::map<types::RPCTopic, std::pair<bool, std::map<types::ParticipantId, std::set<types::GuidPrefix>>>> current_services_;
 
     //! DDSRouterImpl configuration
     configuration::DDSRouterConfiguration configuration_;
