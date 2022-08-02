@@ -63,6 +63,8 @@ public:
      */
     std::set<types::ParticipantId> get_participants_ids() const noexcept;
 
+    std::set<types::ParticipantId> get_rtps_participants_ids() const noexcept;
+
     /**
      * @brief Get all the participants stored
      *

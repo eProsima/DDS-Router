@@ -20,10 +20,12 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
+#include <writer/implementations/rtps/Writer.hpp>
+
+#include <ddsrouter_core/types/topic/RPCTopic.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
 #include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
 #include <types/dds/RouterCacheChange.hpp>
@@ -80,7 +82,7 @@ Writer::Writer(
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
-                      participant_id << " in topic " << topic << ".");
+                      participant_id << " in topic " << topic_ << ".");
     }
 
     // Register writer with topic
@@ -91,7 +93,7 @@ Writer::Writer(
     {
         // In case it fails, remove writer and throw exception
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
-        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
+        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic_ <<
                       " for Simple RTPSWriter in Participant " << participant_id);
     }
 
@@ -109,7 +111,7 @@ Writer::Writer(
     rtps_writer_->reader_data_filter(data_filter_.get());
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
-            topic << " with guid " << rtps_writer_->getGuid());
+            topic_ << " with guid " << rtps_writer_->getGuid());
 }
 
 Writer::~Writer()
@@ -195,11 +197,24 @@ fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
     return att;
 }
 
-fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
+fastrtps::rtps::WriterAttributes Writer::writer_attributes_() noexcept
 {
     fastrtps::rtps::WriterAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+        topic_.topic_reliable(true);
+    }
+    else
+    {
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    }
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
     if (topic_.topic_with_key())
     {
@@ -228,11 +243,24 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     return att;
 }
 
-fastrtps::WriterQos Writer::writer_qos_() const noexcept
+fastrtps::WriterQos Writer::writer_qos_() noexcept
 {
     fastrtps::WriterQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+        topic_.topic_reliable(true);
+    }
+    else
+    {
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    }
     return qos;
 }
 

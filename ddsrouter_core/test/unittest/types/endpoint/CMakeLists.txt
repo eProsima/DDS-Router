@@ -84,7 +84,9 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/GuidPrefix.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RPCTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/participant/ParticipantId.cpp
     )
 
 set(TEST_LIST

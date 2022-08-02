@@ -82,6 +82,8 @@ public:
      */
     types::ParticipantKind kind() const noexcept override;
 
+    bool is_rtps_kind() const noexcept override;
+
     /**
      * @brief Override is_repeater_ IParticipant method
      *
