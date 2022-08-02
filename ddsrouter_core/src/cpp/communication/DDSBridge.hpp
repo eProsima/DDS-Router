@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
 // limitations under the License.
 
 /**
- * @file Bridge.hpp
+ * @file DDSBridge.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_COMMUNICATION_BRIDGE_HPP_
-#define __SRC_DDSROUTERCORE_COMMUNICATION_BRIDGE_HPP_
+#ifndef __SRC_DDSROUTERCORE_COMMUNICATION_DDSBRIDGE_HPP_
+#define __SRC_DDSROUTERCORE_COMMUNICATION_DDSBRIDGE_HPP_
 
-#include <core/ParticipantsDatabase.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <mutex>
+
+#include <communication/Bridge.hpp>
+
+#include <communication/Track.hpp>
+#include <ddsrouter_core/types/topic/RealTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,7 +38,7 @@ namespace core {
  * It contains N \c Tracks that will manage each direction of the communication,
  * being N the number of Participants of this communication channel.
  */
-class Bridge
+class DDSBridge : public Bridge
 {
 public:
 
@@ -51,7 +54,8 @@ public:
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
-    Bridge(
+    DDSBridge(
+            const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<utils::SlotThreadPool> thread_pool,
@@ -63,7 +67,17 @@ public:
      * Before deleting, it calls \c disable.
      * It deletes all the tracks created and all Writers and Readers.
      */
-    virtual ~Bridge();
+    virtual ~DDSBridge();
+
+    // virtual void init_();
+
+    /**
+     * Copy method not allowed
+     *
+     * Bridge creates in constructor all the inside Tracks needed, and thus it should not be copied
+     */
+    void operator =(
+            const Track&) = delete;
 
     /**
      * Enable bridge in case it is not enabled
@@ -71,7 +85,7 @@ public:
      *
      * Thread safe
      */
-    virtual void enable() noexcept = 0;
+    void enable() noexcept override;
 
     /**
      * Disable bridge in case it is not enabled
@@ -79,28 +93,53 @@ public:
      *
      * Thread safe
      */
-    virtual void disable() noexcept = 0;
+    void disable() noexcept override;
 
 protected:
 
     /**
-     * Collection of Participants to manage communication between
+     * Topic of which this Bridge manages communication
      *
-     * @note: This variable is only used at destruction time
+     * @note: This variable is only used for log
      */
-    const std::shared_ptr<ParticipantsDatabase> participants_;
+    const types::RealTopic topic_;
 
-    //! Common shared payload pool
-    std::shared_ptr<PayloadPool> payload_pool_;
+    /**
+     * Inside \c Tracks
+     * They are indexed by the Id of the participant that is source
+     */
+    std::map<types::ParticipantId, std::unique_ptr<Track>> tracks_;
 
-    std::shared_ptr<utils::SlotThreadPool> thread_pool_;
+    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs to
+    std::map<types::ParticipantId, std::shared_ptr<IWriter>> writers_;
 
-    //! Whether the Bridge is currently enabled
-    std::atomic<bool> enabled_;
+    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
+    std::map<types::ParticipantId, std::shared_ptr<IReader>> readers_;
+
+    // //! Whether the Bridge is currently enabled
+    // bool enabled_;
+
+    //! Mutex to prevent simultaneous calls to enable and/or disable
+    std::recursive_mutex mutex_;
+
+    // Allow operator << to use private variables
+    friend std::ostream& operator <<(
+            std::ostream&,
+            const DDSBridge&);
 };
+
+/**
+ * @brief \c Bridge to stream serialization
+ *
+ * This method is merely a to_string of a Bridge definition.
+ * It serialize the topic
+ */
+std::ostream& operator <<(
+        std::ostream& os,
+        const DDSBridge& bridge);
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_COMMUNICATION_BRIDGE_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_COMMUNICATION_DDSBRIDGE_HPP_ */

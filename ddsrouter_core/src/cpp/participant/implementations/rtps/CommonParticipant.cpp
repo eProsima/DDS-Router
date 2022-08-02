@@ -21,15 +21,12 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/RTPSDomain.h>
 
+#include <participant/implementations/rtps/CommonParticipant.hpp>
+
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
-
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
-#include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -59,7 +56,65 @@ CommonParticipant::~CommonParticipant()
     }
 }
 
+<<<<<<< HEAD:ddsrouter_core/src/cpp/participant/implementations/rtps/CommonParticipant.cpp
 void CommonParticipant::onParticipantDiscovery(
+=======
+template <class ConfigurationType>
+std::shared_ptr<rtps::RequestWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_request_writer(
+        types::RPCTopic topic,
+        std::shared_ptr<ServiceRegistry> service_registry)
+{
+    std::lock_guard <std::recursive_mutex> lock(this->mutex_);
+
+    types::RealTopic request_topic = topic.request_topic();
+
+    if (this->writers_.find(request_topic) != this->writers_.end())
+    {
+        throw utils::InitializationException(
+                  utils::Formatter() <<
+                      "Error creating request writer for topic " << request_topic << " in participant " << this->id() <<
+                      ". Writer already exists.");
+    }
+
+    std::shared_ptr <IWriter> new_writer = create_request_writer_(topic, service_registry);
+
+    logInfo(DDSROUTER_BASEPARTICIPANT, "Created request writer in Participant " << this->id() << " for topic " << request_topic);
+
+    // Insertion must not fail as we already know it does not exist
+    this->writers_.emplace(request_topic, new_writer);
+
+    return std::static_pointer_cast<rtps::RequestWriter>(new_writer);
+}
+
+template <class ConfigurationType>
+std::shared_ptr<rtps::ReplyWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_reply_writer(
+        types::RPCTopic topic)
+{
+    std::lock_guard <std::recursive_mutex> lock(this->mutex_);
+
+    types::RealTopic reply_topic = topic.reply_topic();
+
+    if (this->writers_.find(reply_topic) != this->writers_.end())
+    {
+        throw utils::InitializationException(
+                  utils::Formatter() <<
+                      "Error creating reply writer for topic " << reply_topic << " in participant " << this->id() <<
+                      ". Writer already exists.");
+    }
+
+    std::shared_ptr <IWriter> new_writer = create_reply_writer_(topic);
+
+    logInfo(DDSROUTER_BASEPARTICIPANT, "Created reply writer in Participant " << this->id() << " for topic " << reply_topic);
+
+    // Insertion must not fail as we already know it does not exist
+    this->writers_.emplace(reply_topic, new_writer);
+
+    return std::static_pointer_cast<rtps::ReplyWriter>(new_writer);
+}
+
+template <class ConfigurationType>
+void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
+>>>>>>> ea041a7e... Add RPC support (services):ddsrouter_core/src/cpp/participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ParticipantDiscoveryInfo&& info)
 {
@@ -119,11 +174,11 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic, this->id_nts_());
     }
     else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic, this->id_nts_());
     }
     else
     {
@@ -157,15 +212,13 @@ void CommonParticipant::onReaderDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
 
-            info_reader.active(false);
-            this->discovery_database_->update_endpoint(info_reader);
+            this->discovery_database_->erase_endpoint(info_reader);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
 
-            info_reader.active(false);
-            this->discovery_database_->update_endpoint(info_reader);
+            this->discovery_database_->erase_endpoint(info_reader);
         }
     }
 }
@@ -195,15 +248,13 @@ void CommonParticipant::onWriterDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
 
-            info_writer.active(false);
-            this->discovery_database_->update_endpoint(info_writer);
+            this->discovery_database_->erase_endpoint(info_writer);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
 
-            info_writer.active(false);
-            this->discovery_database_->update_endpoint(info_writer);
+            this->discovery_database_->erase_endpoint(info_writer);
         }
     }
 }
@@ -248,7 +299,31 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         this->configuration_->is_repeater);
 }
 
+<<<<<<< HEAD:ddsrouter_core/src/cpp/participant/implementations/rtps/CommonParticipant.cpp
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
+=======
+template <class ConfigurationType>
+std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_request_writer_(
+        types::RPCTopic topic,
+        std::shared_ptr<ServiceRegistry> service_registry)
+{
+    return std::make_shared<RequestWriter>(
+        this->id(), topic,
+        this->payload_pool_, rtps_participant_, service_registry);
+}
+
+template <class ConfigurationType>
+std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_reply_writer_(
+        types::RPCTopic topic)
+{
+    return std::make_shared<ReplyWriter>(
+        this->id(), topic,
+        this->payload_pool_, rtps_participant_);
+}
+
+template <class ConfigurationType>
+std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
+>>>>>>> ea041a7e... Add RPC support (services):ddsrouter_core/src/cpp/participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp
         types::RealTopic topic)
 {
     return std::make_shared<Reader>(

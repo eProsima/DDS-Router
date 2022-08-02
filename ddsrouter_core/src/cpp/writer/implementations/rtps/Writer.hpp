@@ -136,13 +136,18 @@ protected:
      *
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    // fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::rtps::WriterAttributes writer_attributes_() noexcept;
 
     //! Default Topic Attributes to create Writer
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
     //! Default QoS Writer (must be the same as the attributes)
-    fastrtps::WriterQos writer_qos_() const noexcept;
+    // fastrtps::WriterQos writer_qos_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::WriterQos writer_qos_() noexcept;
+
 
     //! Default Cache Change Pool Configuration
     utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;

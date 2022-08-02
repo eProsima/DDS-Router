@@ -20,9 +20,7 @@
 #define __SRC_DDSROUTERCORE_COMMUNICATION_TRACK_HPP_
 
 #include <atomic>
-#include <condition_variable>
 #include <mutex>
-#include <thread>
 
 #include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
