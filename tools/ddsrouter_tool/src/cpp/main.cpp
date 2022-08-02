@@ -47,12 +47,15 @@ int main(
     // Reload time
     utils::Duration_ms reload_time = 0;
 
+    // Maximum timeout
+    utils::Duration_ms timeout = 0;
+
     // Debug option active
     bool activate_debug = false;
 
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug);
+            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug, timeout);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
@@ -105,13 +108,25 @@ int main(
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
-        // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
-        event::MultipleEventHandler signal_handlers;
+        // Create a multiple event handler that handles all events that make the router stop
+        event::MultipleEventHandler close_handler;
 
-        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+        // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
+        close_handler.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
             std::make_unique<event::SignalEventHandler<event::Signal::sigint>>());     // Add SIGINT
-        signal_handlers.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
+        close_handler.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
             std::make_unique<event::SignalEventHandler<event::Signal::sigterm>>());    // Add SIGTERM
+
+        // If it must be a maximum time, register a periodic handler to finish handlers
+        if (timeout > 0)
+        {
+            close_handler.register_event_handler<event::PeriodicEventHandler>(
+                std::make_unique<event::PeriodicEventHandler>(
+                    []()
+                    {
+                        /* Do nothing */ },
+                    timeout));
+        }
 
         /////
         // DDS Router Initialization
@@ -193,9 +208,9 @@ int main(
         logUser(DDSROUTER_EXECUTION, "DDS Router running.");
 
         // Wait until signal arrives
-        signal_handlers.wait_for_event();
+        close_handler.wait_for_event();
 
-        logUser(DDSROUTER_EXECUTION, "Signal received, stopping DDS Router.");
+        logUser(DDSROUTER_EXECUTION, "Stopping DDS Router.");
 
         // Before stopping the Router erase event handlers that reload configuration
         if (periodic_handler)

@@ -90,7 +90,7 @@ It shows the usage information of the application.
                         Value 0 does not reload file. [Default: 0].
       -d --debug        Activate debug Logs (be aware that some logs may require specific CMAKE compilation options).
       -v --version      Print version, branch and commit hash.
-
+      -t --timeout      Set a maximum time in seconds for the Router to run. Value 0 does not set maximum. [Default: 0].
 
 .. _user_manual_user_interface_configuration_file_argument:
 
@@ -132,6 +132,17 @@ Version Argument
 ^^^^^^^^^^^^^^^^
 
 It shows the current version of the DDS Router and the hash of the last commit of the compiled code.
+
+
+.. _user_manual_user_interface_timeout_argument:
+
+Timeout Argument
+^^^^^^^^^^^^^^^^
+
+This argument allow to set a maximum time while the application will be running.
+Setting this argument will set the number of seconds the application will run until it is killed.
+While the application is waiting for timeout, it is still possible to kill it via signal.
+Default value ``0`` means that the application will run forever (until kill via signal).
 
 
 .. _user_manual_user_interface_configuration_file:
@@ -208,3 +219,9 @@ SIGTERM
 Send an interruption ``SIGTERM`` signal *(signal value 15)* to the process.
 Write command ``kill <pid>`` in a different terminal, where ``<pid>`` is the id of the process running the |ddsrouter|.
 Use ``ps`` or ``top`` programs to check the process ids.
+
+TIMEOUT
+^^^^^^^
+
+Setting a maximum amount of seconds that the application will work using argument ``--timeout`` will close the
+application once the time has expired.
