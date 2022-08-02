@@ -63,6 +63,8 @@ public:
      */
     virtual types::ParticipantKind kind() const noexcept = 0;
 
+    virtual bool is_rtps_kind() const noexcept = 0;
+
     /**
      * @brief Whether this Participant requires to connect ist own readers with its own writers.
      */

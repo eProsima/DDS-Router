@@ -101,6 +101,15 @@ bool AllowedTopicList::is_topic_allowed(
     return true;
 }
 
+bool AllowedTopicList::is_service_allowed(
+        const RPCTopic& topic) const noexcept
+{
+    // Lock mutex to perform the verification atomically
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    return is_topic_allowed(topic.request_topic()) && is_topic_allowed(topic.reply_topic());
+}
+
 bool AllowedTopicList::operator ==(
         const AllowedTopicList& other) const noexcept
 {

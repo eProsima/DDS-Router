@@ -61,9 +61,9 @@ public:
     }
 
     ReturnCode erase_endpoint_protected(
-            const Guid& guid_of_endpoint_to_erase)
+            const Endpoint& endpoint_to_erase)
     {
-        return erase_endpoint_(guid_of_endpoint_to_erase);
+        return erase_endpoint_(endpoint_to_erase);
     }
 
 };
@@ -95,9 +95,9 @@ TEST(DiscoveryDatabaseTest, topic_exists)
     ASSERT_TRUE(discovery_database.topic_exists(topic));
     discovery_database.add_endpoint_protected(endpoint_2);
     ASSERT_TRUE(discovery_database.topic_exists(topic));
-    discovery_database.erase_endpoint_protected(guid_1);
+    discovery_database.erase_endpoint_protected(endpoint_1);
     ASSERT_TRUE(discovery_database.topic_exists(topic));
-    discovery_database.erase_endpoint_protected(guid_2);
+    discovery_database.erase_endpoint_protected(endpoint_2);
     ASSERT_FALSE(discovery_database.topic_exists(topic));
 }
 
@@ -119,7 +119,7 @@ TEST(DiscoveryDatabaseTest, endpoint_exists)
     ASSERT_FALSE(discovery_database.endpoint_exists(guid));
     discovery_database.add_endpoint_protected(endpoint);
     ASSERT_TRUE(discovery_database.endpoint_exists(guid));
-    discovery_database.erase_endpoint_protected(guid);
+    discovery_database.erase_endpoint_protected(endpoint);
     ASSERT_FALSE(discovery_database.endpoint_exists(guid));
 }
 
@@ -211,14 +211,14 @@ TEST(DiscoveryDatabaseTest, erase_endpoint)
     Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
     // Endpoint to erase not yet inserted
-    ASSERT_THROW(discovery_database.erase_endpoint_protected(guid), InconsistencyException);
+    ASSERT_THROW(discovery_database.erase_endpoint_protected(endpoint), InconsistencyException);
 
     // Insert endpoint
     discovery_database.add_endpoint_protected(endpoint);
     ASSERT_TRUE(discovery_database.endpoint_exists(guid));
 
     // Erase endpoint
-    ASSERT_EQ(discovery_database.erase_endpoint_protected(guid), ReturnCode::RETCODE_OK);
+    ASSERT_EQ(discovery_database.erase_endpoint_protected(endpoint), ReturnCode::RETCODE_OK);
     ASSERT_FALSE(discovery_database.endpoint_exists(guid));
 }
 

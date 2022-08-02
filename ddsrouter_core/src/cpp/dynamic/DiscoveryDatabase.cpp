@@ -172,24 +172,24 @@ bool DiscoveryDatabase::update_endpoint_(
 }
 
 utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
-        const Guid& guid_of_endpoint_to_erase)
+        const Endpoint& endpoint_to_erase)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
-    auto erased = entities_.erase(guid_of_endpoint_to_erase);
+    auto erased = entities_.erase(endpoint_to_erase.guid());
 
     if (erased == 0)
     {
         throw utils::InconsistencyException(
                   utils::Formatter() <<
-                      "Error erasing Endpoint with GUID " << guid_of_endpoint_to_erase <<
+                      "Error erasing Endpoint " << endpoint_to_erase <<
                       " from database. Endpoint entry not found.");
     }
     else
     {
         for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
         {
-            erased_endpoint_callback(guid_of_endpoint_to_erase);
+            erased_endpoint_callback(endpoint_to_erase);
         }
 
         return utils::ReturnCode::RETCODE_OK;
@@ -235,6 +235,18 @@ void DiscoveryDatabase::add_endpoint_discovered_callback(
         std::function<void(Endpoint)> endpoint_discovered_callback) noexcept
 {
     added_endpoint_callbacks_.push_back(endpoint_discovered_callback);
+}
+
+void DiscoveryDatabase::add_endpoint_updated_callback(
+        std::function<void(Endpoint)> endpoint_updated_callback) noexcept
+{
+    updated_endpoint_callbacks_.push_back(endpoint_updated_callback);
+}
+
+void DiscoveryDatabase::add_endpoint_erased_callback(
+        std::function<void(Endpoint)> endpoint_erased_callback) noexcept
+{
+    erased_endpoint_callbacks_.push_back(endpoint_erased_callback);
 }
 
 void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
@@ -290,7 +302,7 @@ void DiscoveryDatabase::process_queue_() noexcept
             }
             else if (db_operation == DatabaseOperation::erase)
             {
-                erase_endpoint_(entity.guid());
+                erase_endpoint_(entity);
             }
         }
         catch (const utils::InconsistencyException& e)

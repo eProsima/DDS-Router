@@ -152,7 +152,21 @@ public:
     void add_endpoint_discovered_callback(
             std::function<void(types::Endpoint)> endpoint_discovered_callback) noexcept;
 
-    // TODO add methods to register updated_endpoint and erased_endpoint callbacks
+    /**
+     * @brief Add callback to be called when an Endpoint has been updated
+     *
+     * @param [in] endpoint_updated_callback: callback to add
+     */
+    void add_endpoint_updated_callback(
+            std::function<void(types::Endpoint)> endpoint_updated_callback) noexcept;
+
+    /**
+     * @brief Add callback to be called when an Endpoint has been erased
+     *
+     * @param [in] endpoint_erased_callback: callback to add
+     */
+    void add_endpoint_erased_callback(
+            std::function<void(types::Endpoint)> endpoint_erased_callback) noexcept;
 
 protected:
 
@@ -179,12 +193,12 @@ protected:
     /**
      * @brief Erase an endpoint inside the database
      *
-     * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
+     * @param [in] endpoint_to_erase endpoint that will be erased
      * @return \c RETCODE_OK if correctly erased
-     * @throw \c InconsistencyException in case there is no entry associated to this guid
+     * @throw \c InconsistencyException in case there is no entry associated to this endpoint
      */
     utils::ReturnCode erase_endpoint_(
-            const types::Guid& guid_of_endpoint_to_erase);
+            const types::Endpoint& endpoint_to_erase);
 
     //! Routine performed by dedicated thread performing database operations
     void queue_processing_thread_routine_() noexcept;
@@ -213,7 +227,7 @@ protected:
     std::vector<std::function<void(types::Endpoint)>> updated_endpoint_callbacks_;
 
     //! Vector of callbacks to be called when an Endpoint is erased
-    std::vector<std::function<void(types::Guid)>> erased_endpoint_callbacks_;
+    std::vector<std::function<void(types::Endpoint)>> erased_endpoint_callbacks_;
 
     //! Queue storing database operations to be performed in a dedicated thread
     fastrtps::DBQueue<std::tuple<DatabaseOperation, types::Endpoint>> entities_to_process_;

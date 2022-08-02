@@ -61,6 +61,20 @@ std::set<ParticipantId> ParticipantsDatabase::get_participants_ids() const noexc
     return result;
 }
 
+std::set<ParticipantId> ParticipantsDatabase::get_rtps_participants_ids() const noexcept
+{
+    std::shared_lock<std::shared_timed_mutex> lock(mutex_);
+    std::set<ParticipantId> result;
+    for (auto it : participants_)
+    {
+        if (it.second->is_rtps_kind())
+        {
+            result.insert(it.first);
+        }
+    }
+    return result;
+}
+
 std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantsDatabase::get_participants_map() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
