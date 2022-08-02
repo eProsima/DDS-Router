@@ -38,9 +38,11 @@ jobs:
 
       - name: Install eProsima dependencies
         uses: ./DDS-Router/.github/actions/install-eprosima-dependencies-windows
+        env:
+          DEFAULT_FASTDDS_BRANCH: 'master'
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
-          fastdds_branch: ${{ github.event.inputs.fastdds_branch }}
+          fastdds_branch: ${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }}
 
       - name: Upload binaries
         uses: actions/upload-artifact@v3
@@ -75,8 +77,10 @@ jobs:
 
       - name: Fetch Fast DDS repositories
         uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
+        env:
+          DEFAULT_FASTDDS_BRANCH: 'master'
         with:
-          fastdds_branch: ${{ github.event.inputs.fastdds_branch }}
+          fastdds_branch: ${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }}
 
       - name: Build workspace
         run: |
