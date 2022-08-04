@@ -22,10 +22,18 @@ set(TESTS
     repeater
 )
 
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR} ------------------------------------------------------------")
+message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR} ------------------------------------------------------------")
+
 foreach(TEST ${TESTS})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${TEST} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${TEST})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/docker-compose.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${TEST} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docker-compose.sh
+        ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
+        COPYONLY)
+
+find_program (BASH_PROGRAM bash)
 
 # # Calculate environment
 # set(TEST_ENVIRONMENT
@@ -89,8 +97,10 @@ foreach(TEST IN LISTS TESTS)
 
     add_test(
             NAME ${TEST_NAME}
-            COMMAND bash docker-compose.sh -t ${TEST_NAME} -f ${TEST}/compose.yml)
-        )
+            COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
+                -t ${TEST_NAME}
+                -f ${CMAKE_CURRENT_BINARY_DIR}/${TEST}/compose.yml)
+
 
         # # Set test properties
         # set_tests_properties(
@@ -101,4 +111,4 @@ foreach(TEST IN LISTS TESTS)
 
 endforeach()
 
-unset(TEST_ENVIRONMENT)
+# unset(TEST_ENVIRONMENT)

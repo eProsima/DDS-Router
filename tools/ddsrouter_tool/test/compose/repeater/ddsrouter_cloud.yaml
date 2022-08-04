@@ -1,4 +1,4 @@
-version: v2.0
+version: v3.0
 
 participants:
 
@@ -6,7 +6,7 @@ participants:
     kind: void
 
   - name: Cloud_Participant
-    kind: initial-peers
+    kind: wan
     repeater: true
     listening-addresses:
       - domain: ddsrouter_cloud.edge_1
