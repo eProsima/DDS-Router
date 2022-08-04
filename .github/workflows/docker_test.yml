@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
+        env:
+          DEFAULT_FASTDDS_BRANCH: 'master'
+          DEFAULT_DDSROUTER_BRANCH: 'main'
         with:
           path: src/DDS-Router
 
@@ -27,8 +30,8 @@ jobs:
         run: |
           cd src/DDS-Router/.github/docker
           docker build \
-            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch }} \
-            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch }} \
+            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH}} \
+            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH}} \
             -t ddsrouter \
             -f Dockerfile .
 
