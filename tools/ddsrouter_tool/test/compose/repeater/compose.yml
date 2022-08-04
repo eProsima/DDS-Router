@@ -36,7 +36,9 @@ services:
     image: ${DOCKER_IMAGE}
     networks:
       - edge_1_net
-    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample subscriber -s 10
+    volumes:
+      - ../validate_subscriber.py:/validate_subscriber.py
+    command: python3 /validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
 
   ddsrouter_edge_2:
     image: ${DOCKER_IMAGE}
@@ -54,7 +56,9 @@ services:
     image: ${DOCKER_IMAGE}
     networks:
       - edge_2_net
-    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample subscriber -s 10
+    volumes:
+      - ../validate_subscriber.py:/validate_subscriber.py
+    command: python3 /validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
 
 networks:
   edge_1_net:
