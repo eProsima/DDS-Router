@@ -42,7 +42,7 @@ RUN pip3 install \
 WORKDIR /ddsrouter
 
 ARG ddsrouter_branch=main
-ARG fastdds_branch=feature/change-pool-api
+ARG fastdds_branch=master
 
 RUN mkdir src && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
