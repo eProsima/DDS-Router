@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-###########################################################################
-# Create tests                                                            #
-###########################################################################
+cmake_minimum_required(VERSION 3.16.3)
 
+project(ddsrouter_tool_compose_tests LANGUAGES CXX)
+
+enable_testing()
+include(CTest)
 
 # Name of files to test
 set(TESTS
     repeater
 )
-
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR} ------------------------------------------------------------")
-message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR} ------------------------------------------------------------")
 
 foreach(TEST ${TESTS})
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${TEST} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -33,62 +32,11 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docker-compose.sh
         ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
         COPYONLY)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/validate_subscriber.py
+        ${CMAKE_CURRENT_BINARY_DIR}/validate_subscriber.py
+        COPYONLY)
+
 find_program (BASH_PROGRAM bash)
-
-# # Calculate environment
-# set(TEST_ENVIRONMENT
-#     "PATH=$ENV{PATH};$<TARGET_FILE_DIR:${PROJECT_NAME}>")
-
-# foreach(PROJECT_DEPENDENCY ${MODULE_DEPENDENCIES})
-
-#     message(STATUS "Finding target for libraries for ${PROJECT_DEPENDENCY}")
-
-#     if(TARGET ${PROJECT_DEPENDENCY} OR TARGET eprosima::${PROJECT_DEPENDENCY} OR TARGET ${PROJECT_DEPENDENCY}::${PROJECT_DEPENDENCY})
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${PROJECT_DEPENDENCY}>")
-
-#     elseif(EXISTS ${PROJECT_DEPENDENCY}_LIBRARY)
-#         get_filename_component(
-#             ${PROJECT_DEPENDENCY}_LIBRARY_DIR ${${PROJECT_DEPENDENCY}_LIBRARY} DIRECTORY)
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};${${PROJECT_DEPENDENCY}_LIBRARY_DIR}")
-#         unset(${PROJECT_DEPENDENCY}_LIBRARY_DIR)
-
-#     else()
-
-#         message(STATUS "${PROJECT_DEPENDENCY} could not be added to TEST_ENVIRONMENT")
-
-#     endif()
-
-# endforeach()
-
-# if(WIN32)
-
-#     if(TARGET tinyxml2 OR TARGET tinyxml2::tinyxml2)
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${TINYXML2_LIBRARY}>")
-#     elseif(EXISTS TINYXML2_LIBRARY)
-#         get_filename_component(
-#             TINYXML2_LIBRARY_DIR ${TINYXML2_LIBRARY} DIRECTORY)
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};${TINYXML2_LIBRARY_DIR}")
-#         unset(TINYXML2_LIBRARY_DIR)
-#     endif()
-
-#     if(TARGET yamlcpp OR TARGET yamlcpp::yamlcpp)
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};$<TARGET_FILE_DIR:${YAMLCPP_LIBRARY}>")
-#     elseif(EXISTS YAMLCPP_LIBRARY)
-#         get_filename_component(
-#             YAMLCPP_LIBRARY_DIR ${YAMLCPP_LIBRARY} DIRECTORY)
-#         set(TEST_ENVIRONMENT
-#             "${TEST_ENVIRONMENT};${YAMLCPP_LIBRARY_DIR}")
-#         unset(YAMLCPP_LIBRARY_DIR)
-#     endif()
-
-#     string(REPLACE ";" "\\;" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
-
-# endif(WIN32)
 
 # Populate the tests
 foreach(TEST IN LISTS TESTS)
@@ -101,14 +49,4 @@ foreach(TEST IN LISTS TESTS)
                 -t ${TEST_NAME}
                 -f ${CMAKE_CURRENT_BINARY_DIR}/${TEST}/compose.yml)
 
-
-        # # Set test properties
-        # set_tests_properties(
-        #     ${TEST_NAME}
-        #     PROPERTIES
-        #         ENVIRONMENT "${TEST_ENVIRONMENT}"
-        #     )
-
 endforeach()
-
-# unset(TEST_ENVIRONMENT)

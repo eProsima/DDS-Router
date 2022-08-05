@@ -11,18 +11,23 @@ on:
         description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
         required: true
         default: 'main'
+  pull_request:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
   docker_test:
     runs-on: ubuntu-20.04
+    env:
+      DEFAULT_FASTDDS_BRANCH: 'master'
+      DEFAULT_DDSROUTER_BRANCH: 'main'
+      DOCKER_IMAGE: "ddsrouter:ci"
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
-        env:
-          DEFAULT_FASTDDS_BRANCH: 'master'
-          DEFAULT_DDSROUTER_BRANCH: 'main'
         with:
           path: src/DDS-Router
 
@@ -30,17 +35,19 @@ jobs:
         run: |
           cd src/DDS-Router/.github/docker
           docker build \
-            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH}} \
-            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH}} \
-            -t ddsrouter \
+            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
+            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH }} \
+            -t ${{ env.DOCKER_IMAGE }} \
             -f Dockerfile .
 
-      - name: List Docker images
+      - name: Check if Docker image exists
         run: |
-          docker images
+          [ -n "$(docker images -q ${{ env.DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
 
       - name: Run tests
         run: |
-          cd src/DDS-Router/tools/ddsrouter_tool/test/compose/repeater
-          export DOCKER_IMAGE=ddsrouter
-          docker-compose up
+          export DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}
+          cd src/DDS-Router/tools/ddsrouter_tool/test/compose
+          mkdir build && cd build
+          cmake ..
+          ctest --verbose
