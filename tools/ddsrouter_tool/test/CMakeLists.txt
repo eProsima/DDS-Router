@@ -14,4 +14,7 @@
 
 # Add subdirectory with tests
 add_subdirectory(application)
-add_subdirectory(compose)
+
+if(BUILD_TOOL_COMPOSE_TESTS)
+    add_subdirectory(compose)
+endif()

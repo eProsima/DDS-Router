@@ -105,10 +105,11 @@ main ()
 
     EXIT_CODE=$(docker-compose -f ${COMPOSE_FILE} ps -q |
         xargs docker inspect -f '{{ .State.ExitCode }}' |
-        grep -v 0 | wc -l | tr -d ' ')
+        grep -vx "^0$" | wc -l | tr -d ' ')
 
     echo "${TEST_NAME} exited with code ${EXIT_CODE}"
 
+    exit ${EXIT_CODE}
 }
 
 main ${@}

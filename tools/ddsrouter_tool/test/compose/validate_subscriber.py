@@ -14,7 +14,6 @@
 
 import argparse
 import logging
-from os import dup
 import re
 import signal
 import subprocess
@@ -98,6 +97,7 @@ def run(command, timeout):
     except subprocess.TimeoutExpired:
         logger.info('Timeout expired. '
                     'Killing subscriber before receiving all samples...')
+        ret_code = 1
         proc.send_signal(signal.SIGINT)
 
     stdout, stderr = proc.communicate()
