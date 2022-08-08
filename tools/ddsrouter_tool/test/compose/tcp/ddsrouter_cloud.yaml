@@ -1,20 +1,19 @@
-version: v2.0
+version: v3.0
 
 participants:
 
+  - name: EchoParticipant
+    kind: echo
+
   - name: Cloud_Participant_1
-    kind: router
-    discovery-server-guid:
-      id: 0
+    kind: wan
     listening-addresses:
       - domain: ddsrouter_cloud.edge_1
         port: 11666
         transport: tcp
 
   - name: Cloud_Participant_2
-    kind: router
-    discovery-server-guid:
-      id: 1
+    kind: wan
     listening-addresses:
       - domain: ddsrouter_cloud.edge_2
         port: 21666

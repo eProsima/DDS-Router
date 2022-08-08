@@ -158,9 +158,13 @@ def validate(command, samples, timeout, allow_duplicates=False):
     if ret_code:
         logger.error('Subscriber application exited with '
                      f'return code {ret_code}')
+
+        logger.error(f'Subscriber output: \n {stdout}')
         return ret_code
     else:
         data_received = parse_output(stdout)
+
+        logger.debug(f'Subscriber received... \n {data_received}')
 
         if not allow_duplicates:
             return len(find_duplicates(data_received))

@@ -1,4 +1,4 @@
-version: v2.0
+version: v3.0
 
 participants:
 
@@ -7,13 +7,8 @@ participants:
     domain: 0
 
   - name: Edge_2_Participant
-    kind: router
-    discovery-server-guid:
-      id: 3
+    kind: wan
     connection-addresses:
-      - discovery-server-guid:
-          id: 1
-        addresses:
-          - domain: ddsrouter_cloud
-            port: 21666
-            transport: tcp
+      - domain: ddsrouter_cloud
+        port: 21666
+        transport: tcp
