@@ -24,7 +24,6 @@ set(TEST_SOURCES
 all_library_sources("${TEST_SOURCES}")
 
 set(TEST_LIST
-        number_of_participants
     )
 
 set(TEST_EXTRA_LIBRARIES
