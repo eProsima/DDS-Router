@@ -99,14 +99,16 @@ protected:
      *
      * By default, it calls \c delete on the element.
      */
-    virtual void delete_element_(T* element);
+    virtual void delete_element_(
+            T* element);
 
     /**
      * @brief Reset internal element information to reuse it.
      *
      * By default, it does nothing.
      */
-    virtual void reset_element_(T* element);
+    virtual void reset_element_(
+            T* element);
 };
 
 /**

@@ -45,13 +45,15 @@ T* IPool<T>::new_element_()
 }
 
 template <typename T>
-void IPool<T>::delete_element_(T* element)
+void IPool<T>::delete_element_(
+        T* element)
 {
     delete element;
 }
 
 template <typename T>
-void IPool<T>::reset_element_(T* element)
+void IPool<T>::reset_element_(
+        T* element)
 {
     // Do nothing
 }

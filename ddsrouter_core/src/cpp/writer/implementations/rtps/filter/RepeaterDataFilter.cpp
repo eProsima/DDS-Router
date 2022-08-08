@@ -29,8 +29,8 @@ namespace core {
 namespace rtps {
 
 bool RepeaterDataFilter::is_relevant(
-    const fastrtps::rtps::CacheChange_t& change,
-    const fastrtps::rtps::GUID_t& reader_guid) const
+        const fastrtps::rtps::CacheChange_t& change,
+        const fastrtps::rtps::GUID_t& reader_guid) const
 {
     if (!SelfDataFilter::is_relevant(change, reader_guid))
     {
@@ -50,7 +50,7 @@ bool RepeaterDataFilter::is_relevant(
     logDebug(
         REPEATER_DATA_FILTER,
         "Evaluating whether Change with origin writer GUID prefix " << change_ref.last_writer_guid_prefix  <<
-        " is relevant for reader GUID " << reader_guid << "? " << (is_relevant ? "TRUE" : "FALSE"));
+            " is relevant for reader GUID " << reader_guid << "? " << (is_relevant ? "TRUE" : "FALSE"));
 
     return is_relevant;
 }

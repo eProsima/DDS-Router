@@ -23,7 +23,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-CacheChangePool::CacheChangePool(utils::PoolConfiguration configuration)
+CacheChangePool::CacheChangePool(
+        utils::PoolConfiguration configuration)
     : utils::UnboundedPool<fastrtps::rtps::CacheChange_t>(configuration)
 {
     initialize_vector_();

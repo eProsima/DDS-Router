@@ -47,18 +47,18 @@ configuration::DDSRouterConfiguration void_configuration()
 {
     configuration::DDSRouterConfiguration configuration;
     configuration.participants_configurations =
-        {
-            std::make_shared<configuration::ParticipantConfiguration>(
-                ParticipantId("ParticipantVoid1"),
-                ParticipantKind::blank,
-                false
-                ),
-            std::make_shared<configuration::ParticipantConfiguration>(
-                ParticipantId("ParticipantVoid2"),
-                ParticipantKind::blank,
-                false
-                )
-        };
+    {
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid1"),
+            ParticipantKind::blank,
+            false
+            ),
+        std::make_shared<configuration::ParticipantConfiguration>(
+            ParticipantId("ParticipantVoid2"),
+            ParticipantKind::blank,
+            false
+            )
+    };
 
     return configuration;
 }

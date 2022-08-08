@@ -86,7 +86,7 @@ bool UnboundedPool<T>::return_loan(
 {
     // This only could happen if more elements are released than reserved.
     // TODO: this should be a performance test, not in production. It does not affect behaviour.
-    if(reserved_ == elements_.size())
+    if (reserved_ == elements_.size())
     {
         throw InconsistencyException("return_loan: More elements are released than reserved.");
     }

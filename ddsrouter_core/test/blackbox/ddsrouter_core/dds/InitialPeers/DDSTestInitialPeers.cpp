@@ -100,7 +100,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
                 11666 + (this_server_id_is_1 ? 0u : 1u),
                 ip_version,
                 transport_protocol)
-        );
+            );
     }
 
     if (is_server(wan_kind))

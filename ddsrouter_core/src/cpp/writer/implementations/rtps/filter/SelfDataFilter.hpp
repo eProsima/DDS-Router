@@ -55,7 +55,7 @@ public:
     bool is_relevant(
             const fastrtps::rtps::CacheChange_t& change,
             const fastrtps::rtps::GUID_t& reader_guid
-        ) const override;
+            ) const override;
 };
 
 } /* namespace rtps */

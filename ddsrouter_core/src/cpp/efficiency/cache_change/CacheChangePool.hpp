@@ -46,7 +46,8 @@ public:
      *
      * @warning max size will not be used as it is Unbounded
      */
-    CacheChangePool(utils::PoolConfiguration configuration);
+    CacheChangePool(
+            utils::PoolConfiguration configuration);
 
     //! Call UnboundedPool::reserve
     virtual bool reserve_cache(

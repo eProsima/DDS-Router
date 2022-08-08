@@ -29,8 +29,8 @@ namespace core {
 namespace rtps {
 
 bool SelfDataFilter::is_relevant(
-    const fastrtps::rtps::CacheChange_t& change,
-    const fastrtps::rtps::GUID_t& reader_guid) const
+        const fastrtps::rtps::CacheChange_t& change,
+        const fastrtps::rtps::GUID_t& reader_guid) const
 {
     // It is relevant only if the reader does not belong to same participant as writer
     return change.writerGUID.guidPrefix != reader_guid.guidPrefix;
