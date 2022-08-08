@@ -164,6 +164,16 @@ void domain_to_yaml(
         DOMAIN_ID_TAG);
 }
 
+void repeater_to_yaml(
+        Yaml& yml,
+        const bool& repeater)
+{
+    test::add_field_to_yaml(
+        yml,
+        test::YamlField<bool>(repeater),
+        IS_REPEATER_TAG);
+}
+
 } /* namespace test */
 } /* namespace yaml */
 } /* namespace ddsrouter */

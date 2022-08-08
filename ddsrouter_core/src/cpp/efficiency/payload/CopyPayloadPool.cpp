@@ -17,7 +17,7 @@
  *
  */
 
-#include <efficiency/CopyPayloadPool.hpp>
+#include <efficiency/payload/CopyPayloadPool.hpp>
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
 
 namespace eprosima {

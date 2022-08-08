@@ -24,7 +24,7 @@
 #include <ddsrouter_core/types/dds/Data.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

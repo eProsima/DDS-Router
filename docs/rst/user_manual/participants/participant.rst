@@ -130,4 +130,5 @@ Below is the list with all the available Participant Kinds.
     echo
     simple
     local_discovery_server
+    wan_discovery_server
     wan

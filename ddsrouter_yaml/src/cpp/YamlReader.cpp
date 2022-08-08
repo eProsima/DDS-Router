@@ -18,6 +18,7 @@
  */
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
@@ -88,6 +89,7 @@ YamlReaderVersion YamlReader::get<YamlReaderVersion>(
                 {
                     {VERSION_TAG_V_1_0, YamlReaderVersion::V_1_0},
                     {VERSION_TAG_V_2_0, YamlReaderVersion::V_2_0},
+                    {VERSION_TAG_V_3_0, YamlReaderVersion::V_3_0},
                 });
 }
 
@@ -109,6 +111,15 @@ unsigned int YamlReader::get<unsigned int>(
         const YamlReaderVersion version /* version */)
 {
     return get_scalar<unsigned int>(yml);
+}
+
+template <>
+bool YamlReader::get<bool>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    bool value = get_scalar<bool>(yml);
+    return get_scalar<bool>(yml);
 }
 
 /************************
@@ -171,10 +182,18 @@ ParticipantId YamlReader::get<ParticipantId>(
 template <>
 ParticipantKind YamlReader::get<ParticipantKind>(
         const Yaml& yml,
-        const YamlReaderVersion /* version */)
+        const YamlReaderVersion version)
 {
     // Participant kind required
-    return participant_kind_from_name(get_scalar<std::string>(yml));
+    ParticipantKind kind = participant_kind_from_name(get_scalar<std::string>(yml));
+
+    // In version lower than 3.0 wan means wan_discovery_server
+    if (version <= V_2_0 && kind == ParticipantKind::wan_initial_peers)
+    {
+        kind = ParticipantKind::wan_discovery_server;
+    }
+
+    return kind;
 }
 
 template <>
@@ -653,6 +672,55 @@ configuration::DiscoveryServerParticipantConfiguration YamlReader::get(
     return object;
 }
 
+//////////////////////////////////
+// InitialPeersParticipantConfiguration
+template <>
+void YamlReader::fill(
+        configuration::InitialPeersParticipantConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Parent class fill
+    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+
+    // Optional listening addresses
+    if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
+    {
+        object.listening_addresses = YamlReader::get_set<types::Address>(yml, LISTENING_ADDRESSES_TAG, version);
+    }
+
+    // Optional connection addresses
+    if (YamlReader::is_tag_present(yml, CONNECTION_ADDRESSES_TAG))
+    {
+        object.connection_addresses = YamlReader::get_set<types::Address>(
+            yml,
+            CONNECTION_ADDRESSES_TAG,
+            version);
+    }
+
+    // Optional TLS
+    if (YamlReader::is_tag_present(yml, TLS_TAG))
+    {
+        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+    }
+
+    // Optional Repeater
+    if (YamlReader::is_tag_present(yml, IS_REPEATER_TAG))
+    {
+        object.is_repeater = YamlReader::get<bool>(yml, IS_REPEATER_TAG, version);
+    }
+}
+
+template <>
+configuration::InitialPeersParticipantConfiguration YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    configuration::InitialPeersParticipantConfiguration object;
+    fill<configuration::InitialPeersParticipantConfiguration>(object, yml, version);
+    return object;
+}
+
 /***************************
  * DDS ROUTER CONFIGURATION *
  ****************************/
@@ -681,9 +749,13 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
 
         case types::ParticipantKind::local_discovery_server:
-        case types::ParticipantKind::wan:
+        case types::ParticipantKind::wan_discovery_server:
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
+
+        case types::ParticipantKind::wan_initial_peers:
+            return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
+                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
 
         default:
             throw utils::ConfigurationException(
@@ -767,7 +839,7 @@ void _fill_ddsrouter_configuration_v1(
         participant_yml[PARTICIPANT_KIND_TAG] = participant_yml[PARTICIPANT_KIND_TAG_V1];
 
         // Add new Participant with its configuration
-        object.participants_configurations_.insert(
+        object.participants_configurations.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 participant_yml,
                 version));
@@ -819,7 +891,7 @@ void _fill_ddsrouter_configuration_latest(
 
     for (auto conf : participants_configurations_yml)
     {
-        object.participants_configurations_.insert(
+        object.participants_configurations.insert(
             YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
     }
 
@@ -865,8 +937,12 @@ std::ostream& operator <<(
             os << VERSION_TAG_V_2_0;
             break;
 
+        case V_3_0:
+            os << VERSION_TAG_V_3_0;
+            break;
+
         case LATEST:
-            os << VERSION_TAG_V_2_0;
+            os << VERSION_TAG_V_3_0;
             break;
 
         default:

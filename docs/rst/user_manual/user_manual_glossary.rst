@@ -95,6 +95,14 @@ DDS nomenclature
         Global Unique Identifier shared by a Participant and all its sub-entities.
         Identifies uniquely a DDS Participant.
 
+    Initial Peers
+        It is a Fast DDS Discovery Protocol that allows to send the discovery information directly
+        to the participants configured.
+        This is highly recommended for static networks where multicast is not available (e.g. WAN).
+
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html#initial-peers>`__
+        for further information.
+
     Topic
         DDS isolation abstraction to encapsulate subscriptions and publications.
         Each Topic is uniquely identified by a topic name and a topic type name (name of the data type it transmits).

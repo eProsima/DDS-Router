@@ -220,10 +220,11 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
                 id,
                 kind,
+                false,
                 random_domain(seed));
 
         case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_discovery_server:
 
         {
             // TODO get random values
@@ -235,6 +236,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
             return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
                 id,
                 kind,
+                false,
                 random_domain(seed),
                 random_guid_prefix(seed),
                 std::set<Address>(),
@@ -242,9 +244,22 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 security::TlsConfiguration());
         }
 
+        case ParticipantKind::wan_initial_peers:
+
+        {
+            return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
+                id,
+                kind,
+                false,
+                random_domain(seed),
+                std::set<Address>(),
+                std::set<Address>({Address()}),
+                security::TlsConfiguration());
+        }
+
         // Add cases where Participants need specific arguments
         default:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind);
+            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind, false);
     }
 }
 

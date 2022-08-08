@@ -40,7 +40,8 @@ struct ParticipantConfiguration : public BaseConfiguration
 
     DDSROUTER_CORE_DllAPI ParticipantConfiguration(
             const types::ParticipantId& id,
-            const types::ParticipantKind& kind) noexcept;
+            const types::ParticipantKind& kind,
+            const bool is_repeater) noexcept;
 
     /////////////////////////
     // METHODS
@@ -58,15 +59,14 @@ struct ParticipantConfiguration : public BaseConfiguration
     DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
-    /////////////////////////
-    // VARIABLES
-    /////////////////////////
-
     //! Participant Id associated with this configuration
     types::ParticipantId id;
 
     //! Participant Kind of the Participant that this configuration refers.
     types::ParticipantKind kind;
+
+    //! Whether this Participant should connect its readers with its writers.
+    bool is_repeater = false;
 };
 
 } /* namespace configuration */

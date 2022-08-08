@@ -28,7 +28,7 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
 #include <core/DDSRouterImpl.hpp>
-#include <efficiency/FastPayloadPool.hpp>
+#include <efficiency/payload/FastPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -278,7 +278,7 @@ void DDSRouterImpl::init_allowed_topics_()
 void DDSRouterImpl::init_participants_()
 {
     for (std::shared_ptr<configuration::ParticipantConfiguration> participant_config :
-            configuration_.participants_configurations_)
+            configuration_.participants_configurations)
     {
         std::shared_ptr<IParticipant> new_participant;
 

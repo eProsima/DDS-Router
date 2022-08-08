@@ -66,6 +66,7 @@
    /rst/examples/change_domain_example
    /rst/examples/ros_discovery_server_example
    /rst/examples/wan_example
+   /rst/examples/repeater_example
 
 
 .. _index_use_cases:
@@ -76,7 +77,8 @@
    :numbered: 5
    :hidden:
 
-   /rst/use_cases/ros_cloud.rst
+   /rst/use_cases/ros_cloud
+   /rst/use_cases/repeater
 
 
 .. _index_developer_manual:

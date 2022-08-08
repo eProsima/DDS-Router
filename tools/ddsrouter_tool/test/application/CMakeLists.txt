@@ -23,9 +23,11 @@ set(TEST_CONFIGURATIONS
     void_configuration
     simple_configuration
     ds_configuration
-    complex_configuration
     default_version_configuration
     v1_configuration
+    complex_configuration_v1
+    complex_configuration_v2
+    complex_configuration_v3
 )
 
 # Whether one or other signal in test

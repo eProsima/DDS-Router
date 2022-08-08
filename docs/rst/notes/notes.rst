@@ -2,9 +2,9 @@
 
 .. _release_notes:
 
-.. todo:
-    uncomment the include of forthcoming when new info is added
-    .. include:: forthcoming_version.rst
+.. comment the include of forthcoming when new info is added
+
+.. include:: forthcoming_version.rst
 
 .. include:: forthcoming_version.rst
 

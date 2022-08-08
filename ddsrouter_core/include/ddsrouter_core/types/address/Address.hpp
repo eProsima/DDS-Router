@@ -140,7 +140,7 @@ public:
     DDSROUTER_CORE_DllAPI bool is_ipv6() const noexcept;
 
     //! Get FastDDS Locator kind
-    DDSROUTER_CORE_DllAPI LocatorType get_locator_kind() noexcept;
+    DDSROUTER_CORE_DllAPI LocatorType get_locator_kind() const noexcept;
 
     /**
      * @brief Whether the address is correct

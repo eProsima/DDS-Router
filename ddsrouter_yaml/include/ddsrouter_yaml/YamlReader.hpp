@@ -58,7 +58,7 @@ enum YamlReaderVersion
     V_1_0,
 
     /**
-     * @brief  Latest version.
+     * @brief  Version 2.0
      *
      * @version 0.3.0
      *
@@ -68,6 +68,15 @@ enum YamlReaderVersion
      * - Adds domain tag in Address to remplace ip when DNS.
      */
     V_2_0,
+
+    /**
+     * @brief  Latest version.
+     *
+     * @version 0.5.0
+     *
+     * - Change wan to initial peers participant
+     */
+    V_3_0,
 
     /**
      * @brief  Main version.

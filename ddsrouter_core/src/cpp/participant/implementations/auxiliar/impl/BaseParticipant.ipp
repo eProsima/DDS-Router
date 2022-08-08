@@ -80,6 +80,14 @@ types::ParticipantKind BaseParticipant<ConfigurationType>::kind() const noexcept
 }
 
 template <class ConfigurationType>
+bool BaseParticipant<ConfigurationType>::is_repeater() const noexcept
+{
+    std::lock_guard <std::recursive_mutex> lock(mutex_);
+
+    return configuration_.is_repeater;
+}
+
+template <class ConfigurationType>
 std::shared_ptr<IWriter> BaseParticipant<ConfigurationType>::create_writer(
         types::RealTopic topic)
 {

@@ -3,7 +3,7 @@
 #############################
 
 # Yaml configuration file version
-version: v2.0
+version: v3.0
 
 # DDS Router participants
 participants:

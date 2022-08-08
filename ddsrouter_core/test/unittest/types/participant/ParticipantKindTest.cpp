@@ -52,11 +52,15 @@ TEST(ParticipantKindTest, string_conversions)
                 "dummy"));
     ASSERT_EQ(std::string(
                 PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::simple_rtps)]),
-            std::string("simple_rtps"));
+            std::string("simple-rtps"));
     ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::
-                    local_discovery_server)]), std::string("local_discovery_server"));
-    ASSERT_EQ(std::string(PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan)]),
-            std::string("wan"));
+                    local_discovery_server)]), std::string("local-discovery-server"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_initial_peers)]),
+            std::string("wan-initial-peers"));
+    ASSERT_EQ(std::string(
+                PARTICIPANT_KIND_STRINGS[static_cast<ParticipantKindType>(ParticipantKind::wan_discovery_server)]),
+            std::string("wan-ds"));
 
     // Test all possible aliases for each participant kind
 
@@ -85,9 +89,13 @@ TEST(ParticipantKindTest, string_conversions)
     ASSERT_EQ(participant_kind_from_name("local-ds"), ParticipantKind::local_discovery_server);
     ASSERT_EQ(participant_kind_from_name("local-discovery-server"), ParticipantKind::local_discovery_server);
 
-    // Strings mapping to ParticipantKind::wan
-    ASSERT_EQ(participant_kind_from_name("wan"), ParticipantKind::wan);
-    ASSERT_EQ(participant_kind_from_name("router"), ParticipantKind::wan);
+    // Strings mapping to ParticipantKind::wan_initial_peers
+    ASSERT_EQ(participant_kind_from_name("wan"), ParticipantKind::wan_initial_peers);
+    ASSERT_EQ(participant_kind_from_name("router"), ParticipantKind::wan_initial_peers);
+
+    // Strings mapping to ParticipantKind::wan_discovery_server
+    ASSERT_EQ(participant_kind_from_name("wan-ds"), ParticipantKind::wan_discovery_server);
+    ASSERT_EQ(participant_kind_from_name("wan-discovery-server"), ParticipantKind::wan_discovery_server);
 }
 
 int main(

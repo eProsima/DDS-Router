@@ -50,32 +50,6 @@ using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
 /**
- * Test that tries to create a DDSRouter with only one Participant.
- *
- * It expects to receive an exception
- */
-TEST(ImplementationsTest, solo_participant_implementation)
-{
-    // For each Participant Kind
-    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
-    {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(test::random_participant_configuration(kind));
-
-        // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
-            participant_configurations,
-            test::DEFAULT_THREAD_POOL_SIZE);
-
-        // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), utils::ConfigurationException) << kind;
-    }
-}
-
-/**
  * Test that creates a DDSRouter with a Pair of Participants of same kind.
  * It creates a DDSRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
  *

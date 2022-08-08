@@ -62,6 +62,7 @@ TEST(YamlTagsTest, yaml_tags)
         VERSION_TAG,
         VERSION_TAG_V_1_0,
         VERSION_TAG_V_2_0,
+        VERSION_TAG_V_3_0,
         PARTICIPANT_KIND_TAG_V1,
     };
 

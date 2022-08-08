@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.hpp
+ * @file WanDiscoveryServerParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANDISCOVERYSERVERPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANDISCOVERYSERVERPARTICIPANT_HPP_
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <participant/implementations/rtps/DiscoveryServerParticipant.hpp>
@@ -30,12 +30,12 @@ namespace rtps {
 /**
  * TODO
  */
-class WANParticipant
+class WanDiscoveryServerParticipant
     : public DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
 {
 public:
 
-    WANParticipant(
+    WanDiscoveryServerParticipant(
             const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
@@ -46,4 +46,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANDISCOVERYSERVERPARTICIPANT_HPP_ */

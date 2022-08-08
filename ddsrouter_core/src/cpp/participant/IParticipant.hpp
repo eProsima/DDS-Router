@@ -24,7 +24,7 @@
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 
 #include <dynamic/DiscoveryDatabase.hpp>
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
 
@@ -62,6 +62,11 @@ public:
      * @return This Participant kind
      */
     virtual types::ParticipantKind kind() const noexcept = 0;
+
+    /**
+     * @brief Whether this Participant requires to connect ist own readers with its own writers.
+     */
+    virtual bool is_repeater() const noexcept = 0;
 
     /**
      * @brief Return a new Writer

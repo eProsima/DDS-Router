@@ -87,6 +87,15 @@ public:
     types::ParticipantKind kind() const noexcept override;
 
     /**
+     * @brief Override is_repeater_ IParticipant method
+     *
+     * It gets the kind from the configuration.
+     *
+     * Thread safe with mutex \c mutex_ .
+     */
+    bool is_repeater() const noexcept override;
+
+    /**
      * @brief Override create_writer() IParticipant method
      *
      * This method calls the protected method \c create_writer_ in order to create the actual Writer.

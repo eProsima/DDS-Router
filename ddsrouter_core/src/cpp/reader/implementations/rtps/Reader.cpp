@@ -277,6 +277,10 @@ void Reader::onNewCacheChangeAdded(
     }
     else
     {
+        logWarning(
+            DDSROUTER_RTPS_READER_LISTENER,
+            "Ignoring data from this same Participant in reader " << *this << ".");
+
         // If it is a message from this Participant, do not send it forward and remove it
         // TODO: do this more elegant
         rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);

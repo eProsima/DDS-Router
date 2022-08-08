@@ -1,0 +1,59 @@
+######################
+# WAN SERVER EXAMPLE #
+######################
+
+##################################
+# CONFIGURATION VERSION
+version: v3.0                                                     # 0
+
+##################################
+# ALLOWED TOPICS
+# Allowing FastDDS and ROS2 HelloWorld demo examples topics
+
+allowlist:
+  - name: HelloWorldTopic                                         # 1
+    type: HelloWorld                                              # 1
+  - name: rt/chatter                                              # 2
+    type: std_msgs::msg::dds_::String_
+
+##################################
+# PARTICIPANTS
+participants:
+
+##################################
+# WAN SERVER REPEATER
+# This participant will repeat the messages that arrive to it.
+
+  - name: RepeaterParticipant                                     # 3
+    kind: wan                                                     # 4
+    repeater: true                                                # 5
+    listening-addresses:                                          # 6
+      - ip: 1.1.1.1
+        port: 11666
+        transport: tcp
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
+# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
+# through a WAN Participant (configured as Server) to another WAN Participant.
+# The other direction of communication is also possible; receive messages at the WAN Participant and locally
+# publish them in domain 0.
+# Server specifies which DDS Router starts the communication with the other, and after communication has been
+# established, both routers behave in the same way.
+
+# 0: Use YAML configuration version v3.0
+
+# 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+
+# 2: Insert new topics in order to route them.
+
+# 3: New Participant with name <RepeaterParticipant>.
+
+# 4: Kind of RepeaterParticipant: <wan>.
+# WAN communication with other DDS Routers.
+
+# 5: RepeaterParticipant will repeat messages that arrive to it to the rest of DDS Routers connected.
+
+# 6: Addresses where this Repeater will be listening to WAN participants

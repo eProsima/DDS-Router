@@ -30,7 +30,8 @@
 #include <participant/implementations/auxiliar/BlankParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
 #include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
-#include <participant/implementations/rtps/WANParticipant.hpp>
+#include <participant/implementations/rtps/WanDiscoveryServerParticipant.hpp>
+#include <participant/implementations/rtps/WanInitialPeersParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -97,7 +98,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 discovery_database);
         }
 
-        case ParticipantKind::wan:
+        case ParticipantKind::wan_discovery_server:
             // Discovery Server RTPS Participant
         {
             std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
@@ -110,7 +111,26 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::WANParticipant> (
+            return std::make_shared<rtps::WanDiscoveryServerParticipant> (
+                (*conf_),
+                payload_pool,
+                discovery_database);
+        }
+
+        case ParticipantKind::wan_initial_peers:
+            // Initial Peers RTPS Participant
+        {
+            std::shared_ptr<configuration::InitialPeersParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::InitialPeersParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
+            {
+                throw utils::ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
+                              participant_configuration->kind);
+            }
+
+            return std::make_shared<rtps::WanInitialPeersParticipant> (
                 (*conf_),
                 payload_pool,
                 discovery_database);

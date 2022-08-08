@@ -16,10 +16,10 @@
  * @file CopyPayloadPool.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_EFFICIENCY_COPYPAYLOADPOOL_HPP_
-#define __SRC_DDSROUTERCORE_EFFICIENCY_COPYPAYLOADPOOL_HPP_
+#ifndef __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_COPYPAYLOADPOOL_HPP_
+#define __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_COPYPAYLOADPOOL_HPP_
 
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -57,4 +57,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_EFFICIENCY_COPYPAYLOADPOOL_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_COPYPAYLOADPOOL_HPP_ */

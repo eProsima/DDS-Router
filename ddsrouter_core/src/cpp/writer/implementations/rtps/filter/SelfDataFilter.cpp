@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,26 +13,27 @@
 // limitations under the License.
 
 /**
- * @file WANParticipant.cpp
+ * @file SelfDataFilter.cpp
  */
 
-#include <participant/implementations/rtps/WANParticipant.hpp>
+#include <fastrtps/rtps/common/CacheChange.h>
+#include <fastrtps/rtps/common/Guid.h>
+#include <ddsrouter_utils/Log.hpp>
+
+#include <types/dds/RouterCacheChange.hpp>
+#include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-using namespace eprosima::ddsrouter::core::types;
-
-WANParticipant::WANParticipant(
-        const configuration::DiscoveryServerParticipantConfiguration participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : DiscoveryServerParticipant<configuration::DiscoveryServerParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+bool SelfDataFilter::is_relevant(
+        const fastrtps::rtps::CacheChange_t& change,
+        const fastrtps::rtps::GUID_t& reader_guid) const
 {
-    create_participant_();
+    // It is relevant only if the reader does not belong to same participant as writer
+    return change.writerGUID.guidPrefix != reader_guid.guidPrefix;
 }
 
 } /* namespace rtps */

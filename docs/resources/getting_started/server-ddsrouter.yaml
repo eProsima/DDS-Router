@@ -1,6 +1,6 @@
 # server-ddsrouter.yaml
 
-version: v2.0
+version: v3.0
 
 allowlist:
   - name: Square
@@ -13,7 +13,7 @@ participants:
     domain: 1
 
   - name: ServerWAN
-    kind: wan
+    kind: wan-ds
     discovery-server-guid:
       id: 0
     listening-addresses:

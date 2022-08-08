@@ -12,7 +12,7 @@
                 "version":{
                     "type":"string",
                     "enum":[
-                        "v2.0"
+                        "v3.0"
                     ]
                 },
                 "allowlist":{
@@ -35,7 +35,7 @@
                 },
                 "participants":{
                     "type":"array",
-                    "minItems":2,
+                    "minItems":1,
                     "items":{
                         "$ref":"#/definitions/Participant"
                     },
@@ -111,6 +111,8 @@
                         "ds",
                         "local-ds",
                         "local-discovery-server",
+                        "wan-ds",
+                        "wan-discovery-server",
                         "wan",
                         "router"
                     ]
@@ -119,6 +121,9 @@
                     "type":"integer",
                     "minimum":0,
                     "maximum":230
+                },
+                "repeater":{
+                    "type":"boolean"
                 },
                 "discovery-server-guid":{
                     "$ref":"#/definitions/DiscoveryServerGUID"
@@ -133,7 +138,14 @@
                 "connection-addresses":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/definitions/ConnectionAddress"
+                        "anyOf":[
+                            {
+                                "$ref":"#/definitions/DsConnectionAddress"
+                            },
+                            {
+                                "$ref":"#/definitions/Address"
+                            }
+                        ]
                     },
                     "minItems": 1
                 },
@@ -185,6 +197,11 @@
                                 "not":{
 
                                 }
+                            },
+                            "repeater":{
+                                "not":{
+
+                                }
                             }
                         }
                     }
@@ -214,6 +231,11 @@
                                         "not":{
 
                                         }
+                                    },
+                                    "repeater":{
+                                        "not":{
+
+                                        }
                                     }
                                 }
                             }
@@ -230,8 +252,8 @@
                                     "ds",
                                     "local-ds",
                                     "local-discovery-server",
-                                    "wan",
-                                    "router"
+                                    "wan-ds",
+                                    "wan-discovery-server"
                                 ]
                             }
                         }
@@ -251,6 +273,46 @@
                                 "required":[
                                     "discovery-server-guid"
                                 ]
+                            },
+                            {
+                                "anyOf":[
+                                    {
+                                        "required":[
+                                            "listening-addresses"
+                                        ]
+                                    },
+                                    {
+                                        "required":[
+                                            "connection-addresses"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "wan",
+                                    "router"
+                                ]
+                            }
+                        }
+                    },
+                    "then":{
+                        "allOf":[
+                            {
+                                "properties":{
+                                    "discovery-server-guid":{
+                                        "not":{
+
+                                        }
+                                    }
+                                }
                             },
                             {
                                 "anyOf":[
@@ -300,7 +362,7 @@
             ],
             "title":"DiscoveryServerGUID"
         },
-        "ConnectionAddress":{
+        "DsConnectionAddress":{
             "type":"object",
             "additionalProperties":false,
             "properties":{
@@ -318,7 +380,7 @@
                 "addresses",
                 "discovery-server-guid"
             ],
-            "title":"ConnectionAddress"
+            "title":"DsConnectionAddress"
         },
         "TLS":{
             "type":"object",

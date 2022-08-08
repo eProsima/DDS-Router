@@ -16,14 +16,14 @@
  * @file FastPayloadPool.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_EFFICIENCY_FASTPAYLOADPOOL_HPP_
-#define __SRC_DDSROUTERCORE_EFFICIENCY_FASTPAYLOADPOOL_HPP_
+#ifndef __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_FASTPAYLOADPOOL_HPP_
+#define __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_FASTPAYLOADPOOL_HPP_
 
 #include <atomic>
 #include <map>
 #include <mutex>
 
-#include <efficiency/PayloadPool.hpp>
+#include <efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -147,4 +147,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_EFFICIENCY_FASTPAYLOADPOOL_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_EFFICIENCY_PAYLOAD_FASTPAYLOADPOOL_HPP_ */

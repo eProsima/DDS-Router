@@ -29,14 +29,15 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration(
-        const types::ParticipantId& id,
-        const types::ParticipantKind& kind,
-        const types::DomainId& domain_id,
-        const types::GuidPrefix& discovery_server_guid_prefix,
-        const std::set<types::Address>& listening_addresses,
-        const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
+        const ParticipantId& id,
+        const ParticipantKind& kind,
+        const bool is_repeater,
+        const DomainId& domain_id,
+        const GuidPrefix& discovery_server_guid_prefix,
+        const std::set<Address>& listening_addresses,
+        const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
         const types::security::TlsConfiguration tls_configuration)
-    : SimpleParticipantConfiguration(id, kind, domain_id)
+    : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
     , discovery_server_guid_prefix(discovery_server_guid_prefix)
     , listening_addresses(listening_addresses)
     , connection_addresses(connection_addresses)

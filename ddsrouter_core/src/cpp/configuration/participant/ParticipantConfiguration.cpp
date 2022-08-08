@@ -30,9 +30,11 @@ using namespace eprosima::ddsrouter::core::types;
 
 ParticipantConfiguration::ParticipantConfiguration(
         const ParticipantId& id,
-        const ParticipantKind& kind) noexcept
+        const ParticipantKind& kind,
+        const bool is_repeater /* = false */) noexcept
     : id(id)
     , kind(kind)
+    , is_repeater(is_repeater)
 {
 }
 
