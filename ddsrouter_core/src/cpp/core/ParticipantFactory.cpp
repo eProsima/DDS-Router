@@ -29,9 +29,8 @@
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <participant/implementations/auxiliar/BlankParticipant.hpp>
 #include <participant/implementations/rtps/SimpleParticipant.hpp>
-#include <participant/implementations/rtps/LocalDiscoveryServerParticipant.hpp>
-#include <participant/implementations/rtps/WanDiscoveryServerParticipant.hpp>
-#include <participant/implementations/rtps/WanInitialPeersParticipant.hpp>
+#include <participant/implementations/rtps/InitialPeersParticipant.hpp>
+#include <participant/implementations/rtps/DiscoveryServerParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -54,11 +53,11 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
         case ParticipantKind::echo:
             // EchoParticipant
-            return std::make_shared<EchoParticipant>((*participant_configuration), payload_pool, discovery_database);
+            return std::make_shared<EchoParticipant>(participant_configuration, payload_pool, discovery_database);
 
         case ParticipantKind::dummy:
             // DummyParticipant
-            return std::make_shared<DummyParticipant>((*participant_configuration), payload_pool, discovery_database);
+            return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
 
         case ParticipantKind::simple_rtps:
             // Simple RTPS Participant
@@ -74,30 +73,12 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             }
 
             return std::make_shared<rtps::SimpleParticipant> (
-                (*conf_),
+                conf_,
                 payload_pool,
                 discovery_database);
         }
 
         case ParticipantKind::local_discovery_server:
-            // Discovery Server RTPS Participant
-        {
-            std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(
-                participant_configuration);
-            if (!conf_)
-            {
-                throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
-                              participant_configuration->kind);
-            }
-
-            return std::make_shared<rtps::LocalDiscoveryServerParticipant> (
-                (*conf_),
-                payload_pool,
-                discovery_database);
-        }
-
         case ParticipantKind::wan_discovery_server:
             // Discovery Server RTPS Participant
         {
@@ -111,8 +92,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::WanDiscoveryServerParticipant> (
-                (*conf_),
+            return std::make_shared<rtps::DiscoveryServerParticipant> (
+                conf_,
                 payload_pool,
                 discovery_database);
         }
@@ -130,8 +111,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::WanInitialPeersParticipant> (
-                (*conf_),
+            return std::make_shared<rtps::InitialPeersParticipant> (
+                conf_,
                 payload_pool,
                 discovery_database);
         }

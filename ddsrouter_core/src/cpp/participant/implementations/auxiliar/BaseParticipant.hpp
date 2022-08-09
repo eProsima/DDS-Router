@@ -38,12 +38,8 @@ namespace core {
  *
  * This class stores every Endpoint created by this Participant.
  */
-template <class ConfigurationType>
 class BaseParticipant : public IParticipant
 {
-
-    // Force ConfigurationType to be subclass of ParticipantConfiguration
-    FORCE_TEMPLATE_SUBCLASS(configuration::ParticipantConfiguration, ConfigurationType);
 
 public:
 
@@ -57,7 +53,7 @@ public:
      * @param discovery_database DDS Router shared Discovery Database
      */
     BaseParticipant(
-            const ConfigurationType participant_configuration,
+            std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
@@ -194,7 +190,7 @@ protected:
     types::ParticipantId id_nts_() const noexcept;
 
     //! Participant configuration
-    ConfigurationType configuration_;
+    std::shared_ptr<configuration::ParticipantConfiguration> configuration_;
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;
@@ -212,10 +208,9 @@ protected:
     mutable std::recursive_mutex mutex_;
 
     // Allow operator << to use private variables
-    template <class C>
     friend std::ostream& operator <<(
             std::ostream&,
-            const BaseParticipant<C>&);
+            const BaseParticipant&);
 };
 
 /**
@@ -224,16 +219,12 @@ protected:
  * This method is merely a to_string of a BaseParticipant definition.
  * It serialize the Id and kind
  */
-template <class ConfigurationType>
 std::ostream& operator <<(
         std::ostream& os,
-        const BaseParticipant<ConfigurationType>& track);
+        const BaseParticipant& part);
 
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-// Include implementation template file
-#include <participant/implementations/auxiliar/impl/BaseParticipant.ipp>
 
 #endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_BASEPARTICIPANT_HPP_ */

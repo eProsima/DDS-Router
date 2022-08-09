@@ -13,11 +13,8 @@
 // limitations under the License.
 
 /**
- * @file EchoParticipant.cpp
+ * @file CommonParticipant.cpp
  */
-
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_IMPL_IPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_IMPL_IPP_
 
 #include <memory>
 
@@ -32,24 +29,26 @@
 #include <reader/implementations/rtps/Reader.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
+#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-template <class ConfigurationType>
-CommonRTPSRouterParticipant<ConfigurationType>::CommonRTPSRouterParticipant(
-        const ConfigurationType participant_configuration,
+CommonParticipant::CommonParticipant(
+        std::shared_ptr<configuration::SimpleParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : BaseParticipant<ConfigurationType>(participant_configuration, payload_pool, discovery_database)
+        std::shared_ptr<DiscoveryDatabase> discovery_database,
+        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
+    : BaseParticipant(participant_configuration, payload_pool, discovery_database)
 {
-    // init_();
+    create_participant_(
+        participant_configuration->domain,
+        participant_attributes);
 }
 
-template <class ConfigurationType>
-CommonRTPSRouterParticipant<ConfigurationType>::~CommonRTPSRouterParticipant()
+CommonParticipant::~CommonParticipant()
 {
     if (rtps_participant_)
     {
@@ -57,8 +56,7 @@ CommonRTPSRouterParticipant<ConfigurationType>::~CommonRTPSRouterParticipant()
     }
 }
 
-template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
+void CommonParticipant::onParticipantDiscovery(
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ParticipantDiscoveryInfo&& info)
 {
@@ -84,9 +82,8 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
     }
 }
 
-template <class ConfigurationType>
 template<class DiscoveryInfoKind>
-types::Endpoint CommonRTPSRouterParticipant<ConfigurationType>::create_endpoint_from_info_(
+types::Endpoint CommonParticipant::create_endpoint_from_info_(
         DiscoveryInfoKind& info)
 {
     // Parse GUID
@@ -132,8 +129,7 @@ types::Endpoint CommonRTPSRouterParticipant<ConfigurationType>::create_endpoint_
     }
 }
 
-template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
+void CommonParticipant::onReaderDiscovery(
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ReaderDiscoveryInfo&& info)
 {
@@ -171,8 +167,7 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onReaderDiscovery(
     }
 }
 
-template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
+void CommonParticipant::onWriterDiscovery(
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::WriterDiscoveryInfo&& info)
 {
@@ -210,16 +205,16 @@ void CommonRTPSRouterParticipant<ConfigurationType>::onWriterDiscovery(
     }
 }
 
-template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
+void CommonParticipant::create_participant_(
+        const types::DomainId& domain,
+        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
 {
-    types::DomainId domain = this->configuration_.domain;
-    fastrtps::rtps::RTPSParticipantAttributes params = participant_attributes_();
-
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
             "Creating Participant in domain " << domain);
 
-    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(domain(), params);
+    rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(
+        domain,
+        participant_attributes);
 
     // Set listener after participant creation to avoid SEGFAULT (produced when callback using rtps_participant_ is
     // invoked before the variable is fully set)
@@ -232,14 +227,13 @@ void CommonRTPSRouterParticipant<ConfigurationType>::create_participant_()
     }
 
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
-            "New Participant " << this->configuration_.kind <<
+            "New Participant " << this->configuration_->kind <<
             " created with id " << this->id() <<
             " in domain " << domain << " with guid " << rtps_participant_->getGuid() <<
             (this->is_repeater() ? " (repeater)" : " (non repeater)"));
 }
 
-template <class ConfigurationType>
-std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_writer_(
+std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         types::RealTopic topic)
 {
     return std::make_shared<Writer>(
@@ -247,11 +241,10 @@ std::shared_ptr<IWriter> CommonRTPSRouterParticipant<ConfigurationType>::create_
         topic,
         this->payload_pool_,
         rtps_participant_,
-        this->configuration_.is_repeater);
+        this->configuration_->is_repeater);
 }
 
-template <class ConfigurationType>
-std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
+std::shared_ptr<IReader> CommonParticipant::create_reader_(
         types::RealTopic topic)
 {
     return std::make_shared<Reader>(
@@ -261,9 +254,9 @@ std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_
         rtps_participant_);
 }
 
-template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const
+CommonParticipant::participant_attributes_(
+        const configuration::SimpleParticipantConfiguration* participant_configuration)
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
     return params;
@@ -273,5 +266,3 @@ CommonRTPSRouterParticipant<ConfigurationType>::participant_attributes_() const
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_HPP_ */

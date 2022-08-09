@@ -66,6 +66,11 @@ bool DomainId::operator ==(
     return this->domain_id() == other.domain_id();
 }
 
+DomainId::operator DomainIdType() const noexcept
+{
+    return this->domain_id();
+}
+
 std::ostream& operator <<(
         std::ostream& output,
         const DomainId& domain)
