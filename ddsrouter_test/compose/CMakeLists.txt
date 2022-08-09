@@ -37,6 +37,8 @@ foreach(TEST IN LISTS TESTS)
 
     set(TEST_NAME "tool.application.ddsrouter.compose.${TEST}")
 
+    message(STATUS "Building test ${TEST_NAME}")
+
     add_test(
             NAME ${TEST_NAME}
             COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh

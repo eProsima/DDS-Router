@@ -95,6 +95,11 @@ macro(load_project_settings)
         set (MODULE_THIRDPARTY_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty")
     endif()
 
+    # Set MODULE_FIND_PACKAGES
+    if (NOT MODULE_FIND_PACKAGES)
+        set (MODULE_FIND_PACKAGES "")
+    endif()
+
     # Set MODULE_DEPENDENCIES
     if (NOT MODULE_DEPENDENCIES)
         set (MODULE_DEPENDENCIES ${MODULE_FIND_PACKAGES})

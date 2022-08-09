@@ -26,7 +26,6 @@
 # - BUILD_DOCS_TESTS            : BUILD_TESTS
 # - BUILD_TOOL_TESTS            : BUILD_TESTS
 # - BUILD_LIBRARY_TESTS         : BUILD_TESTS
-# - BUILD_COMPOSE_TESTS         : OFF
 #
 # - BUILD_ALL                   : BUILD_TESTS
 # - BUILD_DOCS                  : BUILD_DOCS_TESTS
@@ -53,10 +52,6 @@ macro(configure_cmake_options)
 
     if (NOT DEFINED BUILD_TOOL_TESTS)
         set(BUILD_TOOL_TESTS ${BUILD_TESTS})
-    endif()
-
-    if (NOT DEFINED BUILD_COMPOSE_TESTS)
-        set(BUILD_COMPOSE_TESTS OFF)
     endif()
 
     if (NOT DEFINED BUILD_LIBRARY_TESTS)

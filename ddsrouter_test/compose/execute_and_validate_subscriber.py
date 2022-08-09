@@ -18,6 +18,8 @@ import re
 import signal
 import subprocess
 
+from enum import Enum
+
 DESCRIPTION = """Script to validate subscribers output"""
 USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>'
          ' [-d]')
@@ -25,6 +27,16 @@ USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>'
 PIPE = subprocess.PIPE
 STDOUT = subprocess.STDOUT
 DEVNULL = subprocess.DEVNULL
+
+
+class ReturnCode(Enum):
+    """Enumeration for return codes of this script."""
+
+    SUCCESS = 0
+    TIMEOUT = 1
+    HARD_TIMEOUT = 2
+    DUPLICATES = 3
+    NOT_VALID_MESSAGES = 4
 
 
 def parse_options():
@@ -87,7 +99,7 @@ def run(command, timeout):
         - stdout - Output of the process
         - stderr - Error output of the process
     """
-    ret_code = 0
+    ret_code = ReturnCode.SUCCESS
 
     proc = subprocess.Popen(command,
                             stdout=subprocess.PIPE,
@@ -96,15 +108,17 @@ def run(command, timeout):
         proc.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
         logger.error('Timeout expired. '
-                    'Killing subscriber before receiving all samples...')
+                     'Killing subscriber before receiving all samples...')
         proc.send_signal(signal.SIGINT)
-        ret_code = 1
+        ret_code = ReturnCode.TIMEOUT
 
     # Check whether SIGINT was able to terminate the process
     if proc.poll() is None:
         # SIGINT couldn't terminate the process
+        logger.error('SIGINT could not kill process. '
+                     'Killing subscriber hardly...')
         proc.kill()
-        ret_code = 1
+        ret_code = ReturnCode.HARD_TIMEOUT
 
     stdout, stderr = proc.communicate()
 
@@ -161,26 +175,29 @@ def validate(command, samples, timeout, allow_duplicates=False):
     """
     ret_code, stdout, stderr = run(command, timeout)
 
-    if ret_code:
+    if ret_code != ReturnCode.SUCCESS:
         logger.error('Subscriber application exited with '
                      f'return code {ret_code}')
 
         logger.error(f'Subscriber output: \n {stdout}')
+        logger.error(f'Subscriber stderr output: \n {stderr}')
+
         return ret_code
+
     else:
         data_received = parse_output(stdout)
 
         logger.debug(f'Subscriber received... \n {data_received}')
 
         if not allow_duplicates:
-            return len(find_duplicates(data_received))
+            return ReturnCode.DUPLICATES
 
         if len(data_received) < samples:
             logger.error(f'Number of messages received: {len(data_received)}. '
                          f'Expected {samples}')
-            return 1
+            return ReturnCode.NOT_VALID_MESSAGES
 
-    return 0
+    return ReturnCode.SUCCESS
 
 
 if __name__ == '__main__':
@@ -212,4 +229,4 @@ if __name__ == '__main__':
 
     print(f'Subscriber validator exited with code {ret_code}')
 
-    exit(ret_code)
+    exit(ret_code.value)

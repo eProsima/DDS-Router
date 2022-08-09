@@ -24,12 +24,22 @@ jobs:
     env:
       DEFAULT_FASTDDS_BRANCH: 'master'
       DEFAULT_DDSROUTER_BRANCH: 'main'
-      DOCKER_IMAGE: "ddsrouter:ci"
+      DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
           path: src/DDS-Router
+
+      # Install colcon and required packages
+      - name: Install apt packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
 
       - name: Build DDS Router Docker image
         run: |
@@ -37,16 +47,16 @@ jobs:
           docker build \
             --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
             --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH }} \
-            -t ${{ env.DOCKER_IMAGE }} \
+            -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
 
       - name: Check if Docker image exists
         run: |
-          [ -n "$(docker images -q ${{ env.DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
+          [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
 
       - name: Run tests
         run: |
-          export DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}
+          export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
           colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
           colcon test \
             --event-handlers console_direct+ \

@@ -39,20 +39,26 @@ project(
         ${MODULE_VERSION}
     DESCRIPTION
         ${MODULE_DESCRIPTION}
-    LANGUAGES
-        CXX
 )
 
 ###############################################################################
 # Test
 ###############################################################################
 # Compile tests if CMake options requires it
-compile_test_compose(
-    "${PROJECT_SOURCE_DIR}/compose" # This package is all about tests
-)
+option(BUILD_COMPOSE_TESTS "Compile compose tests" OFF)
+
+if(BUILD_COMPOSE_TESTS)
+    message(STATUS "Compiling Compose Tests of ${PROJECT_NAME}")
+    configure_test_flags()
+    test_requirements()
+    add_subdirectory(compose)
+endif()
+# NOTE: this is done explicitly and not by a CMake macro (compile_test) as other packages
+# because it does not feel like reusable, so adding it to ddsrouter_cmake does not seems appropiate.
 
 ###############################################################################
 # Packaging
 ###############################################################################
+# NOTE: No packaging needed for this package as it is test only. However it removes the colcon warning.
 # Install package
 eprosima_packaging()

@@ -8,13 +8,13 @@ participants:
   - name: Cloud_Participant_1
     kind: wan
     listening-addresses:
-      - domain: ddsrouter_cloud.edge_1
+      - domain: ddsrouter_cloud
         port: 11666
         transport: tcp
 
   - name: Cloud_Participant_2
     kind: wan
     listening-addresses:
-      - domain: ddsrouter_cloud.edge_2
+      - domain: ddsrouter_cloud
         port: 21666
         transport: tcp

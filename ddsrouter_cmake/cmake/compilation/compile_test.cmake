@@ -73,17 +73,3 @@ macro(compile_test_tool _TEST_PATH)
     endif()
 
 endmacro()
-
-macro(compile_test_compose _TEST_PATH)
-
-    if(BUILD_COMPOSE_TESTS)
-
-        message(STATUS "Compiling ${PROJECT_NAME}")
-
-        configure_test_flags()
-
-        add_subdirectory(${_TEST_PATH})
-
-    endif()
-
-endmacro()

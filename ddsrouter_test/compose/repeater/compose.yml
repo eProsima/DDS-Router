@@ -34,7 +34,7 @@
 services:
 
   ddsrouter_cloud:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: ddsrouter_cloud
     networks:
       cloud_edge_1_net:
@@ -48,7 +48,7 @@ services:
     command: ddsrouter -c /config.yaml --timeout 10
 
   ddsrouter_edge_1:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: ddsrouter_edge_1
     depends_on:
       - ddsrouter_cloud
@@ -60,14 +60,14 @@ services:
     command: ddsrouter -c /config.yaml --timeout 10
 
   pub_edge_1:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: pub_edge_1
     networks:
       - edge_1_net
     command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 200 -s 30
 
   sub_edge_1:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: sub_edge_1
     networks:
       - edge_1_net
@@ -76,7 +76,7 @@ services:
     command: python3 /execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
 
   ddsrouter_edge_2:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: ddsrouter_edge_2
     depends_on:
       - ddsrouter_cloud
@@ -88,7 +88,7 @@ services:
     command: ddsrouter -c /config.yaml --timeout 10
 
   sub_edge_2:
-    image: ${DOCKER_IMAGE}
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: sub_edge_2
     networks:
       - edge_2_net
