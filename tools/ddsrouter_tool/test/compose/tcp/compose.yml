@@ -28,6 +28,7 @@ services:
 
   pub_edge_1:
     image: ${DOCKER_IMAGE}
+    container_name: pub_edge_1
     depends_on:
       - ddsrouter_edge_1
     networks:
@@ -48,13 +49,14 @@ services:
 
   sub_edge_2:
     image: ${DOCKER_IMAGE}
+    container_name: sub_edge_2
     depends_on:
       - ddsrouter_edge_1
     networks:
       - edge_2_net
     volumes:
-      - ../validate_subscriber.py:/validate_subscriber.py
-    command: python3 /validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
+      - ../execute_and_validate_subscriber.py:/execute_and_validate_subscriber.py
+    command: python3 /execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
 
 networks:
   edge_1_net:

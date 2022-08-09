@@ -2,8 +2,8 @@ version: v3.0
 
 participants:
 
-  - name: Void_Participant
-    kind: void
+  - name: Echo_Participant
+    kind: echo
 
   - name: Cloud_Participant
     kind: wan

@@ -95,10 +95,16 @@ def run(command, timeout):
     try:
         proc.wait(timeout=timeout)
     except subprocess.TimeoutExpired:
-        logger.info('Timeout expired. '
+        logger.error('Timeout expired. '
                     'Killing subscriber before receiving all samples...')
-        ret_code = 1
         proc.send_signal(signal.SIGINT)
+        ret_code = 1
+
+    # Check whether SIGINT was able to terminate the process
+    if proc.poll() is None:
+        # SIGINT couldn't terminate the process
+        proc.kill()
+        ret_code = 1
 
     stdout, stderr = proc.communicate()
 
