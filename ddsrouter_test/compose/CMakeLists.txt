@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.16.3)
-
-project(ddsrouter_tool_compose_tests LANGUAGES CXX)
-
-enable_testing()
-include(CTest)
-
 # Name of files to test
 set(TESTS
     repeater

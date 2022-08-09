@@ -12,5 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add subdirectory with tests
-add_subdirectory(application)
+###############################################################################
+# Set settings for project ddsrouter_test
+###############################################################################
+
+set(MODULE_NAME
+    ddsrouter_test)
+
+set(MODULE_SUMMARY
+    "Project to run external DDS Router tests.")

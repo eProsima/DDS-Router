@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ###############################################################################
-# Set settings for project ddsrouter_yaml
+# Set settings for project ddsrouter_tool
 ###############################################################################
 
 set(MODULE_NAME

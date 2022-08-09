@@ -47,7 +47,10 @@ jobs:
       - name: Run tests
         run: |
           export DOCKER_IMAGE=${{ env.DOCKER_IMAGE }}
-          cd src/DDS-Router/tools/ddsrouter_tool/test/compose
-          mkdir build && cd build
-          cmake ..
-          ctest --verbose
+          colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
+          colcon test \
+            --event-handlers console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
