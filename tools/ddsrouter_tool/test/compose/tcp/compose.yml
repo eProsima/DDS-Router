@@ -12,7 +12,7 @@ services:
             - ddsrouter_cloud.edge_2
     volumes:
       - ./ddsrouter_cloud.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 10 -d
+    command: ddsrouter -c /config.yaml --timeout 10
 
   ddsrouter_edge_1:
     image: ${DOCKER_IMAGE}
