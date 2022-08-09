@@ -2,9 +2,6 @@ version: v3.0
 
 participants:
 
-  - name: EchoParticipant
-    kind: echo
-
   - name: Simple_Participant
     kind: local
     domain: 0

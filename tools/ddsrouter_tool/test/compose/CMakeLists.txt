@@ -22,6 +22,7 @@ include(CTest)
 # Name of files to test
 set(TESTS
     repeater
+    tcp
 )
 
 foreach(TEST ${TESTS})

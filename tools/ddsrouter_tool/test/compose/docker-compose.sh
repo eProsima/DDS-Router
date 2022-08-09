@@ -23,6 +23,10 @@ print_usage()
     echo "   -t --test-name [string]        Name of the DDS Router test."
     echo "   -f --compose-file [filename]   The Docker compose file"
     echo ""
+    echo "OPTIONAL ARGUMENTS:"
+    echo "   -d --debug                     Print debug traces."
+    echo "   -h --help                      Print this same help."
+    echo ""
     echo "EXAMPLE: bash docker-compose.sh -t <test_name> -f <path/to/compose.yml>"
     echo ""
     exit ${1}
@@ -101,13 +105,23 @@ main ()
 
     echo "Docker compose file: ${COMPOSE_FILE}"
 
+    # Run docker compose
     docker-compose -f ${COMPOSE_FILE} up
 
+    # First this command gets the ids of every container listed on the docker compose file.
+    # Then it checks the exist code of every container listed before, remove the exit codes equal
+    # to 0 and count how many containers exited with an exit code different than 0.
+    # As a result, the EXIT_CODE is the number of containers that exited with an exit code
+    # different than 0.
     EXIT_CODE=$(docker-compose -f ${COMPOSE_FILE} ps -q |
         xargs docker inspect -f '{{ .State.ExitCode }}' |
         grep -vx "^0$" | wc -l | tr -d ' ')
 
     echo "${TEST_NAME} exited with code ${EXIT_CODE}"
+
+    # Clean containers and networks before exiting and do not prompt for confirmation
+    docker container prune --force
+    docker network prune --force
 
     exit ${EXIT_CODE}
 }
