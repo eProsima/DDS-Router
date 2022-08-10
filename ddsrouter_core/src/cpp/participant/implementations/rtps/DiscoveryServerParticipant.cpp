@@ -41,6 +41,7 @@ DiscoveryServerParticipant::DiscoveryServerParticipant(
             participant_configuration,
             payload_pool,
             discovery_database,
+            participant_configuration->domain,
             participant_attributes_(participant_configuration.get()))
 {
 }

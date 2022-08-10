@@ -37,14 +37,15 @@ namespace core {
 namespace rtps {
 
 CommonParticipant::CommonParticipant(
-        std::shared_ptr<configuration::SimpleParticipantConfiguration> participant_configuration,
+        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database,
+        const types::DomainId& domain_id,
         const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
 {
     create_participant_(
-        participant_configuration->domain,
+        domain_id,
         participant_attributes);
 }
 
@@ -256,7 +257,7 @@ std::shared_ptr<IReader> CommonParticipant::create_reader_(
 
 fastrtps::rtps::RTPSParticipantAttributes
 CommonParticipant::participant_attributes_(
-        const configuration::SimpleParticipantConfiguration* participant_configuration)
+        const configuration::ParticipantConfiguration* participant_configuration)
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
     return params;

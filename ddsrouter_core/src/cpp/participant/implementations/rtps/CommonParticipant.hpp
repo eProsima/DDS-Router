@@ -27,7 +27,8 @@
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipantListener.h>
 
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/types/dds/DomainId.hpp>
 
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <reader/implementations/rtps/Reader.hpp>
@@ -48,9 +49,10 @@ class CommonParticipant
 public:
 
     CommonParticipant(
-            std::shared_ptr<configuration::SimpleParticipantConfiguration> participant_configuration,
+            std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
+            const types::DomainId& domain_id,
             const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     virtual ~CommonParticipant();
@@ -87,7 +89,7 @@ protected:
     // RTPS specific methods
 
     static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
-        const configuration::SimpleParticipantConfiguration* participant_configuration);
+        const configuration::ParticipantConfiguration* participant_configuration);
 
     /////
     // VARIABLES
