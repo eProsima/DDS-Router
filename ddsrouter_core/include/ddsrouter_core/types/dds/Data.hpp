@@ -23,6 +23,7 @@
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -43,6 +44,9 @@ struct DataReceived
 
     //! Guid of the source entity that has transmit the data
     Guid source_guid;
+
+    //! Id of the Participant that the Reader that has received the data belongs to
+    ParticipantId participant_receiver;
 };
 
 //! \c octet to stream serializator

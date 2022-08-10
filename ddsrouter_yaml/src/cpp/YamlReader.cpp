@@ -20,6 +20,7 @@
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -588,6 +589,46 @@ configuration::ParticipantConfiguration YamlReader::get(
 }
 
 //////////////////////////////////
+// EchoParticipantConfiguration
+template <>
+void YamlReader::fill(
+        configuration::EchoParticipantConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Parent class fill
+    fill<configuration::ParticipantConfiguration>(object, yml, version);
+
+    // data optional
+    if (is_tag_present(yml, ECHO_DATA_TAG))
+    {
+        object.echo_data = get<bool>(yml, ECHO_DATA_TAG, version);
+    }
+
+    // discovery optional
+    if (is_tag_present(yml, ECHO_DISCOVERY_TAG))
+    {
+        object.echo_discovery = get<bool>(yml, ECHO_DISCOVERY_TAG, version);
+    }
+
+    // verbose optional
+    if (is_tag_present(yml, ECHO_VERBOSE_TAG))
+    {
+        object.verbose = get<bool>(yml, ECHO_VERBOSE_TAG, version);
+    }
+}
+
+template <>
+configuration::EchoParticipantConfiguration YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    configuration::EchoParticipantConfiguration object;
+    fill<configuration::EchoParticipantConfiguration>(object, yml, version);
+    return object;
+}
+
+//////////////////////////////////
 // SimpleParticipantConfiguration
 template <>
 void YamlReader::fill(
@@ -739,10 +780,13 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
     switch (kind)
     {
         case types::ParticipantKind::blank:
-        case types::ParticipantKind::echo:
         case types::ParticipantKind::dummy:
             return std::make_shared<core::configuration::ParticipantConfiguration>(
                 YamlReader::get<core::configuration::ParticipantConfiguration>(yml, version));
+
+        case types::ParticipantKind::echo:
+            return std::make_shared<core::configuration::EchoParticipantConfiguration>(
+                YamlReader::get<core::configuration::EchoParticipantConfiguration>(yml, version));
 
         case types::ParticipantKind::simple_rtps:
             return std::make_shared<core::configuration::SimpleParticipantConfiguration>(

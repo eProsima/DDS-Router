@@ -23,7 +23,7 @@
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
-#include <writer/implementations/auxiliar/BaseWriter.hpp>
+#include <writer/implementations/auxiliar/BlankWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -32,12 +32,14 @@ namespace core {
 /**
  * Writer Implementation that prints in stdout every message that is required to write.
  */
-class EchoWriter : public BaseWriter
+class EchoWriter : public BlankWriter
 {
 public:
 
     //! Using parent class constructors
-    using BaseWriter::BaseWriter;
+    EchoWriter(
+            const types::RealTopic& topic,
+            bool verbose);
 
 protected:
 
@@ -47,10 +49,15 @@ protected:
      * @param data : data to print
      * @return RETCODE_OK always
      */
-    virtual utils::ReturnCode write_(
+    virtual utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
     // Specific enable/disable do not need to be implemented
+
+    bool verbose_;
+
+    //! Topic that this Writer refers to
+    types::RealTopic topic_;
 };
 
 } /* namespace core */

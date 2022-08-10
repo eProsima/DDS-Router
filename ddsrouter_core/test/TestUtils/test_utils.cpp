@@ -257,6 +257,14 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
                 security::TlsConfiguration());
         }
 
+        case ParticipantKind::echo:
+        {
+            return std::make_shared<core::configuration::EchoParticipantConfiguration>(
+                id,
+                kind,
+                false);
+        }
+
         // Add cases where Participants need specific arguments
         default:
             return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind, false);

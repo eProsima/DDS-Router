@@ -16,6 +16,8 @@
  * @file EchoWriter.cpp
  */
 
+#include <ddsrouter_utils/Log.hpp>
+
 #include <writer/implementations/auxiliar/EchoWriter.hpp>
 
 namespace eprosima {
@@ -24,11 +26,40 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-utils::ReturnCode EchoWriter::write_(
+EchoWriter::EchoWriter(
+        const types::RealTopic& topic,
+        bool verbose)
+    : topic_(topic)
+    , verbose_(verbose)
+{
+    logDebug(
+        DDSROUTER_BASEWRITER,
+        "Creating Echo Writer with verbose: " <<
+        (verbose_ ? "active" : "inactive") << ".");
+}
+
+utils::ReturnCode EchoWriter::write(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::cout << "Echo Participant: " << participant_id_ << " has received from Endpoint: " << data->source_guid
-              << " in topic: " << topic_ << " the following payload: <" << data->payload << ">" << std::endl;
+    // TODO: Add Participant receiver Id when added to DataReceived
+    if (!verbose_)
+    {
+        logUser(
+            DDSROUTER_ECHO_DATA,
+            "Received data in Participant: " << data->participant_receiver <<
+            " in topic: " << topic_ <<
+            ".");
+    }
+    else
+    {
+        logUser(
+            DDSROUTER_ECHO_DATA,
+            "In Endpoint: " << data->source_guid <<
+            " from Participant: " << data->participant_receiver <<
+            " in topic: " << topic_ <<
+            " payload received: " << data->payload <<
+            ".");
+    }
 
     return utils::ReturnCode::RETCODE_OK;
 }

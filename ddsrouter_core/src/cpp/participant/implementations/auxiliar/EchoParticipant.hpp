@@ -19,7 +19,9 @@
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_ECHOPARTICIPANT_HPP_
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_ECHOPARTICIPANT_HPP_
 
-#include <participant/implementations/auxiliar/BaseParticipant.hpp>
+#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
+
+#include <participant/implementations/auxiliar/BlankParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,24 +30,34 @@ namespace core {
 /**
  * Concrete Participant that prints in stdout each message that arrives.
  */
-class EchoParticipant : public BaseParticipant
+class EchoParticipant : public BlankParticipant
 {
 public:
 
     //! Using parent class constructors
-    using BaseParticipant::BaseParticipant;
+    EchoParticipant(
+            std::shared_ptr<configuration::EchoParticipantConfiguration> participant_configuration,
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
+
+    //! Override kind() IParticipant method
+    types::ParticipantKind kind() const noexcept override;
+
+    //! Print discovery information from endpoint discovered
+    void echo_discovery(types::Endpoint endpoint_discovered) const noexcept;
+
+    //! Override create_writer() IParticipant method
+    std::shared_ptr<IWriter> create_writer(
+            types::RealTopic topic) override;
 
 protected:
 
-    //! Override create_writer_() BaseParticipant method
-    std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
-
-    //! Override create_reader_() BaseParticipant method
-    std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
-
     // Deleters do not need to be implemented
+
+    //! Reference to alias access of this object configuration without casting every time
+    std::shared_ptr<configuration::EchoParticipantConfiguration> configuration_;
+
+    //! DDS Router shared Discovery Database
+    std::shared_ptr<DiscoveryDatabase> discovery_database_;
 };
 
 } /* namespace core */

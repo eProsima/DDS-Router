@@ -16,9 +16,12 @@
  * @file EchoParticipant.cpp
  */
 
+#include <ddsrouter_utils/Log.hpp>
+
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <reader/implementations/auxiliar/BlankReader.hpp>
 #include <writer/implementations/auxiliar/EchoWriter.hpp>
+#include <writer/implementations/auxiliar/BlankWriter.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 
 namespace eprosima {
@@ -27,16 +30,50 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
-std::shared_ptr<IWriter> EchoParticipant::create_writer_(
-        RealTopic topic)
+EchoParticipant::EchoParticipant(
+        std::shared_ptr<configuration::EchoParticipantConfiguration> participant_configuration,
+        std::shared_ptr<DiscoveryDatabase> discovery_database)
+    : BlankParticipant(participant_configuration->id)
+    , configuration_(participant_configuration)
 {
-    return std::make_shared<EchoWriter>(id(), topic, payload_pool_);
+    logDebug(DDSROUTER_TRACK, "Creating Echo Participant : " << configuration_->id << " .");
+
+    if (configuration_->echo_discovery)
+    {
+        // Register in Discovery DB a callback to be notified each time an endpoint is discovered
+        discovery_database->add_endpoint_discovered_callback(
+            [this](const Endpoint& endpoint_discovered) {
+                this->echo_discovery(endpoint_discovered);
+            });
+    }
 }
 
-std::shared_ptr<IReader> EchoParticipant::create_reader_(
-        RealTopic)
+void EchoParticipant::echo_discovery(Endpoint endpoint_discovered) const noexcept
 {
-    return std::make_shared<BlankReader>();
+    // TODO write this in a way that is efficient and easy to read and allow verbose option
+    logUser(
+        DDSROUTER_ECHO_DISCOVERY,
+        "New endpoint discovered: " << endpoint_discovered << ".");
+}
+
+std::shared_ptr<IWriter> EchoParticipant::create_writer(
+        RealTopic topic)
+{
+    if (configuration_->echo_data)
+    {
+        return std::make_shared<EchoWriter>(
+            topic,
+            configuration_->verbose);
+    }
+    else
+    {
+        return std::make_shared<BlankWriter>();
+    }
+}
+
+types::ParticipantKind EchoParticipant::kind() const noexcept
+{
+    return ParticipantKind::echo;
 }
 
 } /* namespace core */

@@ -19,6 +19,7 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
@@ -132,6 +133,9 @@ bool DDSRouterConfiguration::check_correct_configuration_object_(
 
         case ParticipantKind::wan_initial_peers:
             return check_correct_configuration_object_by_type_<InitialPeersParticipantConfiguration>(configuration);
+
+        case ParticipantKind::echo:
+            return check_correct_configuration_object_by_type_<EchoParticipantConfiguration>(configuration);
 
         default:
             return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
