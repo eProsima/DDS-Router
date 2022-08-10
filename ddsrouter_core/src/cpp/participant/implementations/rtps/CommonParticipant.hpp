@@ -72,8 +72,8 @@ public:
 protected:
 
     void create_participant_(
-        const types::DomainId& domain,
-        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
+            const types::DomainId& domain,
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     std::shared_ptr<IWriter> create_writer_(
             types::RealTopic topic) override;
@@ -89,7 +89,7 @@ protected:
     // RTPS specific methods
 
     static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
-        const configuration::ParticipantConfiguration* participant_configuration);
+            const configuration::ParticipantConfiguration* participant_configuration);
 
     /////
     // VARIABLES

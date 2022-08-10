@@ -45,7 +45,7 @@ public:
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
-        const configuration::InitialPeersParticipantConfiguration* configuration);
+            const configuration::InitialPeersParticipantConfiguration* configuration);
 
 };
 

@@ -35,17 +35,16 @@ InitialPeersParticipant::InitialPeersParticipant(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : CommonParticipant(
-            participant_configuration,
-            payload_pool,
-            discovery_database,
-            participant_configuration->domain,
-            participant_attributes_(participant_configuration.get()))
+        participant_configuration,
+        payload_pool,
+        discovery_database,
+        participant_configuration->domain,
+        participant_attributes_(participant_configuration.get()))
 {
 }
 
-
 fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_attributes_(
-    const configuration::InitialPeersParticipantConfiguration* configuration)
+        const configuration::InitialPeersParticipantConfiguration* configuration)
 {
     // Use default as base attributes
     fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::participant_attributes_(configuration);
