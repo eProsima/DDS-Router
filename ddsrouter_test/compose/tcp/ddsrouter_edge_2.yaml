@@ -2,9 +2,12 @@ version: v3.0
 
 participants:
 
+  - name: EchoParticipant
+    kind: echo
+
   - name: Simple_Participant
     kind: local
-    domain: 0
+    domain: 2
 
   - name: Edge_2_Participant
     kind: wan

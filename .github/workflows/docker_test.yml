@@ -45,6 +45,7 @@ jobs:
         run: |
           cd src/DDS-Router/.github/docker
           docker build \
+            --no-cache \
             --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
             --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \

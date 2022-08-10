@@ -1,0 +1,22 @@
+version: v3.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: Simple_Participant
+    kind: local
+    domain: 2
+
+  - name: Edge_2_DS_Participant
+    kind: wan-ds
+    discovery-server-guid:
+      id: 2
+    connection-addresses:
+      - discovery-server-guid:
+          id: 0
+        addresses:
+          - domain: ddsrouter_cloud
+            port: 21666
+            transport: udp

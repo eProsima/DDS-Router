@@ -7,11 +7,11 @@ participants:
 
   - name: Simple_Participant
     kind: local
-    domain: 1
+    domain: 2
 
-  - name: Edge_1_Participant
+  - name: Edge_2_Participant
     kind: wan
     connection-addresses:
-      - domain: ddsrouter_cloud
-        port: 11666
-        transport: tcp
+      - domain: ddsrouter_cloud_2
+        port: 31666
+        transport: udp

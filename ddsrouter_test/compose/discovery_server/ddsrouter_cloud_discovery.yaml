@@ -1,0 +1,21 @@
+version: v3.0
+
+blocklist:
+  - name: "*"
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: Cloud_Discovery_Server_Participant
+    kind: wan-ds
+    discovery-server-guid:
+      id: 0
+    listening-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: udp
+      - domain: ddsrouter_cloud
+        port: 21666
+        transport: udp

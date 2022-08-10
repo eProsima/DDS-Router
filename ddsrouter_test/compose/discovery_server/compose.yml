@@ -1,7 +1,6 @@
 # Test description:
-#   This test checks the TCP functionality by creating 3 routers, 2 edges and 1 cloud.
-#   The cloud router will forward every message from 1 to 2 by two different participants connected by TCP.
-#   It also probes the Initial Peers functionality, avoiding the discovery of edge router.
+#   This test checks the Discovery Server functionality, by creating a Router Discovery Server blocking every topic.
+#   The edge routers must discover each other via Discovery Server and transmit data from one another.
 #
 # Test architecture:
 #
@@ -10,15 +9,15 @@
 #          │                                                                │
 #          │                        ┌──────────────────┐                    │
 #          │                        │ ddsrouter_cloud  │                    │
-#          │                        │ (wan + wan)      │                    │
+#          │                        │ (ds_wan | block) │                    │
 #          │                        └─▲──────────────▲─┘                    │
 #          │                          │              │                      │
-#          │           ┌──────────────┘              └─────────┐            │
+#          │           ┌--------------┘              └---------┐            │
 #   ┌──────┼───────────┼──────────────────┐        ┌───────────┼────────────┼──────┐
 #   │      │           │                  │        │           │            │      │
 #   │      │ ┌─────────▼────────┐         │        │   ┌───────▼──────────┐ │      │
-#   │      │ │ ddsrouter_edge_1 │         │        │   │ ddsrouter_edge_2 │ │      │
-#   │      │ │ (local + wan)    │         │        │   │ (local + wan)    │ │      │
+#   │      │ │ ddsrouter_edge_1 │──────────────────────│ ddsrouter_edge_2 │ │      │
+#   │      │ │ (local + ds_wan) │         │        │   │ (local + ds_wan) │ │      │
 #   │      │ └───────┬────▲─────┘         │        │   └───────┬──────────┘ │      │
 #   │      │         │    │               │        │           │            │      │
 #   │      └─────────┼────┼───────────────┼────────┼───────────┼────────────┘      │
@@ -39,7 +38,7 @@ services:
     networks:
       - cloud_edge_net
     volumes:
-      - ./ddsrouter_cloud.yaml:/config.yaml
+      - ./ddsrouter_cloud_discovery.yaml:/config.yaml
     command: ddsrouter -c /config.yaml --timeout 10
 
   ddsrouter_edge_1:

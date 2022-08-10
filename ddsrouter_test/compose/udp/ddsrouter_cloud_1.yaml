@@ -1,0 +1,20 @@
+version: v3.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: Cloud_Participant_1_1
+    kind: wan
+    listening-addresses:
+      - domain: ddsrouter_cloud_1
+        port: 11666
+        transport: udp
+
+  - name: Cloud_Participant_1_2
+    kind: wan
+    listening-addresses:
+      - domain: ddsrouter_cloud_1
+        port: 21666
+        transport: udp

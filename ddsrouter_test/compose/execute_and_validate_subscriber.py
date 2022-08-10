@@ -21,8 +21,7 @@ import subprocess
 from enum import Enum
 
 DESCRIPTION = """Script to validate subscribers output"""
-USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>'
-         ' [-d]')
+USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>')
 
 PIPE = subprocess.PIPE
 STDOUT = subprocess.STDOUT
@@ -79,10 +78,15 @@ def parse_options():
         help='Allow receive duplicated data.'
     )
     parser.add_argument(
-        '-d',
         '--debug',
         action='store_true',
         help='Print test debugging info.'
+    )
+    parser.add_argument(
+        '--domain',
+        type=int,
+        default=0,
+        help='Domain to execute the subscriber.'
     )
 
     return parser.parse_args()
@@ -185,12 +189,18 @@ def validate(command, samples, timeout, allow_duplicates=False):
         return ret_code
 
     else:
+
+        logger.debug(f'Subscriber output: \n {stdout}')
+        logger.debug(f'Subscriber stderr output: \n {stderr}')
+
         data_received = parse_output(stdout)
 
         logger.debug(f'Subscriber received... \n {data_received}')
 
         if not allow_duplicates:
-            return ReturnCode.DUPLICATES
+            if find_duplicates(data_received):
+                logger.error('Duplicated messages found')
+                return ReturnCode.DUPLICATES
 
         if len(data_received) < samples:
             logger.error(f'Number of messages received: {len(data_received)}. '
@@ -220,7 +230,11 @@ if __name__ == '__main__':
     else:
         logger.setLevel(logging.INFO)
 
-    command = [args.exe, 'subscriber', '-s', str(args.samples)]
+    command = [
+        args.exe,
+        'subscriber',
+        '-s', str(args.samples),
+        '-d', str(args.domain)]
 
     ret_code = validate(command,
                         args.samples,

@@ -16,6 +16,8 @@
 set(TESTS
     repeater
     tcp
+    udp
+    discovery_server
 )
 
 foreach(TEST ${TESTS})
