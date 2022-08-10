@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file WanInitialPeersParticipant.cpp
+ * @file InitialPeersParticipant.cpp
  */
 
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
@@ -21,7 +21,7 @@
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv6TransportDescriptor.h>
 
-#include <participant/implementations/rtps/WanInitialPeersParticipant.hpp>
+#include <participant/implementations/rtps/InitialPeersParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,24 +30,27 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-WanInitialPeersParticipant::WanInitialPeersParticipant(
-        const configuration::InitialPeersParticipantConfiguration participant_configuration,
+InitialPeersParticipant::InitialPeersParticipant(
+        std::shared_ptr<configuration::InitialPeersParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<configuration::InitialPeersParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+    : CommonParticipant(
+        participant_configuration,
+        payload_pool,
+        discovery_database,
+        participant_configuration->domain,
+        participant_attributes_(participant_configuration.get()))
 {
-    create_participant_();
 }
 
-fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participant_attributes_() const
+fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_attributes_(
+        const configuration::InitialPeersParticipantConfiguration* configuration)
 {
-    // Auxiliary variable to save characters and improve readability
-    const auto& tls_config = this->configuration_.tls_configuration;
+    // Use default as base attributes
+    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::participant_attributes_(configuration);
 
-    // Set attributes
-    fastrtps::rtps::RTPSParticipantAttributes params;
-    // CommonRTPSRouterParticipant::participant_attributes(); // Use default as base attributes
+    // Auxiliary variable to save characters and improve readability
+    const auto& tls_config = configuration->tls_configuration;
 
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
@@ -65,13 +68,14 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
 
     /////
     // Set listening addresses
-    for (const types::Address& address : this->configuration_.listening_addresses)
+    for (const types::Address& address : configuration->listening_addresses)
     {
         if (!address.is_valid())
         {
             // Invalid address, continue with next one
             logWarning(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                    "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
+                    "Discard listening address: " << address <<
+                    " in Participant " << configuration->id << " initialization.");
             continue;
         }
 
@@ -152,19 +156,19 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
         params.defaultUnicastLocatorList.push_back(locator);
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                "Add listening address " << address << " to Participant " << this->id() << ".");
+                "Add listening address " << address << " to Participant " << configuration->id << ".");
     }
 
     /////
     // Set connection addresses
-    for (const types::Address& connection_address : this->configuration_.connection_addresses)
+    for (const types::Address& connection_address : configuration->connection_addresses)
     {
         if (!connection_address.is_valid())
         {
             // Invalid connection address, continue with next one
             logWarning(DDSROUTER_INITIALPEERS_PARTICIPANT,
                     "Discard connection address: " << connection_address <<
-                    " in Participant " << this->id() << " initialization.");
+                    " in Participant " << configuration->id << " initialization.");
             continue;
         }
 
@@ -214,7 +218,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
                 "Add connection address " << connection_address <<
-                " to Participant " << this->id() << ".");
+                " to Participant " << configuration->id << ".");
     }
 
     /////
@@ -235,7 +239,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                "Adding TCPv4 Transport to Participant " << this->id() << ".");
+                "Adding TCPv4 Transport to Participant " << configuration->id << ".");
     }
 
     if (has_connection_tcp_ipv6 && !has_listening_tcp_ipv6)
@@ -252,7 +256,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                "Adding TCPv6 Transport to Participant " << this->id() << ".");
+                "Adding TCPv6 Transport to Participant " << configuration->id << ".");
     }
 
     // If has UDP, create descriptor because it has not been created yet
@@ -263,7 +267,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                "Adding UDPv4 Transport to Participant " << this->id() << ".");
+                "Adding UDPv4 Transport to Participant " << configuration->id << ".");
     }
 
     if (has_udp_ipv6)
@@ -273,7 +277,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
         params.userTransports.push_back(descriptor_v6);
 
         logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-                "Adding UDPv6 Transport to Participant " << this->id() << ".");
+                "Adding UDPv6 Transport to Participant " << configuration->id << ".");
     }
 
     // To avoid creating a multicast transport in UDP when non listening addresses
@@ -296,7 +300,7 @@ fastrtps::rtps::RTPSParticipantAttributes WanInitialPeersParticipant::participan
     }
 
     logDebug(DDSROUTER_INITIALPEERS_PARTICIPANT,
-            "Configured Participant " << this->id());
+            "Configured Participant " << configuration->id);
 
     return params;
 }

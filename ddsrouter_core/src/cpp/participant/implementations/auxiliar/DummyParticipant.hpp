@@ -38,7 +38,7 @@ namespace core {
  *
  * This Participant is used for Testing, as it could mock a DDS real network.
  */
-class DummyParticipant : public BaseParticipant<configuration::ParticipantConfiguration>
+class DummyParticipant : public BaseParticipant
 {
 public:
 
@@ -50,7 +50,7 @@ public:
      * the DDSRouter.
      */
     DummyParticipant(
-            const configuration::ParticipantConfiguration participant_configuration,
+            std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 

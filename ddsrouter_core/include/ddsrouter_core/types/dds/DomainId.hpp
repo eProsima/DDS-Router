@@ -64,6 +64,8 @@ public:
     DDSROUTER_CORE_DllAPI bool operator ==(
             const DomainId& other) const noexcept;
 
+    DDSROUTER_CORE_DllAPI operator DomainIdType() const noexcept;
+
 protected:
 
     //! Value of Fast DDS Domain ID

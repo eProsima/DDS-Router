@@ -16,9 +16,6 @@
  * @file DiscoveryServerParticipant.cpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_
-
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
 #include <fastdds/rtps/transport/UDPv6TransportDescriptor.h>
 #include <fastdds/rtps/transport/TCPv4TransportDescriptor.h>
@@ -36,31 +33,29 @@ namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-
-template <class ConfigurationType>
-DiscoveryServerParticipant<ConfigurationType>::DiscoveryServerParticipant(
-        const ConfigurationType participant_configuration,
+DiscoveryServerParticipant::DiscoveryServerParticipant(
+        std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<ConfigurationType>
-        (participant_configuration, payload_pool, discovery_database)
+    : CommonParticipant(
+        participant_configuration,
+        payload_pool,
+        discovery_database,
+        participant_configuration->domain,
+        participant_attributes_(participant_configuration.get()))
 {
 }
 
-template <class ConfigurationType>
 fastrtps::rtps::RTPSParticipantAttributes
-DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
+DiscoveryServerParticipant::participant_attributes_(
+        const configuration::DiscoveryServerParticipantConfiguration* configuration)
 {
-    // Get Configuration information
-    std::set<types::Address> listening_addresses = this->configuration_.listening_addresses;
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses =
-            this->configuration_.connection_addresses;
-    types::GuidPrefix discovery_server_guid_prefix = this->configuration_.discovery_server_guid_prefix;
-    const auto& tls_config = this->configuration_.tls_configuration;
+    // Use default as base attributes
+    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::participant_attributes_(configuration);
 
-    // Set attributes
-    fastrtps::rtps::RTPSParticipantAttributes params;
-    // CommonRTPSRouterParticipant::participant_attributes(); // Use default as base attributes
+    // Auxiliary variable to save characters and improve readability
+    const types::GuidPrefix& discovery_server_guid_prefix = configuration->discovery_server_guid_prefix;
+    const auto& tls_config = configuration->tls_configuration;
 
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
@@ -76,13 +71,14 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
     /////
     // Set listening addresses
-    for (types::Address address : listening_addresses)
+    for (types::Address address : configuration->listening_addresses)
     {
         if (!address.is_valid())
         {
             // Invalid address, continue with next one
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Discard listening address: " << address << " in Participant " << this->id() << " initialization.");
+                    "Discard listening address: " << address <<
+                    " in Participant " << configuration->id << " initialization.");
             continue;
         }
 
@@ -158,12 +154,12 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         params.defaultUnicastLocatorList.push_back(locator);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Add listening address " << address << " to Participant " << this->id() << ".");
+                "Add listening address " << address << " to Participant " << configuration->id << ".");
     }
 
     /////
     // Set connection addresses
-    for (types::DiscoveryServerConnectionAddress connection_address : connection_addresses)
+    for (types::DiscoveryServerConnectionAddress connection_address : configuration->connection_addresses)
     {
         if (!connection_address.is_valid())
         {
@@ -171,7 +167,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                     "Discard connection address with remote server: " <<
                     connection_address.discovery_server_guid_prefix() <<
-                    " in Participant " << this->id() << " initialization.");
+                    " in Participant " << configuration->id << " initialization.");
             continue;
         }
 
@@ -186,7 +182,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
                 logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                         "Discard connection address with remote server: " <<
                         connection_address.discovery_server_guid_prefix() <<
-                        " due to invalid ip address " << address.ip() << " in Participant " << this->id() <<
+                        " due to invalid ip address " << address.ip() << " in Participant " << configuration->id <<
                         " initialization.");
                 continue;
             }
@@ -234,7 +230,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 
             logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
                     "Add connection address " << address << " for server " << server_prefix <<
-                    " to Participant " << this->id() << ".");
+                    " to Participant " << configuration->id << ".");
         }
     }
 
@@ -253,7 +249,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         if (!has_connection_addresses)
         {
             logWarning(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                    "Creating Participant " << this->id() << " without listening or connection addresses. " <<
+                    "Creating Participant " << configuration->id << " without listening or connection addresses. " <<
                     "It will not communicate with any other Participant.");
         }
     }
@@ -280,7 +276,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding TCPv4 Transport to Participant " << this->id() << ".");
+                "Adding TCPv4 Transport to Participant " << configuration->id << ".");
     }
     if (has_connection_tcp_ipv6 && !has_listening_tcp_ipv6)
     {
@@ -296,7 +292,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding TCPv6 Transport to Participant " << this->id() << ".");
+                "Adding TCPv6 Transport to Participant " << configuration->id << ".");
     }
 
     // If has UDP, create descriptor because it has not been created yet
@@ -307,7 +303,7 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         params.userTransports.push_back(descriptor);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding UDPv4 Transport to Participant " << this->id() << ".");
+                "Adding UDPv4 Transport to Participant " << configuration->id << ".");
     }
     if (has_udp_ipv6)
     {
@@ -316,11 +312,11 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
         params.userTransports.push_back(descriptor_v6);
 
         logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-                "Adding UDPv6 Transport to Participant " << this->id() << ".");
+                "Adding UDPv6 Transport to Participant " << configuration->id << ".");
     }
 
     logDebug(DDSROUTER_DISCOVERYSERVER_PARTICIPANT,
-            "Configured Participant " << this->id() << " with server guid: " <<
+            "Configured Participant " << configuration->id << " with server guid: " <<
             discovery_server_guid_prefix);
 
     return params;
@@ -330,5 +326,3 @@ DiscoveryServerParticipant<ConfigurationType>::participant_attributes_() const
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_DISCOVERYSERVERRTPSROUTERPARTICIPANT_IMPL_IPP_ */

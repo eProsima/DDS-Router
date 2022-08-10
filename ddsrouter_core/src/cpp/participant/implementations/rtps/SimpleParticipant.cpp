@@ -31,13 +31,16 @@ namespace rtps {
 using namespace eprosima::ddsrouter::core::types;
 
 SimpleParticipant::SimpleParticipant(
-        const configuration::SimpleParticipantConfiguration participant_configuration,
+        std::shared_ptr<configuration::SimpleParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database)
-    : CommonRTPSRouterParticipant<configuration::SimpleParticipantConfiguration>
-        (participant_configuration, payload_pool, discovery_database)
+    : CommonParticipant(
+        participant_configuration,
+        payload_pool,
+        discovery_database,
+        participant_configuration->domain,
+        CommonParticipant::participant_attributes_(participant_configuration.get()))
 {
-    create_participant_();
 }
 
 } /* namespace rtps */

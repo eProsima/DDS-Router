@@ -28,7 +28,7 @@ namespace core {
 /**
  * Concrete Participant that prints in stdout each message that arrives.
  */
-class EchoParticipant : public BaseParticipant<configuration::ParticipantConfiguration>
+class EchoParticipant : public BaseParticipant
 {
 public:
 

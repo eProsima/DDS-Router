@@ -13,18 +13,18 @@
 // limitations under the License.
 
 /**
- * @file WanInitialPeersParticipant.hpp
+ * @file InitialPeersParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANINITIALPEERSPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANINITIALPEERSPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_InitialPeersParticipant_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_InitialPeersParticipant_HPP_
 
 #include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
 #include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
-#include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,17 +34,18 @@ namespace rtps {
 /**
  * TODO
  */
-class WanInitialPeersParticipant
-    : public CommonRTPSRouterParticipant<configuration::InitialPeersParticipantConfiguration>
+class InitialPeersParticipant
+    : public CommonParticipant
 {
 public:
 
-    WanInitialPeersParticipant(
-            const configuration::InitialPeersParticipantConfiguration participant_configuration,
+    InitialPeersParticipant(
+            std::shared_ptr<configuration::InitialPeersParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 
-    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const override;
+    static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
+            const configuration::InitialPeersParticipantConfiguration* configuration);
 
 };
 
@@ -53,4 +54,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_WANINITIALPEERSPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_InitialPeersParticipant_HPP_ */

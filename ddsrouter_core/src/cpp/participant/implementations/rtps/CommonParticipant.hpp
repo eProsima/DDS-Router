@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file CommonRTPSRouterParticipant.hpp
+ * @file CommonParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONPARTICIPANT_HPP_
 
 #include <fastdds/rtps/participant/ParticipantDiscoveryInfo.h>
 #include <fastdds/rtps/reader/ReaderDiscoveryInfo.h>
@@ -28,6 +28,7 @@
 #include <fastrtps/rtps/participant/RTPSParticipantListener.h>
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/types/dds/DomainId.hpp>
 
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <reader/implementations/rtps/Reader.hpp>
@@ -41,19 +42,20 @@ namespace rtps {
 /**
  * TODO
  */
-template <class ConfigurationType>
-class CommonRTPSRouterParticipant
-    : public BaseParticipant<ConfigurationType>
+class CommonParticipant
+    : public BaseParticipant
     , public fastrtps::rtps::RTPSParticipantListener
 {
 public:
 
-    CommonRTPSRouterParticipant(
-            const ConfigurationType participant_configuration,
+    CommonParticipant(
+            std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<DiscoveryDatabase> discovery_database);
+            std::shared_ptr<DiscoveryDatabase> discovery_database,
+            const types::DomainId& domain_id,
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
-    virtual ~CommonRTPSRouterParticipant();
+    virtual ~CommonParticipant();
 
     virtual void onParticipantDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
@@ -69,7 +71,9 @@ public:
 
 protected:
 
-    void create_participant_();
+    void create_participant_(
+            const types::DomainId& domain,
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     std::shared_ptr<IWriter> create_writer_(
             types::RealTopic topic) override;
@@ -84,7 +88,8 @@ protected:
     /////
     // RTPS specific methods
 
-    virtual fastrtps::rtps::RTPSParticipantAttributes participant_attributes_() const;
+    static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
+            const configuration::ParticipantConfiguration* participant_configuration);
 
     /////
     // VARIABLES
@@ -99,7 +104,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-// Include implementation template file
-#include <participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp>
-
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONRTPSROUTERPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONPARTICIPANT_HPP_ */

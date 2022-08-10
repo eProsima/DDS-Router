@@ -20,7 +20,7 @@
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_SIMPLEPARTICIPANT_HPP_
 
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -32,7 +32,7 @@ namespace rtps {
  *
  * Standard RTPS Participant with Simple Discovery and default attributes.
  */
-class SimpleParticipant : public CommonRTPSRouterParticipant<configuration::SimpleParticipantConfiguration>
+class SimpleParticipant : public CommonParticipant
 {
 public:
 
@@ -47,7 +47,7 @@ public:
      * @throw \c IConfigurationException in case configuration was incorrectly set
      */
     SimpleParticipant(
-            const configuration::SimpleParticipantConfiguration participant_configuration,
+            std::shared_ptr<configuration::SimpleParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database);
 };
