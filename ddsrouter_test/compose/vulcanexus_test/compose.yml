@@ -1,0 +1,22 @@
+services:
+
+  talker:
+    image: ${VULCANEXUS_IMAGE}
+    container_name: talker
+    privileged: true
+    networks:
+      - private_net
+    command: bash -c "apt update && apt install -y ros-humble-demo-nodes-cpp && timeout 20s ros2 run demo_nodes_cpp talker"
+
+  listener:
+    image: ${VULCANEXUS_IMAGE}
+    container_name: listener
+    privileged: true
+    networks:
+      - private_net
+    command: bash -c "apt update && apt install -y ros-humble-demo-nodes-cpp && timeout 20s ros2 run demo_nodes_cpp listener"
+
+networks:
+  private_net:
+  default:
+    driver: none

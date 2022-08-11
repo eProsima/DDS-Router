@@ -18,6 +18,7 @@ set(TESTS
     tcp
     udp
     discovery_server
+    vulcanexus_test
 )
 
 foreach(TEST ${TESTS})
