@@ -35,9 +35,6 @@ jobs:
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
