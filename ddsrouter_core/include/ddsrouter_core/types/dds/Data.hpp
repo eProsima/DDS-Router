@@ -45,7 +45,7 @@ struct DataReceived
     //! Guid of the source entity that has transmit the data
     Guid source_guid;
 
-    //! Id of the Participant that the Reader that has received the data belongs to
+    //! Id of the participant from which the Reader has received the data.
     ParticipantId participant_receiver;
 };
 
