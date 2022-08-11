@@ -42,13 +42,15 @@ EchoParticipant::EchoParticipant(
     {
         // Register in Discovery DB a callback to be notified each time an endpoint is discovered
         discovery_database->add_endpoint_discovered_callback(
-            [this](const Endpoint& endpoint_discovered) {
+            [this](const Endpoint& endpoint_discovered)
+            {
                 this->echo_discovery(endpoint_discovered);
             });
     }
 }
 
-void EchoParticipant::echo_discovery(Endpoint endpoint_discovered) const noexcept
+void EchoParticipant::echo_discovery(
+        Endpoint endpoint_discovered) const noexcept
 {
     // TODO write this in a way that is efficient and easy to read and allow verbose option
     logUser(

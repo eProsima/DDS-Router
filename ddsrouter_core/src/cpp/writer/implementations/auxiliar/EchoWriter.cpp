@@ -35,7 +35,7 @@ EchoWriter::EchoWriter(
     logDebug(
         DDSROUTER_BASEWRITER,
         "Creating Echo Writer with verbose: " <<
-        (verbose_ ? "active" : "inactive") << ".");
+            (verbose_ ? "active" : "inactive") << ".");
 }
 
 utils::ReturnCode EchoWriter::write(
@@ -47,18 +47,18 @@ utils::ReturnCode EchoWriter::write(
         logUser(
             DDSROUTER_ECHO_DATA,
             "Received data in Participant: " << data->participant_receiver <<
-            " in topic: " << topic_ <<
-            ".");
+                " in topic: " << topic_ <<
+                ".");
     }
     else
     {
         logUser(
             DDSROUTER_ECHO_DATA,
             "In Endpoint: " << data->source_guid <<
-            " from Participant: " << data->participant_receiver <<
-            " in topic: " << topic_ <<
-            " payload received: " << data->payload <<
-            ".");
+                " from Participant: " << data->participant_receiver <<
+                " in topic: " << topic_ <<
+                " payload received: " << data->payload <<
+                ".");
     }
 
     return utils::ReturnCode::RETCODE_OK;

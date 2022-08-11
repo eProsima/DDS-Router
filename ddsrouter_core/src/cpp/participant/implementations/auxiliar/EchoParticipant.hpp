@@ -43,7 +43,8 @@ public:
     types::ParticipantKind kind() const noexcept override;
 
     //! Print discovery information from endpoint discovered
-    void echo_discovery(types::Endpoint endpoint_discovered) const noexcept;
+    void echo_discovery(
+            types::Endpoint endpoint_discovered) const noexcept;
 
     //! Override create_writer() IParticipant method
     std::shared_ptr<IWriter> create_writer(
