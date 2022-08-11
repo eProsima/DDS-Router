@@ -30,4 +30,4 @@ Next release will include the following **major changes**:
 
 Next release will include the following **performance improvements**:
 
-* No locking in the :code:`Track` hot-path so transmission is executed faster.
+* No locking in the :code:`Track` hot-path.
