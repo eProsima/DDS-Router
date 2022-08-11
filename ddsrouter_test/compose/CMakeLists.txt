@@ -19,6 +19,7 @@ set(TESTS
     tcp
     udp
     discovery_server
+    ros2_services
 )
 
 foreach(TEST ${TESTS})
@@ -29,9 +30,16 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docker-compose.sh
         ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
         COPYONLY)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/execute_and_validate_subscriber.py
-        ${CMAKE_CURRENT_BINARY_DIR}/execute_and_validate_subscriber.py
-        COPYONLY)
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/execute_and_validate_subscriber.py
+#         ${CMAKE_CURRENT_BINARY_DIR}/execute_and_validate_subscriber.py
+#         COPYONLY)
+
+file(
+    COPY
+        ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+    DESTINATION
+        ${CMAKE_CURRENT_BINARY_DIR}
+    )
 
 find_program (BASH_PROGRAM bash)
 
