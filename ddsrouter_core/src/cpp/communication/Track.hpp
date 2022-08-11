@@ -102,75 +102,44 @@ protected:
      * WORKAROUND:
      * A problem has been found in the use of Track within FastDDS Readers:
      * the on_data_available callback is called with the Reader mutex taken, so it may occur a deadlock while
-     * reading a data and receiving it at the same time from different threads, and this is a scenario that
-     * could happen with this design.
+     * reading a data and receiving it at the same time from different threads if on_data_available and read
+     * methods share a mutex.
      *
      * In order to avoid this deadlock, there is a DataAvailableStatus enumeration setting the status
      * of the data taking into account the Listener(listen) update and the Track(read) update.
+     * This enumeration works as numbers and not as enumeration (could be seen as a collection of constexpr)
      *
-     * The main point is to not have any mutex taken while take method is called in the Reader, but a mutex could
-     * be used to guard the access to the actual Track data available status.
+     * The main point is to not have to tak any mutex in on_data_available neither in read.
      */
     //! Status of the data available in the Track's Reader
-    enum class DataAvailableStatus
+    enum DataAvailableStatus
     {
-        new_data_arrived,   //! Listener has announced that new data has arrived
-        transmitting_data,  //! Track is taking data from the Reader, so it could or could not be data
-        no_more_data,       //! Track has announced that Reader has no more data, and Listener has not notified new data
+        no_more_data = 0,               //! Track has announced that Reader has no more data
+        transmitting_data = 1,          //! Track is taking data from the Reader, so it could or could not be data
+        new_data_arrived = 2 /* >2 */,  //! Listener has announced that new data has arrived
     };
 
     /**
      * Callback that will be called by the reader in case there is available data to be forwarded.
      *
-     * This method is sent to the Reader so it could call it when there is new data.
+     * This method is registered in the Reader so it could call it when there is new data.
      *
-     * This method will set the variable \c data_available_status_ to \c new_data_arrived and awake the transmit thread.
-     * If Track is disabled, the callback will be lost.
+     * This method will add the variable \c data_available_status_ in \c new_data_arrived .
+     * It will emit a task to execute transmit in a different thread if there was no previous thread before.
      */
     void data_available_() noexcept;
 
     /**
-     * @brief Whether there is data waiting to be taken in the Reader
-     *
-     * The times there is data is when \c data_available_status_ is set as \c new_data_arrived or \c transmitting_data
-     *
-     * @return true if there is available data
-     * @return false otherwise
-     */
-    bool is_data_available_() const noexcept;
-
-    /**
-     * Callback that will be called when there is no more data available to be forwarded.
-     *
-     * @note: this method is called from the Track after receiving a NO_DATA from Reader. But during the time to
-     * set \c data_available_status_ the Listener could notify new data (it is not possible to guard this
-     * behaviour as no shared mutex could be locked in transmit and listen because of FastDDS Reader mutex taken
-     * while \c on_data_available callback). If this happens, it should not be set as NO_DATA, but as new data.
-     * If this happens, the transmit thread will stop transmit loop, it will arrive to wait and it will automatically
-     * exit it as there is actual data to be sent, so there is no case where it gets stopped with new data available.
-     */
-    void no_more_data_available_() noexcept;
-
-    /**
-     * Whether this Track is enabled
+     * Whether this Track is enabled and should not exit.
      *
      * This method does not lock a mutex as it only acces atomic values to read them.
      */
     bool should_transmit_() noexcept;
 
     /**
-     * Main function of Track.
-     * It waits for data to be available
-     * Once there is data available, call \c transmit_ till there is no data to be forwarded, and turn back to read
-     *
-     * Transmission is not executed in case track must be terminated or is not enabled.
-     */
-    void transmit_thread_function_() noexcept;
-
-    /**
      * Take data from the Reader \c source and send this data through every writer in \c targets .
      *
-     * When no more data is available, call \c no_more_data_available_ and exit.
+     * When no more data is available, set \c data_available_status_ as \c no_more_data .
      *
      * It could exit without having finished transmitting all the data if track should terminate or track becomes
      * disabled.
@@ -226,18 +195,16 @@ protected:
      * Current status of the data available
      *
      * There are 3 states:
-     * \c DataAvailableStatus::new_data_arrived  : Reader Listener has notified that there are new data
-     * \c DataAvailableStatus::transmitting_data : Track is currently taking data, so there may or may not be data available
-     * \c DataAvailableStatus::no_more_data      : Track has received a NO_DATA from Reader
+     * \c 0 no_more_data      : Track has received a NO_DATA from Reader and no data has been set from on_data_available
+     * \c 1 transmitting_data : Track is currently taking data, so there may or may not be data available
+     * \c >1 new_data_arrived  : Reader Listener has notified that there are new data
      *
-     * This variable is protected by \c data_available_mutex_
+     * This variable does not need to be protected as it is atomic.
      */
-    std::atomic<DataAvailableStatus> data_available_status_;
-
-    std::mutex data_available_status_mutex_;
+    std::atomic<unsigned int> data_available_status_;
 
     /**
-     * Mutex to guard while the Track is sending a message.
+     * Mutex to guard while the Track is sending a message so it could not be disabled.
      */
     std::mutex on_transmission_mutex_;
 

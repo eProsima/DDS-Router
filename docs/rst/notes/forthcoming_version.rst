@@ -27,3 +27,7 @@ Next release will include the following **major changes**:
 
 * ``wan`` Participant Kind uses now Initial Peers Discovery Protocol, while Discovery Server
   requires a new Participant Kind ``wan-discovery-server``.
+
+Next release will include the following **performance improvements**:
+
+* No locking in the :code:`Track` hot-path.

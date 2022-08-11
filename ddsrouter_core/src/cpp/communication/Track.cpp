@@ -135,7 +135,7 @@ void Track::disable() noexcept
 
 bool Track::should_transmit_() noexcept
 {
-    return !exit_ && enabled_ && this->is_data_available_();
+    return !exit_ && enabled_;
 }
 
 void Track::data_available_() noexcept
@@ -145,25 +145,17 @@ void Track::data_available_() noexcept
     {
         logDebug(DDSROUTER_TRACK, "Track " << *this << " has data ready to be sent.");
 
-        // Lock data_available_status_mutex_ to avoid changing the status while it is being checked
-        std::lock_guard<std::mutex> lock(data_available_status_mutex_);
+        // Get previous status and set current one to >=2 (it it was already >=2 it will keep being >2)
+        unsigned int previous_status = data_available_status_.fetch_add(DataAvailableStatus::new_data_arrived);
 
-        // This method will always be called from the Reader thread, so it is safe to set the status
-        DataAvailableStatus current_status = data_available_status_.exchange(DataAvailableStatus::new_data_arrived);
-
-        if (current_status == DataAvailableStatus::no_more_data)
+        if (previous_status == DataAvailableStatus::no_more_data)
         {
-            // Only send the callback to thread pool if it was not running
+            // no_more_data was set as current status, so no thread was running
+            // (and will not start as 2 is set as new current status)
             thread_pool_->emit(transmit_task_id_);
             logDebug(DDSROUTER_TRACK, "Track " << *this << " send callback to queue.");
         }
     }
-}
-
-bool Track::is_data_available_() const noexcept
-{
-    return data_available_status_ == DataAvailableStatus::new_data_arrived ||
-           data_available_status_ == DataAvailableStatus::transmitting_data;
 }
 
 void Track::transmit_() noexcept
@@ -180,7 +172,8 @@ void Track::transmit_() noexcept
     while (should_transmit_())
     {
         // It starts transmitting, so it sets the data available status as transmitting
-        data_available_status_ = DataAvailableStatus::transmitting_data;
+        // This will erase every previous value added in on_data_available and set 1
+        data_available_status_.store(DataAvailableStatus::transmitting_data);
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
@@ -188,21 +181,20 @@ void Track::transmit_() noexcept
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
         {
-            // Lock data_available_status_mutex_ to avoid changing the status while it is being checked
-            std::lock_guard<std::mutex> lock(data_available_status_mutex_);
-
-            // There is no more data, so finish loop and wait again for new data
-            DataAvailableStatus current_status = data_available_status_.exchange(DataAvailableStatus::no_more_data);
-            if (current_status == DataAvailableStatus::new_data_arrived)
+            // There is no more data, so reduce in 1 the status
+            unsigned int previous_status = data_available_status_.fetch_sub(DataAvailableStatus::transmitting_data);
+            if (previous_status == DataAvailableStatus::transmitting_data)
             {
-                // New data has arrived while setting no_more_data, so it should continues
-                data_available_status_.store(DataAvailableStatus::transmitting_data);
-                continue;
+                // Previous Status = 1 (transmitting => no on_data_available callback has been called)
+                // Current Status  = 0 (new callbacks will emit the task)
+                // => close this thread and keeps status as 0 so new data available emit task
+                break;
             }
             else
             {
-                // no_more_data has been set, so if any other data arrives it will send a callback to thread pool
-                break;
+                // New data has arrived while setting no_more_data, so it should continue
+                // While setting status to 1 again, the value is still >=1 so no other thread will start
+                continue;
             }
         }
         else if (!ret)
@@ -237,8 +229,6 @@ void Track::transmit_() noexcept
 
         payload_pool_->release_payload(data->payload);
     }
-
-    data_available_status_.store(DataAvailableStatus::no_more_data);
 }
 
 std::ostream& operator <<(
