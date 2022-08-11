@@ -116,7 +116,7 @@ protected:
     {
         no_more_data = 0,               //! Track has announced that Reader has no more data
         transmitting_data = 1,          //! Track is taking data from the Reader, so it could or could not be data
-        new_data_arrived = 2 /* >2 */ , //! Listener has announced that new data has arrived
+        new_data_arrived = 2 /* >2 */,  //! Listener has announced that new data has arrived
     };
 
     /**
