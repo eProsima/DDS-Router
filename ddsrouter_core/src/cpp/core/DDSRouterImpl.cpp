@@ -317,11 +317,11 @@ void DDSRouterImpl::init_participants_()
     }
 
     // If DDS Router has not two or more Participants configured, it should fail
-    if (participants_database_->size() < 2)
+    if (participants_database_->size() < 1)
     {
-        logError(DDSROUTER, "At least two Participants are required to initialize a DDS Router.");
+        logError(DDSROUTER, "At least a Participant is required to initialize a DDS Router.");
         throw utils::InitializationException(utils::Formatter()
-                      << "DDS Router requires at least 2 Participants to start.");
+                      << "DDS Router requires at least 1 Participant to start.");
     }
 }
 

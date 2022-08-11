@@ -22,20 +22,20 @@
 #
 # CMAKE OPTIONS ALLOWED
 #
-# - BUILD_TESTS             : OFF
-# - BUILD_DOCS_TESTS        : BUILD_TESTS
-# - BUILD_TOOL_TESTS         : BUILD_TESTS
-# - BUILD_LIBRARY_TESTS     : BUILD_TESTS
+# - BUILD_TESTS                 : OFF
+# - BUILD_DOCS_TESTS            : BUILD_TESTS
+# - BUILD_TOOL_TESTS            : BUILD_TESTS
+# - BUILD_LIBRARY_TESTS         : BUILD_TESTS
 #
-# - BUILD_ALL               : BUILD_TESTS
-# - BUILD_DOCS              : BUILD_DOCS_TESTS
-# - BUILD_TOOL               : ON
-# - BUILD_LIBRARY           : ON
+# - BUILD_ALL                   : BUILD_TESTS
+# - BUILD_DOCS                  : BUILD_DOCS_TESTS
+# - BUILD_TOOL                  : ON
+# - BUILD_LIBRARY               : ON
 #
-# - CODE_COVERAGE           : OFF
-# - CMAKE_BUILD_TYPE        : Release
+# - CODE_COVERAGE               : OFF
+# - CMAKE_BUILD_TYPE            : Release
 #
-# - LOG_INFO                : OFF       // TODO change LOG cmake options to make them smarter
+# - LOG_INFO                    : OFF       // TODO change LOG cmake options to make them smarter
 #
 # ARGUMENTS:
 # NONE

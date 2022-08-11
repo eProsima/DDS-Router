@@ -13,41 +13,11 @@
 # limitations under the License.
 
 ###############################################################################
-# Set settings for project ddsrouter_tool
+# Set settings for project ddsrouter_test
 ###############################################################################
 
 set(MODULE_NAME
-    ddsrouter_tool)
+    ddsrouter_test)
 
 set(MODULE_SUMMARY
-    "C++ application to run a DDS Router from a YAML configuration file.")
-
-set(MODULE_FIND_PACKAGES
-    yaml-cpp
-    fastcdr
-    fastrtps
-    ddsrouter_utils
-    ddsrouter_core
-    ddsrouter_yaml
-)
-
-set(MODULE_DEPENDENCIES
-    ${MODULE_FIND_PACKAGES})
-
-set(MODULE_THIRDPARTY_HEADERONLY
-    optionparser)
-
-set(MODULE_RESOURCES_PATH
-    "../../resources")
-
-set(MODULE_THIRDPARTY_PATH
-    "../../thirdparty")
-
-set(MODULE_LICENSE_FILE_PATH
-    "../../LICENSE")
-
-set(MODULE_VERSION_FILE_PATH
-    "../../VERSION")
-
-set(MODULE_TARGET_NAME
-    "ddsrouter")
+    "Project to run external DDS Router tests.")

@@ -1,0 +1,65 @@
+name: docker_test
+
+on:
+  workflow_dispatch:
+    inputs:
+      fastdds_branch:
+        description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+        required: true
+        default: 'master'
+      ddsrouter_branch:
+        description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
+        required: true
+        default: 'main'
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  docker_test:
+    runs-on: ubuntu-20.04
+    env:
+      DEFAULT_FASTDDS_BRANCH: 'master'
+      DEFAULT_DDSROUTER_BRANCH: 'main'
+      DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: src/DDS-Router
+
+      # Install colcon and required packages
+      - name: Install apt packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
+
+      - name: Install Python packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
+
+      - name: Build DDS Router Docker image
+        run: |
+          cd src/DDS-Router/.github/docker
+          docker build \
+            --no-cache \
+            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
+            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.DEFAULT_DDSROUTER_BRANCH }} \
+            -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
+            -f Dockerfile .
+
+      - name: Check if Docker image exists
+        run: |
+          [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
+
+      - name: Run tests
+        run: |
+          export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
+          colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
+          colcon test \
+            --packages-select ddsrouter_test \
+            --event-handlers console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
