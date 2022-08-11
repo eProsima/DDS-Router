@@ -22,6 +22,7 @@
 #include <ddsrouter_utils/Log.hpp>
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 #include <core/ParticipantFactory.hpp>
@@ -51,13 +52,27 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             // BlankParticipant
             return std::make_shared<BlankParticipant>(participant_configuration->id);
 
-        case ParticipantKind::echo:
-            // EchoParticipant
-            return std::make_shared<EchoParticipant>(participant_configuration, payload_pool, discovery_database);
-
         case ParticipantKind::dummy:
             // DummyParticipant
             return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
+
+        case ParticipantKind::echo:
+            // Echo Participant
+        {
+            std::shared_ptr<configuration::EchoParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<configuration::EchoParticipantConfiguration>(
+                participant_configuration);
+            if (!conf_)
+            {
+                throw utils::ConfigurationException(
+                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
+                              " is not for Participant Kind: " << participant_configuration->kind);
+            }
+
+            return std::make_shared<EchoParticipant> (
+                conf_,
+                discovery_database);
+        }
 
         case ParticipantKind::simple_rtps:
             // Simple RTPS Participant

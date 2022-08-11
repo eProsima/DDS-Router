@@ -55,6 +55,11 @@ constexpr const char* PARTICIPANT_NAME_TAG("name");   //! Participant Name
 constexpr const char* COLLECTION_PARTICIPANTS_TAG("participants"); //! TODO: add comment
 constexpr const char* IS_REPEATER_TAG("repeater");   //! Is participant a repeater
 
+// Echo related tags
+constexpr const char* ECHO_DATA_TAG("data");            //! Echo Data received
+constexpr const char* ECHO_DISCOVERY_TAG("discovery");  //! Echo Discovery received
+constexpr const char* ECHO_VERBOSE_TAG("verbose");      //! Echo in verbose mode
+
 // RTPS related tags
 // Simple RTPS related tags
 constexpr const char* DOMAIN_ID_TAG("domain"); //! Domain Id of the participant

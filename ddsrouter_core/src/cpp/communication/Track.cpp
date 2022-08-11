@@ -177,6 +177,7 @@ void Track::transmit_() noexcept
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
+        data->participant_receiver = reader_participant_id_;
         utils::ReturnCode ret = reader_->take(data);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
