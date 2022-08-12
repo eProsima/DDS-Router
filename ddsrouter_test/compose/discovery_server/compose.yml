@@ -60,7 +60,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 250 -s 30 -d 1
+    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 200 -s 45 -d 1
 
   sub_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
