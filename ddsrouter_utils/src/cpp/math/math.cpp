@@ -31,6 +31,12 @@ bool is_even(
     return (number & 0x1) == 0;
 }
 
+bool is_power_of_2(
+        uint32_t number) noexcept
+{
+    return number && (!(number & (number-1)));
+}
+
 uint32_t fast_module(
         uint32_t dividend,
         uint32_t divisor) noexcept
@@ -52,9 +58,9 @@ uint32_t fast_module(
         // Optimize to 4 operations [if, if, if, and]
         return dividend & 1;
     }
-    else if (is_even(divisor))
+    else if (is_power_of_2(divisor))
     {
-        // Optimize to 6 operations [if, if, if, if(and), and]
+        // Optimize to ~6 operations [if, if, if, if(and), and]
         return dividend & (divisor - 1);
     }
     else
@@ -80,10 +86,24 @@ uint32_t fast_division(
         // Optimize to 2 operation [if, if]
         return 1;
     }
+    else if (divisor == 1)
+    {
+        // Optimize to 3 operations [if, if, if]
+        return dividend;
+    }
     else if (divisor == 2)
     {
-        // Optimize to 4 operations [if, if, if, swift]
+        // Optimize to 5 operations [if, if, if, if, swift]
         return (dividend >> 1);
+    }
+    else if (is_power_of_2(divisor))
+    {
+        while (divisor != 1)
+        {
+            dividend >>= 1;
+            divisor >>= 1;
+        }
+        return dividend;
     }
     else
     {
