@@ -26,11 +26,55 @@ namespace ddsrouter {
 namespace utils {
 namespace test {
 
-void compare_fast_module(
+uint32_t NUMBERS_TO_TEST = 1000;
+uint32_t NUMBERS_TO_TEST_SHORT = 100;
+
+bool compare_is_even(
+        uint32_t number)
+{
+    return (
+        is_even(number)
+        ==
+        number % 2 == 0);
+}
+
+bool compare_fast_module(
         uint32_t dividend,
         uint32_t divisor)
 {
-    ASSERT_EQ(fast_module(dividend, divisor), dividend % divisor) << dividend << " % " << divisor;
+    return (
+        fast_module(dividend, divisor)
+        ==
+        dividend % divisor);
+}
+
+bool compare_fast_division(
+        uint32_t dividend,
+        uint32_t divisor)
+{
+    return (
+        fast_division(dividend, divisor)
+        ==
+        dividend / divisor);
+}
+
+bool compare_arithmetic_progression_sum(
+        uint32_t lowest,
+        uint32_t interval,
+        uint32_t steps)
+{
+    uint32_t current_number = lowest;
+    uint32_t real_result = 0;
+    for (int i = 0; i < steps; ++i)
+    {
+        real_result += current_number;
+        current_number += interval;
+    }
+
+    return (
+        arithmetic_progression_sum(lowest, interval, steps)
+        ==
+        real_result);
 }
 
 } /* namespace test */
@@ -39,62 +83,66 @@ void compare_fast_module(
 } /* namespace eprosima */
 
 /**
- * Test \c is_file_accesible method
- *
- * CASES:
- * - dividend lower than divisor
- * - dividend equal to divisor
- * - divisor = 2
- * - divisor = 2^N
- * - divisor even no 2^N
- * - divisor odd
+ * Test \c is_even method
+ */
+TEST(mathTest, is_even)
+{
+    // calculate module in many cases
+    for (uint32_t number = 0; number < test::NUMBERS_TO_TEST; ++number)
+    {
+        ASSERT_TRUE(test::compare_is_even(number))
+            << number;
+    }
+}
+
+/**
+ * Test \c fast_module method
  */
 TEST(mathTest, fast_module)
 {
-    // dividend lower than divisor
+    // calculate module in many cases
+    for (uint32_t dividend = 0; dividend < test::NUMBERS_TO_TEST; ++dividend)
     {
-        test::compare_fast_module(3, 4);
-        test::compare_fast_module(0, 4);
-        test::compare_fast_module(101223, 20921341);
+        for (uint32_t divisor = 1; divisor < test::NUMBERS_TO_TEST; ++divisor)
+        {
+            ASSERT_TRUE(test::compare_fast_module(dividend, divisor))
+                << dividend << " % " << divisor;
+        }
     }
+}
 
-    // dividend equal to divisor
+/**
+ * Test \c fast_division method
+ */
+TEST(mathTest, fast_division)
+{
+    // calculate module in many cases
+    for (uint32_t dividend = 0; dividend < test::NUMBERS_TO_TEST; ++dividend)
     {
-        test::compare_fast_module(3, 3);
-        test::compare_fast_module(4, 4);
-        test::compare_fast_module(66666, 66666);
+        for (uint32_t divisor = 1; divisor < test::NUMBERS_TO_TEST; ++divisor)
+        {
+            ASSERT_TRUE(test::compare_fast_division(dividend, divisor))
+                << dividend << " % " << divisor;
+        }
     }
+}
 
-    // divisor = 2
+/**
+ * Test \c arithmetic_progression_sum method
+ */
+TEST(mathTest, arithmetic_progression_sum)
+{
+    // calculate module in many cases
+    for (uint32_t lowest = 0; lowest < test::NUMBERS_TO_TEST_SHORT; ++lowest)
     {
-        test::compare_fast_module(3, 2);
-        test::compare_fast_module(4, 2);
-        test::compare_fast_module(66666, 2);
-        test::compare_fast_module(431253426, 2);
-    }
-
-    // divisor = 2^N
-    {
-        test::compare_fast_module(3, 4);
-        test::compare_fast_module(32, 8);
-        test::compare_fast_module(66666, 128);
-        test::compare_fast_module(431253426, 2048);
-    }
-
-    // divisor even no 2^N
-    {
-        test::compare_fast_module(3, 8);
-        test::compare_fast_module(12, 10);
-        test::compare_fast_module(66666, 120);
-        test::compare_fast_module(431253426, 2040);
-    }
-
-    // divisor odd
-    {
-        test::compare_fast_module(3, 5);
-        test::compare_fast_module(12, 11);
-        test::compare_fast_module(66666, 127);
-        test::compare_fast_module(431253426, 2041);
+        for (uint32_t interval = 1; interval < test::NUMBERS_TO_TEST_SHORT; ++interval)
+        {
+            for (uint32_t steps = 1; steps < test::NUMBERS_TO_TEST_SHORT; ++steps)
+            {
+                ASSERT_TRUE(test::compare_arithmetic_progression_sum(lowest, interval, steps))
+                    << lowest << " , " << interval << " , " << steps;
+            }
+        }
     }
 }
 

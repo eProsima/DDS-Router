@@ -21,12 +21,22 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+#include <assert.h>
+
 #include <ddsrouter_utils/math/math.hpp>
+
+bool is_even(
+        uint32_t number) noexcept
+{
+    return (number & 0x1) == 0;
+}
 
 uint32_t fast_module(
         uint32_t dividend,
         uint32_t divisor) noexcept
 {
+    assert(divisor != 0);
+
     if (dividend < divisor)
     {
         // Optimize to 1 operation [if]
@@ -42,11 +52,52 @@ uint32_t fast_module(
         // Optimize to 4 operations [if, if, if, and]
         return dividend & 1;
     }
+    else if (is_even(divisor))
+    {
+        // Optimize to 6 operations [if, if, if, if(and), and]
+        return dividend & (divisor - 1);
+    }
     else
     {
-        // Optimize to 7 operations [if, if, if, -, and, -, and] in case E(n){divisor = 2^n}
-        return divisor & (divisor - 1) ? dividend % divisor : dividend& (divisor - 1);
+        // Not optimum
+        return dividend % divisor;
     }
+}
+
+uint32_t fast_division(
+        uint32_t dividend,
+        uint32_t divisor) noexcept
+{
+    assert(divisor != 0);
+
+    if (dividend < divisor)
+    {
+        // Optimize to 1 operation [if]
+        return 0;
+    }
+    else if (dividend == divisor)
+    {
+        // Optimize to 2 operation [if, if]
+        return 1;
+    }
+    else if (divisor == 2)
+    {
+        // Optimize to 4 operations [if, if, if, swift]
+        return (dividend >> 1);
+    }
+    else
+    {
+        // Not optimum
+        return dividend / divisor;
+    }
+}
+
+uint32_t arithmetic_progression_sum(
+        uint32_t lowest,
+        uint32_t interval,
+        uint32_t steps) noexcept
+{
+    return (((2 * lowest + ((steps - 1) * interval)) * steps) / 2);
 }
 
 } /* namespace utils */
