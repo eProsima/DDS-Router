@@ -85,6 +85,9 @@ DDSRouterImpl::~DDSRouterImpl()
     // Stop all communications
     stop_();
 
+    // Destroy thread pool
+    thread_pool_.reset();
+
     // Destroy Bridges, so Writers and Readers are destroyed before the Databases
     bridges_.clear();
 
@@ -230,9 +233,6 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
 
         logInfo(DDSROUTER, "Starting DDS Router.");
 
-        // Enable thread pool
-        thread_pool_->enable();
-
         activate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
     }
@@ -252,9 +252,6 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
         enabled_.store(false);
 
         logInfo(DDSROUTER, "Stopping DDS Router.");
-
-        // Disable thread pool so tasks running finish and new tasks are not taken by threads
-        thread_pool_->disable();
 
         deactivate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;

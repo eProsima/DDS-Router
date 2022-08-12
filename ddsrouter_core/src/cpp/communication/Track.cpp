@@ -49,7 +49,6 @@ Track::Track(
     , exit_(false)
     , data_available_status_(DataAvailableStatus::no_more_data)
     , thread_pool_(thread_pool)
-    , transmit_task_id_(utils::new_unique_task_id())
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
@@ -57,8 +56,7 @@ Track::Track(
     reader_->set_on_data_available_callback(std::bind(&Track::data_available_, this));
 
     // Set slot in thread pool
-    thread_pool_->slot(
-        transmit_task_id_,
+    transmit_task_id_ = thread_pool_->register_slot(
         std::bind(&Track::transmit_, this));
 
     if (enable)
