@@ -22,6 +22,7 @@
 #include <atomic>
 #include <map>
 #include <mutex>
+#include <set>
 #include <shared_mutex>
 
 #include <communication/Bridge.hpp>
@@ -30,8 +31,7 @@
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/topic/RPCTopic.hpp>
 #include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/rpc/RequestWriter.hpp>
-#include <writer/implementations/rtps/rpc/ReplyWriter.hpp>
+#include <writer/implementations/rtps/Writer.hpp>
 
 
 namespace eprosima {
@@ -58,7 +58,7 @@ public:
      *
      * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
-     * @param enable: Whether the Bridge should be initialized as enabled
+     * Always create disabled, manual enable required. First enable creates all endpoints
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
@@ -66,8 +66,7 @@ public:
             const types::RPCTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool,
-            bool enable = false);
+            std::shared_ptr<utils::SlotThreadPool> thread_pool);
 
     /**
      * @brief Destructor
@@ -93,36 +92,54 @@ public:
      */
     void disable() noexcept override;
 
-    void create_service_registry(types::ParticipantId server_participant_id);
+    void discovered_service(
+            const types::ParticipantId& server_participant_id,
+            const types::GuidPrefix& server_guid_prefix) noexcept;
+
+    void removed_service(
+            const types::ParticipantId& server_participant_id,
+            const types::GuidPrefix& server_guid_prefix) noexcept;
 
 protected:
 
-    const types::RPCTopic topic_;
+    void init_nts_(); // throws exception, caught in enable
 
-    // The id corresponds to that of the RTPS participant which discovered the server
-    std::map<types::ParticipantId, std::shared_ptr<ServiceRegistry>> service_registries_;
+    void create_proxy_server_(types::ParticipantId participant_id); // throws exception
 
-    // Map readers' GUIDs to their associated thread pool tasks, and also keep a task emission flag.
-    std::map<types::Guid, std::pair<bool, utils::TaskId>> tasks_map_;
+    void create_proxy_client_(types::ParticipantId participant_id); // throws exception
 
-    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs to
-    std::map<types::ParticipantId, std::shared_ptr<rtps::RequestWriter>> request_writers_;
-    std::map<types::ParticipantId, std::shared_ptr<rtps::ReplyWriter>> reply_writers_;
-
-    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> request_readers_;
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> reply_readers_;
-
-    //! Mutex to prevent simultaneous calls to enable and/or disable
-    std::mutex mutex_;
-
-    std::shared_timed_mutex on_transmission_mutex_;
+    void create_slot_(std::shared_ptr<rtps::Reader> reader) noexcept;
 
     void data_available_(const types::Guid& reader_guid) noexcept;
 
     void transmit_(std::shared_ptr<rtps::Reader> reader) noexcept;
 
-    void create_slot(std::shared_ptr<rtps::Reader> reader) noexcept;
+    bool servers_available_() const noexcept;
+
+    const types::RPCTopic topic_;
+
+    bool init_;
+
+    // Proxy servers endpoints
+    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> request_readers_;
+    std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> reply_writers_;
+
+    // Proxy clients endpoints
+    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> reply_readers_;
+    std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> request_writers_;
+
+    // Map readers' GUIDs to their associated thread pool tasks, and also keep a task emission flag.
+    std::map<types::Guid, std::pair<bool, utils::TaskId>> tasks_map_;
+
+    // The id corresponds to that of the RTPS participant which discovered the server
+    std::map<types::ParticipantId, std::shared_ptr<ServiceRegistry>> service_registries_;
+
+    std::map<types::ParticipantId, std::set<types::GuidPrefix>> current_servers_;
+
+    //! Mutex to prevent simultaneous calls to enable and/or disable
+    std::mutex mutex_;
+
+    std::shared_timed_mutex on_transmission_mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

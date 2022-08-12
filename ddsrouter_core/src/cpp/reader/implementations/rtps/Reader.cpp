@@ -101,14 +101,17 @@ Reader::~Reader()
 
 types::Guid Reader::guid() const noexcept
 {
-    // never nullptr (value set in construction only, and exception thrown if nullptr)
     return rtps_reader_->getGuid();
 }
 
-std::recursive_timed_mutex& Reader::get_internal_mutex() const noexcept
+RecursiveTimedMutex& Reader::get_internal_mutex() const noexcept
 {
-    // never nullptr (value set in construction only, and exception thrown if nullptr)
     return rtps_reader_->getMutex();
+}
+
+uint64_t Reader::get_unread_count() const noexcept
+{
+    return rtps_reader_->get_unread_count();
 }
 
 utils::ReturnCode Reader::take_(
@@ -117,7 +120,7 @@ utils::ReturnCode Reader::take_(
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
 
     // Check if there is data available
-    if (!(rtps_reader_->get_unread_count() > 0))
+    if (!(get_unread_count() > 0))
     {
         return utils::ReturnCode::RETCODE_NO_DATA;
     }
@@ -188,7 +191,10 @@ void Reader::enable_() noexcept
     // TODO: refactor with the transparency module
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
-    on_data_available_();
+    if (topic_.topic_reliable())
+    {
+        on_data_available_();
+    }
 }
 
 bool Reader::come_from_this_participant_(

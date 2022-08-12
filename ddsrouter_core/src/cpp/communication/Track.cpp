@@ -95,6 +95,9 @@ void Track::enable() noexcept
         logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
         enabled_ = true;
 
+        // Enable writers before reader, to avoid starting a transmission (not protected with \c track_mutex_) which may
+        // attempt to write with a yet disabled writer
+
         // Enabling writers
         for (auto& writer_it : writers_)
         {

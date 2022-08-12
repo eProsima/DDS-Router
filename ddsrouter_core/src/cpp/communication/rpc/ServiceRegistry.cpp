@@ -30,36 +30,29 @@ using namespace eprosima::ddsrouter::core::types;
 
 ServiceRegistry::ServiceRegistry(
             const RPCTopic& topic,
-            const ParticipantId& server_participant_id)
+            const ParticipantId& server_participant_id,
+            const SampleIdentity& related_sample_identity)
             : topic_(topic)
             , server_participant_id_(server_participant_id)
-            , enabled_(true)
+            , related_sample_identity_(related_sample_identity)
+            , enabled_(false)
 {
     // logDebug()
-    enable();
 }
 
 void ServiceRegistry::enable()
 {
-    std::lock_guard<std::mutex> lock(mutex_);
     enabled_ = true;
 }
 
 void ServiceRegistry::disable()
 {
-    std::lock_guard<std::mutex> lock(mutex_);
     enabled_ = false;
 }
 
-bool ServiceRegistry::enabled()
+bool ServiceRegistry::enabled() const
 {
-    std::lock_guard<std::mutex> lock(mutex_);
     return enabled_;
-}
-
-void ServiceRegistry::set_related_sample_identity_nts(const Guid& reply_reader_guid)
-{
-    related_sample_identity_.writer_guid(reply_reader_guid);;
 }
 
 SampleIdentity ServiceRegistry::related_sample_identity_nts()

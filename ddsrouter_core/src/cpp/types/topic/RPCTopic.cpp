@@ -27,11 +27,11 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-const std::string RPCTopic::request_prefix_str = "rq/";
-const std::string RPCTopic::reply_prefix_str = "rr/";
-const std::string RPCTopic::request_str = "Request";
-const std::string RPCTopic::reply_str = "Reply";
-const std::string RPCTopic::response_str = "Response";
+const std::string RPCTopic::REQUEST_PREFIX_STR = "rq/";
+const std::string RPCTopic::REPLY_PREFIX_STR = "rr/";
+const std::string RPCTopic::REQUEST_STR = "Request";
+const std::string RPCTopic::REPLY_STR = "Reply";
+const std::string RPCTopic::RESPONSE_STR = "Response";
 
 RPCTopic::RPCTopic(
         const std::string& service_name,
@@ -51,22 +51,22 @@ RPCTopic::RPCTopic(
         request_topic_ = topic;
 
         reply_topic_ = topic;
-        reply_topic_.topic_name(std::regex_replace(reply_topic_.topic_name(), std::regex(request_prefix_str), reply_prefix_str));
-        reply_topic_.topic_name(std::regex_replace(reply_topic_.topic_name(), std::regex(request_str), reply_str));
-        reply_topic_.topic_type(std::regex_replace(reply_topic_.topic_type(), std::regex(request_str), response_str));
+        reply_topic_.topic_name(std::regex_replace(reply_topic_.topic_name(), std::regex(REQUEST_PREFIX_STR), REPLY_PREFIX_STR));
+        reply_topic_.topic_name(std::regex_replace(reply_topic_.topic_name(), std::regex(REQUEST_STR), REPLY_STR));
+        reply_topic_.topic_type(std::regex_replace(reply_topic_.topic_type(), std::regex(REQUEST_STR), RESPONSE_STR));
 
-        service_name_ = std::regex_replace(topic.topic_name(), std::regex(request_prefix_str + "|" + request_str), "");
+        service_name_ = std::regex_replace(topic.topic_name(), std::regex(REQUEST_PREFIX_STR + "|" + REQUEST_STR), "");
     }
     else if (is_reply_topic(topic))
     {
         reply_topic_ = topic;
 
         request_topic_ = topic;
-        request_topic_.topic_name(std::regex_replace(request_topic_.topic_name(), std::regex(reply_prefix_str), request_prefix_str));
-        request_topic_.topic_name(std::regex_replace(request_topic_.topic_name(), std::regex(reply_str), request_str));
-        request_topic_.topic_type(std::regex_replace(request_topic_.topic_type(), std::regex(response_str), request_str));
+        request_topic_.topic_name(std::regex_replace(request_topic_.topic_name(), std::regex(REPLY_PREFIX_STR), REQUEST_PREFIX_STR));
+        request_topic_.topic_name(std::regex_replace(request_topic_.topic_name(), std::regex(REPLY_STR), REQUEST_STR));
+        request_topic_.topic_type(std::regex_replace(request_topic_.topic_type(), std::regex(RESPONSE_STR), REQUEST_STR));
 
-        service_name_ = std::regex_replace(topic.topic_name(), std::regex(reply_prefix_str + "|" + reply_str), "");
+        service_name_ = std::regex_replace(topic.topic_name(), std::regex(REPLY_PREFIX_STR + "|" + REPLY_STR), "");
     }
     else
     {
@@ -95,7 +95,7 @@ bool RPCTopic::is_request_topic(const RealTopic& topic)
     std::string topic_name = topic.topic_name();
     std::string topic_type = topic.topic_type();
 
-    return (topic_name.find(request_prefix_str) == 0) && (topic_name.rfind(request_str) + request_str.length() == topic_name.length()) && (topic_type.rfind(request_str) + request_str.length() + 1 == topic_type.length());
+    return (topic_name.find(REQUEST_PREFIX_STR) == 0) && (topic_name.rfind(REQUEST_STR) + REQUEST_STR.length() == topic_name.length()) && (topic_type.rfind(REQUEST_STR) + REQUEST_STR.length() + 1 == topic_type.length());
 }
 
 bool RPCTopic::is_reply_topic(const RealTopic& topic)
@@ -103,7 +103,7 @@ bool RPCTopic::is_reply_topic(const RealTopic& topic)
     std::string topic_name = topic.topic_name();
     std::string topic_type = topic.topic_type();
 
-    return (topic_name.find(reply_prefix_str) == 0) && (topic_name.rfind(reply_str) + reply_str.length() == topic_name.length()) && (topic_type.rfind(response_str) + response_str.length() + 1 == topic_type.length());
+    return (topic_name.find(REPLY_PREFIX_STR) == 0) && (topic_name.rfind(REPLY_STR) + REPLY_STR.length() == topic_name.length()) && (topic_type.rfind(RESPONSE_STR) + RESPONSE_STR.length() + 1 == topic_type.length());
 }
 
 bool RPCTopic::is_service_topic(const RealTopic& topic)

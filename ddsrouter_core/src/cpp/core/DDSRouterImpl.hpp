@@ -22,7 +22,6 @@
 #include <atomic>
 #include <map>
 #include <mutex>
-#include <set>
 
 #include <ddsrouter_utils/ReturnCode.hpp>
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
@@ -179,13 +178,13 @@ protected:
 
     void discovered_service_(
             const types::RPCTopic& topic,
-            const types::GuidPrefix& server_guid_prefix,
-            const types::ParticipantId& server_participant_id) noexcept;
+            const types::ParticipantId& server_participant_id,
+            const types::GuidPrefix& server_guid_prefix) noexcept;
 
     void removed_service_(
             const types::RPCTopic& topic,
-            const types::GuidPrefix& server_guid_prefix,
-            const types::ParticipantId& server_participant_id) noexcept;
+            const types::ParticipantId& server_participant_id,
+            const types::GuidPrefix& server_guid_prefix) noexcept;
 
     /**
      * @brief Method called every time a new endpoint has been discovered/updated
@@ -283,8 +282,13 @@ protected:
      */
     std::map<types::RealTopic, bool> current_topics_;
 
-    // keep track of discovered servers and their status
-    std::map<types::RPCTopic, std::pair<bool, std::map<types::ParticipantId, std::set<types::GuidPrefix>>>> current_services_;
+    /**
+     * @brief List of RPC topics discovered
+     *
+     * Every RPC topic discovered would is added to this map.
+     * If the value is true, it means this service is allowed.
+     */
+    std::map<types::RPCTopic, bool> current_services_;
 
     //! DDSRouterImpl configuration
     configuration::DDSRouterConfiguration configuration_;

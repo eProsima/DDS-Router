@@ -98,7 +98,7 @@ bool Endpoint::is_reader() const noexcept
 
 bool Endpoint::is_server_endpoint() const noexcept
 {
-    return is_reader() && RPCTopic::is_request_topic(topic_) || is_writer() && RPCTopic::is_reply_topic(topic_);
+    return (is_reader() && RPCTopic::is_request_topic(topic_)) || (is_writer() && RPCTopic::is_reply_topic(topic_));
 }
 
 Endpoint& Endpoint::operator =(

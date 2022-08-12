@@ -31,8 +31,7 @@ using namespace eprosima::ddsrouter::core::types;
 Bridge::Bridge(
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<utils::SlotThreadPool> thread_pool,
-        bool enable /* = false */)
+        std::shared_ptr<utils::SlotThreadPool> thread_pool)
     : participants_(participants_database)
     , payload_pool_(payload_pool)
     , thread_pool_(thread_pool)
@@ -40,19 +39,12 @@ Bridge::Bridge(
 {
     // logDebug(DDSROUTER_BRIDGE, "Creating Bridge " << *this << ".");
 
-    // if (enable)
-    // {
-    //     this->enable();
-    // }
-
     // logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " created.");
 }
 
 Bridge::~Bridge()
 {
     // logDebug(DDSROUTER_BRIDGE, "Destroying Bridge " << *this << ".");
-
-    // disable();
 
     // logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " destroyed.");
 }
