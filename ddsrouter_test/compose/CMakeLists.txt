@@ -15,6 +15,7 @@
 # Name of files to test
 set(TESTS
     repeater
+    repeater_tcp
     tcp
     udp
     discovery_server
