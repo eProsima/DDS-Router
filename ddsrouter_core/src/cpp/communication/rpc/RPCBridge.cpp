@@ -337,8 +337,7 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
 
             for (auto& service_registry : service_registries_)
             {
-                // TODO: Include is_repeater() condition
-                if (data->participant_receiver == service_registry.first || !service_registry.second->enabled())
+                if ((data->participant_receiver == service_registry.first && !participants_->get_participant(service_registry.first)->is_repeater()) || !service_registry.second->enabled())
                 {
                     continue;
                 }
