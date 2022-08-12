@@ -21,7 +21,7 @@
 
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <participant/implementations/rtps/CommonRTPSRouterParticipant.hpp>
+#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

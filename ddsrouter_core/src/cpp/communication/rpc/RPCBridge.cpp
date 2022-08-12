@@ -359,7 +359,7 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
                     continue;
                 }
 
-                service_registry.second->add(sequence_number, {data->receiver_participant_id, reply_related_sample_identity});
+                service_registry.second->add(sequence_number, {data->participant_receiver, reply_related_sample_identity});
             }
         }
         else if (RPCTopic::is_reply_topic(reader->topic()))
