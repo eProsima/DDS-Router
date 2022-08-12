@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_DDS_SERVICEREGISTRY_HPP_
 #define _DDSROUTERCORE_TYPES_DDS_SERVICEREGISTRY_HPP_
 
+#include <atomic>
 #include <map>
 #include <mutex>
 
@@ -42,15 +43,14 @@ public:
 
     ServiceRegistry(
             const types::RPCTopic& topic,
-            const types::ParticipantId& server_participant_id);
+            const types::ParticipantId& server_participant_id,
+            const SampleIdentity& related_sample_identity);
 
     void enable();
 
     void disable();
 
-    bool enabled();
-
-    void set_related_sample_identity_nts(const types::Guid& reply_reader_guid);
+    bool enabled() const;
 
     SampleIdentity related_sample_identity_nts();
 
@@ -72,7 +72,7 @@ protected:
 
     SampleIdentity related_sample_identity_;
 
-    bool enabled_;
+    std::atomic<bool> enabled_;
 
     std::map<SequenceNumber, std::pair<types::ParticipantId, SampleIdentity>> registry_;
 

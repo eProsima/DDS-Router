@@ -46,6 +46,7 @@ Writer::Writer(
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
+    , write_with_params_(false)
 {
     // TODO Use payload pool for this writer, so change does not need to be copied
 
@@ -138,6 +139,42 @@ Writer::~Writer()
             participant_id_ << " for topic " << topic_);
 }
 
+utils::ReturnCode Writer::write(
+        std::unique_ptr<DataReceived>& data,
+        WriteParams& wparams,
+        SequenceNumber& sequenceNumber) noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (enabled_.load())
+    {
+        write_with_params_ = true;
+        write_info_.write_params = wparams;
+
+        utils::ReturnCode ret = write_(data);
+
+        wparams = write_info_.write_params;
+        sequenceNumber = write_info_.sequence_number;
+
+        write_with_params_ = false;
+        return ret;
+    }
+    else
+    {
+        logDevError(DDSROUTER_RTPS_WRITER, "Attempt to write data from disabled Writer in topic " <<
+                topic_ << " in Participant " << participant_id_);
+        return utils::ReturnCode::RETCODE_NOT_ENABLED;
+    }
+}
+
+utils::ReturnCode Writer::write(
+        std::unique_ptr<DataReceived>& data,
+        WriteParams& wparams) noexcept
+{
+    SequenceNumber _dummy;
+    return write(data, wparams, _dummy);
+}
+
 // Specific enable/disable do not need to be implemented
 utils::ReturnCode Writer::write_(
         std::unique_ptr<DataReceived>& data) noexcept
@@ -184,7 +221,16 @@ utils::ReturnCode Writer::write_(
     }
 
     // Send data by adding it to Writer History
-    rtps_history_->add_change(new_change);
+    if (write_with_params_)
+    {
+        rtps_history_->add_change(new_change, write_info_.write_params);
+    }
+    else
+    {
+        rtps_history_->add_change(new_change);
+    }
+
+    write_info_.sequence_number = new_change->sequenceNumber;
 
     // When max history size is reached, remove oldest cache change
     if (rtps_history_->isFull())

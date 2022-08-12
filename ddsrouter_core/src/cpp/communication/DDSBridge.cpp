@@ -35,7 +35,7 @@ DDSBridge::DDSBridge(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<utils::SlotThreadPool> thread_pool,
         bool enable /* = false */)
-    : Bridge(participants_database, payload_pool, thread_pool, enable)
+    : Bridge(participants_database, payload_pool, thread_pool)
     , topic_(topic)
 {
     logDebug(DDSROUTER_DDSBRIDGE, "Creating DDSBridge " << *this << ".");

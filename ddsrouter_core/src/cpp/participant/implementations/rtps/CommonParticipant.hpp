@@ -30,11 +30,8 @@
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
-#include <communication/rpc/ServiceRegistry.hpp>
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/rpc/ReplyWriter.hpp>
-#include <writer/implementations/rtps/rpc/RequestWriter.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 
 namespace eprosima {
@@ -61,13 +58,6 @@ public:
 
     virtual ~CommonParticipant();
 
-    std::shared_ptr<rtps::RequestWriter> create_request_writer(
-            types::RPCTopic topic,
-            std::shared_ptr<ServiceRegistry> service_registry);
-
-    std::shared_ptr<rtps::ReplyWriter> create_reply_writer(
-            types::RPCTopic topic);
-
     virtual void onParticipantDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
             fastrtps::rtps::ParticipantDiscoveryInfo&& info) override;
@@ -88,13 +78,6 @@ protected:
 
     std::shared_ptr<IWriter> create_writer_(
             types::RealTopic topic) override;
-
-    std::shared_ptr<IWriter> create_request_writer_(
-            types::RPCTopic topic,
-            std::shared_ptr<ServiceRegistry> service_registry);
-
-    std::shared_ptr<IWriter> create_reply_writer_(
-            types::RPCTopic topic);
 
     std::shared_ptr<IReader> create_reader_(
             types::RealTopic topic) override;

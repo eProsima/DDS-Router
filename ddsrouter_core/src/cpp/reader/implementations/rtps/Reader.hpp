@@ -29,6 +29,7 @@
 #include <fastrtps/rtps/attributes/ReaderAttributes.h>
 #include <fastrtps/rtps/reader/RTPSReader.h>
 #include <fastrtps/rtps/reader/ReaderListener.h>
+#include <fastrtps/utils/TimedMutex.hpp>
 
 #include <reader/implementations/auxiliar/BaseReader.hpp>
 
@@ -39,6 +40,8 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
+
+using RecursiveTimedMutex = eprosima::fastrtps::RecursiveTimedMutex;
 
 /**
  * Standard RTPS Reader with less restrictive Attributes.
@@ -104,7 +107,9 @@ public:
 
     types::Guid guid() const noexcept;
 
-    std::recursive_timed_mutex& get_internal_mutex() const noexcept;
+    RecursiveTimedMutex& get_internal_mutex() const noexcept;
+
+    uint64_t get_unread_count() const noexcept;
 
 protected:
 

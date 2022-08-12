@@ -56,10 +56,14 @@ namespace ddsrouter {
 namespace core {
 namespace rtps {
 
+using WriteParams = eprosima::fastrtps::rtps::WriteParams;
+using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
+
 /**
  * Standard RTPS Writer with less restrictive Attributes.
  */
-class Writer : public BaseWriter
+class
+Writer : public BaseWriter
 {
 public:
 
@@ -92,6 +96,15 @@ public:
      * @todo Remove every change and release it in PayloadPool
      */
     virtual ~Writer();
+
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data,
+            WriteParams& wparams,
+            SequenceNumber& sequenceNumber) noexcept;
+
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data,
+            WriteParams& wparams) noexcept;
 
 protected:
 
@@ -148,7 +161,6 @@ protected:
     // TMP: until Transparency module is available
     fastrtps::WriterQos writer_qos_() noexcept;
 
-
     //! Default Cache Change Pool Configuration
     utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
 
@@ -165,6 +177,15 @@ protected:
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
     bool repeater_;
+
+    bool write_with_params_;
+
+    struct WriteInfo
+    {
+        WriteParams write_params;
+        SequenceNumber sequence_number;
+    }
+    write_info_;
 };
 
 } /* namespace rtps */
