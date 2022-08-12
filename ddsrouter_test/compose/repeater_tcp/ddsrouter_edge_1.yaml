@@ -7,7 +7,7 @@ participants:
 
   - name: Simple_Participant
     kind: local
-    domain: 0
+    domain: 1
 
   - name: Edge_1_Participant
     kind: wan
