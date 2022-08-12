@@ -54,8 +54,7 @@ public:
     Bridge(
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool,
-            bool enable = false);
+            std::shared_ptr<utils::SlotThreadPool> thread_pool);
 
     /**
      * @brief Destructor
