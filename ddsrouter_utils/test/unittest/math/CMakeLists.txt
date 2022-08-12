@@ -20,7 +20,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
+        is_even
         fast_module
+        fast_division
+        arithmetic_progression_sum
     )
 
 set(TEST_EXTRA_LIBRARIES
