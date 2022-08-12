@@ -32,7 +32,7 @@ ConsumerWaitHandler<T>::ConsumerWaitHandler(
         bool enabled /* = true */)
     : CounterWaitHandler(0, initial_value, enabled)
 {
-    logDebug(DDSROUTER_WAIT_CONSUMER, "Created Consumer Wait Handler with type " << TYPE_NAME(T) << ".");
+    logDebug(DDSROUTER_WAIT_CONSUMER, "Created Consumer Wait Handler with type <" << TYPE_NAME(T) << ">.");
 }
 
 template <typename T>

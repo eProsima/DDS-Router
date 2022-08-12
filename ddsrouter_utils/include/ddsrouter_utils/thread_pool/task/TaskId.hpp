@@ -23,8 +23,6 @@
 
 #include <ddsrouter_utils/library/library_dll.h>
 
-#include <functional>
-
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {

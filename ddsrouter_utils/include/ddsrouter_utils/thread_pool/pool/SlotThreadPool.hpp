@@ -25,6 +25,7 @@
 #include <thread>
 #include <vector>
 
+#include <ddsrouter_utils/atomic/Atomicable.hpp>
 #include <ddsrouter_utils/library/library_dll.h>
 #include <ddsrouter_utils/thread_pool/task/Task.hpp>
 #include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
@@ -53,6 +54,20 @@ class SlotThreadPool
 {
 public:
 
+    //! TODO
+    struct InternalTaskType
+    {
+        InternalTaskType(
+            Task&& task,
+            const bool is_reusable);
+
+        Task task;
+        bool is_reusable = false;
+    };
+
+    using InternalTaskMapType = std::map<TaskId, InternalTaskType>;
+    using SlotRegistryType = SharedAtomicable<InternalTaskMapType>;
+
     /**
      * @brief Construct a new Slot Thread Pool object
      *
@@ -72,25 +87,6 @@ public:
     DDSROUTER_UTILS_DllAPI ~SlotThreadPool();
 
     /**
-     * Enable Slot Thread Pool in case it is not enabled
-     * Does nothing if it is already enabled
-     */
-    DDSROUTER_UTILS_DllAPI void enable() noexcept;
-
-    /**
-     * Disable Slot Thread Pool in case it is enabled
-     * Does nothing if it is already disabled
-     *
-     * It stops all the threads running, not allowing them to take new tasks.
-     * It blocks until every thread has finished executing.
-     * It does not remove tasks from queue.
-     *
-     * @todo this is a first approach, a new design should be taken into account to not block until threads finish
-     * when disabling the thread pool, but joining them afterwards.
-     */
-    DDSROUTER_UTILS_DllAPI void disable() noexcept;
-
-    /**
      * @brief Add a task Id (that represents a registered Task) to be executed by the threads in the pool
      *
      * This add \c task_id to the queue, and the task identified will be executed by the threads in the pool.
@@ -102,6 +98,10 @@ public:
     DDSROUTER_UTILS_DllAPI void emit(
             const TaskId& task_id);
 
+    //! TODO
+    DDSROUTER_UTILS_DllAPI void emit_once(
+            Task&& task);
+
     /**
      * @brief Register a new task identified by a task Id.
      *
@@ -110,11 +110,22 @@ public:
      * @param task_id task Id that identifies the task.
      * @param task task to be registered.
      */
-    DDSROUTER_UTILS_DllAPI void slot(
-            const TaskId& task_id,
+    DDSROUTER_UTILS_DllAPI TaskId register_slot(
             Task&& task);
 
+    //! TODO
+    DDSROUTER_UTILS_DllAPI void unregister_slot(
+            const TaskId& task_id);
+
 protected:
+
+    void non_blocking_emit_(
+            const TaskId& task_id);
+
+    void register_slot_(
+            const TaskId& task_id,
+            Task&& task,
+            const bool reusable);
 
     /**
      * @brief This is the function that every thread in the pool executes.
@@ -151,12 +162,9 @@ protected:
     /**
      * @brief Map of tasks indexed by their task Id.
      *
-     * This object is protected by the \c slots_mutex_ mutex.
+     * This object is protected by its own mutex.
      */
-    std::map<TaskId, Task> slots_;
-
-    //! Protects access to \c slots_ .
-    std::mutex slots_mutex_;
+    SlotRegistryType slots_;
 
     //! Whether the object is currently enabled
     std::atomic<bool> enabled_;

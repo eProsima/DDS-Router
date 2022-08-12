@@ -28,61 +28,120 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+SlotThreadPool::InternalTaskType::InternalTaskType(
+        Task&& task,
+        const bool is_reusable)
+    : task(std::move(task))
+    , is_reusable(is_reusable)
+{
+}
+
 SlotThreadPool::SlotThreadPool(
         const uint32_t n_threads)
     : number_of_threads_(n_threads)
     , enabled_(false)
 {
     logDebug(DDSROUTER_THREAD_POOL, "Creating Thread Pool with " << n_threads << " threads.");
+
+    // Execute threads
+    for (uint32_t i = 0; i < number_of_threads_; ++i)
+    {
+        threads_.emplace_back(
+            CustomThread(
+                std::bind(&SlotThreadPool::thread_routine_, this)));
+    }
 }
 
 SlotThreadPool::~SlotThreadPool()
 {
-    disable();
-    // Disable queue in case it has not been stopped yet.
     task_queue_.disable();
 
     for (auto& thread : threads_)
     {
         thread.join();
     }
-}
 
-void SlotThreadPool::enable() noexcept
-{
-    if (!enabled_.exchange(true))
-    {
-        // Execute threads
-        for (uint32_t i = 0; i < number_of_threads_; ++i)
-        {
-            threads_.emplace_back(
-                CustomThread(
-                    std::bind(&SlotThreadPool::thread_routine_, this)));
-        }
-    }
-}
-
-void SlotThreadPool::disable() noexcept
-{
-    if (enabled_.exchange(false))
-    {
-        // Disable Task Queue, so threads will stop eventually when their current task is finished
-        task_queue_.disable();
-
-        for (auto& thread : threads_)
-        {
-            thread.join();
-        }
-
-        threads_.clear();
-    }
+    threads_.clear();
 }
 
 void SlotThreadPool::emit(
         const TaskId& task_id)
 {
+    {
+        // Lock to access the slot map
+        std::shared_lock<SlotRegistryType> lock(slots_);
+
+        // Check this Task id exists before sending it to the queue
+        auto it = slots_.find(task_id);
+
+        if (it == slots_.end())
+        {
+            throw utils::ValueNotAllowedException(STR_ENTRY << "Slot " << task_id << " not registered.");
+        }
+    }
+    non_blocking_emit_(task_id);
+}
+
+void SlotThreadPool::emit_once(
+        Task&& task)
+{
+    // Get new unique Task id
+    TaskId new_task_id = new_unique_task_id();
+
+    // Register the task
+    register_slot_(
+        new_task_id,
+        std::move(task),
+        false);
+
+    // Emit it (non blocking as we know it is already in the registry)
+    non_blocking_emit_(new_task_id);
+}
+
+TaskId SlotThreadPool::register_slot(
+        Task&& task)
+{
+    // Get new Task id
+    TaskId new_task_id = new_unique_task_id();
+
+    // Call internal register slot
+    register_slot_(new_task_id, std::move(task), true);
+
+    return new_task_id;
+}
+
+void SlotThreadPool::non_blocking_emit_(
+        const TaskId& task_id)
+{
+    task_queue_.produce(task_id);
+}
+
+void SlotThreadPool::register_slot_(
+        const TaskId& task_id,
+        Task&& task,
+        const bool reusable)
+{
     // Lock to access the slot map
-    std::lock_guard<std::mutex> lock(slots_mutex_);
+    std::unique_lock<SlotRegistryType> lock(slots_);
+
+    auto it = slots_.find(task_id);
+
+    if (it != slots_.end())
+    {
+        // TSNH
+        throw utils::ValueNotAllowedException(STR_ENTRY << "Slot " << task_id << " already exists.");
+    }
+    else
+    {
+        slots_.insert(std::make_pair(task_id, InternalTaskType(std::move(task), reusable)));
+    }
+}
+
+void SlotThreadPool::unregister_slot(
+        const TaskId& task_id)
+{
+    // Lock to access the slot map
+    std::unique_lock<SlotRegistryType> lock(slots_);
 
     auto it = slots_.find(task_id);
 
@@ -92,26 +151,7 @@ void SlotThreadPool::emit(
     }
     else
     {
-        task_queue_.produce(it->first);
-    }
-}
-
-void SlotThreadPool::slot(
-        const TaskId& task_id,
-        Task&& task)
-{
-    // Lock to access the slot map
-    std::lock_guard<std::mutex> lock(slots_mutex_);
-
-    auto it = slots_.find(task_id);
-
-    if (it != slots_.end())
-    {
-        throw utils::ValueNotAllowedException(STR_ENTRY << "Slot " << task_id << " already exists.");
-    }
-    else
-    {
-        slots_.insert(std::make_pair(task_id, std::move(task)));
+        slots_.erase(it);
     }
 }
 
@@ -127,21 +167,30 @@ void SlotThreadPool::thread_routine_()
             TaskId task_id = task_queue_.consume();
 
             // Lock to access the slot map
-            slots_mutex_.lock();
+            // NOTE: is done manually and not in new block with lock lock so task is executed without locking
+            slots_.lock_shared();
 
             auto it = slots_.find(task_id);
             // Check the slot is correct
             if (it == slots_.end())
             {
-                utils::tsnh(STR_ENTRY << "Slot in Queue must be stored in slots register");
+                // TSNH
+                throw utils::ValueNotAllowedException(
+                    STR_ENTRY << "Slot " << task_id << " in QueueTask must be stored in slots register.");
             }
 
-            Task& task = it->second;
+            InternalTaskType& task = it->second;
 
-            slots_mutex_.unlock();
+            slots_.unlock_shared();
 
             logDebug(DDSROUTER_THREAD_POOL, "Thread: " << std::this_thread::get_id() << " executing callback.");
-            task();
+            task.task();
+
+            // If task is not reusable, remove it from map
+            if (!task.is_reusable)
+            {
+                unregister_slot(task_id);
+            }
         }
     }
     catch (const utils::DisabledException& e)

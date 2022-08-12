@@ -23,18 +23,21 @@ set(TEST_SOURCES
         slot_thread_pool_test.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/SlotThreadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/task/TaskId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
     )
 
 set(TEST_LIST
         pool_one_thread_one_slot
         pool_one_thread_n_slots
+        pool_one_thread_n_without_slot
         pool_n_threads_one_slot
     )
 

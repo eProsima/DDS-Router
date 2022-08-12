@@ -18,7 +18,7 @@
  * This file contains class TaskId implementation.
  */
 
-#include <random>
+#include <atomic>
 
 #include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
 
@@ -26,9 +26,11 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+std::atomic<TaskId> task_id_counter_{1};
+
 TaskId new_unique_task_id()
 {
-    return static_cast<TaskId>(std::rand());
+    return task_id_counter_++;
 }
 
 } /* namespace utils */

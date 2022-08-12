@@ -33,9 +33,11 @@ namespace utils {
  * @note this first implementation only uses this class as a \c std::function<void()> for simplicity.
  * In future implementations, this could be a more complex class.
  */
-class Task : public std::function<void()>
+struct Task : public std::function<void()>
 {
     using std::function<void()>::function;
+
+    bool is_reusable_ = false;
 };
 
 } /* namespace utils */

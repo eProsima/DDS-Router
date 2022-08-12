@@ -18,6 +18,7 @@
 #include <ddsrouter_utils/wait/IntWaitHandler.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/time/Timer.hpp>
+#include <ddsrouter_utils/math/math.hpp>
 
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
 
@@ -58,21 +59,18 @@ TEST(slot_thread_pool_test, pool_one_thread_one_slot)
 {
     // Create thread_pool
     SlotThreadPool thread_pool(1);
-    thread_pool.enable();
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);
 
     // Create slot
-    TaskId task_id(27);
-    thread_pool.slot(
-        task_id,
+    TaskId task_id;
+    task_id = thread_pool.register_slot(
         [&waiter]
             ()
         {
             test::test_lambda_increase_waiter(waiter);
-        }
-        );
+        });
 
     // Emit task n times
     for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
@@ -93,7 +91,46 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
 {
     // Create thread_pool
     SlotThreadPool thread_pool(1);
-    thread_pool.enable();
+
+    // Counter Wait Handler to wait for the task to be executed and check the final value
+    eprosima::ddsrouter::event::IntWaitHandler waiter(0);
+    // Create timer to know the task has been executed in the time expected
+    eprosima::ddsrouter::utils::Timer timer;
+
+    std::vector<TaskId> task_ids(test::N_EXECUTIONS_IN_TEST);
+
+    // Create slot
+    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
+    {
+        TaskId task_id;
+        task_id = thread_pool.register_slot(
+            [&waiter, i]
+                ()
+            {
+                test::test_lambda_increase_waiter(waiter, i + 1);
+            });
+        task_ids[i] = task_id;
+    }
+
+    // Emit every task 1 time
+    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
+    {
+        thread_pool.emit(task_ids[i]);
+    }
+
+    // Wait for counter value to be M being M = N*(N+1)/2 that is the increase value that should be achieved
+    waiter.wait_greater_equal_than(arithmetic_progression_sum(1, 1, test::N_EXECUTIONS_IN_TEST));
+
+    ASSERT_EQ(waiter.get_value(), arithmetic_progression_sum(1, 1, test::N_EXECUTIONS_IN_TEST));
+}
+
+/**
+ * Emit N tasks to a ThreadPool with one thread by storing N slots.
+ */
+TEST(slot_thread_pool_test, pool_one_thread_n_without_slot)
+{
+    // Create thread_pool
+    SlotThreadPool thread_pool(1);
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);
@@ -103,27 +140,18 @@ TEST(slot_thread_pool_test, pool_one_thread_n_slots)
     // Create slot
     for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
     {
-        TaskId task_id(i);
-        thread_pool.slot(
-            task_id,
-            [&waiter, &i]
+        thread_pool.emit_once(
+            [&waiter, i]
                 ()
             {
-                test::test_lambda_increase_waiter(waiter, i);
-            }
-            );
-    }
-
-    // Emit every task 1 time
-    for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST; ++i)
-    {
-        thread_pool.emit(TaskId(i));
+                test::test_lambda_increase_waiter(waiter, i + 1);
+            });
     }
 
     // Wait for counter value to be M being M = N*(N+1)/2 that is the increase value that should be achieved
-    waiter.wait_greater_equal_than((test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
+    waiter.wait_greater_equal_than(arithmetic_progression_sum(1, 1, test::N_EXECUTIONS_IN_TEST));
 
-    ASSERT_EQ(waiter.get_value(), (test::N_EXECUTIONS_IN_TEST* (test::N_EXECUTIONS_IN_TEST + 1)) / 2);
+    ASSERT_EQ(waiter.get_value(), arithmetic_progression_sum(1, 1, test::N_EXECUTIONS_IN_TEST));
 }
 
 /**
@@ -133,7 +161,6 @@ TEST(slot_thread_pool_test, pool_n_threads_one_slot)
 {
     // Create thread_pool
     SlotThreadPool thread_pool(test::N_THREADS_IN_TEST);
-    thread_pool.enable();
 
     // Counter Wait Handler to wait for the task to be executed and check the final value
     eprosima::ddsrouter::event::IntWaitHandler waiter(0);
@@ -141,15 +168,13 @@ TEST(slot_thread_pool_test, pool_n_threads_one_slot)
     eprosima::ddsrouter::utils::Timer timer;
 
     // Create slot
-    TaskId task_id(27);
-    thread_pool.slot(
-        task_id,
+    TaskId task_id;
+    task_id = thread_pool.register_slot(
         [&waiter]
             ()
         {
             test::test_lambda_increase_waiter(waiter);
-        }
-        );
+        });
 
     // Emit task n times
     for (uint32_t i = 0; i < test::N_EXECUTIONS_IN_TEST* test::N_THREADS_IN_TEST; ++i)
@@ -173,7 +198,7 @@ int main(
         int argc,
         char** argv)
 {
-    // eprosima::ddsxrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
+    // eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
 
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
