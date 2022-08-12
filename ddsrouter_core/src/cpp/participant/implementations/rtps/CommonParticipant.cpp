@@ -54,12 +54,7 @@ CommonParticipant::~CommonParticipant()
     }
 }
 
-<<<<<<< HEAD:ddsrouter_core/src/cpp/participant/implementations/rtps/CommonParticipant.cpp
 void CommonParticipant::onParticipantDiscovery(
-=======
-template <class ConfigurationType>
-void CommonRTPSRouterParticipant<ConfigurationType>::onParticipantDiscovery(
->>>>>>> ea041a7e... Add RPC support (services):ddsrouter_core/src/cpp/participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ParticipantDiscoveryInfo&& info)
 {
@@ -243,12 +238,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         this->configuration_->is_repeater);
 }
 
-<<<<<<< HEAD:ddsrouter_core/src/cpp/participant/implementations/rtps/CommonParticipant.cpp
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
-=======
-template <class ConfigurationType>
-std::shared_ptr<IReader> CommonRTPSRouterParticipant<ConfigurationType>::create_reader_(
->>>>>>> ea041a7e... Add RPC support (services):ddsrouter_core/src/cpp/participant/implementations/rtps/impl/CommonRTPSRouterParticipant.ipp
         types::RealTopic topic)
 {
     return std::make_shared<Reader>(
