@@ -26,8 +26,10 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-struct RPCTopic
+class RPCTopic
 {
+public:
+
     RPCTopic(
             const std::string& service_name,
             const RealTopic& topic_request,
@@ -59,11 +61,11 @@ protected:
 
     RealTopic reply_topic_;
 
-    static const std::string request_prefix_str;
-    static const std::string reply_prefix_str;
-    static const std::string request_str;
-    static const std::string reply_str;
-    static const std::string response_str;
+    static const std::string REQUEST_PREFIX_STR;
+    static const std::string REPLY_PREFIX_STR;
+    static const std::string REQUEST_STR;
+    static const std::string REPLY_STR;
+    static const std::string RESPONSE_STR;
 };
 
 /**
