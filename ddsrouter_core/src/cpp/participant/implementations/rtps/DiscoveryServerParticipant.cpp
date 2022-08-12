@@ -92,6 +92,9 @@ DiscoveryServerParticipant::participant_attributes_(
                 has_listening_tcp_ipv4 = true;
 
                 std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor;
+
+                // We check if several descriptors share a WAN address.
+                // If so, we add a new port to the previously created descriptor.
                 bool same_wan_addr = false;
 
                 auto it = params.userTransports.begin();
@@ -102,13 +105,18 @@ DiscoveryServerParticipant::participant_attributes_(
 
                     if ((tmp_descriptor != nullptr) && (address.ip() == tmp_descriptor->get_WAN_address()))
                     {
+                        // Save in the new descriptor the previously added descriptor with the same WAN address
                         descriptor = tmp_descriptor;
+                        // Set that a descriptor with same WAN address was found
                         same_wan_addr = true;
+                        // Remove the previously added descriptor as this will be replaced by the same one updated with
+                        // more locators.
                         params.userTransports.erase(it);
                         break;
                     }
                 }
 
+                // Add the new locator to the descriptor if another with the same wan address was found
                 if (same_wan_addr)
                 {
                     descriptor->add_listener_port(address.port());
