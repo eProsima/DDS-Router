@@ -110,31 +110,38 @@ void RPCBridge::init_nts_()
     init_ = true;
 }
 
-void RPCBridge::create_proxy_server_nts_(ParticipantId participant_id)
+void RPCBridge::create_proxy_server_nts_(
+        ParticipantId participant_id)
 {
     std::shared_ptr<IParticipant> participant = participants_->get_participant(participant_id);
 
     // Safe casting as we are only getting RTPS participants
-    reply_writers_[participant_id] = std::static_pointer_cast<rtps::Writer>(participant->create_writer(topic_.reply_topic()));
-    request_readers_[participant_id] = std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.request_topic()));
+    reply_writers_[participant_id] =
+            std::static_pointer_cast<rtps::Writer>(participant->create_writer(topic_.reply_topic()));
+    request_readers_[participant_id] =
+            std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.request_topic()));
 
     create_slot_(request_readers_[participant_id]);
 }
 
-void RPCBridge::create_proxy_client_nts_(ParticipantId participant_id)
+void RPCBridge::create_proxy_client_nts_(
+        ParticipantId participant_id)
 {
     std::shared_ptr<IParticipant> participant = participants_->get_participant(participant_id);
 
     // Safe casting as we are only getting RTPS participants
-    request_writers_[participant_id] = std::static_pointer_cast<rtps::Writer>(participant->create_writer(topic_.request_topic()));
-    reply_readers_[participant_id] = std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.reply_topic()));
+    request_writers_[participant_id] =
+            std::static_pointer_cast<rtps::Writer>(participant->create_writer(topic_.request_topic()));
+    reply_readers_[participant_id] =
+            std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.reply_topic()));
 
     create_slot_(reply_readers_[participant_id]);
 
     // Create service registry associated to this proxy client
     SampleIdentity related_sample_identity;
     related_sample_identity.writer_guid(reply_readers_[participant_id]->guid());
-    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(topic_, participant_id, related_sample_identity);
+    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(topic_, participant_id,
+                    related_sample_identity);
 }
 
 void RPCBridge::enable() noexcept
@@ -252,13 +259,14 @@ bool RPCBridge::servers_available_() const noexcept
     {
         if (it->second.size())
         {
-           return true;
+            return true;
         }
     }
     return false;
 }
 
-void RPCBridge::data_available_(const Guid& reader_guid) noexcept
+void RPCBridge::data_available_(
+        const Guid& reader_guid) noexcept
 {
     // Only hear callback if it is enabled
     if (enabled_)
@@ -281,7 +289,8 @@ void RPCBridge::data_available_(const Guid& reader_guid) noexcept
     }
 }
 
-void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
+void RPCBridge::transmit_(
+        std::shared_ptr<rtps::Reader> reader) noexcept
 {
     // Avoid being disabled while transmitting
     std::shared_lock<std::shared_timed_mutex> lock(on_transmission_mutex_);
@@ -307,32 +316,35 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
         if (!ret)
         {
             // Error reading data
-            logWarning(DDSROUTER_RPCBRIDGE, "Error taking data at service Reader in topic " << reader->topic()
-                                                                        << ". Error code " << ret
-                                                                      << ". Skipping data and continue.");
+            logWarning(DDSROUTER_RPCBRIDGE,
+                    "Error taking data at service Reader in topic " << reader->topic()
+                                                                    << ". Error code " << ret
+                                                                    << ". Skipping data and continue.");
             continue;
         }
 
         if (RPCTopic::is_request_topic(reader->topic()))
         {
             logDebug(DDSROUTER_RPCBRIDGE,
-                "RPCBridge for service " << topic_ <<
-                " transmitting request from remote endpoint " << data->source_guid << ".");
+                    "RPCBridge for service " << topic_ <<
+                    " transmitting request from remote endpoint " << data->source_guid << ".");
 
             SampleIdentity reply_related_sample_identity = data->write_params.sample_identity();
             reply_related_sample_identity.sequence_number(data->sequenceNumber);
             if (reply_related_sample_identity == SampleIdentity::unknown())
             {
                 logWarning(DDSROUTER_RPCBRIDGE,
-                    "RPCBridge for service " << topic_ <<
-                    " received ill-formed request from remote endpoint " << data->source_guid << ". Ignoring...");
+                        "RPCBridge for service " << topic_ <<
+                        " received ill-formed request from remote endpoint " << data->source_guid << ". Ignoring...");
                 break;
             }
 
             for (auto& service_registry : service_registries_)
             {
                 // Do not send request through same participant who received it (unless repeater), or if there are no servers to process it
-                if ((data->participant_receiver == service_registry.first && !participants_->get_participant(service_registry.first)->is_repeater()) || !service_registry.second->enabled())
+                if ((data->participant_receiver == service_registry.first &&
+                        !participants_->get_participant(service_registry.first)->is_repeater()) ||
+                        !service_registry.second->enabled())
                 {
                     continue;
                 }
@@ -350,22 +362,25 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
                 if (!ret)
                 {
                     logWarning(DDSROUTER_RPCBRIDGE, "Error writting request in RPCBridge for service "
-                        << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
+                            << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
                     continue;
                 }
 
                 // Add entry to registry associated to the transmission of this request through this proxy client.
-                service_registry.second->add(sequence_number, {data->participant_receiver, reply_related_sample_identity});
+                service_registry.second->add(sequence_number, {data->participant_receiver,
+                                                               reply_related_sample_identity});
             }
         }
         else if (RPCTopic::is_reply_topic(reader->topic()))
         {
             logDebug(DDSROUTER_RPCBRIDGE,
-                "RPCBridge for service " << topic_ <<
-                " transmitting reply from remote endpoint " << data->source_guid << ".");
+                    "RPCBridge for service " << topic_ <<
+                    " transmitting reply from remote endpoint " << data->source_guid << ".");
 
             // Fetch information required for transmission; which proxy server should send it and with what parameters
-            std::pair<ParticipantId, SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(data->write_params.sample_identity().sequence_number());
+            std::pair<ParticipantId,
+                    SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(
+                data->write_params.sample_identity().sequence_number());
 
             // Not valid means:
             //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
@@ -380,11 +395,12 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
                 if (!ret)
                 {
                     logWarning(DDSROUTER_RPCBRIDGE, "Error writting reply in RPCBridge for service "
-                        << topic_ << ". Error code " << ret << ".");
+                            << topic_ << ". Error code " << ret << ".");
                 }
                 else
                 {
-                    service_registries_[reader->participant_id()]->erase(data->write_params.sample_identity().sequence_number());
+                    service_registries_[reader->participant_id()]->erase(
+                        data->write_params.sample_identity().sequence_number());
                 }
             }
         }
@@ -402,18 +418,25 @@ void RPCBridge::transmit_(std::shared_ptr<rtps::Reader> reader) noexcept
     tasks_map_[reader->guid()].first = false;
 }
 
-void RPCBridge::create_slot_(std::shared_ptr<rtps::Reader> reader) noexcept
+void RPCBridge::create_slot_(
+        std::shared_ptr<rtps::Reader> reader) noexcept
 {
     Guid reader_guid = reader->guid();
 
     reader->set_on_data_available_callback(
-                [=]() { data_available_(reader_guid); });
+        [=]()
+        {
+            data_available_(reader_guid);
+        });
 
     // Set slot in thread pool for this reader
     utils::TaskId task_id = utils::new_unique_task_id();
     thread_pool_->slot(
-            task_id,
-            [=]() { transmit_(reader); });
+        task_id,
+        [=]()
+        {
+            transmit_(reader);
+        });
     tasks_map_[reader_guid] = {false, task_id};
 }
 

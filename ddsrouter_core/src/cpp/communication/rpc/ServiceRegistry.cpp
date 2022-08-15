@@ -31,13 +31,13 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 
 ServiceRegistry::ServiceRegistry(
-            const RPCTopic& topic,
-            const ParticipantId& participant_id,
-            const SampleIdentity& related_sample_identity)
-            : topic_(topic)
-            , participant_id_(participant_id)
-            , related_sample_identity_(related_sample_identity)
-            , enabled_(false)
+        const RPCTopic& topic,
+        const ParticipantId& participant_id,
+        const SampleIdentity& related_sample_identity)
+    : topic_(topic)
+    , participant_id_(participant_id)
+    , related_sample_identity_(related_sample_identity)
+    , enabled_(false)
 {
     logDebug(DDSROUTER_SERVICEREGISTRY,
             "ServiceRegistry for service " << topic <<
@@ -65,7 +65,9 @@ SampleIdentity ServiceRegistry::related_sample_identity_nts() const noexcept
     return related_sample_identity_;
 }
 
-void ServiceRegistry::add(SequenceNumber idx, std::pair<ParticipantId, SampleIdentity> new_entry) noexcept
+void ServiceRegistry::add(
+        SequenceNumber idx,
+        std::pair<ParticipantId, SampleIdentity> new_entry) noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -73,15 +75,16 @@ void ServiceRegistry::add(SequenceNumber idx, std::pair<ParticipantId, SampleIde
     {
         // Should never occur as each sequence number associated to a write operation is unique
         logWarning(DDSROUTER_SERVICEREGISTRY,
-            "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
-            " attempting to add entry with already present SequenceNumber.");
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " attempting to add entry with already present SequenceNumber.");
         return;
     }
 
     registry_[idx] = new_entry;
 }
 
-std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(SequenceNumber idx) const noexcept
+std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(
+        SequenceNumber idx) const noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -98,7 +101,8 @@ std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(SequenceNumber idx
     return ret;
 }
 
-void ServiceRegistry::erase(SequenceNumber idx) noexcept
+void ServiceRegistry::erase(
+        SequenceNumber idx) noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 

@@ -73,7 +73,7 @@ public:
             const Guid& guid,
             const QoS& qos,
             const RealTopic& topic,
-            const ParticipantId& discoverer_participant_id=ParticipantId()) noexcept;
+            const ParticipantId& discoverer_participant_id = ParticipantId()) noexcept;
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
