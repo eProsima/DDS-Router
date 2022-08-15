@@ -63,7 +63,7 @@ using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
  * Standard RTPS Writer with less restrictive Attributes.
  */
 class
-Writer : public BaseWriter
+    Writer : public BaseWriter
 {
 public:
 
