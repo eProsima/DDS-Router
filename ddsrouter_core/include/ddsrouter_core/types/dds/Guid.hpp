@@ -37,9 +37,11 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::GUID_t::GUID_t;
 
+    //! Copy constructor
     Guid(
             const fastrtps::rtps::GUID_t& x);
 
+    //! Move constructor
     Guid(
             fastrtps::rtps::GUID_t&& x);
 

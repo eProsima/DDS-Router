@@ -79,6 +79,17 @@ public:
     bool is_topic_allowed(
             const types::RealTopic& topic) const noexcept;
 
+    /**
+     * Whether RPCTopic \c topic is allowed by the lists that constitute this object
+     *
+     * For a RPCTopic to be allowed it must:
+     * 1. Request topic allowed
+     * 2. Reply topic allowed
+     *
+     * @param topic: topic to check if it is allowed
+     *
+     * @return True if the topic is allowed, false otherwise
+     */
     bool is_service_allowed(
             const types::RPCTopic& topic) const noexcept;
 

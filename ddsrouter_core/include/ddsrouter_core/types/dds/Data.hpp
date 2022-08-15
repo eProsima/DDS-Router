@@ -49,8 +49,10 @@ struct DataReceived
     //! Id of the participant from which the Reader has received the data.
     ParticipantId participant_receiver;
 
+    //! Sequence number of the received cache change
     eprosima::fastrtps::rtps::SequenceNumber_t sequenceNumber;
 
+    //! Write params associated to the received cache change
     eprosima::fastrtps::rtps::WriteParams write_params;
 };
 

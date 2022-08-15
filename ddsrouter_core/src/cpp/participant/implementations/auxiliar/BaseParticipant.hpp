@@ -82,6 +82,11 @@ public:
      */
     types::ParticipantKind kind() const noexcept override;
 
+    /**
+     * @brief Override is_rtps_kind() IParticipant method
+     *
+     * @return whether the participant is RTPS
+     */
     bool is_rtps_kind() const noexcept override;
 
     /**
