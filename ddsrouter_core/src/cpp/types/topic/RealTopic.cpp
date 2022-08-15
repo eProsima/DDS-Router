@@ -95,7 +95,8 @@ bool RealTopic::topic_reliable() const
     return topic_reliable_;
 }
 
-void RealTopic::topic_reliable(bool new_val)
+void RealTopic::topic_reliable(
+        bool new_val)
 {
     topic_reliable_ = new_val;
 }

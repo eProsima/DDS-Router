@@ -55,13 +55,16 @@ public:
     const RealTopic& reply_topic() const;
 
     //! Whether a topic is a request topic
-    static bool is_request_topic(const RealTopic& topic);
+    static bool is_request_topic(
+            const RealTopic& topic);
 
     //! Whether a topic is a reply topic
-    static bool is_reply_topic(const RealTopic& topic);
+    static bool is_reply_topic(
+            const RealTopic& topic);
 
     //! Whether a topic is a service topic (request or reply topic)
-    static bool is_service_topic(const RealTopic& topic);
+    static bool is_service_topic(
+            const RealTopic& topic);
 
     /**
      * Minor operator

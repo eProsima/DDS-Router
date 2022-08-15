@@ -77,13 +77,17 @@ public:
     SampleIdentity related_sample_identity_nts() const noexcept;
 
     //! Add entry to the registry (if key not existing)
-    void add(SequenceNumber idx, std::pair<types::ParticipantId, SampleIdentity> new_entry) noexcept;
+    void add(
+            SequenceNumber idx,
+            std::pair<types::ParticipantId, SampleIdentity> new_entry) noexcept;
 
     //! Fetch entry from the registry. Returns dummy item if not present.
-    std::pair<types::ParticipantId, SampleIdentity> get(SequenceNumber idx) const noexcept;
+    std::pair<types::ParticipantId, SampleIdentity> get(
+            SequenceNumber idx) const noexcept;
 
     //! Remove entry from the registry (if present)
-    void erase(SequenceNumber idx) noexcept;
+    void erase(
+            SequenceNumber idx) noexcept;
 
     //! RPCTopic getter
     types::RPCTopic topic() const noexcept;
