@@ -148,14 +148,17 @@ utils::ReturnCode Writer::write(
 
     if (enabled_.load())
     {
+        // Set flag and copy parameters to object attribute
         write_with_params_ = true;
         write_info_.write_params = wparams;
 
         utils::ReturnCode ret = write_(data);
 
+        // Copy write params and sequence number to given references
         wparams = write_info_.write_params;
         sequenceNumber = write_info_.sequence_number;
 
+        // Write operation finished -> set flag to false
         write_with_params_ = false;
         return ret;
     }
@@ -230,6 +233,7 @@ utils::ReturnCode Writer::write_(
         rtps_history_->add_change(new_change);
     }
 
+    // Copy sequence number of write operation to object attribute
     write_info_.sequence_number = new_change->sequenceNumber;
 
     // When max history size is reached, remove oldest cache change

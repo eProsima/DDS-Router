@@ -28,12 +28,11 @@ namespace ddsrouter {
 namespace core {
 
 /**
- * Bridge object manages the communication of a DDS Topic (or \c RealTopic ).
- * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
+ * Bridge object manages the communication of a DDS Topic (\c RealTopic or \c RPCTopic).
+ * It could be seen as a channel of communication as a DDS Topic, with several Participants that
  * could publish or subscribe in this specific Topic.
  *
- * It contains N \c Tracks that will manage each direction of the communication,
- * being N the number of Participants of this communication channel.
+ * It is implemented by \c DDSBridge and \c RPCBridge , which handle \c RealTopic and \c RPCTopic , respectively.
  */
 class Bridge
 {
@@ -42,14 +41,12 @@ public:
     /**
      * Bridge constructor by required values
      *
-     * In Bridge construction, the inside \c Tracks are created.
-     * In Bridge construction, a Writer and a Reader are created for each Participant.
-     *
-     * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
-     * @param enable: Whether the Bridge should be initialized as enabled
+     * @param payload_pool: Payload Pool that handles the reservation/release of payloads throughout the DDS Router
+     * @param thread_pool: Shared pool of threads in charge of data transmission.
      *
-     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
+     * @note Always created disabled. Enable in children constructors if needed.
+     *
      */
     Bridge(
             std::shared_ptr<ParticipantsDatabase> participants_database,
@@ -57,41 +54,24 @@ public:
             std::shared_ptr<utils::SlotThreadPool> thread_pool);
 
     /**
-     * @brief Destructor
-     *
-     * Before deleting, it calls \c disable.
-     * It deletes all the tracks created and all Writers and Readers.
-     */
-    virtual ~Bridge();
-
-    /**
-     * Enable bridge in case it is not enabled
-     * Does nothing if it is already enabled
-     *
-     * Thread safe
+     * Enable bridge
      */
     virtual void enable() noexcept = 0;
 
     /**
-     * Disable bridge in case it is not enabled
-     * Does nothing if it is disabled
-     *
-     * Thread safe
+     * Disable bridge
      */
     virtual void disable() noexcept = 0;
 
 protected:
 
-    /**
-     * Collection of Participants to manage communication between
-     *
-     * @note: This variable is only used at destruction time
-     */
+    //! Collection of Participants to manage communication
     const std::shared_ptr<ParticipantsDatabase> participants_;
 
     //! Common shared payload pool
     std::shared_ptr<PayloadPool> payload_pool_;
 
+    //! Common shared thread pool
     std::shared_ptr<utils::SlotThreadPool> thread_pool_;
 
     //! Whether the Bridge is currently enabled

@@ -63,6 +63,7 @@ public:
      */
     virtual types::ParticipantKind kind() const noexcept = 0;
 
+    //! Whether this participant is RTPS
     virtual bool is_rtps_kind() const noexcept = 0;
 
     /**

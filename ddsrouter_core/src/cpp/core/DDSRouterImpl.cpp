@@ -187,8 +187,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             discovered_topic_(topic);
         }
 
-        // Check every service discovered and create/activate/deactivate it if needed.
-        // Create service registries as well if required and not created yet
+        // Check every service discovered and activate/deactivate it if needed.
         for (auto& service_it : current_services_)
         {
             if (allowed_topics_.is_service_allowed(service_it.first))

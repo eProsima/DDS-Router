@@ -20,7 +20,7 @@
 #include <regex>
 
 #include <ddsrouter_core/types/topic/RPCTopic.hpp>
-// #include <ddsrouter_utils/exception/UnsupportedException.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -70,8 +70,8 @@ RPCTopic::RPCTopic(
     }
     else
     {
-        // tsnh or throw exception
-        std::cout << "Error" << std::endl;
+        utils::tsnh(
+                utils::Formatter() << "Attempting to create RPCTopic from invalid topic.");
     }
 }
 
