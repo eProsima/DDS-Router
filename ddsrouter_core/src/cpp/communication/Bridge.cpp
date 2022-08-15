@@ -37,16 +37,6 @@ Bridge::Bridge(
     , thread_pool_(thread_pool)
     , enabled_(false)
 {
-    // logDebug(DDSROUTER_BRIDGE, "Creating Bridge " << *this << ".");
-
-    // logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " created.");
-}
-
-Bridge::~Bridge()
-{
-    // logDebug(DDSROUTER_BRIDGE, "Destroying Bridge " << *this << ".");
-
-    // logDebug(DDSROUTER_BRIDGE, "Bridge " << *this << " destroyed.");
 }
 
 } /* namespace core */

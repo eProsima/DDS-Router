@@ -176,11 +176,32 @@ protected:
     void discovered_topic_(
             const types::RealTopic& topic) noexcept;
 
+    /**
+     * @brief Method called every time a new endpoint (corresponding to a server) has been discovered/updated
+     *
+     * This method is called with the topic of a new/updated \c Endpoint discovered.
+     * If the DDSRouterImpl is enabled and no bridge exists, the new RPCBridge is created (and enabled if allowed).
+     *
+     * @note This is the only method that adds topics to \c current_services_
+     *
+     * @param [in] topic : topic discovered
+     * @param [in] server_participant_id : id of participant discovering server
+     * @param [in] server_guid_prefix : GUID Prefix of discovered server
+     */
     void discovered_service_(
             const types::RPCTopic& topic,
             const types::ParticipantId& server_participant_id,
             const types::GuidPrefix& server_guid_prefix) noexcept;
 
+    /**
+     * @brief Method called every time a new endpoint (corresponding to a server) has been removed/dropped
+     *
+     * This method is called with the topic of a removed/dropped \c Endpoint.
+     *
+     * @param [in] topic : topic discovered
+     * @param [in] server_participant_id : id of participant discovering server
+     * @param [in] server_guid_prefix : GUID Prefix of discovered server
+     */
     void removed_service_(
             const types::RPCTopic& topic,
             const types::ParticipantId& server_participant_id,
@@ -196,11 +217,16 @@ protected:
     void discovered_endpoint_(
             const types::Endpoint& endpoint) noexcept;
 
+    /**
+     * @brief Method called every time a new endpoint has been removed/dropped
+     *
+     * @param [in] endpoint : endpoint removed/dropped
+     */
     void removed_endpoint_(
             const types::Endpoint& endpoint) noexcept;
 
     /**
-     * @brief Create a new \c Bridge object
+     * @brief Create a new \c DDSBridge object
      *
      * It is created enabled if the DDSRouterImpl is enabled.
      *
@@ -210,6 +236,13 @@ protected:
             const types::RealTopic& topic,
             bool enabled = false) noexcept;
 
+    /**
+     * @brief Create a new \c RPCBridge object
+     *
+     * It is always created disabled.
+     *
+     * @param [in] topic : new topic
+     */
     void create_new_service(
             const types::RPCTopic& topic) noexcept;
 
@@ -272,6 +305,7 @@ protected:
     //! Map of bridges indexed by their topic
     std::map<types::RealTopic, std::unique_ptr<DDSBridge>> bridges_;
 
+    //! Map of RPC bridges indexed by their topic
     std::map<types::RPCTopic, std::unique_ptr<RPCBridge>> rpc_bridges_;
 
     /**

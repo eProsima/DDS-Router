@@ -37,46 +37,76 @@ using SampleIdentity = eprosima::fastrtps::rtps::SampleIdentity;
 
 using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
 
+/**
+ * Class used to store the information associated to a service request, so its reply can be forwarded through the
+ * appropiate proxy server with the proper write parameters.
+ *
+ * This information is stored in a map, whose insertions and deletions are protected with a mutex.
+ * Insertions are performed every time a request is sent, and deletions after a reply has been received and forwarded.
+ *
+ * There exists a service registry per router participant.
+ *
+ */
 class ServiceRegistry
 {
 public:
 
+    /**
+     * ServiceRegistry constructor by required values
+     *
+     * @param topic: Topic (service) of which this ServiceRegistry manages communication
+     * @param participant_id: Id of participant for which this registry is created
+     * @param related_sample_identity: Proxy client identifier
+     *
+     * @note Always created disabled. It is first enabled when a server is discovered.
+     */
     ServiceRegistry(
             const types::RPCTopic& topic,
-            const types::ParticipantId& server_participant_id,
+            const types::ParticipantId& participant_id,
             const SampleIdentity& related_sample_identity);
 
-    void enable();
+    //! Enable registry
+    void enable() noexcept;
 
-    void disable();
+    //! Disable registry
+    void disable() noexcept;
 
-    bool enabled() const;
+    //! Whether the registry is enabled
+    bool enabled() const noexcept;
 
-    SampleIdentity related_sample_identity_nts();
+    SampleIdentity related_sample_identity_nts() const noexcept;
 
-    void add(SequenceNumber idx, std::pair<types::ParticipantId, SampleIdentity> new_entry);
+    //! Add entry to the registry (if key not existing)
+    void add(SequenceNumber idx, std::pair<types::ParticipantId, SampleIdentity> new_entry) noexcept;
 
-    std::pair<types::ParticipantId, SampleIdentity> get(SequenceNumber idx);
+    //! Fetch entry from the registry. Returns dummy item if not present.
+    std::pair<types::ParticipantId, SampleIdentity> get(SequenceNumber idx) const noexcept;
 
-    void erase(SequenceNumber idx);
+    //! Remove entry from the registry (if present)
+    void erase(SequenceNumber idx) noexcept;
 
-    types::RPCTopic topic();
-
-    types::ParticipantId server_participant_id();
+    //! RPCTopic getter
+    types::RPCTopic topic() const noexcept;
 
 protected:
 
+    //! RPCTopic (service) that this ServiceRegistry manages communication
     types::RPCTopic topic_;
 
-    types::ParticipantId server_participant_id_;
+    //! Id of participant for which this registry is created
+    types::ParticipantId participant_id_;
 
+    //! Proxy client identifier, required for a server to set the target of replies
     SampleIdentity related_sample_identity_;
 
+    //! Whether the registry is activated
     std::atomic<bool> enabled_;
 
+    //! Database with an entry per received request, and the information required for forwarding replies
     std::map<SequenceNumber, std::pair<types::ParticipantId, SampleIdentity>> registry_;
 
-    std::mutex mutex_;
+    //! Mutex to protect concurrent access to \c registry_
+    mutable std::mutex mutex_;
 };
 
 } /* namespace core */

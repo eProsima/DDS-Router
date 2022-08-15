@@ -20,6 +20,8 @@
 #include <regex>
 #include <string>
 
+#include <ddsrouter_utils/Log.hpp>
+
 #include <communication/rpc/ServiceRegistry.hpp>
 
 namespace eprosima {
@@ -30,70 +32,73 @@ using namespace eprosima::ddsrouter::core::types;
 
 ServiceRegistry::ServiceRegistry(
             const RPCTopic& topic,
-            const ParticipantId& server_participant_id,
+            const ParticipantId& participant_id,
             const SampleIdentity& related_sample_identity)
             : topic_(topic)
-            , server_participant_id_(server_participant_id)
+            , participant_id_(participant_id)
             , related_sample_identity_(related_sample_identity)
             , enabled_(false)
 {
-    // logDebug()
+    logDebug(DDSROUTER_SERVICEREGISTRY,
+            "ServiceRegistry for service " << topic <<
+            " created with related_sample_identity " << related_sample_identity <<
+            " in participant " << participant_id << ".");
 }
 
-void ServiceRegistry::enable()
+void ServiceRegistry::enable() noexcept
 {
     enabled_ = true;
 }
 
-void ServiceRegistry::disable()
+void ServiceRegistry::disable() noexcept
 {
     enabled_ = false;
 }
 
-bool ServiceRegistry::enabled() const
+bool ServiceRegistry::enabled() const noexcept
 {
     return enabled_;
 }
 
-SampleIdentity ServiceRegistry::related_sample_identity_nts()
+SampleIdentity ServiceRegistry::related_sample_identity_nts() const noexcept
 {
     return related_sample_identity_;
 }
 
-void ServiceRegistry::add(SequenceNumber idx, std::pair<ParticipantId, SampleIdentity> new_entry)
+void ServiceRegistry::add(SequenceNumber idx, std::pair<ParticipantId, SampleIdentity> new_entry) noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
     if (registry_.count(idx))
     {
-        // logError
-        std::cout << "Error adding entry" << std::endl;
+        // Should never occur as each sequence number associated to a write operation is unique
+        logWarning(DDSROUTER_SERVICEREGISTRY,
+            "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+            " attempting to add entry with already present SequenceNumber.");
         return;
     }
 
     registry_[idx] = new_entry;
 }
 
-std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(SequenceNumber idx)
+std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(SequenceNumber idx) const noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
     std::pair<ParticipantId, SampleIdentity> ret;
     if (registry_.count(idx))
     {
-        ret = registry_[idx];
+        ret = registry_.at(idx);
     }
     else
     {
-        // logError
-        std::cout << "Error getting entry" << std::endl;
         ret = {ParticipantId(), SampleIdentity()};
     }
 
     return ret;
 }
 
-void ServiceRegistry::erase(SequenceNumber idx)
+void ServiceRegistry::erase(SequenceNumber idx) noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
@@ -101,21 +106,11 @@ void ServiceRegistry::erase(SequenceNumber idx)
     {
         registry_.erase(idx);
     }
-    else
-    {
-        // logError
-        std::cout << "Error erasing entry" << std::endl;
-    }
 }
 
-RPCTopic ServiceRegistry::topic()
+RPCTopic ServiceRegistry::topic() const noexcept
 {
     return topic_;
-}
-
-ParticipantId ServiceRegistry::server_participant_id()
-{
-    return server_participant_id_;
 }
 
 } /* namespace core */

@@ -96,11 +96,38 @@ public:
      */
     virtual ~Writer();
 
+    /**
+     * @brief Write with parameters, and copy to \c sequenceNumber the sequence number associated to the last write operation
+     *
+     * This method calls the protected method \c writer_ to make the actual write function.
+     *
+     * Thread safe with mutex \c mutex_ .
+     *
+     * @param data : oldest data to take
+     * @param wparams : parameters to use in write operation
+     * @param sequenceNumber : reference where to copy the sequence number associated to the write operation
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
+     *
+     */
     utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams,
             SequenceNumber& sequenceNumber) noexcept;
 
+    /**
+     * @brief Write with parameters
+     *
+     * This method calls the overloaded method \c write(std::unique_ptr<types::DataReceived>&, WriteParams&, SequenceNumber&)
+     *
+     * @param data : oldest data to take
+     * @param wparams : parameters to use in write operation
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
+     *
+     */
     utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams) noexcept;
@@ -121,8 +148,8 @@ protected:
      *
      * @param data : oldest data to take
      * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
      */
     virtual utils::ReturnCode write_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
@@ -175,10 +202,16 @@ protected:
     //! Data Filter used to filter cache changes at the RTPSWriter level.
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
+    //! Whether this writer belongs to a repeater participant
     bool repeater_;
 
+    //! Whether to write with parameters given by attribute \c writer_info_
     bool write_with_params_;
 
+    /**
+     * Struct storing the sequence number associated to the last write operation, and the parameters with which to
+     * perform a write operation if flag \c write_with_params_ is set
+     */
     struct WriteInfo
     {
         WriteParams write_params;

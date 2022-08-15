@@ -87,6 +87,7 @@ public:
     //! Topic getter
     DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
 
+    //! Id of participant who discovered this endpoint
     DDSROUTER_CORE_DllAPI ParticipantId discoverer_participant_id() const noexcept;
 
     //! Whether the endpoint referenced is currently active
@@ -109,6 +110,7 @@ public:
     //! Whether the endpoint is a reader
     DDSROUTER_CORE_DllAPI bool is_reader() const noexcept;
 
+    //! Whether the endpoint belongs to a RPC server (i.e. is request reader or reply writer)
     DDSROUTER_CORE_DllAPI bool is_server_endpoint() const noexcept;
 
     //! Copy operator
@@ -136,6 +138,7 @@ protected:
     //! Whether the endpoint is currently active
     bool active_;
 
+    //! Id of participant who discovered this endpoint
     ParticipantId discoverer_participant_id_;
 
     // Allow operator << to use private variables
