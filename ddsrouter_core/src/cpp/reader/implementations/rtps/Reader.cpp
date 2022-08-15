@@ -321,7 +321,7 @@ void Reader::onNewCacheChangeAdded(
             {
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
                 logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                    "Change removed from history");
+                        "Change removed from history");
             }
         }
     }

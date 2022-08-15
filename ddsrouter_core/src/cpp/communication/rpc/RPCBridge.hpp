@@ -122,7 +122,8 @@ protected:
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
-    void create_proxy_server_nts_(types::ParticipantId participant_id);
+    void create_proxy_server_nts_(
+            types::ParticipantId participant_id);
 
     /**
      * Create a RTPS Reader in reply topic and a RTPS Writer in request topic.
@@ -132,13 +133,16 @@ protected:
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
-    void create_proxy_client_nts_(types::ParticipantId participant_id);
+    void create_proxy_client_nts_(
+            types::ParticipantId participant_id);
 
     //! Create slot in the thread pool for this reader
-    void create_slot_(std::shared_ptr<rtps::Reader> reader) noexcept;
+    void create_slot_(
+            std::shared_ptr<rtps::Reader> reader) noexcept;
 
     //! Callback to execute when a new cache change is added to this reader
-    void data_available_(const types::Guid& reader_guid) noexcept;
+    void data_available_(
+            const types::Guid& reader_guid) noexcept;
 
     /**
      * REQUEST: Take data from request \c reader and send this data through all proxy clients which are in contact
@@ -150,7 +154,8 @@ protected:
      * Finish execution when no more data is available, or bridge has been disabled (due to servers unavailability or
      * topic being blocked).
      */
-    void transmit_(std::shared_ptr<rtps::Reader> reader) noexcept;
+    void transmit_(
+            std::shared_ptr<rtps::Reader> reader) noexcept;
 
     //! Whether there are any servers in the database
     bool servers_available_() const noexcept;
