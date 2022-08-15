@@ -31,7 +31,7 @@ namespace ddsrouter {
 namespace core {
 
 /**
- * Bridge object manages the communication of a DDS Topic (or \c RealTopic ).
+ * Bridge object manages the communication of a \c RealTopic.
  * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
  * could publish or subscribe in this specific Topic.
  *
@@ -50,6 +50,8 @@ public:
      *
      * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
+     * @param payload_pool: Payload Pool that handles the reservation/release of payloads throughout the DDS Router
+     * @param thread_pool: Shared pool of threads in charge of data transmission.
      * @param enable: Whether the Bridge should be initialized as enabled
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
@@ -116,9 +118,6 @@ protected:
     //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
     std::map<types::ParticipantId, std::shared_ptr<IReader>> readers_;
 
-    // //! Whether the Bridge is currently enabled
-    // bool enabled_;
-
     //! Mutex to prevent simultaneous calls to enable and/or disable
     std::recursive_mutex mutex_;
 
@@ -129,7 +128,7 @@ protected:
 };
 
 /**
- * @brief \c Bridge to stream serialization
+ * @brief \c DDSBridge to stream serialization
  *
  * This method is merely a to_string of a Bridge definition.
  * It serialize the topic
