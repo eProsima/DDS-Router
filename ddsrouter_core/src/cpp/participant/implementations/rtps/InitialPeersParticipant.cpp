@@ -88,16 +88,48 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
             {
                 has_listening_tcp_ipv4 = true;
 
-                std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor =
-                        std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+                std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> descriptor;
 
-                descriptor->add_listener_port(address.port());
-                descriptor->set_WAN_address(address.ip());
+                // We check if several descriptors share a WAN address.
+                // If so, we add a new port to the previously created descriptor.
+                bool same_wan_addr = false;
 
-                // Enable TLS
-                if (tls_config.is_active())
+                auto it = params.userTransports.begin();
+                while (it != params.userTransports.end())
                 {
-                    tls_config.enable_tls(descriptor);
+                    std::shared_ptr<eprosima::fastdds::rtps::TCPv4TransportDescriptor> tmp_descriptor =
+                            std::dynamic_pointer_cast<eprosima::fastdds::rtps::TCPv4TransportDescriptor>(*it);
+
+                    if ((tmp_descriptor != nullptr) && (address.ip() == tmp_descriptor->get_WAN_address()))
+                    {
+                        // Save in the new descriptor the previously added descriptor with the same WAN address
+                        descriptor = tmp_descriptor;
+                        // Set that a descriptor with same WAN address was found
+                        same_wan_addr = true;
+                        // Remove the previously added descriptor as this will be replaced by the same one updated with
+                        // more locators.
+                        params.userTransports.erase(it);
+                        break;
+                    }
+                }
+
+                // Add the new locator to the descriptor if another with the same wan address was found
+                if (same_wan_addr)
+                {
+                    descriptor->add_listener_port(address.port());
+                }
+                else
+                {
+                    descriptor = std::make_shared<eprosima::fastdds::rtps::TCPv4TransportDescriptor>();
+                    descriptor->add_listener_port(address.port());
+                    descriptor->set_WAN_address(address.ip());
+
+                    // Enable TLS
+                    if (tls_config.is_active())
+                    {
+                        tls_config.enable_tls(descriptor);
+                    }
+
                 }
 
                 params.userTransports.push_back(descriptor);
