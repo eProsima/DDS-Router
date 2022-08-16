@@ -137,7 +137,7 @@ Writer::~Writer()
             participant_id_ << " for topic " << topic_);
 }
 
-utils::ReturnCode Writer::write(
+utils::ReturnCode Writer::write_with_params(
         std::unique_ptr<DataReceived>& data,
         WriteParams& wparams,
         SequenceNumber& sequenceNumber) noexcept
@@ -168,12 +168,12 @@ utils::ReturnCode Writer::write(
     }
 }
 
-utils::ReturnCode Writer::write(
+utils::ReturnCode Writer::write_with_params(
         std::unique_ptr<DataReceived>& data,
         WriteParams& wparams) noexcept
 {
     SequenceNumber _dummy;
-    return write(data, wparams, _dummy);
+    return write_with_params(data, wparams, _dummy);
 }
 
 // Specific enable/disable do not need to be implemented
@@ -237,6 +237,11 @@ utils::ReturnCode Writer::write_(
     // TODO: Data is never removed till destruction
 
     return utils::ReturnCode::RETCODE_OK;
+}
+
+types::Guid Writer::guid() const noexcept
+{
+    return rtps_writer_->getGuid();
 }
 
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept

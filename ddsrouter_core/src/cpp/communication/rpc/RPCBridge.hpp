@@ -196,6 +196,8 @@ protected:
      */
     std::shared_timed_mutex on_transmission_mutex_;
 
+    std::atomic<bool> must_enable_;
+
     // Allow operator << to use private variables
     friend std::ostream& operator <<(
             std::ostream&,

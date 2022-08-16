@@ -21,6 +21,8 @@ from rclpy.node import Node
 
 from example_interfaces.srv import AddTwoInts
 
+from utils import print_with_timestamp, sleep_random_time
+
 
 class AdditionServer(Node):
     """
@@ -37,8 +39,9 @@ class AdditionServer(Node):
             self._addition_service_callback)
 
         self.samples_replied = 0
+        self.wait_ = False
 
-        print(
+        print_with_timestamp(
             f'Server Addition created.')
 
     def _addition_service_callback(
@@ -51,13 +54,20 @@ class AdditionServer(Node):
         self.samples_replied += 1
 
         # Log server result
-        print(
+        print_with_timestamp(
             f'Request {{ {request.a} + {request.b} = {response.sum} }}')
+
+        # Sleep a minimum amount of time to simulate a long computation
+        if self.wait_:
+            sleep_random_time(0.1, 0.2)
 
         # return response
         return response
 
-    def run(self, samples):
+    def run(
+            self,
+            samples: int,
+            wait: bool):
         """
         Loop until number of samples has been replied.
 
@@ -65,8 +75,9 @@ class AdditionServer(Node):
 
         :return: True if all samples have been replied, False otherwise.
         """
-        print(
+        print_with_timestamp(
             f'Running Server Addition for {samples} samples.')
+        self.wait_ = wait
 
         while self.samples_replied < samples:
             rclpy.spin_once(self)

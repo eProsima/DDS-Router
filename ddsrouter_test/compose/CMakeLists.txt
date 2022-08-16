@@ -19,8 +19,13 @@ set(TESTS
     tcp
     udp
     discovery_server
-    ros2_services
+    ros2_services_cloud
     ros2_services_repeater
+    ros2_services_correct_target
+    ros2_services_simple
+    ros2_services_without_router
+    ros2_services_trivial
+    ros2_services_trivial_multiple
 )
 
 foreach(TEST ${TESTS})

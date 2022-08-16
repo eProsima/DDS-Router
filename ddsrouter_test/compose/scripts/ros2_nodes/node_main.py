@@ -55,6 +55,12 @@ def parse_options():
         action='store_true',
         help='Use async calls.'
     )
+    parser.add_argument(
+        '-w',
+        '--wait',
+        action='store_true',
+        help='Wait for reply or request.'
+    )
 
     return parser.parse_args()
 
@@ -75,7 +81,7 @@ def main():
         node = AdditionServer()
 
     # Run nodes until finish
-    result = node.run(args.samples)
+    result = node.run(args.samples, args.wait)
     if not result:
         exit(1)
 

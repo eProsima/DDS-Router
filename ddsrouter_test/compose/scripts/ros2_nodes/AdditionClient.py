@@ -8,6 +8,8 @@ from example_interfaces.srv import AddTwoInts
 import rclpy
 from rclpy.node import Node
 
+from utils import print_with_timestamp, sleep_random_time
+
 
 class AdditionClient(Node):
     """
@@ -26,10 +28,13 @@ class AdditionClient(Node):
         self.addition_client = self.create_client(
             AddTwoInts, 'addition_service')
 
-        print(
+        print_with_timestamp(
             f'Client Addition created.')
 
-    def run(self, samples):
+    def run(
+            self,
+            samples: int,
+            wait: bool):
         """
         Loop until number of samples has been replied.
 
@@ -37,13 +42,13 @@ class AdditionClient(Node):
 
         :return: True if all samples have been replied, False otherwise.
         """
-        print(
+        print_with_timestamp(
             f'Client waiting for server.')
         while not self.addition_client.wait_for_service(timeout_sec=1.0):
-            print(
+            print_with_timestamp(
                 f'Server not available yet...')
 
-        print(
+        print_with_timestamp(
             f'Running Client Addition for {samples} samples.')
 
         while samples > 0:
@@ -55,11 +60,15 @@ class AdditionClient(Node):
             result = self._send_request_sync(a, b)
 
             # Log result
-            print(
+            print_with_timestamp(
                 f'Result {{ {a},{b},{result} }}')
 
             # Decrement samples
             samples -= 1
+
+            # Sleep a minimum amount of time
+            if wait:
+                sleep_random_time(0.1, 0.2)
 
         return True
 
@@ -75,11 +84,11 @@ class AdditionClient(Node):
         request.a = a
         request.b = b
 
+        print_with_timestamp(
+            f'Request {{ {a},{b} }} sent, waiting for server result.')
+
         # Send request
         self.future = self.addition_client.call_async(request)
-
-        print(
-            f'Request {{ {a},{b} }} sent, waiting for server result.')
 
         # Wait for response
         rclpy.spin_until_future_complete(self, self.future)

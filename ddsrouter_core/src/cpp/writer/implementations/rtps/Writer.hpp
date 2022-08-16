@@ -111,7 +111,7 @@ public:
      * @return \c RETCODE_ERROR if error occurred
      *
      */
-    utils::ReturnCode write(
+    utils::ReturnCode write_with_params(
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams,
             SequenceNumber& sequenceNumber) noexcept;
@@ -128,9 +128,12 @@ public:
      * @return \c RETCODE_ERROR if error occurred
      *
      */
-    utils::ReturnCode write(
+    utils::ReturnCode write_with_params(
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams) noexcept;
+
+    //! Get GUID of internal RTPS reader
+    types::Guid guid() const noexcept;
 
 protected:
 

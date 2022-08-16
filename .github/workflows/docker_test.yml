@@ -107,4 +107,4 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 600
+              --timeout 60

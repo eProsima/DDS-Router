@@ -75,7 +75,8 @@ def _client_command(args):
     command = [
         'python3', args.exe,
         '--client',
-        '--samples', str(args.samples)]
+        '--samples', str(args.samples),
+        '--wait']
 
     return command
 
@@ -95,7 +96,7 @@ def _client_parse_output(stdout, stderr):
 
     # Get only lines of format "Result { x,y,z }
     filtered_lines = [
-        line[len(head_message_expected):-2]
+        line.split('$')[-1][len(head_message_expected):-2]
         for line
         in lines
         if head_message_expected in line]

@@ -50,6 +50,13 @@ RUN mkdir src && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
     cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
+    colcon build --event-handlers console_direct+ --packages-up-to fastrtps --cmake-args -DLOG_INFO=ON
+
+ARG dummy=0
+
+RUN rm -rf src/ddsrouter && \
+    cd src && git clone https://github.com/eProsima/DDS-Router ddsrouter && cd .. && \
+    cd src/ddsrouter && git checkout ${ddsrouter_branch} && git pull && cd ../.. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON
 
 COPY run.bash /root/run.bash

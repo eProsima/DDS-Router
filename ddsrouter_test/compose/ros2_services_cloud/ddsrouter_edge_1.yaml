@@ -1,9 +1,14 @@
 version: v3.0
 
+allowlist:
+  - name: "*addition_service*"
+
 participants:
 
-  - name: EchoParticipant
-    kind: echo
+  # - name: EchoParticipant
+  #   kind: echo
+  #   data: true
+  #   verbose: true
 
   - name: Simple_Participant
     kind: local
