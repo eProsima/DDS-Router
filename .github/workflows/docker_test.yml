@@ -31,6 +31,20 @@ jobs:
         with:
           path: src/DDS-Router
 
+      - name: Echo env variables
+        run: |
+          echo "--- Input Variables ---"
+          echo "github.event.inputs.fastdds_branch: ${{ github.event.inputs.fastdds_branch }}"
+          echo "github.event.inputs.ddsrouter_branch: ${{ github.event.inputs.ddsrouter_branch }}"
+
+          echo "--- Github Environment Variables ---"
+          echo "github.head_ref: ${{ github.head_ref }}"
+
+          echo "--- Environment Variables ---"
+          echo "DEFAULT_FASTDDS_BRANCH: ${{ env.DEFAULT_FASTDDS_BRANCH }}"
+          echo "DEFAULT_DDSROUTER_BRANCH: ${{ env.DEFAULT_DDSROUTER_BRANCH }}"
+          echo "DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}"
+
       # Install colcon and required packages
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -44,7 +58,7 @@ jobs:
           docker build \
             --no-cache \
             --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
-            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || env.GITHUB_REF || env.DEFAULT_DDSROUTER_BRANCH }} \
+            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || github.head_ref || env.DEFAULT_DDSROUTER_BRANCH }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
 
