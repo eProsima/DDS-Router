@@ -18,6 +18,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   docker_test:
     runs-on: ubuntu-20.04
@@ -25,6 +28,7 @@ jobs:
       DEFAULT_FASTDDS_BRANCH: 'master'
       DEFAULT_DDSROUTER_BRANCH: 'main'
       DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
+      DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "ddsrouter:ci"
     steps:
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
@@ -52,6 +56,14 @@ jobs:
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
+      # It enables the use of Vulcanexus container
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_CONTAINER_REGISTRY_TOKEN }}
+
       - name: Build DDS Router Docker image
         run: |
           cd src/DDS-Router/.github/docker
@@ -69,6 +81,7 @@ jobs:
       - name: Run tests
         run: |
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
+          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=ghcr.io/eprosima/ubuntu-vulcanexus:humble-desktop
           colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
           colcon test \
             --packages-select ddsrouter_test \
