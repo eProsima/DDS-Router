@@ -28,13 +28,16 @@ jobs:
       DEFAULT_FASTDDS_BRANCH: 'master'
       DEFAULT_DDSROUTER_BRANCH: 'main'
       DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
-      DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "ddsrouter:ci"
+      DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "vulcanexus:ci"
     steps:
+
+      # Sync current branch
       - name: Sync eProsima/DDS-Router repository
         uses: actions/checkout@v2
         with:
           path: src/DDS-Router
 
+      # Echo Env Var to debug workflow
       - name: Echo env variables
         run: |
           echo "--- Input Variables ---"
@@ -47,14 +50,6 @@ jobs:
           echo "--- Environment Variables ---"
           echo "DEFAULT_FASTDDS_BRANCH: ${{ env.DEFAULT_FASTDDS_BRANCH }}"
           echo "DEFAULT_DDSROUTER_BRANCH: ${{ env.DEFAULT_DDSROUTER_BRANCH }}"
-          echo "DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}"
-
-      # Install colcon and required packages
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
 
       # It enables the use of Vulcanexus container
       - name: Log in to the Container registry
@@ -64,24 +59,47 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_CONTAINER_REGISTRY_TOKEN }}
 
+      # Build Vulcanexus Docker image
+      - name: Build custom Vulcanexus Docker image
+        run: |
+          cd src/DDS-Router/.github/docker/vulcanexus
+          docker build \
+            --no-cache \
+            --build-arg docker_image_base=ghcr.io/eprosima/ubuntu-vulcanexus:humble-core \
+            -t ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }} \
+            -f Dockerfile .
+
+      # Build DDS Router Docker image
       - name: Build DDS Router Docker image
         run: |
-          cd src/DDS-Router/.github/docker
+          cd src/DDS-Router/.github/docker/ddsrouter
           docker build \
             --no-cache \
             --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
             --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || github.head_ref || env.DEFAULT_DDSROUTER_BRANCH }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
+          echo "DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}"
 
-      - name: Check if Docker image exists
+      # Install colcon and required apt packages
+      - name: Install apt packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
+
+      # Install colcon and required python packages
+      - name: Install Python packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
+
+      # Check Docker images exist
+      - name: Check if Docker images exist
         run: |
           [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
+          [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }})" ] || echo "Vulcanexus image does not exists"
 
+      # Run ddsrouter_test compose tests
       - name: Run tests
         run: |
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
-          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=ghcr.io/eprosima/ubuntu-vulcanexus:humble-desktop
+          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
           colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
           colcon test \
             --packages-select ddsrouter_test \
@@ -89,4 +107,4 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 60
+              --timeout 600

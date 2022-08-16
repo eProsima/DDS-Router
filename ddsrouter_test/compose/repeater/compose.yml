@@ -64,7 +64,7 @@ services:
     container_name: pub_edge_1
     networks:
       - edge_1_net
-    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 200 -s 30
+    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 200 -s 45
 
   sub_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
