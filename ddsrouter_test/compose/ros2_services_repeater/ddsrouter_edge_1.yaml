@@ -2,8 +2,8 @@ version: v3.0
 
 participants:
 
-  - name: EchoParticipant
-    kind: echo
+  # - name: EchoParticipant
+  #   kind: echo
 
   - name: Simple_Participant
     kind: local
@@ -14,4 +14,4 @@ participants:
     connection-addresses:
       - domain: ddsrouter_cloud
         port: 11666
-        transport: udp
+        transport: tcp

@@ -20,6 +20,7 @@ set(TESTS
     udp
     discovery_server
     ros2_services
+    ros2_services_repeater
 )
 
 foreach(TEST ${TESTS})

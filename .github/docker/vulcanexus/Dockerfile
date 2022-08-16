@@ -1,5 +1,5 @@
 ARG docker_image_base
-FROM docker_image_base
+FROM $docker_image_base
 
 LABEL author=javierparis@eprosima.com
 

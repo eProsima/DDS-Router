@@ -2,16 +2,16 @@ version: v3.0
 
 participants:
 
-  - name: EchoParticipant
-    kind: echo
+  # - name: EchoParticipant
+  #   kind: echo
 
   - name: Simple_Participant
     kind: local
-    domain: 1
+    domain: 2
 
-  - name: Edge_1_Participant
+  - name: Edge_2_Participant
     kind: wan
     connection-addresses:
       - domain: ddsrouter_cloud
         port: 11666
-        transport: udp
+        transport: tcp

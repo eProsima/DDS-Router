@@ -73,7 +73,7 @@ services:
       - edge_1_net
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10 --domain 1
 
   ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - edge_2_net
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10 --domain 2
 
 networks:
   edge_1_net:
