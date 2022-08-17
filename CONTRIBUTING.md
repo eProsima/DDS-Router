@@ -32,8 +32,8 @@ the code they are contributing to the project according to the
 
 ## Code Coverage
 
-All contributions to the project must increase line code coverage.
-Because of this, contributors are asked to locally run a coverage assessment that ensures that code coverage has increased when compared to the latest execution of the [nightly coverage CI job](http://jenkins.eprosima.com:8080/job/nightly_fastdds_coverage_linux/).
+All contributions to the project should increase the line code coverage whenever possible.
+Because of this, contributors are asked to locally run a coverage assessment that ensures that code coverage has increased when compared to the latest execution of the [nightly coverage CI job](https://app.codecov.io/gh/eProsima/DDS-Router).
 
 ## Issues and Support
 
