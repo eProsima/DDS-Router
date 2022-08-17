@@ -33,7 +33,7 @@ participants:
   - name: Client                                                  # 5
     kind: wan                                                     # 6
     connection-addresses:
-      - domain: 1.1.1.1
+      - domain: "server.domain.com"
         port: 11666
         transport: tcp
 
