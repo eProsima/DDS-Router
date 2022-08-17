@@ -231,3 +231,7 @@ can be run with the following command:
 ```bash
 colcon test --packages-select-regex ddsrouter --event-handler=console_direct+
 ```
+
+## Getting Help
+
+If you need support you can reach us by mail at `support@eProsima.com` or by phone at `+34 91 804 34 48`.
