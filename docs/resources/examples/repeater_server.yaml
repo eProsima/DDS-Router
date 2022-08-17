@@ -28,7 +28,7 @@ participants:
     kind: wan                                                     # 4
     repeater: true                                                # 5
     listening-addresses:
-      - ip: 1.1.1.1
+      - domain: "server.domain.com"
         port: 11666
         transport: tcp
 
