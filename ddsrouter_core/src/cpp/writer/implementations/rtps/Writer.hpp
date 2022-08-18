@@ -26,6 +26,7 @@
 #include <fastrtps/rtps/history/WriterHistory.h>
 #include <fastrtps/rtps/attributes/WriterAttributes.h>
 #include <fastrtps/rtps/writer/RTPSWriter.h>
+#include <fastrtps/rtps/writer/WriterListener.h>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
@@ -63,7 +64,7 @@ using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
  * Standard RTPS Writer with less restrictive Attributes.
  */
 class
-    Writer : public BaseWriter
+    Writer : public BaseWriter, public fastrtps::rtps::WriterListener
 {
 public:
 
@@ -131,6 +132,11 @@ public:
     utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams) noexcept;
+
+    //! Override onWriterMatched with debug proposes
+    virtual void onWriterMatched(
+            fastrtps::rtps::RTPSWriter* writer,
+            fastrtps::rtps::MatchingInfo& info) override;
 
 protected:
 

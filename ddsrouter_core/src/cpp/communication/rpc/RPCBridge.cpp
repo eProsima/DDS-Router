@@ -107,6 +107,11 @@ void RPCBridge::init_nts_()
             service_registries_[id]->enable();
         }
     }
+
+    // TODO: This should not be done
+    // Wait for the new entities created to match before sending data from one side to the other
+    // utils::sleep_for(500);
+
     init_ = true;
 }
 
@@ -271,7 +276,9 @@ void RPCBridge::data_available_(
     // Only hear callback if it is enabled
     if (enabled_)
     {
-        logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this << " has data ready to be sent.");
+        logDebug(
+            DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+                                 " has data ready to be sent in reader " << reader_guid << " .");
 
         // Protected by internal RTPS Reader mutex, as called within \c onNewCacheChangeAdded callback
 
@@ -280,11 +287,13 @@ void RPCBridge::data_available_(
         {
             thread_pool_->emit(task.second);
             task.first = true;
-            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this << " send callback to queue.");
+            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+                " - " << reader_guid << " send callback to queue.");
         }
         else
         {
-            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this << " callback NOT sent (task already queued).");
+            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+                " - " << reader_guid << " callback NOT sent (task already queued).");
         }
     }
 }
@@ -295,6 +304,9 @@ void RPCBridge::transmit_(
     // Avoid being disabled while transmitting
     std::shared_lock<std::shared_timed_mutex> lock(on_transmission_mutex_);
 
+    logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+        " transmitting for reader " << reader->guid() << " .");
+
     while (enabled_)
     {
         {
@@ -304,6 +316,10 @@ void RPCBridge::transmit_(
             {
                 // No more data to be read -> finish transmission
                 tasks_map_[reader->guid()].first = false;
+
+                logDebug(DDSROUTER_RPCBRIDGE,
+                    "RPCBridge service " << *this << " finishing transmitting because no more data available.");
+
                 return;
             }
         }
@@ -424,6 +440,9 @@ void RPCBridge::transmit_(
 
         payload_pool_->release_payload(data->payload);
     }
+
+    logDebug(DDSROUTER_RPCBRIDGE,
+        "RPCBridge service " << *this << " finishing transmitting.");
 
     // No need to take internal mutex as bridge is disabled (and cannot be enabled until \c disable releases bridge
     // mutex, which cannot occur until this thread releases transmission mutex), so \c data_available_ won't take effect
