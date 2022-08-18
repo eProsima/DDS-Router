@@ -2,9 +2,6 @@ version: v3.0
 
 participants:
 
-  - name: Echo_Participant
-    kind: echo
-
   - name: Cloud_Participant
     kind: wan
     repeater: true
