@@ -377,30 +377,42 @@ void RPCBridge::transmit_(
                     "RPCBridge for service " << topic_ <<
                     " transmitting reply from remote endpoint " << data->source_guid << ".");
 
-            // Fetch information required for transmission; which proxy server should send it and with what parameters
-            std::pair<ParticipantId,
-                    SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(
-                data->write_params.sample_identity().sequence_number());
-
-            // Not valid means:
-            //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
-            //   Case 2: (WAN Participant repeater) Request already replied by another PROXY server connected to the same participant as this one.
-            //   Case 3: (SimpleParticipant) Received reply from a server in same domain as client, thus the request was ignored and no entry was added.
-            if (registry_entry.first.is_valid())
+            // A Server could be answering a different client in this same DDS Router or a remote client
+            // Thus, it must be filtered so only replies to this client are processed.
+            if (data->write_params.sample_identity().writer_guid() != reader->guid())
             {
-                eprosima::fastrtps::rtps::WriteParams wparams;
-                wparams.related_sample_identity(registry_entry.second);
-                ret = reply_writers_[registry_entry.first]->write(data, wparams);
+                logDebug(DDSROUTER_RPCBRIDGE,
+                        "RPCBridge for service " << *this << " from reader " << reader->guid() <<
+                        " received response meant for other client: " <<
+                        data->write_params.sample_identity().writer_guid());
+            }
+            else
+            {
+                // Fetch information required for transmission; which proxy server should send it and with what parameters
+                std::pair<ParticipantId,
+                        SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(
+                    data->write_params.sample_identity().sequence_number());
 
-                if (!ret)
+                // Not valid means:
+                //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
+                //   Case 2: (WAN Participant repeater) Request already replied by another PROXY server connected to the same participant as this one.
+                //   Case 3: (SimpleParticipant) Received reply from a server in same domain as client, thus the request was ignored and no entry was added.
+                if (registry_entry.first.is_valid())
                 {
-                    logWarning(DDSROUTER_RPCBRIDGE, "Error writting reply in RPCBridge for service "
-                            << topic_ << ". Error code " << ret << ".");
-                }
-                else
-                {
-                    service_registries_[reader->participant_id()]->erase(
-                        data->write_params.sample_identity().sequence_number());
+                    eprosima::fastrtps::rtps::WriteParams wparams;
+                    wparams.related_sample_identity(registry_entry.second);
+                    ret = reply_writers_[registry_entry.first]->write(data, wparams);
+
+                    if (!ret)
+                    {
+                        logWarning(DDSROUTER_RPCBRIDGE, "Error writting reply in RPCBridge for service "
+                                << topic_ << ". Error code " << ret << ".");
+                    }
+                    else
+                    {
+                        service_registries_[reader->participant_id()]->erase(
+                            data->write_params.sample_identity().sequence_number());
+                    }
                 }
             }
         }
