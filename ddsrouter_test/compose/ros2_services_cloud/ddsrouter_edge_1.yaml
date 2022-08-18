@@ -1,16 +1,21 @@
 version: v3.0
 
+allowlist:
+  - name: "*addition_service*"
+
 participants:
 
 
+  #   data: true
+  #   verbose: true
 
   - name: Simple_Participant
     kind: local
-    domain: 0
+    domain: 1
 
-  - name: Edge_2_Participant
+  - name: Edge_1_Participant
     kind: wan
     connection-addresses:
       - domain: ddsrouter_cloud
-        port: 21666
+        port: 11666
         transport: udp

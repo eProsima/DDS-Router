@@ -1,19 +1,24 @@
 version: v3.0
 
+allowlist:
+  - name: "*addition_service*"
+
 participants:
 
 
+  #   data: true
+  #   verbose: true
 
   - name: Cloud_Participant_1
     kind: wan
     listening-addresses:
       - domain: ddsrouter_cloud
         port: 11666
-        transport: tcp
+        transport: udp
 
   - name: Cloud_Participant_2
     kind: wan
     listening-addresses:
       - domain: ddsrouter_cloud
         port: 21666
-        transport: tcp
+        transport: udp
