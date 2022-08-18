@@ -37,6 +37,9 @@ public:
     //! Using parent constructors
     using fastrtps::rtps::GUID_t::GUID_t;
 
+    //! Default constructor
+    Guid() = default;
+
     //! Copy constructor
     Guid(
             const fastrtps::rtps::GUID_t& x);
