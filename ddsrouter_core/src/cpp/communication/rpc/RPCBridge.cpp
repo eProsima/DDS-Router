@@ -285,8 +285,8 @@ void RPCBridge::data_available_(
         std::pair<bool, utils::TaskId>& task = tasks_map_[reader_guid];
         if (!task.first)
         {
-            thread_pool_->emit(task.second);
             task.first = true;
+            thread_pool_->emit(task.second);
             logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
                 " - " << reader_guid << " send callback to queue.");
         }
