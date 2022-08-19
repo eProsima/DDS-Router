@@ -2,8 +2,6 @@ version: v3.0
 
 participants:
 
-
-
   - name: Participant_1
     kind: simple
     domain: 1

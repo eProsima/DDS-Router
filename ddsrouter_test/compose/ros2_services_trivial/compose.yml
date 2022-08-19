@@ -19,7 +19,7 @@ services:
       - net_1
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 5
+    command: ddsrouter -c /config.yaml --timeout 10
 
   ser_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
@@ -32,7 +32,7 @@ services:
       - ROS_DOMAIN_ID=1
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_server.py --samples 10 --timeout 5
+    command: python3 /scripts/execute_and_validate_server.py --samples 10 --timeout 10
 
   cli_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
@@ -45,7 +45,7 @@ services:
       - ROS_DOMAIN_ID=2
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_client.py --samples 10 --timeout 5
+    command: python3 /scripts/execute_and_validate_client.py --samples 10 --timeout 10
 
 networks:
   net_1:
