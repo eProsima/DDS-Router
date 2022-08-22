@@ -20,7 +20,7 @@ set(TEST_NAME QoSTest)
 
 set(TEST_SOURCES
         QoSTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/QoS.cpp
     )
 
 set(TEST_LIST
@@ -82,7 +82,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Guid.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/GuidPrefix.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/QoS.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/QoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )

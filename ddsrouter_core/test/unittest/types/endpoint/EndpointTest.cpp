@@ -16,7 +16,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
-#include <ddsrouter_core/types/endpoint/QoS.hpp>
+#include <ddsrouter_core/types/dds/QoS.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 
 using namespace eprosima::ddsrouter::core;

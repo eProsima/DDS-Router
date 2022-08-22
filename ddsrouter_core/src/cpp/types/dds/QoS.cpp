@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter_core/types/endpoint/QoS.hpp>
+#include <ddsrouter_core/types/dds/QoS.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {

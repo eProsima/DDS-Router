@@ -21,7 +21,7 @@
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/endpoint/QoS.hpp>
+#include <ddsrouter_core/types/dds/QoS.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
 namespace eprosima {
