@@ -28,7 +28,11 @@ namespace types {
 bool QoS::operator ==(
         const QoS& other) const noexcept
 {
-    return durability_qos == other.durability_qos && reliability_qos == other.reliability_qos;
+    return
+        durability_qos == other.durability_qos &&
+        reliability_qos == other.reliability_qos &&
+        history_qos == other.history_qos &&
+        partition_qos == other.partition_qos;
 }
 
 std::ostream& operator <<(
@@ -85,9 +89,51 @@ std::ostream& operator <<(
 
 std::ostream& operator <<(
         std::ostream& os,
+        const HistoryQosPolicy& qos)
+{
+    switch (qos.kind)
+    {
+        case eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS:
+            os << "KEEP_LAST(" << qos.depth << ")";
+            break;
+
+        case eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS:
+            os << "KEEP_ALL";
+            break;
+
+        default:
+            utils::tsnh(utils::Formatter() << "Invalid Reliability Kind.");
+            break;
+    }
+
+    return os;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const PartitionQosPolicy& qos)
+{
+    os << "Partitions{";
+    for(auto& partition : qos)
+    {
+        os << partition.name() << ";";
+    }
+    os << "}";
+
+    return os;
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
         const QoS& qos)
 {
-    os << "QoS{" << qos.durability_qos << ";" << qos.reliability_qos << "}";
+    os <<
+        "QoS{" << qos.durability_qos <<
+        ";" << qos.reliability_qos <<
+        ";" << qos.history_qos <<
+        ";" << qos.partition_qos <<
+        "}";
+
     return os;
 }
 

@@ -19,6 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
 #define _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
 
+#include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/Types.h>
 
 #include <ddsrouter_core/library/library_dll.h>
@@ -34,6 +35,12 @@ using DurabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t;
 //! Reliability kind enumeration
 using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 
+//! History kind enumeration
+using HistoryQosPolicy = eprosima::fastdds::dds::HistoryQosPolicy;
+
+//! Partition configuration
+using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
+
 /**
  * Collection of attributes of an Endpoint
  */
@@ -44,7 +51,7 @@ struct DDSROUTER_CORE_DllAPI QoS
     /////////////////////////
 
     //! Default QoS with reader less restrictive parameters
-    QoS() noexcept = default;
+    QoS() = default;
 
     /////////////////////////
     // OPERATORS
@@ -63,21 +70,41 @@ struct DDSROUTER_CORE_DllAPI QoS
 
     //! Reliability kind (Default = BEST_EFFORT)
     ReliabilityKind reliability_qos = ReliabilityKind::BEST_EFFORT;
+
+    //! History Qos
+    HistoryQosPolicy history_qos = HistoryQosPolicy();
+
+    //! Partitions QoS Policy
+    PartitionQosPolicy partition_qos = PartitionQosPolicy();
 };
 
 /**
  * @brief \c DurabilityKind to stream serialization
  */
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const DurabilityKind& kind);
 
 /**
  * @brief \c ReliabilityKind to stream serialization
  */
-std::ostream& operator <<(
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const ReliabilityKind& kind);
+
+/**
+ * @brief \c HistoryQosPolicy to stream serialization
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const HistoryQosPolicy& qos);
+
+/**
+ * @brief \c PartitionQosPolicy to stream serialization
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const PartitionQosPolicy& qos);
 
 /**
  * @brief \c QoS to stream serialization
