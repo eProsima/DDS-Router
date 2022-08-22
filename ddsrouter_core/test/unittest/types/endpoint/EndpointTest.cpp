@@ -26,41 +26,40 @@ using namespace eprosima::ddsrouter::core::types;
 QoS random_qos(
         uint16_t seed = 0)
 {
-    DurabilityKind durability;
-    ReliabilityKind reliability;
+    QoS qos;
 
     if (seed % 2)
     {
-        reliability = ReliabilityKind::BEST_EFFORT;
+        qos.reliability_qos = ReliabilityKind::BEST_EFFORT;
     }
     else
     {
-        reliability = ReliabilityKind::RELIABLE;
+        qos.reliability_qos = ReliabilityKind::RELIABLE;
     }
 
     switch ((seed / 2) % 4)
     {
         case 0:
-            durability = DurabilityKind::VOLATILE;
+            qos.durability_qos = DurabilityKind::VOLATILE;
             break;
 
         case 1:
-            durability = DurabilityKind::TRANSIENT_LOCAL;
+            qos.durability_qos = DurabilityKind::TRANSIENT_LOCAL;
             break;
 
         case 2:
-            durability = DurabilityKind::TRANSIENT;
+            qos.durability_qos = DurabilityKind::TRANSIENT;
             break;
 
         case 3:
-            durability = DurabilityKind::PERSISTENT;
+            qos.durability_qos = DurabilityKind::PERSISTENT;
             break;
 
         default:
             break;
     }
 
-    return QoS(durability, reliability);
+    return qos;
 }
 
 // Get a random topic name

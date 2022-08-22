@@ -37,45 +37,32 @@ using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 /**
  * Collection of attributes of an Endpoint
  */
-class DDSROUTER_CORE_DllAPI QoS
+struct DDSROUTER_CORE_DllAPI QoS
 {
-public:
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
 
     //! Default QoS with reader less restrictive parameters
-    QoS() noexcept;
+    QoS() noexcept = default;
 
-    /**
-     * Constructor of QoS class by its variables
-     *
-     * @param durability: durability kind
-     * @param reliability: reliability kind
-     */
-    QoS(
-            DurabilityKind durability,
-            ReliabilityKind reliability) noexcept;
-
-    //! Whether this QoS is set with reliability
-    DurabilityKind durability() const noexcept;
-
-    //! Whether this QoS is set with durability
-    ReliabilityKind reliability() const noexcept;
+    /////////////////////////
+    // OPERATORS
+    /////////////////////////
 
     // OPERATOR OVERLOAD
     bool operator ==(
             const QoS& other) const noexcept;
 
-protected:
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
-    //! Durability kind
-    DurabilityKind durability_;
+    //! Durability kind (Default = VOLATILE)
+    DurabilityKind durability_qos = DurabilityKind::VOLATILE;
 
-    //! Reliability kind
-    ReliabilityKind reliability_;
-
-    // Allow operator << to use private variables
-    DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
-            std::ostream&,
-            const QoS&);
+    //! Reliability kind (Default = BEST_EFFORT)
+    ReliabilityKind reliability_qos = ReliabilityKind::BEST_EFFORT;
 };
 
 /**
