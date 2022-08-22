@@ -25,57 +25,32 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-QoS::QoS() noexcept
-    : durability_(DurabilityKind::VOLATILE)
-    , reliability_(ReliabilityKind::BEST_EFFORT)
-{
-}
-
-QoS::QoS(
-        DurabilityKind durability,
-        ReliabilityKind reliability) noexcept
-    : durability_(durability)
-    , reliability_(reliability)
-{
-}
-
-DurabilityKind QoS::durability() const noexcept
-{
-    return durability_;
-}
-
-ReliabilityKind QoS::reliability() const noexcept
-{
-    return reliability_;
-}
-
 bool QoS::operator ==(
         const QoS& other) const noexcept
 {
-    return durability_ == other.durability_ && reliability_ == other.reliability_;
+    return durability_qos == other.durability_qos && reliability_qos == other.reliability_qos;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
         const DurabilityKind& kind)
 {
-    std::string durability_str;
     switch (kind)
     {
         case DurabilityKind::VOLATILE:
-            durability_str = "VOLATILE";
+            os << "VOLATILE";
             break;
 
         case DurabilityKind::TRANSIENT_LOCAL:
-            durability_str = "TRANSIENT_LOCAL";
+            os << "TRANSIENT_LOCAL";
             break;
 
         case DurabilityKind::TRANSIENT:
-            durability_str = "TRANSIENT";
+            os << "TRANSIENT";
             break;
 
         case DurabilityKind::PERSISTENT:
-            durability_str = "PERSISTENT";
+            os << "PERSISTENT";
             break;
 
         default:
@@ -83,22 +58,21 @@ std::ostream& operator <<(
             break;
     }
 
-    return os << durability_str;
+    return os;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
         const ReliabilityKind& kind)
 {
-    std::string reliability_str;
     switch (kind)
     {
         case ReliabilityKind::RELIABLE:
-            reliability_str = "RELIABLE";
+            os << "RELIABLE";
             break;
 
         case ReliabilityKind::BEST_EFFORT:
-            reliability_str = "BEST_EFFORT";
+            os << "BEST_EFFORT";
             break;
 
         default:
@@ -106,14 +80,14 @@ std::ostream& operator <<(
             break;
     }
 
-    return os << reliability_str;
+    return os;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
         const QoS& qos)
 {
-    os << "QoS{" << qos.durability_ << ";" << qos.reliability_ << "}";
+    os << "QoS{" << qos.durability_qos << ";" << qos.reliability_qos << "}";
     return os;
 }
 

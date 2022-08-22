@@ -94,15 +94,17 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     info_guid = info.info.guid();
 
     // Parse QoS
-    types::DurabilityKind info_durability_kind = info.info.m_qos.m_durability.durabilityKind();
-    types::ReliabilityKind info_reliability_kind;
+    types::QoS info_qos;
+    // Durability
+    info_qos.durability_qos = info.info.m_qos.m_durability.durabilityKind();
+    // Reliability
     if (info.info.m_qos.m_reliability.kind == fastdds::dds::BEST_EFFORT_RELIABILITY_QOS)
     {
-        info_reliability_kind = fastrtps::rtps::BEST_EFFORT;
+        info_qos.reliability_qos = fastrtps::rtps::BEST_EFFORT;
     }
     else if (info.info.m_qos.m_reliability.kind == fastdds::dds::RELIABLE_RELIABILITY_QOS)
     {
-        info_reliability_kind = fastrtps::rtps::RELIABLE;
+        info_qos.reliability_qos = fastrtps::rtps::RELIABLE;
     }
     else
     {
@@ -110,7 +112,6 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
             utils::Formatter() <<
                 "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
     }
-    types::QoS info_qos(info_durability_kind, info_reliability_kind);
 
     // Parse Topic
     types::RealTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()),
