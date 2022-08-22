@@ -12,36 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#######
-# QoS #
-#######
-
-set(TEST_NAME QoSTest)
-
-set(TEST_SOURCES
-        QoSTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/QoS.cpp
-    )
-
-set(TEST_LIST
-        constructor
-        durability_getter
-        reliability_getter
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        fastcdr
-        fastrtps
-        ddsrouter_utils
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
-
 ########
 # GUID #
 ########
