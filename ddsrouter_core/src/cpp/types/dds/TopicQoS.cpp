@@ -56,7 +56,6 @@ bool TopicQoS::has_partitions() const noexcept
     return use_partitions;
 }
 
-
 std::ostream& operator <<(
         std::ostream& os,
         const DurabilityKind& kind)

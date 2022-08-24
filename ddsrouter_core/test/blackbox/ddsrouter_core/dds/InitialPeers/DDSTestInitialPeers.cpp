@@ -26,7 +26,7 @@
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <test_participants.hpp>
 
@@ -153,14 +153,18 @@ configuration::DDSRouterConfiguration router_configuration(
         types::DomainIdType domain)
 {
     // One topic
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist(
+    auto allow_topic = std::make_shared<types::WildcardDdsFilterTopic>();
+    allow_topic->topic_name = TOPIC_NAME;
+    allow_topic->type_name = std::string("HelloWorld");
+
+    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist(
                     {
-                        std::make_shared<types::WildcardTopic>(TOPIC_NAME, "HelloWorld"),
+                        allow_topic,
                     });
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(

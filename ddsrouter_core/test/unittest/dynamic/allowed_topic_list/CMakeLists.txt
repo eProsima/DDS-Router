@@ -17,10 +17,11 @@ set(TEST_NAME AllowedTopicListTest)
 set(TEST_SOURCES
         AllowedTopicListTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/AllowedTopicList.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/DdsFilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/WildcardDdsFilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
     )
 all_header_sources("${TEST_SOURCES}")
 

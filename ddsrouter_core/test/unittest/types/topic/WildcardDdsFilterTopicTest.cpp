@@ -15,7 +15,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -25,25 +25,25 @@ using pair_topic_type = std::pair<std::string, std::string>;
 // TODO: extend contains tests for regex topics
 
 /**
- * Test WildcardTopic construct only with topic name
+ * Test WildcardDdsFilterTopic construct only with topic name
  */
 TEST(WildcardTopicTest, topic_name_constructor)
 {
-    WildcardTopic topic1("topic1");
-    WildcardTopic topic2("topic1", "*");
+    WildcardDdsFilterTopic topic1("topic1");
+    WildcardDdsFilterTopic topic2;
 
     ASSERT_EQ(topic1, topic2);
 }
 
 /**
- * Test WildcardTopic contains method for positive cases
+ * Test WildcardDdsFilterTopic contains method for positive cases
  */
 TEST(WildcardTopicTest, contains_wildcard)
 {
     std::vector<                            // Test cases
         std::pair<
             pair_topic_type,                // Wildcard Topic
-            std::vector<pair_topic_type>    // List of accepted RealTopics
+            std::vector<pair_topic_type>    // List of accepted DdsTopics
             >> test_cases = {
 
         {{"topic", "*"},
@@ -65,27 +65,31 @@ TEST(WildcardTopicTest, contains_wildcard)
     for (auto test_case : test_cases)
     {
         // Create Wildcard topic
-        WildcardTopic wt(test_case.first.first, test_case.first.second);
+        WildcardDdsFilterTopic wt;
+        wt.topic_name = test_case.first.first;
+        wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a RealTopic and test
+        // For every topic to test, create a FilterDdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            WildcardTopic real_topic(real_topic_names.first, real_topic_names.second);
+            WildcardDdsFilterTopic contained_topic;
+            contained_topic.topic_name = real_topic_names.first;
+            contained_topic.type_name = real_topic_names.second;
 
-            ASSERT_TRUE(wt.contains(real_topic));
+            ASSERT_TRUE(wt.contains(contained_topic));
         }
     }
 }
 
 /**
- * Test WildcardTopic matches method for positive cases
+ * Test WildcardDdsFilterTopic matches method for positive cases
  */
 TEST(WildcardTopicTest, matches)
 {
     std::vector<                            // Test cases
         std::pair<
             pair_topic_type,                // Wildcard Topic
-            std::vector<pair_topic_type>    // List of accepted RealTopics
+            std::vector<pair_topic_type>    // List of accepted DdsTopics
             >> test_cases = {
 
         {{"topic", "*"},
@@ -107,12 +111,14 @@ TEST(WildcardTopicTest, matches)
     for (auto test_case : test_cases)
     {
         // Create Wildcard topic
-        WildcardTopic wt(test_case.first.first, test_case.first.second);
+        WildcardDdsFilterTopic wt;
+        wt.topic_name = test_case.first.first;
+        wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a RealTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            RealTopic real_topic(real_topic_names.first, real_topic_names.second);
+            DdsTopic real_topic(real_topic_names.first, real_topic_names.second);
 
             ASSERT_TRUE(wt.matches(real_topic)) << "wildcard: " << wt << " ; real: " << real_topic;
         }
@@ -120,14 +126,14 @@ TEST(WildcardTopicTest, matches)
 }
 
 /**
- * Test WildcardTopic contains method for negative cases
+ * Test WildcardDdsFilterTopic contains method for negative cases
  */
 TEST(WildcardTopicTest, non_contains_wildcard)
 {
     std::vector<                            // Test cases
         std::pair<
             pair_topic_type,                // Wildcard Topic
-            std::vector<pair_topic_type>    // List of accepted RealTopics
+            std::vector<pair_topic_type>    // List of accepted DdsTopics
             >> test_cases = {
 
         {{"topic", "*"},
@@ -149,27 +155,31 @@ TEST(WildcardTopicTest, non_contains_wildcard)
     for (auto test_case : test_cases)
     {
         // Create Wildcard topic
-        WildcardTopic wt(test_case.first.first, test_case.first.second);
+        WildcardDdsFilterTopic wt;
+        wt.topic_name = test_case.first.first;
+        wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a RealTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            WildcardTopic real_topic(real_topic_names.first, real_topic_names.second);
+            WildcardDdsFilterTopic contained_topic;
+            contained_topic.topic_name = real_topic_names.first;
+            contained_topic.type_name = real_topic_names.second;
 
-            ASSERT_FALSE(wt.contains(real_topic));
+            ASSERT_FALSE(wt.contains(contained_topic));
         }
     }
 }
 
 /**
- * Test WildcardTopic matches method for negative cases
+ * Test WildcardDdsFilterTopic matches method for negative cases
  */
 TEST(WildcardTopicTest, non_matches)
 {
     std::vector<                            // Test cases
         std::pair<
             pair_topic_type,                // Wildcard Topic
-            std::vector<pair_topic_type>    // List of accepted RealTopics
+            std::vector<pair_topic_type>    // List of accepted DdsTopics
             >> test_cases = {
 
         {{"topic", "*"},
@@ -191,12 +201,14 @@ TEST(WildcardTopicTest, non_matches)
     for (auto test_case : test_cases)
     {
         // Create Wildcard topic
-        WildcardTopic wt(test_case.first.first, test_case.first.second);
+        WildcardDdsFilterTopic wt;
+        wt.topic_name = test_case.first.first;
+        wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a RealTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            RealTopic real_topic(real_topic_names.first, real_topic_names.second);
+            DdsTopic real_topic(real_topic_names.first, real_topic_names.second);
 
             ASSERT_FALSE(wt.matches(real_topic));
         }

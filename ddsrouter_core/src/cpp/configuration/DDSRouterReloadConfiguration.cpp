@@ -19,7 +19,7 @@
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
@@ -30,9 +30,9 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 DDSRouterReloadConfiguration::DDSRouterReloadConfiguration(
-        std::set<std::shared_ptr<FilterTopic>> allowlist,
-        std::set<std::shared_ptr<FilterTopic>> blocklist,
-        std::set<std::shared_ptr<RealTopic>> builtin_topics)
+        std::set<std::shared_ptr<DdsFilterTopic>> allowlist,
+        std::set<std::shared_ptr<DdsFilterTopic>> blocklist,
+        std::set<std::shared_ptr<DdsTopic>> builtin_topics)
     : allowlist(allowlist)
     , blocklist(blocklist)
     , builtin_topics(builtin_topics)
@@ -43,7 +43,7 @@ bool DDSRouterReloadConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
     // Check Allow list topics
-    for (std::shared_ptr<FilterTopic> topic : allowlist)
+    for (std::shared_ptr<DdsFilterTopic> topic : allowlist)
     {
         if (!topic)
         {
@@ -51,16 +51,10 @@ bool DDSRouterReloadConfiguration::is_valid(
             error_msg << "nullptr Filter Topic in allowlist. ";
             return false;
         }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Filter Topic " << topic << " in allowlist. ";
-            return false;
-        }
     }
 
     // Check Block list topics
-    for (std::shared_ptr<FilterTopic> topic : blocklist)
+    for (std::shared_ptr<DdsFilterTopic> topic : blocklist)
     {
         if (!topic)
         {
@@ -68,16 +62,10 @@ bool DDSRouterReloadConfiguration::is_valid(
             error_msg << "nullptr Filter Topic in blocklist. ";
             return false;
         }
-
-        if (!topic->is_valid())
-        {
-            error_msg << "Invalid Filter Topic " << topic << " in blocklist. ";
-            return false;
-        }
     }
 
     // Check Builtin list topics
-    for (std::shared_ptr<RealTopic> topic : builtin_topics)
+    for (std::shared_ptr<DdsTopic> topic : builtin_topics)
     {
         if (!topic)
         {
@@ -86,7 +74,7 @@ bool DDSRouterReloadConfiguration::is_valid(
             return false;
         }
 
-        if (!topic->is_valid())
+        if (!topic->is_valid(error_msg))
         {
             error_msg << "Invalid Topic " << topic << " in Builtin list. ";
             return false;

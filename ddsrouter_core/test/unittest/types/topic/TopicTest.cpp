@@ -15,159 +15,48 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddsrouter_utils/Formatter.hpp>
+
 #include <ddsrouter_core/types/topic/Topic.hpp>
 
-using namespace eprosima::ddsrouter::core;
+using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core::types;
-
-using pair_topic_type = std::pair<std::string, std::string>;
 
 /*
  * Return a list of non repeated random topic names
  */
-std::vector<pair_topic_type> random_topic_names()
+std::vector<std::string> random_topic_names()
 {
     return
         {
-            {"topic1", "type1"},
-            {"topic2", "type2"},
-            {"topic3", "type3"},
-            {"topic1", "type2"},
-            {"topic1", "type3"},
+            {"topic1"},
+            {"topic2"},
+            {"topic3"},
 
-            {"*", "*"},
-            {"*rt", "*std"},
-            {"rt*", "std*"},
-            {"rt", "std*"},
-            {"rt*", "std"},
+            {"*"},
+            {"*rt"},
+            {"rt*"},
+            {"rt"},
+            {"rt*"},
 
-            {".", "."},
-        };
-}
-
-/*
- * Return a list of non repeated well sorted topic names
- */
-std::vector<pair_topic_type> well_sorted_topic_names()
-{
-    return
-        {
-            {"*", "*"}, // Lowest element
-            {"*", "a"},
-            {"*", "b"},
-            {"*a", "*"},
-
-            {"Topic1", "Type1"},
-            {"Topic1", "type1"},
-
-            {"topic1", "type1"},
-            {"topic1", "type2"},
-            {"topic1", "type3"},
-            {"topic2", "type1"},
-            {"topic2", "type2"},
-            {"topic2", "type3"},
-            {"topic3", "type1"}, // Biggest element
+            {"."},
         };
 }
 
 /**
  * Test Topic constructor and std getter methods
  */
-TEST(TopicTest, constructor)
+TEST(TopicTest, is_valid)
 {
-    for (pair_topic_type topic : random_topic_names())
+    utils::Formatter __f;
+
+    for (const std::string& topic_name : random_topic_names())
     {
-        Topic dt(topic.first, topic.second);
-        ASSERT_EQ(dt.topic_name(), topic.first);
-        ASSERT_EQ(dt.topic_type(), topic.second);
+        Topic topic(topic_name);
+        ASSERT_TRUE(topic.is_valid(__f));
     }
-}
 
-/**
- * Test Topic == operator in positive cases
- */
-TEST(TopicTest, equal_operator)
-{
-    for (pair_topic_type topic : random_topic_names())
-    {
-        Topic dt1(topic.first, topic.second);
-        Topic dt2(topic.first, topic.second);
-        ASSERT_TRUE(dt1 == dt2);
-    }
-}
-
-/**
- * Test Topic < operator in positive cases
- */
-TEST(TopicTest, minor_operator)
-{
-    std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
-
-    for (int i = 0; i < well_sorted_names.size(); ++i)
-    {
-        // Skip same topic
-        for (int j = (i + 1); j < well_sorted_names.size(); ++j)
-        {
-            Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
-            Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
-            ASSERT_TRUE(dt1 < dt2) << dt1 << " < " << dt2;
-        }
-    }
-}
-
-/**
- * Test Topic == operator in negative cases
- *
- * Test that every name in random topics is different with the others
- */
-TEST(TopicTest, non_equal_operator)
-{
-    std::vector<pair_topic_type> names = random_topic_names();
-
-    for (int i = 0; i < names.size(); ++i)
-    {
-        for (int j = 0; j < names.size(); ++j)
-        {
-            // Skip same topic
-            if (i != j)
-            {
-                Topic dt1(names[i].first, names[i].second);
-                Topic dt2(names[j].first, names[j].second);
-                ASSERT_FALSE(dt1 == dt2);
-            }
-        }
-    }
-}
-
-/**
- * Test Topic < operator in negative cases
- */
-TEST(TopicTest, non_minor_operator)
-{
-    std::vector<pair_topic_type> well_sorted_names = well_sorted_topic_names();
-
-    for (int i = 0; i < well_sorted_names.size(); ++i)
-    {
-        for (int j = i; j < well_sorted_names.size(); ++j)
-        {
-            Topic dt1(well_sorted_names[i].first, well_sorted_names[i].second);
-            Topic dt2(well_sorted_names[j].first, well_sorted_names[j].second);
-            ASSERT_FALSE(dt2 < dt1) << dt2 << " < " << dt1;
-        }
-    }
-}
-
-/**
- * Test the Topic << operator
- */
-TEST(TopicTest, stdout_operator)
-{
-    std::vector<pair_topic_type> topics = {{"topic1", "type1"}, {"topic2", "type2"}};
-    Topic dt("topic1", "type1");
-
-    std::stringstream ss;
-    ss << dt;
-    ASSERT_EQ(ss.str(), "Topic{topic1;type1;no_key}");
+    ASSERT_FALSE(Topic().is_valid(__f));
 }
 
 int main(

@@ -37,7 +37,7 @@ using namespace eprosima::ddsrouter::core::types;
 
 Writer::Writer(
         const ParticipantId& participant_id,
-        const RealTopic& topic,
+        const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
         unsigned int max_history_depth,
@@ -208,7 +208,7 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
     // Write synchronously to avoid removing a change before being sent, likely event when history depth is very small
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
-    if (topic_.topic_with_key())
+    if (topic_.keyed)
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -222,7 +222,7 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
-    if (topic_.topic_with_key())
+    if (topic_.keyed)
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -230,8 +230,8 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     {
         att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
-    att.topicName = topic_.topic_name();
-    att.topicDataType = topic_.topic_type();
+    att.topicName = topic_.topic_name;
+    att.topicDataType = topic_.type_name;
     return att;
 }
 

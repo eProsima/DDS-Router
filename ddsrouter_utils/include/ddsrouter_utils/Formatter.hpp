@@ -51,6 +51,8 @@ public:
             const Val& val);
 
     //! Return a string with the concatenation of this object
+    DDSROUTER_UTILS_DllAPI operator std::string () const noexcept;
+
     DDSROUTER_UTILS_DllAPI std::string to_string() const noexcept;
 
 protected:

@@ -33,7 +33,7 @@ using namespace eprosima::ddsrouter::core::types;
 const unsigned int Track::MAX_MESSAGES_TRANSMIT_LOOP_ = 100;
 
 Track::Track(
-        const RealTopic& topic,
+        const DdsTopic& topic,
         ParticipantId reader_participant_id,
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,

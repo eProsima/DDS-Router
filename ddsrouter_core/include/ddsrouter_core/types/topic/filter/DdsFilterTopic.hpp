@@ -13,15 +13,17 @@
 // limitations under the License.
 
 /**
- * @file FilterTopic.hpp
+ * @file Topic.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_TOPIC_FILTERTOPIC_HPP_
-#define _DDSROUTERCORE_TYPES_TOPIC_FILTERTOPIC_HPP_
+#ifndef _DDSROUTERCORE_TYPES_TOPIC_FILTER_DDSFILTERTOPIC_HPP_
+#define _DDSROUTERCORE_TYPES_TOPIC_FILTER_DDSFILTERTOPIC_HPP_
+
+#include <iostream>
+#include <string>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/topic/Topic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -29,27 +31,22 @@ namespace core {
 namespace types {
 
 /**
- * Class that represents a Topic filter
+ * Generic Data Struct that represent a Dds Topic of data flow in the Router
  */
-class FilterTopic : public Topic
+struct DDSROUTER_CORE_DllAPI DdsFilterTopic
 {
-public:
 
-    //! Constructor by topic name, topic type name, and (optionally) has_keyed_set and topic kind
-    DDSROUTER_CORE_DllAPI FilterTopic(
-            const std::string& topic_name,
-            const std::string& topic_type,
-            bool has_keyed_set = false,
-            bool topic_with_key = false) noexcept;
+    /////////////////////////
+    // OPERATORS
+    /////////////////////////
 
-    // OPERATOR OVERLOAD
-    /**
-     * Equal operator
-     *
-     * It compares that topic_name_, topic_type_, topic_with_key_ and has_keyed_set_ are equal
-     */
-    bool operator ==(
-            const FilterTopic& other) const;
+    virtual bool operator< (const DdsFilterTopic& other) const noexcept;
+
+    virtual bool operator== (const DdsFilterTopic& other) const noexcept;
+
+    /////////////////////////
+    // FILTER METHODS
+    /////////////////////////
 
     /**
      * Whether this topic filters the same of the topic by argument.
@@ -57,15 +54,15 @@ public:
      * This method is used to prevent duplications in filter topic lists.
      * If the topic \c other filters a subset of the topics filtered by \c this, it returns true.
      *
-     * Example: {<*>:<*>} contains every FilterTopic.
-     * Example: {<>:<>} is contained by every FilterTopic.
+     * Example: {<*>:<*>} contains every DdsFilterTopic.
+     * Example: {<>:<>} is contained by every DdsFilterTopic.
      *
      * @param other: Other topic to check if it is contained
      *
      * @return: True if \c other topic filters a subset of \c this
      */
     virtual bool contains(
-            const FilterTopic& other) const = 0;
+            const DdsFilterTopic& other) const = 0;
 
     /**
      * Whether a Real Topic matches the filter of this topic.
@@ -77,28 +74,22 @@ public:
      * @return: True if \c real_topic matches with \c this filter
      */
     virtual bool matches(
-            const RealTopic& real_topic) const = 0;
+            const DdsTopic& real_topic) const = 0;
 
-    //! \c has_keyed_set_ getter
-    DDSROUTER_CORE_DllAPI bool has_keyed_set() const;
-
-protected:
-
-    //! Whether or not \c topic_with_key_ is explicitly set in yaml configuration
-    bool has_keyed_set_;
+    virtual std::ostream& serialize(
+        std::ostream& os) const = 0;
 };
 
 /**
- * TODO
+ * Serialization method for \c DdsFilterTopic object.
  */
-struct RegexTopic : public FilterTopic
-{
-    using FilterTopic::FilterTopic;
-};
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const DdsFilterTopic& t);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_TOPIC_FILTERTOPIC_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_TOPIC_FILTER_DDSFILTERTOPIC_HPP_ */

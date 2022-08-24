@@ -16,15 +16,14 @@
  * @file Topic.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_
-#define _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_
+#ifndef _DDSROUTERCORE_TYPES_TOPIC_FILTER_WILDCARDDDSFILTERTOPIC_HPP_
+#define _DDSROUTERCORE_TYPES_TOPIC_FILTER_WILDCARDDDSFILTERTOPIC_HPP_
 
 #include <iostream>
 #include <string>
 
-#include <ddsrouter_utils/Formatter.hpp>
-
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -32,53 +31,62 @@ namespace core {
 namespace types {
 
 /**
- * Generic Data Struct that represent a Topic of data flow in the Router
+ * Generic Data Struct that represent a Dds Topic of data flow in the Router
  */
-struct Topic
+struct WildcardDdsFilterTopic : public DdsFilterTopic
 {
 
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    DDSROUTER_CORE_DllAPI Topic() = default;
+    //! Using parent constructos
+    using DdsFilterTopic::DdsFilterTopic;
 
-    //! Construct a Topic with name
-    DDSROUTER_CORE_DllAPI Topic(
-            const std::string& topic_name) noexcept;
-
-    /////////////////////////
-    // METHODS
-    /////////////////////////
-
-    virtual bool is_valid(utils::Formatter& error_msg) const noexcept;
+    DDSROUTER_CORE_DllAPI WildcardDdsFilterTopic(
+        const std::string topic_name = "*");
 
     /////////////////////////
-    // OPERATORS
+    // FILTER METHODS
     /////////////////////////
 
-    bool operator< (const Topic& other) const noexcept;
+    //! Implement \c contains parent method.
+    DDSROUTER_CORE_DllAPI virtual bool contains(
+            const DdsFilterTopic& other) const;
 
-    bool operator== (const Topic& other) const noexcept;
+    //! Implement \c contains parent method.
+    DDSROUTER_CORE_DllAPI virtual bool matches(
+            const DdsTopic& real_topic) const;
+
+    /////////////////////////
+    // SERIALIZATION METHODS
+    /////////////////////////
+
+    virtual std::ostream& serialize(
+        std::ostream& os) const override;
 
     /////////////////////////
     // VARIABLES
     /////////////////////////
 
-    //! Topic name
     std::string topic_name;
+
+    utils::Fuzzy<std::string> type_name;
+
+    //! Whether the topic has key or not
+    utils::Fuzzy<bool> keyed;
 };
 
 /**
- * Serialization method for \c Topic object.
+ * Serialization method for \c WildcardDdsFilterTopic object.
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const Topic& t);
+        const WildcardDdsFilterTopic& t);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_TOPIC_FILTER_WILDCARDDDSFILTERTOPIC_HPP_ */

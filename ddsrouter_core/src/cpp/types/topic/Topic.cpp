@@ -25,99 +25,37 @@ namespace core {
 namespace types {
 
 Topic::Topic(
-        std::string topic_name,
-        std::string topic_type,
-        bool topic_with_key /* = false */) noexcept
-    : topic_name_(topic_name)
-    , topic_type_(topic_type)
-    , topic_with_key_(topic_with_key)
+        const std::string& topic_name) noexcept
+    : topic_name(topic_name)
 {
 }
 
-Topic& Topic::operator =(
-        const Topic& other)
+bool Topic::is_valid(utils::Formatter& error_msg) const noexcept
 {
-    this->topic_name_ = other.topic_name_;
-    this->topic_type_ = other.topic_type_;
-    this->topic_with_key_ = other.topic_with_key_;
-    return *this;
-}
-
-const std::string& Topic::topic_name() const
-{
-    return topic_name_;
-}
-
-const std::string& Topic::topic_type() const
-{
-    return topic_type_;
-}
-
-bool Topic::topic_with_key() const
-{
-    return topic_with_key_;
-}
-
-bool Topic::operator ==(
-        const Topic& other) const
-{
-
-    return topic_name_ == other.topic_name_
-           && topic_type_ == other.topic_type_
-           && topic_with_key_ == other.topic_with_key_;
-}
-
-bool Topic::operator <(
-        const Topic& other) const
-{
-    int name_comparison = topic_name_.compare(other.topic_name_);
-    if (name_comparison < 0)
+    if (topic_name.empty())
     {
-        return true;
-    }
-    else if (name_comparison > 0)
-    {
+        error_msg << "Topic name could not be empty. ";
         return false;
     }
-    else
-    {
-        // Equal name, compare type
-        // WARNING: do not return value from compare, as -1 != false
-        int topic_comparison = topic_type_.compare(other.topic_type_);
-        if (topic_comparison < 0)
-        {
-            return true;
-        }
-        else if (topic_comparison > 0)
-        {
-            return false;
-        }
-        else
-        {
-            // Equal type, compare keyed
-            if (topic_with_key_ == other.topic_with_key_)
-            {
-                return false;
-            }
-            else
-            {
-                return !topic_with_key_;
-            }
-        }
-    }
+
+    return true;
 }
 
-bool Topic::is_valid() const noexcept
+bool Topic::operator< (const Topic& other) const noexcept
 {
-    return true;
+    return this->topic_name < other.topic_name;
+}
+
+bool Topic::operator== (const Topic& other) const noexcept
+{
+    return this->topic_name == other.topic_name;
 }
 
 std::ostream& operator <<(
         std::ostream& os,
-        const Topic& a)
+        const Topic& t)
 {
-    std::string keyed_str = a.topic_with_key() ? "keyed" : "no_key";
-    os << "Topic{" << a.topic_name() << ";" << a.topic_type() << ";" << keyed_str << "}";
+    os << "Topic{" << t.topic_name << "}";
     return os;
 }
 

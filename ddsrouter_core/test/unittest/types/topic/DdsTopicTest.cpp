@@ -15,7 +15,7 @@
 #include <gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -23,9 +23,9 @@ using namespace eprosima::ddsrouter::core::types;
 using pair_topic_type = std::pair<std::string, std::string>;
 
 /**
- * Test RealTopic is_real_topic method for positive cases
+ * Test DdsTopic is_valid_dds_topic method for positive cases
  */
-TEST(RealTopicTest, is_real_topic)
+TEST(DdsTopicTest, is_valid_dds_topic)
 {
     std::vector<pair_topic_type> topics = {
         {"topic1", "type1"},
@@ -39,14 +39,14 @@ TEST(RealTopicTest, is_real_topic)
 
     for (pair_topic_type topic : topics)
     {
-        ASSERT_TRUE(RealTopic::is_real_topic(topic.first, topic.second));
+        ASSERT_TRUE(DdsTopic::is_valid_dds_topic(topic.first, topic.second));
     }
 }
 
 /**
- * Test RealTopic is_real_topic method for negative cases
+ * Test DdsTopic is_valid_dds_topic method for negative cases
  */
-TEST(RealTopicTest, is_non_real_topic)
+TEST(DdsTopicTest, is_valid_dds_topic_negative)
 {
     std::vector<pair_topic_type> topics = {
         {"topic", "type*"},
@@ -69,12 +69,15 @@ TEST(RealTopicTest, is_non_real_topic)
         {"topic", "*"},
         {"*", "*"},
 
+        {"topic", ""},
+        {"", "type"},
+        {"", ""},
         // TODO add regex cases
     };
 
     for (pair_topic_type topic : topics)
     {
-        ASSERT_FALSE(RealTopic::is_real_topic(topic.first, topic.second));
+        ASSERT_FALSE(DdsTopic::is_valid_dds_topic(topic.first, topic.second));
     }
 }
 

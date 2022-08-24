@@ -114,17 +114,18 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     }
 
     // Parse Topic
-    types::RealTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()),
-            info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY);
+    types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
+    info_topic.keyed = info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY;
+    info_topic.topic_qos = info_qos;
 
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::reader, info_guid, info_topic);
     }
     else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::writer, info_guid, info_topic);
     }
     else
     {
@@ -238,7 +239,7 @@ void CommonParticipant::create_participant_(
 }
 
 std::shared_ptr<IWriter> CommonParticipant::create_writer_(
-        types::RealTopic topic)
+        types::DdsTopic topic)
 {
     return std::make_shared<Writer>(
         this->id(),
@@ -250,7 +251,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
 }
 
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
-        types::RealTopic topic)
+        types::DdsTopic topic)
 {
     return std::make_shared<Reader>(
         this->id(),

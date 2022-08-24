@@ -52,11 +52,11 @@ public:
 
     //! Override create_writer() IParticipant method
     std::shared_ptr<IWriter> create_writer(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     //! Override create_reader() IParticipant method
     std::shared_ptr<IReader> create_reader(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     //! Override delete_writer() IParticipant method
     void delete_writer(

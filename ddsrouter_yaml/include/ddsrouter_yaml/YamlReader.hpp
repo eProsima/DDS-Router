@@ -19,6 +19,8 @@
 #ifndef _DDSROUTERYAML_YAMLREADER_HPP_
 #define _DDSROUTERYAML_YAMLREADER_HPP_
 
+#include <ddsrouter_utils/types/Fuzzy.hpp>
+
 #include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/Yaml.hpp>
 

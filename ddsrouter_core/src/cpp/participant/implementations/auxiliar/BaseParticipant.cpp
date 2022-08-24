@@ -81,7 +81,7 @@ bool BaseParticipant::is_repeater() const noexcept
 }
 
 std::shared_ptr<IWriter> BaseParticipant::create_writer(
-        types::RealTopic topic)
+        types::DdsTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 
@@ -104,7 +104,7 @@ std::shared_ptr<IWriter> BaseParticipant::create_writer(
 }
 
 std::shared_ptr<IReader> BaseParticipant::create_reader(
-        types::RealTopic topic)
+        types::DdsTopic topic)
 {
     std::lock_guard <std::recursive_mutex> lock(mutex_);
 

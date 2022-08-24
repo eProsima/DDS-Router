@@ -25,7 +25,7 @@
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
@@ -36,9 +36,9 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 DDSRouterConfiguration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<FilterTopic>> allowlist,
-        std::set<std::shared_ptr<FilterTopic>> blocklist,
-        std::set<std::shared_ptr<RealTopic>> builtin_topics,
+        std::set<std::shared_ptr<DdsFilterTopic>> allowlist,
+        std::set<std::shared_ptr<DdsFilterTopic>> blocklist,
+        std::set<std::shared_ptr<DdsTopic>> builtin_topics,
         std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
         unsigned int number_of_threads,
         unsigned int max_history_depth)

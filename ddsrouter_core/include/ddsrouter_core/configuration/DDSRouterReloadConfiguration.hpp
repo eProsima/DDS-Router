@@ -27,8 +27,8 @@
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -49,9 +49,9 @@ struct DDSRouterReloadConfiguration : public BaseConfiguration
     DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration() = default;
 
     DDSROUTER_CORE_DllAPI DDSRouterReloadConfiguration(
-            std::set<std::shared_ptr<types::FilterTopic>> allowlist,
-            std::set<std::shared_ptr<types::FilterTopic>> blocklist,
-            std::set<std::shared_ptr<types::RealTopic>> builtin_topics);
+            std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist,
+            std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist,
+            std::set<std::shared_ptr<types::DdsTopic>> builtin_topics);
 
     /////////////////////////
     // METHODS
@@ -64,11 +64,11 @@ struct DDSRouterReloadConfiguration : public BaseConfiguration
     // VARIABLES
     /////////////////////////
 
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist = {};
+    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist = {};
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist = {};
+    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist = {};
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics = {};
+    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics = {};
 };
 
 } /* namespace configuration */

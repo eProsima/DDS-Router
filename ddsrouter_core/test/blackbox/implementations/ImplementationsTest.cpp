@@ -29,9 +29,9 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/utils.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -73,9 +73,9 @@ TEST(ImplementationsTest, pair_implementation)
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
             test::DEFAULT_THREAD_POOL_SIZE,
             test::DEFAULT_MAX_HISTORY_DEPTH);
@@ -110,8 +110,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     // For each Participant kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
     {
-        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
-            {test::RealTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
+        std::set<std::shared_ptr<DdsTopic>> builtin_topics = test::topic_set(
+            {test::DdsTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
 
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
@@ -119,8 +119,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
             builtin_topics,
             participant_configurations,
             test::DEFAULT_THREAD_POOL_SIZE,
@@ -156,8 +156,8 @@ TEST(ImplementationsTest, all_implementations)
 
     {
         // Set topic to active
-        std::set<std::shared_ptr<RealTopic>> builtin_topics = test::topic_set(
-            {test::RealTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
+        std::set<std::shared_ptr<DdsTopic>> builtin_topics = test::topic_set(
+            {test::DdsTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
 
         std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
 
@@ -172,9 +172,9 @@ TEST(ImplementationsTest, all_implementations)
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
             test::DEFAULT_THREAD_POOL_SIZE,
             test::DEFAULT_MAX_HISTORY_DEPTH);
@@ -209,9 +209,9 @@ TEST(ImplementationsTest, duplicated_ids)
 
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<FilterTopic>>(),
-            std::set<std::shared_ptr<RealTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsFilterTopic>>(),
+            std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
             test::DEFAULT_THREAD_POOL_SIZE,
             test::DEFAULT_MAX_HISTORY_DEPTH);

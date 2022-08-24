@@ -34,7 +34,6 @@ std::set<std::string> ddsrouter_tags() noexcept
             TOPIC_NAME_TAG,
             TOPIC_TYPE_NAME_TAG,
             TOPIC_KIND_TAG,
-            TOPIC_RELIABLE_TAG,
             PARTICIPANT_KIND_TAG,
             PARTICIPANT_NAME_TAG,
             COLLECTION_PARTICIPANTS_TAG,
