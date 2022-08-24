@@ -34,7 +34,7 @@ Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
         const QoS& qos,
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
     : kind_(kind)
     , guid_(guid)
     , qos_(qos)
@@ -58,7 +58,7 @@ QoS Endpoint::qos() const noexcept
     return qos_;
 }
 
-RealTopic Endpoint::topic() const noexcept
+DdsTopic Endpoint::topic() const noexcept
 {
     return topic_;
 }

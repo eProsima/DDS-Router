@@ -22,7 +22,7 @@
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/QoS.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -70,7 +70,7 @@ public:
             const EndpointKind& kind,
             const Guid& guid,
             const QoS& qos,
-            const RealTopic& topic) noexcept;
+            const DdsTopic& topic) noexcept;
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
@@ -82,7 +82,7 @@ public:
     DDSROUTER_CORE_DllAPI QoS qos() const noexcept;
 
     //! Topic getter
-    DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
+    DDSROUTER_CORE_DllAPI DdsTopic topic() const noexcept;
 
     //! Whether the endpoint referenced is currently active
     DDSROUTER_CORE_DllAPI bool active() const noexcept;
@@ -124,7 +124,7 @@ protected:
     QoS qos_;
 
     //! Topic that this endpoint belongs to
-    RealTopic topic_;
+    DdsTopic topic_;
 
     //! Whether the endpoint is currently active
     bool active_;

@@ -51,7 +51,7 @@ public:
      */
     BaseReader(
             const types::ParticipantId& participant_id,
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool);
 
     /**
@@ -149,7 +149,7 @@ protected:
     types::ParticipantId participant_id_;
 
     //! Topic that this Reader refers to
-    types::RealTopic topic_;
+    types::DdsTopic topic_;
 
     //! DDS Router shared Payload Pool
     std::shared_ptr<PayloadPool> payload_pool_;

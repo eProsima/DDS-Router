@@ -76,10 +76,10 @@ protected:
             const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     template<class DiscoveryInfoKind>
     types::Endpoint create_endpoint_from_info_(

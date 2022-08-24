@@ -22,7 +22,7 @@
 #include <ddsrouter_utils/exception/utils::ConfigurationException.hpp>
 #include <ddsrouter_core/types/configuration_tags.hpp>
 #include <ddsrouter_core/types/RawConfiguration.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -85,10 +85,10 @@ void add_empty_tag_to_yaml(
  * Check if a topic is inside a list returned by allowlist or blocklist DDSRouter methods
  */
 bool topic_in_list(
-        std::list<std::shared_ptr<FilterTopic>> list,
-        WildcardTopic compared_topic)
+        std::list<std::shared_ptr<DdsFilterTopic>> list,
+        WildcardDdsFilterTopic compared_topic)
 {
-    for (std::shared_ptr<FilterTopic> topic : list)
+    for (std::shared_ptr<DdsFilterTopic> topic : list)
     {
         // Check class and internal variables
         if (typeid(*topic) == typeid(compared_topic) &&
@@ -104,10 +104,10 @@ bool topic_in_list(
  * Check if a topic is inside a list returned by real_topics DDSRouter methods
  */
 bool topic_in_real_list(
-        std::set<RealTopic> list,
-        RealTopic compared_topic)
+        std::set<DdsTopic> list,
+        DdsTopic compared_topic)
 {
-    for (RealTopic topic : list)
+    for (DdsTopic topic : list)
     {
         // Check class and internal variables
         if (typeid(topic) == typeid(compared_topic) &&
@@ -419,7 +419,7 @@ TEST(ConfigurationTest, real_topics)
     EXPECT_FALSE(result4.empty());
     for (auto random_topic : random_real_topic_names())
     {
-        RealTopic topic(random_topic.first, random_topic.second);
+        DdsTopic topic(random_topic.first, random_topic.second);
         EXPECT_TRUE(topic_in_real_list(result4, topic));
     }
 
@@ -433,12 +433,12 @@ TEST(ConfigurationTest, real_topics)
     uint16_t real_topics = 0;
     for (auto random_topic : random_topic_names())
     {
-        bool real_topic = RealTopic::is_real_topic(random_topic.first, random_topic.second);
+        bool real_topic = DdsTopic::is_valid_dds_topic(random_topic.first, random_topic.second);
 
         if (real_topic)
         {
             ++real_topics;
-            RealTopic topic(random_topic.first, random_topic.second);
+            DdsTopic topic(random_topic.first, random_topic.second);
             EXPECT_TRUE(topic_in_real_list(result5, topic)) << topic;
         }
     }
@@ -482,8 +482,8 @@ TEST(ConfigurationTest, allowlist_wildcard)
     add_topic_to_list_to_yaml(yaml3, ALLOWLIST_TAG, "topic2*", "type2*");
     DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.allowlist();
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic1"), std::string("type1"))));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic2*"), std::string("type2*"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardDdsFilterTopic(std::string("topic1"), std::string("type1"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardDdsFilterTopic(std::string("topic2*"), std::string("type2*"))));
 
     // Allowlist with random topics
     RawConfiguration yaml4;
@@ -532,8 +532,8 @@ TEST(ConfigurationTest, blocklist_wildcard)
     add_topic_to_list_to_yaml(yaml3, BLOCKLIST_TAG, "topic2*", "type2*");
     DDSRouterConfiguration config3(yaml3);
     auto result3 = config3.blocklist();
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic1"), std::string("type1"))));
-    EXPECT_TRUE(topic_in_list(result3, WildcardTopic(std::string("topic2*"), std::string("type2*"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardDdsFilterTopic(std::string("topic1"), std::string("type1"))));
+    EXPECT_TRUE(topic_in_list(result3, WildcardDdsFilterTopic(std::string("topic2*"), std::string("type2*"))));
 
     // Blocklist with random topics
     RawConfiguration yaml4;

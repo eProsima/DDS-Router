@@ -59,7 +59,7 @@ void EchoParticipant::echo_discovery(
 }
 
 std::shared_ptr<IWriter> EchoParticipant::create_writer(
-        RealTopic topic)
+        DdsTopic topic)
 {
     if (configuration_->echo_data)
     {

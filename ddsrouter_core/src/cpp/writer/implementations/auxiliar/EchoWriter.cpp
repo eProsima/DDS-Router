@@ -27,7 +27,7 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 
 EchoWriter::EchoWriter(
-        const types::RealTopic& topic,
+        const types::DdsTopic& topic,
         bool verbose)
     : topic_(topic)
     , verbose_(verbose)

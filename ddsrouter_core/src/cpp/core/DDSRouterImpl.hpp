@@ -54,7 +54,7 @@ public:
      * Initialize a whole DDSRouterImpl:
      * - Create its associated AllowedTopicList
      * - Create Participants and add them to \c ParticipantsDatabase
-     * - Create the Bridges for RealTopics as disabled (TODO: remove when discovery is ready)
+     * - Create the Bridges for DdsTopics as disabled (TODO: remove when discovery is ready)
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *
@@ -173,7 +173,7 @@ protected:
      * @param [in] topic : topic discovered
      */
     void discovered_topic_(
-            const types::RealTopic& topic) noexcept;
+            const types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Method called every time a new endpoint has been discovered/updated
@@ -193,7 +193,7 @@ protected:
      * @param [in] topic : new topic
      */
     void create_new_bridge(
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             bool enabled = false) noexcept;
 
     /**
@@ -204,7 +204,7 @@ protected:
      * @param [in] topic : Topic to be enabled
      */
     void activate_topic_(
-            const types::RealTopic& topic) noexcept;
+            const types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Disable a specific topic.
@@ -214,7 +214,7 @@ protected:
      * @param [in] topic : Topic to be disabled
      */
     void deactivate_topic_(
-            const types::RealTopic& topic) noexcept;
+            const types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Activate all Topics that are allowed by the allowed topics list
@@ -253,7 +253,7 @@ protected:
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
     //! Map of bridges indexed by their topic
-    std::map<types::RealTopic, std::unique_ptr<Bridge>> bridges_;
+    std::map<types::DdsTopic, std::unique_ptr<Bridge>> bridges_;
 
     /**
      * @brief List of topics discovered
@@ -261,7 +261,7 @@ protected:
      * Every topic discovered would be added to this map.
      * If the value is true, it means this topic is currently activated.
      */
-    std::map<types::RealTopic, bool> current_topics_;
+    std::map<types::DdsTopic, bool> current_topics_;
 
     //! DDSRouterImpl configuration
     configuration::DDSRouterConfiguration configuration_;

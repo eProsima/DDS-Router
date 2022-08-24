@@ -35,6 +35,11 @@ bool QoS::operator ==(
         partition_qos == other.partition_qos;
 }
 
+bool QoS::is_reliable() const noexcept
+{
+    return reliability_qos == ReliabilityKind::RELIABLE;
+}
+
 std::ostream& operator <<(
         std::ostream& os,
         const DurabilityKind& kind)

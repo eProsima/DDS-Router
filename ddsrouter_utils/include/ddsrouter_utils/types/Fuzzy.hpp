@@ -18,10 +18,8 @@
  * This file contains class Formatter implementation.
  */
 
-#pragma once
-
-#ifndef DDSROUTERUTILS_TYPES_FUZZY_HPP_
-#define DDSROUTERUTILS_TYPES_FUZZY_HPP_
+#ifndef _DDSROUTERUTILS_TYPES_FUZZY_HPP_
+#define _DDSROUTERUTILS_TYPES_FUZZY_HPP_
 
 #include <ostream>
 
@@ -64,11 +62,23 @@ public:
         T&& other,
         FuzzyLevel level = FuzzyLevel::set);
 
+    // Fuzzy(
+    //     const Fuzzy<T>& other);
+
+    // Fuzzy(
+    //     Fuzzy<T>&& other);
+
+    // Fuzzy& operator=(const Fuzzy<T>& other) noexcept;
+
+    // Fuzzy& operator=(const T& other) noexcept;
+
+    // Fuzzy& operator=(Fuzzy<T>&& other) noexcept;
+
+    // Fuzzy& operator=(T&& other) noexcept;
+
     /////////////////////////
     // OPERATORS
     /////////////////////////
-
-    operator T() const noexcept;
 
     operator const T&() const noexcept;
 
@@ -95,6 +105,8 @@ public:
     /////////////////////////
 
     void set_value(const T& new_value, FuzzyLevel level = FuzzyLevel::set);
+
+    void check_as_set(FuzzyLevel level = FuzzyLevel::set);
 
     /////////////////////////
     // VARIABLES
@@ -123,4 +135,4 @@ DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
 // Include implementation template file
 #include <ddsrouter_utils/types/impl/Fuzzy.ipp>
 
-#endif /* DDSROUTERUTILS_TYPES_FUZZY_HPP_ */
+#endif /* _DDSROUTERUTILS_TYPES_FUZZY_HPP_ */

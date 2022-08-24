@@ -52,13 +52,13 @@ DummyParticipant::~DummyParticipant()
 }
 
 std::shared_ptr<IWriter> DummyParticipant::create_writer_(
-        RealTopic topic)
+        DdsTopic topic)
 {
     return std::make_shared<DummyWriter>(id(), topic, payload_pool_);
 }
 
 std::shared_ptr<IReader> DummyParticipant::create_reader_(
-        RealTopic topic)
+        DdsTopic topic)
 {
     return std::make_shared<DummyReader>(id(), topic, payload_pool_);
 }
@@ -76,7 +76,7 @@ Endpoint DummyParticipant::get_discovered_endpoint(
 }
 
 void DummyParticipant::simulate_data_reception(
-        RealTopic topic,
+        DdsTopic topic,
         DummyDataReceived data)
 {
     auto it = readers_.find(topic);
@@ -88,7 +88,7 @@ void DummyParticipant::simulate_data_reception(
 }
 
 std::vector<DummyDataStored> DummyParticipant::get_data_that_should_have_been_sent(
-        RealTopic topic)
+        DdsTopic topic)
 {
     auto it = writers_.find(topic);
     if (it != writers_.end())
@@ -103,7 +103,7 @@ std::vector<DummyDataStored> DummyParticipant::get_data_that_should_have_been_se
 }
 
 void DummyParticipant::wait_until_n_data_sent(
-        RealTopic topic,
+        DdsTopic topic,
         uint16_t n) const noexcept
 {
     auto it = writers_.find(topic);

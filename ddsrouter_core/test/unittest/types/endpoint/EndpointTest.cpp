@@ -63,10 +63,10 @@ QoS random_qos(
 }
 
 // Get a random topic name
-RealTopic random_topic(
+DdsTopic random_topic(
         uint16_t seed = 0)
 {
-    return RealTopic("TopicName_" + std::to_string(seed), "TopicType_" + std::to_string(seed));
+    return DdsTopic("TopicName_" + std::to_string(seed), "TopicType_" + std::to_string(seed));
 }
 
 // Get a random topic name
@@ -117,7 +117,7 @@ TEST(EndpointTest, constructor)
     EndpointKind kind;
     Guid guid;
     QoS qos = random_qos();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
 
     Endpoint endpoint(kind, guid, qos, topic);
 
@@ -138,7 +138,7 @@ TEST(EndpointTest, kind_getter)
 {
     Guid guid;
     QoS qos = random_qos();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
 
     // Writer
     {
@@ -163,7 +163,7 @@ TEST(EndpointTest, kind_getter)
 TEST(EndpointTest, guid_getter)
 {
     QoS qos = random_qos();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
 
     // Default guid
@@ -193,7 +193,7 @@ TEST(EndpointTest, guid_getter)
 TEST(EndpointTest, qos_getter)
 {
     Guid guid = random_valid_guid();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
 
     // Random guids
@@ -223,7 +223,7 @@ TEST(EndpointTest, topic_getter)
     {
         for (uint16_t i = 0; i < 10; i++)
         {
-            RealTopic topic = random_topic(i);
+            DdsTopic topic = random_topic(i);
             Endpoint endpoint(kind, guid, qos, topic);
             ASSERT_EQ(endpoint.topic(), random_topic(i)) << i;
         }
@@ -241,7 +241,7 @@ TEST(EndpointTest, topic_getter)
 TEST(EndpointTest, active_getter)
 {
     Guid guid = random_valid_guid();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
     QoS qos = random_qos();
 
@@ -279,7 +279,7 @@ TEST(EndpointTest, active_getter)
 TEST(EndpointTest, active_setter)
 {
     Guid guid = random_valid_guid();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
     QoS qos = random_qos();
 
@@ -316,7 +316,7 @@ TEST(EndpointTest, is_writer)
 {
     Guid guid;
     QoS qos = random_qos();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
 
     // Writer
     {
@@ -342,7 +342,7 @@ TEST(EndpointTest, is_reader)
 {
     Guid guid;
     QoS qos = random_qos();
-    RealTopic topic = random_topic();
+    DdsTopic topic = random_topic();
 
     // Writer
     {

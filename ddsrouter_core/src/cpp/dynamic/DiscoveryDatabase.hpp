@@ -33,7 +33,7 @@
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -95,7 +95,7 @@ public:
      * @return true if any endpoint has this topic, false otherwise
      */
     bool topic_exists(
-            const types::RealTopic& topic) const noexcept;
+            const types::DdsTopic& topic) const noexcept;
 
     //! Whether this guid is in the database
     bool endpoint_exists(

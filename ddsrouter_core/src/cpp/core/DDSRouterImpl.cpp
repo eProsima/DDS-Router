@@ -62,6 +62,7 @@ DDSRouterImpl::DDSRouterImpl(
     discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
             std::placeholders::_1));
 
+
     // Init topic allowed
     init_allowed_topics_();
     // Load Participants
@@ -132,7 +133,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             new_configuration.blocklist);
 
         // Check if there are any new builtin topics
-        std::set<RealTopic> new_builtin_topics;
+        std::set<DdsTopic> new_builtin_topics;
         for (auto builtin_topic : new_configuration.builtin_topics)
         {
             if (current_topics_.find(*builtin_topic) == current_topics_.end())
@@ -175,7 +176,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
         }
 
         // Create bridges for newly added builtin topics
-        for (RealTopic topic : new_builtin_topics)
+        for (DdsTopic topic : new_builtin_topics)
         {
             discovered_topic_(topic);
         }
@@ -327,14 +328,14 @@ void DDSRouterImpl::init_participants_()
 
 void DDSRouterImpl::init_bridges_()
 {
-    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics)
+    for (std::shared_ptr<DdsTopic> topic : configuration_.builtin_topics)
     {
         discovered_topic_(*topic);
     }
 }
 
 void DDSRouterImpl::discovered_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -356,6 +357,9 @@ void DDSRouterImpl::discovered_topic_(
     {
         activate_topic_(topic);
     }
+    else
+    {
+    }
 }
 
 void DDSRouterImpl::discovered_endpoint_(
@@ -367,7 +371,7 @@ void DDSRouterImpl::discovered_endpoint_(
 }
 
 void DDSRouterImpl::create_new_bridge(
-        const RealTopic& topic,
+        const DdsTopic& topic,
         bool enabled /*= false*/) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -387,7 +391,7 @@ void DDSRouterImpl::create_new_bridge(
 }
 
 void DDSRouterImpl::activate_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -412,7 +416,7 @@ void DDSRouterImpl::activate_topic_(
 }
 
 void DDSRouterImpl::deactivate_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -440,6 +444,9 @@ void DDSRouterImpl::activate_all_topics_() noexcept
         if (allowed_topics_.is_topic_allowed(it.first))
         {
             activate_topic_(it.first);
+        }
+        else
+        {
         }
     }
 }

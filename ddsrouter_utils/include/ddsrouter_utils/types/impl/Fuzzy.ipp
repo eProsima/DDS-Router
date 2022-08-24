@@ -42,15 +42,63 @@ Fuzzy<T>::Fuzzy(
 {
 }
 
+// template <typename T>
+// Fuzzy<T>::Fuzzy(
+//         const Fuzzy<T>& other)
+//     : value(other.value)
+//     , fuzzy_level(other.fuzzy_level)
+// {
+// }
+
+// template <typename T>
+// Fuzzy<T>::Fuzzy(
+//         Fuzzy<T>&& other)
+//     : value(std::move(other.value))
+//     , fuzzy_level(other.fuzzy_level)
+// {
+// }
+
+// template <typename T>
+// Fuzzy<T>& Fuzzy<T>::operator=(const Fuzzy<T>& other) noexcept
+// {
+//     this->value = other.value;
+//     this->fuzzy_level = other.fuzzy_level;
+//     return *this;
+// }
+
+// template <typename T>
+// Fuzzy<T>& Fuzzy<T>::operator=(const T& other) noexcept
+// {
+//     this->value = other;
+//     this->fuzzy_level = FuzzyLevel::set;
+//     return *this;
+// }
+
+// template <typename T>
+// Fuzzy<T>& Fuzzy<T>::operator=(Fuzzy<T>&& other) noexcept
+// {
+//     this->value = std::move(other.value);
+//     this->fuzzy_level = other.fuzzy_level;
+//     return *this;
+// }
+
+// template <typename T>
+// Fuzzy<T>& Fuzzy<T>::operator=(T&& other) noexcept
+// {
+//     this->value = std::move(other);
+//     this->fuzzy_level = FuzzyLevel::set;
+//     return *this;
+// }
+
 /////////////////////////
 // OPERATORS
 /////////////////////////
 
-template <typename T>
-Fuzzy<T>::operator T() const noexcept
-{
-    return value;
-}
+// template <typename T>
+// Fuzzy<T>::operator T() const noexcept
+// {
+//     return value;
+// }
 
 template <typename T>
 Fuzzy<T>::operator const T&() const noexcept
@@ -129,6 +177,13 @@ void Fuzzy<T>::set_value(const T& new_value, FuzzyLevel level /* = FuzzyLevel::S
     value = new_value;
     fuzzy_level = level;
 }
+
+template <typename T>
+void Fuzzy<T>::check_as_set(FuzzyLevel level /* = FuzzyLevel::set */)
+{
+    fuzzy_level = level;
+}
+
 
 /////////////////////////
 // SERIALIZATION

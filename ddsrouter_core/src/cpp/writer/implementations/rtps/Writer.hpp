@@ -77,7 +77,7 @@ public:
      */
     Writer(
             const types::ParticipantId& participant_id,
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const bool repeater = false);

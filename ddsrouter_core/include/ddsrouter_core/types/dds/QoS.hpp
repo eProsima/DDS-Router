@@ -57,9 +57,14 @@ struct DDSROUTER_CORE_DllAPI QoS
     // OPERATORS
     /////////////////////////
 
-    // OPERATOR OVERLOAD
     bool operator ==(
             const QoS& other) const noexcept;
+
+    /////////////////////////
+    // METHODS
+    /////////////////////////
+
+    bool is_reliable() const noexcept;
 
     /////////////////////////
     // VARIABLES

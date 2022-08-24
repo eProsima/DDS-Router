@@ -28,7 +28,7 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 
 Bridge::Bridge(
-        const RealTopic& topic,
+        const DdsTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<utils::SlotThreadPool> thread_pool,
