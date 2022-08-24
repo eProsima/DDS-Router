@@ -28,7 +28,7 @@ using namespace eprosima::ddsrouter::core::types;
 
 BaseWriter::BaseWriter(
         const ParticipantId& participant_id,
-        const RealTopic& topic,
+        const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool)
     : participant_id_(participant_id)
     , topic_(topic)

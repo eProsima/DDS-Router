@@ -27,9 +27,9 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
@@ -68,9 +68,9 @@ struct TopicInput
     bool key_set;
 };
 
-struct RealTopicInput : public TopicInput
+struct DdsTopicInput : public TopicInput
 {
-    RealTopicInput(
+    DdsTopicInput(
             std::string name,
             std::string type,
             bool keyed,
@@ -94,10 +94,10 @@ struct WildcardTopicInput : public TopicInput
     bool type_set;
 };
 
-std::set<std::shared_ptr<RealTopic>> topic_set(
-        std::vector<RealTopicInput> topics);
+std::set<std::shared_ptr<DdsTopic>> topic_set(
+        std::vector<DdsTopicInput> topics);
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(
+std::set<std::shared_ptr<DdsFilterTopic>> topic_set(
         std::vector<WildcardTopicInput> topics);
 
 DomainId random_domain(

@@ -20,7 +20,7 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
 #include <test_participants.hpp>
@@ -48,19 +48,22 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
         bool reliable_readers = false)
 {
     // Always filter the test topics by topic name
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // empty
+    allowlist.insert(std::make_shared<types::WildcardDdsFilterTopic>(TOPIC_NAME));
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
 
     if (disable_dynamic_discovery || reliable_readers)
     {
+        types::TopicQoS qos;
+        qos.reliability_qos = reliable_readers ? types::ReliabilityKind::RELIABLE : types::ReliabilityKind::BEST_EFFORT;
+
         builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
+            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));
         builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
+            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorldKeyed", true, qos));
     }
 
     // Two simple participants
@@ -105,6 +108,7 @@ void test_local_communication(
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
         bool reliable = false)
 {
+
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
     eprosima::ddsrouter::test::TestLogHandler test_log_handler(utils::Log::Kind::Error);

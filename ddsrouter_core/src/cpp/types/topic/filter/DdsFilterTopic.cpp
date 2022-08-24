@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,37 +13,34 @@
 // limitations under the License.
 
 /**
- * @file FilterTopic.cpp
+ * @file DdsFilterTopic.cpp
  *
  */
 
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-FilterTopic::FilterTopic(
-        const std::string& topic_name,
-        const std::string& topic_type,
-        bool has_keyed_set, /* = false */
-        bool topic_with_key /* = false */) noexcept
-    : Topic(topic_name, topic_type, topic_with_key)
-    , has_keyed_set_(has_keyed_set)
+bool DdsFilterTopic::operator< (const DdsFilterTopic& other) const noexcept
 {
+    return utils::generic_to_string(other) < utils::generic_to_string(*this);
 }
 
-bool FilterTopic::operator ==(
-        const FilterTopic& other) const
+bool DdsFilterTopic::operator== (const DdsFilterTopic& other) const noexcept
 {
-    return Topic::operator ==(
-        other) && has_keyed_set_ == other.has_keyed_set_;
+    return utils::generic_to_string(other) == utils::generic_to_string(*this);
 }
 
-bool FilterTopic::has_keyed_set() const
+std::ostream& operator <<(
+        std::ostream& os,
+        const DdsFilterTopic& t)
 {
-    return has_keyed_set_;
+    t.serialize(os);
+    return os;
 }
 
 } /* namespace types */

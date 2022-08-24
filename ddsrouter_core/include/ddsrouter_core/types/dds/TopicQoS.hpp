@@ -57,7 +57,6 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     // OPERATORS
     /////////////////////////
 
-    // OPERATOR OVERLOAD
     bool operator ==(
             const TopicQoS& other) const noexcept;
 
