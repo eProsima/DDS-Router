@@ -171,16 +171,16 @@ void Reader::enable_() noexcept
     on_data_available_();
 }
 
-bool Reader::come_from_this_participant_(
+bool Reader::accept_message_from_this_source_(
         const fastrtps::rtps::CacheChange_t* change) const noexcept
 {
-    return come_from_this_participant_(change->writerGUID);
+    return accept_message_from_this_source_(change->writerGUID);
 }
 
-bool Reader::come_from_this_participant_(
+bool Reader::accept_message_from_this_source_(
         const fastrtps::rtps::GUID_t guid) const noexcept
 {
-    return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
+    return true;
 }
 
 fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
@@ -255,7 +255,7 @@ void Reader::onNewCacheChangeAdded(
         fastrtps::rtps::RTPSReader*,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
-    if (!come_from_this_participant_(change))
+    if (accept_message_from_this_source_(change))
     {
         // Do not remove previous received changes so they can be read when the reader is enabled
         if (enabled_)
@@ -279,7 +279,7 @@ void Reader::onNewCacheChangeAdded(
     {
         logWarning(
             DDSROUTER_RTPS_READER_LISTENER,
-            "Ignoring data from this same Participant in reader " << *this << ".");
+            "Ignoring data from " << change->writerGUID << " in reader " << *this << ".");
 
         // If it is a message from this Participant, do not send it forward and remove it
         // TODO: do this more elegant
@@ -291,7 +291,7 @@ void Reader::onReaderMatched(
         fastrtps::rtps::RTPSReader*,
         fastrtps::rtps::MatchingInfo& info) noexcept
 {
-    if (!come_from_this_participant_(info.remoteEndpointGuid))
+    if (accept_message_from_this_source_(info.remoteEndpointGuid))
     {
         if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
         {

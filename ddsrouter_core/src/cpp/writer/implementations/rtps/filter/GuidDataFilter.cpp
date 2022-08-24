@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file SelfDataFilter.cpp
+ * @file GuidDataFilter.cpp
  */
 
 #include <fastrtps/rtps/common/CacheChange.h>
@@ -21,19 +21,26 @@
 #include <ddsrouter_utils/Log.hpp>
 
 #include <types/dds/RouterCacheChange.hpp>
-#include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
+#include <writer/implementations/rtps/filter/GuidDataFilter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
 
-bool SelfDataFilter::is_relevant(
+GuidDataFilter::GuidDataFilter(std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter)
+    : target_guids_filter(target_guids_filter)
+{
+    // Do nothing
+}
+
+
+bool GuidDataFilter::is_relevant(
         const fastrtps::rtps::CacheChange_t& change,
         const fastrtps::rtps::GUID_t& reader_guid) const
 {
-    // It is relevant only if the reader does not belong to same participant as writer
-    return change.writerGUID.guidPrefix != reader_guid.guidPrefix;
+    std::shared_lock<types::GuidPrefixDataFilterType> lock(*target_guids_filter);
+    return target_guids_filter->find(reader_guid.guidPrefix) == target_guids_filter->end();
 }
 
 } /* namespace rtps */

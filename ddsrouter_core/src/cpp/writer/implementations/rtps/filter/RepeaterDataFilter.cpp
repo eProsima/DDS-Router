@@ -32,11 +32,11 @@ bool RepeaterDataFilter::is_relevant(
         const fastrtps::rtps::CacheChange_t& change,
         const fastrtps::rtps::GUID_t& reader_guid) const
 {
-    if (!SelfDataFilter::is_relevant(change, reader_guid))
+    if (!GuidDataFilter::is_relevant(change, reader_guid))
     {
         logDebug(
             REPEATER_DATA_FILTER,
-            "Ignoring message by SelfDataFilter is_relevant result.");
+            "Ignoring message by GuidDataFilter is_relevant result.");
 
         // If origin filter does not pass this change, it is discarded
         return false;

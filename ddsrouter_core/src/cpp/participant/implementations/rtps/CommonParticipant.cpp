@@ -45,10 +45,14 @@ CommonParticipant::CommonParticipant(
         unsigned int max_history_depth)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
     , max_history_depth_(max_history_depth)
+    , target_guids_writer_filter_(std::make_shared<types::GuidPrefixDataFilterType>())
 {
     create_participant_(
         domain_id,
         participant_attributes);
+
+    // Add this same Participant to be filtered by the Writer
+    add_filter_guidprefix_(rtps_participant_->getGuid().guidPrefix);
 }
 
 CommonParticipant::~CommonParticipant()
@@ -67,20 +71,33 @@ void CommonParticipant::onParticipantDiscovery(
     {
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
+            // Check whether this Participant belongs to a local Dds Router and is such, filter its sources
+            if (is_local_ddsrouter_participant_(info))
+            {
+                // Found local DDS Router, so filtering it
+                add_filter_guidprefix_(info.info.m_guid.guidPrefix);
+                logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY,
+                            "Found in Participant " << this->id_nts_() <<
+                            " new Local Participant " << info.info.m_guid <<
+                            " that belongs to a DDS Router, so filtering it.");
+            }
+            else
+            {
+                logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY,
+                        "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
+            }
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::REMOVED_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " removed.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Participant " << info.info.m_guid << " removed.");
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " dropped.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Participant " << info.info.m_guid << " dropped.");
         }
     }
 }
@@ -142,27 +159,27 @@ void CommonParticipant::onReaderDiscovery(
 
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY,
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
 
             this->discovery_database_->update_endpoint(info_reader);
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::REMOVED_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Reader " << info.info.guid() << " removed.");
 
             info_reader.active(false);
             this->discovery_database_->update_endpoint(info_reader);
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
 
             info_reader.active(false);
             this->discovery_database_->update_endpoint(info_reader);
@@ -180,27 +197,27 @@ void CommonParticipant::onWriterDiscovery(
 
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY,
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY,
                     "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
 
             this->discovery_database_->update_endpoint(info_writer);
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::REMOVED_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Writer " << info.info.guid() << " removed.");
 
             info_writer.active(false);
             this->discovery_database_->update_endpoint(info_writer);
         }
         else
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
+            logInfo(DDSROUTER_RTPSPARTICIPANT_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
 
             info_writer.active(false);
             this->discovery_database_->update_endpoint(info_writer);
@@ -245,6 +262,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         this->payload_pool_,
         rtps_participant_,
         max_history_depth_,
+        target_guids_writer_filter_,
         this->configuration_->is_repeater);
 }
 
@@ -258,6 +276,13 @@ std::shared_ptr<IReader> CommonParticipant::create_reader_(
         rtps_participant_);
 }
 
+void CommonParticipant::add_filter_guidprefix_(const types::GuidPrefix& guid_to_filter) noexcept
+{
+    // Lock to write
+    std::unique_lock<types::GuidPrefixDataFilterType> lock(*target_guids_writer_filter_);
+    target_guids_writer_filter_->insert(guid_to_filter);
+}
+
 fastrtps::rtps::RTPSParticipantAttributes
 CommonParticipant::participant_attributes_(
         const configuration::ParticipantConfiguration* participant_configuration)
@@ -267,7 +292,42 @@ CommonParticipant::participant_attributes_(
     // Add Participant name
     params.setName(participant_configuration->id.id_name().c_str());
 
+    // Set property so other Routers know the Participants belongs to a Router and its kind
+    eprosima::fastrtps::rtps::Property router_kind_property(
+        std::string(ROUTER_PROPERTY_KIND_NAME_),
+        std::string(types::PARTICIPANT_KIND_STRINGS[static_cast<int>(participant_configuration->kind)]));
+    router_kind_property.propagate(true);
+    params.properties.properties().push_back(router_kind_property);
+
+    // Set property so other Routers know the Participant is local or wan
+    eprosima::fastrtps::rtps::Property router_positioning_property(
+        std::string(ROUTER_PROPERTY_POSITIONING_NAME_),
+        std::string((participant_configuration->kind == types::ParticipantKind::local_discovery_server ||
+         participant_configuration->kind == types::ParticipantKind::simple_rtps)
+            ? ROUTER_PROPERTY_POSITIONING_VALUE_LOCAL_
+            : ROUTER_PROPERTY_POSITIONING_VALUE_WAN_));
+    router_positioning_property.propagate(true);
+    params.properties.properties().push_back(router_positioning_property);
+
     return params;
+}
+
+bool CommonParticipant::is_local_ddsrouter_participant_(const fastrtps::rtps::ParticipantDiscoveryInfo& info) noexcept
+{
+
+    // Check if router positioning property exist
+    for (auto pit = info.info.m_properties.begin();
+         pit != info.info.m_properties.end();
+         ++pit)
+    {
+        // Attribute found
+        if (pit->first() == std::string(ROUTER_PROPERTY_POSITIONING_NAME_))
+        {
+            return pit->second() == std::string(ROUTER_PROPERTY_POSITIONING_VALUE_LOCAL_);
+        }
+    }
+
+    return false;
 }
 
 } /* namespace rtps */

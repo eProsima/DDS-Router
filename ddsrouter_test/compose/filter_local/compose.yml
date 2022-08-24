@@ -1,0 +1,70 @@
+# Test description:
+#   This test checks that 2 DDS Routers can work simultaneously over same local area network without creating a loop.
+#   There are a Pub and sub in domain 0, and a sub in domain 1; and 2 dds routers from domain 0 to 1.
+#
+# Note:
+#   The messages received in Subscriber 2 will be repeated, as both routers will transmit them.
+#
+# Test architecture:
+#
+
+#   TODO: add graph
+
+services:
+
+  ddsrouter_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_1
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter_1.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+  ddsrouter_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_2
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter_2.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+  pub_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: pub_edge_1
+    depends_on:
+      - ddsrouter_1
+      - ddsrouter_2
+    networks:
+      - std_net
+    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher --interval 100 --samples 110 --domain 1
+
+  sub_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: sub_edge_1
+    depends_on:
+      - ddsrouter_1
+      - ddsrouter_2
+    networks:
+      - std_net
+    volumes:
+      - ../execute_and_validate_subscriber.py:/execute_and_validate_subscriber.py
+    command: python3 /execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --domain 1
+
+  sub_edge_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: sub_edge_2
+    depends_on:
+      - ddsrouter_1
+      - ddsrouter_2
+    networks:
+      - std_net
+    volumes:
+      - ../execute_and_validate_subscriber.py:/execute_and_validate_subscriber.py
+    command: python3 /execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 40 --timeout 12 --domain 2 --allow-duplicates
+
+networks:
+  std_net:
+  default:
+    driver: none

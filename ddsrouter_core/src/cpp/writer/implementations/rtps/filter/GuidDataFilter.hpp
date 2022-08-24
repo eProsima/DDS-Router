@@ -13,13 +13,15 @@
 // limitations under the License.
 
 /**
- * @file SelfDataFilter.hpp
+ * @file GuidDataFilter.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_SelfParticipantDataFilter_HPP_
 
 #include <fastdds/rtps/interfaces/IReaderDataFilter.hpp>
+
+#include <ddsrouter_core/types/common/types.hpp>
 
 /////
 // Forward declarations
@@ -40,11 +42,12 @@ namespace core {
 namespace rtps {
 
 /**
- * This filter allows to not send messages from this Writer to the Readers in the same Participant.
+ * This filter filter messages to those readers belonging to a Participant present in the filter list given.
  */
-class SelfDataFilter : public fastdds::rtps::IReaderDataFilter
+struct GuidDataFilter : public fastdds::rtps::IReaderDataFilter
 {
-public:
+
+    GuidDataFilter(std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter);
 
     /**
      * @brief Whether incoming change is relevant for this reader.
@@ -56,6 +59,8 @@ public:
             const fastrtps::rtps::CacheChange_t& change,
             const fastrtps::rtps::GUID_t& reader_guid
             ) const override;
+
+    std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter;
 };
 
 } /* namespace rtps */

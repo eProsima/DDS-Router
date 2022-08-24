@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_REPEATERDATAFILTER_HPP_
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_FILTER_REPEATERDATAFILTER_HPP_
 
-#include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
+#include <writer/implementations/rtps/filter/GuidDataFilter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,9 +34,10 @@ namespace rtps {
  *
  * This uses the RouterCacheChange extra information.
  */
-class RepeaterDataFilter : public SelfDataFilter
+struct RepeaterDataFilter : public GuidDataFilter
 {
-public:
+
+    using GuidDataFilter::GuidDataFilter;
 
     /**
      * @brief Whether incoming change is relevant for this reader.

@@ -18,6 +18,7 @@ set(TESTS
     repeater_tcp
     tcp
     udp
+    filter_local
     discovery_server
 )
 

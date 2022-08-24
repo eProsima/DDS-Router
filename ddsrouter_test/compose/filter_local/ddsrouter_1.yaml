@@ -1,0 +1,14 @@
+version: v3.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: 1_Simple_Participant_1
+    kind: local
+    domain: 1
+
+  - name: 1_Simple_Participant_2
+    kind: local
+    domain: 2

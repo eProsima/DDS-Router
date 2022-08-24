@@ -28,9 +28,9 @@
 #include <fastrtps/rtps/reader/RTPSReader.h>
 #include <fastrtps/rtps/reader/ReaderListener.h>
 
-#include <reader/implementations/auxiliar/BaseReader.hpp>
-
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+
+#include <reader/implementations/auxiliar/BaseReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -160,11 +160,11 @@ protected:
     // Reader specific methods
 
     //! Whether a change received is from this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(
+    bool accept_message_from_this_source_(
             const fastrtps::rtps::CacheChange_t* change) const noexcept;
 
     //! Whether a guid references this Participant (to avoid auto-feedback)
-    bool come_from_this_participant_(
+    bool accept_message_from_this_source_(
             const fastrtps::rtps::GUID_t guid) const noexcept;
 
     /////

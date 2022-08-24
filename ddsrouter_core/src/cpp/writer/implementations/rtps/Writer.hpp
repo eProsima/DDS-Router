@@ -27,7 +27,10 @@
 #include <fastrtps/rtps/attributes/WriterAttributes.h>
 #include <fastrtps/rtps/writer/RTPSWriter.h>
 
+#include <ddsrouter_utils/types/Atomicable.hpp>
+
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/common/types.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
 
@@ -81,6 +84,7 @@ public:
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             unsigned int max_history_depth,
+            std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter,
             const bool repeater = false);
 
     /**
@@ -160,6 +164,9 @@ protected:
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
     bool repeater_;
+
+    //! Collects these guid prefixes that the Writer must filter when sending data.
+    std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter_;
 };
 
 } /* namespace rtps */

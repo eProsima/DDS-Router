@@ -86,11 +86,15 @@ protected:
     types::Endpoint create_endpoint_from_info_(
             DiscoveryInfoKind& info);
 
+    void add_filter_guidprefix_(const types::GuidPrefix& guid_to_filter) noexcept;
+
     /////
     // RTPS specific methods
 
     static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
             const configuration::ParticipantConfiguration* participant_configuration);
+
+    static bool is_local_ddsrouter_participant_(const fastrtps::rtps::ParticipantDiscoveryInfo& info) noexcept;
 
     /////
     // VARIABLES
@@ -101,6 +105,21 @@ protected:
 
     //! Maximum depth of RTPS History instances
     unsigned int max_history_depth_;
+
+    /**
+     * @brief Collects these guid prefixes that the Writer must filter and not send messages to them.
+     *
+     * It does add also this same Participant.
+     */
+    std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_writer_filter_;
+
+    /*
+     * These constants set the name of property and values used in Property QoS
+     */
+    static constexpr const char* ROUTER_PROPERTY_KIND_NAME_ = "fastdds.ddsrouter.kind";
+    static constexpr const char* ROUTER_PROPERTY_POSITIONING_NAME_ = "fastdds.ddsrouter.positioning";
+    static constexpr const char* ROUTER_PROPERTY_POSITIONING_VALUE_LOCAL_ = "local";
+    static constexpr const char* ROUTER_PROPERTY_POSITIONING_VALUE_WAN_ = "wan";
 };
 
 } /* namespace rtps */
@@ -109,3 +128,4 @@ protected:
 } /* namespace eprosima */
 
 #endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_RTPS_COMMONPARTICIPANT_HPP_ */
+

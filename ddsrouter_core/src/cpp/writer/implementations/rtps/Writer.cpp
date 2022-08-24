@@ -25,7 +25,7 @@
 #include <efficiency/cache_change/CacheChangePool.hpp>
 #include <writer/implementations/rtps/Writer.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
-#include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
+#include <writer/implementations/rtps/filter/GuidDataFilter.hpp>
 #include <types/dds/RouterCacheChange.hpp>
 
 namespace eprosima {
@@ -41,9 +41,11 @@ Writer::Writer(
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
         unsigned int max_history_depth,
+        std::shared_ptr<types::GuidPrefixDataFilterType> target_guids_filter,
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
+    , target_guids_filter_(target_guids_filter)
 {
     // TODO Use payload pool for this writer, so change does not need to be copied
 
@@ -100,12 +102,12 @@ Writer::Writer(
     if (repeater)
     {
         // Use filter writer of origin
-        data_filter_ = std::make_unique<RepeaterDataFilter>();
+        data_filter_ = std::make_unique<RepeaterDataFilter>(target_guids_filter);
     }
     else
     {
         // Use default filter
-        data_filter_ = std::make_unique<SelfDataFilter>();
+        data_filter_ = std::make_unique<GuidDataFilter>(target_guids_filter);
     }
 
     rtps_writer_->reader_data_filter(data_filter_.get());
