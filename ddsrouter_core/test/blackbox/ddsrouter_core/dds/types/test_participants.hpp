@@ -68,12 +68,14 @@ class TestPublisher
 public:
 
     TestPublisher(
-            bool keyed = false)
+            bool keyed = false,
+            bool reliable = false)
         : participant_(nullptr)
         , publisher_(nullptr)
         , topic_(nullptr)
         , writer_(nullptr)
         , keyed_(keyed)
+        , reliable_ (reliable)
     {
     }
 
@@ -150,6 +152,12 @@ public:
         wqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
+        if (reliable_)
+        {
+            wqos.durability().kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+            wqos.reliability().kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        }
+
         if (writer_ == nullptr)
         {
             return false;
@@ -165,6 +173,7 @@ public:
         hello_.index(msg.index());
         hello_.message(msg.message());
         ASSERT_TRUE(writer_->write(&hello_));
+        // logError(DEBUG, "Write message");
     }
 
     void wait_discovery(
@@ -186,6 +195,8 @@ private:
     eprosima::fastdds::dds::DataWriter* writer_;
 
     bool keyed_;
+
+    bool reliable_;
 
     class PubListener : public eprosima::fastdds::dds::DataWriterListener
     {
@@ -418,6 +429,7 @@ private:
                     {
                         success = true;
                         (*samples_received_)++;
+                        // logError(DEBUG, "Read message " << samples_received_);
                     }
                 }
             }

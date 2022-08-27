@@ -58,7 +58,10 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     if (disable_dynamic_discovery || reliable_readers)
     {
         types::QoS qos;
-        qos.reliability_qos = reliable_readers ? types::ReliabilityKind::RELIABLE : types::ReliabilityKind::BEST_EFFORT;
+        qos.reliability_qos =
+            reliable_readers ? types::ReliabilityKind::RELIABLE : types::ReliabilityKind::BEST_EFFORT;
+        qos.durability_qos =
+            reliable_readers ? types::DurabilityKind::TRANSIENT_LOCAL : types::DurabilityKind::VOLATILE;
 
         builtin_topics.insert(
             std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));
@@ -128,7 +131,7 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<MsgStruct> publisher(msg.isKeyDefined());
+    TestPublisher<MsgStruct> publisher(msg.isKeyDefined(), reliable);
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
@@ -299,6 +302,8 @@ int main(
         int argc,
         char** argv)
 {
+    // eprosima::ddsrouter::utils::Log::SetVerbosity(eprosima::ddsrouter::utils::Log::Kind::Info);
+
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();

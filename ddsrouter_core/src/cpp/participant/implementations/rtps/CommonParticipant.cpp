@@ -110,10 +110,14 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
             utils::Formatter() <<
                 "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
     }
+    // TODO: Set History and partitions
+    // NOTE: dont know where history are or partitions are going to be used
+    // info_qos.history_qos = info.info.m_qos.
 
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
     info_topic.keyed = info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY;
+    info_topic.topic_qos.set_value(info_qos, utils::FuzzyLevel::fuzzy_set);
 
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)

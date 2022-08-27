@@ -158,7 +158,7 @@ bool Fuzzy<T>::is_valid() const noexcept
 template <typename T>
 bool Fuzzy<T>::is_set() const noexcept
 {
-    return fuzzy_level == FuzzyLevel::set;
+    return fuzzy_level == FuzzyLevel::set || fuzzy_level == FuzzyLevel::fuzzy_set;
 }
 
 template <typename T>

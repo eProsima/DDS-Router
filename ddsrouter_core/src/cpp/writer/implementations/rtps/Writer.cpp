@@ -183,6 +183,7 @@ utils::ReturnCode Writer::write_(
     rtps_history_->add_change(new_change);
 
     // TODO: Data is never removed till destruction
+    // TODO: Check if data must be erased manually
 
     return utils::ReturnCode::RETCODE_OK;
 }
@@ -198,9 +199,26 @@ fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+    // ASYNC write
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+
+    // If Qos has been set, use it. If not, use default (less restrictive)
+    if (topic_.topic_qos.is_set())
+    {
+        // NOTE: for some reasons I cannot reach to understand, there are 2 different types for Durability and
+        // Reliability in Fast DDS and not easy way to convert one to another.
+
+        att.endpoint.durabilityKind = topic_.topic_qos.value.durability_qos;
+        att.endpoint.reliabilityKind = topic_.topic_qos.value.reliability_qos;
+    }
+    else
+    {
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    }
+
+    // Set topic key
     if (topic_.keyed)
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -209,6 +227,7 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
     return att;
 }
 
@@ -231,8 +250,38 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 fastrtps::WriterQos Writer::writer_qos_() const noexcept
 {
     fastrtps::WriterQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+    // If Qos has been set, use it. If not, use default (less restrictive)
+    if (topic_.topic_qos.is_set())
+    {
+        // NOTE: for some reasons I cannot reach to understand, there are 2 different types for Durability and
+        // Reliability in Fast DDS and not easy way to convert one to another.
+        // Durability
+        if (topic_.topic_qos.value.durability_qos == types::DurabilityKind::VOLATILE)
+        {
+            qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+        }
+        else
+        {
+            qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+        }
+
+        // Reliability
+        if (topic_.topic_qos.value.reliability_qos == types::ReliabilityKind::BEST_EFFORT)
+        {
+            qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
+        }
+        else
+        {
+            qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        }
+    }
+    else
+    {
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    }
+
     return qos;
 }
 

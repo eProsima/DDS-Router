@@ -120,6 +120,7 @@ protected:
     //! Unique id of the endpoint
     Guid guid_;
 
+    // TODO: remove qos because they are already in topic
     //! Attributes of the endpoint
     QoS qos_;
 
