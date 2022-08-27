@@ -190,7 +190,7 @@ void Fuzzy<T>::check_as_set(FuzzyLevel level /* = FuzzyLevel::set */)
 /////////////////////////
 
 template <typename T>
-DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
+std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
