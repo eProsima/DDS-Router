@@ -49,7 +49,8 @@ std::shared_ptr<IParticipant> create_participant(
     std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration =
             random_participant_configuration(kind);
 
-    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database, test::DEFAULT_MAX_HISTORY_DEPTH);
+    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database,
+                   test::DEFAULT_MAX_HISTORY_DEPTH);
 }
 
 } /* namespace test */
