@@ -206,7 +206,8 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     fastrtps::rtps::WriterAttributes att;
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-    att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+    // Write synchronously to avoid removing a change before being sent, likely event when history depth is very small
+    att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
     if (topic_.topic_with_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
