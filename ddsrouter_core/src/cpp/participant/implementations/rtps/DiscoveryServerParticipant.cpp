@@ -42,7 +42,8 @@ DiscoveryServerParticipant::DiscoveryServerParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        participant_attributes_(participant_configuration.get()))
+        participant_attributes_(participant_configuration.get()),
+        participant_configuration->max_history_depth)
 {
 }
 

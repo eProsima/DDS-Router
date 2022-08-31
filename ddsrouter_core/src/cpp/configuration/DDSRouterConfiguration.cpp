@@ -40,10 +40,12 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<FilterTopic>> blocklist,
         std::set<std::shared_ptr<RealTopic>> builtin_topics,
         std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-        unsigned int number_of_threads /* = default_number_of_threads() */)
+        unsigned int number_of_threads,
+        unsigned int max_history_depth)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations(participants_configurations)
     , number_of_threads(number_of_threads)
+    , max_history_depth(max_history_depth)
 {
 }
 

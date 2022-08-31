@@ -187,7 +187,8 @@ configuration::DDSRouterConfiguration router_configuration(
         blocklist,
         builtin_topics,
         participants_configurations,
-        1);
+        1,
+        100);
 }
 
 /**
