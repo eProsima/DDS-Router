@@ -946,6 +946,13 @@ void _fill_ddsrouter_configuration_latest(
         object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
     }
 
+    /////
+    // Get optional maximum history depth
+    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
+    {
+        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
+    }
+
 }
 
 template <>

@@ -40,6 +40,7 @@ Writer::Writer(
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
+        unsigned int max_history_depth,
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
@@ -48,6 +49,7 @@ Writer::Writer(
 
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
+    history_att.maximumReservedCaches = max_history_depth;
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
 
     // Create Writer
@@ -182,7 +184,11 @@ utils::ReturnCode Writer::write_(
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
-    // TODO: Data is never removed till destruction
+    // When max history size is reached, remove oldest cache change
+    if (rtps_history_->isFull())
+    {
+        rtps_history_->remove_min_change();
+    }
 
     return utils::ReturnCode::RETCODE_OK;
 }
@@ -200,7 +206,8 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     fastrtps::rtps::WriterAttributes att;
     att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
     att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-    att.mode = fastrtps::rtps::RTPSWriterPublishMode::ASYNCHRONOUS_WRITER;
+    // Write synchronously to avoid removing a change before being sent, likely event when history depth is very small
+    att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
     if (topic_.topic_with_key())
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;

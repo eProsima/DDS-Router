@@ -278,6 +278,41 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     }
 }
 
+/**
+ * Test load of maximum history depth in the configuration
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, max_history_depth)
+{
+    const char* yml_configuration =
+            // trivial configuration
+            R"(
+        version: v2.0
+        participants:
+          - name: "P1"
+            kind: "void"
+          - name: "P2"
+            kind: "void"
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    std::vector<unsigned int> test_cases = {10, 100, 1000, 5000, 10000};
+
+    for (unsigned int test_case : test_cases)
+    {
+        yml[MAX_HISTORY_DEPTH_TAG] = test_case;
+
+        // Load configuration
+        core::configuration::DDSRouterConfiguration configuration_result =
+                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        // Check max history depth is correct
+        ASSERT_EQ(test_case, configuration_result.max_history_depth);
+    }
+}
+
 int main(
         int argc,
         char** argv)

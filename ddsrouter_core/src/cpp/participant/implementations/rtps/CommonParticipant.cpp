@@ -41,8 +41,10 @@ CommonParticipant::CommonParticipant(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database,
         const types::DomainId& domain_id,
-        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
+        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
+        unsigned int max_history_depth)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
+    , max_history_depth_(max_history_depth)
 {
     create_participant_(
         domain_id,
@@ -242,6 +244,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         topic,
         this->payload_pool_,
         rtps_participant_,
+        max_history_depth_,
         this->configuration_->is_repeater);
 }
 

@@ -39,7 +39,8 @@ SimpleParticipant::SimpleParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        CommonParticipant::participant_attributes_(participant_configuration.get()))
+        CommonParticipant::participant_attributes_(participant_configuration.get()),
+        participant_configuration->max_history_depth)
 {
 }
 

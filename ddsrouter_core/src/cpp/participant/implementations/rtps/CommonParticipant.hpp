@@ -53,7 +53,8 @@ public:
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
             const types::DomainId& domain_id,
-            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
+            unsigned int max_history_depth);
 
     virtual ~CommonParticipant();
 
@@ -97,6 +98,9 @@ protected:
 
     //! Mutex that guards every access to the RTPS Participant
     mutable std::recursive_mutex rtps_mutex_;
+
+    //! Maximum depth of RTPS History instances
+    unsigned int max_history_depth_;
 };
 
 } /* namespace rtps */

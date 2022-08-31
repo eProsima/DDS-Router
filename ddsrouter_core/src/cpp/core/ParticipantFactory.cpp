@@ -43,7 +43,8 @@ using namespace eprosima::ddsrouter::core::configuration;
 std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
+        std::shared_ptr<DiscoveryDatabase> discovery_database,
+        unsigned int max_history_depth)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
     switch (participant_configuration->kind)
@@ -80,6 +81,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
                     std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(
                 participant_configuration);
+            // TMP: Until Transparency QoS module is available
+            conf_->max_history_depth = max_history_depth;
             if (!conf_)
             {
                 throw utils::ConfigurationException(
@@ -100,6 +103,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
                     std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(
                 participant_configuration);
+            // TMP: Until Transparency QoS module is available
+            conf_->max_history_depth = max_history_depth;
             if (!conf_)
             {
                 throw utils::ConfigurationException(
@@ -119,6 +124,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             std::shared_ptr<configuration::InitialPeersParticipantConfiguration> conf_ =
                     std::dynamic_pointer_cast<configuration::InitialPeersParticipantConfiguration>(
                 participant_configuration);
+            // TMP: Until Transparency QoS module is available
+            conf_->max_history_depth = max_history_depth;
             if (!conf_)
             {
                 throw utils::ConfigurationException(
