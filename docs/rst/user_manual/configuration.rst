@@ -72,7 +72,7 @@ samples a |ddsrouter| instance can deliver to late joiner Readers configured wit
 Optionally, this parameter may be tuned from within the YAML Configuration file, under the ``max-depth`` tag, in order
 to better fit concrete scenarios.
 
-Its value should be decreased when the sample size and/or number of created endpoints (incresing with the number of
+Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of
 topics and |ddsrouter| participants) are as big as to cause memory exhaustion issues.
 
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
