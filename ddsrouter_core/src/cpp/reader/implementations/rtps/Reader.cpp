@@ -266,8 +266,8 @@ void Reader::onNewCacheChangeAdded(
                     // change->writerGUID);
             std::stringstream msg;
             msg << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Data arrived to Reader " << *this <<
-                    " with payload " << change->serializedPayload << " from " << change->writerGUID << std::endl;
-            std::cout << msg.str();
+                    " with payload " << change->serializedPayload << " from " << change->writerGUID << "\n";
+            std::cout << msg.str() << std::flush;
             on_data_available_();
         }
         else
