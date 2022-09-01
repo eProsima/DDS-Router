@@ -195,7 +195,7 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
 
-    if (topic_.topic_reliable())
+    if (true)
     {
         att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
         att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
@@ -237,7 +237,7 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
 
-    if (topic_.topic_reliable())
+    if (true)
     {
         qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
         qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
