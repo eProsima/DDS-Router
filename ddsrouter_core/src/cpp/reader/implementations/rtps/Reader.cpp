@@ -261,9 +261,11 @@ void Reader::onNewCacheChangeAdded(
         if (enabled_)
         {
             // Call Track callback (by calling BaseReader callback method)
-            logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                    "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
-                    change->writerGUID);
+            // logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                    // "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
+                    // change->writerGUID);
+            std::cout << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Data arrived to Reader " << *this <<
+                    " with payload " << change->serializedPayload << " from " << change->writerGUID << std::endl;
             on_data_available_();
         }
         else
