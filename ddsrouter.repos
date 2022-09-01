@@ -10,8 +10,8 @@ repositories:
     fastdds:
         type: git
         url: https://github.com/eProsima/Fast-DDS.git
-        version: master
+        version: testing/BasicConfigurationExample
     ddsrouter:
         type: git
         url: https://github.com/eProsima/DDS-Router.git
-        version: main
+        version: testing/performance-analysis

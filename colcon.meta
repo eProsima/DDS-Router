@@ -1,0 +1,17 @@
+{
+    "names":
+    {
+        "fastrtps":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCOMPILE_EXAMPLES=ON",
+                "-DINTERNAL_DEBUG=OFF",
+                "-DLOG_NO_INFO=OFF",
+                "-DFASTDDS_STATISTICS=OFF"
+                #"-DSHM_TRANSPORT_DEFAULT=OFF"
+            ]
+        }
+    }
+}
