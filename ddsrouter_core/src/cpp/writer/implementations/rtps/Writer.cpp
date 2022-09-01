@@ -173,8 +173,10 @@ utils::ReturnCode Writer::write_(
     // logDebug(DDSROUTER_RTPS_WRITER,
     //         "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
     //         data->source_guid);
-    std::cout << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Writer " << *this << " sending payload " <<
+    std::stringstream msg;
+    msg << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Writer " << *this << " sending payload " <<
             new_change->serializedPayload << " from " << data->source_guid << std::endl;
+    std::cout << msg.str();
 
     if (repeater_)
     {
