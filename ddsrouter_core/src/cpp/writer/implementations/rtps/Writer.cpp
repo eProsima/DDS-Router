@@ -175,8 +175,8 @@ utils::ReturnCode Writer::write_(
     //         data->source_guid);
     std::stringstream msg;
     msg << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Writer " << *this << " sending payload " <<
-            new_change->serializedPayload << " from " << data->source_guid << std::endl;
-    std::cout << msg.str();
+            new_change->serializedPayload << " from " << data->source_guid << "\n";
+    std::cout << msg.str() << std::flush;
 
     if (repeater_)
     {
