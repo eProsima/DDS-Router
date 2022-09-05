@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file OwnerPtr.hpp
+ * @file Atomicable.hpp
  *
- * This file contains class OwnerPtr definition.
+ * This file contains class Atomicable definition.
  */
 
-#ifndef _DDSROUTERUTILS_ATOMIC_ATOMICABLE_HPP_
-#define _DDSROUTERUTILS_ATOMIC_ATOMICABLE_HPP_
+#ifndef _DDSROUTERUTILS_TYPES_ATOMICABLE_HPP_
+#define _DDSROUTERUTILS_TYPES_ATOMICABLE_HPP_
 
 #include <mutex>
 #include <shared_mutex>
@@ -29,15 +29,15 @@ namespace ddsrouter {
 namespace utils {
 
 /**
- * @brief Sugar class to join any type value and a mutex together for commodity and readability.
+ * @brief Utils class to join any type value and a mutex together for commodity and readability.
  *
  * @tparam Type actual type of the object.
  * @tparam Mutex class of the mutex. Default std::mutex but could be recursive, shared, etc.
  *
- * @note as primitive types are not classes, are not allowed in this class.
+ * @note as primitive types are not classes, are not allowed in this class. Use std::atomic instead.
  *
  * EXAMPLE OF USE
- *   Atomic<Foo, std::recursive_mutex> f;
+ *   Atomicable<Foo> f;
  *   std::unique_lock lock(f);
  *   f.foo();
  */
@@ -62,4 +62,4 @@ using SharedAtomicable = Atomicable<Type, std::shared_timed_mutex>;
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERUTILS_ATOMIC_ATOMICABLE_HPP_ */
+#endif /* _DDSROUTERUTILS_TYPES_ATOMICABLE_HPP_ */
