@@ -33,88 +33,27 @@ namespace ddsrouter {
 namespace utils {
 
 /**
- * @brief This macro creates a Custom Enumeration
+ * @brief This macro creates a Custom Enumeration with auxiliary functions and variables.
  *
- * A Custom Enumeration is an Enumeration class that internally has a enum class and has several methods to interact
- * with it:
- * - creation from enum value
- * - creation from string
- * - conversion to string
- * - conversion to int
+ * An enumeration built with ENUEMERATION_BUILDER has:
+ * - enum class with name \c enumeration_name and N values, one for each extra argument, and with that exact name.
+ * - array called \c nammes_<enumeration_name> with the names of each element of the enumeration
+ * as strings of the enum value.
+ * - \c to_string method to get the string associated with an enumeration value.
+ * - \c from_string_<enumeration_name> method that gives enumeration value from string name.
+ * - operator << for each enumeration value using to_string .
+ * - \c N_VALUES_<enumeration_name> unsigned int to get the number of elements in the enumeration.
  *
- * @warning Requires a ";" after call
+ * @arg enumeration_name it sets the enum class name and is used to name variables and methods.
+ * @arg extra_arguments each of the elements of the enum class. Their conversion to string would use this same name.
+ *e
+ * @example
+ * ENUMERATION_BUILDER(CustomEnum, el1, el2);
+ * CustomEnum my_value = CustomEnum::el1;  // Set my_value as el1 = 0
+ * my_value = from_string_CustomEnum("el2");  // Set my_value as el2 = 1
+ * to_string(my_value);  // = "el2"
  */
-
-// #define ENUMERATION_BUILDER(enumeration_name, ...) \
-//                                                                                                                        \
-//     class enumeration_name                                                                                             \
-//     {                                                                                                                  \
-//     public:                                                                                                            \
-//                                                                                                                        \
-//         /* Internal enumeration */                                                                                     \
-//         enum class Enum {__VA_ARGS__};                                                                                 \
-//                                                                                                                        \
-//         /* Constructor from Enumeration */                                                                             \
-//         enumeration_name(Enum e) : internal_value_(e) {}                                                               \
-//                                                                                                                        \
-//         /* Constructor from string */                                                                                  \
-//         enumeration_name(const std::string& s) : internal_value_(from_string_(s)) {}                                   \
-//                                                                                                                        \
-//         /* To string method */                                                                                         \
-//         std::string to_string() const { return names_[static_cast<int>(internal_value_)]; }                            \
-//                                                                                                                        \
-//         /* To string operator */                                                                                       \
-//         operator std::string() const { return this->to_string(); }                                                     \
-//                                                                                                                        \
-//         /* To int operator */                                                                                          \
-//         operator int() const { return static_cast<int>(internal_value_); }                                             \
-//                                                                                                                        \
-//         /* To Enum operator */                                                                                         \
-//         operator Enum() const { return internal_value_; }                                                              \
-//                                                                                                                        \
-//         /* Equal comparision */                                                                                        \
-//         bool operator== (const enumeration_name& other) { return this->internal_value_ == other.internal_value_; }     \
-//                                                                                                                        \
-//         /* Equal comparision */                                                                                        \
-//         bool operator== (const Enum& other) { return this->internal_value_ == other; }                                 \
-//                                                                                                                        \
-//         /* Not Equal comparision */                                                                                    \
-//         bool operator!= (const enumeration_name& other) { return this->internal_value_ != other.internal_value_; }     \
-//                                                                                                                        \
-//         /* Not Equal comparision */                                                                                    \
-//         bool operator!= (const Enum& other) { return this->internal_value_ != other; }                                 \
-//                                                                                                                        \
-//     protected:                                                                                                         \
-//                                                                                                                        \
-//         /* From string */                                                                                              \
-//         static Enum from_string_ (const std::string& s)                                                                \
-//         {                                                                                                              \
-//             for (int i=0; i<COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                         \
-//                 if (names_[i] == s) return static_cast<Enum>(i);                                                       \
-//             throw eprosima::ddsrouter::utils::InitializationException(                                                 \
-//                 STR_ENTRY << "Not correct name " << s << " for Enum " << STRINGIFY(enumeration_name) << ".");          \
-//         }                                                                                                              \
-//                                                                                                                        \
-//                                                                                                                        \
-//         /* Names array */                                                                                              \
-//         static const std::array<std::string, COUNT_ARGUMENTS(__VA_ARGS__)> names_;                                     \
-//                                                                                                                        \
-//         /* Internal value */                                                                                           \
-//         Enum internal_value_;                                                                                          \
-//                                                                                                                        \
-//     };                                                                                                                 \
-//                                                                                                                        \
-//     /* Serialization operation */                                                                                      \
-//     std::ostream& operator <<(std::ostream& os, const enumeration_name& e) { os << e.to_string(); return os; }         \
-//                                                                                                                        \
-//     /* Initialize name arrays */                                                                                       \
-//     const std::array<std::string, COUNT_ARGUMENTS(__VA_ARGS__)> enumeration_name::names_ =                             \
-//         { APPLY_MACRO_FOR_EACH(STRINGIFY_WITH_COMMA, __VA_ARGS__) }
-
-
-
-
-#define ENUMERATION_BUILDER(enumeration_name, ...) \
+#define ENUMERATION_BUILDER(enumeration_name, ...)                                                                    \
                                                                                                                       \
     /* Declare enumeration */                                                                                         \
     enum class enumeration_name {__VA_ARGS__};                                                                        \
@@ -137,7 +76,10 @@ namespace utils {
     }                                                                                                                 \
                                                                                                                       \
     /* Serialization operation */                                                                                     \
-    std::ostream& operator <<(std::ostream& os, const enumeration_name& e) { os << to_string(e); return os; }
+    std::ostream& operator <<(std::ostream& os, const enumeration_name& e) { os << to_string(e); return os; }         \
+                                                                                                                      \
+    /* Number of elements in enumeration */                                                                           \
+    constexpr const unsigned int N_VALUES_##enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__);
 
 
 } /* namespace utils */

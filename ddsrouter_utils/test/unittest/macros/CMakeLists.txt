@@ -52,7 +52,7 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         count_arguments
-        apply_APPLY_MACRO_FOR_EACH
+        apply_macro_for_each
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -82,12 +82,11 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        construct_enum
-        construct_string
+        show_how
+        from_string
         to_string
-        string_operator
-        int_operator
         serializator
+        n_values
     )
 
 set(TEST_EXTRA_LIBRARIES

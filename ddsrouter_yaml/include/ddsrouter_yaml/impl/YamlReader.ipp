@@ -21,7 +21,7 @@
 #define _DDSROUTERYAML_IMPL_YAMLREADER_IPP_
 
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/macros.hpp>
+#include <ddsrouter_utils/macros/macros.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {

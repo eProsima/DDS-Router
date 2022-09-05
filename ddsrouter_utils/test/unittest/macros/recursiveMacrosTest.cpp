@@ -75,7 +75,7 @@ TEST(recursiveMacrosTest, count_arguments)
  *  addition
  *  string concatenation
  */
-TEST(recursiveMacrosTest, apply_APPLY_MACRO_FOR_EACH)
+TEST(recursiveMacrosTest, apply_macro_for_each)
 {
 
 #define APPLY_LAMBDA(x) lambda(x);

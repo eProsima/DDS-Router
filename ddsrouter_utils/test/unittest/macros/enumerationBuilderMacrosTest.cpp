@@ -19,146 +19,9 @@
 
 #include <ddsrouter_utils/macros/custom_enumeration.hpp>
 
-// namespace test {
-
-// ENUMERATION_BUILDER(
-//     TestCustomEnum,
-//     el0,
-//     el1,
-//     other_element,
-//     noElement_atAll_00
-// );
-
-// constexpr unsigned int NUMBER_OF_ELEMENTS = 4;
-
-// const std::array<TestCustomEnum::Enum, NUMBER_OF_ELEMENTS> enum_values =
-// {
-//     TestCustomEnum::Enum::el0,
-//     TestCustomEnum::Enum::el1,
-//     TestCustomEnum::Enum::other_element,
-//     TestCustomEnum::Enum::noElement_atAll_00,
-// };
-
-// const std::array<TestCustomEnum, NUMBER_OF_ELEMENTS> class_values =
-// {
-//     TestCustomEnum(TestCustomEnum::Enum::el0),
-//     TestCustomEnum(TestCustomEnum::Enum::el1),
-//     TestCustomEnum(TestCustomEnum::Enum::other_element),
-//     TestCustomEnum(TestCustomEnum::Enum::noElement_atAll_00),
-// };
-
-// const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
-// {
-//     "el0",
-//     "el1",
-//     "other_element",
-//     "noElement_atAll_00",
-// };
-
-// } /* namespace test */
-
-// /**
-//  * Construct enumeration of type TestCustomEnum from its values.
-//  *
-//  * CASES:
-//  * x each element inside
-//  */
-// TEST(enumerationBuilderMacrosTest, construct_enum)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         test::TestCustomEnum value(test::enum_values[i]);
-//         ASSERT_TRUE(value == test::class_values[i]);
-//         ASSERT_TRUE(value == test::enum_values[i]);
-//     }
-// }
-
-// /**
-//  * Construct enumeration of type TestCustomEnum from a string.
-//  *
-//  * CASES:
-//  * x each element inside
-//  * - string not in enumeration
-//  */
-// TEST(enumerationBuilderMacrosTest, construct_string)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         test::TestCustomEnum value(test::string_values[i]);
-//         ASSERT_TRUE(value == test::class_values[i]);
-//         ASSERT_TRUE(value == test::enum_values[i]);
-//     }
-
-//     // string not in enumeration
-//     ASSERT_THROW(test::TestCustomEnum("noElement_atAll_0") , eprosima::ddsrouter::utils::InitializationException);
-// }
-
-// /**
-//  * Compare to_string with expected result
-//  *
-//  * CASES:
-//  * x each element inside
-//  */
-// TEST(enumerationBuilderMacrosTest, to_string)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         ASSERT_EQ(test::class_values[i].to_string(), test::string_values[i]);
-//     }
-// }
-
-// /**
-//  * Compare to string cast operator with expected result
-//  *
-//  * CASES:
-//  * x each element inside
-//  */
-// TEST(enumerationBuilderMacrosTest, string_operator)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         ASSERT_EQ(static_cast<std::string>(test::class_values[i]), test::string_values[i]);
-//     }
-// }
-
-// /**
-//  * Compare to int cast operator with expected result
-//  *
-//  * CASES:
-//  * x each element inside
-//  */
-// TEST(enumerationBuilderMacrosTest, int_operator)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         ASSERT_EQ(static_cast<int>(test::class_values[i]), i);
-//     }
-// }
-
-// /**
-//  * Compare to int cast operator with expected result
-//  *
-//  * CASES:
-//  * x each element inside
-//  */
-// TEST(enumerationBuilderMacrosTest, serializator)
-// {
-//     // x each element inside
-//     for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
-//     {
-//         std::stringstream ss;
-//         ss << test::class_values[i];
-//         ASSERT_EQ(ss.str(), test::string_values[i]);
-//     }
-// }
-
 namespace test {
 
+// This will create a TestCustomEnum enum class with these values.
 ENUMERATION_BUILDER(
     TestCustomEnum,
     el0,
@@ -167,13 +30,10 @@ ENUMERATION_BUILDER(
     noElement_atAll_00
 );
 
-ENUMERATION_BUILDER(
-    TestCustomOtherEnum,
-    el_0,
-);
-
+// Number of elements in TestCustomEnum
 constexpr unsigned int NUMBER_OF_ELEMENTS = 4;
 
+// Each of the elements of TestCustomEnum
 const std::array<TestCustomEnum, NUMBER_OF_ELEMENTS> enum_values =
 {
     TestCustomEnum::el0,
@@ -182,6 +42,7 @@ const std::array<TestCustomEnum, NUMBER_OF_ELEMENTS> enum_values =
     TestCustomEnum::noElement_atAll_00,
 };
 
+// Each of the names of TestCustomEnum
 const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
 {
     "el0",
@@ -190,7 +51,39 @@ const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
     "noElement_atAll_00",
 };
 
+// This tests that two calls to ENUMERATION_BUILDER are possible.
+ENUMERATION_BUILDER(
+    TestCustomOtherEnum,
+    el0,
+);
+
 } /* namespace test */
+
+/**
+ * This test only shows how to use the ENUMERATION_BUILDER macro.
+ */
+TEST(enumerationBuilderMacrosTest, show_how)
+{
+    // Get a new element of value el0
+    test::TestCustomEnum value = test::TestCustomEnum::el0;
+
+    // Compare string of value
+    ASSERT_EQ("el0", test::to_string(value));
+
+    // Get it from a string
+    value = test::from_string_TestCustomEnum("el1");
+
+    // Compare string of value
+    ASSERT_EQ("el1", test::to_string(value));
+}
+
+/**
+ * Check the N_VALUES variable
+ */
+TEST(enumerationBuilderMacrosTest, n_values)
+{
+    ASSERT_EQ(test::N_VALUES_TestCustomEnum, test::NUMBER_OF_ELEMENTS);
+}
 
 /**
  * Construct enumeration of type TestCustomEnum from a string.
@@ -202,7 +95,7 @@ const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
 TEST(enumerationBuilderMacrosTest, from_string)
 {
     // x each element inside
-    for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
+    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         test::TestCustomEnum value = test::from_string_TestCustomEnum(test::string_values[i]);
         ASSERT_TRUE(value == test::enum_values[i]);
@@ -221,14 +114,14 @@ TEST(enumerationBuilderMacrosTest, from_string)
 TEST(enumerationBuilderMacrosTest, to_string)
 {
     // x each element inside
-    for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
+    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         ASSERT_EQ(test::to_string(test::enum_values[i]), test::string_values[i]);
     }
 }
 
 /**
- * Compare to int cast operator with expected result
+ * Compare serializator method of each value of enumeration
  *
  * CASES:
  * x each element inside
@@ -236,7 +129,7 @@ TEST(enumerationBuilderMacrosTest, to_string)
 TEST(enumerationBuilderMacrosTest, serializator)
 {
     // x each element inside
-    for (int i = 0; i < test::NUMBER_OF_ELEMENTS; i++)
+    for (int i = 0; i < test::N_VALUES_TestCustomEnum; i++)
     {
         std::stringstream ss;
         ss << test::enum_values[i];
