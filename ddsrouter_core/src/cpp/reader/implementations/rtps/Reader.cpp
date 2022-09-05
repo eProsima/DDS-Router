@@ -226,6 +226,14 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
+
+    // If Qos has been set, use it to configure history
+    if (topic_.topic_qos.is_set())
+    {
+        att.historyQos.kind = topic_.topic_qos.value.history_qos.kind;
+        att.historyQos.depth = topic_.topic_qos.value.history_qos.depth;
+    }
+
     if (topic_.keyed)
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -267,6 +275,10 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
         {
             qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
         }
+
+        // History
+        qos.m_durabilityService.history_kind = topic_.topic_qos.value.history_qos.kind;
+        qos.m_durabilityService.history_depth = topic_.topic_qos.value.history_qos.depth;
     }
     else
     {

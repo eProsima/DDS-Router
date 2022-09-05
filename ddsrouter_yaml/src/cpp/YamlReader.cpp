@@ -399,6 +399,38 @@ void YamlReader::fill(
             object.reliability_qos = eprosima::ddsrouter::core::types::ReliabilityKind::BEST_EFFORT;
         }
     }
+
+    // Durability optional
+    if (is_tag_present(yml, QOS_TRANSIENT_TAG))
+    {
+        if(get<bool>(yml, QOS_TRANSIENT_TAG, version))
+        {
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::TRANSIENT_LOCAL;
+        }
+        else
+        {
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::VOLATILE;
+        }
+    }
+
+    // History kind optional
+    if (is_tag_present(yml, QOS_KEEP_LAST_TAG))
+    {
+        if(get<bool>(yml, QOS_KEEP_LAST_TAG, version))
+        {
+            object.history_qos.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS;
+        }
+        else
+        {
+            object.history_qos.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
+        }
+    }
+
+    // History depth optional
+    if (is_tag_present(yml, QOS_HISTORY_DEPTH_TAG))
+    {
+        object.history_qos.depth = get<unsigned int>(yml, QOS_HISTORY_DEPTH_TAG, version);
+    }
 }
 
 /************************

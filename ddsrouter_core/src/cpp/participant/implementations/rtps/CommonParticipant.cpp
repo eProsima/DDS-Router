@@ -110,9 +110,13 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
             utils::Formatter() <<
                 "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
     }
-    // TODO: Set History and partitions
-    // NOTE: dont know where history are or partitions are going to be used
-    // info_qos.history_qos = info.info.m_qos.
+
+    // History
+    info_qos.history_qos.depth = info.info.m_qos.m_durabilityService.history_depth;
+    info_qos.history_qos.kind = info.info.m_qos.m_durabilityService.history_kind;
+
+    // TODO: Set partitions
+    // NOTE: dont know where partitions are going to be used
 
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
@@ -139,6 +143,7 @@ void CommonParticipant::onReaderDiscovery(
         fastrtps::rtps::RTPSParticipant*,
         fastrtps::rtps::ReaderDiscoveryInfo&& info)
 {
+    info.info.m_qos.m_durabilityService.history_kind;
     if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
     {
         types::Endpoint info_reader = create_endpoint_from_info_<fastrtps::rtps::ReaderDiscoveryInfo>(info);
