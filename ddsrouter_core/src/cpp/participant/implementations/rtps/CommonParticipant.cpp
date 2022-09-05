@@ -42,9 +42,11 @@ CommonParticipant::CommonParticipant(
         std::shared_ptr<DiscoveryDatabase> discovery_database,
         const types::DomainId& domain_id,
         const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-        unsigned int max_history_depth)
+        unsigned int max_history_depth,
+        unsigned int n_locators)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
     , max_history_depth_(max_history_depth)
+    , n_locators_(n_locators)
 {
     create_participant_(
         domain_id,
@@ -255,7 +257,8 @@ std::shared_ptr<IReader> CommonParticipant::create_reader_(
         this->id(),
         topic,
         this->payload_pool_,
-        rtps_participant_);
+        rtps_participant_,
+        n_locators_);
 }
 
 fastrtps::rtps::RTPSParticipantAttributes

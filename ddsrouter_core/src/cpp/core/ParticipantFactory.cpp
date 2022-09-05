@@ -44,7 +44,8 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database,
-        unsigned int max_history_depth)
+        unsigned int max_history_depth,
+        unsigned int n_locators)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
     switch (participant_configuration->kind)
@@ -83,6 +84,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 participant_configuration);
             // TMP: Until Transparency QoS module is available
             conf_->max_history_depth = max_history_depth;
+            conf_->n_locators = n_locators;
             if (!conf_)
             {
                 throw utils::ConfigurationException(
@@ -105,6 +107,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 participant_configuration);
             // TMP: Until Transparency QoS module is available
             conf_->max_history_depth = max_history_depth;
+            conf_->n_locators = n_locators;
             if (!conf_)
             {
                 throw utils::ConfigurationException(
@@ -126,6 +129,7 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 participant_configuration);
             // TMP: Until Transparency QoS module is available
             conf_->max_history_depth = max_history_depth;
+            conf_->n_locators = n_locators;
             if (!conf_)
             {
                 throw utils::ConfigurationException(

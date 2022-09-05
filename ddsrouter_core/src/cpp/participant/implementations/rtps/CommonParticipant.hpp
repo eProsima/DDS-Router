@@ -54,7 +54,8 @@ public:
             std::shared_ptr<DiscoveryDatabase> discovery_database,
             const types::DomainId& domain_id,
             const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-            unsigned int max_history_depth);
+            unsigned int max_history_depth,
+            unsigned int n_locators);
 
     virtual ~CommonParticipant();
 
@@ -101,6 +102,8 @@ protected:
 
     //! Maximum depth of RTPS History instances
     unsigned int max_history_depth_;
+
+    unsigned int n_locators_;
 };
 
 } /* namespace rtps */

@@ -41,6 +41,8 @@ int main(
         int argc,
         char** argv)
 {
+    srand (time(NULL));
+
     // Configuration File path
     std::string file_path = "";
 

@@ -47,7 +47,8 @@ public:
             std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
-            unsigned int max_history_depth);
+            unsigned int max_history_depth,
+            unsigned int n_locators);
 
     /**
      * @brief Delete correctly a Participant

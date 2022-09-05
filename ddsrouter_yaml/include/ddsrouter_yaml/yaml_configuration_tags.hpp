@@ -99,6 +99,7 @@ constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! T
 // Advance configuration
 constexpr const char* NUMBER_THREADS_TAG("threads"); //! Number of threads to configure the thread pool
 constexpr const char* MAX_HISTORY_DEPTH_TAG("max-depth"); //! Maximum size (number of stored cache changes) for RTPS History instances
+constexpr const char* N_READER_LOCATORS_TAG("n-locators");
 
 // Old versions tags
 constexpr const char* PARTICIPANT_KIND_TAG_V1("type"); //! Participant Kind

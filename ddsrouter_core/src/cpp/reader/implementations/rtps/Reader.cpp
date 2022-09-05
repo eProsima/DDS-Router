@@ -34,7 +34,8 @@ Reader::Reader(
         const ParticipantId& participant_id,
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant* rtps_participant)
+        fastrtps::rtps::RTPSParticipant* rtps_participant,
+        unsigned int n_locators)
     : BaseReader(participant_id, topic, payload_pool)
 {
     // Create History
@@ -43,6 +44,14 @@ Reader::Reader(
 
     // Create Reader
     fastrtps::rtps::ReaderAttributes reader_att = reader_attributes_();
+
+    if (n_locators > 1)
+    {
+        fastrtps::rtps::Locator_t locator;
+        locator.port = 7000 + (std::rand() % n_locators);
+        reader_att.endpoint.unicastLocatorList.push_back(locator);
+    }
+
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant,
         reader_att,

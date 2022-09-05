@@ -953,6 +953,10 @@ void _fill_ddsrouter_configuration_latest(
         object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
     }
 
+    if (YamlReader::is_tag_present(yml, N_READER_LOCATORS_TAG))
+    {
+        object.n_locators = YamlReader::get<unsigned int>(yml, N_READER_LOCATORS_TAG, version);
+    }
 }
 
 template <>

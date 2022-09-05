@@ -62,7 +62,8 @@ public:
             const types::ParticipantId& participant_id,
             const types::RealTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
-            fastrtps::rtps::RTPSParticipant* rtps_participant);
+            fastrtps::rtps::RTPSParticipant* rtps_participant,
+            unsigned int n_locators);
 
     /**
      * @brief Destroy the Reader object

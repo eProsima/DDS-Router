@@ -54,7 +54,8 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
             std::set<std::shared_ptr<types::RealTopic>> builtin_topics,
             std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
             unsigned int number_of_threads,
-            unsigned int max_history_depth);
+            unsigned int max_history_depth,
+            unsigned int n_locators);
 
     /////////////////////////
     // METHODS
@@ -75,6 +76,8 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     unsigned int number_of_threads = 12;
 
     unsigned int max_history_depth = 5000;
+
+    unsigned int n_locators = 1;
 
 protected:
 
