@@ -266,6 +266,10 @@ CommonParticipant::participant_attributes_(
         const configuration::ParticipantConfiguration* participant_configuration)
 {
     fastrtps::rtps::RTPSParticipantAttributes params;
+
+    // Add Participant name
+    params.setName(participant_configuration->id.id_name().c_str());
+
     return params;
 }
 
