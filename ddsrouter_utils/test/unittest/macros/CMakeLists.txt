@@ -48,6 +48,9 @@ set(TEST_NAME recursiveMacrosTest)
 
 set(TEST_SOURCES
         recursiveMacrosTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
     )
 
 set(TEST_LIST
@@ -56,6 +59,8 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
     )
 
 set(TEST_NEEDED_SOURCES

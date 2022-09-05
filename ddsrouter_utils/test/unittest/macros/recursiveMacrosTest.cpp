@@ -16,6 +16,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_utils/macros/recursive_macros.hpp>
+#include <ddsrouter_utils/utils.hpp>
 
 /**
  * Test \c COUNT_ARGUMENTS macro
@@ -78,44 +79,41 @@ TEST(recursiveMacrosTest, count_arguments)
 TEST(recursiveMacrosTest, apply_macro_for_each)
 {
 
-#define APPLY_LAMBDA(x) lambda(x);
+#define ADD_1(x) x += 1;
 
     // addition
     {
-        int addition_result = 0;
-
-        // Add x to addition_result
-        auto lambda = [&addition_result](int x){ addition_result += x; };
-
+        int x = 1;
+        int y = 2;
+        int z = 3;
 
         APPLY_MACRO_FOR_EACH(
-            APPLY_LAMBDA,
-            1,
-            2,
-            3
+            ADD_1,
+            x,
+            y,
+            z
         );
 
-        ASSERT_EQ(addition_result, 6);
+        ASSERT_EQ(x, 2);
+        ASSERT_EQ(y, 3);
+        ASSERT_EQ(z, 4);
     }
+
+#define TO_LOWERCASE(x) eprosima::ddsrouter::utils::to_lowercase(x);
 
     // string concatenation
     {
-        std::string concatenation_result = "";
-
-        // Add char to the end of string
-        auto lambda = [&concatenation_result](char c){ concatenation_result.push_back(c); };
+        std::string hello = "HELLO";
+        std::string bye = "ByE";
 
         APPLY_MACRO_FOR_EACH(
-            APPLY_LAMBDA,
-            'H',
-            'e',
-            'l',
-            'l',
-            '0',
-            '.'
+            TO_LOWERCASE,
+            hello,
+            bye
         );
 
-        ASSERT_EQ(concatenation_result, "Hell0.");
+        ASSERT_EQ(hello, "hello");
+        ASSERT_EQ(bye, "bye");
     }
 }
 
