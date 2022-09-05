@@ -51,7 +51,7 @@ class Atomicable : public Type, public Mutex
  * Alias to use a Atomicable object with a shared time mutex.
  *
  * EXAMPLE OF USE
- *   Atomic<Foo> f;
+ *   SharedAtomicable<Foo> f;
  *   std::shared_lock lock(f);
  *   f.foo();
  */
