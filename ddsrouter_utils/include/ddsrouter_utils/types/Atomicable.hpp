@@ -42,7 +42,7 @@ namespace utils {
  *   f.foo();
  */
 template <class Type, class Mutex = std::mutex>
-class Atomicable : public Type , public Mutex
+class Atomicable : public Type, public Mutex
 {
     // Nothing to add
 };
