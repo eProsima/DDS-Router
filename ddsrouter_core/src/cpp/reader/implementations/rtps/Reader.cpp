@@ -275,7 +275,8 @@ void Reader::onNewCacheChangeAdded(
                     // change->writerGUID);
             std::stringstream msg;
             msg << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Data arrived to Reader " << *this <<
-                    " with payload " << change->serializedPayload << " from " << change->writerGUID << "\n";
+                    " with payload Payload{" << change->serializedPayload.data[4] << " " <<
+                    change->serializedPayload.data[5] << "} from " << change->writerGUID << "\n";
             std::cout << msg.str() << std::flush;
             on_data_available_();
         }
@@ -290,6 +291,10 @@ void Reader::onNewCacheChangeAdded(
     }
     else
     {
+        std::stringstream msg;
+        msg << eprosima::fastdds::dds::Log::get_timestamp() << " | " << "Same Participant: Data arrived to Reader " <<
+                *this << " from " << change->writerGUID << "\n";
+        std::cout << msg.str() << std::flush;
         logWarning(
             DDSROUTER_RTPS_READER_LISTENER,
             "Ignoring data from this same Participant in reader " << *this << ".");
