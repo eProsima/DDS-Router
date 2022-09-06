@@ -18,8 +18,8 @@
  * This file contains constant values common for the whole project
  */
 
-#ifndef _DDSROUTERUTILS_MACROS_HPP_
-#define _DDSROUTERUTILS_MACROS_HPP_
+#ifndef _DDSROUTERUTILS_MACROS_MACROS_HPP_
+#define _DDSROUTERUTILS_MACROS_MACROS_HPP_
 
 #include <type_traits>
 
@@ -27,16 +27,49 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+/////////////////////////
+// FORMAT
+/////////////////////////
+
+/**
+ * @brief Get string of the argument passed to the macro
+ *
+ * @example
+ * STRINGIFY(value) = "value"
+ */
 #define STRINGIFY(x) #x
 
+//! Same as \c STRINGIFY but adding a comma "," at the end
+#define STRINGIFY_WITH_COMMA(x) #x,
+
+
+/////////////////////////
+// TYPES
+/////////////////////////
+
+/**
+ * @brief Force the specialization type of a template to be a subclass of a Class.
+ *
+ * @example
+ * FORCE_TEMPLATE_SUBCLASS(A, B)  =  static assert  <=>  B not inherit from A
+ *
+ * @param base parent class that \c derived must inherit.
+ * @param derived specialization class.
+ */
 #define FORCE_TEMPLATE_SUBCLASS(base, derived) \
     static_assert(std::is_base_of<base, derived>::value, STRINGIFY(derived) " class not derived from " STRINGIFY(base))
 
-// TODO: probably in the future is needed to create a utils method that transforms this name to a human reasonable name
+/**
+ * @brief Get string of the name of the CPP Data Type of the argument
+ *
+ * @example
+ * STRINGIFY(int) = "j"
+ * STRINGIFY(string) = "NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE"
+ */
 #define TYPE_NAME(x) typeid(x).name()
 
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERUTILS_MACROS_HPP_ */
+#endif /* _DDSROUTERUTILS_MACROS_MACROS_HPP_ */

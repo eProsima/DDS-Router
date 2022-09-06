@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-#include <ddsrouter_utils/macros.hpp>
+#include <ddsrouter_utils/macros/macros.hpp>
 #include <ddsrouter_utils/Formatter.hpp>
 #include <ddsrouter_utils/library/library_dll.h>
 
