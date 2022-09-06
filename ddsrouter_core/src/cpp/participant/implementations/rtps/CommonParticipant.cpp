@@ -293,20 +293,24 @@ CommonParticipant::participant_attributes_(
     params.setName(participant_configuration->id.id_name().c_str());
 
     // Set property so other Routers know the Participants belongs to a Router and its kind
-    eprosima::fastrtps::rtps::Property router_kind_property(
-        std::string(ROUTER_PROPERTY_KIND_NAME_),
-        std::string(types::PARTICIPANT_KIND_STRINGS[static_cast<int>(participant_configuration->kind)]));
+    eprosima::fastrtps::rtps::Property router_kind_property;
+    router_kind_property.name(std::string(ROUTER_PROPERTY_KIND_NAME_));
+    router_kind_property.value(std::string(types::PARTICIPANT_KIND_STRINGS[static_cast<int>(participant_configuration->kind)]));
     router_kind_property.propagate(true);
+    // Add it to properties
     params.properties.properties().push_back(router_kind_property);
 
     // Set property so other Routers know the Participant is local or wan
-    eprosima::fastrtps::rtps::Property router_positioning_property(
-        std::string(ROUTER_PROPERTY_POSITIONING_NAME_),
-        std::string((participant_configuration->kind == types::ParticipantKind::local_discovery_server ||
-         participant_configuration->kind == types::ParticipantKind::simple_rtps)
-            ? ROUTER_PROPERTY_POSITIONING_VALUE_LOCAL_
-            : ROUTER_PROPERTY_POSITIONING_VALUE_WAN_));
+    eprosima::fastrtps::rtps::Property router_positioning_property;
+    router_positioning_property.name(std::string(ROUTER_PROPERTY_POSITIONING_NAME_));
+    router_positioning_property.value(
+        std::string(
+            (participant_configuration->kind == types::ParticipantKind::local_discovery_server ||
+                    participant_configuration->kind == types::ParticipantKind::simple_rtps)
+                ? ROUTER_PROPERTY_POSITIONING_VALUE_LOCAL_
+                : ROUTER_PROPERTY_POSITIONING_VALUE_WAN_));
     router_positioning_property.propagate(true);
+    // Add it to properties
     params.properties.properties().push_back(router_positioning_property);
 
     return params;
