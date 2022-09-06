@@ -61,6 +61,7 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
+        $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     )
 
 set(TEST_NEEDED_SOURCES
