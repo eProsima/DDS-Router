@@ -114,7 +114,7 @@ std::ostream& operator <<(
         const PartitionQosPolicy& qos)
 {
     os << "Partitions{";
-    for(auto& partition : qos)
+    for (auto& partition : qos)
     {
         os << partition.name() << ";";
     }
