@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -46,7 +46,9 @@ namespace utils {
  *
  * @arg enumeration_name it sets the enum class name and is used to name variables and methods.
  * @arg extra_arguments each of the elements of the enum class. Their conversion to string would use this same name.
- *e
+ *
+ * @note empty custom enumerations are not allowed, even when empty enum class are.
+ *
  * @example
  * ENUMERATION_BUILDER(CustomEnum, el1, el2);
  * CustomEnum my_value = CustomEnum::el1;  // Set my_value as el1 = 0
@@ -54,6 +56,9 @@ namespace utils {
  * to_string(my_value);  // = "el2"
  */
 #define ENUMERATION_BUILDER(enumeration_name, ...)                                                                    \
+                                                                                                                      \
+    /* Forbid empty enumerations */                                                                                   \
+    static_assert( COUNT_ARGUMENTS(__VA_ARGS__) , "Empty Enumerations are not allowed.");                             \
                                                                                                                       \
     /* Declare enumeration */                                                                                         \
     enum class enumeration_name {__VA_ARGS__};                                                                        \

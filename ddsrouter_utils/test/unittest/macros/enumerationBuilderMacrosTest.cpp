@@ -54,8 +54,15 @@ const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
 // This tests that two calls to ENUMERATION_BUILDER are possible.
 ENUMERATION_BUILDER(
     TestCustomOtherEnum,
-    el0,
+    el0
 );
+
+// This should be forbidden and would not compile
+/*
+ENUMERATION_BUILDER(
+    TestEmptyEnum
+);
+*/
 
 } /* namespace test */
 
