@@ -31,12 +31,12 @@ TEST(macrosTest, stringify)
         ASSERT_EQ(
             std::string(STRINGIFY(abcdefghijkl)),
             std::string("abcdefghijkl")
-        );
+            );
 
         ASSERT_EQ(
             std::string(STRINGIFY(k1)),
             std::string("k1")
-        );
+            );
     }
 
     // variable name
@@ -46,14 +46,14 @@ TEST(macrosTest, stringify)
         ASSERT_EQ(
             std::string(STRINGIFY(_random_value)),
             std::string("_random_value")
-        );
+            );
 
         // String
         std::string _random_string = "other value";
         ASSERT_EQ(
             std::string(STRINGIFY(_random_string)),
             std::string("_random_string")
-        );
+            );
     }
 }
 

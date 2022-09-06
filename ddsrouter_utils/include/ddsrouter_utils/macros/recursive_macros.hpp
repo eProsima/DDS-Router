@@ -89,11 +89,11 @@ namespace utils {
  *
  * @note this is useful for \c APPLY_MACRO_FOR_EACH macro.
  */
-#define _GET_NINTH_ARGUMENT(_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) \
+#define _GET_NINTH_ARGUMENT(_1, _2, _3, _4, _5, _6, _7, _8, _9, NAME, ...) \
     NAME
 
-#define _APPLY_MACRO_FOR_EACH__UP_TO_NINE(action,...) \
-  _GET_NINTH_ARGUMENT(__VA_ARGS__,_FE_9,_FE_8,_FE_7,_FE_6,_FE_5,_FE_4,_FE_3,_FE_2,_FE_1)(action,__VA_ARGS__)
+#define _APPLY_MACRO_FOR_EACH__UP_TO_NINE(action, ...) \
+    _GET_NINTH_ARGUMENT(__VA_ARGS__, _FE_9, _FE_8, _FE_7, _FE_6, _FE_5, _FE_4, _FE_3, _FE_2, _FE_1)(action, __VA_ARGS__)
 
 /**
  * @brief Execute \c action (must be a macro) for every argument after it.
@@ -105,8 +105,8 @@ namespace utils {
  * @example
  * APPLY_MACRO_FOR_EACH(print, el1, el2, el3)  =>  print(el1); print(el2); print(el3);
  */
-#define APPLY_MACRO_FOR_EACH(action,...) \
-    _APPLY_MACRO_FOR_EACH__UP_TO_NINE(action,__VA_ARGS__)
+#define APPLY_MACRO_FOR_EACH(action, ...) \
+    _APPLY_MACRO_FOR_EACH__UP_TO_NINE(action, __VA_ARGS__)
 
 } /* namespace utils */
 } /* namespace ddsrouter */

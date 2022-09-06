@@ -34,7 +34,7 @@ TEST(recursiveMacrosTest, count_arguments)
         ASSERT_EQ(
             0,
             COUNT_ARGUMENTS()
-        );
+            );
     }
 
     // 1
@@ -43,8 +43,8 @@ TEST(recursiveMacrosTest, count_arguments)
             1,
             COUNT_ARGUMENTS(
                 "el1"
-            )
-        );
+                )
+            );
     }
 
     // 5
@@ -53,8 +53,8 @@ TEST(recursiveMacrosTest, count_arguments)
             5,
             COUNT_ARGUMENTS(
                 "el1", "el2", "el3", "el4", "el5"
-            )
-        );
+                )
+            );
     }
 
     // 9
@@ -64,8 +64,8 @@ TEST(recursiveMacrosTest, count_arguments)
             COUNT_ARGUMENTS(
                 "el1", "el2", "el3", "el4", "el5",
                 "el1", "el2", "el3", "el4"
-            )
-        );
+                )
+            );
     }
 }
 
@@ -92,7 +92,7 @@ TEST(recursiveMacrosTest, apply_macro_for_each)
             x,
             y,
             z
-        );
+            );
 
         ASSERT_EQ(x, 2);
         ASSERT_EQ(y, 3);
@@ -110,7 +110,7 @@ TEST(recursiveMacrosTest, apply_macro_for_each)
             TO_LOWERCASE,
             hello,
             bye
-        );
+            );
 
         ASSERT_EQ(hello, "hello");
         ASSERT_EQ(bye, "bye");

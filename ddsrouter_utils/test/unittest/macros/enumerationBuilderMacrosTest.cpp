@@ -28,7 +28,7 @@ ENUMERATION_BUILDER(
     el1,
     other_element,
     noElement_atAll_00
-);
+    );
 
 // Number of elements in TestCustomEnum
 constexpr unsigned int NUMBER_OF_ELEMENTS = 4;
@@ -55,14 +55,14 @@ const std::array<std::string, NUMBER_OF_ELEMENTS> string_values =
 ENUMERATION_BUILDER(
     TestCustomOtherEnum,
     el0
-);
+    );
 
 // This should be forbidden and would not compile
 /*
-ENUMERATION_BUILDER(
+   ENUMERATION_BUILDER(
     TestEmptyEnum
-);
-*/
+   );
+ */
 
 } /* namespace test */
 
@@ -109,7 +109,7 @@ TEST(enumerationBuilderMacrosTest, from_string)
     }
 
     // string not in enumeration
-    ASSERT_THROW(test::from_string_TestCustomEnum("el_0") , eprosima::ddsrouter::utils::InitializationException);
+    ASSERT_THROW(test::from_string_TestCustomEnum("el_0"), eprosima::ddsrouter::utils::InitializationException);
 }
 
 /**
