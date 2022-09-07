@@ -110,6 +110,7 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
             utils::Formatter() <<
                 "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
     }
+    // TODO: Set partitions and ownership
 
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
@@ -246,7 +247,6 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         topic,
         this->payload_pool_,
         rtps_participant_,
-        max_history_depth_,
         this->configuration_->is_repeater);
 }
 

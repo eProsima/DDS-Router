@@ -80,7 +80,6 @@ public:
             const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
-            unsigned int max_history_depth,
             const bool repeater = false);
 
     /**

@@ -370,7 +370,12 @@ void DDSRouterImpl::discovered_endpoint_(
 {
     logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
-    discovered_topic_(endpoint.topic());
+    // Set as discovered only if the endpoints is a Reader
+    // If non Readers in topics, it is considered as non discovered
+    if (endpoint.is_reader())
+    {
+        discovered_topic_(endpoint.topic());
+    }
 }
 
 void DDSRouterImpl::create_new_bridge(

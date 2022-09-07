@@ -188,6 +188,10 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
     fastrtps::rtps::HistoryAttributes att;
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+
+    att.maximumReservedCaches = topic_.topic_qos.value.history_depth;
+    // TODO: Check if history atts must be set from topics qos
+
     return att;
 }
 
@@ -195,17 +199,13 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
 
-    if (topic_.topic_qos.value.is_reliable())
-    {
-        att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    }
-    else
-    {
-        att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::BEST_EFFORT;
-        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
-    }
+    // Set Durability
+    att.endpoint.durabilityKind = topic_.topic_qos.value.durability_qos;
 
+    // Set Reliability
+    att.endpoint.reliabilityKind = topic_.topic_qos.value.reliability_qos;
+
+    // Set if topic has key
     if (topic_.keyed)
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -214,12 +214,17 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
+    // TODO Set ownership and partitions
+
     return att;
 }
 
 fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
+
+    // Set if topic has key
     if (topic_.keyed)
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -228,8 +233,11 @@ fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
     {
         att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
+    // Set Topic attributes
     att.topicName = topic_.topic_name;
     att.topicDataType = topic_.type_name;
+
     return att;
 }
 
@@ -237,16 +245,19 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
 {
     fastrtps::ReaderQos qos;
 
-    if (topic_.topic_qos.value.is_reliable())
-    {
-        qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
-        qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    }
-    else
-    {
-        qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
-        qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
-    }
+    // Set Durability
+    qos.m_durability.kind =
+        (topic_.topic_qos.value.is_transient_local()
+            ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
+            : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
+
+    // Set Reliability
+    qos.m_reliability.kind =
+        (topic_.topic_qos.value.is_reliable()
+            ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
+            : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
+
+    // TODO Set ownership and partitions
 
     return qos;
 }

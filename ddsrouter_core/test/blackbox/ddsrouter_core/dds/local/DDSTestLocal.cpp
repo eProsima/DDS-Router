@@ -58,7 +58,16 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     if (disable_dynamic_discovery || reliable_readers)
     {
         types::TopicQoS qos;
-        qos.reliability_qos = reliable_readers ? types::ReliabilityKind::RELIABLE : types::ReliabilityKind::BEST_EFFORT;
+        if (reliable_readers)
+        {
+            qos.reliability_qos = types::ReliabilityKind::RELIABLE;
+            qos.durability_qos = types::DurabilityKind::TRANSIENT_LOCAL;
+        }
+        else
+        {
+            qos.reliability_qos = types::ReliabilityKind::BEST_EFFORT;
+            qos.durability_qos = types::DurabilityKind::VOLATILE;
+        }
 
         builtin_topics.insert(
             std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));

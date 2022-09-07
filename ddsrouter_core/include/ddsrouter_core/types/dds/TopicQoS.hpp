@@ -53,7 +53,7 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     /////////////////////////
 
     //! Default TopicQoS with reader less restrictive parameters
-    TopicQoS() = default;
+    TopicQoS();
 
     /////////////////////////
     // OPERATORS
@@ -100,9 +100,6 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
      * @brief History Qos
      *
      * @note It only stores the depth because in router it will always be keep last, as RTPS has not resource limits.
-     *
-     * @warning this is not set by default to \c default_history_depth so if user wants to use default setable value
-     * must to it explicitly.
      */
     HistoryDepthType history_depth = 1000;
 };

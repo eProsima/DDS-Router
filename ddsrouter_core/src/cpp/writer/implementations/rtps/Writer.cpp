@@ -40,7 +40,6 @@ Writer::Writer(
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
-        unsigned int max_history_depth,
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
@@ -49,7 +48,6 @@ Writer::Writer(
 
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
-    history_att.maximumReservedCaches = max_history_depth;
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
 
     // Create Writer
@@ -144,18 +142,6 @@ utils::ReturnCode Writer::write_(
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
 
-    // TODO : Set method to remove old changes in order to get a new one
-    // In case it fails, remove old changes from history and try again
-    // uint32_t data_size = data->payload.length;
-    // if (!new_change)
-    // {
-    //     rtps_writer_->remove_older_changes(1);
-    //     new_change = rtps_writer_->new_change([data_size]() -> uint32_t
-    //     {
-    //         return data_size;
-    //     }, eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
-    // }
-
     // If still is not able to get a change, return an error code
     if (!new_change)
     {
@@ -184,6 +170,8 @@ utils::ReturnCode Writer::write_(
     // Send data by adding it to Writer History
     rtps_history_->add_change(new_change);
 
+    // TODO: check if this being synchronous means that we can remove the change in case of volatile
+
     // When max history size is reached, remove oldest cache change
     if (rtps_history_->isFull())
     {
@@ -196,18 +184,27 @@ utils::ReturnCode Writer::write_(
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
+
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+
+    att.maximumReservedCaches = topic_.topic_qos.value.history_depth;
+    // TODO: Check if history atts must be set from topics qos
+
     return att;
 }
 
 fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
 {
     fastrtps::rtps::WriterAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
-    // Write synchronously to avoid removing a change before being sent, likely event when history depth is very small
-    att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
+
+    // Set Durability
+    att.endpoint.durabilityKind = topic_.topic_qos.value.durability_qos;
+
+    // Set Reliability
+    att.endpoint.reliabilityKind = topic_.topic_qos.value.reliability_qos;
+
+    // Set if topic has key
     if (topic_.keyed)
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -216,12 +213,20 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
+    // TODO Set ownership and partitions
+
+    // Set write mode
+    att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
+
     return att;
 }
 
 fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
 {
     fastrtps::TopicAttributes att;
+
+    // Set if topic has key
     if (topic_.keyed)
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
@@ -230,23 +235,39 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     {
         att.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
+
+    // Set Topic attributes
     att.topicName = topic_.topic_name;
     att.topicDataType = topic_.type_name;
+
     return att;
 }
 
 fastrtps::WriterQos Writer::writer_qos_() const noexcept
 {
     fastrtps::WriterQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+    // Set Durability
+    qos.m_durability.kind =
+        (topic_.topic_qos.value.is_transient_local()
+            ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
+            : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
+
+    // Set Reliability
+    qos.m_reliability.kind =
+        (topic_.topic_qos.value.is_reliable()
+            ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
+            : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
+
+    // TODO Set ownership and partitions
+
     return qos;
 }
 
 utils::PoolConfiguration Writer::cache_change_pool_configuration_() const noexcept
 {
     utils::PoolConfiguration config;
-    config.maximum_size = 0; // No maximum
+    config.maximum_size = topic_.topic_qos.value.history_depth; // No maximum
     config.initial_size = 20;
     config.batch_size = 20;
     // NOTE: Not use of memory policy or maximum yet

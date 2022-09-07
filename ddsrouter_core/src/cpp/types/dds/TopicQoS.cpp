@@ -27,6 +27,12 @@ namespace types {
 
 std::atomic<HistoryDepthType> TopicQoS::default_history_depth{1000};
 
+TopicQoS::TopicQoS()
+{
+    // Set history by default
+    history_depth = default_history_depth;
+}
+
 bool TopicQoS::operator ==(
         const TopicQoS& other) const noexcept
 {
