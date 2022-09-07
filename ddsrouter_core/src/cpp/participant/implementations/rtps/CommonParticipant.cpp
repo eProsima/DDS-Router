@@ -72,7 +72,7 @@ void CommonParticipant::onParticipantDiscovery(
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed TopicQoS.");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::REMOVED_PARTICIPANT)
         {
@@ -93,8 +93,8 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     types::Guid info_guid;
     info_guid = info.info.guid();
 
-    // Parse QoS
-    types::QoS info_qos;
+    // Parse TopicQoS
+    types::TopicQoS info_qos;
     // Durability
     info_qos.durability_qos = info.info.m_qos.m_durability.durabilityKind();
     // Reliability
@@ -150,7 +150,7 @@ void CommonParticipant::onReaderDiscovery(
         }
         else if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::CHANGED_QOS_READER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " changed TopicQoS.");
 
             this->discovery_database_->update_endpoint(info_reader);
         }
@@ -188,7 +188,7 @@ void CommonParticipant::onWriterDiscovery(
         }
         else if (info.status == fastrtps::rtps::WriterDiscoveryInfo::CHANGED_QOS_WRITER)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed QoS.");
+            logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " changed TopicQoS.");
 
             this->discovery_database_->update_endpoint(info_writer);
         }

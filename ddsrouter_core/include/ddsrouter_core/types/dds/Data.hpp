@@ -23,6 +23,7 @@
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
+#include <ddsrouter_core/types/dds/DataQoS.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -47,6 +48,9 @@ struct DataReceived
 
     //! Id of the participant from which the Reader has received the data.
     ParticipantId participant_receiver;
+
+    //! QoS of the data received
+    DataQoS qos;
 };
 
 //! \c octet to stream serializator

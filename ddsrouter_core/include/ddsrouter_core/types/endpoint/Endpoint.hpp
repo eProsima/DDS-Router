@@ -21,7 +21,7 @@
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/QoS.hpp>
+#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
 namespace eprosima {
@@ -69,7 +69,7 @@ public:
     DDSROUTER_CORE_DllAPI Endpoint(
             const EndpointKind& kind,
             const Guid& guid,
-            const QoS& qos,
+            const TopicQoS& qos,
             const RealTopic& topic) noexcept;
 
     //! Endpoint kind getter
@@ -78,8 +78,8 @@ public:
     //! Guid getter
     DDSROUTER_CORE_DllAPI Guid guid() const noexcept;
 
-    //! QoS getter
-    DDSROUTER_CORE_DllAPI QoS qos() const noexcept;
+    //! TopicQoS getter
+    DDSROUTER_CORE_DllAPI TopicQoS qos() const noexcept;
 
     //! Topic getter
     DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
@@ -121,7 +121,7 @@ protected:
     Guid guid_;
 
     //! Attributes of the endpoint
-    QoS qos_;
+    TopicQoS qos_;
 
     //! Topic that this endpoint belongs to
     RealTopic topic_;

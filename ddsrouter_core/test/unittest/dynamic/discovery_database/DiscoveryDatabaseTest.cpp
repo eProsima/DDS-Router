@@ -20,7 +20,7 @@
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/QoS.hpp>
+#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 #include <ddsrouter_utils/ReturnCode.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
 
@@ -85,7 +85,7 @@ TEST(DiscoveryDatabaseTest, topic_exists)
     test::DiscoveryDatabase discovery_database;
     Guid guid_1 = random_guid(1);
     Guid guid_2 = random_guid(2);
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint_1(EndpointKind::reader, guid_1, qos, topic);
     Endpoint endpoint_2(EndpointKind::reader, guid_2, qos, topic);
@@ -112,7 +112,7 @@ TEST(DiscoveryDatabaseTest, endpoint_exists)
 {
     test::DiscoveryDatabase discovery_database;
     Guid guid;
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
@@ -134,7 +134,7 @@ TEST(DiscoveryDatabaseTest, endpoint_exists)
 TEST(DiscoveryDatabaseTest, add_endpoint)
 {
     test::DiscoveryDatabase discovery_database;
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("original", "original");
     // Create active endpoint
     Guid active_guid = random_guid(1);
@@ -174,7 +174,7 @@ TEST(DiscoveryDatabaseTest, update_endpoint)
 {
     test::DiscoveryDatabase discovery_database;
     Guid guid = random_guid(1);
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("original", "original");
     Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
     RealTopic new_topic("new", "new");
@@ -206,7 +206,7 @@ TEST(DiscoveryDatabaseTest, erase_endpoint)
 {
     test::DiscoveryDatabase discovery_database;
     Guid guid = random_guid(1);
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 
@@ -233,7 +233,7 @@ TEST(DiscoveryDatabaseTest, get_endpoint)
 {
     test::DiscoveryDatabase discovery_database;
     Guid guid = random_guid(1);
-    QoS qos;
+    TopicQoS qos;
     RealTopic topic("test", "test");
     Endpoint endpoint(EndpointKind::reader, guid, qos, topic);
 

@@ -49,7 +49,7 @@ public:
     /**
      * @brief Construct a new Reader object
      *
-     * Get the Attributes and QoS and create the Reader History and the RTPS Reader.
+     * Get the Attributes and TopicQoS and create the Reader History and the RTPS Reader.
      *
      * @param participant_id    Router Id of the Participant that has created this Reader.
      * @param topic             Topic that this Reader subscribes to.
@@ -153,7 +153,7 @@ protected:
     //! Default Topic Attributes to create Reader
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
-    //! Default QoS Reader (must be the same as the attributes)
+    //! Default TopicQoS Reader (must be the same as the attributes)
     fastrtps::ReaderQos reader_qos_() const noexcept;
 
     /////
