@@ -90,7 +90,7 @@ struct DdsTopic : public Topic
     bool keyed = false;
 
     //! Topic QoS
-    types::TopicQoS topic_qos{};
+    utils::Fuzzy<types::TopicQoS> topic_qos{};
 };
 
 /**

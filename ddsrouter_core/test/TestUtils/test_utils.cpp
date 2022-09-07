@@ -102,6 +102,7 @@ std::set<std::shared_ptr<DdsTopic>> topic_set(
                 qos.reliability_qos = ReliabilityKind::BEST_EFFORT;
             }
             new_topic->topic_qos = qos;
+            new_topic->topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_fuzzy);
         }
 
         result.insert(new_topic);
