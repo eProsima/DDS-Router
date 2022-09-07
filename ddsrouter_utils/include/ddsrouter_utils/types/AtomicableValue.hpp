@@ -32,7 +32,7 @@ namespace utils {
  *
  * @tparam T
  */
-template <typename T>
+template <class T>
 class AtomicableValue
 {
 public:

@@ -27,37 +27,37 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
-template <typename T>
+template <class T>
 AtomicableValue<T>::AtomicableValue(const T& value)
     : value_(value)
 {
 }
 
-template <typename T>
+template <class T>
 AtomicableValue<T>::AtomicableValue(T&& value)
     : value_(std::move(value))
 {
 }
 
-template <typename T>
+template <class T>
 void AtomicableValue<T>::get(T& value_to_set) const noexcept
 {
     std::shared_lock<SharedAtomicable<T>> lock(value_);
     value_to_set = value_;
 }
 
-template <typename T>
+template <class T>
 void AtomicableValue<T>::set(const T& new_value) const
 {
     std::unique_lock<SharedAtomicable<T>> lock(value_);
     value_ = new_value;
 }
 
-template <typename T>
+template <class T>
 void AtomicableValue<T>::set(T&& new_value) const
 {
     std::unique_lock<SharedAtomicable<T>> lock(value_);
-    value = std::move(new_value);
+    value_ = std::move(new_value);
 }
 
 } /* namespace utils */

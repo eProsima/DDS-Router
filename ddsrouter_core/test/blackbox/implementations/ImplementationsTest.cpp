@@ -71,14 +71,17 @@ TEST(ImplementationsTest, pair_implementation)
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
         participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
+        configuration::SpecsConfiguration specs;
+        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
+        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
+
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
-            test::DEFAULT_THREAD_POOL_SIZE,
-            test::DEFAULT_MAX_HISTORY_DEPTH);
+            specs);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -117,14 +120,17 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
         participant_configurations.insert(test::random_participant_configuration(kind, 1));
         participant_configurations.insert(test::random_participant_configuration(kind, 2));
 
+        configuration::SpecsConfiguration specs;
+        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
+        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
+
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             builtin_topics,
             participant_configurations,
-            test::DEFAULT_THREAD_POOL_SIZE,
-            test::DEFAULT_MAX_HISTORY_DEPTH);
+            specs);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -170,14 +176,17 @@ TEST(ImplementationsTest, all_implementations)
             participant_configurations.insert(test::random_participant_configuration(kind, participant_number++));
         }
 
+        configuration::SpecsConfiguration specs;
+        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
+        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
+
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
-            test::DEFAULT_THREAD_POOL_SIZE,
-            test::DEFAULT_MAX_HISTORY_DEPTH);
+            specs);
 
         // Create DDSRouter entity
         DDSRouter router(configuration);
@@ -207,14 +216,17 @@ TEST(ImplementationsTest, duplicated_ids)
         participant_configurations.insert(test::random_participant_configuration(kind, 0));
         participant_configurations.insert(test::random_participant_configuration(kind, 0));
 
+        configuration::SpecsConfiguration specs;
+        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
+        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
+
         // Generate configuration
         configuration::DDSRouterConfiguration configuration(
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsFilterTopic>>(),
             std::set<std::shared_ptr<DdsTopic>>(),
             participant_configurations,
-            test::DEFAULT_THREAD_POOL_SIZE,
-            test::DEFAULT_MAX_HISTORY_DEPTH);
+            specs);
 
         // Create DDSRouter entity
         ASSERT_THROW(DDSRouter router(configuration), eprosima::ddsrouter::utils::ConfigurationException) << kind;

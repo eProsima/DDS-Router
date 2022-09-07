@@ -25,6 +25,7 @@
 #include <ddsrouter_utils/Formatter.hpp>
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
+#include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
@@ -53,8 +54,7 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
             std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist,
             std::set<std::shared_ptr<types::DdsTopic>> builtin_topics,
             std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-            unsigned int number_of_threads,
-            unsigned int max_history_depth);
+            const SpecsConfiguration& advance_options);
 
     /////////////////////////
     // METHODS
@@ -72,9 +72,7 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
 
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations = {};
 
-    unsigned int number_of_threads = 12;
-
-    unsigned int max_history_depth = 5000;
+    SpecsConfiguration advance_options;
 
 protected:
 

@@ -41,10 +41,8 @@ CommonParticipant::CommonParticipant(
         std::shared_ptr<PayloadPool> payload_pool,
         std::shared_ptr<DiscoveryDatabase> discovery_database,
         const types::DomainId& domain_id,
-        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-        unsigned int max_history_depth)
+        const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
-    , max_history_depth_(max_history_depth)
 {
     create_participant_(
         domain_id,
@@ -72,7 +70,7 @@ void CommonParticipant::onParticipantDiscovery(
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
-            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed TopicQoS.");
+            logInfo(DDSROUTER_DISCOVERY, "Participant " << info.info.m_guid << " changed QoS.");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::REMOVED_PARTICIPANT)
         {

@@ -91,6 +91,7 @@ YamlReaderVersion YamlReader::get<YamlReaderVersion>(
                     {VERSION_TAG_V_1_0, YamlReaderVersion::V_1_0},
                     {VERSION_TAG_V_2_0, YamlReaderVersion::V_2_0},
                     {VERSION_TAG_V_3_0, YamlReaderVersion::V_3_0},
+                    {VERSION_TAG_V_4_0, YamlReaderVersion::V_4_0},
                 });
 }
 
@@ -774,6 +775,29 @@ configuration::InitialPeersParticipantConfiguration YamlReader::get(
     return object;
 }
 
+//////////////////////////////////
+// SpecsConfiguration
+template <>
+void YamlReader::fill(
+        configuration::SpecsConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    /////
+    // Get optional number of threads
+    if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
+    {
+        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+    }
+
+    /////
+    // Get optional maximum history depth
+    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
+    {
+        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
+    }
+}
+
 /***************************
  * DDS ROUTER CONFIGURATION *
  ****************************/
@@ -913,7 +937,7 @@ void _fill_ddsrouter_configuration_v1(
     }
 }
 
-void _fill_ddsrouter_configuration_latest(
+void _fill_ddsrouter_configuration_v3(
         core::configuration::DDSRouterConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
@@ -966,16 +990,75 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional number of threads
     if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
     {
-        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+        object.advance_options.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
     }
 
     /////
     // Get optional maximum history depth
     if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
     {
-        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
+        object.advance_options.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
+    }
+}
+
+void _fill_ddsrouter_configuration_latest(
+        core::configuration::DDSRouterConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    /////
+    // Get optional allowlist
+    if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
+    {
+        object.allowlist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, ALLOWLIST_TAG, version));
     }
 
+    /////
+    // Get optional blocklist
+    if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
+    {
+        object.blocklist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, BLOCKLIST_TAG, version));
+    }
+
+    /////
+    // Get optional builtin topics
+    if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
+    {
+        object.builtin_topics = utils::convert_set_to_shared<types::DdsTopic, types::DdsTopic>(
+            YamlReader::get_set<types::DdsTopic>(yml, BUILTIN_TAG, version));
+    }
+
+    /////
+    // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
+    auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
+
+    // TODO do it in a single instruction
+    // Check it is a list
+    if (!participants_configurations_yml.IsSequence())
+    {
+        throw utils::ConfigurationException(
+                  utils::Formatter() <<
+                      "Participant configurations must be specified in an array under tag: " <<
+                      COLLECTION_PARTICIPANTS_TAG);
+    }
+
+    for (auto conf : participants_configurations_yml)
+    {
+        object.participants_configurations.insert(
+            YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
+    }
+
+    /////
+    // Get optional specs configuration
+    if (YamlReader::is_tag_present(yml, SPECS_TAG))
+    {
+        YamlReader::fill<configuration::SpecsConfiguration>(
+            object.advance_options,
+            YamlReader::get_value_in_tag(yml, SPECS_TAG),
+            version);
+    }
 }
 
 template <>
@@ -988,6 +1071,11 @@ core::configuration::DDSRouterConfiguration YamlReader::get<core::configuration:
     {
         case V_1_0:
             _fill_ddsrouter_configuration_v1(object, yml, version);
+            break;
+
+        case V_2_0:
+        case V_3_0:
+            _fill_ddsrouter_configuration_v3(object, yml, version);
             break;
 
         default:
@@ -1015,8 +1103,12 @@ std::ostream& operator <<(
             os << VERSION_TAG_V_3_0;
             break;
 
+        case V_4_0:
+            os << VERSION_TAG_V_4_0;
+            break;
+
         case LATEST:
-            os << VERSION_TAG_V_3_0;
+            os << VERSION_TAG_V_4_0;
             break;
 
         default:

@@ -53,8 +53,7 @@ public:
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
             const types::DomainId& domain_id,
-            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-            unsigned int max_history_depth);
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     virtual ~CommonParticipant();
 

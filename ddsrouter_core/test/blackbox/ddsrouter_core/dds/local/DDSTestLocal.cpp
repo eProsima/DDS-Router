@@ -89,8 +89,7 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
         blocklist,
         builtin_topics,
         participants_configurations,
-        1,
-        100);
+        configuration::SpecsConfiguration());
 }
 
 /**

@@ -40,6 +40,7 @@ constexpr const char* VERSION_TAG("version");       //! Version to parse the yam
 constexpr const char* VERSION_TAG_V_1_0("v1.0");    //! Version v1.0
 constexpr const char* VERSION_TAG_V_2_0("v2.0");    //! Version v2.0
 constexpr const char* VERSION_TAG_V_3_0("v3.0");    //! Version v3.0
+constexpr const char* VERSION_TAG_V_4_0("v4.0");    //! Version v4.0
 
 // Topics related tags
 constexpr const char* ALLOWLIST_TAG("allowlist");     //! List of allowed topics
@@ -105,6 +106,7 @@ constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO: add comment
 
 // Advance configuration
+constexpr const char* SPECS_TAG("specs"); //! Specs options for DDS Router configuration
 constexpr const char* NUMBER_THREADS_TAG("threads"); //! Number of threads to configure the thread pool
 constexpr const char* MAX_HISTORY_DEPTH_TAG("max-depth"); //! Maximum size (number of stored cache changes) for RTPS History instances
 

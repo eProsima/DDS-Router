@@ -22,6 +22,8 @@
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/Types.h>
 
+#include <ddsrouter_utils/types/AtomicableValue.hpp>
+
 #include <ddsrouter_core/library/library_dll.h>
 
 namespace eprosima {
@@ -73,6 +75,12 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     bool has_partitions() const noexcept;
 
     /////////////////////////
+    // GLOBAL VARIABLES
+    /////////////////////////
+
+    static std::atomic<HistoryDepthType> default_history_depth;
+
+    /////////////////////////
     // VARIABLES
     /////////////////////////
 
@@ -92,8 +100,11 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
      * @brief History Qos
      *
      * @note It only stores the depth because in router it will always be keep last, as RTPS has not resource limits.
+     *
+     * @warning this is not set by default to \c default_history_depth so if user wants to use default setable value
+     * must to it explicitly.
      */
-    HistoryDepthType history_depth = 1;
+    HistoryDepthType history_depth = 1000;
 };
 
 /**

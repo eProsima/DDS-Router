@@ -45,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advance_options.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -58,10 +58,13 @@ DDSRouterImpl::DDSRouterImpl(
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
 
+    // Set default value for history
+    types::TopicQoS::default_history_depth.store(
+        configuration_.advance_options.max_history_depth);
+
     // Add callback to be called by the discovery database when an Endpoint is discovered
     discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
             std::placeholders::_1));
-
 
     // Init topic allowed
     init_allowed_topics_();
@@ -289,8 +292,7 @@ void DDSRouterImpl::init_participants_()
                 participant_factory_.create_participant(
             participant_config,
             payload_pool_,
-            discovery_database_,
-            configuration_.max_history_depth);
+            discovery_database_);
 
         // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||

@@ -25,6 +25,8 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
+std::atomic<HistoryDepthType> TopicQoS::default_history_depth{1000};
+
 bool TopicQoS::operator ==(
         const TopicQoS& other) const noexcept
 {

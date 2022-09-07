@@ -254,7 +254,7 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v2.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "void"
@@ -267,14 +267,16 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
 
     for (unsigned int test_case : test_cases)
     {
-        yml[NUMBER_THREADS_TAG] = test_case;
+        Yaml yml_specs;
+        yml_specs[NUMBER_THREADS_TAG] = test_case;
+        yml[SPECS_TAG] = yml_specs;
 
         // Load configuration
         core::configuration::DDSRouterConfiguration configuration_result =
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check threads are correct
-        ASSERT_EQ(test_case, configuration_result.number_of_threads);
+        ASSERT_EQ(test_case, configuration_result.advance_options.number_of_threads);
     }
 }
 
@@ -289,7 +291,7 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v2.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "void"
@@ -302,14 +304,16 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
 
     for (unsigned int test_case : test_cases)
     {
-        yml[MAX_HISTORY_DEPTH_TAG] = test_case;
+        Yaml yml_specs;
+        yml_specs[MAX_HISTORY_DEPTH_TAG] = test_case;
+        yml[SPECS_TAG] = yml_specs;
 
         // Load configuration
         core::configuration::DDSRouterConfiguration configuration_result =
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.max_history_depth);
+        ASSERT_EQ(test_case, configuration_result.advance_options.max_history_depth);
     }
 }
 

@@ -72,13 +72,22 @@ enum YamlReaderVersion
     V_2_0,
 
     /**
-     * @brief  Latest version.
+     * @brief  Version 3.0
      *
      * @version 0.5.0
      *
      * - Change wan to initial peers participant
      */
     V_3_0,
+
+    /**
+     * @brief  Latest version.
+     *
+     * @version 0.5.0
+     *
+     * - Add Specs
+     */
+    V_4_0,
 
     /**
      * @brief  Main version.
