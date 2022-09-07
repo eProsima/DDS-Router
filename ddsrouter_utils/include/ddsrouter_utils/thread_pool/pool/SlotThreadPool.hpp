@@ -29,11 +29,15 @@
 #include <ddsrouter_utils/thread_pool/task/Task.hpp>
 #include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
 #include <ddsrouter_utils/thread_pool/thread/CustomThread.hpp>
+#include <ddsrouter_utils/types/Atomicable.hpp>
 #include <ddsrouter_utils/wait/DBQueueWaitHandler.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace utils {
+
+// Declarations to make code less verbose
+using SlotsMapType = SharedAtomicable<std::map<TaskId, Task>>;
 
 /**
  * This class represents a thread pool that can register tasks inside.
@@ -151,12 +155,9 @@ protected:
     /**
      * @brief Map of tasks indexed by their task Id.
      *
-     * This object is protected by the \c slots_mutex_ mutex.
+     * This object is protected by itself (atomicable).
      */
-    std::map<TaskId, Task> slots_;
-
-    //! Protects access to \c slots_ .
-    std::mutex slots_mutex_;
+    SlotsMapType slots_;
 
     //! Whether the object is currently enabled
     std::atomic<bool> enabled_;
