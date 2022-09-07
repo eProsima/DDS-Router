@@ -66,7 +66,7 @@ public:
     /**
      * @brief Construct a new Writer object
      *
-     * Get the Attributes and QoS and create the Writer History and the RTPS Writer.
+     * Get the Attributes and TopicQoS and create the Writer History and the RTPS Writer.
      *
      * @param participant_id    Router Id of the Participant that has created this Writer.
      * @param topic             Topic that this Writer subscribes to.
@@ -141,7 +141,7 @@ protected:
     //! Default Topic Attributes to create Writer
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
-    //! Default QoS Writer (must be the same as the attributes)
+    //! Default TopicQoS Writer (must be the same as the attributes)
     fastrtps::WriterQos writer_qos_() const noexcept;
 
     //! Default Cache Change Pool Configuration

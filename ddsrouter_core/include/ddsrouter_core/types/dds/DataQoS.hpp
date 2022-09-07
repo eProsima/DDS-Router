@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file QoS.hpp
+ * @file DataQoS.hpp
  */
 
 #ifndef _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
@@ -30,74 +30,33 @@ namespace core {
 namespace types {
 
 //! Durability kind enumeration
-using DurabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t;
-
-//! Reliability kind enumeration
-using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
-
-//! History kind enumeration
-using HistoryQosPolicy = eprosima::fastdds::dds::HistoryQosPolicy;
+using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
 
 //! Partition configuration
-using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
+using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosPolicy;
 
 /**
  * Collection of attributes of an Endpoint
  */
-struct DDSROUTER_CORE_DllAPI QoS
+struct DDSROUTER_CORE_DllAPI DataQoS
 {
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    //! Default QoS with reader less restrictive parameters
-    QoS() = default;
-
-    /////////////////////////
-    // OPERATORS
-    /////////////////////////
-
-    // OPERATOR OVERLOAD
-    bool operator ==(
-            const QoS& other) const noexcept;
+    //! Default DataQoS with reader less restrictive parameters
+    DataQoS() = default;
 
     /////////////////////////
     // VARIABLES
     /////////////////////////
 
-    //! Durability kind (Default = VOLATILE)
-    DurabilityKind durability_qos = DurabilityKind::VOLATILE;
+    //! Partitions of the data
+    PartitionQosPolicy partitions{};
 
-    //! Reliability kind (Default = BEST_EFFORT)
-    ReliabilityKind reliability_qos = ReliabilityKind::BEST_EFFORT;
-
-    //! History Qos
-    HistoryQosPolicy history_qos = HistoryQosPolicy();
-
-    //! Partitions QoS Policy
-    PartitionQosPolicy partition_qos = PartitionQosPolicy();
+    //! Ownership strength of the data
+    OwnershipStrengthQosPolicy ownership_strength{};
 };
-
-/**
- * @brief \c DurabilityKind to stream serialization
- */
-DDSROUTER_CORE_DllAPI std::ostream& operator <<(
-        std::ostream& os,
-        const DurabilityKind& kind);
-
-/**
- * @brief \c ReliabilityKind to stream serialization
- */
-DDSROUTER_CORE_DllAPI std::ostream& operator <<(
-        std::ostream& os,
-        const ReliabilityKind& kind);
-
-/**
- * @brief \c HistoryQosPolicy to stream serialization
- */
-DDSROUTER_CORE_DllAPI std::ostream& operator <<(
-        std::ostream& os,
-        const HistoryQosPolicy& qos);
 
 /**
  * @brief \c PartitionQosPolicy to stream serialization
@@ -107,11 +66,18 @@ DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         const PartitionQosPolicy& qos);
 
 /**
- * @brief \c QoS to stream serialization
+ * @brief \c OwnershipStrengthQosPolicy to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const QoS& qos);
+        const OwnershipStrengthQosPolicy& qos);
+
+/**
+ * @brief \c DataQoS to stream serialization
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const DataQoS& qos);
 
 } /* namespace types */
 } /* namespace core */

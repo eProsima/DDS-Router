@@ -16,17 +16,17 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
-#include <ddsrouter_core/types/dds/QoS.hpp>
+#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
-// Get a random QoS configuration
-QoS random_qos(
+// Get a random TopicQoS configuration
+TopicQoS random_qos(
         uint16_t seed = 0)
 {
-    QoS qos;
+    TopicQoS qos;
 
     if (seed % 2)
     {
@@ -116,7 +116,7 @@ TEST(EndpointTest, constructor)
 {
     EndpointKind kind;
     Guid guid;
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
     RealTopic topic = random_topic();
 
     Endpoint endpoint(kind, guid, qos, topic);
@@ -137,7 +137,7 @@ TEST(EndpointTest, constructor)
 TEST(EndpointTest, kind_getter)
 {
     Guid guid;
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
     RealTopic topic = random_topic();
 
     // Writer
@@ -162,7 +162,7 @@ TEST(EndpointTest, kind_getter)
  */
 TEST(EndpointTest, guid_getter)
 {
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
     RealTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
 
@@ -188,7 +188,7 @@ TEST(EndpointTest, guid_getter)
  * Test \c Endpoint \c qos getter method
  *
  * CASES:
- *  Random QoS
+ *  Random TopicQoS
  */
 TEST(EndpointTest, qos_getter)
 {
@@ -200,7 +200,7 @@ TEST(EndpointTest, qos_getter)
     {
         for (uint16_t i = 0; i < 8; i++)
         {
-            QoS qos = random_qos(i);
+            TopicQoS qos = random_qos(i);
             Endpoint endpoint(kind, guid, qos, topic);
             ASSERT_EQ(endpoint.qos(), random_qos(i)) << i;
         }
@@ -217,7 +217,7 @@ TEST(EndpointTest, topic_getter)
 {
     Guid guid = random_valid_guid();
     EndpointKind kind = random_endpoint_kind();
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
 
     // Random guids
     {
@@ -243,7 +243,7 @@ TEST(EndpointTest, active_getter)
     Guid guid = random_valid_guid();
     RealTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
 
     // Default value
     {
@@ -281,7 +281,7 @@ TEST(EndpointTest, active_setter)
     Guid guid = random_valid_guid();
     RealTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
 
     // Default value
     {
@@ -315,7 +315,7 @@ TEST(EndpointTest, active_setter)
 TEST(EndpointTest, is_writer)
 {
     Guid guid;
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
     RealTopic topic = random_topic();
 
     // Writer
@@ -341,7 +341,7 @@ TEST(EndpointTest, is_writer)
 TEST(EndpointTest, is_reader)
 {
     Guid guid;
-    QoS qos = random_qos();
+    TopicQoS qos = random_qos();
     RealTopic topic = random_topic();
 
     // Writer

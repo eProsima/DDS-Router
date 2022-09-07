@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file QoS.cpp
+ * @file TopicQoS.cpp
  *
  */
 
-#include <ddsrouter_core/types/dds/QoS.hpp>
+#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
@@ -25,15 +25,37 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool QoS::operator ==(
-        const QoS& other) const noexcept
+bool TopicQoS::operator ==(
+        const TopicQoS& other) const noexcept
 {
     return
-        durability_qos == other.durability_qos &&
-        reliability_qos == other.reliability_qos &&
-        history_qos == other.history_qos &&
-        partition_qos == other.partition_qos;
+        this->reliability_qos == other.reliability_qos &&
+        this->durability_qos == other.durability_qos &&
+        this->history_depth == other.history_depth &&
+        this->ownership_qos == other.ownership_qos &&
+        this->use_partitions == other.use_partitions;
 }
+
+bool TopicQoS::is_reliable() const noexcept
+{
+    return reliability_qos == ReliabilityKind::RELIABLE;
+}
+
+bool TopicQoS::is_transient_local() const noexcept
+{
+    return durability_qos == DurabilityKind::TRANSIENT_LOCAL;
+}
+
+bool TopicQoS::has_ownership() const noexcept
+{
+    return ownership_qos == OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS;
+}
+
+bool TopicQoS::has_partitions() const noexcept
+{
+    return use_partitions;
+}
+
 
 std::ostream& operator <<(
         std::ostream& os,
@@ -89,20 +111,20 @@ std::ostream& operator <<(
 
 std::ostream& operator <<(
         std::ostream& os,
-        const HistoryQosPolicy& qos)
+        const OwnershipQosPolicyKind& kind)
 {
-    switch (qos.kind)
+    switch (kind)
     {
-        case eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS:
-            os << "KEEP_LAST(" << qos.depth << ")";
+        case OwnershipQosPolicyKind::SHARED_OWNERSHIP_QOS:
+            os << "SHARED";
             break;
 
-        case eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS:
-            os << "KEEP_ALL";
+        case OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS:
+            os << "EXCLUSIVE";
             break;
 
         default:
-            utils::tsnh(utils::Formatter() << "Invalid Reliability Kind.");
+            utils::tsnh(utils::Formatter() << "Invalid Ownership Kind.");
             break;
     }
 
@@ -111,27 +133,14 @@ std::ostream& operator <<(
 
 std::ostream& operator <<(
         std::ostream& os,
-        const PartitionQosPolicy& qos)
-{
-    os << "Partitions{";
-    for (auto& partition : qos)
-    {
-        os << partition.name() << ";";
-    }
-    os << "}";
-
-    return os;
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const QoS& qos)
+        const TopicQoS& qos)
 {
     os <<
-        "QoS{" << qos.durability_qos <<
+        "TopicQoS{" << qos.durability_qos <<
         ";" << qos.reliability_qos <<
-        ";" << qos.history_qos <<
-        ";" << qos.partition_qos <<
+        ";" << qos.ownership_qos <<
+        (qos.has_partitions() ? ";partitions" : "") <<
+        ";depth(" << qos.history_depth << ")" <<
         "}";
 
     return os;
