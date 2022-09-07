@@ -12,15 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add test subdirectories
-add_subdirectory(event)
-add_subdirectory(exception)
-add_subdirectory(types)
-add_subdirectory(macros)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(thread_pool)
-add_subdirectory(time)
-add_subdirectory(utils)
-add_subdirectory(wait)
+set(TEST_NAME fuzzyTest)
+
+set(TEST_SOURCES
+        fuzzyTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+    )
+
+set(TEST_LIST
+        default_construct
+        construct
+        assign_operator
+    )
+
+set(TEST_EXTRA_LIBRARIES
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+add_unittest_executable(
+        "${TEST_NAME}"
+        "${TEST_SOURCES}"
+        "${TEST_LIST}"
+        "${TEST_EXTRA_LIBRARIES}"
+        "${TEST_NEEDED_SOURCES}"
+    )
