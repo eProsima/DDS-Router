@@ -124,6 +124,12 @@ void Fuzzy<T>::set_value(const T& new_value, FuzzyLevelType level /* = FuzzyLeve
     fuzzy_level = level;
 }
 
+template <typename T>
+void Fuzzy<T>::set_level(FuzzyLevelType level /* = FuzzyLevelValues::fuzzy_level_set */)
+{
+    fuzzy_level = level;
+}
+
 /////////////////////////
 // SERIALIZATION
 /////////////////////////

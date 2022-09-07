@@ -94,7 +94,7 @@ void compare_topic(
             expected_reliability_qos = core::types::ReliabilityKind::BEST_EFFORT;
         }
 
-        ASSERT_EQ(topic.topic_qos.reliability_qos, expected_reliability_qos);
+        ASSERT_EQ(topic.topic_qos.value.reliability_qos, expected_reliability_qos);
     }
 }
 
