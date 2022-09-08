@@ -259,6 +259,9 @@ fastrtps::WriterQos Writer::writer_qos_() const noexcept
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 
+    // Set minimum deadline so it matches with everything
+    qos.m_deadline.period = eprosima::fastrtps::Duration_t(0);
+
     // TODO Set ownership and partitions
 
     return qos;
