@@ -215,7 +215,7 @@ fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
 
-    // TODO Set ownership and partitions
+    // Ownership and Partitions are not part of RTPS, thus they are set in qos
 
     return att;
 }
@@ -238,6 +238,10 @@ fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
     att.topicName = topic_.topic_name;
     att.topicDataType = topic_.type_name;
 
+    // Set Topic history attributes
+    att.historyQos.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS;
+    att.historyQos.depth = topic_.topic_qos.value.history_depth;
+
     return att;
 }
 
@@ -257,7 +261,14 @@ fastrtps::ReaderQos Reader::reader_qos_() const noexcept
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 
-    // TODO Set ownership and partitions
+    // If topic with partitions, set this Reader in *
+    if (topic_.topic_qos.value.use_partitions)
+    {
+        qos.m_partition.push_back("*");
+    }
+
+    // If topic is with ownership
+    qos.m_ownership.kind = topic_.topic_qos.value.ownership_qos;
 
     return qos;
 }

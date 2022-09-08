@@ -119,7 +119,7 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
     info_topic.keyed = info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY;
     // Set qos as set, but fuzzy
-    info_topic.topic_qos = info_qos;
+    info_topic.topic_qos = discovered_topic_qos;
     info_topic.topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_fuzzy);
 
     // Create Endpoint
