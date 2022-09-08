@@ -92,17 +92,17 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     info_guid = info.info.guid();
 
     // Parse TopicQoS
-    types::TopicQoS info_qos;
+    types::TopicQoS discovered_topic_qos;
     // Durability
-    info_qos.durability_qos = info.info.m_qos.m_durability.durabilityKind();
+    discovered_topic_qos.durability_qos = info.info.m_qos.m_durability.durabilityKind();
     // Reliability
     if (info.info.m_qos.m_reliability.kind == fastdds::dds::BEST_EFFORT_RELIABILITY_QOS)
     {
-        info_qos.reliability_qos = fastrtps::rtps::BEST_EFFORT;
+        discovered_topic_qos.reliability_qos = fastrtps::rtps::BEST_EFFORT;
     }
     else if (info.info.m_qos.m_reliability.kind == fastdds::dds::RELIABLE_RELIABILITY_QOS)
     {
-        info_qos.reliability_qos = fastrtps::rtps::RELIABLE;
+        discovered_topic_qos.reliability_qos = fastrtps::rtps::RELIABLE;
     }
     else
     {
@@ -110,7 +110,10 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
             utils::Formatter() <<
                 "Invalid ReliabilityQoS value found while parsing DiscoveryInfo for Endpoint creation.");
     }
-    // TODO: Set partitions and ownership
+    // Set Topic with Partitions
+    discovered_topic_qos.use_partitions = !info.info.m_qos.m_partition.empty();
+    // Set Topic with ownership
+    discovered_topic_qos.ownership_qos = info.info.m_qos.m_ownership.kind;
 
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
