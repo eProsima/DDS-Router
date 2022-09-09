@@ -141,7 +141,7 @@ void Writer::onWriterMatched(
             fastrtps::rtps::RTPSWriter* writer,
             fastrtps::rtps::MatchingInfo& info)
 {
-    if (info.status == fastrtps::rtps::MATCHED_MATCHING)
+    if (info.status == fastrtps::rtps::MATCHED_MATCHING && RPCTopic::is_service_topic(topic_))
     {
         logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
                 topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);

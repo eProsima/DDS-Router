@@ -308,7 +308,10 @@ void Reader::onNewCacheChangeAdded(
             logDebug(DDSROUTER_RTPS_READER_LISTENER,
                     "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
-            std::cout << "Data arrived to Reader " << *this << std::endl;
+            if (RPCTopic::is_service_topic(topic_))
+            {
+                std::cout << "Data arrived to Reader " << *this << std::endl;
+            }
             on_data_available_();
         }
         else
@@ -344,7 +347,7 @@ void Reader::onReaderMatched(
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
+        if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING && RPCTopic::is_service_topic(topic_))
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
                     "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
