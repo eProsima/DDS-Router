@@ -48,6 +48,14 @@ struct DDSROUTER_CORE_DllAPI DataQoS
     DataQoS() = default;
 
     /////////////////////////
+    // OPERATORS
+    /////////////////////////
+
+    bool operator< (const DataQoS& other) const noexcept;
+
+    bool operator== (const DataQoS& other) const noexcept;
+
+    /////////////////////////
     // VARIABLES
     /////////////////////////
 

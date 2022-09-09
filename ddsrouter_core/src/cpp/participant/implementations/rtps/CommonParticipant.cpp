@@ -23,11 +23,15 @@
 
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/Log.hpp>
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
+#include <writer/implementations/rtps/PartitionsWriter.hpp>
+#include <reader/implementations/rtps/PartitionsReader.hpp>
+#include <reader/implementations/rtps/SimpleReader.hpp>
+#include <writer/implementations/rtps/SimpleWriter.hpp>
+#include <writer/implementations/rtps/QoSSpecificWriter.hpp>
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <participant/implementations/rtps/CommonParticipant.hpp>
 
@@ -115,6 +119,14 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     // Set Topic with ownership
     discovered_topic_qos.ownership_qos = info.info.m_qos.m_ownership.kind;
 
+    // Parse specific QoS of the entity
+    types::DataQoS specific_qos;
+    if (discovered_topic_qos.has_partitions())
+    {
+        specific_qos.partitions = info.info.m_qos.m_partition;
+    }
+    // Ownership not implemented
+
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
     info_topic.keyed = info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY;
@@ -125,11 +137,11 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::reader, info_guid, info_topic);
+        return types::Endpoint(types::EndpointKind::reader, info_guid, info_topic, specific_qos);
     }
     else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::writer, info_guid, info_topic);
+        return types::Endpoint(types::EndpointKind::writer, info_guid, info_topic, specific_qos);
     }
     else
     {
@@ -245,22 +257,46 @@ void CommonParticipant::create_participant_(
 std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         types::DdsTopic topic)
 {
-    return std::make_shared<Writer>(
-        this->id(),
-        topic,
-        this->payload_pool_,
-        rtps_participant_,
-        this->configuration_->is_repeater);
+    if (topic.topic_qos.value.has_partitions())
+    {
+        return std::make_shared<PartitionsWriter>(
+            this->id(),
+            topic,
+            this->payload_pool_,
+            rtps_participant_,
+            this->configuration_->is_repeater);
+    }
+    else
+    {
+        return std::make_shared<SimpleWriter>(
+            this->id(),
+            topic,
+            this->payload_pool_,
+            rtps_participant_,
+            this->configuration_->is_repeater);
+    }
 }
 
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
         types::DdsTopic topic)
 {
-    return std::make_shared<Reader>(
-        this->id(),
-        topic,
-        this->payload_pool_,
-        rtps_participant_);
+    if (topic.topic_qos.value.has_partitions())
+    {
+        return std::make_shared<PartitionsReader>(
+            this->id(),
+            topic,
+            this->payload_pool_,
+            rtps_participant_,
+            discovery_database_);
+    }
+    else
+    {
+        return std::make_shared<SimpleReader>(
+            this->id(),
+            topic,
+            this->payload_pool_,
+            rtps_participant_);
+    }
 }
 
 fastrtps::rtps::RTPSParticipantAttributes

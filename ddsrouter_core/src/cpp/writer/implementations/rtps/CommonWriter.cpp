@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Writer.cpp
+ * @file CommonWriter.cpp
  */
 
 #include <fastrtps/rtps/RTPSDomain.h>
@@ -23,7 +23,7 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
+#include <writer/implementations/rtps/CommonWriter.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
 #include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
 #include <types/dds/RouterCacheChange.hpp>
@@ -35,84 +35,30 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-Writer::Writer(
+CommonWriter::CommonWriter(
         const ParticipantId& participant_id,
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
-        const bool repeater /* = false */)
+        const bool repeater,
+        const fastrtps::rtps::HistoryAttributes& history_attributes,
+        const fastrtps::rtps::WriterAttributes& writer_attributes,
+        const fastrtps::TopicAttributes& topic_attributes,
+        const fastrtps::WriterQos& writer_qos,
+        const utils::PoolConfiguration& pool_configuration)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
+    , rtps_participant_(rtps_participant)
 {
-    // TODO Use payload pool for this writer, so change does not need to be copied
-
-    // Create History
-    fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
-    rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
-
-    // Create Writer
-    fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
-
-    if (repeater)
-    {
-        logDebug(DDSROUTER_RTPS_WRITER, "Writer created with repeater filter");
-
-        utils::PoolConfiguration pool_config = cache_change_pool_configuration_();
-        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
-            rtps_participant,
-            writer_att,
-            payload_pool_,
-            std::make_shared<CacheChangePool>(pool_config),
-            rtps_history_,
-            nullptr);
-    }
-    else
-    {
-        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
-            rtps_participant,
-            writer_att,
-            payload_pool_,
-            rtps_history_,
-            nullptr);
-    }
-
-    if (!rtps_writer_)
-    {
-        throw utils::InitializationException(
-                  utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
-                      participant_id << " in topic " << topic << ".");
-    }
-
-    // Register writer with topic
-    fastrtps::TopicAttributes topic_att = topic_attributes_();
-    fastrtps::WriterQos writer_qos = writer_qos_();
-
-    if (!rtps_participant->registerWriter(rtps_writer_, topic_att, writer_qos))
-    {
-        // In case it fails, remove writer and throw exception
-        fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
-        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
-                      " for Simple RTPSWriter in Participant " << participant_id);
-    }
-
-    if (repeater)
-    {
-        // Use filter writer of origin
-        data_filter_ = std::make_unique<RepeaterDataFilter>();
-    }
-    else
-    {
-        // Use default filter
-        data_filter_ = std::make_unique<SelfDataFilter>();
-    }
-
-    rtps_writer_->reader_data_filter(data_filter_.get());
-
-    logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
-            topic << " with guid " << rtps_writer_->getGuid());
+    internal_entities_creation_(
+        history_attributes,
+        writer_attributes,
+        topic_attributes,
+        writer_qos,
+        pool_configuration);
 }
 
-Writer::~Writer()
+CommonWriter::~CommonWriter()
 {
     // This variables should be set, otherwise the creation should have fail
     // Anyway, the if case is used for safety reasons
@@ -120,7 +66,7 @@ Writer::~Writer()
     // Delete writer
     if (rtps_writer_)
     {
-        // Delete the Writer the History is cleaned
+        // Delete the CommonWriter the History is cleaned
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
 
@@ -130,12 +76,12 @@ Writer::~Writer()
         delete rtps_history_;
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "Deleting Writer created in Participant " <<
+    logInfo(DDSROUTER_RTPS_WRITER, "Deleting CommonWriter created in Participant " <<
             participant_id_ << " for topic " << topic_);
 }
 
 // Specific enable/disable do not need to be implemented
-utils::ReturnCode Writer::write_(
+utils::ReturnCode CommonWriter::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
 
@@ -157,7 +103,7 @@ utils::ReturnCode Writer::write_(
     }
 
     logDebug(DDSROUTER_RTPS_WRITER,
-            "Writer " << *this << " sending payload " << new_change->serializedPayload << " from " <<
+            "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
             data->source_guid);
 
     if (repeater_)
@@ -167,7 +113,7 @@ utils::ReturnCode Writer::write_(
         change_ref.last_writer_guid_prefix = data->source_guid.guidPrefix;
     }
 
-    // Send data by adding it to Writer History
+    // Send data by adding it to CommonWriter History
     rtps_history_->add_change(new_change);
 
     // TODO: check if this being synchronous means that we can remove the change in case of volatile
@@ -181,31 +127,105 @@ utils::ReturnCode Writer::write_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
-fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
+void CommonWriter::internal_entities_creation_(
+        const fastrtps::rtps::HistoryAttributes& history_attributes,
+        const fastrtps::rtps::WriterAttributes& writer_attributes,
+        const fastrtps::TopicAttributes& topic_attributes,
+        const fastrtps::WriterQos& writer_qos,
+        const utils::PoolConfiguration& pool_configuration)
+{
+    // Copy writer attributes because fast needs it non const (do not ask why)
+    fastrtps::rtps::WriterAttributes non_const_writer_attributes = writer_attributes;
+
+    // Create History
+    rtps_history_ = new fastrtps::rtps::WriterHistory(history_attributes);
+
+    // Create CommonWriter
+    if (repeater_)
+    {
+        logDebug(DDSROUTER_RTPS_WRITER, "CommonWriter created with repeater filter");
+
+        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+            rtps_participant_,
+            non_const_writer_attributes,
+            payload_pool_,
+            std::make_shared<CacheChangePool>(pool_configuration),
+            rtps_history_,
+            nullptr);
+    }
+    else
+    {
+        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+            rtps_participant_,
+            non_const_writer_attributes,
+            payload_pool_,
+            rtps_history_,
+            nullptr);
+    }
+
+    if (!rtps_writer_)
+    {
+        throw utils::InitializationException(
+                  utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
+                      participant_id_ << " in topic " << topic_ << ".");
+    }
+
+    // Register writer with topic
+    if (!rtps_participant_->registerWriter(rtps_writer_, topic_attributes, writer_qos))
+    {
+        // In case it fails, remove writer and throw exception
+        fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
+        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic_ <<
+                      " for Simple RTPSWriter in Participant " << participant_id_);
+    }
+
+    if (repeater_)
+    {
+        // Use filter writer of origin
+        data_filter_ = std::make_unique<RepeaterDataFilter>();
+    }
+    else
+    {
+        // Use default filter
+        data_filter_ = std::make_unique<SelfDataFilter>();
+    }
+
+    rtps_writer_->reader_data_filter(data_filter_.get());
+
+    logInfo(
+        DDSROUTER_RTPS_WRITER,
+        "New CommonWriter created in Participant " << participant_id_ <<
+        " for topic " << topic_ <<
+        " with guid " << rtps_writer_->getGuid());
+}
+
+fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
 
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
 
-    att.maximumReservedCaches = topic_.topic_qos.value.history_depth;
+    att.maximumReservedCaches = topic.topic_qos.value.history_depth;
     // TODO: Check if history atts must be set from topics qos
 
     return att;
 }
 
-fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
+fastrtps::rtps::WriterAttributes CommonWriter::writer_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::WriterAttributes att;
 
     // Set Durability
-    att.endpoint.durabilityKind = topic_.topic_qos.value.durability_qos;
+    att.endpoint.durabilityKind = topic.topic_qos.value.durability_qos;
 
     // Set Reliability
-    att.endpoint.reliabilityKind = topic_.topic_qos.value.reliability_qos;
+    att.endpoint.reliabilityKind = topic.topic_qos.value.reliability_qos;
 
     // Set if topic has key
-    if (topic_.keyed)
+    if (topic.keyed)
     {
         att.endpoint.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -222,12 +242,13 @@ fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
     return att;
 }
 
-fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
+fastrtps::TopicAttributes CommonWriter::topic_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::TopicAttributes att;
 
     // Set if topic has key
-    if (topic_.keyed)
+    if (topic.keyed)
     {
         att.topicKind = eprosima::fastrtps::rtps::WITH_KEY;
     }
@@ -237,25 +258,26 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     }
 
     // Set Topic attributes
-    att.topicName = topic_.topic_name;
-    att.topicDataType = topic_.type_name;
+    att.topicName = topic.topic_name;
+    att.topicDataType = topic.type_name;
 
     return att;
 }
 
-fastrtps::WriterQos Writer::writer_qos_() const noexcept
+fastrtps::WriterQos CommonWriter::writer_qos_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::WriterQos qos;
 
     // Set Durability
     qos.m_durability.kind =
-        (topic_.topic_qos.value.is_transient_local()
+        (topic.topic_qos.value.is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
     qos.m_reliability.kind =
-        (topic_.topic_qos.value.is_reliable()
+        (topic.topic_qos.value.is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 
@@ -267,10 +289,11 @@ fastrtps::WriterQos Writer::writer_qos_() const noexcept
     return qos;
 }
 
-utils::PoolConfiguration Writer::cache_change_pool_configuration_() const noexcept
+utils::PoolConfiguration CommonWriter::cache_change_pool_configuration_(
+        const types::DdsTopic& topic) noexcept
 {
     utils::PoolConfiguration config;
-    config.maximum_size = topic_.topic_qos.value.history_depth; // No maximum
+    config.maximum_size = topic.topic_qos.value.history_depth; // No maximum
     config.initial_size = 20;
     config.batch_size = 20;
     // NOTE: Not use of memory policy or maximum yet

@@ -89,7 +89,13 @@ struct DdsTopic : public Topic
     //! Whether the topic has key or not
     bool keyed = false;
 
-    //! Topic QoS
+    /**
+     * @brief Topic QoS
+     *
+     * @note This is Fuzzy to solve the case where different QoS for same topic are found
+     * (e.g. Writer and Reader default). In these cases the fuzzy level must declare which one should be used.
+     * However, as we finally decided that only readers generate bridges, this Fuzzy level is actually not needed (yet).
+     */
     utils::Fuzzy<types::TopicQoS> topic_qos{};
 };
 

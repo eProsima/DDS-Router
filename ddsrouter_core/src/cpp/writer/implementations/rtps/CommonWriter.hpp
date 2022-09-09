@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file Writer.hpp
+ * @file CommonWriter.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_
-#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_
+#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_COMMONWRITER_HPP_
+#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_COMMONWRITER_HPP_
 
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
@@ -57,42 +57,50 @@ namespace core {
 namespace rtps {
 
 /**
- * Standard RTPS Writer with less restrictive Attributes.
+ * Standard RTPS CommonWriter with less restrictive Attributes.
  */
-class Writer : public BaseWriter
+class CommonWriter : public BaseWriter
 {
 public:
 
     /**
-     * @brief Construct a new Writer object
+     * @brief Destroy the CommonWriter object
      *
-     * Get the Attributes and TopicQoS and create the Writer History and the RTPS Writer.
+     * Remove CommonWriter RTPS
+     * Remove History
      *
-     * @param participant_id    Router Id of the Participant that has created this Writer.
-     * @param topic             Topic that this Writer subscribes to.
+     * @todo Remove every change and release it in PayloadPool
+     */
+    virtual ~CommonWriter();
+
+protected:
+
+    /**
+     * @brief Construct a new CommonWriter object
+     *
+     * Get the Attributes and TopicQoS and create the CommonWriter History and the RTPS CommonWriter.
+     *
+     * @note use protected constructor so this class is not called but from subclasses
+     * (Basically make abstract class without a pure virtual function).
+     *
+     * @param participant_id    Router Id of the Participant that has created this CommonWriter.
+     * @param topic             Topic that this CommonWriter subscribes to.
      * @param payload_pool      Shared Payload Pool to received data and take it.
      * @param rtps_participant  RTPS Participant pointer (this is not stored).
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    Writer(
+    CommonWriter(
             const types::ParticipantId& participant_id,
             const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
-            const bool repeater = false);
-
-    /**
-     * @brief Destroy the Writer object
-     *
-     * Remove Writer RTPS
-     * Remove History
-     *
-     * @todo Remove every change and release it in PayloadPool
-     */
-    virtual ~Writer();
-
-protected:
+            const bool repeater,
+            const fastrtps::rtps::HistoryAttributes& history_attributes,
+            const fastrtps::rtps::WriterAttributes& writer_attributes,
+            const fastrtps::TopicAttributes& topic_attributes,
+            const fastrtps::WriterQos& writer_qos,
+            const utils::PoolConfiguration& pool_configuration);
 
     // Specific enable/disable do not need to be implemented
 
@@ -104,7 +112,7 @@ protected:
      * Set \c data with the message taken (data payload must be stored from PayloadPool).
      * Remove this change from Reader History and release.
      *
-     * It does not require mutex, it will be guarded by RTPS Writer mutex in internal methods.
+     * It does not require mutex, it will be guarded by RTPS CommonWriter mutex in internal methods.
      *
      * @param data : oldest data to take
      * @return \c RETCODE_OK if data has been correctly taken
@@ -118,16 +126,32 @@ protected:
     // RTPS specific methods
 
     /**
-     * @brief Default History Attributes to create Writer History
+     * @brief Create \c this->rtps_writer_ internal object
+     *
+     * @note this method exists because it may be created from child classes, thus the methods may not be yet available
+     * to get atts and qos.
+     *
+     * @param rtps_participant
+     */
+    void internal_entities_creation_(
+            const fastrtps::rtps::HistoryAttributes& history_attributes,
+            const fastrtps::rtps::WriterAttributes& writer_attributes,
+            const fastrtps::TopicAttributes& topic_attributes,
+            const fastrtps::WriterQos& writer_qos,
+            const utils::PoolConfiguration& pool_configuration);
+
+    /**
+     * @brief Default History Attributes to create CommonWriter History
      *
      * @return Default HistoryAttributes
      */
-    fastrtps::rtps::HistoryAttributes history_attributes_() const noexcept;
+    static fastrtps::rtps::HistoryAttributes history_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
     /**
-     * @brief Default Writer Attributes to create Writer
+     * @brief Default CommonWriter Attributes to create CommonWriter
      *
-     * It returns the less restrictive Attributes for a Writer, so it maches every Reader
+     * It returns the less restrictive Attributes for a CommonWriter, so it maches every Reader
      * durability: TRANSIENT_LOCAL
      * reliability: RELIABLE
      *
@@ -135,30 +159,41 @@ protected:
      *
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    static fastrtps::rtps::WriterAttributes writer_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
-    //! Default Topic Attributes to create Writer
-    fastrtps::TopicAttributes topic_attributes_() const noexcept;
+    //! Default Topic Attributes to create CommonWriter
+    static fastrtps::TopicAttributes topic_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
-    //! Default TopicQoS Writer (must be the same as the attributes)
-    fastrtps::WriterQos writer_qos_() const noexcept;
+    //! Default TopicQoS CommonWriter
+    static fastrtps::WriterQos writer_qos_(
+            const types::DdsTopic& topic) noexcept;
 
     //! Default Cache Change Pool Configuration
-    utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
+    static utils::PoolConfiguration cache_change_pool_configuration_(
+            const types::DdsTopic& topic) noexcept;
 
     /////
-    // VARIABLES
+    // EXTERNAL VARIABLES
 
-    //! RTPS Writer pointer
+    //! RTPS Participant
+    fastrtps::rtps::RTPSParticipant* rtps_participant_;
+
+    //! Wether it is repeater or not (used for data filters and/or qos)
+    bool repeater_;
+
+    /////
+    // INTERNAL VARIABLES
+
+    //! RTPS CommonWriter pointer
     fastrtps::rtps::RTPSWriter* rtps_writer_;
 
-    //! RTPS Writer History associated to \c rtps_reader_
+    //! RTPS CommonWriter History associated to \c rtps_reader_
     fastrtps::rtps::WriterHistory* rtps_history_;
 
     //! Data Filter used to filter cache changes at the RTPSWriter level.
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
-
-    bool repeater_;
 };
 
 } /* namespace rtps */
@@ -166,4 +201,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_WRITER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_COMMONWRITER_HPP_ */

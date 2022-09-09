@@ -355,6 +355,14 @@ void DDSRouterImpl::discovered_topic_(
     // Add topic to current_topics as non activated
     current_topics_.emplace(topic, false);
 
+    // Ownership is not implemented, so if trying to use it, show warning
+    if (topic.topic_qos.value.has_ownership())
+    {
+        logWarning(
+            DDSROUTER_DISCOVERY,
+            "Ownership is not Supported by DDS Router. Topic " << topic << " may not correctly match.")
+    }
+
     // If Router is enabled and topic allowed, activate it
     if (enabled_.load() && allowed_topics_.is_topic_allowed(topic))
     {

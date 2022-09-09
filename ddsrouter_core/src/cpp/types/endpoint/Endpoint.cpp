@@ -33,11 +33,13 @@ Endpoint::Endpoint() noexcept
 Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
-        const DdsTopic& topic) noexcept
+        const DdsTopic& topic,
+        const DataQoS& specific_qos /* = DataQoS() */) noexcept
     : kind_(kind)
     , guid_(guid)
     , topic_(topic)
     , active_(true)
+    , specific_qos_(specific_qos)
 {
 }
 
@@ -51,9 +53,14 @@ Guid Endpoint::guid() const noexcept
     return guid_;
 }
 
-TopicQoS Endpoint::qos() const noexcept
+TopicQoS Endpoint::topic_qos() const noexcept
 {
     return topic_.topic_qos;
+}
+
+DataQoS Endpoint::specific_qos() const noexcept
+{
+    return specific_qos_;
 }
 
 DdsTopic Endpoint::topic() const noexcept
@@ -126,7 +133,7 @@ std::ostream& operator <<(
 {
     std::string active_str = endpoint.active_ ? "Active" : "Inactive";
 
-    os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" <<
+    os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.specific_qos_ << ";" <<
         endpoint.kind_ << ";" << active_str << "}";
     return os;
 }

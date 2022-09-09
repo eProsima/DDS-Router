@@ -31,8 +31,6 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

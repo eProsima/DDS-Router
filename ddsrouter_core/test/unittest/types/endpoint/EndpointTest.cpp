@@ -117,12 +117,13 @@ TEST(EndpointTest, constructor)
     EndpointKind kind;
     Guid guid;
     DdsTopic topic = random_topic();
+    // TODO: add data qos
 
     Endpoint endpoint(kind, guid, topic);
 
     ASSERT_EQ(endpoint.kind(), kind);
     ASSERT_EQ(endpoint.guid(), guid);
-    ASSERT_EQ(endpoint.qos(), topic.topic_qos);
+    ASSERT_EQ(endpoint.topic_qos(), topic.topic_qos);
     ASSERT_EQ(endpoint.topic(), topic);
 }
 
@@ -198,7 +199,7 @@ TEST(EndpointTest, qos_getter)
         for (uint16_t i = 0; i < 8; i++)
         {
             Endpoint endpoint(kind, guid, topic);
-            ASSERT_EQ(endpoint.qos(), topic.topic_qos) << i;
+            ASSERT_EQ(endpoint.topic_qos(), topic.topic_qos) << i;
         }
     }
 }
