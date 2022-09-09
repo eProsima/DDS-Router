@@ -134,9 +134,9 @@ public:
             WriteParams& wparams) noexcept;
 
     //! Override onWriterMatched with debug proposes
-    virtual void onWriterMatched(
-            fastrtps::rtps::RTPSWriter* writer,
-            fastrtps::rtps::MatchingInfo& info) override;
+    void onWriterMatched(
+            fastrtps::rtps::RTPSWriter*,
+            fastrtps::rtps::MatchingInfo& info) noexcept override;
 
 protected:
 
@@ -195,6 +195,10 @@ protected:
 
     //! Default Cache Change Pool Configuration
     utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
+
+    //! Whether a guid references this Participant (to avoid auto-feedback)
+    bool come_from_this_participant_(
+            const fastrtps::rtps::GUID_t guid) const noexcept;
 
     /////
     // VARIABLES
