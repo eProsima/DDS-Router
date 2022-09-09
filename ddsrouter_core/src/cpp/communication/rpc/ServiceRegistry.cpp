@@ -30,6 +30,8 @@ namespace core {
 
 using namespace eprosima::ddsrouter::core::types;
 
+const unsigned int ServiceRegistry::DEFAULT_MAX_ENTRIES_ = 5000;
+
 ServiceRegistry::ServiceRegistry(
         const RPCTopic& topic,
         const ParticipantId& participant_id,
@@ -81,6 +83,13 @@ void ServiceRegistry::add(
     }
 
     registry_[idx] = new_entry;
+
+    // Remove oldest entry if registry full
+    // TMP: Use configuration specs value when available
+    if (registry_.size() == DEFAULT_MAX_ENTRIES_)
+    {
+        registry_.erase(registry_.begin());
+    }
 }
 
 std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(

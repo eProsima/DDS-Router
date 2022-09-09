@@ -109,6 +109,9 @@ protected:
     //! Database with an entry per received request, and the information required for forwarding replies
     std::map<SequenceNumber, std::pair<types::ParticipantId, SampleIdentity>> registry_;
 
+    //! Default maximum number of entries stored by \c registry_ map
+    static const unsigned int DEFAULT_MAX_ENTRIES_;
+
     //! Mutex to protect concurrent access to \c registry_
     mutable std::mutex mutex_;
 };
