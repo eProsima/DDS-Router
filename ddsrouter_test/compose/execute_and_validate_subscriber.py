@@ -17,7 +17,7 @@ import logging
 import re
 import signal
 import subprocess
-
+import time
 from enum import Enum
 
 DESCRIPTION = """Script to validate subscribers output"""
@@ -35,7 +35,8 @@ class ReturnCode(Enum):
     TIMEOUT = 1
     HARD_TIMEOUT = 2
     DUPLICATES = 3
-    NOT_VALID_MESSAGES = 4
+    MISSING_MESSAGES = 4
+    NOT_VALID_MESSAGES = 5
 
 
 def parse_options():
@@ -87,6 +88,17 @@ def parse_options():
         type=int,
         default=0,
         help='Domain to execute the subscriber.'
+    )
+    parser.add_argument(
+        '--transient',
+        action='store_true',
+        help='Transient Local Subscriber, so it must receive data from 0.'
+    )
+    parser.add_argument(
+        '--delay',
+        type=int,
+        default=0,
+        help='Time to wait before executing the command.'
     )
 
     return parser.parse_args()
@@ -167,7 +179,33 @@ def find_duplicates(data):
     return duplicates
 
 
-def validate(command, samples, timeout, allow_duplicates=False):
+def check_transient(data):
+    """
+    Check that messages go from 0 to N without gaps
+
+    :param data: List of strings
+    :return: True if transient has been fulfilled, false in case on error
+    """
+    # Convert every line into just the number
+    ini_str_size = len("Message HelloWorld  ")
+    end_str_size = len(" RECEIVED")
+    numbers_received = [
+        line[ini_str_size:-end_str_size]
+        for line in data]
+
+    for idx, numbers_received in enumerate(data):
+        if idx != int(numbers_received):
+            return False
+
+    return True
+
+
+def validate(
+        command,
+        samples,
+        timeout,
+        allow_duplicates=False,
+        transient=False):
     """
     Validate the output of a subscriber run.
 
@@ -201,6 +239,11 @@ def validate(command, samples, timeout, allow_duplicates=False):
             if find_duplicates(data_received):
                 logger.error('Duplicated messages found')
                 return ReturnCode.DUPLICATES
+
+        if transient:
+            if not check_transient(data_received):
+                logger.error('Transient messages incorrect reception.')
+                return ReturnCode.MISSING_MESSAGES
 
         if len(data_received) < samples:
             logger.error(f'Number of messages received: {len(data_received)}. '
@@ -236,10 +279,14 @@ if __name__ == '__main__':
         '-s', str(args.samples),
         '-d', str(args.domain)]
 
+    # Wait for delay
+    time.sleep(args.delay)
+
     ret_code = validate(command,
                         args.samples,
                         args.timeout,
-                        args.allow_duplicates)
+                        args.allow_duplicates,
+                        args.transient)
 
     print(f'Subscriber validator exited with code {ret_code}')
 

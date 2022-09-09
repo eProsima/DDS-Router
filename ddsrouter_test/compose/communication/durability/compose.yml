@@ -1,0 +1,86 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with transient_local topics
+#
+# Test architecture:
+#  topic0 -> non reliable
+#  topic1 -> reliable transient_local
+#  topic2 -> reliable transient_local
+#
+#   Domain 0         <-->  Router  <-->     Domain 1
+# Publisher_t0_0_0                        Subscriber_t0_1_0
+# Publisher_t1_0_0                        Subscriber_t1_1_0
+#                                         Subscriber_t1_1_1
+# Subscriber_t2_0_0                       Publisher_t2_1_0
+#
+# NOTE:
+#   Subscribers transient do not need to receive everything, but to received from 0 to N.
+#   This is because last message of Publisher cannot assure that exists before closing Pub.
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+  # DOMAIN 0
+  Publisher_t0_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Publisher_t0_0_0
+    networks:
+      - cloud_edge_net
+    command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --topic topic0
+
+  Publisher_t1_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Publisher_t1_0_0
+    networks:
+      - cloud_edge_net
+    command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --reliable --transient --topic topic1
+
+  Subscriber_t2_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Subscriber_t2_0_0
+    networks:
+      - cloud_edge_net
+    command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic2 --reliable --transient
+
+  # DOMAIN 1
+  Subscriber_t0_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Subscriber_t0_1_0
+    networks:
+      - cloud_edge_net
+    command: python3 /execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --domain 2 --topic topic0
+
+  Subscriber_t1_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Subscriber_t1_1_0
+    networks:
+      - cloud_edge_net
+    command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic1 --reliable --transient
+
+  Subscriber_t1_1_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Subscriber_t1_1_1
+    networks:
+      - cloud_edge_net
+    command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic1 --reliable --transient
+
+  Publisher_t2_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: Publisher_t2_1_0
+    networks:
+      - cloud_edge_net
+    command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --reliable --transient --topic topic2
+
+networks:
+  std_net:
+  default:
+    driver: none
