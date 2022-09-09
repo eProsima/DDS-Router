@@ -412,7 +412,6 @@ void RPCBridge::transmit_(
                 // Not valid means:
                 //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
                 //   Case 2: (WAN Participant repeater) Request already replied by another PROXY server connected to the same participant as this one.
-                //   Case 3: (SimpleParticipant) Received reply from a server in same domain as client, thus the request was ignored and no entry was added.
                 if (registry_entry.first.is_valid())
                 {
                     eprosima::fastrtps::rtps::WriteParams wparams;

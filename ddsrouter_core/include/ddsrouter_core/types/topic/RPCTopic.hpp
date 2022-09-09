@@ -41,7 +41,7 @@ public:
             const RealTopic& topic_request,
             const RealTopic& topic_reply) noexcept;
 
-    //! Constructor by service name only (infers DDS topics via mangling)
+    //! Constructor by request/reply topic only (infers service name and the other request/reply topic)
     RPCTopic(
             const RealTopic& topic) noexcept;
 

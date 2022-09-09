@@ -143,15 +143,18 @@ void Writer::onWriterMatched(
         fastrtps::rtps::RTPSWriter* writer,
         fastrtps::rtps::MatchingInfo& info)
 {
-    if (info.status == fastrtps::rtps::MATCHED_MATCHING)
+    if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
-                topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
-    }
-    else
-    {
-        logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
-                topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        if (info.status == fastrtps::rtps::MATCHED_MATCHING)
+        {
+            logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
+                    topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        }
+        else
+        {
+            logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
+                    topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        }
     }
 }
 
@@ -259,6 +262,12 @@ utils::ReturnCode Writer::write_(
     }
 
     return utils::ReturnCode::RETCODE_OK;
+}
+
+bool Writer::come_from_this_participant_(
+        const fastrtps::rtps::GUID_t guid) const noexcept
+{
+    return guid.guidPrefix == rtps_writer_->getGuid().guidPrefix;
 }
 
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept

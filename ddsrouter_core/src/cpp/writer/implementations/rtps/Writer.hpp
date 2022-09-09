@@ -134,8 +134,15 @@ public:
             std::unique_ptr<types::DataReceived>& data,
             WriteParams& wparams) noexcept;
 
-    //! Override onWriterMatched with debug proposes
-    virtual void onWriterMatched(
+    /**
+     * @brief Writer Listener callback when a new Reader is matched or unmatched
+     *
+     * This method is call every time a new Reader is matched or unmatched from this Writer.
+     * It only creates a log for matching and unmatching (in case it is not a reader from this same Participant)
+     *
+     * @param [in] info information about the matched Reader
+     */
+    void onWriterMatched(
             fastrtps::rtps::RTPSWriter* writer,
             fastrtps::rtps::MatchingInfo& info) override;
 
@@ -196,6 +203,10 @@ protected:
 
     //! Default Cache Change Pool Configuration
     utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
+
+    //! Whether a guid references this Participant
+    bool come_from_this_participant_(
+            const fastrtps::rtps::GUID_t guid) const noexcept;
 
     /////
     // VARIABLES
