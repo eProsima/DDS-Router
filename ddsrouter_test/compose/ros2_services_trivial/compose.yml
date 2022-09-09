@@ -19,7 +19,7 @@ services:
       - net_1
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 5
+    command: bash -c "source /root/DDS-Router/install/setup.bash && ddsrouter -c /config.yaml --timeout 10"
 
   ser_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}

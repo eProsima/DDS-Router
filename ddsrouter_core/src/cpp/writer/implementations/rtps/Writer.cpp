@@ -145,6 +145,7 @@ void Writer::onWriterMatched(
     {
         logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
                 topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        std::cout << "Writer " << *this << " matched with a new Reader" << std::endl;
     }
     else
     {

@@ -308,6 +308,7 @@ void Reader::onNewCacheChangeAdded(
             logDebug(DDSROUTER_RTPS_READER_LISTENER,
                     "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
+            std::cout << "Data arrived to Reader " << *this << std::endl;
             on_data_available_();
         }
         else
@@ -347,6 +348,7 @@ void Reader::onReaderMatched(
         {
             logInfo(DDSROUTER_RTPS_READER_LISTENER,
                     "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
+            std::cout << "Reader " << *this << " matched with a new Writer" << std::endl;
         }
         else
         {

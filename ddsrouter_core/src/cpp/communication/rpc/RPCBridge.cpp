@@ -289,11 +289,15 @@ void RPCBridge::data_available_(
             task.first = true;
             logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
                 " - " << reader_guid << " send callback to queue.");
+            std::cout << "RPCBridge " << *this <<
+                " - " << reader_guid << " send callback to queue." << std::endl;
         }
         else
         {
             logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
                 " - " << reader_guid << " callback NOT sent (task already queued).");
+            std::cout << "RPCBridge " << *this <<
+                " - " << reader_guid << " callback NOT sent (task already queued)." << std::endl;
         }
     }
 }
@@ -306,6 +310,8 @@ void RPCBridge::transmit_(
 
     logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
         " transmitting for reader " << reader->guid() << " .");
+    std::cout << "RPCBridge " << *this <<
+        " transmitting for reader " << reader->guid() << " ." << std::endl;
 
     while (enabled_)
     {
@@ -319,6 +325,7 @@ void RPCBridge::transmit_(
 
                 logDebug(DDSROUTER_RPCBRIDGE,
                     "RPCBridge service " << *this << " finishing transmitting because no more data available.");
+                std::cout << "RPCBridge service " << *this << " finishing transmitting because no more data available." << std::endl;
 
                 return;
             }
