@@ -193,6 +193,7 @@ void Reader::enable_() noexcept
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
     if (topic_.topic_reliable())
     {
+        std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_internal_mutex());
         on_data_available_();
     }
 }
