@@ -147,11 +147,12 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_<fastrtps::rtps::Wr
     // Create Endpoint from common info
     types::Endpoint endpoint = create_common_endpoint_from_info_(info);
 
-    if (endpoint.topic_qos().has_ownership())
+    if (endpoint.topic_qos().has_partitions() || endpoint.topic_qos().has_ownership())
     {
         // Only for writers (TODO: this could be done much better if Endpoint is not a class but a struct)
         auto specific_qos = endpoint.specific_qos();
         specific_qos.ownership_strength = info.info.m_qos.m_ownershipStrength;
+        specific_qos.partitions = info.info.m_qos.m_partition;
         endpoint.specific_qos(specific_qos);
     }
 
@@ -281,7 +282,7 @@ void CommonParticipant::create_participant_(
 std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         types::DdsTopic topic)
 {
-    if (topic.topic_qos.value.has_partitions())
+    if (topic.topic_qos.value.has_partitions() || topic.topic_qos.value.has_ownership())
     {
         return std::make_shared<MultiWriter>(
             this->id(),

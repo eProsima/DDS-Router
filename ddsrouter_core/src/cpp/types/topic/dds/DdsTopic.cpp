@@ -98,7 +98,7 @@ bool DdsTopic::operator== (const DdsTopic& other) const noexcept
 {
     return
         Topic::operator==(other) &&
-        this->topic_name == other.topic_name;
+        this->type_name == other.type_name;
 }
 
 bool DdsTopic::is_valid_dds_topic(

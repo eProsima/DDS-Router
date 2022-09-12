@@ -9,11 +9,3 @@ participants:
   - name: Simple_1
     kind: simple
     domain: 1
-
-  - name: Simple_2
-    kind: simple
-    domain: 2
-
-  - name: Simple_3
-    kind: simple
-    domain: 3

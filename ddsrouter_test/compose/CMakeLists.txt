@@ -19,8 +19,8 @@ set(TESTS
     tcp
     udp
     discovery_server
-    communication/partitions
-    communication/durability
+    transparency/partitions
+    transparency/durability
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

@@ -60,6 +60,12 @@ def parse_options():
         help='Path to discovery-server executable.'
     )
     parser.add_argument(
+        '--args',
+        type=str,
+        default="",
+        help='Arguments for executable .'
+    )
+    parser.add_argument(
         '-s',
         '--samples',
         type=int,
@@ -67,11 +73,10 @@ def parse_options():
         help='Samples to receive.'
     )
     parser.add_argument(
-        '-t',
         '--timeout',
         type=int,
-        default=5,
-        help='Timeout for the subscriber application.'
+        default=10,
+        help='Time before killing process.'
     )
     parser.add_argument(
         '--allow-duplicates',
@@ -82,12 +87,6 @@ def parse_options():
         '--debug',
         action='store_true',
         help='Print test debugging info.'
-    )
-    parser.add_argument(
-        '--domain',
-        type=int,
-        default=0,
-        help='Domain to execute the subscriber.'
     )
     parser.add_argument(
         '--transient',
@@ -181,7 +180,7 @@ def find_duplicates(data):
 
 def check_transient(data):
     """
-    Check that messages go from 0 to N without gaps
+    Check that messages go from 0 to N without gaps.
 
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
@@ -193,10 +192,14 @@ def check_transient(data):
         line[ini_str_size:-end_str_size]
         for line in data]
 
-    for idx, numbers_received in enumerate(data):
-        if idx != int(numbers_received):
+    # NOTE: idx starts in 0 and messages start in 1
+    for idx, number in enumerate(numbers_received):
+        if (idx + 1) != int(number):
+            logger.info(
+                f'Message received in position {idx+1} is {number}')
             return False
 
+    logger.debug('All messages received and in correct order.')
     return True
 
 
@@ -215,6 +218,8 @@ def validate(
     :param allow_duplicates: Allow duplicated messages (Default: False)
     :return: The exit code
     """
+    logger.info(f'Executing command: {command}')
+
     ret_code, stdout, stderr = run(command, timeout)
 
     if ret_code != ReturnCode.SUCCESS:
@@ -267,6 +272,7 @@ if __name__ == '__main__':
     l_handler.setFormatter(l_format)
     # Add handlers to the logger
     logger.addHandler(l_handler)
+
     # Set log level
     if args.debug:
         logger.setLevel(logging.DEBUG)
@@ -275,9 +281,7 @@ if __name__ == '__main__':
 
     command = [
         args.exe,
-        'subscriber',
-        '-s', str(args.samples),
-        '-d', str(args.domain)]
+        'subscriber'] + args.args.split(' ')
 
     # Wait for delay
     time.sleep(args.delay)
@@ -288,6 +292,6 @@ if __name__ == '__main__':
                         args.allow_duplicates,
                         args.transient)
 
-    print(f'Subscriber validator exited with code {ret_code}')
+    logger.info(f'Subscriber validator exited with code {ret_code}')
 
     exit(ret_code.value)

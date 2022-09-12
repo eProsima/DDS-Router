@@ -44,11 +44,14 @@ WORKDIR /ddsrouter
 ARG ddsrouter_branch=main
 ARG fastdds_branch=master
 
+RUN echo "DDS Router branch: <${ddsrouter_branch}> ; Fast DDS branch: <${fastdds_branch}>"
+
 RUN mkdir src && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
     vcs import src < ddsrouter.repos && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
+    cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
     cp -r src/fastdds/examples/cpp/dds/AdvanceConfigurationExample src/. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON
 

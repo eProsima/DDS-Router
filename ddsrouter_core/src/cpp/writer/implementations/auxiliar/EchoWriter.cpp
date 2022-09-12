@@ -58,6 +58,7 @@ utils::ReturnCode EchoWriter::write(
                 " from Participant: " << data->qos.participant_receiver <<
                 " in topic: " << topic_ <<
                 " payload received: " << data->payload <<
+                " with specific qos: " << data->qos.writer_qos <<
                 ".");
     }
 
