@@ -94,12 +94,21 @@ utils::ReturnCode CommonWriter::write_(
         return utils::ReturnCode::RETCODE_ERROR;
     }
 
-    // Get the Payload (copying it)
-    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
-    if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
+    // Get the Payload without copy only if it has length
+    if (data->payload.length > 0)
     {
-        logDevError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
-        return utils::ReturnCode::RETCODE_ERROR;
+        eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
+        if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
+        {
+            logDevError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
+            return utils::ReturnCode::RETCODE_ERROR;
+        }
+    }
+
+    // Set keys in case topic has keys
+    if (topic_.keyed)
+    {
+        new_change->instanceHandle = data->qos.instanceHandle;
     }
 
     logDebug(DDSROUTER_RTPS_WRITER,

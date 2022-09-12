@@ -20,6 +20,7 @@
 #define _DDSROUTERCORE_TYPES_ENDPOINT_QOS_HPP_
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
+#include <fastdds/rtps/common/InstanceHandle.h>
 #include <fastdds/rtps/common/Types.h>
 
 #include <ddsrouter_core/library/library_dll.h>
@@ -34,6 +35,9 @@ using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
 
 //! Partition configuration
 using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosPolicy;
+
+//! Instance Handler type
+using InstanceHandle = eprosima::fastrtps::rtps::InstanceHandle_t;
 
 /**
  * Collection of attributes of an Endpoint
@@ -64,6 +68,9 @@ struct DDSROUTER_CORE_DllAPI DataQoS
 
     //! Ownership strength of the data
     OwnershipStrengthQosPolicy ownership_strength{};
+
+    //! Instance of the message (default no instance)
+    InstanceHandle instanceHandle{};
 };
 
 /**

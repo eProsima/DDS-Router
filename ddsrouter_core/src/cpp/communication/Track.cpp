@@ -228,7 +228,11 @@ void Track::transmit_() noexcept
             }
         }
 
-        payload_pool_->release_payload(data->payload);
+        // Release payload in case it has length
+        if (data->payload.length > 0)
+        {
+            payload_pool_->release_payload(data->payload);
+        }
     }
 }
 

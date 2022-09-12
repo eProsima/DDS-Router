@@ -163,12 +163,22 @@ utils::ReturnCode CommonReader::take_(
     // Get the writer guid
     data->source_guid = received_change->writerGUID;
 
-    // Store it in DDSRouter PayloadPool
-    eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
-    payload_pool_->get_payload(
-        received_change->serializedPayload,
-        payload_owner,
-        data->payload);
+    // Store it in DDSRouter PayloadPool if size is bigger than 0
+    // NOTE: in case of keyed topics an empty payload is possible
+    if (received_change->serializedPayload.length > 0)
+    {
+        eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
+        payload_pool_->get_payload(
+            received_change->serializedPayload,
+            payload_owner,
+            data->payload);
+    }
+
+    // Set Instance Handle to data
+    if (topic_.keyed)
+    {
+        data->qos.instanceHandle = received_change->instanceHandle;
+    }
 
     logDebug(DDSROUTER_RTPS_READER_LISTENER,
             "Data transmiting to track from CommonReader " << *this << " with payload " <<
@@ -177,11 +187,6 @@ utils::ReturnCode CommonReader::take_(
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
 
-    // Set QoS to data
-    if (topic_.topic_qos.value.has_partitions())
-    {
-        // data->qos.partitions = wp->
-    }
     // Ownership not supported
     // data->qos.ownership_strength = wp->ownership_strength_;
 
