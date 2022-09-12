@@ -83,6 +83,10 @@ protected:
     types::Endpoint create_endpoint_from_info_(
             DiscoveryInfoKind& info);
 
+    template<class DiscoveryInfoKind>
+    types::Endpoint create_common_endpoint_from_info_(
+            DiscoveryInfoKind& info);
+
     /////
     // RTPS specific methods
 

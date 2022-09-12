@@ -23,9 +23,7 @@ set(TESTS
     communication/durability
 )
 
-foreach(TEST ${TESTS})
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${TEST} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-endforeach()
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docker-compose.sh
         ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
@@ -41,6 +39,7 @@ find_program (BASH_PROGRAM bash)
 foreach(TEST IN LISTS TESTS)
 
     set(TEST_NAME "tool.application.ddsrouter.compose.${TEST}")
+    string(REPLACE "/" "_" TEST_NAME ${TEST_NAME})
 
     message(STATUS "Building test ${TEST_NAME}")
 
@@ -48,6 +47,6 @@ foreach(TEST IN LISTS TESTS)
             NAME ${TEST_NAME}
             COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
                 -t ${TEST_NAME}
-                -f ${CMAKE_CURRENT_BINARY_DIR}/${TEST}/compose.yml)
+                -f ${CMAKE_CURRENT_BINARY_DIR}/test_cases/${TEST}/compose.yml)
 
 endforeach()

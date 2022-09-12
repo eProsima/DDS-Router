@@ -34,7 +34,7 @@ Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
         const DdsTopic& topic,
-        const DataQoS& specific_qos /* = DataQoS() */) noexcept
+        const SpecificWriterQoS& specific_qos /* = SpecificWriterQoS() */) noexcept
     : kind_(kind)
     , guid_(guid)
     , topic_(topic)
@@ -48,6 +48,11 @@ EndpointKind Endpoint::kind() const noexcept
     return kind_;
 }
 
+void Endpoint::kind(const EndpointKind& kind) noexcept
+{
+    kind_ = kind;
+}
+
 Guid Endpoint::guid() const noexcept
 {
     return guid_;
@@ -58,9 +63,14 @@ TopicQoS Endpoint::topic_qos() const noexcept
     return topic_.topic_qos;
 }
 
-DataQoS Endpoint::specific_qos() const noexcept
+SpecificWriterQoS Endpoint::specific_qos() const noexcept
 {
     return specific_qos_;
+}
+
+void Endpoint::specific_qos(const SpecificWriterQoS& specific_qos) noexcept
+{
+    specific_qos_ = specific_qos;
 }
 
 DdsTopic Endpoint::topic() const noexcept

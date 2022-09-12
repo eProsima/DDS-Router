@@ -177,7 +177,6 @@ void Track::transmit_() noexcept
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
-        data->participant_receiver = reader_participant_id_;
         utils::ReturnCode ret = reader_->take(data);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
@@ -208,7 +207,7 @@ void Track::transmit_() noexcept
 
         logDebug(DDSROUTER_TRACK,
                 "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->source_guid << ".");
+                " transmitting data from remote endpoint " << data->qos.source_guid << ".");
 
         // Send data through writers
         for (auto& writer_it : writers_)

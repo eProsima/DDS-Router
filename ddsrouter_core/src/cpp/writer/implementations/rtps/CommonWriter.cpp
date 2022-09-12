@@ -113,13 +113,13 @@ utils::ReturnCode CommonWriter::write_(
 
     logDebug(DDSROUTER_RTPS_WRITER,
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
-            data->source_guid);
+            data->qos.source_guid);
 
     if (repeater_)
     {
         // Add origin to change in case the cache change is RouterCacheChange (only in repeater mode)
         types::RouterCacheChange& change_ref = static_cast<types::RouterCacheChange&>(*new_change);
-        change_ref.last_writer_guid_prefix = data->source_guid.guidPrefix;
+        change_ref.last_writer_guid_prefix = data->qos.source_guid.guidPrefix;
     }
 
     // Send data by adding it to CommonWriter History
@@ -293,7 +293,7 @@ fastrtps::WriterQos CommonWriter::writer_qos_(
     // Set minimum deadline so it matches with everything
     qos.m_deadline.period = eprosima::fastrtps::Duration_t(0);
 
-    // TODO Set ownership and partitions
+    // Partitions and specific ownership strength are not set in common.
 
     return qos;
 }

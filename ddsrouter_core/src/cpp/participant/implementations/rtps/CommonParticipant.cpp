@@ -27,7 +27,7 @@
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
-#include <writer/implementations/rtps/PartitionsWriter.hpp>
+#include <writer/implementations/rtps/MultiWriter.hpp>
 #include <reader/implementations/rtps/PartitionsReader.hpp>
 #include <reader/implementations/rtps/SimpleReader.hpp>
 #include <writer/implementations/rtps/SimpleWriter.hpp>
@@ -88,7 +88,7 @@ void CommonParticipant::onParticipantDiscovery(
 }
 
 template<class DiscoveryInfoKind>
-types::Endpoint CommonParticipant::create_endpoint_from_info_(
+types::Endpoint CommonParticipant::create_common_endpoint_from_info_(
         DiscoveryInfoKind& info)
 {
     // Parse GUID
@@ -120,12 +120,12 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     discovered_topic_qos.ownership_qos = info.info.m_qos.m_ownership.kind;
 
     // Parse specific QoS of the entity
-    types::DataQoS specific_qos;
+    types::SpecificWriterQoS specific_qos;
     if (discovered_topic_qos.has_partitions())
     {
         specific_qos.partitions = info.info.m_qos.m_partition;
     }
-    // Ownership not implemented
+    // NOTE: ownership is only for Writer
 
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
@@ -134,20 +134,44 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     info_topic.topic_qos = discovered_topic_qos;
     info_topic.topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_fuzzy);
 
-    // Create Endpoint
-    if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
+    return types::Endpoint(
+        types::EndpointKind::invalid,
+        info_guid,
+        info_topic);
+}
+
+template<>
+types::Endpoint CommonParticipant::create_endpoint_from_info_<fastrtps::rtps::WriterDiscoveryInfo>(
+        fastrtps::rtps::WriterDiscoveryInfo& info)
+{
+    // Create Endpoint from common info
+    types::Endpoint endpoint = create_common_endpoint_from_info_(info);
+
+    if (endpoint.topic_qos().has_ownership())
     {
-        return types::Endpoint(types::EndpointKind::reader, info_guid, info_topic, specific_qos);
+        // Only for writers (TODO: this could be done much better if Endpoint is not a class but a struct)
+        auto specific_qos = endpoint.specific_qos();
+        specific_qos.ownership_strength = info.info.m_qos.m_ownershipStrength;
+        endpoint.specific_qos(specific_qos);
     }
-    else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
-    {
-        return types::Endpoint(types::EndpointKind::writer, info_guid, info_topic, specific_qos);
-    }
-    else
-    {
-        utils::tsnh(utils::Formatter() << "Invalid DiscoveryInfoKind for Endpoint creation.");
-        return types::Endpoint();
-    }
+
+    // Set type
+    endpoint.kind(types::EndpointKind::writer);
+
+    return endpoint;
+}
+
+template<>
+types::Endpoint CommonParticipant::create_endpoint_from_info_<fastrtps::rtps::ReaderDiscoveryInfo>(
+        fastrtps::rtps::ReaderDiscoveryInfo& info)
+{
+    // Create Endpoint from common info
+    types::Endpoint endpoint = create_common_endpoint_from_info_(info);
+
+    // Set type
+    endpoint.kind(types::EndpointKind::reader);
+
+    return endpoint;
 }
 
 void CommonParticipant::onReaderDiscovery(
@@ -259,7 +283,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
 {
     if (topic.topic_qos.value.has_partitions())
     {
-        return std::make_shared<PartitionsWriter>(
+        return std::make_shared<MultiWriter>(
             this->id(),
             topic,
             this->payload_pool_,

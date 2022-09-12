@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file PartitionsWriter.cpp
+ * @file MultiWriter.cpp
  */
 
 #include <fastrtps/rtps/RTPSDomain.h>
@@ -23,7 +23,7 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
-#include <writer/implementations/rtps/PartitionsWriter.hpp>
+#include <writer/implementations/rtps/MultiWriter.hpp>
 #include <writer/implementations/rtps/QoSSpecificWriter.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
 #include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
@@ -36,7 +36,7 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-PartitionsWriter::PartitionsWriter(
+MultiWriter::MultiWriter(
         const ParticipantId& participant_id,
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
@@ -49,7 +49,7 @@ PartitionsWriter::PartitionsWriter(
     // Do nothing
 }
 
-PartitionsWriter::~PartitionsWriter()
+MultiWriter::~MultiWriter()
 {
     // Lock so no other operations is taking place
     std::unique_lock<WritersMapType> lock(writers_map_);
@@ -61,11 +61,11 @@ PartitionsWriter::~PartitionsWriter()
         delete writer.second;
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "Deleting PartitionsWriter created in Participant " <<
+    logInfo(DDSROUTER_RTPS_WRITER, "Deleting MultiWriter created in Participant " <<
             participant_id_ << " for topic " << topic_);
 }
 
-void PartitionsWriter::enable_() noexcept
+void MultiWriter::enable_() noexcept
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
     for(auto& writer : writers_map_)
@@ -74,7 +74,7 @@ void PartitionsWriter::enable_() noexcept
     }
 }
 
-void PartitionsWriter::disable_() noexcept
+void MultiWriter::disable_() noexcept
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
     for(auto& writer : writers_map_)
@@ -83,13 +83,13 @@ void PartitionsWriter::disable_() noexcept
     }
 }
 
-bool PartitionsWriter::exist_partition_(const types::DataQoS& data_qos)
+bool MultiWriter::exist_partition_(const types::SpecificWriterQoS& data_qos)
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
     return writers_map_.find(data_qos) != writers_map_.end();
 }
 
-QoSSpecificWriter* PartitionsWriter::get_writer_or_create_(const types::DataQoS& data_qos)
+QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificWriterQoS& data_qos)
 {
     // NOTE: it uses unique lock because it may change the database, and there is no way
     // to do so if taking share and unique must be done.
@@ -116,7 +116,7 @@ QoSSpecificWriter* PartitionsWriter::get_writer_or_create_(const types::DataQoS&
     return new_writer;
 }
 
-QoSSpecificWriter* PartitionsWriter::create_writer_nts_(const types::DataQoS& data_qos)
+QoSSpecificWriter* MultiWriter::create_writer_nts_(const types::SpecificWriterQoS& data_qos)
 {
     logDebug(
         DDSROUTER_PARTITIONSWRITER,
@@ -132,15 +132,15 @@ QoSSpecificWriter* PartitionsWriter::create_writer_nts_(const types::DataQoS& da
 }
 
 // Specific enable/disable do not need to be implemented
-utils::ReturnCode PartitionsWriter::write_(
+utils::ReturnCode MultiWriter::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     logDebug(
         DDSROUTER_PARTITIONSWRITER,
-        "Writing in Partitions Writer " << *this << " a data with qos " << data->qos << " from " << data->source_guid);
+        "Writing in Partitions Writer " << *this << " a data with qos " << data->qos << " from " << data->qos.source_guid);
 
     // Take Writer
-    auto this_qos_writer = get_writer_or_create_(data->qos);
+    auto this_qos_writer = get_writer_or_create_(data->qos.writer_qos);
 
     logDebug(
         DDSROUTER_PARTITIONSWRITER,

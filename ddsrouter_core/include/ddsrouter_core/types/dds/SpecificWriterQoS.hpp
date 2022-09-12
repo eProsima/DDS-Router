@@ -13,21 +13,17 @@
 // limitations under the License.
 
 /**
- * @file DataQoS.hpp
+ * @file SpecificWriterQoS.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_
-#define _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_
+#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_
+#define _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/InstanceHandle.h>
 #include <fastdds/rtps/common/Types.h>
-#include <fastdds/rtps/common/Time_t.h>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -40,62 +36,61 @@ using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
 //! Partition configuration
 using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosPolicy;
 
-//! Instance Handler type
-using InstanceHandle = eprosima::fastrtps::rtps::InstanceHandle_t;
-
-//! Fast DDS Time
-using DataTime = eprosima::fastrtps::rtps::Time_t;
-
 /**
  * Collection of attributes of an Endpoint
  */
-struct DDSROUTER_CORE_DllAPI DataQoS
+struct DDSROUTER_CORE_DllAPI SpecificWriterQoS
 {
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    //! Default DataQoS with reader less restrictive parameters
-    DataQoS() = default;
+    //! Default SpecificWriterQoS with reader less restrictive parameters
+    SpecificWriterQoS() = default;
 
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
-    bool operator< (const DataQoS& other) const noexcept;
+    bool operator< (const SpecificWriterQoS& other) const noexcept;
 
-    bool operator== (const DataQoS& other) const noexcept;
+    bool operator== (const SpecificWriterQoS& other) const noexcept;
 
     /////////////////////////
     // VARIABLES
     /////////////////////////
 
-    //! Specific Writer QoS of the Data
-    SpecificWriterQoS writer_qos;
+    //! Partitions of the data
+    PartitionQosPolicy partitions{};
 
-    //! Instance of the message (default no instance)
-    InstanceHandle instanceHandle{};
-
-    //! Source time stamp of the message
-    DataTime source_timestamp;
-
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
-
-    //! Id of the participant from which the Reader has received the data.
-    ParticipantId participant_receiver;
+    //! Ownership strength of the data
+    OwnershipStrengthQosPolicy ownership_strength{};
 };
 
 /**
- * @brief \c DataQoS to stream serialization
+ * @brief \c PartitionQosPolicy to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const DataQoS& qos);
+        const PartitionQosPolicy& qos);
+
+/**
+ * @brief \c OwnershipStrengthQosPolicy to stream serialization
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const OwnershipStrengthQosPolicy& qos);
+
+/**
+ * @brief \c SpecificWriterQoS to stream serialization
+ */
+DDSROUTER_CORE_DllAPI std::ostream& operator <<(
+        std::ostream& os,
+        const SpecificWriterQoS& qos);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_ */

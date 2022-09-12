@@ -46,7 +46,7 @@ utils::ReturnCode EchoWriter::write(
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "Received data in Participant: " << data->participant_receiver <<
+            "Received data in Participant: " << data->qos.participant_receiver <<
                 " in topic: " << topic_ <<
                 ".");
     }
@@ -54,8 +54,8 @@ utils::ReturnCode EchoWriter::write(
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "In Endpoint: " << data->source_guid <<
-                " from Participant: " << data->participant_receiver <<
+            "In Endpoint: " << data->qos.source_guid <<
+                " from Participant: " << data->qos.participant_receiver <<
                 " in topic: " << topic_ <<
                 " payload received: " << data->payload <<
                 ".");

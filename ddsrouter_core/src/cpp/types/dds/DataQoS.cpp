@@ -27,60 +27,25 @@ namespace types {
 
 bool DataQoS::operator< (const DataQoS& other) const noexcept
 {
-    // NOTE: Ownership not supported
-    // NOTE: PartitionQosPolicy operator< out of class implementation, this should be in Fast DDS file.
-    if(this->partitions.size() < other.partitions.size())
+    if(this->writer_qos < other.writer_qos)
     {
         return true;
     }
-    else if(this->partitions.size() > other.partitions.size())
+    else if(this->writer_qos == other.writer_qos)
     {
-        return false;
+        return this->instanceHandle < other.instanceHandle;
     }
 
-    auto const this_names = this->partitions.getNames();
-    auto const other_names = other.partitions.getNames();
-
-    for (int i=0; i<this_names.size(); ++i)
-    {
-        if (this_names[i] < other_names[i])
-        {
-            return true;
-        }
-        else if (this_names[i] > other_names[i])
-        {
-            return false;
-        }
-    }
-
+    // NOTE: operator> does not exist, so use == instead
+    // else => this->writer_qos > other.writer_qos
     return false;
+
 }
 
 bool DataQoS::operator== (const DataQoS& other) const noexcept
 {
     // NOTE: Ownership not supported
-    return this->partitions == other.partitions;
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const PartitionQosPolicy& qos)
-{
-    os << "Partitions{";
-    for (auto const& p : qos)
-    {
-        os << p.name() << ";";
-    }
-    os << "}";
-    return os;
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const OwnershipStrengthQosPolicy& qos)
-{
-    os << "OwnershipStrength{" << qos.value << "}";
-    return os;
+    return this->writer_qos == other.writer_qos && this->instanceHandle == other.instanceHandle;
 }
 
 std::ostream& operator <<(
@@ -88,8 +53,8 @@ std::ostream& operator <<(
         const DataQoS& qos)
 {
     os <<
-        "DataQoS{" << qos.partitions <<
-        ";" << qos.ownership_strength <<
+        "DataQoS{" << qos.writer_qos <<
+        ";" << qos.instanceHandle <<
         "}";
 
     return os;

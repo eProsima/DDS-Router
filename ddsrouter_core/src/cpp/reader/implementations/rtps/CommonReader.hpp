@@ -111,6 +111,10 @@ protected:
         const fastrtps::TopicAttributes& topic_attributes,
         const fastrtps::ReaderQos& reader_qos);
 
+    virtual void fill_received_data_(
+        fastrtps::rtps::CacheChange_t* received_change,
+        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
+
     // Specific enable/disable do not need to be implemented
 
     /**

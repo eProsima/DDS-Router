@@ -20,11 +20,10 @@
 #define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
+#include <fastdds/rtps/common/Time_t.h>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/DataQoS.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -42,12 +41,6 @@ struct DataReceived
 {
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
-
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
-
-    //! Id of the participant from which the Reader has received the data.
-    ParticipantId participant_receiver;
 
     //! QoS of the data received
     DataQoS qos;

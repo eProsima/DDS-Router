@@ -47,40 +47,33 @@ PartitionsReader::PartitionsReader(
 {
 }
 
-types::DataQoS PartitionsReader::specific_qos_of_writer_(const types::Guid& guid) const
+types::SpecificWriterQoS PartitionsReader::specific_qos_of_writer_(const types::Guid& guid) const
 {
     return discovery_database_->get_endpoint(guid).specific_qos();
 }
 
-utils::ReturnCode PartitionsReader::take_(
-        std::unique_ptr<types::DataReceived>& data) noexcept
+void PartitionsReader::fill_received_data_(
+        fastrtps::rtps::CacheChange_t* received_change,
+        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
 {
-    auto result = CommonReader::take_(data);
+    CommonReader::fill_received_data_(received_change, data_to_fill);
 
-    // If read has been fulfilled correctly, set the qos of the writer that has sent it
-    if (result())
+    // Find qos of writer
+    try
     {
-        // Find qos of writer
-        try
-        {
-            data->qos = specific_qos_of_writer_(data->source_guid);
-            logDebug(
-                DDSROUTER_PARTITIONSREADER,
-                "Set QoS " << data->qos << " for data from " << data->source_guid << ".");
-        }
-        catch(const utils::InconsistencyException& e)
-        {
-            // Get a message from a writer not in database, this is an error.
-            // Remove data and make as it has not been received.
-            logError(
-                DDSROUTER_PARTITIONSREADER,
-                "Received a message from Writer " << data->source_guid << " that is not stored in DB.");
-            payload_pool_->release_payload(data->payload);
-            return utils::ReturnCode::RETCODE_PRECONDITION_NOT_MET;
-        }
+        data_to_fill->qos.writer_qos = specific_qos_of_writer_(data_to_fill->qos.source_guid);
+        logDebug(
+            DDSROUTER_PARTITIONSREADER,
+            "Set QoS " << data_to_fill->qos << " for data from " << data_to_fill->qos.source_guid << ".");
     }
-
-    return result;
+    catch(const utils::InconsistencyException& e)
+    {
+        // Get a message from a writer not in database, this is an error.
+        // Remove data and make as it has not been received.
+        logError(
+            DDSROUTER_PARTITIONSREADER,
+            "Received a message from Writer " << data_to_fill->qos.source_guid << " that is not stored in DB.");
+    }
 }
 
 } /* namespace rtps */

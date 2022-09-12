@@ -7,10 +7,10 @@
 #  topic2 -> reliable transient_local
 #
 #   Domain 0         <-->  Router  <-->     Domain 1
-# Publisher_t0_0_0                        Subscriber_t0_1_0
-# Publisher_t1_0_0                        Subscriber_t1_1_0
-#                                         Subscriber_t1_1_1
-# Subscriber_t2_0_0                       Publisher_t2_1_0
+# publisher_t0_0_0                        subscriber_t0_1_0
+# publisher_t1_0_0                        subscriber_t1_1_0
+#                                         subscriber_t1_1_1
+# subscriber_t2_0_0                       publisher_t2_1_0
 #
 # NOTE:
 #   Subscribers transient do not need to receive everything, but to received from 0 to N.
@@ -30,54 +30,54 @@ services:
     command: ddsrouter -c /config.yaml --timeout 12
 
   # DOMAIN 0
-  Publisher_t0_0_0:
+  publisher_t0_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Publisher_t0_0_0
+    container_name: publisher_t0_0_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --topic topic0
 
-  Publisher_t1_0_0:
+  publisher_t1_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Publisher_t1_0_0
+    container_name: publisher_t1_0_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --reliable --transient --topic topic1
 
-  Subscriber_t2_0_0:
+  subscriber_t2_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Subscriber_t2_0_0
+    container_name: subscriber_t2_0_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic2 --reliable --transient
 
   # DOMAIN 1
-  Subscriber_t0_1_0:
+  subscriber_t0_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Subscriber_t0_1_0
+    container_name: subscriber_t0_1_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 2 --topic topic0
 
-  Subscriber_t1_1_0:
+  subscriber_t1_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Subscriber_t1_1_0
+    container_name: subscriber_t1_1_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic1 --reliable --transient
 
-  Subscriber_t1_1_1:
+  subscriber_t1_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Subscriber_t1_1_1
+    container_name: subscriber_t1_1_1
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --domain 0 --topic topic1 --reliable --transient
 
-  Publisher_t2_1_0:
+  publisher_t2_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: Publisher_t2_1_0
+    container_name: publisher_t2_1_0
     networks:
-      - cloud_edge_net
+      - std_net
     command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --reliable --transient --topic topic2
 
 networks:

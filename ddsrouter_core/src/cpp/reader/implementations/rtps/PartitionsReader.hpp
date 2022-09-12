@@ -31,7 +31,7 @@
 #include <ddsrouter_utils/types/Atomicable.hpp>
 
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/DataQoS.hpp>
+#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
 
 #include <reader/implementations/rtps/CommonReader.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
@@ -69,12 +69,13 @@ public:
 
 protected:
 
-    types::DataQoS specific_qos_of_writer_(const types::Guid& guid) const;
+    types::SpecificWriterQoS specific_qos_of_writer_(const types::Guid& guid) const;
     // void discovered_endpoint_(
     //     const Endpoint& endpoint);
 
-    virtual utils::ReturnCode take_(
-            std::unique_ptr<types::DataReceived>& data) noexcept override;
+    virtual void fill_received_data_(
+        fastrtps::rtps::CacheChange_t* received_change,
+        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept override;
 
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 

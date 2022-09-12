@@ -22,7 +22,7 @@
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
-#include <ddsrouter_core/types/dds/DataQoS.hpp>
+#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -70,10 +70,12 @@ public:
             const EndpointKind& kind,
             const Guid& guid,
             const DdsTopic& topic,
-            const DataQoS& specific_qos = DataQoS()) noexcept;
+            const SpecificWriterQoS& specific_qos = SpecificWriterQoS()) noexcept;
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
+
+    DDSROUTER_CORE_DllAPI void kind(const EndpointKind& kind) noexcept;
 
     //! Guid getter
     DDSROUTER_CORE_DllAPI Guid guid() const noexcept;
@@ -82,7 +84,9 @@ public:
     DDSROUTER_CORE_DllAPI TopicQoS topic_qos() const noexcept;
 
     //! SpecificQoS getter
-    DDSROUTER_CORE_DllAPI DataQoS specific_qos() const noexcept;
+    DDSROUTER_CORE_DllAPI SpecificWriterQoS specific_qos() const noexcept;
+
+    DDSROUTER_CORE_DllAPI void specific_qos(const SpecificWriterQoS& specific_qos) noexcept;
 
     //! Topic getter
     DDSROUTER_CORE_DllAPI DdsTopic topic() const noexcept;
@@ -130,7 +134,7 @@ protected:
     bool active_;
 
     //! Specific QoS of the entity
-    DataQoS specific_qos_;
+    SpecificWriterQoS specific_qos_;
 
     // Allow operator << to use private variables
     DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(

@@ -54,17 +54,17 @@ public:
             const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
-            const types::DataQoS& specific_qos,
+            const types::SpecificWriterQoS& specific_qos,
             const bool repeater = false);
 
 protected:
 
     //! Specific writer QoS to override (more or less) the CommonWriter qos
     static fastrtps::WriterQos writer_qos_(
-            const types::DataQoS& specific_qos,
+            const types::SpecificWriterQoS& specific_qos,
             const types::DdsTopic& topic) noexcept;
 
-    const types::DataQoS& specific_qos_;
+    const types::SpecificWriterQoS& specific_qos_;
 };
 
 } /* namespace rtps */

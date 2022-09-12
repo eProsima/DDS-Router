@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file PartitionsWriter.hpp
+ * @file MultiWriter.hpp
  */
 
 #ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_PARTITIONSWRITER_HPP_
@@ -38,27 +38,27 @@ namespace core {
 namespace rtps {
 
 /**
- * Standard RTPS PartitionsWriter with less restrictive Attributes.
+ * Standard RTPS MultiWriter with less restrictive Attributes.
  *
  * @todo this class could have access to the Discovery DataBase and create writers in discovery and not when
  * data is received.
  */
-class PartitionsWriter : public BaseWriter
+class MultiWriter : public BaseWriter
 {
 public:
     /**
-     * @brief Construct a new PartitionsWriter object
+     * @brief Construct a new MultiWriter object
      *
-     * Get the Attributes and TopicQoS and create the PartitionsWriter History and the RTPS PartitionsWriter.
+     * Get the Attributes and TopicQoS and create the MultiWriter History and the RTPS MultiWriter.
      *
-     * @param participant_id    Router Id of the Participant that has created this PartitionsWriter.
-     * @param topic             Topic that this PartitionsWriter subscribes to.
+     * @param participant_id    Router Id of the Participant that has created this MultiWriter.
+     * @param topic             Topic that this MultiWriter subscribes to.
      * @param payload_pool      Shared Payload Pool to received data and take it.
      * @param rtps_participant  RTPS Participant pointer (this is not stored).
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    PartitionsWriter(
+    MultiWriter(
         const types::ParticipantId &participant_id,
         const types::DdsTopic &topic,
         std::shared_ptr<PayloadPool> payload_pool,
@@ -66,14 +66,14 @@ public:
         const bool repeater = false);
 
     /**
-     * @brief Destroy the PartitionsWriter object
+     * @brief Destroy the MultiWriter object
      *
-     * Remove PartitionsWriter RTPS
+     * Remove MultiWriter RTPS
      * Remove History
      *
      * @todo Remove every change and release it in PayloadPool
      */
-    virtual ~PartitionsWriter();
+    virtual ~MultiWriter();
 
 protected:
     // Specific enable/disable.
@@ -88,7 +88,7 @@ protected:
      * Set \c data with the message taken (data payload must be stored from PayloadPool).
      * Remove this change from Reader History and release.
      *
-     * It does not require mutex, it will be guarded by RTPS PartitionsWriter mutex in internal methods.
+     * It does not require mutex, it will be guarded by RTPS MultiWriter mutex in internal methods.
      *
      * @param data : oldest data to take
      * @return \c RETCODE_OK if data has been correctly taken
@@ -98,16 +98,16 @@ protected:
     virtual utils::ReturnCode write_(
         std::unique_ptr<types::DataReceived> &data) noexcept override;
 
-    bool exist_partition_(const types::DataQoS &data_qos);
-    QoSSpecificWriter* get_writer_or_create_(const types::DataQoS &data_qos);
-    QoSSpecificWriter* create_writer_nts_(const types::DataQoS &data_qos);
+    bool exist_partition_(const types::SpecificWriterQoS &data_qos);
+    QoSSpecificWriter* get_writer_or_create_(const types::SpecificWriterQoS &data_qos);
+    QoSSpecificWriter* create_writer_nts_(const types::SpecificWriterQoS &data_qos);
 
     /////
     // VARIABLES
 
-    // TODO: This could be an unordered_map avoiding the use of operator< with DataQoS,
+    // TODO: This could be an unordered_map avoiding the use of operator< with SpecificWriterQoS,
     // what may be a problem.
-    using WritersMapType = utils::SharedAtomicable<std::map<types::DataQoS, QoSSpecificWriter*>>;
+    using WritersMapType = utils::SharedAtomicable<std::map<types::SpecificWriterQoS, QoSSpecificWriter*>>;
     WritersMapType writers_map_;
 
     fastrtps::rtps::RTPSParticipant* rtps_participant_;

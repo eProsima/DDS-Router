@@ -31,7 +31,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --partitions "A"
 
   sub_0_0:
@@ -40,7 +40,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 0 --partitions "bbb"
 
   # DOMAIN 1
@@ -50,7 +50,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample publisher --interval 100 --samples 110 --domain 0 --partitions "bbb;ccc"
 
   # DOMAIN 2
@@ -60,7 +60,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 2 --partitions "A"
 
   sub_2_1:
@@ -69,7 +69,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 2 --partitions "bbb"
 
   sub_2_2:
@@ -78,7 +78,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 2 --partitions "ccc"
 
   # DOMAIN 3
@@ -88,7 +88,7 @@ services:
     depends_on:
       - ddsrouter
     networks:
-      - cloud_edge_net
+      - std_net
     command: python3 /execute_and_validate_subscriber.py --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 20 --timeout 12 --domain 2 --partitions "*"
 
 networks:

@@ -30,7 +30,7 @@ QoSSpecificWriter::QoSSpecificWriter(
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
-        const types::DataQoS& specific_qos,
+        const types::SpecificWriterQoS& specific_qos,
         const bool repeater /* = false */)
     : CommonWriter(
         participant_id, topic, payload_pool, rtps_participant, repeater,
@@ -44,7 +44,7 @@ QoSSpecificWriter::QoSSpecificWriter(
 }
 
 fastrtps::WriterQos QoSSpecificWriter::writer_qos_(
-        const types::DataQoS& specific_qos,
+        const types::SpecificWriterQoS& specific_qos,
         const types::DdsTopic& topic) noexcept
 {
     // Get QoS from parent class
@@ -56,7 +56,14 @@ fastrtps::WriterQos QoSSpecificWriter::writer_qos_(
         qos.m_partition = specific_qos.partitions;
     }
 
-    // NOTE: Ownership not supported
+    // Set Ownership
+    if (topic.topic_qos.value.has_ownership())
+    {
+        // Set ownership
+        qos.m_ownership.kind = topic.topic_qos.value.ownership_qos;
+
+        qos.m_ownershipStrength = specific_qos.ownership_strength;
+    }
 
     return qos;
 }

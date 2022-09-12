@@ -160,8 +160,29 @@ utils::ReturnCode CommonReader::take_(
     }
 
     // Store the new data that has arrived in the Track data
+    fill_received_data_(received_change, data);
+
+    logDebug(DDSROUTER_RTPS_READER_LISTENER,
+            "Data transmiting to track from CommonReader " << *this << " with payload " <<
+            data->payload << " from remote writer " << data->qos.source_guid);
+
+    // Remove the change in the History and release it in the reader
+    rtps_reader_->getHistory()->remove_change(received_change);
+
+    return utils::ReturnCode::RETCODE_OK;
+}
+
+void CommonReader::fill_received_data_(
+    fastrtps::rtps::CacheChange_t* received_change,
+    std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
+{
+    // Store the new data that has arrived in the Track data
     // Get the writer guid
-    data->source_guid = received_change->writerGUID;
+    data_to_fill->qos.source_guid = received_change->writerGUID;
+    // Get source timestamp
+    data_to_fill->qos.source_timestamp = received_change->sourceTimestamp;
+    // Get Participant receiver
+    data_to_fill->qos.participant_receiver = participant_id_;
 
     // Store it in DDSRouter PayloadPool if size is bigger than 0
     // NOTE: in case of keyed topics an empty payload is possible
@@ -171,26 +192,17 @@ utils::ReturnCode CommonReader::take_(
         payload_pool_->get_payload(
             received_change->serializedPayload,
             payload_owner,
-            data->payload);
+            data_to_fill->payload);
     }
 
-    // Set Instance Handle to data
+    // Set Instance Handle to data_to_fill
     if (topic_.keyed)
     {
-        data->qos.instanceHandle = received_change->instanceHandle;
+        data_to_fill->qos.instanceHandle = received_change->instanceHandle;
     }
 
-    logDebug(DDSROUTER_RTPS_READER_LISTENER,
-            "Data transmiting to track from CommonReader " << *this << " with payload " <<
-            received_change->serializedPayload << " from remote writer " << received_change->writerGUID);
-
-    // Remove the change in the History and release it in the reader
-    rtps_reader_->getHistory()->remove_change(received_change);
-
-    // Ownership not supported
-    // data->qos.ownership_strength = wp->ownership_strength_;
-
-    return utils::ReturnCode::RETCODE_OK;
+    // Note: do not fill writer specific qos in this data from this kind of Readers.
+    // Implement specific class for filling it.
 }
 
 void CommonReader::enable_() noexcept
@@ -298,8 +310,7 @@ fastrtps::ReaderQos CommonReader::reader_qos_(const types::DdsTopic& topic) noex
     }
 
     // If topic is with ownership
-    // NOTE: Ownership is not supported, so it will always use SHARED
-    // qos.m_ownership.kind = topic.topic_qos.value.ownership_qos;
+    qos.m_ownership.kind = topic.topic_qos.value.ownership_qos;
 
     return qos;
 }
