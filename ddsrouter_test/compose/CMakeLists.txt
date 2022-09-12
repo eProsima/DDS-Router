@@ -20,6 +20,7 @@ set(TESTS
     udp
     discovery_server
     communication/partitions
+    communication/durability
 )
 
 foreach(TEST ${TESTS})

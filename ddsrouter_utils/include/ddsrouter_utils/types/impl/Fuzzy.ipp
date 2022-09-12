@@ -135,7 +135,7 @@ void Fuzzy<T>::set_level(FuzzyLevelType level /* = FuzzyLevelValues::fuzzy_level
 /////////////////////////
 
 template <typename T>
-DDSROUTER_UTILS_DllAPI std::ostream& operator <<(
+std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
