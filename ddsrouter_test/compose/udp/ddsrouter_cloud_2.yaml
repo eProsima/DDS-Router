@@ -2,8 +2,9 @@ version: v3.0
 
 participants:
 
-  - name: EchoParticipant
+  - name: Echo_Participant
     kind: echo
+    data: true
 
   - name: Cloud_Participant_2_1
     kind: wan

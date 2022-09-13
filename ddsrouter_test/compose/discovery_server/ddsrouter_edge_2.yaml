@@ -2,8 +2,9 @@ version: v3.0
 
 participants:
 
-  - name: EchoParticipant
+  - name: Echo_Participant
     kind: echo
+    data: true
 
   - name: Simple_Participant
     kind: local

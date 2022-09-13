@@ -4,6 +4,7 @@ participants:
 
   - name: Echo_Participant
     kind: echo
+    data: true
 
   - name: Cloud_Participant
     kind: wan
