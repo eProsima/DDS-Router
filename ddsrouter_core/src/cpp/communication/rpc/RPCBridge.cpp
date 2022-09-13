@@ -126,6 +126,9 @@ void RPCBridge::create_proxy_server_nts_(
     request_readers_[participant_id] =
             std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.request_topic()));
 
+    writers_[reply_writers_[participant_id]->guid()] = reply_writers_[participant_id];
+    readers_[request_readers_[participant_id]->guid()] = request_readers_[participant_id];
+
     create_slot_(request_readers_[participant_id]);
 }
 
@@ -139,6 +142,9 @@ void RPCBridge::create_proxy_client_nts_(
             std::static_pointer_cast<rtps::Writer>(participant->create_writer(topic_.request_topic()));
     reply_readers_[participant_id] =
             std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.reply_topic()));
+
+    writers_[request_writers_[participant_id]->guid()] = request_writers_[participant_id];
+    readers_[reply_readers_[participant_id]->guid()] = reply_readers_[participant_id];
 
     create_slot_(reply_readers_[participant_id]);
 
@@ -291,8 +297,10 @@ void RPCBridge::data_available_(
                 " - " << reader_guid << " send callback to queue.");
             if (topic_.service_name() == "addition_service")
             {
+                std::cout << std::endl;
                 std::cout << "RPCBridge " << *this <<
-                    " - " << reader_guid << " send callback to queue." << std::endl;
+                    " - " << *readers_[reader_guid] << " send callback to queue." << std::endl;
+                std::cout << std::endl;
             }
         }
         else
@@ -301,8 +309,10 @@ void RPCBridge::data_available_(
                 " - " << reader_guid << " callback NOT sent (task already queued).");
             if (topic_.service_name() == "addition_service")
             {
+                std::cout << "##################################################################" << std::endl;
                 std::cout << "RPCBridge " << *this <<
                     " - " << reader_guid << " callback NOT sent (task already queued)." << std::endl;
+                std::cout << "##################################################################" << std::endl;
             }
         }
     }
@@ -318,8 +328,10 @@ void RPCBridge::transmit_(
         " transmitting for reader " << reader->guid() << " .");
     if (topic_.service_name() == "addition_service")
     {
+        std::cout << std::endl;
         std::cout << "RPCBridge " << *this <<
             " transmitting for reader " << reader->guid() << " ." << std::endl;
+        std::cout << std::endl;
     }
 
     while (enabled_)
@@ -336,7 +348,9 @@ void RPCBridge::transmit_(
                     "RPCBridge service " << *this << " finishing transmitting because no more data available.");
                 if (topic_.service_name() == "addition_service")
                 {
+                    std::cout << std::endl;
                     std::cout << "RPCBridge service " << *this << " finishing transmitting because no more data available." << std::endl;
+                    std::cout << std::endl;
                 }
 
                 return;
@@ -466,6 +480,13 @@ void RPCBridge::transmit_(
     // No need to take internal mutex as bridge is disabled (and cannot be enabled until \c disable releases bridge
     // mutex, which cannot occur until this thread releases transmission mutex), so \c data_available_ won't take effect
     tasks_map_[reader->guid()].first = false;
+
+    if (topic_.service_name() == "addition_service")
+    {
+        std::cout << "##################################################################" << std::endl;
+        std::cout << "RPCBridge service " << *this << " finishing transmitting due to disable." << std::endl;
+        std::cout << "##################################################################" << std::endl;
+    }
 }
 
 void RPCBridge::create_slot_(

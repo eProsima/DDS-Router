@@ -79,6 +79,8 @@ Writer::Writer(
             nullptr);
     }
 
+    rtps_writer_->set_listener(this);
+
     if (!rtps_writer_)
     {
         throw utils::InitializationException(
@@ -143,17 +145,20 @@ void Writer::onWriterMatched(
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        if (info.status == fastrtps::rtps::MATCHED_MATCHING && RPCTopic::is_service_topic(topic_))
+        if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
         {
-            // logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
-            //         topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
-            std::cout << "Writer " << *this << " matched with a new Reader" << std::endl;
+            if (info.status == fastrtps::rtps::MATCHED_MATCHING)
+            {
+                // logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
+                //         topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+                std::cout << "Writer " << *this << " matched with a new Reader" << std::endl;
+            }
+            // else
+            // {
+            //     logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
+            //             topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+            // }
         }
-        // else
-        // {
-        //     logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
-        //             topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
-        // }
     }
 }
 
@@ -349,6 +354,11 @@ utils::PoolConfiguration Writer::cache_change_pool_configuration_() const noexce
     // NOTE: Not use of memory policy or maximum yet
 
     return config;
+}
+
+types::Guid Writer::guid() const noexcept
+{
+    return rtps_writer_->getGuid();
 }
 
 } /* namespace rtps */

@@ -275,6 +275,8 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
 
         logInfo(DDSROUTER, "Stopping DDS Router.");
 
+        discovery_database_->disable();
+
         // Disable thread pool so tasks running finish and new tasks are not taken by threads
         thread_pool_->disable();
 

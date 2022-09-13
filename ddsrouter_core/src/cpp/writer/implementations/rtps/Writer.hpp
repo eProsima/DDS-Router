@@ -138,6 +138,8 @@ public:
             fastrtps::rtps::RTPSWriter*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
+    types::Guid guid() const noexcept;
+
 protected:
 
     // Specific enable/disable do not need to be implemented

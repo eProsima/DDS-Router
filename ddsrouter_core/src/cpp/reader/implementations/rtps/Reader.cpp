@@ -194,6 +194,9 @@ void Reader::enable_() noexcept
     if (topic_.topic_reliable())
     {
         std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_internal_mutex());
+        std::cout << std::endl;
+        std::cout << "FAKE data available in Reader " << *this << std::endl;
+        std::cout << std::endl;
         on_data_available_();
     }
 }
@@ -311,7 +314,9 @@ void Reader::onNewCacheChangeAdded(
                     change->writerGUID);
             if (RPCTopic::is_service_topic(topic_))
             {
+                std::cout << std::endl;
                 std::cout << "Data arrived to Reader " << *this << std::endl;
+                std::cout << std::endl;
             }
             on_data_available_();
         }
@@ -320,6 +325,13 @@ void Reader::onNewCacheChangeAdded(
             logDebug(DDSROUTER_RTPS_READER_LISTENER,
                     "Data arrived to (DISABLED) Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
+
+            if (RPCTopic::is_service_topic(topic_))
+            {
+                std::cout << "##################################################################" << std::endl;
+                std::cout << "Data arrived to DISABLED Reader " << *this << std::endl;
+                std::cout << "##################################################################" << std::endl;
+            }
 
             // Remove received change if the Reader is disabled and the topic is not reliable
             if (!topic_.topic_reliable())
@@ -348,16 +360,19 @@ void Reader::onReaderMatched(
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING && RPCTopic::is_service_topic(topic_))
+        if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
         {
-            logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                    "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
-            std::cout << "Reader " << *this << " matched with a new Writer" << std::endl;
-        }
-        else
-        {
-            logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                    "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
+            if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
+            {
+                logInfo(DDSROUTER_RTPS_READER_LISTENER,
+                        "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
+                std::cout << "Reader " << *this << " matched with a new Writer" << std::endl;
+            }
+            else
+            {
+                logInfo(DDSROUTER_RTPS_READER_LISTENER,
+                        "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
+            }
         }
     }
 }
