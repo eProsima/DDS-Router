@@ -87,6 +87,8 @@ public:
     virtual utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
+    std::recursive_mutex& get_mutex();
+
 protected:
 
     /**

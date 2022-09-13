@@ -38,11 +38,6 @@ DiscoveryDatabase::DiscoveryDatabase() noexcept
 DiscoveryDatabase::~DiscoveryDatabase()
 {
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Destroying Discovery Database.");
-    {
-        std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
-        exit_.store(true);
-    }
-    entities_to_process_cv_.notify_one();
 
     disable();
 }
@@ -65,6 +60,14 @@ void DiscoveryDatabase::disable() noexcept
 {
     if (enabled_.load())
     {
+        clear_all_callbacks();
+
+        {
+            std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+            exit_.store(true);
+        }
+        entities_to_process_cv_.notify_one();
+
         logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
         enabled_.store(false);
         queue_processing_thread_.join();
@@ -78,7 +81,9 @@ void DiscoveryDatabase::disable() noexcept
 bool DiscoveryDatabase::topic_exists(
         const RealTopic& topic) const noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling topic_exists BEFORE");
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling topic_exists AFTER");
 
     // Loop over every Endpoint checking if topic matches
     // It is not required to be reference
@@ -95,14 +100,19 @@ bool DiscoveryDatabase::topic_exists(
 bool DiscoveryDatabase::endpoint_exists(
         const Guid& guid) const noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling endpoint_exists BEFORE");
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling endoint_exists AFTER");
     return entities_.find(guid) != entities_.end();
 }
 
 bool DiscoveryDatabase::add_endpoint_(
         const Endpoint& new_endpoint)
 {
+    {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling add_endpoint_ BEFORE");
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling add_endpoint_ AFTER");
 
     auto it = entities_.find(new_endpoint.guid());
     if (it != entities_.end())
@@ -127,11 +137,15 @@ bool DiscoveryDatabase::add_endpoint_(
     }
     else
     {
-        // Add it to the dictionary
-        entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
-
         logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
 
+        // Add it to the dictionary
+        entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
+    }
+    }
+
+    {
+        std::lock_guard<std::mutex> lock(callbacks_mutex_);
         for (auto added_endpoint_callback : added_endpoint_callbacks_)
         {
             added_endpoint_callback(new_endpoint);
@@ -144,7 +158,10 @@ bool DiscoveryDatabase::add_endpoint_(
 bool DiscoveryDatabase::update_endpoint_(
         const Endpoint& endpoint_to_update)
 {
+    {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling update_endpoint_ BEFORE");
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling update_endpoint_ AFTER");
 
     auto it = entities_.find(endpoint_to_update.guid());
     if (it == entities_.end())
@@ -169,14 +186,28 @@ bool DiscoveryDatabase::update_endpoint_(
 
         return true;
     }
+    }
+
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+    for (auto updated_endpoint_callback : updated_endpoint_callbacks_)
+    {
+        updated_endpoint_callback(endpoint_to_update);
+    }
+
+    return true;
 }
 
 utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
         const Endpoint& endpoint_to_erase)
 {
+    {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ BEFORE");
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ AFTER");
 
     auto erased = entities_.erase(endpoint_to_erase.guid());
+
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ AFTER ERASING");
 
     if (erased == 0)
     {
@@ -185,39 +216,48 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
                       "Error erasing Endpoint " << endpoint_to_erase <<
                       " from database. Endpoint entry not found.");
     }
-    else
-    {
-        for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
-        {
-            erased_endpoint_callback(endpoint_to_erase);
-        }
-
-        return utils::ReturnCode::RETCODE_OK;
     }
+
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ BEFORE CALLBACKS");
+    for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
+    {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ CALLING CALLBACK");
+        erased_endpoint_callback(endpoint_to_erase);
+    }
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling erase_endpoint_ AFTER CALLBACKS");
+
+    return utils::ReturnCode::RETCODE_OK;
 }
 
 void DiscoveryDatabase::add_endpoint(
         const Endpoint& new_endpoint) noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Adding endpoint");
     push_item_to_queue_(std::make_tuple(DatabaseOperation::add, new_endpoint));
 }
 
 void DiscoveryDatabase::update_endpoint(
         const Endpoint& endpoint_to_update) noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Updating endpoint");
     push_item_to_queue_(std::make_tuple(DatabaseOperation::update, endpoint_to_update));
 }
 
 void DiscoveryDatabase::erase_endpoint(
         const Endpoint& endpoint_to_erase) noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Erasing endpoint");
     push_item_to_queue_(std::make_tuple(DatabaseOperation::erase, endpoint_to_erase));
 }
 
 Endpoint DiscoveryDatabase::get_endpoint(
         const Guid& endpoint_guid) const
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling get_endpoint BEFORE");
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling get_endpoint AFTER");
 
     auto it = entities_.find(endpoint_guid);
     if (it == entities_.end())
@@ -234,19 +274,33 @@ Endpoint DiscoveryDatabase::get_endpoint(
 void DiscoveryDatabase::add_endpoint_discovered_callback(
         std::function<void(Endpoint)> endpoint_discovered_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
     added_endpoint_callbacks_.push_back(endpoint_discovered_callback);
 }
 
 void DiscoveryDatabase::add_endpoint_updated_callback(
         std::function<void(Endpoint)> endpoint_updated_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
     updated_endpoint_callbacks_.push_back(endpoint_updated_callback);
 }
 
 void DiscoveryDatabase::add_endpoint_erased_callback(
         std::function<void(Endpoint)> endpoint_erased_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
     erased_endpoint_callbacks_.push_back(endpoint_erased_callback);
+}
+
+void DiscoveryDatabase::clear_all_callbacks() noexcept
+{
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling clear_all_callbacks BEFORE");
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling clear_all_callbacks AFTER");
+
+    added_endpoint_callbacks_.clear();
+    updated_endpoint_callbacks_.clear();
+    erased_endpoint_callbacks_.clear();
 }
 
 void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
@@ -254,21 +308,25 @@ void DiscoveryDatabase::queue_processing_thread_routine_() noexcept
     while (true)
     {
         {
+            logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling queue_processing_thread_routine_ BEFORE");
             std::unique_lock<std::mutex> lock(entities_to_process_cv_mutex_);
+            logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling queue_processing_thread_routine_ AFTER");
             entities_to_process_cv_.wait(
                 lock,
                 [&]
                 {
                     return !entities_to_process_.BothEmpty() || exit_.load();
                 });
-
+            logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling queue_processing_thread_routine_ OUT OF WAIT");
             if (exit_.load())
             {
                 break;
             }
         }
         // Release the mutex as DBQueue already has internal mutexes
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ BEFORE");
         process_queue_();
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ AFTER");
     }
 }
 
@@ -276,17 +334,23 @@ void DiscoveryDatabase::push_item_to_queue_(
         std::tuple<DatabaseOperation, Endpoint> item) noexcept
 {
     {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling push_item_to_queue_ BEFORE");
         std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling push_item_to_queue_ AFTER");
         entities_to_process_.Push(item);
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling push_item_to_queue_ AFTER PUSHING");
     }
     entities_to_process_cv_.notify_one();
 }
 
 void DiscoveryDatabase::process_queue_() noexcept
 {
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ BEFORE SWAP");
     entities_to_process_.Swap();
+    logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ AFTER SWAP");
     while (!entities_to_process_.Empty())
     {
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ NEW ITERATION");
         std::tuple<DatabaseOperation, Endpoint> queue_item = entities_to_process_.Front();
         DatabaseOperation db_operation = std::get<0>(queue_item);
         Endpoint entity = std::get<1>(queue_item);
@@ -310,7 +374,9 @@ void DiscoveryDatabase::process_queue_() noexcept
             logDevError(DDSROUTER_DISCOVERY_DATABASE,
                     "Error processing database operations queue:" << e.what() << ".");
         }
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ BEFORE POP");
         entities_to_process_.Pop();
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Calling process_queue_ AFTER POP");
     }
 }
 

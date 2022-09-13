@@ -79,7 +79,9 @@ void ServiceRegistry::add(
                 " attempting to add entry with already present SequenceNumber.");
         return;
     }
-
+    logDebug(DDSROUTER_SERVICEREGISTRY,
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " adding entry with SequenceNumber " << idx);
     registry_[idx] = new_entry;
 }
 
@@ -88,6 +90,10 @@ std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(
 {
     std::lock_guard<std::mutex> lock(mutex_);
 
+    logDebug(DDSROUTER_SERVICEREGISTRY,
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " attempting to get entry with SequenceNumber " << idx);
+
     std::pair<ParticipantId, SampleIdentity> ret;
     if (registry_.count(idx))
     {
@@ -95,6 +101,9 @@ std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(
     }
     else
     {
+        logError(DDSROUTER_SERVICEREGISTRY,
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " FAILED TO GET entry with SequenceNumber " << idx);
         ret = {ParticipantId(), SampleIdentity()};
     }
 
@@ -108,7 +117,16 @@ void ServiceRegistry::erase(
 
     if (registry_.count(idx))
     {
+        logDebug(DDSROUTER_SERVICEREGISTRY,
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " erasing entry with SequenceNumber " << idx);
         registry_.erase(idx);
+    }
+    else
+    {
+        logError(DDSROUTER_SERVICEREGISTRY,
+                "ServiceRegistry for service " << topic_ << " in participant " << participant_id_ <<
+                " FAILED TO ERASE entry with SequenceNumber " << idx);
     }
 }
 

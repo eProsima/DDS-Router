@@ -168,6 +168,8 @@ public:
     void add_endpoint_erased_callback(
             std::function<void(types::Endpoint)> endpoint_erased_callback) noexcept;
 
+    void clear_all_callbacks() noexcept;
+
 protected:
 
     /**
@@ -219,6 +221,8 @@ protected:
 
     //! Mutex to guard queries to the database
     mutable std::shared_timed_mutex mutex_;
+
+    mutable std::mutex callbacks_mutex_;
 
     //! Vector of callbacks to be called when an Endpoint is added
     std::vector<std::function<void(types::Endpoint)>> added_endpoint_callbacks_;

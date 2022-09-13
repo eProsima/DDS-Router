@@ -126,6 +126,8 @@ void RPCBridge::create_proxy_server_nts_(
     request_readers_[participant_id] =
             std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.request_topic()));
 
+    readers_[request_readers_[participant_id]->guid()] = "{" + participant_id.id_name() + "_" + topic_.request_topic().topic_name() + "}";
+
     create_slot_(request_readers_[participant_id]);
 }
 
@@ -140,6 +142,8 @@ void RPCBridge::create_proxy_client_nts_(
     reply_readers_[participant_id] =
             std::static_pointer_cast<rtps::Reader>(participant->create_reader(topic_.reply_topic()));
 
+    readers_[reply_readers_[participant_id]->guid()] = "{" + participant_id.id_name() + "_" + topic_.reply_topic().topic_name() + "}";
+
     create_slot_(reply_readers_[participant_id]);
 
     // Create service registry associated to this proxy client
@@ -152,6 +156,8 @@ void RPCBridge::create_proxy_client_nts_(
 void RPCBridge::enable() noexcept
 {
     std::lock_guard<std::mutex> lock(mutex_);
+
+    logDebug(DDSROUTER_RPCBRIDGE, "Attempting to enable RPCBridge for service " << topic_ << ".");
 
     if (!enabled_ && servers_available_())
     {
@@ -240,6 +246,10 @@ void RPCBridge::discovered_service(
         const types::ParticipantId& server_participant_id,
         const types::GuidPrefix& server_guid_prefix) noexcept
 {
+    if (topic_.service_name() == "addition_service")
+    {
+        logDebug(DDSROUTER_RPCBRIDGE,  "ADDING FOUND SERVER");
+    }
     current_servers_[server_participant_id].emplace(server_guid_prefix);
     if (init_)
     {
@@ -267,6 +277,10 @@ bool RPCBridge::servers_available_() const noexcept
             return true;
         }
     }
+    if (topic_.service_name() == "addition_service")
+    {
+        logError(DDSROUTER_RPCBRIDGE,  "NO SERVERS FOUND");
+    }
     return false;
 }
 
@@ -276,9 +290,9 @@ void RPCBridge::data_available_(
     // Only hear callback if it is enabled
     if (enabled_)
     {
-        logDebug(
+        logWarning(
             DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
-                                 " has data ready to be sent in reader " << reader_guid << " .");
+                                 " has data ready to be sent in reader " << readers_[reader_guid] << " .");
 
         // Protected by internal RTPS Reader mutex, as called within \c onNewCacheChangeAdded callback
 
@@ -287,22 +301,30 @@ void RPCBridge::data_available_(
         {
             thread_pool_->emit(task.second);
             task.first = true;
-            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
-                " - " << reader_guid << " send callback to queue.");
+            // logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+            //     " - " << reader_guid << " send callback to queue.");
             if (topic_.service_name() == "addition_service")
             {
-                std::cout << "RPCBridge " << *this <<
-                    " - " << reader_guid << " send callback to queue." << std::endl;
+                logWarning(DDSROUTER_RPCBRIDGE,"RPCBridge " << *this <<
+                    " - " << readers_[reader_guid] << " send callback to queue."); 
+                // std::cout << std::endl;
+                // std::cout << "RPCBridge " << *this <<
+                //     " - " << readers_[reader_guid] << " send callback to queue." << std::endl;
+                // std::cout << std::endl;
             }
         }
         else
         {
-            logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
-                " - " << reader_guid << " callback NOT sent (task already queued).");
+            // logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+            //     " - " << reader_guid << " callback NOT sent (task already queued).");
             if (topic_.service_name() == "addition_service")
             {
-                std::cout << "RPCBridge " << *this <<
-                    " - " << reader_guid << " callback NOT sent (task already queued)." << std::endl;
+                logError(DDSROUTER_RPCBRIDGE, "############################################# RPCBridge " << *this <<
+                    " - " << readers_[reader_guid] << " callback NOT sent (task already queued).");
+                // std::cout << "##################################################################" << std::endl;
+                // std::cout << "RPCBridge " << *this <<
+                //     " - " << readers_[reader_guid] << " callback NOT sent (task already queued)." << std::endl;
+                // std::cout << "##################################################################" << std::endl;
             }
         }
     }
@@ -314,29 +336,47 @@ void RPCBridge::transmit_(
     // Avoid being disabled while transmitting
     std::shared_lock<std::shared_timed_mutex> lock(on_transmission_mutex_);
 
-    logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
-        " transmitting for reader " << reader->guid() << " .");
+    // logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+    //     " transmitting for reader " << reader->guid() << " .");
     if (topic_.service_name() == "addition_service")
     {
-        std::cout << "RPCBridge " << *this <<
-            " transmitting for reader " << reader->guid() << " ." << std::endl;
+        logWarning(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
+            " transmitting for reader " << readers_[reader->guid()] << " .");
+        // std::cout << std::endl;
+        // std::cout << "RPCBridge " << *this <<
+        //     " transmitting for reader " << readers_[reader->guid()] << " ." << std::endl;
+        // std::cout << std::endl;
     }
 
-    while (enabled_)
+    while (true)
     {
         {
             std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(reader->get_internal_mutex());
 
-            if (!(reader->get_unread_count() > 0))
+            if (!enabled_)
+            {
+                tasks_map_[reader->guid()].first = false;
+
+                if (topic_.service_name() == "addition_service")
+                {
+                    logError(DDSROUTER_RPCBRIDGE, "############################################################# RPCBridge service " << *this << " finishing transmitting due to disable in Reader" << readers_[reader->guid()]);
+                }
+
+                return;
+            }
+            else if (!(reader->get_unread_count() > 0))
             {
                 // No more data to be read -> finish transmission
                 tasks_map_[reader->guid()].first = false;
 
-                logDebug(DDSROUTER_RPCBRIDGE,
-                    "RPCBridge service " << *this << " finishing transmitting because no more data available.");
+                // logDebug(DDSROUTER_RPCBRIDGE,
+                //     "RPCBridge service " << *this << " finishing transmitting because no more data available.");
                 if (topic_.service_name() == "addition_service")
                 {
-                    std::cout << "RPCBridge service " << *this << " finishing transmitting because no more data available." << std::endl;
+                    logWarning(DDSROUTER_RPCBRIDGE, "RPCBridge service " << *this << " finishing transmitting because no more data available at Reader " << readers_[reader->guid()]);
+                    // std::cout << std::endl;
+                    // std::cout << "RPCBridge service " << *this << " finishing transmitting because no more data available at Reader " << readers_[reader->guid()] << std::endl;
+                    // std::cout << std::endl;
                 }
 
                 return;
@@ -361,8 +401,8 @@ void RPCBridge::transmit_(
         if (RPCTopic::is_request_topic(reader->topic()))
         {
             logDebug(DDSROUTER_RPCBRIDGE,
-                    "RPCBridge for service " << topic_ <<
-                    " transmitting request from remote endpoint " << data->source_guid << ".");
+                   "RPCBridge for service " << topic_ <<
+                   " transmitting request from remote endpoint " << data->source_guid << ".");
 
             SampleIdentity reply_related_sample_identity = data->write_params.sample_identity();
             reply_related_sample_identity.sequence_number(data->sequenceNumber);
@@ -384,26 +424,36 @@ void RPCBridge::transmit_(
                     continue;
                 }
 
-                eprosima::fastrtps::rtps::WriteParams wparams;
-                eprosima::fastrtps::rtps::SequenceNumber_t sequence_number;
-
-                // Attach the information the server needs in order to reply to the appropiate proxy client.
-                // Thread-safe as registry's related_sample_identity is set only in creation, when this writer is still disabled.
-                // Also note that concurrent \c write_ operations in the same \c RequestWriter are not possible, as \c write from parent \c BaseWriter is guarded.
-                wparams.related_sample_identity(service_registry.second->related_sample_identity_nts());
-
-                ret = request_writers_[service_registry.first]->write(data, wparams, sequence_number);
-
-                if (!ret)
                 {
-                    logWarning(DDSROUTER_RPCBRIDGE, "Error writting request in RPCBridge for service "
-                            << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
-                    continue;
+                    std::lock_guard<std::recursive_mutex> lock(request_writers_[service_registry.first]->get_mutex());
+
+                    eprosima::fastrtps::rtps::WriteParams wparams;
+                    eprosima::fastrtps::rtps::SequenceNumber_t sequence_number;
+
+                    // Attach the information the server needs in order to reply to the appropiate proxy client.
+                    // Thread-safe as registry's related_sample_identity is set only in creation, when this writer is still disabled.
+                    // Also note that concurrent \c write_ operations in the same \c RequestWriter are not possible, as \c write from parent \c BaseWriter is guarded.
+                    wparams.related_sample_identity(service_registry.second->related_sample_identity_nts());
+
+                    ret = request_writers_[service_registry.first]->write(data, wparams, sequence_number);
+
+                    logWarning(DDSROUTER_RPCBRIDGE, "RPCBridge service " << *this << " transmitting REQUEST from Reader " << readers_[reader->guid()]);
+                // std::cout << std::endl;
+                // std::cout << "RPCBridge service " << *this << " transmitting REQUEST from Reader " << readers_[reader->guid()] << std::endl;
+                // std::cout << std::endl;
+
+
+                    if (!ret)
+                    {
+                        logWarning(DDSROUTER_RPCBRIDGE, "Error writting request in RPCBridge for service "
+                                << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
+                        continue;
+                    }
+
+                    // Add entry to registry associated to the transmission of this request through this proxy client.
+                    service_registry.second->add(sequence_number, {data->participant_receiver, reply_related_sample_identity});
                 }
 
-                // Add entry to registry associated to the transmission of this request through this proxy client.
-                service_registry.second->add(sequence_number, {data->participant_receiver,
-                                                               reply_related_sample_identity});
             }
         }
         else if (RPCTopic::is_reply_topic(reader->topic()))
@@ -423,10 +473,13 @@ void RPCBridge::transmit_(
             }
             else
             {
-                // Fetch information required for transmission; which proxy server should send it and with what parameters
-                std::pair<ParticipantId,
-                        SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(
-                    data->write_params.sample_identity().sequence_number());
+                std::pair<ParticipantId, SampleIdentity> registry_entry;
+                {
+                    std::lock_guard<std::recursive_mutex> lock(request_writers_[reader->participant_id()]->get_mutex());
+
+                    // Fetch information required for transmission; which proxy server should send it and with what parameters
+                    registry_entry = service_registries_[reader->participant_id()]->get(data->write_params.sample_identity().sequence_number());
+                }
 
                 // Not valid means:
                 //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
@@ -437,6 +490,11 @@ void RPCBridge::transmit_(
                     eprosima::fastrtps::rtps::WriteParams wparams;
                     wparams.related_sample_identity(registry_entry.second);
                     ret = reply_writers_[registry_entry.first]->write(data, wparams);
+
+                    logWarning(DDSROUTER_RPCBRIDGE, "RPCBridge service " << *this << " transmitting REPLY from Reader " << readers_[reader->guid()]);
+                    // std::cout << std::endl;
+                    // std::cout << "RPCBridge service " << *this << " transmitting REPLY from Reader " << readers_[reader->guid()] << std::endl;
+                    // std::cout << std::endl;
 
                     if (!ret)
                     {
@@ -449,6 +507,10 @@ void RPCBridge::transmit_(
                             data->write_params.sample_identity().sequence_number());
                     }
                 }
+                else
+                {
+                    logError(DDSROUTER_RPCBRIDGE, "########################################## RPCBridge service " << *this << " INVALID transmitting REPLY from Reader " << readers_[reader->guid()]);
+                }
             }
         }
         else
@@ -459,13 +521,6 @@ void RPCBridge::transmit_(
 
         payload_pool_->release_payload(data->payload);
     }
-
-    logDebug(DDSROUTER_RPCBRIDGE,
-        "RPCBridge service " << *this << " finishing transmitting.");
-
-    // No need to take internal mutex as bridge is disabled (and cannot be enabled until \c disable releases bridge
-    // mutex, which cannot occur until this thread releases transmission mutex), so \c data_available_ won't take effect
-    tasks_map_[reader->guid()].first = false;
 }
 
 void RPCBridge::create_slot_(

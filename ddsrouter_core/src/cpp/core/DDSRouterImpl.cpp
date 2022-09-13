@@ -86,6 +86,14 @@ DDSRouterImpl::~DDSRouterImpl()
 {
     logDebug(DDSROUTER, "Destroying DDS Router.");
 
+    // discovery_database_->clear_all_callbacks();
+
+    logDebug(DDSROUTER, "BEFORE disabling discovery database.");
+
+    discovery_database_->disable();
+
+    logDebug(DDSROUTER, "AFTER disabling discovery database.");
+
     // Stop all communications
     stop_();
 
@@ -256,6 +264,15 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
         thread_pool_->enable();
 
         activate_all_topics_();
+
+        for (auto it : current_services_)
+        {
+            if (it.second)
+            {
+                rpc_bridges_[it.first]->enable();
+            }
+        }
+
         return utils::ReturnCode::RETCODE_OK;
     }
     else
@@ -277,6 +294,8 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
 
         // Disable thread pool so tasks running finish and new tasks are not taken by threads
         thread_pool_->disable();
+
+        logDebug(DDSROUTER, "AFTER disabling thread pool.");
 
         deactivate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
@@ -411,6 +430,14 @@ void DDSRouterImpl::discovered_service_(
     {
         rpc_bridges_[topic]->enable();
     }
+    else if (topic.service_name() == "addition_service")
+    {
+        logError(DDSROUTER, "NOT ENABLING service: " << topic << ".");
+        if (!enabled_.load())
+        {
+            logError(DDSROUTER, "DISABLED ROUTER");
+        }
+    }
 }
 
 void DDSRouterImpl::removed_service_(
@@ -418,7 +445,9 @@ void DDSRouterImpl::removed_service_(
         const ParticipantId& server_participant_id,
         const GuidPrefix& server_guid_prefix) noexcept
 {
+    logDebug(DDSROUTER, "Removing service BEFORE: " << topic << ".");
     std::lock_guard<std::recursive_mutex> lock(mutex_);
+    logDebug(DDSROUTER, "Removing service AFTER: " << topic << ".");
 
     logInfo(DDSROUTER, "Removed service: " << topic << ".");
 

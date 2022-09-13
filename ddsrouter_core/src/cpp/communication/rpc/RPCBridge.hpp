@@ -174,6 +174,8 @@ protected:
     std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> reply_readers_;
     std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> request_writers_;
 
+    std::map<types::Guid, std::string> readers_;
+
     //! Map readers' GUIDs to their associated thread pool tasks, and also keep a task emission flag.
     std::map<types::Guid, std::pair<bool, utils::TaskId>> tasks_map_;
 
