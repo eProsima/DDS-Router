@@ -114,6 +114,9 @@ void TlsConfiguration::enable_tls_client(
 
     // CA certificate
     descriptor->tls_config.verify_file = certificate_authority_file;
+
+    // SNI server name
+    descriptor->tls_config.server_name = sni_server_name;
 }
 
 void TlsConfiguration::enable_tls_server(

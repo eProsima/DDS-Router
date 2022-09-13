@@ -47,6 +47,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     // Add TLS
     yml[TLS_TAG] = Yaml();
     yml[TLS_TAG][TLS_CA_TAG] = "ca.pem";
+    yml[TLS_TAG][TLS_SNI_HOST_TAG] = "my_server.com";
 
     core::types::security::TlsConfiguration tls_configuration =
             YamlReader::get<core::types::security::TlsConfiguration>(yml, TLS_TAG, LATEST);
@@ -58,6 +59,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     ASSERT_TRUE(tls_configuration.is_active());
 
     ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
+    ASSERT_EQ(tls_configuration.sni_server_name, "my_server.com");
 }
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_server)
