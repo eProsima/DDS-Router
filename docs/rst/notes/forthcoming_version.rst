@@ -18,6 +18,7 @@ Next release will include the following **Fast DDS features**:
 
 * New :term:`Initial Peers` Participant that allows to create a fast WAN communication
   avoiding the Discovery Server configuration.
+* Participants names are set from ParticipantIds.
 
 Next release will include the following **configuration changes**:
 

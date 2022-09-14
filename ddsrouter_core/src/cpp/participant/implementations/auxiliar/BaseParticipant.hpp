@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_BASEPARTICIPANT_HPP_
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_BASEPARTICIPANT_HPP_
 
-#include <ddsrouter_utils/macros.hpp>
+#include <ddsrouter_utils/macros/macros.hpp>
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 

@@ -33,6 +33,7 @@ set(TEST_LIST
         get_ddsrouter_configuration_no_version
         version_negative_cases
         number_of_threads
+        max_history_depth
     )
 
 set(TEST_EXTRA_LIBRARIES

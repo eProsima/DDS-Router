@@ -57,6 +57,9 @@ macro(configure_project_cpp)
         activate_code_coverage()
     endif()
 
+    # Set custom C++ Flags
+    custom_cpp_flags()
+
     # Finish macro
     message(STATUS "C++ Project ${MODULE_NAME_LARGE} configured.")
 

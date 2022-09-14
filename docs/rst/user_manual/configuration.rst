@@ -61,11 +61,22 @@ This improves the performance of the data transmission between Participants.
 This value should be set by each user depending on each system characteristics.
 In case this value is not set, the default number of threads used is :code:`12`.
 
-.. note::
+.. _history_depth_configuration:
 
-    The number of threads set by this configuration does not affect the total number of thread used by the application.
-    Internal library dependencies will create additional threads.
+Maximum History Depth
+=====================
 
+By default, the depth of every RTPS History instance is :code:`5000`, which sets a constraint on the maximum number of
+samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT`` `DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
+
+Optionally, this parameter may be tuned from within the YAML Configuration file, under the ``max-depth`` tag, in order
+to better fit concrete scenarios.
+
+Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of
+topics and |ddsrouter| participants) are as big as to cause memory exhaustion issues.
+
+Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
+enough memory is available.
 
 .. _topic_filtering:
 

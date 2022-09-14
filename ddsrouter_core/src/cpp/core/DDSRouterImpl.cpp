@@ -329,7 +329,8 @@ void DDSRouterImpl::init_participants_()
                 participant_factory_.create_participant(
             participant_config,
             payload_pool_,
-            discovery_database_);
+            discovery_database_,
+            configuration_.max_history_depth);
 
         // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||

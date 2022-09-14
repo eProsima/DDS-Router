@@ -42,6 +42,7 @@ Writer::Writer(
         const RealTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
+        unsigned int max_history_depth,
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
@@ -51,6 +52,7 @@ Writer::Writer(
 
     // Create History
     fastrtps::rtps::HistoryAttributes history_att = history_attributes_();
+    history_att.maximumReservedCaches = max_history_depth;
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_att);
 
     // Create Writer
@@ -268,7 +270,11 @@ utils::ReturnCode Writer::write_(
     // Copy sequence number of write operation to object attribute
     write_info_.sequence_number = new_change->sequenceNumber;
 
-    // TODO: Data is never removed till destruction
+    // When max history size is reached, remove oldest cache change
+    if (rtps_history_->isFull())
+    {
+        rtps_history_->remove_min_change();
+    }
 
     return utils::ReturnCode::RETCODE_OK;
 }

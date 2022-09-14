@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add test subdirectories
-add_subdirectory(event)
-add_subdirectory(exception)
-add_subdirectory(macros)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(thread_pool)
-add_subdirectory(time)
-add_subdirectory(utils)
-add_subdirectory(wait)
+###############################################################################
+# CMake Build Type
+###############################################################################
+
+# Set custom CMAKE_CXX_FLAGS
+macro(custom_cpp_flags)
+
+    # Only for windows
+    if(MSVC OR MSVC_IDE)
+        # Set standard preprocessor
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:preprocessor")
+    endif()
+
+endmacro()
