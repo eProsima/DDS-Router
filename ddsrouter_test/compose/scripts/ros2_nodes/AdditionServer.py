@@ -18,6 +18,7 @@ TODO
 
 import rclpy
 from rclpy.node import Node
+import time
 
 from example_interfaces.srv import AddTwoInts
 
@@ -81,5 +82,7 @@ class AdditionServer(Node):
 
         while self.samples_replied < samples:
             rclpy.spin_once(self)
+
+        time.sleep(2)
 
         return True
