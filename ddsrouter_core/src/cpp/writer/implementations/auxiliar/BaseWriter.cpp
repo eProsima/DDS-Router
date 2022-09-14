@@ -83,6 +83,11 @@ utils::ReturnCode BaseWriter::write(
     }
 }
 
+std::recursive_mutex& BaseWriter::get_mutex()
+{
+    return mutex_;
+}
+
 void BaseWriter::enable_() noexcept
 {
     // It does nothing. Override this method so it has functionality.

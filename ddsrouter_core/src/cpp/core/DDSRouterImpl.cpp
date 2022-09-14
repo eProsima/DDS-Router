@@ -76,7 +76,7 @@ DDSRouterImpl::DDSRouterImpl(
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
-    discovery_database_->enable();
+    discovery_database_->start();
 
 
     logDebug(DDSROUTER, "DDS Router created.");
@@ -85,6 +85,9 @@ DDSRouterImpl::DDSRouterImpl(
 DDSRouterImpl::~DDSRouterImpl()
 {
     logDebug(DDSROUTER, "Destroying DDS Router.");
+
+    // Stop Discovery Database
+    discovery_database_->stop();
 
     // Stop all communications
     stop_();
@@ -256,6 +259,17 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
         thread_pool_->enable();
 
         activate_all_topics_();
+
+        // Enable services discovered while router disabled
+        for (auto it : current_services_)
+        {
+            // Enable only allowed services
+            if (it.second)
+            {
+                rpc_bridges_[it.first]->enable();
+            }
+        }
+
         return utils::ReturnCode::RETCODE_OK;
     }
     else

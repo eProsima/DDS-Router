@@ -38,16 +38,11 @@ DiscoveryDatabase::DiscoveryDatabase() noexcept
 DiscoveryDatabase::~DiscoveryDatabase()
 {
     logDebug(DDSROUTER_DISCOVERY_DATABASE, "Destroying Discovery Database.");
-    {
-        std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
-        exit_.store(true);
-    }
-    entities_to_process_cv_.notify_one();
 
-    disable();
+    stop();
 }
 
-void DiscoveryDatabase::enable() noexcept
+void DiscoveryDatabase::start() noexcept
 {
     if (!enabled_.load())
     {
@@ -57,14 +52,22 @@ void DiscoveryDatabase::enable() noexcept
     }
     else
     {
-        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Processing thread routine already enabled.");
+        logDebug(DDSROUTER_DISCOVERY_DATABASE, "Processing thread routine already started.");
     }
 }
 
-void DiscoveryDatabase::disable() noexcept
+void DiscoveryDatabase::stop() noexcept
 {
     if (enabled_.load())
     {
+        clear_all_callbacks();
+
+        {
+            std::lock_guard<std::mutex> lock(entities_to_process_cv_mutex_);
+            exit_.store(true);
+        }
+        entities_to_process_cv_.notify_one();
+
         logDebug(DDSROUTER_DISCOVERY_DATABASE, "Waiting for queue processing thread to finish.");
         enabled_.store(false);
         queue_processing_thread_.join();
@@ -102,98 +105,108 @@ bool DiscoveryDatabase::endpoint_exists(
 bool DiscoveryDatabase::add_endpoint_(
         const Endpoint& new_endpoint)
 {
-    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
-
-    auto it = entities_.find(new_endpoint.guid());
-    if (it != entities_.end())
     {
-        // Already exists
-        if (it->second.active())
+        std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+
+        auto it = entities_.find(new_endpoint.guid());
+        if (it != entities_.end())
         {
-            throw utils::InconsistencyException(
-                      utils::Formatter() <<
-                          "Error adding Endpoint to database. Endpoint already exists." << new_endpoint);
+            // Already exists
+            if (it->second.active())
+            {
+                throw utils::InconsistencyException(
+                          utils::Formatter() <<
+                              "Error adding Endpoint to database. Endpoint already exists." << new_endpoint);
+            }
+            else
+            {
+                // If exists but inactive, modify entry
+                it->second = new_endpoint;
+
+                logInfo(DDSROUTER_DISCOVERY_DATABASE,
+                        "Modifying an already discovered (inactive) Endpoint " << new_endpoint << ".");
+
+                return true;
+            }
         }
         else
         {
-            // If exists but inactive, modify entry
-            it->second = new_endpoint;
+            logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
 
-            logInfo(DDSROUTER_DISCOVERY_DATABASE,
-                    "Modifying an already discovered (inactive) Endpoint " << new_endpoint << ".");
-
-            return true;
+            // Add it to the dictionary
+            entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
         }
     }
-    else
+
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+    for (auto added_endpoint_callback : added_endpoint_callbacks_)
     {
-        // Add it to the dictionary
-        entities_.insert(std::pair<Guid, Endpoint>(new_endpoint.guid(), new_endpoint));
-
-        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Inserting a new discovered Endpoint " << new_endpoint << ".");
-
-        for (auto added_endpoint_callback : added_endpoint_callbacks_)
-        {
-            added_endpoint_callback(new_endpoint);
-        }
-
-        return true;
+        added_endpoint_callback(new_endpoint);
     }
+
+    return true;
 }
 
 bool DiscoveryDatabase::update_endpoint_(
         const Endpoint& endpoint_to_update)
 {
-    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
-
-    auto it = entities_.find(endpoint_to_update.guid());
-    if (it == entities_.end())
     {
-        // Entry not found
-        throw utils::InconsistencyException(
-                  utils::Formatter() <<
-                      "Error updating Endpoint in database. Endpoint entry not found." << endpoint_to_update);
-    }
-    else
-    {
-        // Modify entry
-        it->second = endpoint_to_update;
-        // It is assumed a topic cannot change, otherwise further actions may be taken
+        std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
-        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Modifying an already discovered Endpoint " << endpoint_to_update << ".");
-
-        for (auto updated_endpoint_callback : updated_endpoint_callbacks_)
+        auto it = entities_.find(endpoint_to_update.guid());
+        if (it == entities_.end())
         {
-            updated_endpoint_callback(endpoint_to_update);
+            // Entry not found
+            throw utils::InconsistencyException(
+                      utils::Formatter() <<
+                          "Error updating Endpoint in database. Endpoint entry not found." << endpoint_to_update);
         }
+        else
+        {
+            logInfo(DDSROUTER_DISCOVERY_DATABASE,
+                    "Modifying an already discovered Endpoint " << endpoint_to_update << ".");
 
-        return true;
+            // Modify entry
+            it->second = endpoint_to_update;
+            // It is assumed a topic cannot change, otherwise further actions may be taken
+        }
     }
+
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+    for (auto updated_endpoint_callback : updated_endpoint_callbacks_)
+    {
+        updated_endpoint_callback(endpoint_to_update);
+    }
+
+    return true;
 }
 
 utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
         const Endpoint& endpoint_to_erase)
 {
-    std::unique_lock<std::shared_timed_mutex> lock(mutex_);
-
-    auto erased = entities_.erase(endpoint_to_erase.guid());
-
-    if (erased == 0)
     {
-        throw utils::InconsistencyException(
-                  utils::Formatter() <<
-                      "Error erasing Endpoint " << endpoint_to_erase <<
-                      " from database. Endpoint entry not found.");
-    }
-    else
-    {
-        for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
+        std::unique_lock<std::shared_timed_mutex> lock(mutex_);
+
+        logInfo(DDSROUTER_DISCOVERY_DATABASE, "Erasing Endpoint " << endpoint_to_erase << ".");
+
+        auto erased = entities_.erase(endpoint_to_erase.guid());
+
+        if (erased == 0)
         {
-            erased_endpoint_callback(endpoint_to_erase);
+            throw utils::InconsistencyException(
+                      utils::Formatter() <<
+                          "Error erasing Endpoint " << endpoint_to_erase <<
+                          " from database. Endpoint entry not found.");
         }
-
-        return utils::ReturnCode::RETCODE_OK;
     }
+
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+    for (auto erased_endpoint_callback : erased_endpoint_callbacks_)
+    {
+        erased_endpoint_callback(endpoint_to_erase);
+    }
+
+    return utils::ReturnCode::RETCODE_OK;
 }
 
 void DiscoveryDatabase::add_endpoint(
@@ -234,19 +247,34 @@ Endpoint DiscoveryDatabase::get_endpoint(
 void DiscoveryDatabase::add_endpoint_discovered_callback(
         std::function<void(Endpoint)> endpoint_discovered_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+
     added_endpoint_callbacks_.push_back(endpoint_discovered_callback);
 }
 
 void DiscoveryDatabase::add_endpoint_updated_callback(
         std::function<void(Endpoint)> endpoint_updated_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+
     updated_endpoint_callbacks_.push_back(endpoint_updated_callback);
 }
 
 void DiscoveryDatabase::add_endpoint_erased_callback(
         std::function<void(Endpoint)> endpoint_erased_callback) noexcept
 {
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+
     erased_endpoint_callbacks_.push_back(endpoint_erased_callback);
+}
+
+void DiscoveryDatabase::clear_all_callbacks() noexcept
+{
+    std::lock_guard<std::mutex> lock(callbacks_mutex_);
+
+    added_endpoint_callbacks_.clear();
+    updated_endpoint_callbacks_.clear();
+    erased_endpoint_callbacks_.clear();
 }
 
 void DiscoveryDatabase::queue_processing_thread_routine_() noexcept

@@ -88,6 +88,9 @@ Writer::Writer(
                       participant_id << " in topic " << topic_ << ".");
     }
 
+    // Set listener after successful creation
+    rtps_writer_->set_listener(this);
+
     // Register writer with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
     fastrtps::WriterQos writer_qos = writer_qos_();

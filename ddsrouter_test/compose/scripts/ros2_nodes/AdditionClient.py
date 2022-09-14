@@ -52,6 +52,10 @@ class AdditionClient(Node):
             f'Running Client Addition for {samples} samples.')
 
         while samples > 0:
+            # Sleep a minimum amount of time
+            if wait:
+                sleep_random_time(0.1, 0.2)
+
             # Generate random numbers
             a = random.randint(0, 100)
             b = random.randint(0, 100)
@@ -65,10 +69,6 @@ class AdditionClient(Node):
 
             # Decrement samples
             samples -= 1
-
-            # Sleep a minimum amount of time
-            if wait:
-                sleep_random_time(0.1, 0.2)
 
         return True
 

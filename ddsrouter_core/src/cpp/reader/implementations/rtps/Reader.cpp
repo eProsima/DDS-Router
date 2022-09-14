@@ -51,16 +51,16 @@ Reader::Reader(
         payload_pool_,
         rtps_history_);
 
-    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
-    // invoked before the variable is fully set)
-    rtps_reader_->setListener(this);
-
     if (!rtps_reader_)
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
                       participant_id << " in topic " << topic_ << ".");
     }
+
+    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
+    // invoked before the variable is fully set)
+    rtps_reader_->setListener(this);
 
     // Register reader with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
@@ -104,7 +104,7 @@ types::Guid Reader::guid() const noexcept
     return rtps_reader_->getGuid();
 }
 
-RecursiveTimedMutex& Reader::get_internal_mutex() const noexcept
+RecursiveTimedMutex& Reader::get_rtps_mutex() const noexcept
 {
     return rtps_reader_->getMutex();
 }
@@ -193,7 +193,7 @@ void Reader::enable_() noexcept
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
     if (topic_.topic_reliable())
     {
-        std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_internal_mutex());
+        std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_rtps_mutex());
         on_data_available_();
     }
 }

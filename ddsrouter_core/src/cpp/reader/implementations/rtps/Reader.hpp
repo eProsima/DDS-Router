@@ -109,7 +109,7 @@ public:
     types::Guid guid() const noexcept;
 
     //! Get internal RTPS reader mutex
-    RecursiveTimedMutex& get_internal_mutex() const noexcept;
+    RecursiveTimedMutex& get_rtps_mutex() const noexcept;
 
     //! Get number of unread cache changes in internal RTPS reader
     uint64_t get_unread_count() const noexcept;

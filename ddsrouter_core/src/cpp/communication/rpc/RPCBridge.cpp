@@ -281,7 +281,7 @@ void RPCBridge::data_available_(
                 " has data ready to be sent in reader " << reader_guid << " .");
 
         // Protected by internal RTPS Reader mutex, as called within \c onNewCacheChangeAdded callback
-
+        // This method is also called from Reader's \c enable_ , so Reader's mutex must also be taken there beforehand
         std::pair<bool, utils::TaskId>& task = tasks_map_[reader_guid];
         if (!task.first)
         {
@@ -307,18 +307,26 @@ void RPCBridge::transmit_(
     logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
             " transmitting for reader " << reader->guid() << " .");
 
-    while (enabled_)
+    while (true)
     {
         {
-            std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(reader->get_internal_mutex());
+            std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(reader->get_rtps_mutex());
 
-            if (!(reader->get_unread_count() > 0))
+            if (!enabled_ || !(reader->get_unread_count() > 0))
             {
-                // No more data to be read -> finish transmission
-                tasks_map_[reader->guid()].first = false;
+                if (!enabled_)
+                {
+                    logDebug(DDSROUTER_RPCBRIDGE,
+                            "RPCBridge service " << *this << " finishing transmitting: bridge disabled.");
+                }
+                else
+                {
+                    logDebug(DDSROUTER_RPCBRIDGE,
+                            "RPCBridge service " << *this << " finishing transmitting: no more data available.");
+                }
 
-                logDebug(DDSROUTER_RPCBRIDGE,
-                        "RPCBridge service " << *this << " finishing transmitting because no more data available.");
+                // Finish transmission
+                tasks_map_[reader->guid()].first = false;
 
                 return;
             }
@@ -365,6 +373,9 @@ void RPCBridge::transmit_(
                     continue;
                 }
 
+                // Perform write + add entry to registry atomically -> avoid reply processed before entry added to registry
+                std::lock_guard<std::recursive_mutex> lock(request_writers_[service_registry.first]->get_mutex());
+
                 eprosima::fastrtps::rtps::WriteParams wparams;
                 eprosima::fastrtps::rtps::SequenceNumber_t sequence_number;
 
@@ -404,10 +415,15 @@ void RPCBridge::transmit_(
             }
             else
             {
-                // Fetch information required for transmission; which proxy server should send it and with what parameters
-                std::pair<ParticipantId,
-                        SampleIdentity> registry_entry = service_registries_[reader->participant_id()]->get(
-                    data->write_params.sample_identity().sequence_number());
+                std::pair<ParticipantId, SampleIdentity> registry_entry;
+                {
+                    // Wait for request transmission to be finished (entry added to registry)
+                    std::lock_guard<std::recursive_mutex> lock(request_writers_[reader->participant_id()]->get_mutex());
+
+                    // Fetch information required for transmission; which proxy server should send it and with what parameters
+                    registry_entry = service_registries_[reader->participant_id()]->get(
+                        data->write_params.sample_identity().sequence_number());
+                }
 
                 // Not valid means:
                 //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
@@ -439,13 +455,6 @@ void RPCBridge::transmit_(
 
         payload_pool_->release_payload(data->payload);
     }
-
-    logDebug(DDSROUTER_RPCBRIDGE,
-            "RPCBridge service " << *this << " finishing transmitting.");
-
-    // No need to take internal mutex as bridge is disabled (and cannot be enabled until \c disable releases bridge
-    // mutex, which cannot occur until this thread releases transmission mutex), so \c data_available_ won't take effect
-    tasks_map_[reader->guid()].first = false;
 }
 
 void RPCBridge::create_slot_(
