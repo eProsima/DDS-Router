@@ -47,6 +47,7 @@ TEST(YamlTagsTest, yaml_tags)
         TLS_PRIVATE_KEY_TAG,
         TLS_CERT_TAG,
         TLS_DHPARAMS_TAG,
+        TLS_SNI_HOST_TAG,
         ADDRESS_IP_TAG,
         ADDRESS_DNS_TAG,
         ADDRESS_PORT_TAG,
