@@ -32,6 +32,7 @@ namespace test {
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
+constexpr const uint32_t DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION = 500;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
 /**
@@ -97,13 +98,11 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
  * The reliable option changes the test behavior to verify that the communication is reliable and all old data is sent
  * to Late Joiners.
  */
-template <class MsgStruct>
-void test_local_communication(
+void test_local_communication_key_dispose(
         configuration::DDSRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
-        bool reliable = false)
+        uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
@@ -113,7 +112,7 @@ void test_local_communication(
     std::atomic<uint32_t> samples_received(0);
 
     // Create a message with size specified by repeating the same string
-    MsgStruct msg;
+    HelloWorldKeyed msg;
     std::string msg_str;
 
     // Add this string as many times as the msg size requires
@@ -122,63 +121,59 @@ void test_local_communication(
         msg_str += "Testing DDSRouter Blackbox Local Communication ...";
     }
     msg.message(msg_str);
+    msg.id(666);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<MsgStruct> publisher(msg.isKeyDefined());
+    TestPublisher<HelloWorldKeyed> publisher(msg.isKeyDefined());
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), reliable);
+    TestSubscriber<HelloWorldKeyed> subscriber(msg.isKeyDefined());
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DDSRouter entity
     // The DDS Router does not start here in order to test a reliable communication
     DDSRouter router(ddsrouter_configuration);
 
-    if (reliable)
+    // Start DDS Router
+    router.start();
+
+    // Start publishing
+    while (samples_received.load() < samples_to_receive)
     {
-        // To check that the communication is reliable and all previous published samples are sent to late joiner,
-        // the publisher publish all data at once.
-        for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
+        msg.index(++samples_sent);
+        ASSERT_TRUE(publisher.publish(msg)) << samples_sent;
+
+        // If time is 0 do not wait
+        if (time_between_samples > 0)
         {
-            msg.index(samples_sent);
-            ASSERT_TRUE(publisher.publish(msg));
-
-            // If time is 0 do not wait
-            if (time_between_samples > 0)
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
-            }
-        }
-
-        // Once the publisher has already publish all its samples, the DDS Router starts.
-        router.start();
-
-        // The subscriber should receive all samples sent by the publisher when the communication was not
-        // already established.
-        while (samples_received.load() < samples_to_receive)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
         }
     }
-    else
+
+    // All samples received, now dispose key from publisher and check that subscriber has receive it
+    ASSERT_TRUE(publisher.dispose_key(msg) == ReturnCode_t::RETCODE_OK);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
+    samples_received.store(0);
+
+    // Keep publishing
+    while (samples_received.load() < samples_to_receive)
     {
-        // Start DDS Router
-        router.start();
+        msg.index(++samples_sent);
+        ASSERT_TRUE(publisher.publish(msg)) << samples_sent;
 
-        // Start publishing
-        while (samples_received.load() < samples_to_receive)
+        // If time is 0 do not wait
+        if (time_between_samples > 0)
         {
-            msg.index(++samples_sent);
-            publisher.publish(msg);
-
-            // If time is 0 do not wait
-            if (time_between_samples > 0)
-            {
-                std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
-            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
         }
     }
+
+    // All samples received, now dispose key from publisher and check that subscriber has receive it
+    ASSERT_TRUE(publisher.dispose_key(msg) == ReturnCode_t::RETCODE_OK);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
+
+    ASSERT_EQ(2u, subscriber.n_disposed());
 
     router.stop();
 }
@@ -192,103 +187,13 @@ using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
 /**
- * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- */
-TEST(DDSTestLocal, end_to_end_local_communication)
-{
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration());
-}
-
-/**
- * Test communication in HelloWorldKeyed topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- */
-TEST(DDSTestLocal, end_to_end_local_communication_keyed)
-{
-    test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration());
-}
-
-/**
- * Test communication both in HelloWorld and HelloWorldKeyed topics between two DDS participants created in
- * different domains, by using a router with two Simple Participants at each domain.
- * In this test allowlist and blocklist are left empty, while only builtin topics are provided.
- */
-TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
-{
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(true));
-}
-
-TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
-{
-    test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration(true));
-}
-
-/**
- * Test high frequency communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- *
- * PARAMETERS:
- * - Frequency: max
- */
-TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
-{
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        1000,   // wait for 1000 samples received
-        0);     // send it without waiting from one sample to the other
-}
-
-/**
- * Test high message size communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- *
- * PARAMETERS:
- * - Sample size: 500K
- */
-TEST(DDSTestLocal, end_to_end_local_communication_high_size)
-{
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        test::DEFAULT_SAMPLES_TO_RECEIVE,
-        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        10000); // 500K message size
-}
-
-/**
- * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
- *
- * PARAMETERS:
- * - Frequency: 1ms
- * - Sample size: 50K
- * -> Throughput: 50MBps
- */
-TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
-{
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        500,
-        1,
-        1000); // 50K message size
-}
-
-/**
  * Test reliable communication in HelloWorld topic between two DDS participants created in different domains,
  * by using a router with two Simple Participants at each domain.
  */
-TEST(DDSTestLocal, end_to_end_local_communication_reliable)
+TEST(DDSTestLocalDisposeKey, end_to_end_local_communication_key_dispose)
 {
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(true, true),
-        test::DEFAULT_SAMPLES_TO_RECEIVE,
-        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        test::DEFAULT_MESSAGE_SIZE,
-        true);
+    test::test_local_communication_key_dispose(
+        test::dds_test_simple_configuration());
 }
 
 int main(
