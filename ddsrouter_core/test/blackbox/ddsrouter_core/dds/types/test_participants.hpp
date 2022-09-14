@@ -47,6 +47,7 @@
 #include <fastrtps/attributes/PublisherAttributes.h>
 #include <fastrtps/attributes/SubscriberAttributes.h>
 #include <fastrtps/xmlparser/XMLProfileManager.h>
+#include <fastdds/dds/common/InstanceHandle.hpp>
 
 #include "HelloWorld/HelloWorldPubSubTypes.h"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
@@ -159,12 +160,21 @@ public:
     }
 
     //! Publish a sample
-    void publish(
+    bool publish(
             MsgStruct msg)
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
-        ASSERT_TRUE(writer_->write(&hello_));
+        return writer_->write(&hello_);
+    }
+
+    //! Publish a sample
+    eprosima::fastrtps::types::ReturnCode_t dispose_key(
+            MsgStruct msg)
+    {
+        hello_.index(msg.index());
+        hello_.message(msg.message());
+        return writer_->dispose(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
     }
 
     void wait_discovery(
@@ -237,6 +247,16 @@ private:
     }
     listener_;
 };
+
+template <>
+bool TestPublisher<HelloWorldKeyed>::publish(
+        HelloWorldKeyed msg)
+{
+    hello_.index(msg.index());
+    hello_.message(msg.message());
+    hello_.id(msg.id());
+    return writer_->write(&hello_);
+}
 
 /**
  * Class used to group into a single working unit a Subscriber with a DataReader, its listener, and a TypeSupport member
@@ -356,6 +376,11 @@ public:
         listener_.wait_discovery(n_publishers);
     }
 
+    uint32_t n_disposed() const
+    {
+        return listener_.n_key_disposed_;
+    }
+
 private:
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
@@ -389,6 +414,7 @@ private:
         {
             msg_should_receive_ = msg_should_receive;
             samples_received_ = samples_received;
+            n_key_disposed_ = 0;
         }
 
         void wait_discovery(
@@ -420,6 +446,10 @@ private:
                         (*samples_received_)++;
                     }
                 }
+                else if(info.instance_state == eprosima::fastdds::dds::NOT_ALIVE_DISPOSED_INSTANCE_STATE)
+                {
+                    n_key_disposed_++;
+                }
             }
             ASSERT_TRUE(success);
         }
@@ -439,10 +469,10 @@ private:
             }
         }
 
-    private:
-
         //! Placeholder where received data is stored
         MsgStruct msg_received_;
+
+        std::atomic<std::uint32_t> n_key_disposed_;
 
         //! Reference to the sample sent by the publisher
         MsgStruct* msg_should_receive_;

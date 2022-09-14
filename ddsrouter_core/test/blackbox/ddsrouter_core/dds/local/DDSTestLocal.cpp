@@ -154,7 +154,7 @@ void test_local_communication(
         for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
             msg.index(samples_sent);
-            publisher.publish(msg);
+            ASSERT_TRUE(publisher.publish(msg));
 
             // If time is 0 do not wait
             if (time_between_samples > 0)
