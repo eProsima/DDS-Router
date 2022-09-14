@@ -395,7 +395,7 @@ void RPCBridge::transmit_(
 
                     // Add entry to registry associated to the transmission of this request through this proxy client.
                     service_registry.second->add(sequence_number, {data->participant_receiver,
-                                                                reply_related_sample_identity});
+                                                                   reply_related_sample_identity});
                 }
             }
         }
