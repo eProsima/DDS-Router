@@ -41,7 +41,7 @@ services:
       - cloud_edge_net
     volumes:
       - ./ddsrouter_cloud.yaml:/config.yaml
-    command: bash -c "source /root/DDS-Router/install/setup.bash && ddsrouter -c /config.yaml --timeout 10"
+    command: ddsrouter -c /config.yaml -d --timeout 15
 
   ddsrouter_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -53,7 +53,7 @@ services:
       - edge_1_net
     volumes:
       - ./ddsrouter_edge_1.yaml:/config.yaml
-    command: bash -c "source /root/DDS-Router/install/setup.bash && ddsrouter -c /config.yaml --timeout 10"
+    command: ddsrouter -c /config.yaml -d --timeout 15
 
   pub_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -73,7 +73,7 @@ services:
       - edge_1_net
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10 --domain 1
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 15 --domain 1
 
   ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -85,7 +85,7 @@ services:
       - edge_2_net
     volumes:
       - ./ddsrouter_edge_2.yaml:/config.yaml
-    command: bash -c "source /root/DDS-Router/install/setup.bash && ddsrouter -c /config.yaml --timeout 10"
+    command: ddsrouter -c /config.yaml -d --timeout 15
 
   sub_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - edge_2_net
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 10 --domain 2
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 10 --timeout 15 --domain 2
 
 networks:
   edge_1_net:

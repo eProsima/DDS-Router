@@ -1,7 +1,7 @@
 version: v3.0
 
-allowlist:
-  - name: "*addition_service*"
+# allowlist:
+#   - name: "*addition_service*"
 
 participants:
 

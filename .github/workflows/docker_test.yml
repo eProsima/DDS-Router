@@ -107,5 +107,16 @@ jobs:
             --event-handlers console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
+              -R discovery_server \
+              --repeat-until-fail 200 \
+              --label-exclude xfail \
+              --timeout 60
+          colcon test \
+            --packages-select ddsrouter_test \
+            --event-handlers console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              -R ros2_services \
+              --repeat-until-fail 200 \
               --label-exclude xfail \
               --timeout 60
