@@ -147,8 +147,8 @@ void Writer::onWriterMatched(
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
-        {
+        // if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
+        // {
             if (info.status == fastrtps::rtps::MATCHED_MATCHING)
             {
                 // logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
@@ -161,7 +161,7 @@ void Writer::onWriterMatched(
             //     logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
             //             topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
             // }
-        }
+        // }
     }
 }
 

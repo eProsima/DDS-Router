@@ -192,13 +192,13 @@ void Reader::enable_() noexcept
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
     std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_internal_mutex());
-    if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
-    {
+    // if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
+    // {
         logWarning(DDSROUTER_RTPS_READER_LISTENER, "FAKE data available in Reader " << *this);
         // std::cout << std::endl;
         // std::cout << "FAKE data available in Reader " << *this << std::endl;
         // std::cout << std::endl;
-    }
+    // }
     on_data_available_();
 }
 
@@ -363,8 +363,8 @@ void Reader::onReaderMatched(
 {
     if (!come_from_this_participant_(info.remoteEndpointGuid))
     {
-        if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
-        {
+        // if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
+        // {
             if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
             {
                 logWarning(DDSROUTER_RTPS_READER_LISTENER, "Reader " << *this << " matched with a new Writer");
@@ -375,7 +375,7 @@ void Reader::onReaderMatched(
                 logWarning(DDSROUTER_RTPS_READER_LISTENER,
                         "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
             }
-        }
+        // }
     }
 }
 

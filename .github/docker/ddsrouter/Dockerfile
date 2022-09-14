@@ -51,7 +51,7 @@ RUN mkdir src && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
     cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
-    colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON
+    colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON -DINTERNAL_DEBUG=ON
 
 COPY run.bash /root/run.bash
 
