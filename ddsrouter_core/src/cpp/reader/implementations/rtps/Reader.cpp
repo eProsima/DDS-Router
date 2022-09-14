@@ -313,13 +313,13 @@ void Reader::onNewCacheChangeAdded(
             // logDebug(DDSROUTER_RTPS_READER_LISTENER,
             //         "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
             //         change->writerGUID);
-            if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
-            {
+            // if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
+            // {
                 logWarning(DDSROUTER_RTPS_READER_LISTENER, "Data arrived to Reader " << *this);
                 // std::cout << std::endl;
                 // std::cout << "Data arrived to Reader " << *this << std::endl;
                 // std::cout << std::endl;
-            }
+            // }
             on_data_available_();
         }
         else
@@ -327,14 +327,14 @@ void Reader::onNewCacheChangeAdded(
             // logDebug(DDSROUTER_RTPS_READER_LISTENER,
             //         "Data arrived to (DISABLED) Reader " << *this << " with payload " << change->serializedPayload << " from " <<
             //         change->writerGUID);
-            
-            if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
-            {
+
+            // if (topic_.topic_name() == "rq/addition_serviceRequest" || topic_.topic_name() == "rr/addition_serviceReply")
+            // {
                 logError(DDSROUTER_RTPS_READER_LISTENER, " ##################################################################### Data arrived to DISABLED Reader " << *this);
                 // std::cout << "##################################################################" << std::endl;
                 // std::cout << "Data arrived to DISABLED Reader " << *this << std::endl;
                 // std::cout << "##################################################################" << std::endl;
-            }
+            // }
 
             // Remove received change if the Reader is disabled and the topic is not reliable
             if (!topic_.topic_reliable())
