@@ -360,42 +360,43 @@ void RPCBridge::transmit_(
                 logWarning(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << topic_ <<
                         " received ill-formed request from remote endpoint " << data->source_guid << ". Ignoring...");
-                break;
             }
-
-            for (auto& service_registry : service_registries_)
+            else
             {
-                // Do not send request through same participant who received it (unless repeater), or if there are no servers to process it
-                if ((data->participant_receiver == service_registry.first &&
-                        !participants_->get_participant(service_registry.first)->is_repeater()) ||
-                        !service_registry.second->enabled())
+                for (auto& service_registry : service_registries_)
                 {
-                    continue;
+                    // Do not send request through same participant who received it (unless repeater), or if there are no servers to process it
+                    if ((data->participant_receiver == service_registry.first &&
+                            !participants_->get_participant(service_registry.first)->is_repeater()) ||
+                            !service_registry.second->enabled())
+                    {
+                        continue;
+                    }
+
+                    // Perform write + add entry to registry atomically -> avoid reply processed before entry added to registry
+                    std::lock_guard<std::recursive_mutex> lock(request_writers_[service_registry.first]->get_mutex());
+
+                    eprosima::fastrtps::rtps::WriteParams wparams;
+                    eprosima::fastrtps::rtps::SequenceNumber_t sequence_number;
+
+                    // Attach the information the server needs in order to reply to the appropiate proxy client.
+                    // Thread-safe as registry's related_sample_identity is set only in creation, when this writer is still disabled.
+                    // Also note that concurrent \c write_ operations in the same \c RequestWriter are not possible, as \c write from parent \c BaseWriter is guarded.
+                    wparams.related_sample_identity(service_registry.second->related_sample_identity_nts());
+
+                    ret = request_writers_[service_registry.first]->write(data, wparams, sequence_number);
+
+                    if (!ret)
+                    {
+                        logWarning(DDSROUTER_RPCBRIDGE, "Error writting request in RPCBridge for service "
+                                << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
+                        continue;
+                    }
+
+                    // Add entry to registry associated to the transmission of this request through this proxy client.
+                    service_registry.second->add(sequence_number, {data->participant_receiver,
+                                                                reply_related_sample_identity});
                 }
-
-                // Perform write + add entry to registry atomically -> avoid reply processed before entry added to registry
-                std::lock_guard<std::recursive_mutex> lock(request_writers_[service_registry.first]->get_mutex());
-
-                eprosima::fastrtps::rtps::WriteParams wparams;
-                eprosima::fastrtps::rtps::SequenceNumber_t sequence_number;
-
-                // Attach the information the server needs in order to reply to the appropiate proxy client.
-                // Thread-safe as registry's related_sample_identity is set only in creation, when this writer is still disabled.
-                // Also note that concurrent \c write_ operations in the same \c RequestWriter are not possible, as \c write from parent \c BaseWriter is guarded.
-                wparams.related_sample_identity(service_registry.second->related_sample_identity_nts());
-
-                ret = request_writers_[service_registry.first]->write(data, wparams, sequence_number);
-
-                if (!ret)
-                {
-                    logWarning(DDSROUTER_RPCBRIDGE, "Error writting request in RPCBridge for service "
-                            << topic_ << ". Error code " << ret << ". Skipping data for this writer and continue.");
-                    continue;
-                }
-
-                // Add entry to registry associated to the transmission of this request through this proxy client.
-                service_registry.second->add(sequence_number, {data->participant_receiver,
-                                                               reply_related_sample_identity});
             }
         }
         else if (RPCTopic::is_reply_topic(reader->topic()))
