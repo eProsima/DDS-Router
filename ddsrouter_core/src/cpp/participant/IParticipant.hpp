@@ -16,8 +16,8 @@
  * @file IParticipant.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
-#define __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_
+#ifndef __SRC_DDSROUTERCORE_PARTICIPANT_IPARTICIPANT_HPP_
+#define __SRC_DDSROUTERCORE_PARTICIPANT_IPARTICIPANT_HPP_
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
@@ -130,4 +130,4 @@ public:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IDDS_ROUTERPARTICIPANT_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_PARTICIPANT_IPARTICIPANT_HPP_ */
