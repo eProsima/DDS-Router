@@ -120,6 +120,16 @@ utils::ReturnCode BaseReader::take(
     }
 }
 
+ParticipantId BaseReader::participant_id() const noexcept
+{
+    return participant_id_;
+}
+
+RealTopic BaseReader::topic() const noexcept
+{
+    return topic_;
+}
+
 void BaseReader::on_data_available_() const noexcept
 {
     if (on_data_available_lambda_set_)

@@ -21,15 +21,12 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/RTPSDomain.h>
 
+#include <participant/implementations/rtps/CommonParticipant.hpp>
+
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
-
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
-#include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -119,11 +116,11 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_(
     // Create Endpoint
     if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::ReaderDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::reader, info_guid, info_qos, info_topic, this->id_nts_());
     }
     else if (std::is_same<DiscoveryInfoKind, fastrtps::rtps::WriterDiscoveryInfo>::value)
     {
-        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic);
+        return types::Endpoint(types::EndpointKind::writer, info_guid, info_qos, info_topic, this->id_nts_());
     }
     else
     {
@@ -157,15 +154,13 @@ void CommonParticipant::onReaderDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " removed.");
 
-            info_reader.active(false);
-            this->discovery_database_->update_endpoint(info_reader);
+            this->discovery_database_->erase_endpoint(info_reader);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Reader " << info.info.guid() << " dropped.");
 
-            info_reader.active(false);
-            this->discovery_database_->update_endpoint(info_reader);
+            this->discovery_database_->erase_endpoint(info_reader);
         }
     }
 }
@@ -195,15 +190,13 @@ void CommonParticipant::onWriterDiscovery(
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " removed.");
 
-            info_writer.active(false);
-            this->discovery_database_->update_endpoint(info_writer);
+            this->discovery_database_->erase_endpoint(info_writer);
         }
         else
         {
             logInfo(DDSROUTER_DISCOVERY, "Writer " << info.info.guid() << " dropped.");
 
-            info_writer.active(false);
-            this->discovery_database_->update_endpoint(info_writer);
+            this->discovery_database_->erase_endpoint(info_writer);
         }
     }
 }

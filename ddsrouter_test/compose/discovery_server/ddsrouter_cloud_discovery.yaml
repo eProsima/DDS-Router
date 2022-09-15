@@ -1,12 +1,6 @@
 version: v3.0
 
-blocklist:
-  - name: "*"
-
 participants:
-
-  - name: EchoParticipant
-    kind: echo
 
   - name: Cloud_Discovery_Server_Participant
     kind: wan-ds

@@ -1,0 +1,11 @@
+version: v3.0
+
+participants:
+
+  - name: Participant_10
+    kind: simple
+    domain: 10
+
+  - name: Participant_2
+    kind: simple
+    domain: 2

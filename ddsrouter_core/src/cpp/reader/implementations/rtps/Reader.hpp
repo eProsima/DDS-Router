@@ -19,6 +19,8 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_READER_HPP_
 
+#include <mutex>
+
 #include <fastdds/rtps/rtps_fwd.h>
 #include <fastrtps/rtps/attributes/HistoryAttributes.h>
 #include <fastrtps/attributes/TopicAttributes.h>
@@ -27,15 +29,19 @@
 #include <fastrtps/rtps/attributes/ReaderAttributes.h>
 #include <fastrtps/rtps/reader/RTPSReader.h>
 #include <fastrtps/rtps/reader/ReaderListener.h>
+#include <fastrtps/utils/TimedMutex.hpp>
 
 #include <reader/implementations/auxiliar/BaseReader.hpp>
 
+#include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace rtps {
+
+using RecursiveTimedMutex = eprosima::fastrtps::RecursiveTimedMutex;
 
 /**
  * Standard RTPS Reader with less restrictive Attributes.
@@ -99,6 +105,15 @@ public:
             fastrtps::rtps::RTPSReader*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
+    //! Get GUID of internal RTPS reader
+    types::Guid guid() const noexcept;
+
+    //! Get internal RTPS reader mutex
+    RecursiveTimedMutex& get_rtps_mutex() const noexcept;
+
+    //! Get number of unread cache changes in internal RTPS reader
+    uint64_t get_unread_count() const noexcept;
+
 protected:
 
     // Specific enable/disable do not need to be implemented
@@ -148,13 +163,17 @@ protected:
      *
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    // fastrtps::rtps::ReaderAttributes reader_attributes_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::rtps::ReaderAttributes reader_attributes_() noexcept;
 
     //! Default Topic Attributes to create Reader
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
     //! Default QoS Reader (must be the same as the attributes)
-    fastrtps::ReaderQos reader_qos_() const noexcept;
+    // fastrtps::ReaderQos reader_qos_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::ReaderQos reader_qos_() noexcept;
 
     /////
     // Reader specific methods

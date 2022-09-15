@@ -80,6 +80,20 @@ bool BaseParticipant::is_repeater() const noexcept
     return configuration_->is_repeater;
 }
 
+bool BaseParticipant::is_rtps_kind() const noexcept
+{
+    switch (kind())
+    {
+        case types::ParticipantKind::simple_rtps:
+        case types::ParticipantKind::local_discovery_server:
+        case types::ParticipantKind::wan_discovery_server:
+        case types::ParticipantKind::wan_initial_peers:
+            return true;
+        default:
+            return false;
+    }
+}
+
 std::shared_ptr<IWriter> BaseParticipant::create_writer(
         types::RealTopic topic)
 {

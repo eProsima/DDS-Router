@@ -95,6 +95,9 @@ void Track::enable() noexcept
         logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
         enabled_ = true;
 
+        // Enable writers before reader, to avoid starting a transmission (not protected with \c track_mutex_) which may
+        // attempt to write with a yet disabled writer
+
         // Enabling writers
         for (auto& writer_it : writers_)
         {
@@ -177,7 +180,6 @@ void Track::transmit_() noexcept
 
         // Get data received
         std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
-        data->participant_receiver = reader_participant_id_;
         utils::ReturnCode ret = reader_->take(data);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)

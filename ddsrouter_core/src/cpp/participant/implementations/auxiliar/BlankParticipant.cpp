@@ -48,6 +48,11 @@ bool BlankParticipant::is_repeater() const noexcept
     return false;
 }
 
+bool BlankParticipant::is_rtps_kind() const noexcept
+{
+    return false;
+}
+
 std::shared_ptr<IWriter> BlankParticipant::create_writer(
         RealTopic topic)
 {

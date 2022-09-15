@@ -49,8 +49,16 @@ struct Topic
     //! Topic name getter
     DDSROUTER_CORE_DllAPI const std::string& topic_name() const;
 
+    //! Topic name setter
+    DDSROUTER_CORE_DllAPI void topic_name(
+            const std::string& topic_name);
+
     //! Topic type name getter
     DDSROUTER_CORE_DllAPI const std::string& topic_type() const;
+
+    //! Topic type setter
+    DDSROUTER_CORE_DllAPI void topic_type(
+            const std::string& topic_type);
 
     //! Topic kind getter
     DDSROUTER_CORE_DllAPI bool topic_with_key() const;

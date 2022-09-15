@@ -77,10 +77,15 @@ utils::ReturnCode BaseWriter::write(
     }
     else
     {
-        logDevError(DDSROUTER_BASEREADER, "Attempt to write data from disabled Writer in topic " <<
+        logDevError(DDSROUTER_BASEWRITER, "Attempt to write data from disabled Writer in topic " <<
                 topic_ << " in Participant " << participant_id_);
         return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
+}
+
+std::recursive_mutex& BaseWriter::get_mutex()
+{
+    return mutex_;
 }
 
 void BaseWriter::enable_() noexcept

@@ -58,7 +58,7 @@ public:
      * @brief Construct a new DiscoveryDatabase object
      *
      * Create a thread in charge of processing DB transactions stored in a queue.
-     * Call enable() function to enable the DiscoveryDatabase.
+     * Call \c start() function to enable the DiscoveryDatabase.
      */
     DiscoveryDatabase() noexcept;
 
@@ -79,14 +79,14 @@ public:
      * The builtin topics may have special topic configurations not detected in discovery
      * that would mean that the topic does not have the correct configuration.
      */
-    void enable() noexcept;
+    void start() noexcept;
 
     /**
      * @brief Stop the queue processing thread routine
      *
      * Join the thread in charge of processing the dynamic discovery of endpoints.
      */
-    void disable() noexcept;
+    void stop() noexcept;
 
     /**
      * @brief Whether a topic exists in any Endpoint in the database
@@ -152,7 +152,27 @@ public:
     void add_endpoint_discovered_callback(
             std::function<void(types::Endpoint)> endpoint_discovered_callback) noexcept;
 
-    // TODO add methods to register updated_endpoint and erased_endpoint callbacks
+    /**
+     * @brief Add callback to be called when an Endpoint has been updated
+     *
+     * @param [in] endpoint_updated_callback: callback to add
+     */
+    void add_endpoint_updated_callback(
+            std::function<void(types::Endpoint)> endpoint_updated_callback) noexcept;
+
+    /**
+     * @brief Add callback to be called when an Endpoint has been erased
+     *
+     * @param [in] endpoint_erased_callback: callback to add
+     */
+    void add_endpoint_erased_callback(
+            std::function<void(types::Endpoint)> endpoint_erased_callback) noexcept;
+
+    /**
+     * @brief Remove all callbacks from all types (endpoint discovered, updated and erased)
+     *
+     */
+    void clear_all_callbacks() noexcept;
 
 protected:
 
@@ -179,12 +199,12 @@ protected:
     /**
      * @brief Erase an endpoint inside the database
      *
-     * @param [in] guid_of_endpoint_to_erase guid of endpoint that will be erased
+     * @param [in] endpoint_to_erase endpoint that will be erased
      * @return \c RETCODE_OK if correctly erased
-     * @throw \c InconsistencyException in case there is no entry associated to this guid
+     * @throw \c InconsistencyException in case there is no entry associated to this endpoint
      */
     utils::ReturnCode erase_endpoint_(
-            const types::Guid& guid_of_endpoint_to_erase);
+            const types::Endpoint& endpoint_to_erase);
 
     //! Routine performed by dedicated thread performing database operations
     void queue_processing_thread_routine_() noexcept;
@@ -213,7 +233,10 @@ protected:
     std::vector<std::function<void(types::Endpoint)>> updated_endpoint_callbacks_;
 
     //! Vector of callbacks to be called when an Endpoint is erased
-    std::vector<std::function<void(types::Guid)>> erased_endpoint_callbacks_;
+    std::vector<std::function<void(types::Endpoint)>> erased_endpoint_callbacks_;
+
+    //! Mutex to guard callbacks vectors
+    mutable std::mutex callbacks_mutex_;
 
     //! Queue storing database operations to be performed in a dedicated thread
     fastrtps::DBQueue<std::tuple<DatabaseOperation, types::Endpoint>> entities_to_process_;

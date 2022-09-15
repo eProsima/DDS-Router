@@ -62,17 +62,21 @@ DDSRouterImpl::DDSRouterImpl(
     discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
             std::placeholders::_1));
 
+    // Add callback to be called by the discovery database when an Endpoint is removed/dropped
+    discovery_database_->add_endpoint_erased_callback(std::bind(&DDSRouterImpl::removed_endpoint_, this,
+            std::placeholders::_1));
+
     // Init topic allowed
     init_allowed_topics_();
     // Load Participants
     init_participants_();
-    // Create Bridges
+    // Create Bridges for builtin topics
     init_bridges_();
     // Init discovery database
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
-    discovery_database_->enable();
+    discovery_database_->start();
 
 
     logDebug(DDSROUTER, "DDS Router created.");
@@ -82,11 +86,17 @@ DDSRouterImpl::~DDSRouterImpl()
 {
     logDebug(DDSROUTER, "Destroying DDS Router.");
 
+    // Stop Discovery Database
+    discovery_database_->stop();
+
     // Stop all communications
     stop_();
 
     // Destroy Bridges, so Writers and Readers are destroyed before the Databases
     bridges_.clear();
+
+    // Destroy RPCBridges, so Writers and Readers are destroyed before the Databases
+    rpc_bridges_.clear();
 
     // Destroy Participants
     while (!participants_database_->empty())
@@ -153,7 +163,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
 
         logDebug(DDSROUTER, "New DDS Router allowed topics configuration: " << allowed_topics_);
 
-        // It must change the configuration. Check every topic discovered and active if needed.
+        // It must change the configuration. Check every topic discovered and activate/deactivate it if needed.
         for (auto& topic_it : current_topics_)
         {
             // If topic is active and it is blocked, deactivate it
@@ -178,6 +188,21 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
         for (RealTopic topic : new_builtin_topics)
         {
             discovered_topic_(topic);
+        }
+
+        // Check every service discovered and activate/deactivate it if needed.
+        for (auto& service_it : current_services_)
+        {
+            if (allowed_topics_.is_service_allowed(service_it.first))
+            {
+                service_it.second = true;
+                rpc_bridges_[service_it.first]->enable();
+            }
+            else
+            {
+                service_it.second = false;
+                rpc_bridges_[service_it.first]->disable();
+            }
         }
 
         configuration_.reload(new_configuration);
@@ -234,6 +259,17 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
         thread_pool_->enable();
 
         activate_all_topics_();
+
+        // Enable services discovered while router disabled
+        for (auto it : current_services_)
+        {
+            // Enable only allowed services
+            if (it.second)
+            {
+                rpc_bridges_[it.first]->enable();
+            }
+        }
+
         return utils::ReturnCode::RETCODE_OK;
     }
     else
@@ -359,12 +395,90 @@ void DDSRouterImpl::discovered_topic_(
     }
 }
 
+void DDSRouterImpl::discovered_service_(
+        const RPCTopic& topic,
+        const ParticipantId& server_participant_id,
+        const GuidPrefix& server_guid_prefix) noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    logInfo(DDSROUTER, "Discovered service: " << topic << ".");
+
+    auto it_bridge = rpc_bridges_.find(topic);
+
+    if (it_bridge == rpc_bridges_.end())
+    {
+        // Create RPCBridge even if topic not allowed, as we need to store server in database
+        create_new_service(topic);
+
+        if (allowed_topics_.is_service_allowed(topic))
+        {
+            current_services_[topic] = true;
+        }
+        else
+        {
+            current_services_[topic] = false;
+        }
+    }
+
+    rpc_bridges_[topic]->discovered_service(server_participant_id, server_guid_prefix);
+    if (enabled_.load() && current_services_[topic])
+    {
+        rpc_bridges_[topic]->enable();
+    }
+}
+
+void DDSRouterImpl::removed_service_(
+        const RPCTopic& topic,
+        const ParticipantId& server_participant_id,
+        const GuidPrefix& server_guid_prefix) noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    logInfo(DDSROUTER, "Removed service: " << topic << ".");
+
+    auto it_bridge = rpc_bridges_.find(topic);
+
+    if (it_bridge != rpc_bridges_.end())
+    {
+        rpc_bridges_[topic]->removed_service(server_participant_id, server_guid_prefix);
+    }
+}
+
 void DDSRouterImpl::discovered_endpoint_(
         const Endpoint& endpoint) noexcept
 {
     logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
-    discovered_topic_(endpoint.topic());
+    RealTopic topic = endpoint.topic();
+    if (RPCTopic::is_service_topic(topic))
+    {
+        if (endpoint.is_server_endpoint())
+        {
+            // Service server discovered
+            discovered_service_(RPCTopic(topic), endpoint.discoverer_participant_id(), endpoint.guid().guid_prefix());
+        }
+    }
+    else
+    {
+        discovered_topic_(topic);
+    }
+}
+
+void DDSRouterImpl::removed_endpoint_(
+        const Endpoint& endpoint) noexcept
+{
+    logDebug(DDSROUTER, "Endpoint removed/dropped: " << endpoint << ".");
+
+    RealTopic topic = endpoint.topic();
+    if (RPCTopic::is_service_topic(topic))
+    {
+        if (endpoint.is_server_endpoint())
+        {
+            // Service server removed/dropped
+            removed_service_(RPCTopic(topic), endpoint.discoverer_participant_id(), endpoint.guid().guid_prefix());
+        }
+    }
 }
 
 void DDSRouterImpl::create_new_bridge(
@@ -377,7 +491,8 @@ void DDSRouterImpl::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<Bridge>(topic, participants_database_, payload_pool_, thread_pool_, enabled);
+        bridges_[topic] = std::make_unique<DDSBridge>(topic, participants_database_, payload_pool_, thread_pool_,
+                        enabled);
     }
     catch (const utils::InitializationException& e)
     {
@@ -385,6 +500,17 @@ void DDSRouterImpl::create_new_bridge(
                 "Error creating Bridge for topic " << topic <<
                 ". Error code:" << e.what() << ".");
     }
+}
+
+void DDSRouterImpl::create_new_service(
+        const RPCTopic& topic) noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    logInfo(DDSROUTER, "Creating Service: " << topic << ".");
+
+    // Endpoints not created until enabled for the first time, so no exception can be thrown
+    rpc_bridges_[topic] = std::make_unique<RPCBridge>(topic, participants_database_, payload_pool_, thread_pool_);
 }
 
 void DDSRouterImpl::activate_topic_(

@@ -83,6 +83,13 @@ public:
     types::ParticipantKind kind() const noexcept override;
 
     /**
+     * @brief Override is_rtps_kind() IParticipant method
+     *
+     * @return whether the participant is RTPS
+     */
+    bool is_rtps_kind() const noexcept override;
+
+    /**
      * @brief Override is_repeater_ IParticipant method
      *
      * It gets the kind from the configuration.

@@ -24,6 +24,20 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
+Guid::Guid(
+        const fastrtps::rtps::GUID_t& x)
+{
+    guidPrefix = x.guidPrefix;
+    entityId = x.entityId;
+}
+
+Guid::Guid(
+        fastrtps::rtps::GUID_t&& x)
+{
+    guidPrefix = std::move(x.guidPrefix);
+    entityId = std::move(x.entityId);
+}
+
 Guid& Guid::operator = (
         const fastrtps::rtps::GUID_t& other) noexcept
 {

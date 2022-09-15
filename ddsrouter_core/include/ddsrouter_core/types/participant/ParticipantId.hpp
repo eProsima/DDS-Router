@@ -83,6 +83,17 @@ public:
             const ParticipantId& other) const noexcept;
 
     /**
+     * @brief Not equals operator
+     *
+     * Check whether both objects identify different participants
+     *
+     * @param [in] other \c ParticipantId to compare with
+     * @return true if this Ids are not equal. False otherwise.
+     */
+    DDSROUTER_CORE_DllAPI bool operator !=(
+            const ParticipantId& other) const noexcept;
+
+    /**
      * @brief Minor operator
      *
      * Check the internal strings to compare

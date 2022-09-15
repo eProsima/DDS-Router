@@ -26,6 +26,7 @@
 #include <fastrtps/rtps/history/WriterHistory.h>
 #include <fastrtps/rtps/attributes/WriterAttributes.h>
 #include <fastrtps/rtps/writer/RTPSWriter.h>
+#include <fastrtps/rtps/writer/WriterListener.h>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
@@ -56,10 +57,14 @@ namespace ddsrouter {
 namespace core {
 namespace rtps {
 
+using WriteParams = eprosima::fastrtps::rtps::WriteParams;
+using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
+
 /**
  * Standard RTPS Writer with less restrictive Attributes.
  */
-class Writer : public BaseWriter
+class
+    Writer : public BaseWriter, public fastrtps::rtps::WriterListener
 {
 public:
 
@@ -93,6 +98,54 @@ public:
      */
     virtual ~Writer();
 
+    /**
+     * @brief Write with parameters, and copy to \c sequenceNumber the sequence number associated to the last write operation
+     *
+     * This method calls the protected method \c writer_ to make the actual write function.
+     *
+     * Thread safe with mutex \c mutex_ .
+     *
+     * @param data : oldest data to take
+     * @param wparams : parameters to use in write operation
+     * @param sequenceNumber : reference where to copy the sequence number associated to the write operation
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
+     *
+     */
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data,
+            WriteParams& wparams,
+            SequenceNumber& sequenceNumber) noexcept;
+
+    /**
+     * @brief Write with parameters
+     *
+     * This method calls the overloaded method \c write(std::unique_ptr<types::DataReceived>&, WriteParams&, SequenceNumber&)
+     *
+     * @param data : oldest data to take
+     * @param wparams : parameters to use in write operation
+     * @return \c RETCODE_OK if data has been correctly taken
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
+     *
+     */
+    utils::ReturnCode write(
+            std::unique_ptr<types::DataReceived>& data,
+            WriteParams& wparams) noexcept;
+
+    /**
+     * @brief Writer Listener callback when a new Reader is matched or unmatched
+     *
+     * This method is call every time a new Reader is matched or unmatched from this Writer.
+     * It only creates a log for matching and unmatching (in case it is not a reader from this same Participant)
+     *
+     * @param [in] info information about the matched Reader
+     */
+    void onWriterMatched(
+            fastrtps::rtps::RTPSWriter* writer,
+            fastrtps::rtps::MatchingInfo& info) override;
+
 protected:
 
     // Specific enable/disable do not need to be implemented
@@ -109,8 +162,8 @@ protected:
      *
      * @param data : oldest data to take
      * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @return \c RETCODE_NO_DATA if \c data is empty
+     * @return \c RETCODE_ERROR if error occurred
      */
     virtual utils::ReturnCode write_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
@@ -136,16 +189,24 @@ protected:
      *
      * @return Default ReaderAttributes
      */
-    fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    // fastrtps::rtps::WriterAttributes writer_attributes_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::rtps::WriterAttributes writer_attributes_() noexcept;
 
     //! Default Topic Attributes to create Writer
     fastrtps::TopicAttributes topic_attributes_() const noexcept;
 
     //! Default QoS Writer (must be the same as the attributes)
-    fastrtps::WriterQos writer_qos_() const noexcept;
+    // fastrtps::WriterQos writer_qos_() const noexcept;
+    // TMP: until Transparency module is available
+    fastrtps::WriterQos writer_qos_() noexcept;
 
     //! Default Cache Change Pool Configuration
     utils::PoolConfiguration cache_change_pool_configuration_() const noexcept;
+
+    //! Whether a guid references this Participant
+    bool come_from_this_participant_(
+            const fastrtps::rtps::GUID_t guid) const noexcept;
 
     /////
     // VARIABLES
@@ -159,7 +220,22 @@ protected:
     //! Data Filter used to filter cache changes at the RTPSWriter level.
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
+    //! Whether this writer belongs to a repeater participant
     bool repeater_;
+
+    //! Whether to write with parameters given by attribute \c writer_info_
+    bool write_with_params_;
+
+    /**
+     * Struct storing the sequence number associated to the last write operation, and the parameters with which to
+     * perform a write operation if flag \c write_with_params_ is set
+     */
+    struct WriteInfo
+    {
+        WriteParams write_params;
+        SequenceNumber sequence_number;
+    }
+    write_info_;
 };
 
 } /* namespace rtps */

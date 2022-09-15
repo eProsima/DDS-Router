@@ -64,6 +64,13 @@ public:
     std::set<types::ParticipantId> get_participants_ids() const noexcept;
 
     /**
+     * @brief Get all the ids of the RPTS participants stored
+     *
+     * @return set of ids
+     */
+    std::set<types::ParticipantId> get_rtps_participants_ids() const noexcept;
+
+    /**
      * @brief Get all the participants stored
      *
      * @return map of pointers to participants indexed by ids

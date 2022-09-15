@@ -22,7 +22,9 @@
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/endpoint/QoS.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/RPCTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -70,7 +72,8 @@ public:
             const EndpointKind& kind,
             const Guid& guid,
             const QoS& qos,
-            const RealTopic& topic) noexcept;
+            const RealTopic& topic,
+            const ParticipantId& discoverer_participant_id = ParticipantId()) noexcept;
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
@@ -83,6 +86,9 @@ public:
 
     //! Topic getter
     DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
+
+    //! Id of participant who discovered this endpoint
+    DDSROUTER_CORE_DllAPI ParticipantId discoverer_participant_id() const noexcept;
 
     //! Whether the endpoint referenced is currently active
     DDSROUTER_CORE_DllAPI bool active() const noexcept;
@@ -103,6 +109,9 @@ public:
 
     //! Whether the endpoint is a reader
     DDSROUTER_CORE_DllAPI bool is_reader() const noexcept;
+
+    //! Whether the endpoint belongs to a RPC server (i.e. is request reader or reply writer)
+    DDSROUTER_CORE_DllAPI bool is_server_endpoint() const noexcept;
 
     //! Copy operator
     DDSROUTER_CORE_DllAPI Endpoint& operator =(
@@ -128,6 +137,9 @@ protected:
 
     //! Whether the endpoint is currently active
     bool active_;
+
+    //! Id of participant who discovered this endpoint
+    ParticipantId discoverer_participant_id_;
 
     // Allow operator << to use private variables
     DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(

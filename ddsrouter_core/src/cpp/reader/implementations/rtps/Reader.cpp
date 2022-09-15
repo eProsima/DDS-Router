@@ -20,6 +20,8 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 
 #include <reader/implementations/rtps/Reader.hpp>
+
+#include <ddsrouter_core/types/topic/RPCTopic.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
@@ -49,16 +51,16 @@ Reader::Reader(
         payload_pool_,
         rtps_history_);
 
-    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
-    // invoked before the variable is fully set)
-    rtps_reader_->setListener(this);
-
     if (!rtps_reader_)
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSReader for Participant " <<
-                      participant_id << " in topic " << topic << ".");
+                      participant_id << " in topic " << topic_ << ".");
     }
+
+    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_reader_ is
+    // invoked before the variable is fully set)
+    rtps_reader_->setListener(this);
 
     // Register reader with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
@@ -68,12 +70,12 @@ Reader::Reader(
     {
         // In case it fails, remove reader and throw exception
         fastrtps::rtps::RTPSDomain::removeRTPSReader(rtps_reader_);
-        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
+        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic_ <<
                       " for Simple RTPSReader in Participant " << participant_id);
     }
 
     logInfo(DDSROUTER_RTPS_READER, "New Reader created in Participant " << participant_id_ << " for topic " <<
-            topic << " with guid " << rtps_reader_->getGuid());
+            topic_ << " with guid " << rtps_reader_->getGuid());
 }
 
 Reader::~Reader()
@@ -97,13 +99,28 @@ Reader::~Reader()
             participant_id_ << " for topic " << topic_);
 }
 
+types::Guid Reader::guid() const noexcept
+{
+    return rtps_reader_->getGuid();
+}
+
+RecursiveTimedMutex& Reader::get_rtps_mutex() const noexcept
+{
+    return rtps_reader_->getMutex();
+}
+
+uint64_t Reader::get_unread_count() const noexcept
+{
+    return rtps_reader_->get_unread_count();
+}
+
 utils::ReturnCode Reader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
 
     // Check if there is data available
-    if (!(rtps_reader_->get_unread_count() > 0))
+    if (!(get_unread_count() > 0))
     {
         return utils::ReturnCode::RETCODE_NO_DATA;
     }
@@ -146,6 +163,12 @@ utils::ReturnCode Reader::take_(
     // Get the writer guid
     data->source_guid = received_change->writerGUID;
 
+    data->sequenceNumber = received_change->sequenceNumber;
+
+    data->write_params = received_change->write_params;
+
+    data->participant_receiver = participant_id_;
+
     // Store it in DDSRouter PayloadPool
     eprosima::fastrtps::rtps::IPayloadPool* payload_owner = received_change->payload_owner();
     payload_pool_->get_payload(
@@ -168,7 +191,11 @@ void Reader::enable_() noexcept
     // TODO: refactor with the transparency module
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
-    on_data_available_();
+    if (topic_.topic_reliable())
+    {
+        std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_rtps_mutex());
+        on_data_available_();
+    }
 }
 
 bool Reader::come_from_this_participant_(
@@ -191,11 +218,20 @@ fastrtps::rtps::HistoryAttributes Reader::history_attributes_() const noexcept
     return att;
 }
 
-fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() const noexcept
+fastrtps::rtps::ReaderAttributes Reader::reader_attributes_() noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
 
-    if (topic_.topic_reliable())
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+        att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::VOLATILE;
+
+        topic_.topic_reliable(true);
+    }
+    else if (topic_.topic_reliable())
     {
         att.endpoint.reliabilityKind = fastrtps::rtps::ReliabilityKind_t::RELIABLE;
         att.endpoint.durabilityKind = fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
@@ -233,11 +269,20 @@ fastrtps::TopicAttributes Reader::topic_attributes_() const noexcept
     return att;
 }
 
-fastrtps::ReaderQos Reader::reader_qos_() const noexcept
+fastrtps::ReaderQos Reader::reader_qos_() noexcept
 {
     fastrtps::ReaderQos qos;
 
-    if (topic_.topic_reliable())
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+        qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+
+        topic_.topic_reliable(true);
+    }
+    else if (topic_.topic_reliable())
     {
         qos.m_reliability.kind = fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
         qos.m_durability.kind = fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
@@ -268,10 +313,16 @@ void Reader::onNewCacheChangeAdded(
         }
         else
         {
-            // Remove received change if the Reader is disbled and the topic is not reliable
+            logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                    "Data arrived to (DISABLED) Reader " << *this << " with payload " << change->serializedPayload << " from " <<
+                    change->writerGUID);
+
+            // Remove received change if the Reader is disabled and the topic is not reliable
             if (!topic_.topic_reliable())
             {
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+                logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                        "Change removed from history");
             }
         }
     }

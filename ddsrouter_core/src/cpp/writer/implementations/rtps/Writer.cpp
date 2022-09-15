@@ -20,10 +20,12 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
+#include <writer/implementations/rtps/Writer.hpp>
+
+#include <ddsrouter_core/types/topic/RPCTopic.hpp>
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>
 #include <writer/implementations/rtps/filter/SelfDataFilter.hpp>
 #include <types/dds/RouterCacheChange.hpp>
@@ -44,6 +46,7 @@ Writer::Writer(
         const bool repeater /* = false */)
     : BaseWriter(participant_id, topic, payload_pool)
     , repeater_(repeater)
+    , write_with_params_(false)
 {
     // TODO Use payload pool for this writer, so change does not need to be copied
 
@@ -82,8 +85,11 @@ Writer::Writer(
     {
         throw utils::InitializationException(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
-                      participant_id << " in topic " << topic << ".");
+                      participant_id << " in topic " << topic_ << ".");
     }
+
+    // Set listener after successful creation
+    rtps_writer_->set_listener(this);
 
     // Register writer with topic
     fastrtps::TopicAttributes topic_att = topic_attributes_();
@@ -93,7 +99,7 @@ Writer::Writer(
     {
         // In case it fails, remove writer and throw exception
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
-        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic <<
+        throw utils::InitializationException(utils::Formatter() << "Error registering topic " << topic_ <<
                       " for Simple RTPSWriter in Participant " << participant_id);
     }
 
@@ -111,7 +117,7 @@ Writer::Writer(
     rtps_writer_->reader_data_filter(data_filter_.get());
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
-            topic << " with guid " << rtps_writer_->getGuid());
+            topic_ << " with guid " << rtps_writer_->getGuid());
 }
 
 Writer::~Writer()
@@ -134,6 +140,64 @@ Writer::~Writer()
 
     logInfo(DDSROUTER_RTPS_WRITER, "Deleting Writer created in Participant " <<
             participant_id_ << " for topic " << topic_);
+}
+
+void Writer::onWriterMatched(
+        fastrtps::rtps::RTPSWriter* writer,
+        fastrtps::rtps::MatchingInfo& info)
+{
+    if (!come_from_this_participant_(info.remoteEndpointGuid))
+    {
+        if (info.status == fastrtps::rtps::MATCHED_MATCHING)
+        {
+            logInfo(DDSROUTER_RTPS_WRITER, "Writer matched in Participant " << participant_id_ << " for topic " <<
+                    topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        }
+        else
+        {
+            logInfo(DDSROUTER_RTPS_WRITER, "Writer unmatched in Participant " << participant_id_ << " for topic " <<
+                    topic_ << " with guid " << writer->getGuid() << " matched with " << info.remoteEndpointGuid);
+        }
+    }
+}
+
+utils::ReturnCode Writer::write(
+        std::unique_ptr<DataReceived>& data,
+        WriteParams& wparams,
+        SequenceNumber& sequenceNumber) noexcept
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+
+    if (enabled_.load())
+    {
+        // Set flag and copy parameters to object attribute
+        write_with_params_ = true;
+        write_info_.write_params = wparams;
+
+        utils::ReturnCode ret = write_(data);
+
+        // Copy write params and sequence number to given references
+        wparams = write_info_.write_params;
+        sequenceNumber = write_info_.sequence_number;
+
+        // Write operation finished -> set flag to false
+        write_with_params_ = false;
+        return ret;
+    }
+    else
+    {
+        logDevError(DDSROUTER_RTPS_WRITER, "Attempt to write data from disabled Writer in topic " <<
+                topic_ << " in Participant " << participant_id_);
+        return utils::ReturnCode::RETCODE_NOT_ENABLED;
+    }
+}
+
+utils::ReturnCode Writer::write(
+        std::unique_ptr<DataReceived>& data,
+        WriteParams& wparams) noexcept
+{
+    SequenceNumber _dummy;
+    return write(data, wparams, _dummy);
 }
 
 // Specific enable/disable do not need to be implemented
@@ -182,7 +246,17 @@ utils::ReturnCode Writer::write_(
     }
 
     // Send data by adding it to Writer History
-    rtps_history_->add_change(new_change);
+    if (write_with_params_)
+    {
+        rtps_history_->add_change(new_change, write_info_.write_params);
+    }
+    else
+    {
+        rtps_history_->add_change(new_change);
+    }
+
+    // Copy sequence number of write operation to object attribute
+    write_info_.sequence_number = new_change->sequenceNumber;
 
     // When max history size is reached, remove oldest cache change
     if (rtps_history_->isFull())
@@ -193,6 +267,12 @@ utils::ReturnCode Writer::write_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
+bool Writer::come_from_this_participant_(
+        const fastrtps::rtps::GUID_t guid) const noexcept
+{
+    return guid.guidPrefix == rtps_writer_->getGuid().guidPrefix;
+}
+
 fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
@@ -201,11 +281,24 @@ fastrtps::rtps::HistoryAttributes Writer::history_attributes_() const noexcept
     return att;
 }
 
-fastrtps::rtps::WriterAttributes Writer::writer_attributes_() const noexcept
+fastrtps::rtps::WriterAttributes Writer::writer_attributes_() noexcept
 {
     fastrtps::rtps::WriterAttributes att;
-    att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
-    att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::VOLATILE;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+
+        topic_.topic_reliable(true);
+    }
+    else
+    {
+        att.endpoint.durabilityKind = eprosima::fastrtps::rtps::DurabilityKind_t::TRANSIENT_LOCAL;
+        att.endpoint.reliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t::RELIABLE;
+    }
     // Write synchronously to avoid removing a change before being sent, likely event when history depth is very small
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
     if (topic_.topic_with_key())
@@ -235,11 +328,24 @@ fastrtps::TopicAttributes Writer::topic_attributes_() const noexcept
     return att;
 }
 
-fastrtps::WriterQos Writer::writer_qos_() const noexcept
+fastrtps::WriterQos Writer::writer_qos_() noexcept
 {
     fastrtps::WriterQos qos;
-    qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
-    qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+    // TMP: until Transparency module is available
+    if (RPCTopic::is_service_topic(topic_))
+    {
+        // Default ROS 2 service QoS (custom QoS not supported until transparency module is available)
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::VOLATILE_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+
+        topic_.topic_reliable(true);
+    }
+    else
+    {
+        qos.m_durability.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_LOCAL_DURABILITY_QOS;
+        qos.m_reliability.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+    }
     return qos;
 }
 

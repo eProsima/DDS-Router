@@ -73,6 +73,12 @@ bool ParticipantId::operator ==(
     return id_ == other.id_;
 }
 
+bool ParticipantId::operator !=(
+        const ParticipantId& other) const noexcept
+{
+    return !(*this == other);
+}
+
 bool ParticipantId::operator <(
         const ParticipantId& other) const noexcept
 {

@@ -112,6 +112,12 @@ public:
     utils::ReturnCode take(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
+    //! Getter of \c participant_id_ attribute
+    types::ParticipantId participant_id() const noexcept;
+
+    //! Getter of \c topic_ attribute
+    types::RealTopic topic() const noexcept;
+
 protected:
 
     /**

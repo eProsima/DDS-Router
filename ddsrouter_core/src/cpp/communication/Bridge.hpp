@@ -19,10 +19,6 @@
 #ifndef __SRC_DDSROUTERCORE_COMMUNICATION_BRIDGE_HPP_
 #define __SRC_DDSROUTERCORE_COMMUNICATION_BRIDGE_HPP_
 
-#include <mutex>
-
-#include <communication/Track.hpp>
-#include <participant/IParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
@@ -32,12 +28,11 @@ namespace ddsrouter {
 namespace core {
 
 /**
- * Bridge object manages the communication of a DDS Topic (or \c RealTopic ).
- * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
+ * Bridge object manages the communication of a DDS Topic (\c RealTopic or \c RPCTopic).
+ * It could be seen as a channel of communication as a DDS Topic, with several Participants that
  * could publish or subscribe in this specific Topic.
  *
- * It contains N \c Tracks that will manage each direction of the communication,
- * being N the number of Participants of this communication channel.
+ * It is implemented by \c DDSBridge and \c RPCBridge , which handle \c RealTopic and \c RPCTopic , respectively.
  */
 class Bridge
 {
@@ -46,106 +41,42 @@ public:
     /**
      * Bridge constructor by required values
      *
-     * In Bridge construction, the inside \c Tracks are created.
-     * In Bridge construction, a Writer and a Reader are created for each Participant.
-     *
-     * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
-     * @param enable: Whether the Bridge should be initialized as enabled
+     * @param payload_pool: Payload Pool that handles the reservation/release of payloads throughout the DDS Router
+     * @param thread_pool: Shared pool of threads in charge of data transmission.
      *
-     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
+     * @note Always created disabled. Enable in children constructors if needed.
+     *
      */
     Bridge(
-            const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool,
-            bool enable = false);
+            std::shared_ptr<utils::SlotThreadPool> thread_pool);
 
     /**
-     * @brief Destructor
-     *
-     * Before deleting, it calls \c disable.
-     * It deletes all the tracks created and all Writers and Readers.
+     * Enable bridge
      */
-    virtual ~Bridge();
+    virtual void enable() noexcept = 0;
 
     /**
-     * Copy method not allowed
-     *
-     * Bridge creates in constructor all the inside Tracks needed, and thus it should not be copied
+     * Disable bridge
      */
-    void operator =(
-            const Track&) = delete;
-
-    /**
-     * Enable bridge in case it is not enabled
-     * Does nothing if it is already enabled
-     *
-     * Thread safe
-     */
-    void enable() noexcept;
-
-    /**
-     * Disable bridge in case it is not enabled
-     * Does nothing if it is disabled
-     *
-     * Thread safe
-     */
-    void disable() noexcept;
+    virtual void disable() noexcept = 0;
 
 protected:
 
-    /**
-     * Topic of which this Bridge manages communication
-     *
-     * @note: This variable is only used for log
-     */
-    const types::RealTopic topic_;
-
-    /**
-     * Collection of Participants to manage communication between
-     *
-     * @note: This variable is only used at destruction time
-     */
+    //! Collection of Participants to manage communication
     const std::shared_ptr<ParticipantsDatabase> participants_;
 
     //! Common shared payload pool
     std::shared_ptr<PayloadPool> payload_pool_;
 
-    /**
-     * Inside \c Tracks
-     * They are indexed by the Id of the participant that is source
-     */
-    std::map<types::ParticipantId, std::unique_ptr<Track>> tracks_;
-
-    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs to
-    std::map<types::ParticipantId, std::shared_ptr<IWriter>> writers_;
-
-    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
-    std::map<types::ParticipantId, std::shared_ptr<IReader>> readers_;
+    //! Common shared thread pool
+    std::shared_ptr<utils::SlotThreadPool> thread_pool_;
 
     //! Whether the Bridge is currently enabled
-    bool enabled_;
-
-    //! Mutex to prevent simultaneous calls to enable and/or disable
-    std::recursive_mutex mutex_;
-
-    // Allow operator << to use private variables
-    friend std::ostream& operator <<(
-            std::ostream&,
-            const Bridge&);
+    std::atomic<bool> enabled_;
 };
-
-/**
- * @brief \c Bridge to stream serialization
- *
- * This method is merely a to_string of a Bridge definition.
- * It serialize the topic
- */
-std::ostream& operator <<(
-        std::ostream& os,
-        const Bridge& bridge);
 
 } /* namespace core */
 } /* namespace ddsrouter */
