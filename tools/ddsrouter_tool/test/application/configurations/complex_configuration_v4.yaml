@@ -1,0 +1,72 @@
+
+# 1 Echo Participant
+# 2 Simple Participants in domains 0 and 1
+# 1 Local Discovery Server Participant with listening address
+# 1 WAN DS Participant with connection address
+# 1 Initial Peers repeater Participant with connection and listening addresses
+# 2 topics, one with key and one without
+
+version: v4.0
+
+builtin-topics:
+  - name: "rt/chatter"
+    type: "std_msgs::msg::dds_::String_"
+  - name: "rt/chatter/key"
+    type: "std_msgs::msg::dds_::String_"
+    keyed: true
+
+allowlist:
+  - name: "rt/*"
+  - name: "rq/service_custom*"
+    type: "rq/*"
+
+blocklist:
+  - name: "rt/ros_discovery_info*"
+
+specs:
+  threads: 10
+  max-depth: 1000
+
+
+participants:
+
+  - name: simple_0
+    kind: simple
+    domain: 0
+
+  - name: simple_1
+    kind: simple
+    domain: 1
+
+  - name: local-ds
+    kind: local-discovery-server
+    discovery-server-guid:
+      id: 0
+
+    listening-addresses:
+      - ip: "127.0.0.1"
+        port: 11666
+
+  - name: wan
+    kind: wan-ds
+    discovery-server-guid:
+      id: 1
+    connection-addresses:
+      - discovery-server-guid:
+          id: 2
+        addresses:
+        - ip: "127.0.0.1"
+          port: 11667
+          transport: tcp
+
+  - name: initial-peers
+    kind: router
+    repeater: true
+    connection-addresses:
+      - ip: "127.0.0.1"
+        port: 11668
+        transport: tcp
+      - ip: "0.0.0.0"
+    listening-addresses:
+      - ip: "127.0.0.1"
+        port: 11669

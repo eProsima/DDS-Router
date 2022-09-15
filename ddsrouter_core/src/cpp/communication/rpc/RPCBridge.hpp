@@ -29,9 +29,9 @@
 
 #include <communication/rpc/ServiceRegistry.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/topic/RPCTopic.hpp>
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
+#include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
+#include <reader/implementations/rtps/CommonReader.hpp>
+#include <writer/IWriter.hpp>
 
 
 namespace eprosima {
@@ -111,7 +111,7 @@ protected:
      *
      * Called only once in execution (controlled by \c init_ flag).
      *
-     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
+     * @throw InitializationException in case \c IWriters or \c rtps::CommonReaders creation fails.
      */
     void init_nts_(); // throws exception, caught in enable
 
@@ -120,7 +120,7 @@ protected:
      *
      * @param participant_id: Participant where proxy server is to be created
      *
-     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
+     * @throw InitializationException in case \c IWriters or \c rtps::CommonReaders creation fails.
      */
     void create_proxy_server_nts_(
             types::ParticipantId participant_id);
@@ -131,14 +131,14 @@ protected:
      *
      * @param participant_id: Participant where proxy client is to be created
      *
-     * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
+     * @throw InitializationException in case \c IWriters or \c rtps::CommonReaders creation fails.
      */
     void create_proxy_client_nts_(
             types::ParticipantId participant_id);
 
     //! Create slot in the thread pool for this reader
     void create_slot_(
-            std::shared_ptr<rtps::Reader> reader) noexcept;
+            std::shared_ptr<rtps::CommonReader> reader) noexcept;
 
     //! Callback to execute when a new cache change is added to this reader
     void data_available_(
@@ -155,7 +155,7 @@ protected:
      * topic being blocked).
      */
     void transmit_(
-            std::shared_ptr<rtps::Reader> reader) noexcept;
+            std::shared_ptr<rtps::CommonReader> reader) noexcept;
 
     //! Whether there are any servers in the database
     bool servers_available_() const noexcept;
@@ -167,12 +167,12 @@ protected:
     bool init_;
 
     //! Proxy servers endpoints
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> request_readers_;
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> reply_writers_;
+    std::map<types::ParticipantId, std::shared_ptr<rtps::CommonReader>> request_readers_;
+    std::map<types::ParticipantId, std::shared_ptr<IWriter>> reply_writers_;
 
     //! Proxy clients endpoints
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Reader>> reply_readers_;
-    std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> request_writers_;
+    std::map<types::ParticipantId, std::shared_ptr<rtps::CommonReader>> reply_readers_;
+    std::map<types::ParticipantId, std::shared_ptr<IWriter>> request_writers_;
 
     //! Map readers' GUIDs to their associated thread pool tasks, and also keep a task emission flag.
     std::map<types::Guid, std::pair<bool, utils::TaskId>> tasks_map_;

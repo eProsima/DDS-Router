@@ -27,7 +27,7 @@
 
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/topic/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -92,6 +92,9 @@ public:
     //! RPCTopic getter
     types::RPCTopic topic() const noexcept;
 
+    //! Get \c mutex_
+    std::recursive_mutex& get_mutex() noexcept;
+
 protected:
 
     //! RPCTopic (service) that this ServiceRegistry manages communication
@@ -113,7 +116,7 @@ protected:
     static const unsigned int DEFAULT_MAX_ENTRIES_;
 
     //! Mutex to protect concurrent access to \c registry_
-    mutable std::mutex mutex_;
+    mutable std::recursive_mutex mutex_;
 };
 
 } /* namespace core */

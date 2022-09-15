@@ -79,7 +79,7 @@ void DiscoveryDatabase::stop() noexcept
 }
 
 bool DiscoveryDatabase::topic_exists(
-        const RealTopic& topic) const noexcept
+        const DdsTopic& topic) const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
 

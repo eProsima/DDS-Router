@@ -1,0 +1,11 @@
+version: v4.0
+
+participants:
+
+  - name: Simple_0
+    kind: simple
+    domain: 0
+
+  - name: Simple_1
+    kind: simple
+    domain: 1

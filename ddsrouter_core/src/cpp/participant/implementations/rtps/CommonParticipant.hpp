@@ -31,8 +31,6 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -53,8 +51,7 @@ public:
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
             const types::DomainId& domain_id,
-            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-            unsigned int max_history_depth);
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     virtual ~CommonParticipant();
 
@@ -77,13 +74,17 @@ protected:
             const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
     std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     template<class DiscoveryInfoKind>
     types::Endpoint create_endpoint_from_info_(
+            DiscoveryInfoKind& info);
+
+    template<class DiscoveryInfoKind>
+    types::Endpoint create_common_endpoint_from_info_(
             DiscoveryInfoKind& info);
 
     /////

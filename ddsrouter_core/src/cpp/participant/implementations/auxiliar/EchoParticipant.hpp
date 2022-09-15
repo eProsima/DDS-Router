@@ -48,7 +48,7 @@ public:
 
     //! Override create_writer() IParticipant method
     std::shared_ptr<IWriter> create_writer(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
 protected:
 

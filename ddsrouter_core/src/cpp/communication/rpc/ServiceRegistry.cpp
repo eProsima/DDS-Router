@@ -71,7 +71,7 @@ void ServiceRegistry::add(
         SequenceNumber idx,
         std::pair<ParticipantId, SampleIdentity> new_entry) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (registry_.count(idx))
     {
@@ -95,7 +95,7 @@ void ServiceRegistry::add(
 std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(
         SequenceNumber idx) const noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     std::pair<ParticipantId, SampleIdentity> ret;
     if (registry_.count(idx))
@@ -113,7 +113,7 @@ std::pair<ParticipantId, SampleIdentity> ServiceRegistry::get(
 void ServiceRegistry::erase(
         SequenceNumber idx) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (registry_.count(idx))
     {
@@ -124,6 +124,11 @@ void ServiceRegistry::erase(
 RPCTopic ServiceRegistry::topic() const noexcept
 {
     return topic_;
+}
+
+std::recursive_mutex& ServiceRegistry::get_mutex() noexcept
+{
+    return mutex_;
 }
 
 } /* namespace core */

@@ -161,6 +161,11 @@ DDSROUTER_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
         FileAccessMode access_mode = FileAccessMode::exist) noexcept;
 
+
+template <typename T>
+DDSROUTER_UTILS_DllAPI std::string generic_to_string(
+        const T& element);
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

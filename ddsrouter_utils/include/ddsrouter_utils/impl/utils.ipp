@@ -146,6 +146,15 @@ std::set<std::shared_ptr<Parent>> convert_set_to_shared(
     return result_set;
 }
 
+template <typename T>
+std::string generic_to_string(
+        const T& element)
+{
+    std::stringstream ss;
+    ss << element;
+    return ss.str();
+}
+
 } /* namespace utils */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -28,11 +28,11 @@ namespace ddsrouter {
 namespace core {
 
 /**
- * Bridge object manages the communication of a DDS Topic (\c RealTopic or \c RPCTopic).
- * It could be seen as a channel of communication as a DDS Topic, with several Participants that
+ * Bridge object manages the communication of a DDS Topic (or \c DdsTopic ).
+ * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
  * could publish or subscribe in this specific Topic.
  *
- * It is implemented by \c DDSBridge and \c RPCBridge , which handle \c RealTopic and \c RPCTopic , respectively.
+ * It is implemented by \c DDSBridge and \c RPCBridge , which handle \c DdsTopic and \c RPCTopic , respectively.
  */
 class Bridge
 {

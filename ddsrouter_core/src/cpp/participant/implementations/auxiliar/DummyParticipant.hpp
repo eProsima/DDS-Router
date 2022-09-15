@@ -87,7 +87,7 @@ public:
      * @param data : data received
      */
     void simulate_data_reception(
-            types::RealTopic topic,
+            types::DdsTopic topic,
             DummyDataReceived data);
 
     /**
@@ -97,7 +97,7 @@ public:
      * @return Vector of all the data that the Writer should have sent.
      */
     std::vector<DummyDataStored> get_data_that_should_have_been_sent(
-            types::RealTopic topic);
+            types::DdsTopic topic);
 
     /**
      * @brief Make the thread wait until message \c n has arrived to Writer in topic \c topic
@@ -106,7 +106,7 @@ public:
      * @param [in] n : wait until data \c n has arrived and simulated to be sent
      */
     void wait_until_n_data_sent(
-            types::RealTopic topic,
+            types::DdsTopic topic,
             uint16_t n) const noexcept;
 
     /**
@@ -128,11 +128,11 @@ protected:
 
     //! Override create_writer_() BaseParticipant method
     std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     //! Override create_reader_() BaseParticipant method
     std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     // Specific enable/disable do not need to be implemented
 

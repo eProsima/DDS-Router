@@ -33,7 +33,7 @@ using namespace eprosima::ddsrouter::core::types;
 const unsigned int Track::MAX_MESSAGES_TRANSMIT_LOOP_ = 100;
 
 Track::Track(
-        const RealTopic& topic,
+        const DdsTopic& topic,
         ParticipantId reader_participant_id,
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
@@ -210,7 +210,7 @@ void Track::transmit_() noexcept
 
         logDebug(DDSROUTER_TRACK,
                 "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->source_guid << ".");
+                " transmitting data from remote endpoint " << data->qos.source_guid << ".");
 
         // Send data through writers
         for (auto& writer_it : writers_)
@@ -230,7 +230,11 @@ void Track::transmit_() noexcept
             }
         }
 
-        payload_pool_->release_payload(data->payload);
+        // Release payload in case it has length
+        if (data->payload.length > 0)
+        {
+            payload_pool_->release_payload(data->payload);
+        }
     }
 }
 

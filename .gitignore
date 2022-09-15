@@ -57,3 +57,8 @@ log/
 
 ### Documentation ###
 docs/rst/_static/css/online_eprosima_rtd_theme.css
+
+
+### Python ###
+# Precompile files
+__pycache__

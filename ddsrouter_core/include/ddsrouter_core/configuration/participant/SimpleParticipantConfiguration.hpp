@@ -67,8 +67,6 @@ public:
     /////////////////////////
 
     types::DomainId domain = types::DomainId(0u);
-
-    unsigned int max_history_depth = 5000;
 };
 
 } /* namespace configuration */

@@ -84,7 +84,7 @@ public:
      * @throw \c InitializationException in case the writer creation fails.
      */
     virtual std::shared_ptr<IWriter> create_writer(
-            types::RealTopic topic) = 0;
+            types::DdsTopic topic) = 0;
 
     /**
      * @brief Return a new Reader
@@ -99,7 +99,7 @@ public:
      * @throw \c InitializationException in case the reader creation fails.
      */
     virtual std::shared_ptr<IReader> create_reader(
-            types::RealTopic topic) = 0;
+            types::DdsTopic topic) = 0;
 
     /**
      * @brief Delete Writer

@@ -40,14 +40,12 @@ public:
      *      participant that will be created, and its Configuration.
      * @param [in] payload : Common Payload pool to create the Participant
      * @param [in] discovery_database : Common Discovery Database to create the Participant
-     * @param [in] max_history_depth : Maximum size of RTPS History instances (only applies to RTPS participants);
      * @return new Participant
      */
     std::shared_ptr<IParticipant> create_participant(
             std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload,
-            std::shared_ptr<DiscoveryDatabase> discovery_database,
-            unsigned int max_history_depth);
+            std::shared_ptr<DiscoveryDatabase> discovery_database);
 
     /**
      * @brief Delete correctly a Participant

@@ -23,6 +23,11 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+Formatter::operator std::string () const noexcept
+{
+    return to_string();
+}
+
 std::string Formatter::to_string() const noexcept
 {
     return ss_.str().c_str();

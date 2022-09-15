@@ -38,7 +38,7 @@ public:
 
     //! Using parent class constructors
     EchoWriter(
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             bool verbose);
 
 protected:
@@ -57,7 +57,7 @@ protected:
     bool verbose_;
 
     //! Topic that this Writer refers to
-    types::RealTopic topic_;
+    types::DdsTopic topic_;
 };
 
 } /* namespace core */

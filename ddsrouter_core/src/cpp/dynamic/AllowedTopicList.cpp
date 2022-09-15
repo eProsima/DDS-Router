@@ -31,8 +31,8 @@ using namespace eprosima::ddsrouter::core::types;
 
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
-        const std::set<std::shared_ptr<FilterTopic>>& allowlist,
-        const std::set<std::shared_ptr<FilterTopic>>& blocklist) noexcept
+        const std::set<std::shared_ptr<DdsFilterTopic>>& allowlist,
+        const std::set<std::shared_ptr<DdsFilterTopic>>& blocklist) noexcept
 {
     allowlist_ = AllowedTopicList::get_topic_list_without_repetition_(allowlist);
     blocklist_ = AllowedTopicList::get_topic_list_without_repetition_(blocklist);
@@ -65,7 +65,7 @@ void AllowedTopicList::clear() noexcept
 }
 
 bool AllowedTopicList::is_topic_allowed(
-        const RealTopic& topic) const noexcept
+        const DdsTopic& topic) const noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -73,7 +73,7 @@ bool AllowedTopicList::is_topic_allowed(
     bool accepted = allowlist_.empty();
 
     // Check if allowlist filter it (this will do anything if empty and accepted will be true)
-    for (std::shared_ptr<FilterTopic> filter : allowlist_)
+    for (std::shared_ptr<DdsFilterTopic> filter : allowlist_)
     {
         if (filter->matches(topic))
         {
@@ -89,7 +89,7 @@ bool AllowedTopicList::is_topic_allowed(
     }
 
     // Allowlist passed, check blocklist
-    for (std::shared_ptr<FilterTopic> filter : blocklist_)
+    for (std::shared_ptr<DdsFilterTopic> filter : blocklist_)
     {
         if (filter->matches(topic))
         {
@@ -114,23 +114,23 @@ bool AllowedTopicList::operator ==(
         const AllowedTopicList& other) const noexcept
 {
     return
-        utils::are_set_of_ptr_equal<FilterTopic>(allowlist_, other.allowlist_) &&
-        utils::are_set_of_ptr_equal<FilterTopic>(blocklist_, other.blocklist_);
+        utils::are_set_of_ptr_equal<DdsFilterTopic>(allowlist_, other.allowlist_) &&
+        utils::are_set_of_ptr_equal<DdsFilterTopic>(blocklist_, other.blocklist_);
 }
 
-std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(
-        const std::set<std::shared_ptr<FilterTopic>>& list) noexcept
+std::set<std::shared_ptr<DdsFilterTopic>> AllowedTopicList::get_topic_list_without_repetition_(
+        const std::set<std::shared_ptr<DdsFilterTopic>>& list) noexcept
 {
-    std::set<std::shared_ptr<FilterTopic>> non_repeated_list;
+    std::set<std::shared_ptr<DdsFilterTopic>> non_repeated_list;
 
     // Store each topic without repetition
-    for (std::shared_ptr<FilterTopic> new_topic : list)
+    for (std::shared_ptr<DdsFilterTopic> new_topic : list)
     {
         bool add_it = true;
-        std::set<std::shared_ptr<FilterTopic>> repeated;
+        std::set<std::shared_ptr<DdsFilterTopic>> repeated;
 
         // Check if it is contained or contains any topic already in the list
-        for (std::shared_ptr<FilterTopic> topic_stored : non_repeated_list)
+        for (std::shared_ptr<DdsFilterTopic> topic_stored : non_repeated_list)
         {
             if (topic_stored->contains(*new_topic))
             {
@@ -146,7 +146,7 @@ std::set<std::shared_ptr<FilterTopic>> AllowedTopicList::get_topic_list_without_
         }
 
         // Remove topics repeated
-        for (std::shared_ptr<FilterTopic> topic_repeated : repeated)
+        for (std::shared_ptr<DdsFilterTopic> topic_repeated : repeated)
         {
             non_repeated_list.erase(topic_repeated);
         }
@@ -169,11 +169,11 @@ std::ostream& operator <<(
 
     // Allowed topics
     os << "allowed";
-    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.allowlist_);
+    utils::container_to_stream<std::shared_ptr<DdsFilterTopic>, true>(os, atl.allowlist_);
 
     // Blocked topics
     os << "blocked";
-    utils::container_to_stream<std::shared_ptr<FilterTopic>, true>(os, atl.blocklist_);
+    utils::container_to_stream<std::shared_ptr<DdsFilterTopic>, true>(os, atl.blocklist_);
 
     os << "}";
 

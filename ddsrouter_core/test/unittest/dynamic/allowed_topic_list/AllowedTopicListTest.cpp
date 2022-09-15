@@ -16,7 +16,7 @@
 #include <gtest/gtest.h>
 
 #include <dynamic/AllowedTopicList.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -33,14 +33,17 @@ using pair_topic_type = std::pair<std::string, std::string>;
  * TODO: Add regex when implemented
  */
 void add_topic_to_list(
-        std::set<std::shared_ptr<FilterTopic>>& list,
+        std::set<std::shared_ptr<DdsFilterTopic>>& list,
         pair_topic_type topic_name,
         bool wildcard = true)
 {
     if (wildcard)
     {
-        list.insert(
-            std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
+        auto new_topic = std::make_shared<WildcardDdsFilterTopic>();
+        new_topic->topic_name = topic_name.first;
+        new_topic->type_name = topic_name.second;
+
+        list.insert(new_topic);
     }
 }
 
@@ -50,7 +53,7 @@ void add_topic_to_list(
  * TODO: Add regex when implemented
  */
 void add_topics_to_list(
-        std::set<std::shared_ptr<FilterTopic>>& list,
+        std::set<std::shared_ptr<DdsFilterTopic>>& list,
         std::vector<pair_topic_type> topic_names,
         bool wildcard = true)
 {
@@ -58,8 +61,11 @@ void add_topics_to_list(
     {
         for (pair_topic_type topic_name : topic_names)
         {
-            list.insert(
-                std::make_shared<WildcardTopic>(topic_name.first, topic_name.second));
+            auto new_topic = std::make_shared<WildcardDdsFilterTopic>();
+            new_topic->topic_name = topic_name.first;
+            new_topic->type_name = topic_name.second;
+
+            list.insert(new_topic);
         }
     }
 }
@@ -76,8 +82,8 @@ void generic_test(
         const std::vector<pair_topic_type>& real_topics_negative)
 {
     // Create AllowedTopicList object
-    std::set<std::shared_ptr<FilterTopic>> allowlist;
-    std::set<std::shared_ptr<FilterTopic>> blocklist;
+    std::set<std::shared_ptr<DdsFilterTopic>> allowlist;
+    std::set<std::shared_ptr<DdsFilterTopic>> blocklist;
 
     add_topics_to_list(allowlist, allowlist_topics);
     add_topics_to_list(blocklist, blocklist_topics);
@@ -87,14 +93,14 @@ void generic_test(
     // Test positive cases
     for (pair_topic_type topic_name : real_topics_positive)
     {
-        RealTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic(topic_name.first, topic_name.second);
         ASSERT_TRUE(atl.is_topic_allowed(topic));
     }
 
     // Test negative cases
     for (pair_topic_type topic_name : real_topics_negative)
     {
-        RealTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic(topic_name.first, topic_name.second);
         ASSERT_FALSE(atl.is_topic_allowed(topic));
     }
 }
@@ -118,7 +124,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
 
     for (pair_topic_type topic_name : real_topics)
     {
-        RealTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic(topic_name.first, topic_name.second);
 
         ASSERT_TRUE(atl.is_topic_allowed(topic));
     }

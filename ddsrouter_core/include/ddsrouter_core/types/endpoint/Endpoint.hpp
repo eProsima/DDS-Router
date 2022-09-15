@@ -19,12 +19,14 @@
 #ifndef _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 #define _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 
+#include <ddsrouter_utils/macros/custom_enumeration.hpp>
+
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/endpoint/QoS.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
+#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,24 +36,12 @@ namespace types {
 using EndpointKindType = unsigned int;
 
 //! Possible kinds of the endpoint
-enum class EndpointKind : EndpointKindType
-{
-    invalid = 0,  //! Invalid endpoint
-    writer = 1,   //! Writer endpoint
-    reader = 2,   //! Reader endpoint
-};
-
-//! Number of endpoint kinds
-//! NOTE: Change ENDPOINT_KIND_COUNT if enums are modified
-constexpr unsigned int ENDPOINT_KIND_COUNT = 3;
-
-//! Strings associated to each endpoint kind
-constexpr std::array<const char*, ENDPOINT_KIND_COUNT> ENDPOINT_KIND_STRINGS =
-{
-    "invalid",
-    "writer",
-    "reader"
-};
+ENUMERATION_BUILDER(
+    EndpointKind,
+        invalid,
+        writer,
+        reader
+);
 
 /**
  * Data collection to describe an Endpoint
@@ -71,21 +61,28 @@ public:
     DDSROUTER_CORE_DllAPI Endpoint(
             const EndpointKind& kind,
             const Guid& guid,
-            const QoS& qos,
-            const RealTopic& topic,
-            const ParticipantId& discoverer_participant_id = ParticipantId()) noexcept;
+            const DdsTopic& topic,
+            const ParticipantId& discoverer_participant_id = ParticipantId(),
+            const SpecificWriterQoS& specific_qos = SpecificWriterQoS()) noexcept;
 
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
 
+    DDSROUTER_CORE_DllAPI void kind(const EndpointKind& kind) noexcept;
+
     //! Guid getter
     DDSROUTER_CORE_DllAPI Guid guid() const noexcept;
 
-    //! QoS getter
-    DDSROUTER_CORE_DllAPI QoS qos() const noexcept;
+    //! TopicQoS getter
+    DDSROUTER_CORE_DllAPI TopicQoS topic_qos() const noexcept;
+
+    //! SpecificQoS getter
+    DDSROUTER_CORE_DllAPI SpecificWriterQoS specific_qos() const noexcept;
+
+    DDSROUTER_CORE_DllAPI void specific_qos(const SpecificWriterQoS& specific_qos) noexcept;
 
     //! Topic getter
-    DDSROUTER_CORE_DllAPI RealTopic topic() const noexcept;
+    DDSROUTER_CORE_DllAPI DdsTopic topic() const noexcept;
 
     //! Id of participant who discovered this endpoint
     DDSROUTER_CORE_DllAPI ParticipantId discoverer_participant_id() const noexcept;
@@ -129,11 +126,8 @@ protected:
     //! Unique id of the endpoint
     Guid guid_;
 
-    //! Attributes of the endpoint
-    QoS qos_;
-
     //! Topic that this endpoint belongs to
-    RealTopic topic_;
+    DdsTopic topic_;
 
     //! Whether the endpoint is currently active
     bool active_;
@@ -141,18 +135,14 @@ protected:
     //! Id of participant who discovered this endpoint
     ParticipantId discoverer_participant_id_;
 
+    //! Specific QoS of the entity
+    SpecificWriterQoS specific_qos_;
+
     // Allow operator << to use private variables
     DDSROUTER_CORE_DllAPI friend std::ostream& operator <<(
             std::ostream&,
             const Endpoint&);
 };
-
-/**
- * @brief \c EndpointKind to stream serialization
- */
-std::ostream& operator <<(
-        std::ostream& os,
-        const EndpointKind& kind);
 
 /**
  * @brief \c Endpoint to stream serialization

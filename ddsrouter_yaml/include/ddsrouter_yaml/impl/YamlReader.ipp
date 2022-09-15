@@ -23,6 +23,7 @@
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/macros/macros.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/types/Fuzzy.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

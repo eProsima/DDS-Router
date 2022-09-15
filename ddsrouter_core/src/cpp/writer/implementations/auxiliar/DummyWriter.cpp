@@ -33,7 +33,7 @@ utils::ReturnCode DummyWriter::write_(
         // Fill the data to store
         DummyDataStored new_data_to_store;
         new_data_to_store.timestamp = utils::now();
-        new_data_to_store.source_guid = data->source_guid;
+        new_data_to_store.source_guid = data->qos.source_guid;
 
         // Copying data as it should not be stored in PayloadPool
         for (uint32_t i = 0; i < data->payload.length; i++)

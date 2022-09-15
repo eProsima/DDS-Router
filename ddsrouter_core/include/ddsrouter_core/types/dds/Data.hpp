@@ -20,11 +20,10 @@
 #define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
-#include <fastdds/rtps/common/WriteParams.h>
+#include <fastdds/rtps/common/SequenceNumber.h>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/dds/DataQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -40,20 +39,24 @@ using Payload = eprosima::fastrtps::rtps::SerializedPayload_t;
 //! Structure of the Data received from a Reader containing the data itself and the attributes of the source
 struct DataReceived
 {
+    /**
+     * @brief Destroy the Data Received object
+     *
+     * @note Default destructor. Force \c DataReceived to be polymorphic
+     */
+    virtual ~DataReceived()
+    {}
+
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
 
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
+    //! QoS of the data received
+    DataQoS qos;
+};
 
-    //! Id of the participant from which the Reader has received the data.
-    ParticipantId participant_receiver;
-
-    //! Sequence number of the received cache change
-    eprosima::fastrtps::rtps::SequenceNumber_t sequenceNumber;
-
-    //! Write params associated to the received cache change
-    eprosima::fastrtps::rtps::WriteParams write_params;
+struct DataReceivedParametrized : public DataReceived
+{
+    eprosima::fastrtps::rtps::SequenceNumber_t writer_data_sent_sequence_number;
 };
 
 //! \c octet to stream serializator

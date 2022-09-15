@@ -33,8 +33,6 @@ namespace eprosima {
 namespace ddsrouter {
 namespace test {
 
-constexpr const unsigned int DEFAULT_MAX_HISTORY_DEPTH = 100;
-
 /*
  * Generate all required objects for participant creation,
  * and then create a participant from an id string
@@ -49,8 +47,7 @@ std::shared_ptr<IParticipant> create_participant(
     std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration =
             random_participant_configuration(kind);
 
-    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database,
-                   test::DEFAULT_MAX_HISTORY_DEPTH);
+    return participant_factory.create_participant(participant_configuration, payload_pool, discovery_database);
 }
 
 } /* namespace test */

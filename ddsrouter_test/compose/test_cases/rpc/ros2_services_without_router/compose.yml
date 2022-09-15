@@ -1,0 +1,62 @@
+# Test description:
+#   This test checks the UDP functionality by creating 4 routers, 2 edges and 2 cloud.
+#   The cloud router will forward every message from 1 to 2 by two different participants connected by UDP.
+#   It also probes the Initial Peers functionality, avoiding the discovery of edge routers with those routers that
+#    that are not the one suppose to connect with.
+#
+# Test architecture:
+#
+#   1 Server & N Clients
+#
+
+services:
+
+  ser_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: ser_edge_1
+    networks:
+      - net_1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_server.py --samples 50 --timeout 15
+
+  cli_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: cli_edge_1
+    networks:
+      - net_1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_client.py --samples 10 --timeout 15
+
+  cli_edge_2:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: cli_edge_2
+    networks:
+      - net_1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_client.py --samples 10 --timeout 15
+
+  cli_edge_3:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: cli_edge_3
+    networks:
+      - net_1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_client.py --samples 15 --timeout 15
+
+  cli_edge_4:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: cli_edge_4
+    networks:
+      - net_1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_client.py --samples 15 --timeout 15
+
+networks:
+  net_1:
+  default:
+    driver: none

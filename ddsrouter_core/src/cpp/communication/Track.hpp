@@ -50,7 +50,7 @@ public:
      * @param enable:   Whether the \c Track should be initialized as enabled. False by default
      */
     Track(
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             types::ParticipantId reader_participant_id,
             std::shared_ptr<IReader> reader,
             std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
@@ -156,7 +156,7 @@ protected:
      *
      * @note: This variable is only used for log
      */
-    types::RealTopic topic_;
+    types::DdsTopic topic_;
 
     //! Reader that will read data
     std::shared_ptr<IReader> reader_;

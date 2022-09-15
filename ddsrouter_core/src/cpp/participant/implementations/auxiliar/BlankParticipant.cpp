@@ -54,13 +54,13 @@ bool BlankParticipant::is_rtps_kind() const noexcept
 }
 
 std::shared_ptr<IWriter> BlankParticipant::create_writer(
-        RealTopic topic)
+        DdsTopic topic)
 {
     return std::make_shared<BlankWriter>();
 }
 
 std::shared_ptr<IReader> BlankParticipant::create_reader(
-        RealTopic topic)
+        DdsTopic topic)
 {
     return std::make_shared<BlankReader>();
 }
