@@ -53,7 +53,7 @@ template <typename T>
 void ConsumerWaitHandler<T>::produce(
         const T& value)
 {
-    add_value_(value);
+    add_value_(T(value));
     this->operator ++();
 }
 

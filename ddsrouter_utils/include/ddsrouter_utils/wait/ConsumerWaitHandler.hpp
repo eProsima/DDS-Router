@@ -74,7 +74,6 @@ public:
     void produce(
             T&& value);
 
-
     /**
      * @brief Add a new value to the collection. Use copy constructor.
      *
@@ -123,18 +122,11 @@ protected:
     virtual void add_value_(
             T&& value) = 0;
 
-
-    /**
-     * @brief Method that adds a new value in the collection. Use copy constructor.
-     *
-     * This method must be reimplemented in child classes specialized to the internal collection.
-     *
-     * This method is called without any mutex taken and afterwards the internal counter is increased by 1.
-     *
-     * @param value new value
+    /*
+     * NOTE:
+     * Function add_value_ called with const reference is not available because of weird behaviour of override methods
+     * in template classes.
      */
-    virtual void add_value_(
-            const T& value) = 0;
 
     /**
      * @brief Method that gets next available value from the collection
