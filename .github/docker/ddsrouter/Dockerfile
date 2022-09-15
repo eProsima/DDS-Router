@@ -49,8 +49,8 @@ RUN mkdir src && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
     vcs import src < ddsrouter.repos && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
-    cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
-    cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
+    cd src/fastdds && git checkout testing/february && cd ../.. && \
+    cp -r src/fastdds/examples/C++/DDS/BasicConfigurationExample src/. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON -DINTERNAL_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug -DLOG_NO_INFO=OFF
 
 COPY run.bash /root/run.bash

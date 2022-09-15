@@ -58,28 +58,28 @@ Writer::Writer(
     // Create Writer
     fastrtps::rtps::WriterAttributes writer_att = writer_attributes_();
 
-    if (repeater)
-    {
-        logDebug(DDSROUTER_RTPS_WRITER, "Writer created with repeater filter");
+    // if (repeater)
+    // {
+    //     logDebug(DDSROUTER_RTPS_WRITER, "Writer created with repeater filter");
 
-        utils::PoolConfiguration pool_config = cache_change_pool_configuration_();
+    //     utils::PoolConfiguration pool_config = cache_change_pool_configuration_();
+    //     rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
+    //         rtps_participant,
+    //         writer_att,
+    //         payload_pool_,
+    //         std::make_shared<CacheChangePool>(pool_config),
+    //         rtps_history_,
+    //         nullptr);
+    // }
+    // else
+    // {
         rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
             rtps_participant,
             writer_att,
             payload_pool_,
-            std::make_shared<CacheChangePool>(pool_config),
             rtps_history_,
             nullptr);
-    }
-    else
-    {
-        rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
-            rtps_participant,
-            writer_att,
-            payload_pool_,
-            rtps_history_,
-            nullptr);
-    }
+    // }
 
     rtps_writer_->set_listener(this);
 
@@ -102,18 +102,18 @@ Writer::Writer(
                       " for Simple RTPSWriter in Participant " << participant_id);
     }
 
-    if (repeater)
-    {
-        // Use filter writer of origin
-        data_filter_ = std::make_unique<RepeaterDataFilter>();
-    }
-    else
-    {
-        // Use default filter
-        data_filter_ = std::make_unique<SelfDataFilter>();
-    }
+    // if (repeater)
+    // {
+    //     // Use filter writer of origin
+    //     data_filter_ = std::make_unique<RepeaterDataFilter>();
+    // }
+    // else
+    // {
+    //     // Use default filter
+    //     data_filter_ = std::make_unique<SelfDataFilter>();
+    // }
 
-    rtps_writer_->reader_data_filter(data_filter_.get());
+    // rtps_writer_->reader_data_filter(data_filter_.get());
 
     logInfo(DDSROUTER_RTPS_WRITER, "New Writer created in Participant " << participant_id_ << " for topic " <<
             topic_ << " with guid " << rtps_writer_->getGuid());
