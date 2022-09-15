@@ -90,7 +90,8 @@ def _subscriber_command(args):
         args.exe,
         'subscriber',
         '-s', str(args.samples),
-        '-d', str(args.domain)]
+        '-d', str(args.domain),
+        '--transport', 'udp']
 
     return command
 
