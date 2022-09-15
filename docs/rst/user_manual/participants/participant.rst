@@ -110,6 +110,16 @@ Below is the list with all the available Participant Kinds.
         - Discovery Server DDS DomainParticipant |br|
           for local communication.
 
+    *   - :ref:`user_manual_participants_discovery_server_wan`
+        - ``wan-discovery-server`` |br|
+          ``wan-ds``
+        - ``guid`` |br|
+          ``listening-addresses`` |br|
+          ``connection-addresses`` |br|
+          ``tls``
+        - Discovery Server DDS DomainParticipant |br|
+          for WAN communication.
+
     *   - :ref:`user_manual_participants_wan`
         - ``wan`` |br|
           ``router``

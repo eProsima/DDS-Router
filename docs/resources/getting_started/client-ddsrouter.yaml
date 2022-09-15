@@ -12,16 +12,11 @@ participants:
     domain: 0
 
   - name: ClientWAN
-    kind: wan-ds
-    discovery-server-guid:
-      id: 1
+    kind: wan
     connection-addresses:
-      - discovery-server-guid:
-          id: 0
-        addresses:
-          - ip: 192.168.1.8
-            port: 11800
-            transport: udp
+      - ip: 192.168.1.8
+        port: 11800
+        transport: udp
     listening-addresses:
       - ip: 192.168.1.4
         port: 11008

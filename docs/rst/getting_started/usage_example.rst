@@ -78,8 +78,7 @@ The configuration of WAN participants is more complex, and we will not be coveri
 example both WAN participants will communicate through UDP, with one being the client and the other one having the
 server role. Both participants are required to have a ``listening address`` (for the UDP case) where they will expect to
 receive traffic, and a ``connection address`` in the case of the client, which points at the server's
-``listening address``. Note that a unique ``id`` must be set for every WAN participant, and this entry should also be
-included in ``connection address``. Refer to :ref:`WAN Participant <user_manual_participants_wan>` and
+``listening address``. Refer to :ref:`WAN Participant <user_manual_participants_wan>` and
 :ref:`WAN Configuration <user_manual_wan_configuration>` for more information. You may also have a look at
 :ref:`WAN Example <examples_wan_example>` for a detailed explanation on how to configure this kind of participant.
 

@@ -30,7 +30,7 @@ participants:
 
 ##################################
 # WAN SERVER
-# This participant will subscribe to topics in allowlist using Discovery Server protocol as Server
+# This participant will subscribe to topics in allowlist and connect to clients through Initial Peers.
 
   - name: WANServer                                               # 6
     kind: wan                                                     # 7

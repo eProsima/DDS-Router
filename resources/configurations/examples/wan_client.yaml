@@ -48,7 +48,7 @@ participants:
 
 # This configuration example configures a DDS Router to listen to every message published in domain 1 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# through a WAN Participant (configured as Super Client) to another WAN Participant.
+# through a WAN Participant (configured as Client) to another WAN Participant.
 # The other direction of communication is also possible; receive messages at the WAN Participant and locally
 # publish them in domain 1.
 # Client specifies which DDS Router starts the communication with the other, and after communication has been
@@ -70,9 +70,9 @@ participants:
 # 6: New Participant with name <WanParticipant>.
 
 # 7: Kind of WANClient: <wan>.
-# InitialPeers discovery to discover and communicate with another WAN DDS Router.
+# InitialPeers discovery to discover and communicate with another Initial Peers participant.
 
 # 8: Add the connection addresses where to reach the remote DDS Routers to connect with
 # Uses the same info set in Server listening-addresses
 
-# 8: Add the listening addresses if this host is under a NAT, so the other external Router can access it.
+# 9: Add the listening addresses if this host is under a NAT, so the other external Router can access it.

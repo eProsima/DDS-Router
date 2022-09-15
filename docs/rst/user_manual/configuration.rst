@@ -35,7 +35,11 @@ with future releases.
         - ``v2.0``
         - *v0.2.0*
 
-**Current configuration version is v2.0**.
+    *   - version 3.0
+        - ``v3.0``
+        - *v0.3.0*
+
+**Current configuration version is v3.0**.
 This is the configuration version that is described along this page.
 
 .. note::
@@ -534,11 +538,11 @@ A complete example of all the configurations described on this page can be found
     ####################
 
     # Participant that will communicate with a DDS Router in a different LAN.
-    # This Participant will work as the remote DDS Router Client, so it set the connection address of the remote one.
+    # This Participant will work as the remote DDS Router Client, so it sets the connection address of the remote one.
 
       - name: Wan                       # Participant Name = Wan
 
-        kind: wan-ds                    # Participant Kind = Discovery Server WAN
+        kind: wan-ds                     # Participant Kind = Discovery Server WAN
 
         discovery-server-guid:
           id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe

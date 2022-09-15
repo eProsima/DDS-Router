@@ -40,7 +40,8 @@ Repeater Participant
 --------------------
 
 The **Repeater Participant** is the one that will be used to forward messages by the same Participant.
-It must be a :code:`WAN` Participant and be configured as so with *Discovery Server* configuration.
+It must be a :code:`WAN` Participant and be configured as so with
+:ref:`WAN configuration <user_manual_wan_configuration>`.
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml
@@ -50,13 +51,13 @@ It must be a :code:`WAN` Participant and be configured as so with *Discovery Ser
 Client Participants
 -------------------
 
-Every *Discovery Server Client* can connect to a Repeater Participant as if it was a normal :code:`WAN` Participant.
+Every *Client* can connect to a Repeater Participant as if it was a normal :code:`WAN` Participant.
 The Repeater admits as many edge |ddsrouter| connections as desired, so several |ddsrouter| can use the same
 or similar configuration to communicate across it.
 
 .. literalinclude:: ../../resources/examples/repeater_client.yaml
     :language: yaml
-    :lines: 33-39
+    :lines: 33-38
 
 
 Execute example

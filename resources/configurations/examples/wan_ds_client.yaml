@@ -1,6 +1,6 @@
-######################
-# WAN CLIENT EXAMPLE #
-######################
+#######################################
+# WAN DISCOVERY SERVER CLIENT EXAMPLE #
+#######################################
 
 ##################################
 # CONFIGURATION VERSION
@@ -49,8 +49,8 @@ participants:
 
 # This configuration example configures a DDS Router to listen to every message published in domain 1 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# through a WAN Participant (configured as Super Client) to another WAN Participant.
-# The other direction of communication is also possible; receive messages at the WAN Participant and locally
+# through a Discovery Server WAN Participant (configured as Super Client) to another Discovery Server WAN Participant.
+# The other direction of communication is also possible; receive messages at the Discovery Server WAN Participant and locally
 # publish them in domain 1.
 # Client specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.

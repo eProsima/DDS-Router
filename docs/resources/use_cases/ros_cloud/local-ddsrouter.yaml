@@ -13,7 +13,7 @@ participants:
     domain: 0
 
   - name: LocalWAN
-    kind: wan
+    kind: wan-discovery-server
     discovery-server-guid:
       id: 3
     listening-addresses:      # Needed for UDP communication

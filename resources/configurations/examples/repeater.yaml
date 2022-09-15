@@ -1,6 +1,6 @@
-######################
-# WAN SERVER EXAMPLE #
-######################
+###########################
+# REPEATER SERVER EXAMPLE #
+###########################
 
 ##################################
 # CONFIGURATION VERSION
@@ -56,4 +56,4 @@ participants:
 
 # 5: RepeaterParticipant will repeat messages that arrive to it to the rest of DDS Routers connected.
 
-# 6: Addresses where this Repeater will be listening to WAN participants
+# 6: Add the configuration of the address(es) where WAN clients will request connections.

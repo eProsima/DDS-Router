@@ -46,7 +46,7 @@ participants:
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# through a WAN Participant (configured as Server) to another WAN Participant.
+# through a Discovery Server WAN Participant (configured as Server) to another Discovery Server WAN Participant.
 # The other direction of communication is also possible; receive messages at the Discovery Server WAN Participant
 # and locally publish them in domain 0.
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
@@ -68,7 +68,7 @@ participants:
 # 6: New Participant with name <WANServer>.
 
 # 7: Kind of WANServer: <wan-ds>.
-# Discovery Server WAN communication with another DDS Router.
+# WAN communication with another DDS Router via Discovery Server.
 
 # 8: Set this Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe> for WANServer.
 # This GuidPrefix is needed in order from a remote DDS Router to connect with this one.

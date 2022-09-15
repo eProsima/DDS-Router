@@ -7,14 +7,14 @@ Discovery Server WAN Participant
 ################################
 
 This type of :term:`Participant` refers to a :term:`Discovery Server` :term:`DomainParticipant` that communicates
-with other **WAN** Participants in different networks.
+with other **Discovery Server WAN** Participants in different networks.
 This Participant will work as bridge for every Participant working locally in the LAN and any other LAN that has
-a |ddsrouter| with an active WAN Participant.
+a |ddsrouter| with an active Discovery Server WAN Participant.
 
 .. warning::
 
-    Do not try to communicate a WAN Participant with any other kind of Participant that is not of type
-    WAN Participant.
+    Do not try to communicate a Discovery Server WAN Participant with any other kind of Participant that is not of type
+    Discovery Server WAN Participant.
 
 Use case
 ========
@@ -55,6 +55,8 @@ WAN Configuration
 Refer to section :ref:`user_manual_wan_configuration` for detailed explanation on how to correctly configure
 the |ddsrouter| for WAN communication.
 
+.. _user_manual_participants_discovery_server_wan_example:
+
 Configuration Example
 =====================
 
@@ -67,7 +69,7 @@ Server GuidPrefix is ``01.0f.04.00.00.00.00.00.00.00.ca.fe`` using ``UDP`` trans
 
     - name: wan_participant                       # Participant Name = wan_participant
 
-      kind: wan
+      kind: wan-discovery-server
 
       discovery-server-guid:
         id: 2                                     # GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
