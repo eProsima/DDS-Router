@@ -79,6 +79,7 @@
 
    /rst/use_cases/ros_cloud
    /rst/use_cases/repeater
+   /rst/use_cases/wan_tcp
 
 
 .. _index_developer_manual:

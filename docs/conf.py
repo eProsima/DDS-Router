@@ -145,14 +145,17 @@ def select_css(html_css_dir):
     :param html_css_dir: The directory to save the CSS stylesheet.
     :return: Returns a list of CSS files to be imported.
     """
+    ret = ['_static/tabs.css']
     common_css = '_static/css/online_eprosima_rtd_theme.css'
     local_css = '_static/css/eprosima_rtd_theme.css'
     if download_css(html_css_dir):
         print('Applying common CSS style file: {}'.format(common_css))
-        return [common_css]
+        ret.append(common_css)
     else:
         print('Applying local CSS style file: {}'.format(local_css))
-        return [local_css]
+        ret.append(local_css)
+
+    return ret
 
 
 script_path = os.path.abspath(pathlib.Path(__file__).parent.absolute())
@@ -174,7 +177,11 @@ project_binary_docs_dir = os.path.abspath(
 # ones.
 extensions = [
     'sphinx.ext.todo',
+    'sphinx_tabs.tabs'
 ]
+
+sphinx_tabs_disable_css_loading = False
+sphinx_tabs_disable_tab_closing = True
 
 try:
     import sphinxcontrib.spelling  # noqa: F401
