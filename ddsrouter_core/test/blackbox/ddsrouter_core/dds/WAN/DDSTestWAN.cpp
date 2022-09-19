@@ -63,19 +63,18 @@ types::security::TlsConfiguration tls_configuration(
     // It fails when connecting to other server
     if (is_server(wan_kind))
     {
-        return types::security::TlsConfiguration(
-            "../../resources/tls/ca.crt", // ca
-            "", // private key password
-            "../../resources/tls/ddsrouter.key", // private key
-            "../../resources/tls/ddsrouter.crt", // cert
-            "../../resources/tls/dh_params.pem" // dh params
-            );
+        types::security::TlsConfiguration tls;
+        tls.certificate_authority_file = "../../resources/tls/ca.crt";
+        tls.private_key_file = "../../resources/tls/ddsrouter.key";
+        tls.certificate_chain_file = "../../resources/tls/ddsrouter.crt";
+        tls.dh_params_file = "../../resources/tls/dh_params.pem";
+        return tls;
     }
     else
     {
-        return types::security::TlsConfiguration(
-            "../../resources/tls/ca.crt" // ca
-            );
+        types::security::TlsConfiguration tls;
+        tls.certificate_authority_file = "../../resources/tls/ca.crt";
+        return tls;
     }
 }
 

@@ -31,143 +31,9 @@ namespace core {
 namespace types {
 namespace security {
 
-template <>
-void TlsConfiguration::check_valid_<TlsKind::client>() const
-{
-    if (certificate_authority_file_.empty())
-    {
-        // TODO check it is a correct file
-        throw utils::InitializationException(utils::Formatter() << "Invalid certificate_authority_file");
-    }
-}
-
-template <>
-void TlsConfiguration::check_valid_<TlsKind::server>() const
-{
-    // TODO check every file is correct
-    if (private_key_file_.empty() || certificate_chain_file_.empty() || dh_params_file_.empty())
-    {
-        throw utils::InitializationException(utils::Formatter() << "At least one invalid file");
-    }
-}
-
-template <>
-void TlsConfiguration::check_valid_<TlsKind::both>() const
-{
-    this->check_valid_<TlsKind::client>();
-    this->check_valid_<TlsKind::server>();
-}
-
-// Inactive constructor
-TlsConfiguration::TlsConfiguration()
-    : kind_(TlsKind::inactive)
-{
-}
-
-// Client constructor
-TlsConfiguration::TlsConfiguration(
-        std::string certificate_authority_file)
-    : kind_(TlsKind::client)
-    , certificate_authority_file_(certificate_authority_file)
-{
-    this->check_valid_<TlsKind::client>();
-}
-
-// Server constructor
-TlsConfiguration::TlsConfiguration(
-        std::string private_key_file_password,
-        std::string private_key_file,
-        std::string certificate_chain_file,
-        std::string dh_params_file)
-    : kind_(TlsKind::server)
-    , private_key_file_password_(private_key_file_password)
-    , private_key_file_(private_key_file)
-    , certificate_chain_file_(certificate_chain_file)
-    , dh_params_file_(dh_params_file)
-{
-    this->check_valid_<TlsKind::server>();
-}
-
-// Server & client constructor
-TlsConfiguration::TlsConfiguration(
-        std::string certificate_authority_file,
-        std::string private_key_file_password,
-        std::string private_key_file,
-        std::string certificate_chain_file,
-        std::string dh_params_file)
-    : kind_(TlsKind::both)
-    , certificate_authority_file_(certificate_authority_file)
-    , private_key_file_password_(private_key_file_password)
-    , private_key_file_(private_key_file)
-    , certificate_chain_file_(certificate_chain_file)
-    , dh_params_file_(dh_params_file)
-{
-    this->check_valid_<TlsKind::both>();
-}
-
 bool TlsConfiguration::is_active() const noexcept
 {
-    return this->kind_ != TlsKind::inactive;
-}
-
-const std::string& TlsConfiguration::certificate_authority_file() const
-{
-    if (this->compatible<TlsKind::client>())
-    {
-        return certificate_authority_file_;
-    }
-    else
-    {
-        throw utils::InconsistencyException("Cannot get certificate_authority_file: incompatible with TlsKind::client");
-    }
-}
-
-const std::string& TlsConfiguration::private_key_file_password() const
-{
-    if (this->compatible<TlsKind::server>())
-    {
-        return private_key_file_password_;
-    }
-    else
-    {
-        throw utils::InconsistencyException("Cannot get private_key_file_password: incompatible with TlsKind::server");
-    }
-}
-
-const std::string& TlsConfiguration::private_key_file() const
-{
-    if (this->compatible<TlsKind::server>())
-    {
-        return private_key_file_;
-    }
-    else
-    {
-        throw utils::InconsistencyException("Cannot get private_key_file: incompatible with TlsKind::server");
-    }
-}
-
-const std::string& TlsConfiguration::certificate_chain_file() const
-{
-    if (this->compatible<TlsKind::server>())
-    {
-        return certificate_chain_file_;
-    }
-    else
-    {
-        throw utils::InconsistencyException("Cannot get certificate_chain_file: incompatible with TlsKind::server");
-    }
-}
-
-const std::string& TlsConfiguration::dh_params_file() const
-{
-    if (this->compatible<TlsKind::server>())
-    {
-        return dh_params_file_;
-    }
-    else
-    {
-        throw utils::InconsistencyException("Cannot get dh_params_file: no compatible with TlsKind::server");
-    }
+    return this->kind != TlsKind::inactive;
 }
 
 void TlsConfiguration::enable_tls(
@@ -185,9 +51,17 @@ void TlsConfiguration::enable_tls(
     descriptor->tls_config.add_option(
         eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSOptions::NO_SSLV2); // not safe
 
-    // Perform verification of the server
-    descriptor->tls_config.add_verify_mode(
-        eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
+    if (verify_peer)
+    {
+        // Perform verification of the server
+        descriptor->tls_config.add_verify_mode(
+            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_PEER);
+    }
+    else
+    {
+        descriptor->tls_config.verify_mode =
+            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::UNUSED;
+    }
 
     if (client)
     {
@@ -231,13 +105,7 @@ void TlsConfiguration::enable_tls_client(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor,
         bool only_client) const
 {
-    if (!compatible<types::security::TlsKind::client>())
-    {
-        utils::tsnh(
-            utils::Formatter() << "Error, TlsConfiguration expected a Client-compatible configuration.");
-    }
-
-    if (only_client)
+    if (only_client && verify_peer)
     {
         // Fail verification if the server has no certificate
         descriptor->tls_config.add_verify_mode(
@@ -245,26 +113,87 @@ void TlsConfiguration::enable_tls_client(
     }
 
     // CA certificate
-    descriptor->tls_config.verify_file = certificate_authority_file();
+    descriptor->tls_config.verify_file = certificate_authority_file;
 }
 
 void TlsConfiguration::enable_tls_server(
         std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor) const
 {
-    if (!compatible<types::security::TlsKind::server>())
+    // Password
+    descriptor->tls_config.password = private_key_file_password;
+    // Private key
+    descriptor->tls_config.private_key_file = private_key_file;
+    // DDS-Router certificate
+    descriptor->tls_config.cert_chain_file = certificate_chain_file;
+    // DH
+    descriptor->tls_config.tmp_dh_file = dh_params_file;
+}
+
+template <>
+bool TlsConfiguration::is_valid_kind<TlsKind::client>(
+        utils::Formatter& error_msg) const noexcept
+{
+    if (certificate_authority_file.empty())
     {
-        utils::tsnh(
-            utils::Formatter() << "Error, TlsConfiguration expected a Server-compatible configuration.");
+        // TODO check it is a correct file
+        error_msg << "Invalid certificate_authority_file.";
+        return false;
+    }
+    return true;
+}
+
+template <>
+bool TlsConfiguration::is_valid_kind<TlsKind::server>(
+        utils::Formatter& error_msg) const noexcept
+{
+    if (private_key_file.empty())
+    {
+        // TODO check it is a correct file
+        error_msg << "Invalid private_key_file.";
+        return false;
     }
 
-    // Password
-    descriptor->tls_config.password = private_key_file_password();
-    // Private key
-    descriptor->tls_config.private_key_file = private_key_file();
-    // DDS-Router certificate
-    descriptor->tls_config.cert_chain_file = certificate_chain_file();
-    // DH
-    descriptor->tls_config.tmp_dh_file = dh_params_file();
+    if (dh_params_file.empty())
+    {
+        // TODO check it is a correct file
+        error_msg << "Invalid dh_params_file.";
+        return false;
+    }
+
+    // chain cert is not required, however is usually needed
+    if (certificate_chain_file.empty())
+    {
+        logInfo(DDSROUTER_TLSCONFIGURATION, "Server configured TLS does not have certificate chain file.")
+    }
+
+    return true;
+}
+
+template <>
+bool TlsConfiguration::is_valid_kind<TlsKind::both>(
+        utils::Formatter& error_msg) const noexcept
+{
+    return is_valid_kind<TlsKind::client>(error_msg) && is_valid_kind<TlsKind::server>(error_msg);
+}
+
+bool TlsConfiguration::is_valid(
+            utils::Formatter& error_msg) const noexcept
+{
+    switch (kind)
+    {
+    case TlsKind::client:
+        return is_valid_kind<TlsKind::client>(error_msg);
+
+    case TlsKind::server:
+        return is_valid_kind<TlsKind::server>(error_msg);
+
+    case TlsKind::both:
+        return is_valid_kind<TlsKind::both>(error_msg);
+
+    default:
+        // None
+        return true;
+    }
 }
 
 } /* namespace security */

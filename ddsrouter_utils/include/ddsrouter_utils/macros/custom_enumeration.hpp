@@ -69,11 +69,11 @@ namespace utils {
     { APPLY_MACRO_FOR_EACH(STRINGIFY_WITH_COMMA, __VA_ARGS__) };                                                  \
                                                                                                                       \
     /* To string method */                                                                                            \
-    const std::string& to_string(const enumeration_name& e)                                                           \
+    inline const std::string& to_string(const enumeration_name& e)                                                           \
     { return names_ ## enumeration_name[static_cast<int>(e)]; }                                                     \
                                                                                                                       \
     /* From string */                                                                                                 \
-    enumeration_name from_string_ ## enumeration_name(const std::string& s)                                             \
+    inline enumeration_name from_string_ ## enumeration_name(const std::string& s)                                             \
     {                                                                                                                 \
         for (int i = 0; i < COUNT_ARGUMENTS(__VA_ARGS__); i++)                                                            \
         if (names_ ## enumeration_name[i] == s)return static_cast<enumeration_name>(i);                            \
@@ -82,7 +82,7 @@ namespace utils {
     }                                                                                                                 \
                                                                                                                       \
     /* Serialization operation */                                                                                     \
-    std::ostream& operator <<(std::ostream& os, const enumeration_name& e) { os << to_string(e); return os; }         \
+    inline std::ostream& operator <<(std::ostream& os, const enumeration_name& e) { os << to_string(e); return os; }         \
                                                                                                                       \
     /* Number of elements in enumeration */                                                                           \
     constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__);

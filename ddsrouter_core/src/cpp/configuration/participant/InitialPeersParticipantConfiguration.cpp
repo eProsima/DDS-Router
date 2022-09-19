@@ -35,7 +35,7 @@ InitialPeersParticipantConfiguration::InitialPeersParticipantConfiguration(
         const types::DomainId& domain_id,
         const std::set<types::Address>& listening_addresses,
         const std::set<types::Address>& connection_addresses,
-        const types::security::TlsConfiguration tls_configuration)
+        const types::security::TlsConfiguration& tls_configuration)
     : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
     , listening_addresses(listening_addresses)
     , connection_addresses(connection_addresses)
