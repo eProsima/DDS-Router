@@ -84,7 +84,7 @@ namespace utils {
     /* Serialization operation */                                                                                     \
     inline std::ostream& operator <<(std::ostream& os, const enumeration_name& e) \
     { os << to_string(e); return os; }         \
-                                                                                                                      \
+                                                                                                  \
     /* Number of elements in enumeration */                                                                           \
     constexpr const unsigned int N_VALUES_ ## enumeration_name = COUNT_ARGUMENTS(__VA_ARGS__);
 
