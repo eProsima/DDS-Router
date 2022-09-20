@@ -23,6 +23,11 @@ allowlist:
 blocklist:
   - name: "rt/ros_discovery_info*"
 
+specs:
+  threads: 10
+  max-depth: 1000
+
+
 participants:
 
   - name: simple_0

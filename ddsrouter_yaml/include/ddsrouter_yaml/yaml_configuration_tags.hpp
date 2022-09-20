@@ -40,7 +40,6 @@ constexpr const char* VERSION_TAG("version");       //! Version to parse the yam
 constexpr const char* VERSION_TAG_V_1_0("v1.0");    //! Version v1.0
 constexpr const char* VERSION_TAG_V_2_0("v2.0");    //! Version v2.0
 constexpr const char* VERSION_TAG_V_3_0("v3.0");    //! Version v3.0
-constexpr const char* VERSION_TAG_V_4_0("v4.0");    //! Version v4.0
 
 // Topics related tags
 constexpr const char* ALLOWLIST_TAG("allowlist");     //! List of allowed topics

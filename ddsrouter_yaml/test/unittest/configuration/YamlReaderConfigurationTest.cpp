@@ -254,7 +254,7 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v3.0
         participants:
           - name: "P1"
             kind: "void"
@@ -291,7 +291,7 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v3.0
         participants:
           - name: "P1"
             kind: "void"

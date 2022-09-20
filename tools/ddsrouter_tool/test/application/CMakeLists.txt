@@ -28,7 +28,6 @@ set(TEST_CONFIGURATIONS
     complex_configuration_v1
     complex_configuration_v2
     complex_configuration_v3
-    complex_configuration_v4
 )
 
 # Whether one or other signal in test
