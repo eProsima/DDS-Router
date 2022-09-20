@@ -59,8 +59,8 @@ void TlsConfiguration::enable_tls(
     }
     else
     {
-        descriptor->tls_config.verify_mode =
-            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::UNUSED;
+        descriptor->tls_config.add_verify_mode(
+            eprosima::fastdds::rtps::TCPTransportDescriptor::TLSConfig::TLSVerifyMode::VERIFY_NONE);
     }
 
     if (client)
@@ -133,11 +133,14 @@ template <>
 bool TlsConfiguration::is_valid_kind<TlsKind::client>(
         utils::Formatter& error_msg) const noexcept
 {
-    if (certificate_authority_file.empty())
+    if (verify_peer)
     {
-        // TODO check it is a correct file
-        error_msg << "Invalid certificate_authority_file.";
-        return false;
+        if (certificate_authority_file.empty())
+        {
+            // TODO check it is a correct file
+            error_msg << "Invalid certificate_authority_file while server verification must be done.";
+            return false;
+        }
     }
     return true;
 }
@@ -163,7 +166,9 @@ bool TlsConfiguration::is_valid_kind<TlsKind::server>(
     // chain cert is not required, however is usually needed
     if (certificate_chain_file.empty())
     {
-        logInfo(DDSROUTER_TLSCONFIGURATION, "Server configured TLS does not have certificate chain file.")
+        // TODO check it is a correct file
+        error_msg << "Invalid certificate_chain_file.";
+        return false;
     }
 
     return true;

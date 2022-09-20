@@ -108,7 +108,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
-    ASSERT_EQ(tls_configuration.certificate_authority_file , "ca.pem");
+    ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
     ASSERT_EQ(tls_configuration.private_key_file_password, "pwd-file");
     ASSERT_EQ(tls_configuration.private_key_file, "pk-file");
     ASSERT_EQ(tls_configuration.certificate_chain_file, "cert-chain-file");
