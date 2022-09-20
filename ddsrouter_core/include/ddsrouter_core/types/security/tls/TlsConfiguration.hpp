@@ -79,7 +79,7 @@ struct TlsConfiguration : public configuration::BaseConfiguration
     }
 
     template <TlsKind Kind>
-    bool is_valid_kind(utils::Formatter& error_msg) const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid_kind(utils::Formatter& error_msg) const noexcept;
 
     //! Activate TLS configuration in a TCP transport descriptor
     DDSROUTER_CORE_DllAPI void enable_tls(
