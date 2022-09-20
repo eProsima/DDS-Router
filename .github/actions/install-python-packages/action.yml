@@ -11,6 +11,7 @@ runs:
           sphinx_rtd_theme==0.4.3 \
           sphinxcontrib.spelling==5.0.0 \
           sphinxcontrib-imagehelper==1.1.1 \
+          sphinx-tabs==3.2.0 \
           colcon-common-extensions \
           colcon-mixin \
           vcstool \

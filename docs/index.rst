@@ -77,6 +77,7 @@
    :numbered: 5
    :hidden:
 
+   /rst/use_cases/wan_tcp
    /rst/use_cases/ros_cloud
    /rst/use_cases/repeater
 

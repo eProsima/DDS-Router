@@ -29,8 +29,7 @@ if(DOC8)
     message(STATUS "Found doc8: ${DOC8}")
     add_test(
         NAME documentation.doc8
-        COMMAND ${DOC8}
-        --max-line-length 120 ${PROJECT_SOURCE_DOCS_DIR})
+        COMMAND ${DOC8} --ignore D001 ${PROJECT_SOURCE_DOCS_DIR})
 else()
     message(FATAL_ERROR "Could not find doc8")
 endif()
