@@ -13,14 +13,4 @@
 # limitations under the License.
 
 # Add test subdirectories
-add_subdirectory(collection)
-add_subdirectory(event)
-add_subdirectory(exception)
-add_subdirectory(macros)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(return_code)
-add_subdirectory(thread)
-add_subdirectory(time)
-add_subdirectory(utils)
-add_subdirectory(wait)
+add_subdirectory(database)
