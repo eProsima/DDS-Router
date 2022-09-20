@@ -17,7 +17,7 @@ Both DDS entities will communicate over the Internet by means of the DDS Router.
 .. warning::
 
     This tutorial is intended for WAN communication.
-    However, if there is only access to a LAN communication, it is possible to follow the tutorial by changing the DDS Domain Id so that the Subscriber uses the default Domain (``0``) and the Publisher uses DDS Domain ``1``.
+    However, if there is only access to a LAN communication, it is possible to follow the tutorial by changing the DDS Domain Id so DDS entities in LAN A use default Domain (``0``) and those in LAN B use DDS Domain ``1``.
     This way the DDS entities are logically isolated and will not discovery other entities out of their DDS Domain.
 
 The image below describes the scenario presented in this tutorial.
@@ -37,8 +37,16 @@ Several key elements can be observed in it:
 
     This example presents two routers that enable Internet communication:
 
-    * *DDS Router Net A*. This is the DDS Router that is deployed on *LAN A*. This way it is possible for the robot to communicate out-of-the-box with an external DDS Router configured as server.
-    * *DDS Router Net B*. It plays the server role in the communication. It will expose a public network address to which client DDS Routers connect to establish communication.
+    *   *DDS Router Net A*.
+        This is the DDS Router that is deployed on *LAN A* and configured as TCP client.
+        This way it is possible for the robot to communicate out-of-the-box with an external DDS Router configured as TCP server.
+    *   *DDS Router Net B*.
+        It plays the server role in the communication.
+        It will expose a public network address to which client DDS Routers connect to establish communication.
+
+    It is important to mention that there is no correlation between DDS Publisher and Subscriber and TCP client and server.
+    That is, the functionality of the DDS entity is independent of its behavior in TCP communication.
+    Thus, although one DDS Router acts as a TCP client and another as a TCP server, both share information in both directions of communication.
 
 Prerequisites
 -------------
@@ -115,12 +123,12 @@ Next, it is briefly explained the most relevant aspects of this configuration fi
 The ``participants`` are the interfaces of the DDS Router to communicate with other networks.
 In this case, we have two participants:
 
-    *   ``local``: this is a simple participant that communicates with all DDS entities it finds in the default DDS Domain, domain 0.
-        For more information about this participant please refer to the :ref:`Simple Participant section <user_manual_participants_simple>` of this documentation.
+*   ``local``: this is a simple participant that communicates with all DDS entities it finds in the default DDS Domain, domain 0.
+    For more information about this participant please refer to the :ref:`Simple Participant section <user_manual_participants_simple>` of this documentation.
 
-    *   ``wan``: it is a participant designed for WAN communication or the communication between two *DDS Routers*.
-        It uses the `Fast DDS Initial Peers configuration <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html#initial-peers>`_ to establish a point-to-point communication between two DDS entities, two *DDS Routers* in this case.
-        For now it is not necessary to know more about the details of this configuration as you only need to configure the connection address of the DDS Router.
+*   ``wan``: it is a participant designed for WAN communication or the communication between two *DDS Routers*.
+    It uses the `Fast DDS Initial Peers configuration <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html#initial-peers>`_ to establish a point-to-point communication between two DDS entities, two *DDS Routers* in this case.
+    For now it is not necessary to know more about the details of this configuration as you only need to configure the connection address of the DDS Router.
 
     For the *DDS Router Net A*, a connection address shall be defined which must be the same as the one exposed by the *DDS Router Net B*.
     There are some relevant configurations within this connection address:

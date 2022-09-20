@@ -29,6 +29,7 @@ microcontroller
 middleware
 multicast
 mutex
+QoS
 Redistributable
 Requiredness
 runtime
