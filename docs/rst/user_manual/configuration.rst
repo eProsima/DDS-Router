@@ -11,6 +11,11 @@ This *.yaml* file contains all the information regarding the |ddsrouter| configu
 and :term:`Participants <Participant>` configurations. Configuration files may be easily validated by using the
 :ref:`yaml_validator` tool.
 
+.. contents::
+    :local:
+    :backlinks: none
+    :depth: 2
+
 Configuration version
 =====================
 
@@ -54,10 +59,17 @@ This is the configuration version that is described along this page.
 
 .. _thread_configuration:
 
-Number of Threads
-=================
+Specs Configuration
+===================
 
-The YAML Configuration support a ``threads`` **optional** value that allows the user to set a maximum number of threads
+The YAML Configuration supports a ``specs`` **optional** tag that contains certain options related with the
+overall configuration of the DDS Router instance to run.
+The values available to configure are:
+
+Number of Threads
+-----------------
+
+``specs`` supports a ``threads`` **optional** value that allows the user to set a maximum number of threads
 for the internal :code:`ThreadPool`.
 This ThreadPool allows to limit the number of threads spawned by the application.
 This improves the performance of the data transmission between Participants.
@@ -67,22 +79,99 @@ In case this value is not set, the default number of threads used is :code:`12`.
 
 .. _history_depth_configuration:
 
-Maximum History Depth
-=====================
+Maximum Default History Depth
+-----------------------------
 
+``specs`` supports a ``max-depth`` **optional** value that configures the history size
+of the Fast DDS internal entities.
 By default, the depth of every RTPS History instance is :code:`5000`, which sets a constraint on the maximum number of
-samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT`` `DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
-
-Optionally, this parameter may be tuned from within the YAML Configuration file, under the ``max-depth`` tag, in order
-to better fit concrete scenarios.
-
+samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT_LOCAL``
+`DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
 Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of
 topics and |ddsrouter| participants) are as big as to cause memory exhaustion issues.
-
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
 enough memory is available.
 
 .. _topic_filtering:
+
+Built-in Topics
+===============
+
+|ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
+By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
+and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each
+discovered topic.
+
+.. note::
+
+    DDS Router entities are created with the QoS of the first Subscriber found in this Topic.
+
+The discovery phase of the network topics can be accelerated by using the builtin topic list (``builtin-topics``).
+By defining topics in this list, the DDS router will create the DataWriters and DataReaders for these topics without
+waiting for them to be discovered.
+In this way, the initialization phase mentioned above is omitted and the application launching efficiency is improved.
+This feature also allows to manually force the QoS of a specific topic, so the entities created in such topic
+follows the specified QoS and not the one first discovered.
+
+Topic Quality of Service
+------------------------
+
+For every topic contained in this list, both ``name`` and ``type`` must be specified and contain no wildcard
+characters. The entry ``keyed`` is optional, and defaults to ``false``.
+Apart from these values, the tag ``qos`` under each topic allows to configure the following values:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Quality of Service
+        - Yaml tag
+        - Data type
+        - Default value
+        - QoS set
+
+    *   - Reliability
+        - ``reliability``
+        - *bool*
+        - ``false``
+        - ``RELIABLE`` / ``BEST_EFFORT``
+
+    *   - Durability
+        - ``durability``
+        - *bool*
+        - ``false``
+        - ``TRANSIENT_LOCAL`` / ``VOLATILE``
+
+    *   - History Depth
+        - ``depth``
+        - *integer*
+        - *default value*
+        - -
+
+    *   - Partitions
+        - ``partitions``
+        - *bool*
+        - ``false``
+        - Topic with / without partitions
+
+    *   - Ownership
+        - ``ownership``
+        - *bool*
+        - ``false``
+        - ``EXCLUSIVE_OWNERSHIP_QOS`` / ``SHARED_OWNERSHIP_QOS``
+
+
+.. code-block:: yaml
+
+    builtin-topics:
+      - name: HelloWorldTopic
+        type: HelloWorld
+        qos:
+          reliability: true  # Use QoS RELIABLE
+          durability: true   # Use QoS TRANSIENT_LOCAL
+          depth: 100         # Use History Depth 100
+          partitions: true   # Topic with partitions
+          ownership: false   # Use QoS SHARED_OWNERSHIP_QOS
+
 
 Topic Filtering
 ===============
@@ -158,22 +247,6 @@ If a topic matches an expression both in the ``allowlist`` and in the ``blocklis
 causing the data under this topic to be discarded.
 
 
-Builtin topics list (``builtin-topics``)
-----------------------------------------
-
-|ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
-By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
-and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each
-discovered topic.
-
-The discovery phase of the network topics can be accelerated by using the builtin topic list (``builtin-topics``).
-By defining topics in this list, the DDS router will create the DataWriters and DataReaders for these topics without
-waiting for them to be discovered.
-In this way, the initialization phase mentioned above is omitted and the application launching efficiency is improved.
-
-Note that, for every topic contained in this list, both ``name`` and ``type`` must be specified and contain no wildcard
-characters. The entry ``keyed`` is optional, and defaults to ``false``.
-
 Examples of usage
 -----------------
 
@@ -186,7 +259,8 @@ Dynamic topic discovery example
 This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2
 topic for ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
 topics in the DDS network are expected to be dynamically discovered.
-Additionally, two rules are specified in the ``blocklist`` in order to filter out messages of no interest to the user.
+Additionally, two rules are specified in the ``blocklist`` in order to filter out messages of no interest to the user
+(in this case ROS2 services related topics).
 
 .. code-block:: yaml
 
@@ -198,9 +272,6 @@ Additionally, two rules are specified in the ``blocklist`` in order to filter ou
       - name: "rq/*"
       - name: "rr/*"
 
-    builtin-topics:
-      - name: rt/chatter
-        type: std_msgs::msg::dds_::String_
 
 Allowlist and blocklist collision
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -209,7 +280,8 @@ In the following example, the ``HelloWorldTopic`` topic is both in the ``allowli
 ``blocklist``, so according to the ``blocklist`` preference rule this topic is blocked.
 Moreover, only the topics present in the allowlist are relayed, regardless of whether more topics are dynamically
 discovered in the DDS network.
-In this case the forwarded topics are ``AllowedTopic1`` and ``AllowedTopic2``.
+In this case the forwarded topics are ``AllowedTopic1`` with data type ``Allowed``
+and ``AllowedTopic2`` regardless of its data type.
 
 .. code-block:: yaml
 
@@ -275,7 +347,7 @@ locally with domain 1.
 .. _user_manual_configuration_domain_id:
 
 Domain Id
-=========
+---------
 
 Tag ``domain`` configures the :term:`Domain Id` of a specific Participant.
 Be aware that some Participants (e.g. Discovery Servers) does not need a Domain Id configuration.
@@ -288,7 +360,7 @@ Be aware that some Participants (e.g. Discovery Servers) does not need a Domain 
 .. _user_manual_configuration_repeater:
 
 Repeater Participant
-====================
+--------------------
 
 Optional tag ``repeater`` configures a :ref:`WAN Participant <user_manual_participants_wan>` as a *Repeater* point.
 This means that this Participant will forward all the information received from its Readers by its Writer.
@@ -307,7 +379,7 @@ Check the following :ref:`use_case_repeater` to know how to use the ``repeater``
 .. _user_manual_configuration_network_address:
 
 Network Address
-===============
+---------------
 
 Network Addresses are elements that can be configured for specific Participants.
 An Address is defined by:
@@ -356,14 +428,14 @@ For more information, check section :ref:`user_manual_wan_configuration_nat_trav
 .. _user_manual_configuration_discovery_server_guidprefix:
 
 Discovery Server GuidPrefix
-===========================
+---------------------------
 
 A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order to other Participants connect to it.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
 
 
 Discovery Server GuidPrefix by string
--------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The GuidPrefix of the Discovery Server can be configured using ``guid`` tag.
 Be aware of using the correct format for GuidPrefix.
@@ -376,7 +448,7 @@ That is, 12 hexadecimal numbers (lower than ``ff``) separated with ``.``.
 
 
 Discovery Server GuidPrefix by Id
----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Using tag ``id``, the GuidPrefix will be calculated arbitrarily using a default |ddsrouter| GuidPrefix.
 This default GuidPrefix is ``01.0f.<id>.00.00.00.00.00.00.00.ca.fe``.
@@ -395,7 +467,7 @@ This entry is ignored if ``guid`` is specified.
 
 
 ROS Discovery Server GuidPrefix
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There is a specific GuidPrefix for ROS 2 executions, so it could be used using Fast DDS CLI and
 ROS 2 ``ROS_DISCOVERY_SERVER`` environment variable
@@ -416,7 +488,7 @@ Default value for ``id`` is ``0``.
 .. _user_manual_configuration_listening_addresses:
 
 Listening Addresses
-===================
+-------------------
 
 Tag ``listening-addresses`` configures the network addresses where this Participant is going to
 listen for remote Participants.
@@ -436,7 +508,7 @@ listen for remote Participants.
 .. _user_manual_configuration_initial_peers_connection_addresses:
 
 Initial Peers Connection Addresses
-==================================
+----------------------------------
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote WAN Participants.
 ``connection-addresses`` is *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
@@ -454,7 +526,7 @@ Tag ``connection-addresses`` configure a connection with one or multiple remote 
 .. _user_manual_configuration_discovery_server_connection_addresses:
 
 Discovery Server Connection Addresses
-=====================================
+-------------------------------------
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
 ``connection-addresses`` is the *key* for an array in which each element has a GuidPrefix referencing the Discovery
@@ -492,14 +564,29 @@ A complete example of all the configurations described on this page can be found
     # Version Latest
     version: v3.0
 
+    specs:
+      threads: 10
+      max-depth: 1000
+
     # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
     # Relay topic HelloWorldTopic and type HelloWorld
 
     builtin-topics:
+
       - name: rt/chatter
         type: std_msgs::msg::dds_::String_
+
       - name: HelloWorldTopic
         type: HelloWorld
+        qos:
+          reliability: true
+          durability: true
+
+    # Do not allow ROS2 services
+
+    blocklist:
+      - name: "rr/*"
+      - name: "rq/*"
 
 
     participants:
@@ -534,6 +621,14 @@ A complete example of all the configurations described on this page can be found
             port: 11601                 # Port = 11601
             external-port: 11602        # External Port = 11602
             transport: tcp              # Transport = TCP
+
+        connection-addresses:
+          - discovery-server-guid:
+              id: 2
+              ros-discovery-server: true
+            addresses:
+              - domain: "localhost"
+                port: 22000
 
     ####################
 
