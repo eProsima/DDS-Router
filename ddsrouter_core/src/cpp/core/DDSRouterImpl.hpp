@@ -24,7 +24,8 @@
 #include <mutex>
 
 #include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <ddsrouter_utils/thread/manager/IManager.hpp>
+#include <ddsrouter_utils/thread/manager/StdThreadPool.hpp>
 
 #include <communication/DDSBridge.hpp>
 #include <communication/rpc/RPCBridge.hpp>
@@ -342,7 +343,19 @@ protected:
     //! Internal mutex for concurrent calls
     std::recursive_mutex mutex_;
 
-    std::shared_ptr<utils::SlotThreadPool> thread_pool_;
+    /**
+     * @warning \c thread_manager_ and \c thread_pool_ reference the same object.
+     *
+     * @brief Couple of variables that reference the same object StdThreadPool.
+     *
+     * While \c thread_pool_ is used internally to start and stop Thread Pool (and methods specific from ThreadPool
+     * and not from IManager) \c thread_manager_ is used to pass it to other entities as a shared entity that need
+     * to use a IManager.
+     *
+     * The use of both variables is just to avoid the casting when using StdThreadPool specific methods.
+     */
+    utils::thread::StdThreadPool* thread_pool_;
+    std::shared_ptr<utils::thread::IManager> thread_manager_;
 };
 
 } /* namespace core */

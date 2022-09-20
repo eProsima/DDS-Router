@@ -25,8 +25,9 @@
 #include <set>
 #include <shared_mutex>
 
-#include <communication/Bridge.hpp>
+#include <ddsrouter_utils/thread/connector/SlotConnector.hpp>
 
+#include <communication/Bridge.hpp>
 #include <communication/rpc/ServiceRegistry.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/topic/RPCTopic.hpp>
@@ -60,7 +61,7 @@ public:
      * @param topic: Topic (service) of which this RPCBridge manages communication
      * @param participant_database: Collection of Participants to manage communication
      * @param payload_pool: Payload Pool that handles the reservation/release of payloads throughout the DDS Router
-     * @param thread_pool: Shared pool of threads in charge of data transmission.
+     * @param thread_manager: Shared pool of threads in charge of data transmission.
      *
      * @note Always created disabled, manual enable required. First enable creates all endpoints.
      */
@@ -68,7 +69,7 @@ public:
             const types::RPCTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool);
+            std::shared_ptr<utils::thread::IManager> thread_manager);
 
     /**
      * @brief Destructor
@@ -175,7 +176,11 @@ protected:
     std::map<types::ParticipantId, std::shared_ptr<rtps::Writer>> request_writers_;
 
     //! Map readers' GUIDs to their associated thread pool tasks, and also keep a task emission flag.
-    std::map<types::Guid, std::pair<bool, utils::TaskId>> tasks_map_;
+    std::map<
+        types::Guid,
+        std::pair<
+            bool,
+            utils::thread::SimpleSlotConnector>> tasks_map_;
 
     /**
      * Registry of requests received, with all the information needed to send the future reply back to the requester.

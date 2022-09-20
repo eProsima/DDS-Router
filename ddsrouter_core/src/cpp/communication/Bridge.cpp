@@ -31,10 +31,10 @@ using namespace eprosima::ddsrouter::core::types;
 Bridge::Bridge(
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<utils::SlotThreadPool> thread_pool)
+        std::shared_ptr<utils::thread::IManager> thread_manager)
     : participants_(participants_database)
     , payload_pool_(payload_pool)
-    , thread_pool_(thread_pool)
+    , thread_manager_(thread_manager)
     , enabled_(false)
 {
 }

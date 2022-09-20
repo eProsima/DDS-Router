@@ -21,7 +21,7 @@
 
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <ddsrouter_utils/thread/manager/IManager.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -51,7 +51,7 @@ public:
     Bridge(
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool);
+            std::shared_ptr<utils::thread::IManager> thread_manager);
 
     /**
      * Enable bridge
@@ -72,7 +72,7 @@ protected:
     std::shared_ptr<PayloadPool> payload_pool_;
 
     //! Common shared thread pool
-    std::shared_ptr<utils::SlotThreadPool> thread_pool_;
+    std::shared_ptr<utils::thread::IManager> thread_manager_;
 
     //! Whether the Bridge is currently enabled
     std::atomic<bool> enabled_;

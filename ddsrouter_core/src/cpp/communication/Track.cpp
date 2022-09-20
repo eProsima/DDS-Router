@@ -19,8 +19,6 @@
 
 #include <ddsrouter_utils/exception/UnsupportedException.hpp>
 #include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
-#include <ddsrouter_utils/thread_pool/task/TaskId.hpp>
 
 #include <communication/Track.hpp>
 
@@ -38,7 +36,7 @@ Track::Track(
         std::shared_ptr<IReader> reader,
         std::map<ParticipantId, std::shared_ptr<IWriter>>&& writers,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<utils::SlotThreadPool> thread_pool,
+        std::shared_ptr<utils::thread::IManager> thread_manager,
         bool enable /* = false */) noexcept
     : reader_participant_id_(reader_participant_id)
     , topic_(topic)
@@ -48,18 +46,13 @@ Track::Track(
     , enabled_(false)
     , exit_(false)
     , data_available_status_(DataAvailableStatus::no_more_data)
-    , thread_pool_(thread_pool)
-    , transmit_task_id_(utils::new_unique_task_id())
+    , thread_manager_(thread_manager)
+    , thread_manager_slot_connector_(thread_manager.get(), std::bind(&Track::transmit_, this))
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 
     // Set this track to on_data_available lambda call
     reader_->set_on_data_available_callback(std::bind(&Track::data_available_, this));
-
-    // Set slot in thread pool
-    thread_pool_->slot(
-        transmit_task_id_,
-        std::bind(&Track::transmit_, this));
 
     if (enable)
     {
@@ -155,7 +148,7 @@ void Track::data_available_() noexcept
         {
             // no_more_data was set as current status, so no thread was running
             // (and will not start as 2 is set as new current status)
-            thread_pool_->emit(transmit_task_id_);
+            thread_manager_slot_connector_.execute();
             logDebug(DDSROUTER_TRACK, "Track " << *this << " send callback to queue.");
         }
     }

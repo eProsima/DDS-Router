@@ -51,7 +51,7 @@ public:
      * @param topic: Topic of which this Bridge manages communication
      * @param participant_database: Collection of Participants to manage communication
      * @param payload_pool: Payload Pool that handles the reservation/release of payloads throughout the DDS Router
-     * @param thread_pool: Shared pool of threads in charge of data transmission.
+     * @param thread_manager: Shared pool of threads in charge of data transmission.
      * @param enable: Whether the Bridge should be initialized as enabled
      *
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
@@ -60,7 +60,7 @@ public:
             const types::RealTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool,
+            std::shared_ptr<utils::thread::IManager> thread_manager,
             bool enable = false);
 
     /**

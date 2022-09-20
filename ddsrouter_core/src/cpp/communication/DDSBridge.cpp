@@ -33,9 +33,9 @@ DDSBridge::DDSBridge(
         const RealTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<utils::SlotThreadPool> thread_pool,
+        std::shared_ptr<utils::thread::IManager> thread_manager,
         bool enable /* = false */)
-    : Bridge(participants_database, payload_pool, thread_pool)
+    : Bridge(participants_database, payload_pool, thread_manager)
     , topic_(topic)
 {
     logDebug(DDSROUTER_DDSBRIDGE, "Creating DDSBridge " << *this << ".");
@@ -77,7 +77,7 @@ DDSBridge::DDSBridge(
             id,
             readers_[id], std::move(writers_except_one),
             payload_pool_,
-            thread_pool,
+            thread_manager,
             false);
     }
 
