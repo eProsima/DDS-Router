@@ -130,7 +130,7 @@ void TlsConfiguration::enable_tls_server(
 }
 
 template <>
-bool TlsConfiguration::is_valid_kind<TlsKind::client>(
+DDSROUTER_CORE_DllAPI bool TlsConfiguration::is_valid_kind<TlsKind::client>(
         utils::Formatter& error_msg) const noexcept
 {
     if (verify_peer)
@@ -146,7 +146,7 @@ bool TlsConfiguration::is_valid_kind<TlsKind::client>(
 }
 
 template <>
-bool TlsConfiguration::is_valid_kind<TlsKind::server>(
+DDSROUTER_CORE_DllAPI bool TlsConfiguration::is_valid_kind<TlsKind::server>(
         utils::Formatter& error_msg) const noexcept
 {
     if (private_key_file.empty())
@@ -175,7 +175,7 @@ bool TlsConfiguration::is_valid_kind<TlsKind::server>(
 }
 
 template <>
-bool TlsConfiguration::is_valid_kind<TlsKind::both>(
+DDSROUTER_CORE_DllAPI bool TlsConfiguration::is_valid_kind<TlsKind::both>(
         utils::Formatter& error_msg) const noexcept
 {
     return is_valid_kind<TlsKind::client>(error_msg) && is_valid_kind<TlsKind::server>(error_msg);
