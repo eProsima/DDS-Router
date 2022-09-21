@@ -35,8 +35,8 @@ RPCBridge::RPCBridge(
         const RPCTopic& topic,
         std::shared_ptr<ParticipantsDatabase> participants_database,
         std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<utils::SlotThreadPool> thread_pool)
-    : Bridge(participants_database, payload_pool, thread_pool)
+        std::shared_ptr<utils::thread::IManager> thread_manager)
+    : Bridge(participants_database, payload_pool, thread_manager)
     , topic_(topic)
     , init_(false)
 {
@@ -282,11 +282,18 @@ void RPCBridge::data_available_(
 
         // Protected by internal RTPS Reader mutex, as called within \c onNewCacheChangeAdded callback
         // This method is also called from Reader's \c enable_ , so Reader's mutex must also be taken there beforehand
-        std::pair<bool, utils::TaskId>& task = tasks_map_[reader_guid];
-        if (!task.first)
+        auto it = tasks_map_.find(reader_guid);
+        if (it == tasks_map_.end())
         {
-            task.first = true;
-            thread_pool_->emit(task.second);
+            utils::tsnh(STR_ENTRY << "No task for guid: " << reader_guid);
+        }
+        auto& task_pair = it->second;
+
+        // auto& task_pair = tasks_map_[reader_guid];
+        if (!task_pair.first)
+        {
+            task_pair.first = true;
+            task_pair.second.execute();
             logDebug(DDSROUTER_RPCBRIDGE, "RPCBridge " << *this <<
                     " - " << reader_guid << " send callback to queue.");
         }
@@ -326,7 +333,12 @@ void RPCBridge::transmit_(
                 }
 
                 // Finish transmission
-                tasks_map_[reader->guid()].first = false;
+                auto it = tasks_map_.find(reader->guid());
+                if (it == tasks_map_.end())
+                {
+                    utils::tsnh(STR_ENTRY << "No task for guid: " << reader->guid());
+                }
+                it->second.first = false;
 
                 return;
             }
@@ -470,14 +482,14 @@ void RPCBridge::create_slot_(
         });
 
     // Set slot in thread pool for this reader
-    utils::TaskId task_id = utils::new_unique_task_id();
-    thread_pool_->slot(
-        task_id,
-        [=]()
-        {
-            transmit_(reader);
-        });
-    tasks_map_[reader_guid] = {false, task_id};
+    tasks_map_.emplace(
+        reader_guid,
+        std::make_pair(
+            false,
+            utils::thread::SimpleSlotConnector(
+                thread_manager_.get(),
+                [=](){ transmit_(reader); })
+        ));
 }
 
 std::ostream& operator <<(

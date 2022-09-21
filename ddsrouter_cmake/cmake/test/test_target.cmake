@@ -58,15 +58,24 @@ function(add_test_executable TEST_EXECUTABLE_NAME TEST_SOURCES TEST_NAME TEST_LI
 
     get_win32_path_dependencies(${TEST_EXECUTABLE_NAME} TEST_FRIENDLY_PATH)
 
-    foreach(test_name ${TEST_LIST})
-        add_test(NAME ${TEST_NAME}.${test_name}
-                COMMAND ${TEST_EXECUTABLE_NAME}
-                --gtest_filter=${TEST_NAME}.${test_name}:**/${TEST_NAME}.${test_name}/**)
+    if( TEST_LIST )
+        # If list of tests is not empty, add each test separatly
+        foreach(test_name ${TEST_LIST})
+            add_test(NAME ${TEST_NAME}.${test_name}
+                    COMMAND ${TEST_EXECUTABLE_NAME}
+                    --gtest_filter=${TEST_NAME}**.${test_name}:**/${TEST_NAME}**.${test_name}/**)
 
-        if(TEST_FRIENDLY_PATH)
-            set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
-        endif(TEST_FRIENDLY_PATH)
-    endforeach()
+            if(TEST_FRIENDLY_PATH)
+                set_tests_properties(${TEST_NAME}.${test_name} PROPERTIES ENVIRONMENT "PATH=${TEST_FRIENDLY_PATH}")
+            endif(TEST_FRIENDLY_PATH)
+        endforeach()
+    else()
+        # If no tests are provided, create a single test
+        message(STATUS "Creating general test ${TEST_NAME}.")
+        add_test(NAME ${TEST_NAME}
+            COMMAND ${TEST_EXECUTABLE_NAME})
+    endif( TEST_LIST )
+
 
     target_compile_definitions(${TEST_EXECUTABLE_NAME}
         PRIVATE FASTDDS_ENFORCE_LOG_INFO

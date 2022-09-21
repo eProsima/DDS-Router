@@ -33,14 +33,6 @@ void DBQueueWaitHandler<T>::add_value_(
 }
 
 template <typename T>
-void DBQueueWaitHandler<T>::add_value_(
-        const T& value)
-{
-    logDebug(DDSROUTER_WAIT_DBQUEUE, "Copying element to DBQueue.");
-    queue_.Push(value);
-}
-
-template <typename T>
 T DBQueueWaitHandler<T>::get_next_value_()
 {
     // Assure that only one thread check if queue must be swapped
@@ -59,11 +51,11 @@ T DBQueueWaitHandler<T>::get_next_value_()
         throw utils::InconsistencyException("Empty DBQueue, impossible to get value.");
     }
 
-    // TODO: Do it without copy
-    auto value = queue_.Front();
+    // TODO: Do it with front and pop without copy
+    auto value = std::move(queue_.Front());
     queue_.Pop();
 
-    return value;
+    return std::move(value);
 }
 
 } /* namespace event */

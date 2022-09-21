@@ -13,29 +13,27 @@
 # limitations under the License.
 
 ###################################
-# Slot Thread Pool execution Test
+# ITask Specializations Test
 ###################################
 
 set(TEST_NAME
-    slot_thread_pool_test)
+    ParametrizedThreadTaskTest)
 
 set(TEST_SOURCES
-        slot_thread_pool_test.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/pool/SlotThreadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/thread_pool/task/TaskId.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        task_interface_test.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/exception/Exception.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/Formatter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread/task/OwnedTask.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/thread/task/ReferenceTask.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/time_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/time/Timer.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/CounterWaitHandler.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/wait/IntWaitHandler.cpp
     )
 
 set(TEST_LIST
-        pool_one_thread_one_slot
-        pool_one_thread_n_slots
-        pool_n_threads_one_slot
+        task_operator
     )
 
 set(TEST_EXTRA_LIBRARIES

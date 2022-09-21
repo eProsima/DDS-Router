@@ -25,7 +25,8 @@
 #include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <ddsrouter_utils/thread/manager/IManager.hpp>
+#include <ddsrouter_utils/thread/connector/SlotConnector.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -55,7 +56,7 @@ public:
             std::shared_ptr<IReader> reader,
             std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
             std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool,
+            std::shared_ptr<utils::thread::IManager> thread_manager,
             bool enable = false) noexcept;
 
     /**
@@ -206,9 +207,9 @@ protected:
      */
     std::mutex on_transmission_mutex_;
 
-    utils::TaskId transmit_task_id_;
+    utils::thread::SimpleSlotConnector thread_manager_slot_connector_;
 
-    std::shared_ptr<utils::SlotThreadPool> thread_pool_;
+    std::shared_ptr<utils::thread::IManager> thread_manager_;
 
     static const unsigned int MAX_MESSAGES_TRANSMIT_LOOP_;
 

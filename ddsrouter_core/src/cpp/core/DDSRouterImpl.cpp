@@ -24,6 +24,7 @@
 #include <ddsrouter_utils/exception/InitializationException.hpp>
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
+#include <ddsrouter_utils/thread/manager/StdThreadPool.hpp>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
@@ -45,9 +46,12 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
+
+    // NOTE: setting it here to avoid order issue in variables construction
+    thread_pool_ = new utils::thread::StdThreadPool(configuration_.number_of_threads, false);
+    thread_manager_ = std::shared_ptr<utils::thread::IManager>(thread_pool_);
 
     // Check that the configuration is correct
     utils::Formatter error_msg;
@@ -256,7 +260,7 @@ utils::ReturnCode DDSRouterImpl::start_() noexcept
         logInfo(DDSROUTER, "Starting DDS Router.");
 
         // Enable thread pool
-        thread_pool_->enable();
+        thread_pool_->start();
 
         activate_all_topics_();
 
@@ -290,7 +294,7 @@ utils::ReturnCode DDSRouterImpl::stop_() noexcept
         logInfo(DDSROUTER, "Stopping DDS Router.");
 
         // Disable thread pool so tasks running finish and new tasks are not taken by threads
-        thread_pool_->disable();
+        thread_pool_->stop();
 
         deactivate_all_topics_();
         return utils::ReturnCode::RETCODE_OK;
@@ -491,7 +495,7 @@ void DDSRouterImpl::create_new_bridge(
 
     try
     {
-        bridges_[topic] = std::make_unique<DDSBridge>(topic, participants_database_, payload_pool_, thread_pool_,
+        bridges_[topic] = std::make_unique<DDSBridge>(topic, participants_database_, payload_pool_, thread_manager_,
                         enabled);
     }
     catch (const utils::InitializationException& e)
@@ -510,7 +514,7 @@ void DDSRouterImpl::create_new_service(
     logInfo(DDSROUTER, "Creating Service: " << topic << ".");
 
     // Endpoints not created until enabled for the first time, so no exception can be thrown
-    rpc_bridges_[topic] = std::make_unique<RPCBridge>(topic, participants_database_, payload_pool_, thread_pool_);
+    rpc_bridges_[topic] = std::make_unique<RPCBridge>(topic, participants_database_, payload_pool_, thread_manager_);
 }
 
 void DDSRouterImpl::activate_topic_(

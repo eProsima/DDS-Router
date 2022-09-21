@@ -89,7 +89,7 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_move)
     // This lvalue is moved as rvalue, so after moving it will be empty
     handler.produce(std::move(lvalue));
     // TODO uncomment it once DBQueue supports moving values
-    // ASSERT_EQ(lvalue.size(), 0);
+    ASSERT_EQ(lvalue.size(), 0);
 
     // Getting first value
     std::string pop_value = handler.consume();
@@ -109,7 +109,7 @@ TEST(DBQueueWaitHandlerTest, push_pop_one_thread_string_copy)
 
     std::string lvalue("test_data");
 
-    handler.produce(lvalue);
+    handler.produce(std::string(lvalue));
 
     // Getting first value
     std::string pop_value = handler.consume();
