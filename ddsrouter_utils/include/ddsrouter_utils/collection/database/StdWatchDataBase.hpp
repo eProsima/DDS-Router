@@ -22,6 +22,7 @@
 
 #include <ddsrouter_utils/collection/database/IWatchDataBase.hpp>
 #include <ddsrouter_utils/thread/manager/IManager.hpp>
+#include <ddsrouter_utils/thread/connector/SlotConnector.hpp>
 #include <ddsrouter_utils/types/Atomicable.hpp>
 
 namespace eprosima {
@@ -32,7 +33,8 @@ enum DataBaseActionKind
 {
     add = 0,
     modify = 1,
-    remove = 2
+    remove = 2,
+    enum_size = 3,
 };
 
 template <typename Key, typename Value>
@@ -67,6 +69,12 @@ public:
     virtual void register_deletion_callback(
             const CallbackType& callback) override;
 
+    virtual void async_add(Key key, Value value);
+
+    virtual void async_modify(Key key, Value value);
+
+    virtual void async_remove(Key key);
+
 protected:
 
     void call_callback_common_(
@@ -82,7 +90,15 @@ protected:
 
     SharedAtomicable<std::map<Key, Value>> map_database_;
 
-    std::array<SharedAtomicable<std::vector<CallbackType>>, 3> callbacks_;
+    std::array<
+        SharedAtomicable<
+            std::vector<
+                thread::SlotConnector<Key, Value>>>,
+                DataBaseActionKind::enum_size> callbacks_;
+
+    thread::SlotConnector<Key, Value> add_slot_connector_;
+    thread::SlotConnector<Key, Value> modify_slot_connector_;
+    thread::SlotConnector<Key> remove_slot_connector_;
 
 };
 

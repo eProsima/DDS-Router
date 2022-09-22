@@ -28,6 +28,18 @@ template <typename Key, typename Value>
 StdWatchDataBase<Key, Value>::StdWatchDataBase(
         std::shared_ptr<thread::IManager> thread_manager)
     : thread_manager_(thread_manager)
+    , add_slot_connector_(
+        thread::SlotConnector<Key, Value>(
+            thread_manager.get(),
+            [this](Key key, Value value){ this->add(key, value); }))
+    , modify_slot_connector_(
+        thread::SlotConnector<Key, Value>(
+            thread_manager.get(),
+            [this](Key key, Value value){ this->modify(key, value); }))
+    , remove_slot_connector_(
+        thread::SlotConnector<Key>(
+            thread_manager.get(),
+            [this](Key key){ this->remove(key); }))
 {
 }
 
@@ -127,15 +139,33 @@ void StdWatchDataBase<Key, Value>::register_deletion_callback(
 }
 
 template <typename Key, typename Value>
+void StdWatchDataBase<Key, Value>::async_add(Key key, Value value)
+{
+    add_slot_connector_.execute(key, value);
+}
+
+template <typename Key, typename Value>
+void StdWatchDataBase<Key, Value>::async_modify(Key key, Value value)
+{
+    modify_slot_connector_.execute(key, value);
+}
+
+template <typename Key, typename Value>
+void StdWatchDataBase<Key, Value>::async_remove(Key key)
+{
+    remove_slot_connector_.execute(key);
+}
+
+template <typename Key, typename Value>
 void StdWatchDataBase<Key, Value>::call_callback_common_(
         const Key& key,
         const Value& value,
         DataBaseActionKind action_kind)
 {
     std::shared_lock<std::shared_timed_mutex> lock_db(callbacks_[action_kind]);
-    for (auto& callback : callbacks_[action_kind])
+    for (auto& slot : callbacks_[action_kind])
     {
-        callback(key, value);
+        slot.execute(key, value);
     }
 }
 
@@ -145,7 +175,10 @@ void StdWatchDataBase<Key, Value>::register_callback_common_(
         DataBaseActionKind action_kind)
 {
     std::unique_lock<std::shared_timed_mutex> lock_db(callbacks_[action_kind]);
-    callbacks_[action_kind].push_back(callback);
+    callbacks_[action_kind].push_back(
+        thread::SlotConnector<Key, Value>(
+            thread_manager_.get(),
+            callback));
 }
 
 } /* namespace utils */
