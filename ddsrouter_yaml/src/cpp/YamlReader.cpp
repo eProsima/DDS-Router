@@ -295,6 +295,19 @@ Address YamlReader::get<Address>(
         port = Address::default_port();
     }
 
+    // Optional get external port
+    // If it is not set, same as internal port is used
+    PortType external_port;
+    bool external_port_set = is_tag_present(yml, ADDRESS_EXTERNAL_PORT_TAG);
+    if (external_port_set)
+    {
+        external_port = get<PortType>(yml, ADDRESS_EXTERNAL_PORT_TAG, version);
+    }
+    else
+    {
+        external_port = port;
+    }
+
     // Optional get Transport protocol
     TransportProtocol tp;
     bool tp_set = is_tag_present(yml, ADDRESS_TRANSPORT_TAG);
@@ -312,22 +325,22 @@ Address YamlReader::get<Address>(
     {
         if (ip_version_set)
         {
-            return Address(port, ip_version, domain_name, tp);
+            return Address(port, external_port, ip_version, domain_name, tp);
         }
         else
         {
-            return Address(port, domain_name, tp);
+            return Address(port, external_port, domain_name, tp);
         }
     }
     else
     {
         if (ip_version_set)
         {
-            return Address(ip, port, ip_version, tp);
+            return Address(ip, port, external_port, ip_version, tp);
         }
         else
         {
-            return Address(ip, port, tp);
+            return Address(ip, port, external_port, tp);
         }
     }
 }

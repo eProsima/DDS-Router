@@ -70,12 +70,14 @@ public:
      *
      * @param ip address ip
      * @param port address port
+     * @param external_port external address port
      * @param ip_version ip version (4 or 6)
      * @param transport_protocol transport protocol (UDP or TCP)
      */
     DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
             const PortType& port,
+            const PortType& external_port,
             const IpVersion& ip_version,
             const TransportProtocol& transport_protocol) noexcept;
 
@@ -83,12 +85,14 @@ public:
      * @brief Construct a new Address object using a DNS call to get IP from \c domain
      *
      * @param port address port
+     * @param external_port external address port
      * @param ip_version ip version (4 or 6)
      * @param domain address domain name to call DNS
      * @param transport_protocol transport protocol (UDP or TCP)
      */
     DDSROUTER_CORE_DllAPI Address(
             const PortType& port,
+            const PortType& external_port,
             const IpVersion& ip_version,
             const DomainType& domain,
             const TransportProtocol& transport_protocol) noexcept;
@@ -103,25 +107,30 @@ public:
     DDSROUTER_CORE_DllAPI Address(
             const IpType& ip,
             const PortType& port,
+            const PortType& external_port,
             const TransportProtocol& transport_protocol) noexcept;
 
     /**
      * @brief Construct a new Address object using a DNS call to get IP from \c domain without specifying the IP version
      *
      * @param port address port
+     * @param external_port external address port
      * @param domain address domain name to call DNS
      * @param transport_protocol transport protocol (UDP or TCP)
      */
     DDSROUTER_CORE_DllAPI Address(
             const PortType& port,
+            const PortType& external_port,
             const DomainType& domain,
             const TransportProtocol& transport_protocol) noexcept;
 
     //! Construct a default IP by default values (set in this class)
     DDSROUTER_CORE_DllAPI Address();
 
-    //! Address Port getter
+    //! Address internal Port getter
     DDSROUTER_CORE_DllAPI PortType port() const noexcept;
+    //! Address external Port getter
+    DDSROUTER_CORE_DllAPI PortType external_port() const noexcept;
     //! Address IP getter
     DDSROUTER_CORE_DllAPI IpType ip() const noexcept;
     //! Address IP version getter
@@ -218,8 +227,10 @@ protected:
     bool has_domain_;
     //! Whether the domain has been valid on DNS call
     bool has_valid_domain_;
-    //! Internal Port object
+    //! Internal (physical) Port object
     PortType port_;
+    //! External (public) Port object
+    PortType external_port_;
     //! Internal Ip version object
     IpVersion ip_version_;
     //! Internal Transport Protocol object

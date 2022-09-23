@@ -92,6 +92,7 @@ constexpr const char* TLS_SNI_HOST_TAG("sni_host"); //! TLS configuration tag
 constexpr const char* ADDRESS_IP_TAG("ip"); //! TODO: add comment
 constexpr const char* ADDRESS_DNS_TAG("domain"); //! TODO: add comment
 constexpr const char* ADDRESS_PORT_TAG("port"); //! TODO: add comment
+constexpr const char* ADDRESS_EXTERNAL_PORT_TAG("external-port"); //! TODO: add comment
 
 constexpr const char* ADDRESS_IP_VERSION_TAG("ip-version"); //! TODO: add comment
 constexpr const char* ADDRESS_IP_VERSION_V4_TAG("v4"); //! TODO: add comment

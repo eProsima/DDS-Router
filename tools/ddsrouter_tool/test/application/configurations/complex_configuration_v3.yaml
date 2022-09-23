@@ -57,6 +57,7 @@ participants:
         addresses:
         - ip: "127.0.0.1"
           port: 11667
+          external-port: 11677
           transport: tcp
 
   - name: initial-peers

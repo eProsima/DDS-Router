@@ -35,13 +35,14 @@ const IpVersion Address::DEFAULT_IP_VERSION_ = IpVersion::v4;
 const TransportProtocol Address::DEFAULT_TRANSPORT_PROTOCOL_ = TransportProtocol::udp;
 
 Address::Address()
-    : Address(DEFAULT_IP_v4_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
+    : Address(DEFAULT_IP_v4_, DEFAULT_PORT_, DEFAULT_PORT_, DEFAULT_IP_VERSION_, DEFAULT_TRANSPORT_PROTOCOL_)
 {
 }
 
 Address::Address(
         const IpType& ip,
         const PortType& port,
+        const PortType& external_port,
         const IpVersion& ip_version,
         const TransportProtocol& transport_protocol) noexcept
     : ip_(ip)
@@ -49,6 +50,7 @@ Address::Address(
     , has_domain_(false)
     , has_valid_domain_(false)
     , port_(port)
+    , external_port_(external_port)
     , ip_version_(ip_version)
     , transport_protocol_(transport_protocol)
 {
@@ -56,6 +58,7 @@ Address::Address(
 
 Address::Address(
         const PortType& port,
+        const PortType& external_port,
         const IpVersion& ip_version,
         const DomainType& domain,
         const TransportProtocol& transport_protocol) noexcept
@@ -64,6 +67,7 @@ Address::Address(
     , has_domain_(true)
     , has_valid_domain_(false)
     , port_(port)
+    , external_port_(external_port)
     , ip_version_(ip_version)
     , transport_protocol_(transport_protocol)
 {
@@ -82,8 +86,9 @@ Address::Address(
 Address::Address(
         const IpType& ip,
         const PortType& port,
+        const PortType& external_port,
         const TransportProtocol& transport_protocol) noexcept
-    : Address(ip, port, IpVersion::v4, transport_protocol)
+    : Address(ip, port, external_port, IpVersion::v4, transport_protocol)
 {
     if (is_ipv6_correct(ip_))
     {
@@ -93,6 +98,7 @@ Address::Address(
 
 Address::Address(
         const PortType& port,
+        const PortType& external_port,
         const DomainType& domain,
         const TransportProtocol& transport_protocol) noexcept
     : ip_()
@@ -100,6 +106,7 @@ Address::Address(
     , has_domain_(true)
     , has_valid_domain_(false)
     , port_(port)
+    , external_port_(external_port)
     , transport_protocol_(transport_protocol)
 {
     try
@@ -119,6 +126,11 @@ Address::Address(
 PortType Address::port() const noexcept
 {
     return port_;
+}
+
+PortType Address::external_port() const noexcept
+{
+    return external_port_;
 }
 
 IpType Address::ip() const noexcept

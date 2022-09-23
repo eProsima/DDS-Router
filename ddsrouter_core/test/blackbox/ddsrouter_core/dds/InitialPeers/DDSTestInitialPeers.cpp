@@ -97,6 +97,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
             types::Address(
                 (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 0u : 1u),
+                11666 + (this_server_id_is_1 ? 0u : 1u),
                 ip_version,
                 transport_protocol)
             );
@@ -107,6 +108,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
         listening_addresses.insert(
             types::Address(
                 (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                11666 + (this_server_id_is_1 ? 1u : 0u),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
                 transport_protocol)
