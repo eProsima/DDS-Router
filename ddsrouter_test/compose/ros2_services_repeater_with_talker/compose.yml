@@ -112,7 +112,7 @@ services:
       - ROS_DOMAIN_ID=1
     volumes:
       - ../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_listener.py --samples 5 --timeout 13 --delay 1
+    command: python3 /scripts/execute_and_validate_listener.py --timeout 13 --delay 1
 
   cli_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}

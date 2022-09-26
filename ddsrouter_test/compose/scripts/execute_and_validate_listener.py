@@ -136,11 +136,12 @@ if __name__ == '__main__':
         _listener_validate_function = validation.validate_default
 
     # Run command and validate
-    ret_code = validation.run_command_till_timeout(
+    ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
         parse_output_function=_listener_parse_output,
-        validate_output_function=_listener_validate_function)
+        validate_output_function=_listener_validate_function,
+        timeout_as_error=False)
 
     print(f'listener validator exited with code {ret_code}')
 

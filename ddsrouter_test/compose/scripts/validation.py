@@ -32,9 +32,9 @@ class ReturnCode(Enum):
 
 
 def run_command(
-        command: List[str],
+        command: 'list[str]',
         timeout: float,
-        timeout_as_error: bool = False):
+        timeout_as_error: bool = True):
     """
     Run command with timeout.
 
@@ -96,11 +96,11 @@ def run_command(
 
 
 def run_and_validate(
-        command: List[str],
+        command: 'list[str]',
         timeout: int,
         parse_output_function,
         validate_output_function,
-        timeout_as_error: bool = False):
+        timeout_as_error: bool = True):
     """
     Run the subscriber and validate its output.
 
@@ -127,8 +127,12 @@ def run_and_validate(
 
         log.logger.debug(
             f'Executable execution output:'
-            f'\n stdout output: \n{stdout}'
-            f'\n stderr output: \n{stderr}')
+            f'\n stdout output: \n{stdout}')
+
+        if stderr != '':
+            log.logger.warning(
+                f'Executable execution output in stderr:'
+                f'\n{stderr}')
 
         stdout_parsed, stderr_parsed = parse_output_function(stdout, stderr)
 

@@ -110,11 +110,12 @@ if __name__ == '__main__':
     command = _talker_command(args)
 
     # Run command and validate
-    ret_code = validation.run_command_till_timeout(
+    ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
         parse_output_function=_talker_parse_output,
-        validate_output_function=_talker_validate)
+        validate_output_function=_talker_validate,
+        timeout_as_error=False)
 
     print(f'talker validator exited with code {ret_code}')
 
