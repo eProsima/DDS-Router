@@ -43,6 +43,7 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         const SpecsConfiguration& advanced_options)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations(participants_configurations)
+    , advanced_options(advanced_options)
 {
 }
 

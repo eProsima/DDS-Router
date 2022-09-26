@@ -86,25 +86,24 @@ utils::ReturnCode CommonWriter::write_(
 {
 
     // Take new Change from history
-    fastrtps::rtps::CacheChange_t* new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+    fastrtps::rtps::CacheChange_t* new_change;
+    if (topic_.keyed)
+    {
+        new_change =
+            rtps_writer_->new_change(
+                eprosima::fastrtps::rtps::ChangeKind_t::ALIVE,
+                data->properties.instanceHandle);
+    }
+    else
+    {
+        new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+    }
 
     // If still is not able to get a change, return an error code
     if (!new_change)
     {
         return utils::ReturnCode::RETCODE_ERROR;
     }
-
-    // Get the Payload without copy only if it has length
-    if (data->payload.length > 0)
-    {
-        eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
-        if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
-        {
-            logDevError(DDSROUTER_RTPS_COMMONWRITER, "Error getting Payload.");
-            return utils::ReturnCode::RETCODE_ERROR;
-        }
-    }
-
 
     logDebug(DDSROUTER_RTPS_COMMONWRITER,
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
@@ -114,7 +113,12 @@ utils::ReturnCode CommonWriter::write_(
     eprosima::fastrtps::rtps::WriteParams write_params;
 
     // Fill cache change with specific data to send
-    fill_to_send_data_(new_change, write_params, data);
+    auto ret = fill_to_send_data_(new_change, write_params, data);
+    if (!ret)
+    {
+        logError(DDSROUTER_RTPS_COMMONWRITER, "Error setting change to send.");
+        return ret;
+    }
 
     // Send data by adding it to CommonWriter History
     rtps_history_->add_change(new_change, write_params);
@@ -134,7 +138,7 @@ utils::ReturnCode CommonWriter::write_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
-void CommonWriter::fill_to_send_data_(
+utils::ReturnCode CommonWriter::fill_to_send_data_(
         fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
         eprosima::fastrtps::rtps::WriteParams& to_send_params,
         std::unique_ptr<types::DataReceived>& data) const noexcept
@@ -152,6 +156,22 @@ void CommonWriter::fill_to_send_data_(
         to_send_change_to_fill->instanceHandle = data->properties.instanceHandle;
     }
 
+    // Get the Payload without copy only if it has length
+    if (data->payload.length > 0)
+    {
+        eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
+        if (!payload_pool_->get_payload(data->payload, payload_owner, (*to_send_change_to_fill)))
+        {
+            logDevError(DDSROUTER_RTPS_COMMONWRITER, "Error getting Payload.");
+            return utils::ReturnCode::RETCODE_ERROR;
+        }
+    }
+    else
+    {
+        // this
+        to_send_change_to_fill->kind = eprosima::fastrtps::rtps::ChangeKind_t::NOT_ALIVE_DISPOSED;
+    }
+
     // Set source time stamp to be the original one
     to_send_params.source_timestamp(data->properties.source_timestamp);
 
@@ -161,6 +181,8 @@ void CommonWriter::fill_to_send_data_(
     {
         to_send_params.related_sample_identity(data->properties.write_params.value.related_sample_identity());
     }
+
+    return utils::ReturnCode::RETCODE_OK;
 }
 
 void CommonWriter::fill_sent_data_(

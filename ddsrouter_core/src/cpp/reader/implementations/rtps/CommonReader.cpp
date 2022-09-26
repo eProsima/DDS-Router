@@ -149,18 +149,6 @@ utils::ReturnCode CommonReader::take_(
         return utils::ReturnCode::RETCODE_ERROR;
     }
 
-    // Check that the data is consistent
-    if (!(received_change->serializedPayload.max_size > 0))
-    {
-        logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
-                "Error taking data with length " << received_change->serializedPayload.length << ".");
-
-        // Remove the change in the History and release it in the reader
-        rtps_reader_->getHistory()->remove_change(received_change);
-
-        return utils::ReturnCode::RETCODE_ERROR;
-    }
-
     // Check that the guid is consistent
     if (received_change->writerGUID == fastrtps::rtps::GUID_t::unknown())
     {
@@ -172,6 +160,18 @@ utils::ReturnCode CommonReader::take_(
 
         return utils::ReturnCode::RETCODE_ERROR;
     }
+
+    // Check that the data is consistent
+    // if (!(received_change->serializedPayload.max_size > 0))
+    // {
+    //     logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+    //             "Error taking data with length " << received_change->serializedPayload.length << ".");
+
+    //     // Remove the change in the History and release it in the reader
+    //     rtps_reader_->getHistory()->remove_change(received_change);
+
+    //     return utils::ReturnCode::RETCODE_ERROR;
+    // }
 
     // Store the new data that has arrived in the Track data
     fill_received_data_(received_change, data);

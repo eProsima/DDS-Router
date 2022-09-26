@@ -20,7 +20,8 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
 #include <test_participants.hpp>
@@ -49,19 +50,31 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
         bool reliable_readers = false)
 {
     // Always filter the test topics by topic name
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist;   // empty
-    allowlist.insert(std::make_shared<types::WildcardTopic>(TOPIC_NAME));
+    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // only this topic
+    allowlist.insert(std::make_shared<types::WildcardDdsFilterTopic>(TOPIC_NAME));
 
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist;   // empty
+    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
 
-    std::set<std::shared_ptr<types::RealTopic>> builtin_topics;   // empty
+    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
 
     if (disable_dynamic_discovery || reliable_readers)
     {
+        types::TopicQoS qos;
+        if (reliable_readers)
+        {
+            qos.reliability_qos = types::ReliabilityKind::RELIABLE;
+            qos.durability_qos = types::DurabilityKind::TRANSIENT_LOCAL;
+        }
+        else
+        {
+            qos.reliability_qos = types::ReliabilityKind::BEST_EFFORT;
+            qos.durability_qos = types::DurabilityKind::VOLATILE;
+        }
+
         builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorld", false, reliable_readers));
+            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));
         builtin_topics.insert(
-            std::make_shared<types::RealTopic>(TOPIC_NAME, "HelloWorldKeyed", true, reliable_readers));
+            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorldKeyed", true, qos));
     }
 
     // Two simple participants
@@ -82,13 +95,16 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
                     }
         );
 
+    // TODO: this could be removed to use default number of threads
+    auto specs = configuration::SpecsConfiguration();
+    specs.number_of_threads = 2;
+
     return configuration::DDSRouterConfiguration(
         allowlist,
         blocklist,
         builtin_topics,
         participants_configurations,
-        1,
-        100);
+        specs);
 }
 
 /**

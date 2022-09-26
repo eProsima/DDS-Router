@@ -434,7 +434,6 @@ private:
         void on_data_available(
                 eprosima::fastdds::dds::DataReader* reader) override
         {
-            bool success = false;
             eprosima::fastdds::dds::SampleInfo info;
             while (reader->take_next_sample(&msg_received_, &info) == ReturnCode_t::RETCODE_OK)
             {
@@ -442,7 +441,6 @@ private:
                 {
                     if (msg_received_.message() == msg_should_receive_->message())
                     {
-                        success = true;
                         (*samples_received_)++;
                     }
                 }
@@ -451,7 +449,6 @@ private:
                     n_key_disposed_++;
                 }
             }
-            ASSERT_TRUE(success);
         }
 
         void on_subscription_matched(
