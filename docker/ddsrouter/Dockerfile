@@ -21,9 +21,11 @@ RUN apt-get update && apt-get install -y \
 
 # Download and build DDS-Router
 RUN mkdir resources && \
-    wget https://raw.githubusercontent.com/eProsima/DDS-Router/v0.3.0/ddsrouter.repos && \
+    wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos && \
     mkdir src && \
     vcs import src < ddsrouter.repos && \
+    cd src/fastdds && git checkout feature/sni && cd ../.. && \
+    cd src/ddsrouter && git checkout testing/wan-port && cd ../.. && \
     colcon build --event-handlers=console_direct+ --packages-skip ddsrouter_docs --cmake-args -DLOG_INFO=ON
 
 COPY ./run.bash /
