@@ -8,7 +8,7 @@ Forthcoming Version
 
 Next release will include the following **major features**:
 
-* New **Transparency Module**.
+* New **QoS Transparency Module**.
 
 Next release will include the following **features**:
 

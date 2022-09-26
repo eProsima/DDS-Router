@@ -79,8 +79,8 @@ In case this value is not set, the default number of threads used is :code:`12`.
 
 .. _history_depth_configuration:
 
-Maximum Default History Depth
------------------------------
+Maximum History Depth
+---------------------
 
 ``specs`` supports a ``max-depth`` **optional** value that configures the history size
 of the Fast DDS internal entities.
@@ -97,19 +97,9 @@ enough memory is available.
 Built-in Topics
 ===============
 
-|ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
-By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
-and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each
-discovered topic.
-
-.. note::
-
-    DDS Router entities are created with the QoS of the first Subscriber found in this Topic.
-
-The discovery phase of the network topics can be accelerated by using the builtin topic list (``builtin-topics``).
-By defining topics in this list, the DDS router will create the DataWriters and DataReaders for these topics without
-waiting for them to be discovered.
-In this way, the initialization phase mentioned above is omitted and the application launching efficiency is improved.
+Apart from the dynamic creation of Endpoints in DDS Topics discovered,
+the discovery phase can be accelerated by using the builtin topic list (``builtin-topics``).
+By defining topics in this list, the DDS router will create the DataWriters and DataReaders in router initialization.
 This feature also allows to manually force the QoS of a specific topic, so the entities created in such topic
 follows the specified QoS and not the one first discovered.
 
@@ -175,6 +165,15 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
 
 Topic Filtering
 ===============
+
+|ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
+By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
+and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each
+discovered topic.
+
+.. note::
+
+    DDS Router entities are created with the QoS of the first Subscriber found in this Topic.
 
 |ddsrouter| allows filtering of DDS :term:`Topics<Topic>`, that is, it allows to define which DDS Topics are going to be
 relayed by the application.
