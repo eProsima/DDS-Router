@@ -108,7 +108,7 @@ utils::ReturnCode CommonWriter::write_(
 
     logDebug(DDSROUTER_RTPS_COMMONWRITER,
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
-            data->qos.source_guid);
+            data->properties.source_guid);
 
     // Fill cache change with specific data to send
     fill_to_send_data_(new_change, data);
@@ -118,9 +118,9 @@ utils::ReturnCode CommonWriter::write_(
 
     // RPC support
     // If writer params has been set specifically, use them in change
-    if (data->qos.write_params.is_set())
+    if (data->properties.write_params.is_set())
     {
-        write_params.related_sample_identity(data->qos.write_params.value.related_sample_identity());
+        write_params.related_sample_identity(data->properties.write_params.value.related_sample_identity());
     }
 
     // Send data by adding it to CommonWriter History
@@ -147,13 +147,13 @@ void CommonWriter::fill_to_send_data_(
     {
         // Add origin to change in case the cache change is RouterCacheChange (only in repeater mode)
         types::RouterCacheChange& change_ref = static_cast<types::RouterCacheChange&>(*to_send_change_to_fill);
-        change_ref.last_writer_guid_prefix = data->qos.source_guid.guidPrefix;
+        change_ref.last_writer_guid_prefix = data->properties.source_guid.guidPrefix;
     }
 
     // Set keys in case topic has keys
     if (topic_.keyed)
     {
-        to_send_change_to_fill->instanceHandle = data->qos.instanceHandle;
+        to_send_change_to_fill->instanceHandle = data->properties.instanceHandle;
     }
 }
 

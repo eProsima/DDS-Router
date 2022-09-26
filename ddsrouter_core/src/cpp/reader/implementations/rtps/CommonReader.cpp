@@ -178,7 +178,7 @@ utils::ReturnCode CommonReader::take_(
 
     logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
             "Data transmiting to track from Reader " << *this << " with payload " <<
-            data->payload << " from remote writer " << data->qos.source_guid);
+            data->payload << " from remote writer " << data->properties.source_guid);
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
@@ -192,11 +192,11 @@ void CommonReader::fill_received_data_(
 {
     // Store the new data that has arrived in the Track data
     // Get the writer guid
-    data_to_fill->qos.source_guid = received_change->writerGUID;
+    data_to_fill->properties.source_guid = received_change->writerGUID;
     // Get source timestamp
-    data_to_fill->qos.source_timestamp = received_change->sourceTimestamp;
+    data_to_fill->properties.source_timestamp = received_change->sourceTimestamp;
     // Get Participant receiver
-    data_to_fill->qos.participant_receiver = participant_id_;
+    data_to_fill->properties.participant_receiver = participant_id_;
 
     // Store it in DDSRouter PayloadPool if size is bigger than 0
     // NOTE: in case of keyed topics an empty payload is possible
@@ -212,14 +212,14 @@ void CommonReader::fill_received_data_(
     // Set Instance Handle to data_to_fill
     if (topic_.keyed)
     {
-        data_to_fill->qos.instanceHandle = received_change->instanceHandle;
+        data_to_fill->properties.instanceHandle = received_change->instanceHandle;
     }
 
-    data_to_fill->qos.write_params.set_value(received_change->write_params);
+    data_to_fill->properties.write_params.set_value(received_change->write_params);
 
-    data_to_fill->qos.origin_sequence_number = received_change->sequenceNumber;
+    data_to_fill->properties.origin_sequence_number = received_change->sequenceNumber;
 
-    // Note: do not fill writer specific qos in this data from this kind of Readers.
+    // Note: do not fill writer specific properties in this data from this kind of Readers.
     // Implement specific class for filling it.
 }
 
@@ -277,7 +277,7 @@ fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(const types::D
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
 
-    // Ownership and Partitions are not part of RTPS, thus they are set in qos
+    // Ownership and Partitions are not part of RTPS, thus they are set in properties
 
     return att;
 }
@@ -309,16 +309,16 @@ fastrtps::TopicAttributes CommonReader::topic_attributes_(const types::DdsTopic&
 
 fastrtps::ReaderQos CommonReader::reader_qos_(const types::DdsTopic& topic) noexcept
 {
-    fastrtps::ReaderQos qos;
+    fastrtps::ReaderQos properties;
 
     // Set Durability
-    qos.m_durability.kind =
+    properties.m_durability.kind =
         (topic.topic_qos.value.is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
-    qos.m_reliability.kind =
+    properties.m_reliability.kind =
         (topic.topic_qos.value.is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
@@ -326,13 +326,13 @@ fastrtps::ReaderQos CommonReader::reader_qos_(const types::DdsTopic& topic) noex
     // If topic with partitions, set this CommonReader in *
     if (topic.topic_qos.value.use_partitions)
     {
-        qos.m_partition.push_back("*");
+        properties.m_partition.push_back("*");
     }
 
     // If topic is with ownership
-    qos.m_ownership.kind = topic.topic_qos.value.ownership_qos;
+    properties.m_ownership.kind = topic.topic_qos.value.ownership_qos;
 
-    return qos;
+    return properties;
 }
 
 void CommonReader::onNewCacheChangeAdded(

@@ -34,7 +34,7 @@ const unsigned int ServiceRegistry::DEFAULT_MAX_ENTRIES_ = 5000;
 
 ServiceRegistry::ServiceRegistry(
         const RPCTopic& topic,
-        const ParticipantId& participant_id
+        const ParticipantId& participant_id)
     : topic_(topic)
     , participant_id_(participant_id)
     , enabled_(false)

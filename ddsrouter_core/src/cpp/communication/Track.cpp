@@ -210,7 +210,7 @@ void Track::transmit_() noexcept
 
         logDebug(DDSROUTER_TRACK,
                 "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->qos.source_guid << ".");
+                " transmitting data from remote endpoint " << data->properties.source_guid << ".");
 
         // Send data through writers
         for (auto& writer_it : writers_)

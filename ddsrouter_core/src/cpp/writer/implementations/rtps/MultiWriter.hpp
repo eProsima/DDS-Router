@@ -19,6 +19,8 @@
 #ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_PARTITIONSWRITER_HPP_
 #define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_PARTITIONSWRITER_HPP_
 
+#include <ddsrouter_utils/types/Atomicable.hpp>
+
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 #include <writer/implementations/rtps/QoSSpecificWriter.hpp>

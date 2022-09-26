@@ -26,6 +26,7 @@
 
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -348,23 +348,23 @@ void RPCBridge::transmit_(
         {
             logDebug(DDSROUTER_RPCBRIDGE,
                     "RPCBridge for service " << topic_ <<
-                    " transmitting request from remote endpoint " << data->qos.source_guid << ".");
+                    " transmitting request from remote endpoint " << data->properties.source_guid << ".");
 
-            SampleIdentity reply_related_sample_identity = data->qos.write_params.value.sample_identity();
-            reply_related_sample_identity.sequence_number(data->qos.origin_sequence_number);
+            SampleIdentity reply_related_sample_identity = data->properties.write_params.value.sample_identity();
+            reply_related_sample_identity.sequence_number(data->properties.origin_sequence_number);
 
             if (reply_related_sample_identity == SampleIdentity::unknown())
             {
                 logWarning(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << topic_ <<
-                        " received ill-formed request from remote endpoint " << data->qos.source_guid << ". Ignoring...");
+                        " received ill-formed request from remote endpoint " << data->properties.source_guid << ". Ignoring...");
             }
             else
             {
                 for (auto& service_registry : service_registries_)
                 {
                     // Do not send request through same participant who received it (unless repeater), or if there are no servers to process it
-                    if ((data->qos.participant_receiver == service_registry.first &&
+                    if ((data->properties.participant_receiver == service_registry.first &&
                             !participants_->get_participant(service_registry.first)->is_repeater()) ||
                             !service_registry.second->enabled())
                     {
@@ -376,9 +376,9 @@ void RPCBridge::transmit_(
 
                     // Set write params so writer set in related sample identity the correct value
                     // Set it so writer use it
-                    data->qos.write_params.set_level();
+                    data->properties.write_params.set_level();
                     // Attach the information the server needs in order to reply to the appropiate proxy client.
-                    data->qos.write_params.value.related_sample_identity().writer_guid(
+                    data->properties.write_params.value.related_sample_identity().writer_guid(
                         reply_readers_[service_registry.first]->guid());
 
                     ret = request_writers_[service_registry.first]->write(data);
@@ -402,7 +402,7 @@ void RPCBridge::transmit_(
                         // Add entry to registry associated to the transmission of this request through this proxy client.
                         service_registry.second->add(
                             sequence_number,
-                            {data->qos.participant_receiver, reply_related_sample_identity});
+                            {data->properties.participant_receiver, reply_related_sample_identity});
                     }
 
                 }
@@ -412,16 +412,16 @@ void RPCBridge::transmit_(
         {
             logDebug(DDSROUTER_RPCBRIDGE,
                     "RPCBridge for service " << topic_ <<
-                    " transmitting reply from remote endpoint " << data->qos.source_guid << ".");
+                    " transmitting reply from remote endpoint " << data->properties.source_guid << ".");
 
             // A Server could be answering a different client in this same DDS Router or a remote client
             // Thus, it must be filtered so only replies to this client are processed.
-            if (data->qos.write_params.value.sample_identity().writer_guid() != reader->guid())
+            if (data->properties.write_params.value.sample_identity().writer_guid() != reader->guid())
             {
                 logDebug(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << *this << " from reader " << reader->guid() <<
                         " received response meant for other client: " <<
-                        data->qos.write_params.value.sample_identity().writer_guid());
+                        data->properties.write_params.value.sample_identity().writer_guid());
             }
             else
             {
@@ -432,7 +432,7 @@ void RPCBridge::transmit_(
 
                     // Fetch information required for transmission; which proxy server should send it and with what parameters
                     registry_entry = service_registries_[reader->participant_id()]->get(
-                        data->qos.write_params.value.sample_identity().sequence_number());
+                        data->properties.write_params.value.sample_identity().sequence_number());
                 }
 
                 // Not valid means:
@@ -440,8 +440,8 @@ void RPCBridge::transmit_(
                 //   Case 2: (WAN Participant repeater) Request already replied by another PROXY server connected to the same participant as this one.
                 if (registry_entry.first.is_valid())
                 {
-                    data->qos.write_params.set_level();
-                    data->qos.write_params.value.related_sample_identity(registry_entry.second);
+                    data->properties.write_params.set_level();
+                    data->properties.write_params.value.related_sample_identity(registry_entry.second);
 
                     ret = reply_writers_[registry_entry.first]->write(data);
 
@@ -453,7 +453,7 @@ void RPCBridge::transmit_(
                     else
                     {
                         service_registries_[reader->participant_id()]->erase(
-                            data->qos.write_params.value.sample_identity().sequence_number());
+                            data->properties.write_params.value.sample_identity().sequence_number());
                     }
                 }
             }

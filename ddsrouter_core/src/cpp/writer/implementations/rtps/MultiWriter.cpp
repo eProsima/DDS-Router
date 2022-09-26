@@ -137,10 +137,10 @@ utils::ReturnCode MultiWriter::write_(
 {
     logDebug(
         DDSROUTER_MULTIWRITER,
-        "Writing in Partitions Writer " << *this << " a data with qos " << data->qos << " from " << data->qos.source_guid);
+        "Writing in Partitions Writer " << *this << " a data with qos " << data->properties << " from " << data->properties.source_guid);
 
     // Take Writer
-    auto this_qos_writer = get_writer_or_create_(data->qos.writer_qos);
+    auto this_qos_writer = get_writer_or_create_(data->properties.writer_qos);
 
     logDebug(
         DDSROUTER_MULTIWRITER,

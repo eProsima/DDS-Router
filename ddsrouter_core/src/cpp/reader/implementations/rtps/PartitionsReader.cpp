@@ -61,10 +61,10 @@ void PartitionsReader::fill_received_data_(
     // Find qos of writer
     try
     {
-        data_to_fill->qos.writer_qos = specific_qos_of_writer_(data_to_fill->qos.source_guid);
+        data_to_fill->properties.writer_qos = specific_qos_of_writer_(data_to_fill->properties.source_guid);
         logDebug(
             DDSROUTER_PARTITIONSREADER,
-            "Set QoS " << data_to_fill->qos << " for data from " << data_to_fill->qos.source_guid << ".");
+            "Set QoS " << data_to_fill->properties << " for data from " << data_to_fill->properties.source_guid << ".");
     }
     catch(const utils::InconsistencyException& e)
     {
@@ -72,7 +72,7 @@ void PartitionsReader::fill_received_data_(
         // Remove data and make as it has not been received.
         logError(
             DDSROUTER_PARTITIONSREADER,
-            "Received a message from Writer " << data_to_fill->qos.source_guid << " that is not stored in DB.");
+            "Received a message from Writer " << data_to_fill->properties.source_guid << " that is not stored in DB.");
     }
 }
 
