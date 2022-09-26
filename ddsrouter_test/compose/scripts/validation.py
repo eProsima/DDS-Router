@@ -31,7 +31,10 @@ class ReturnCode(Enum):
     STDERR_OUTPUT = 5
 
 
-def run_command(command, timeout):
+def run_command(
+        command: List[str],
+        timeout: float,
+        timeout_as_error: bool = False):
     """
     Run command with timeout.
 
@@ -53,12 +56,22 @@ def run_command(command, timeout):
 
     try:
         proc.wait(timeout=timeout)
+
     except subprocess.TimeoutExpired:
-        log.logger.error(
-            'Timeout expired. '
-            'Killing process before receiving all samples...')
-        proc.send_signal(signal.SIGINT)
-        ret_code = ReturnCode.TIMEOUT
+        if timeout_as_error:
+            log.logger.error(
+                'Timeout expired. '
+                'Killing process before receiving all samples...')
+            proc.send_signal(signal.SIGINT)
+            ret_code = ReturnCode.TIMEOUT
+
+        else:
+            proc.send_signal(signal.SIGINT)
+
+    else:
+        if not timeout_as_error:
+            log.logger.error(f'Command finished before expected.')
+            ret_code = ReturnCode.COMMAND_FAIL
 
         # Wait a minimum elapsed time to the signal to be received
         time.sleep(0.2)
@@ -83,10 +96,11 @@ def run_command(command, timeout):
 
 
 def run_and_validate(
-        command,
+        command: List[str],
         timeout: int,
         parse_output_function,
-        validate_output_function):
+        validate_output_function,
+        timeout_as_error: bool = False):
     """
     Run the subscriber and validate its output.
 
@@ -94,10 +108,11 @@ def run_and_validate(
     :param timeout: Timeout for the process
     :param parse_output_function: Function to parse the output of the process
     :param validate_output_function: Function to validate the output of process
+    :param timeout_as_error: Whether the timeout reach should be taken as error
 
     :return: exit code
     """
-    ret_code, stdout, stderr = run_command(command, timeout)
+    ret_code, stdout, stderr = run_command(command, timeout, timeout_as_error)
 
     if ret_code != ReturnCode.SUCCESS:
         log.logger.error(

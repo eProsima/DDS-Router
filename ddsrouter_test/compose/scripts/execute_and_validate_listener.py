@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import argparse
-from asyncio.log import logger
+import re
 
 import log
 
@@ -21,8 +21,8 @@ from ros2_nodes.utils import delay
 
 import validation
 
-DESCRIPTION = """Script to validate clients output"""
-USAGE = ('python3 execute_and_validate_client.py '
+DESCRIPTION = """Script to validate listeners output"""
+USAGE = ('python3 execute_and_validate_listener.py '
          '[-s <samples>] [-t <timeout>] [-d]')
 
 
@@ -39,31 +39,22 @@ def parse_options():
         usage=(USAGE)
     )
     parser.add_argument(
-        '-s',
-        '--samples',
-        type=int,
-        default=5,
-        help='Samples to receive.'
-    )
-    parser.add_argument(
         '-t',
         '--timeout',
         type=int,
         default=5,
-        help='Timeout for the client application.'
-    )
-    parser.add_argument(
-        '-e',
-        '--exe',
-        type=str,
-        default='/scripts/ros2_nodes/node_main.py',
-        help='Timeout for the server application.'
+        help='Timeout for the subscriber application.'
     )
     parser.add_argument(
         '--delay',
         type=float,
         default=0,
         help='Time to wait before starting execution.'
+    )
+    parser.add_argument(
+        '--allow-duplicates',
+        action='store_true',
+        help='Allow receive duplicated data.'
     )
     parser.add_argument(
         '-d',
@@ -75,64 +66,52 @@ def parse_options():
     return parser.parse_args()
 
 
-def _client_command(args):
+def _listener_command(args):
     """
-    Build the command to execute the client.
+    Build the command to execute the listener.
 
     :param args: Arguments parsed
-    :return: Command to execute the client
+    :return: Command to execute the listener
     """
     command = [
-        'python3', args.exe,
-        '--client',
-        '--samples', str(args.samples),
-        '--wait']
+        'ros2',
+        'run',
+        'demo_nodes_cpp',
+        'listener']
 
     return command
 
 
-def _client_parse_output(stdout, stderr):
+def _listener_parse_output(stdout, stderr):
     """
-    Transform the output of the program in a list of received messages.
-
-    :param stdout: Process stdout
-    :param stdout: Process stderr
-
-    :return: (List of received messages , stderr)
+    Parse message and get only the numbers received.
     """
-    head_message_expected = 'Result { '
+    head_message_expected = '[INFO] [1664186953.395023916] [listener]: I heard: [Hello World: '
+    tail_message_expected = ']'
 
     lines = stdout.splitlines()
 
     # Get only lines of format "Result { x,y,z }
     filtered_lines = [
-        line.split('$')[-1][len(head_message_expected):-2]
+        line[len(head_message_expected):-tail_message_expected]
         for line
         in lines
         if head_message_expected in line]
 
-    executions = []
-    for line in filtered_lines:
-        line = line.split(',')
-        executions.append((int(line[0]), int(line[1]), int(line[2])))
-
-    return executions, stderr
+    return filtered_lines, stderr
 
 
-def _client_validate(stdout_parsed, stderr_parsed):
+def _listener_validate_duplicates(stdout_parsed, stderr_parsed):
+    """
+    Do nothing.
 
-    # Check default validator
-    ret_code = validation.validate_default(stdout_parsed, stderr_parsed)
-
-    if ret_code != validation.ReturnCode.SUCCESS:
-        return ret_code
-
-    # Check that responses are ok
-    for execution in stdout_parsed:
-        if (execution[0] + execution[1]) != execution[2]:
-            return validation.ReturnCode.NOT_VALID_MESSAGES
-
-    return ret_code
+    Dummy method as listener will not validate anything.
+    """
+    ret = validation.validate_default(stdout_parsed, stderr_parsed)
+    if (ret == validation.ReturnCode.SUCCESS):
+        if (validation.find_duplicates(stdout_parsed)):
+            return validation.ReturnCode.DUPLICATES
+    return ret
 
 
 if __name__ == '__main__':
@@ -147,14 +126,22 @@ if __name__ == '__main__':
     # Delay
     delay(args.delay)
 
-    command = _client_command(args)
+    # Prepare command
+    command = _listener_command(args)
 
-    ret_code = validation.run_and_validate(
+    _listener_validate_function = None
+    if args.allow_duplicates:
+        _listener_validate_function = _listener_validate_duplicates
+    else:
+        _listener_validate_function = validation.validate_default
+
+    # Run command and validate
+    ret_code = validation.run_command_till_timeout(
         command=command,
         timeout=args.timeout,
-        parse_output_function=_client_parse_output,
-        validate_output_function=_client_validate)
+        parse_output_function=_listener_parse_output,
+        validate_output_function=_listener_validate_function)
 
-    log.logger.info(f'Client validator exited with code {ret_code}')
+    print(f'listener validator exited with code {ret_code}')
 
     exit(ret_code.value)

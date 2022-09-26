@@ -1,0 +1,15 @@
+version: v3.0
+
+participants:
+
+  - name: Echo Participant
+    kind: echo
+    data: true
+
+  - name: Cloud_Participant_Repeater
+    kind: local
+    repeater: true
+    listening-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: tcp

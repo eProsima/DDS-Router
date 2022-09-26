@@ -20,8 +20,8 @@ from ros2_nodes.utils import delay
 
 import validation
 
-DESCRIPTION = """Script to validate servers output"""
-USAGE = ('python3 execute_and_validate_server.py '
+DESCRIPTION = """Script to validate talkers output"""
+USAGE = ('python3 execute_and_validate_talker.py '
          '[-s <samples>] [-t <timeout>] [-d]')
 
 
@@ -38,25 +38,11 @@ def parse_options():
         usage=(USAGE)
     )
     parser.add_argument(
-        '-s',
-        '--samples',
-        type=int,
-        default=5,
-        help='Samples to receive.'
-    )
-    parser.add_argument(
         '-t',
         '--timeout',
         type=int,
         default=5,
-        help='Timeout for the server application.'
-    )
-    parser.add_argument(
-        '-e',
-        '--exe',
-        type=str,
-        default='/scripts/ros2_nodes/node_main.py',
-        help='Timeout for the server application.'
+        help='Timeout for the subscriber application.'
     )
     parser.add_argument(
         '--delay',
@@ -74,18 +60,38 @@ def parse_options():
     return parser.parse_args()
 
 
-def _server_command(args):
+def _talker_command(args):
     """
-    Build the command to execute the server.
+    Build the command to execute the talker.
 
     :param args: Arguments parsed
-    :return: Command to execute the server
+    :return: Command to execute the talker
     """
     command = [
-        'python3', args.exe,
-        '--samples', str(args.samples)]
+        'ros2',
+        'run',
+        'demo_nodes_cpp',
+        'talker']
 
     return command
+
+
+def _talker_parse_output(stdout, stderr):
+    """
+    Do nothing.
+
+    Dummy method as talker will not parse output.
+    """
+    return stdout, stderr
+
+
+def _talker_validate(stdout_parsed, stderr_parsed):
+    """
+    Do nothing.
+
+    Dummy method as talker will not validate anything.
+    """
+    return validation.ReturnCode.SUCCESS
 
 
 if __name__ == '__main__':
@@ -100,14 +106,16 @@ if __name__ == '__main__':
     # Delay
     delay(args.delay)
 
-    command = _server_command(args)
+    # Prepare command
+    command = _talker_command(args)
 
-    ret_code = validation.run_and_validate(
+    # Run command and validate
+    ret_code = validation.run_command_till_timeout(
         command=command,
         timeout=args.timeout,
-        parse_output_function=validation.parse_default,
-        validate_output_function=validation.validate_default)
+        parse_output_function=_talker_parse_output,
+        validate_output_function=_talker_validate)
 
-    log.logger.info(f'Server validator exited with code {ret_code}')
+    print(f'talker validator exited with code {ret_code}')
 
     exit(ret_code.value)
