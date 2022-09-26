@@ -19,18 +19,9 @@
 #ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_PARTITIONSWRITER_HPP_
 #define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_RTPS_PARTITIONSWRITER_HPP_
 
-#include <fastdds/rtps/rtps_fwd.h>
-#include <fastrtps/rtps/attributes/HistoryAttributes.h>
-#include <fastrtps/attributes/TopicAttributes.h>
-#include <fastrtps/qos/WriterQos.h>
-#include <fastrtps/rtps/history/WriterHistory.h>
-#include <fastrtps/rtps/attributes/WriterAttributes.h>
-#include <fastrtps/rtps/writer/RTPSWriter.h>
-
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 #include <writer/implementations/rtps/QoSSpecificWriter.hpp>
-#include <efficiency/cache_change/CacheChangePool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

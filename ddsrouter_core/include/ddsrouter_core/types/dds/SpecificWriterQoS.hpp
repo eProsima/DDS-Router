@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-//! Durability kind enumeration
+//! Partitions
 using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
 
-//! Partition configuration
+//! Ownership Strength
 using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosPolicy;
 
 /**

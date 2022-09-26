@@ -56,14 +56,12 @@ public:
      *
      * @param topic: Topic (service) of which this ServiceRegistry manages communication
      * @param participant_id: Id of participant for which this registry is created
-     * @param related_sample_identity: Proxy client identifier
      *
      * @note Always created disabled. It is first enabled when a server is discovered.
      */
     ServiceRegistry(
             const types::RPCTopic& topic,
-            const types::ParticipantId& participant_id,
-            const SampleIdentity& related_sample_identity);
+            const types::ParticipantId& participant_id);
 
     //! Enable registry
     void enable() noexcept;
@@ -102,9 +100,6 @@ protected:
 
     //! Id of participant for which this registry is created
     types::ParticipantId participant_id_;
-
-    //! Proxy client identifier, required for a server to set the target of replies
-    SampleIdentity related_sample_identity_;
 
     //! Whether the registry is activated
     std::atomic<bool> enabled_;

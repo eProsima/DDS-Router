@@ -40,7 +40,7 @@ DDSRouterConfiguration::DDSRouterConfiguration(
         std::set<std::shared_ptr<DdsFilterTopic>> blocklist,
         std::set<std::shared_ptr<DdsTopic>> builtin_topics,
         std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-        const SpecsConfiguration& advance_options)
+        const SpecsConfiguration& advanced_options)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
     , participants_configurations(participants_configurations)
 {

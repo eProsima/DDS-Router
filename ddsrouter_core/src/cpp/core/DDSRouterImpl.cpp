@@ -45,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advance_options.number_of_threads))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advanced_options.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -60,7 +60,7 @@ DDSRouterImpl::DDSRouterImpl(
 
     // Set default value for history
     types::TopicQoS::default_history_depth.store(
-        configuration_.advance_options.max_history_depth);
+        configuration_.advanced_options.max_history_depth);
 
     // Add callback to be called by the discovery database when an Endpoint is discovered
     discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
@@ -396,9 +396,6 @@ void DDSRouterImpl::discovered_topic_(
     {
         activate_topic_(topic);
     }
-    else
-    {
-    }
 }
 
 void DDSRouterImpl::discovered_service_(
@@ -456,22 +453,19 @@ void DDSRouterImpl::discovered_endpoint_(
 {
     logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
-    DdsTopic topic = endpoint.topic();
-    if (RPCTopic::is_service_topic(topic))
+    // Set as discovered only if the endpoint is a Reader
+    // If non Readers in topics, it is considered as non discovered
+    if (endpoint.is_reader())
     {
+        DdsTopic topic = endpoint.topic();
         if (endpoint.is_server_endpoint())
         {
             // Service server discovered
             discovered_service_(RPCTopic(topic), endpoint.discoverer_participant_id(), endpoint.guid().guid_prefix());
         }
-    }
-    else
-    {
-        // Set as discovered only if the endpoints is a Reader
-        // If non Readers in topics, it is considered as non discovered
-        if (endpoint.is_reader())
+        else
         {
-            discovered_topic_(endpoint.topic());
+            discovered_topic_(topic);
         }
     }
 }

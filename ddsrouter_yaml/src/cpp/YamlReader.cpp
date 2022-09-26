@@ -990,7 +990,7 @@ void _fill_ddsrouter_configuration_latest(
     if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
         YamlReader::fill<configuration::SpecsConfiguration>(
-            object.advance_options,
+            object.advanced_options,
             YamlReader::get_value_in_tag(yml, SPECS_TAG),
             version);
     }

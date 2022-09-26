@@ -16,6 +16,9 @@
 #   Subscribers transient do not need to receive everything, but to received from 0 to N.
 #   This is because last message of Publisher cannot assure that exists before closing Pub.
 #
+#   DDS Router has a delay to start, so to probe transient local in router.
+#   sleep command is use for this
+#
 
 services:
 
@@ -27,7 +30,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 12
+    command: sleep 1 && ddsrouter -c /config.yaml --timeout 12
 
   # DOMAIN 0
   publisher_t0_0_0:
@@ -51,7 +54,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 0 --topic topic2 --reliable --transient"
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 0 --topic topic2 --reliable --transient"
 
   # DOMAIN 1
   subscriber_t0_1_0:
@@ -70,7 +73,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
 
   subscriber_t1_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -79,7 +82,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 1 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvanceConfigurationExample/examples/cpp/dds/AdvanceConfigurationExample/AdvanceConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
 
   publisher_t2_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}

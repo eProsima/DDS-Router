@@ -23,7 +23,7 @@
 #include <fastdds/rtps/common/SequenceNumber.h>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/DataQoS.hpp>
+#include <ddsrouter_core/types/dds/DataProperties.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -50,13 +50,15 @@ struct DataReceived
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
 
-    //! QoS of the data received
-    DataQoS qos;
-};
+    //! Specific QoS and attributes of the data received
+    DataProperties properties;
 
-struct DataReceivedParametrized : public DataReceived
-{
-    eprosima::fastrtps::rtps::SequenceNumber_t writer_data_sent_sequence_number;
+    /**
+     * @brief Sequence Number with which the internal writer (ddsrouter writer) has sent this message
+     *
+     * @warning This is not the sequence number of the data received. It is the one set by writer when sending it.
+     */
+    eprosima::fastrtps::rtps::SequenceNumber_t sent_sequence_number;
 };
 
 //! \c octet to stream serializator

@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DataQoS.hpp
+ * @file DataProperties.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_
-#define _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_
+#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_DataProperties_HPP_
+#define _DDSROUTERCORE_TYPES_ENDPOINT_DataProperties_HPP_
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/InstanceHandle.h>
@@ -53,22 +53,22 @@ using DataTime = eprosima::fastrtps::rtps::Time_t;
 /**
  * Collection of attributes of an Endpoint
  */
-struct DDSROUTER_CORE_DllAPI DataQoS
+struct DDSROUTER_CORE_DllAPI DataProperties
 {
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    //! Default DataQoS with reader less restrictive parameters
-    DataQoS() = default;
+    //! Default DataProperties with reader less restrictive parameters
+    DataProperties() = default;
 
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
-    bool operator< (const DataQoS& other) const noexcept;
+    bool operator< (const DataProperties& other) const noexcept;
 
-    bool operator== (const DataQoS& other) const noexcept;
+    bool operator== (const DataProperties& other) const noexcept;
 
     /////////////////////////
     // VARIABLES
@@ -92,20 +92,20 @@ struct DDSROUTER_CORE_DllAPI DataQoS
     //! Write params associated to the received cache change
     utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params;
 
-    //! Origin sequence number
+    //! Sequence number of the received cache change
     eprosima::fastrtps::rtps::SequenceNumber_t origin_sequence_number;
 };
 
 /**
- * @brief \c DataQoS to stream serialization
+ * @brief \c DataProperties to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const DataQoS& qos);
+        const DataProperties& qos);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_DATAQOS_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_DataProperties_HPP_ */

@@ -19,20 +19,6 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_PARTITIONSREADER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_PARTITIONSREADER_HPP_
 
-#include <fastdds/rtps/rtps_fwd.h>
-#include <fastrtps/rtps/attributes/HistoryAttributes.h>
-#include <fastrtps/attributes/TopicAttributes.h>
-#include <fastrtps/qos/ReaderQos.h>
-#include <fastrtps/rtps/history/ReaderHistory.h>
-#include <fastrtps/rtps/attributes/ReaderAttributes.h>
-#include <fastrtps/rtps/reader/RTPSReader.h>
-#include <fastrtps/rtps/reader/ReaderListener.h>
-
-#include <ddsrouter_utils/types/Atomicable.hpp>
-
-#include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
-
 #include <reader/implementations/rtps/CommonReader.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 
@@ -70,8 +56,6 @@ public:
 protected:
 
     types::SpecificWriterQoS specific_qos_of_writer_(const types::Guid& guid) const;
-    // void discovered_endpoint_(
-    //     const Endpoint& endpoint);
 
     virtual void fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,

@@ -142,9 +142,9 @@ std::ostream& operator <<(
 
     os <<
         "Endpoint{" << endpoint.guid_ <<
+        ";" << endpoint.kind_ <<
         ";" << endpoint.topic_ <<
         ";" << endpoint.specific_qos_ <<
-        ";" << endpoint.kind_ <<
         ";" << active_str <<
         ";" << endpoint.discoverer_participant_id_ <<
         "}";

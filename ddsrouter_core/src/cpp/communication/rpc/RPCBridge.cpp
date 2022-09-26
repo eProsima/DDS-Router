@@ -122,8 +122,7 @@ void RPCBridge::create_proxy_server_nts_(
     std::shared_ptr<IParticipant> participant = participants_->get_participant(participant_id);
 
     // Safe casting as we are only getting RTPS participants
-    reply_writers_[participant_id] =
-            std::static_pointer_cast<IWriter>(participant->create_writer(topic_.reply_topic()));
+    reply_writers_[participant_id] = participant->create_writer(topic_.reply_topic());
     request_readers_[participant_id] =
             std::static_pointer_cast<rtps::CommonReader>(participant->create_reader(topic_.request_topic()));
 
@@ -144,10 +143,7 @@ void RPCBridge::create_proxy_client_nts_(
     create_slot_(reply_readers_[participant_id]);
 
     // Create service registry associated to this proxy client
-    SampleIdentity related_sample_identity;
-    related_sample_identity.writer_guid(reply_readers_[participant_id]->guid());
-    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(topic_, participant_id,
-                    related_sample_identity);
+    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(topic_, participant_id);
 }
 
 void RPCBridge::enable() noexcept
@@ -334,7 +330,7 @@ void RPCBridge::transmit_(
         }
 
         // Get data received
-        std::unique_ptr<DataReceived> data = std::make_unique<DataReceivedParametrized>();
+        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
         utils::ReturnCode ret = reader->take(data);
 
         // Will never return \c RETCODE_NO_DATA, otherwise would have finished before
@@ -357,8 +353,6 @@ void RPCBridge::transmit_(
             SampleIdentity reply_related_sample_identity = data->qos.write_params.value.sample_identity();
             reply_related_sample_identity.sequence_number(data->qos.origin_sequence_number);
 
-            // TODO check if this needs to be set
-            // reply_related_sample_identity.sequence_number(data->sequenceNumber);
             if (reply_related_sample_identity == SampleIdentity::unknown())
             {
                 logWarning(DDSROUTER_RPCBRIDGE,
@@ -383,7 +377,7 @@ void RPCBridge::transmit_(
                     // Set write params so writer set in related sample identity the correct value
                     // Set it so writer use it
                     data->qos.write_params.set_level();
-                    // Set related sample identity as reader that this is meant
+                    // Attach the information the server needs in order to reply to the appropiate proxy client.
                     data->qos.write_params.value.related_sample_identity().writer_guid(
                         reply_readers_[service_registry.first]->guid());
 
@@ -397,16 +391,14 @@ void RPCBridge::transmit_(
                     }
 
                     // Get Raw ptr to specialize by casting
-                    types::DataReceivedParametrized* parametrized_data =
-                        dynamic_cast<types::DataReceivedParametrized*>(data.get());
-                    if (!parametrized_data)
+                    if (!data)
                     {
-                        utils::tsnh(STR_ENTRY << "Sending a Non DataReceivedParametrized data through a RPC Writer.");
+                        utils::tsnh(STR_ENTRY << "Sending a Non DataReceived data through a RPC Writer.");
                     }
                     else
                     {
                         eprosima::fastrtps::rtps::SequenceNumber_t sequence_number =
-                            parametrized_data->writer_data_sent_sequence_number;
+                            data->sent_sequence_number;
                         // Add entry to registry associated to the transmission of this request through this proxy client.
                         service_registry.second->add(
                             sequence_number,

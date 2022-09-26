@@ -42,7 +42,7 @@ enum FuzzyLevelValues : FuzzyLevelType
 };
 
 /**
- * Fuzzy class is a implementation of a class related with a type \c T and a certainty level that this value has
+ * Fuzzy class is an implementation of a class related with a type \c T and a certainty level that this value has
  * been set.
  *
  * It is useful to maintain together the logic of a class/value and the knowledge if the element has been set by

@@ -120,14 +120,6 @@ types::Endpoint CommonParticipant::create_common_endpoint_from_info_(
     // Set Topic with ownership
     discovered_topic_qos.ownership_qos = info.info.m_qos.m_ownership.kind;
 
-    // Parse specific QoS of the entity
-    types::SpecificWriterQoS specific_qos;
-    if (discovered_topic_qos.has_partitions())
-    {
-        specific_qos.partitions = info.info.m_qos.m_partition;
-    }
-    // NOTE: ownership is only for Writer
-
     // Parse Topic
     types::DdsTopic info_topic(std::string(info.info.topicName()), std::string(info.info.typeName()));
     info_topic.keyed = info.info.topicKind() == eprosima::fastrtps::rtps::TopicKind_t::WITH_KEY;
@@ -135,11 +127,22 @@ types::Endpoint CommonParticipant::create_common_endpoint_from_info_(
     info_topic.topic_qos = discovered_topic_qos;
     info_topic.topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_fuzzy);
 
-    return types::Endpoint(
+    types::Endpoint endpoint = types::Endpoint(
         types::EndpointKind::invalid,
         info_guid,
         info_topic,
         this->id_nts_());
+
+    // Parse specific QoS of the entity
+    types::SpecificWriterQoS specific_qos;
+    if (discovered_topic_qos.has_partitions())
+    {
+        specific_qos.partitions = info.info.m_qos.m_partition;
+    }
+    endpoint.specific_qos(specific_qos);
+
+    // NOTE: ownership is only for Writer
+    return endpoint;
 }
 
 template<>
@@ -149,12 +152,11 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_<fastrtps::rtps::Wr
     // Create Endpoint from common info
     types::Endpoint endpoint = create_common_endpoint_from_info_(info);
 
-    if (endpoint.topic_qos().has_partitions() || endpoint.topic_qos().has_ownership())
+    if (endpoint.topic_qos().has_ownership())
     {
         // Only for writers (TODO: this could be done much better if Endpoint is not a class but a struct)
         auto specific_qos = endpoint.specific_qos();
         specific_qos.ownership_strength = info.info.m_qos.m_ownershipStrength;
-        specific_qos.partitions = info.info.m_qos.m_partition;
         endpoint.specific_qos(specific_qos);
     }
 
@@ -307,7 +309,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
         types::DdsTopic topic)
 {
-    if (topic.topic_qos.value.has_partitions())
+    if (topic.topic_qos.value.has_partitions() || topic.topic_qos.value.has_ownership())
     {
         return std::make_shared<PartitionsReader>(
             this->id(),

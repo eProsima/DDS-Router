@@ -62,7 +62,7 @@ bool Fuzzy<T>::operator==(const Fuzzy<T>& other) const noexcept
     }
     else
     {
-        return this->fuzzy_level == other.fuzzy_level || this->value == other.value;
+        return this->fuzzy_level == other.fuzzy_level && this->value == other.value;
     }
 }
 
@@ -146,14 +146,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
-    if (f.is_set())
-    {
-        os << f.value;
-    }
-    else
-    {
-        os << "{(" << f.fuzzy_level << ")" << f.value << "}";
-    }
+    os << "{(" << f.fuzzy_level << ")" << f.value << "}";
     return os;
 }
 

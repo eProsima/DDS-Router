@@ -34,16 +34,13 @@ const unsigned int ServiceRegistry::DEFAULT_MAX_ENTRIES_ = 5000;
 
 ServiceRegistry::ServiceRegistry(
         const RPCTopic& topic,
-        const ParticipantId& participant_id,
-        const SampleIdentity& related_sample_identity)
+        const ParticipantId& participant_id
     : topic_(topic)
     , participant_id_(participant_id)
-    , related_sample_identity_(related_sample_identity)
     , enabled_(false)
 {
     logDebug(DDSROUTER_SERVICEREGISTRY,
-            "ServiceRegistry for service " << topic <<
-            " created with related_sample_identity " << related_sample_identity <<
+            "ServiceRegistry created for service " << topic <<
             " in participant " << participant_id << ".");
 }
 
@@ -60,11 +57,6 @@ void ServiceRegistry::disable() noexcept
 bool ServiceRegistry::enabled() const noexcept
 {
     return enabled_;
-}
-
-SampleIdentity ServiceRegistry::related_sample_identity_nts() const noexcept
-{
-    return related_sample_identity_;
 }
 
 void ServiceRegistry::add(

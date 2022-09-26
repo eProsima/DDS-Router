@@ -34,7 +34,7 @@ namespace core {
 namespace types {
 
 /**
- * Generic Data Struct that represent a Dds Topic of data flow in the Router
+ * Data struct that represents a DDS Topic of data flow in the Router.
  */
 struct DdsTopic : public Topic
 {

@@ -276,7 +276,7 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check threads are correct
-        ASSERT_EQ(test_case, configuration_result.advance_options.number_of_threads);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.number_of_threads);
     }
 }
 
@@ -313,7 +313,7 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advance_options.max_history_depth);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.max_history_depth);
     }
 }
 

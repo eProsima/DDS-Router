@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@
 
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -34,8 +33,9 @@ namespace core {
 namespace configuration {
 
 /**
- * This class joins every DDSRouter feature configuration and includes methods
- * to interact with this configuration.
+ * This data struct contains the values for advance configuration of the DDS Router such as:
+ * - Number of threads to Thread Pool
+ * - Default maximum history depth
  */
 struct SpecsConfiguration : public BaseConfiguration
 {
@@ -59,7 +59,12 @@ struct SpecsConfiguration : public BaseConfiguration
 
     unsigned int number_of_threads = 12;
 
-    types::HistoryDepthType max_history_depth = 1000;
+    /**
+     * @brief Maximum of History depth by default in those topics where it is not specified.
+     *
+     * @note Default value is 5000 as in Fast DDS.
+     */
+    types::HistoryDepthType max_history_depth = 5000;
 };
 
 } /* namespace configuration */

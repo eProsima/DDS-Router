@@ -32,7 +32,7 @@ namespace core {
 namespace types {
 
 /**
- * Generic Data Struct that represent a Topic of data flow in the Router
+ * Generic data struct that represents a Topic of data flow in the Router.
  */
 struct Topic
 {

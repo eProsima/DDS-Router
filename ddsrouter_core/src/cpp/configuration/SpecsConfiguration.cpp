@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ bool SpecsConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
 
     if (max_history_depth == 0)
     {
-        logWarning(DDSROUTER_SPECS, "Using non limited histories could lead to memory lack in long executions.");
+        logWarning(DDSROUTER_SPECS, "Using non limited histories could lead to memory exhaustion in long executions.");
     }
 
     return true;

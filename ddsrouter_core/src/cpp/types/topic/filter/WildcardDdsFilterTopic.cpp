@@ -71,7 +71,7 @@ bool WildcardDdsFilterTopic::matches(
 std::ostream& WildcardDdsFilterTopic::serialize(
         std::ostream& os) const
 {
-    os << this;
+    os << *this;
     return os;
 }
 

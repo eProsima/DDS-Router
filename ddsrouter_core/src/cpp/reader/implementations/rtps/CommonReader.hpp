@@ -169,20 +169,14 @@ protected:
     static fastrtps::rtps::HistoryAttributes history_attributes_(const types::DdsTopic& topic) noexcept;
 
     /**
-     * @brief Default CommonReader Attributes to create CommonReader
-     *
-     * It returns the less restrictive Attributes for a CommonReader
-     * durability: VOLATILE
-     * reliability: BEST_EFFORT
-     *
-     * @return Default ReaderAttributes
+     * @brief Reader Attributes to create RTPS Reader
      */
     static fastrtps::rtps::ReaderAttributes reader_attributes_(const types::DdsTopic& topic) noexcept;
 
-    //! Default Topic Attributes to create CommonReader
+    //! Topic Attributes to create RTPS Reader
     static fastrtps::TopicAttributes topic_attributes_(const types::DdsTopic& topic) noexcept;
 
-    //! Default TopicQoS CommonReader (must be the same as the attributes)
+    //! Reader QoS to create RTPS Reader
     static fastrtps::ReaderQos reader_qos_(const types::DdsTopic& topic) noexcept;
 
     /////

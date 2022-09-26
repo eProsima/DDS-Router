@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file Topic.hpp
+ * @file WildcardDdsFilterTopic.hpp
  */
 
 #ifndef _DDSROUTERCORE_TYPES_TOPIC_FILTER_WILDCARDDDSFILTERTOPIC_HPP_
@@ -31,7 +31,7 @@ namespace core {
 namespace types {
 
 /**
- * Generic Data Struct that represent a Dds Topic of data flow in the Router
+ * Data struct that uses wildcards (*, ?) to filter a DDS Router.
  */
 struct WildcardDdsFilterTopic : public DdsFilterTopic
 {

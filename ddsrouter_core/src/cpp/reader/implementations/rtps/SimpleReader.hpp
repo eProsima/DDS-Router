@@ -19,18 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SIMPLEREADER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SIMPLEREADER_HPP_
 
-#include <fastdds/rtps/rtps_fwd.h>
-#include <fastrtps/rtps/attributes/HistoryAttributes.h>
-#include <fastrtps/attributes/TopicAttributes.h>
-#include <fastrtps/qos/ReaderQos.h>
-#include <fastrtps/rtps/history/ReaderHistory.h>
-#include <fastrtps/rtps/attributes/ReaderAttributes.h>
-#include <fastrtps/rtps/reader/RTPSReader.h>
-#include <fastrtps/rtps/reader/ReaderListener.h>
-
 #include <reader/implementations/rtps/CommonReader.hpp>
-
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

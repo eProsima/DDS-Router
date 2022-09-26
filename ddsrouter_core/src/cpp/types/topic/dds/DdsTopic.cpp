@@ -113,7 +113,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const DdsTopic& t)
 {
-    std::string keyed_str = t.keyed ? ";keyed" : "";
+    std::string keyed_str = t.keyed ? ";keyed;" : ";";
 
     os << "DdsTopic{" << t.topic_name << ";" << t.type_name << keyed_str << t.topic_qos << "}";
     return os;

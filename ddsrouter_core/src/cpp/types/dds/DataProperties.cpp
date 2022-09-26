@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file DataQoS.cpp
+ * @file DataProperties.cpp
  *
  */
 
-#include <ddsrouter_core/types/dds/DataQoS.hpp>
+#include <ddsrouter_core/types/dds/DataProperties.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
@@ -25,7 +25,7 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool DataQoS::operator< (const DataQoS& other) const noexcept
+bool DataProperties::operator< (const DataProperties& other) const noexcept
 {
     if(this->writer_qos < other.writer_qos)
     {
@@ -42,7 +42,7 @@ bool DataQoS::operator< (const DataQoS& other) const noexcept
 
 }
 
-bool DataQoS::operator== (const DataQoS& other) const noexcept
+bool DataProperties::operator== (const DataProperties& other) const noexcept
 {
     // NOTE: Ownership not supported
     return this->writer_qos == other.writer_qos && this->instanceHandle == other.instanceHandle;
@@ -50,10 +50,10 @@ bool DataQoS::operator== (const DataQoS& other) const noexcept
 
 std::ostream& operator <<(
         std::ostream& os,
-        const DataQoS& qos)
+        const DataProperties& qos)
 {
     os <<
-        "DataQoS{" << qos.writer_qos <<
+        "DataProperties{" << qos.writer_qos <<
         ";" << qos.instanceHandle <<
         "}";
 

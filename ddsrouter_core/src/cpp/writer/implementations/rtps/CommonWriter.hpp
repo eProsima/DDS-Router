@@ -111,7 +111,7 @@ protected:
     /**
      * @brief Write specific method
      *
-     * Store new data as message to send (asynchronously) (it could use PayloadPool to not copy payload).
+     * Store new data as message to send (synchronously) (it could use PayloadPool to not copy payload).
      * Take next Untaken Change.
      * Set \c data with the message taken (data payload must be stored from PayloadPool).
      * Remove this change from Reader History and release.
@@ -153,36 +153,26 @@ protected:
             const utils::PoolConfiguration& pool_configuration);
 
     /**
-     * @brief Default History Attributes to create CommonWriter History
-     *
-     * @return Default HistoryAttributes
+     * @brief History Attributes to create RTPS Writer History
      */
     static fastrtps::rtps::HistoryAttributes history_attributes_(
             const types::DdsTopic& topic) noexcept;
 
     /**
-     * @brief Default CommonWriter Attributes to create CommonWriter
-     *
-     * It returns the less restrictive Attributes for a CommonWriter, so it maches every Reader
-     * durability: TRANSIENT_LOCAL
-     * reliability: RELIABLE
-     *
-     * @warning less restrictive would be PERSISTENCE, but those are not supported yet.
-     *
-     * @return Default ReaderAttributes
+     * @brief Writer Attributes to create RTPS Writer
      */
     static fastrtps::rtps::WriterAttributes writer_attributes_(
             const types::DdsTopic& topic) noexcept;
 
-    //! Default Topic Attributes to create CommonWriter
+    //! Topic Attributes to create RTPS Writer
     static fastrtps::TopicAttributes topic_attributes_(
             const types::DdsTopic& topic) noexcept;
 
-    //! Default TopicQoS CommonWriter
+    //! QoS for RTPS Writer
     static fastrtps::WriterQos writer_qos_(
             const types::DdsTopic& topic) noexcept;
 
-    //! Default Cache Change Pool Configuration
+    //! Cache Change Pool Configuration
     static utils::PoolConfiguration cache_change_pool_configuration_(
             const types::DdsTopic& topic) noexcept;
 

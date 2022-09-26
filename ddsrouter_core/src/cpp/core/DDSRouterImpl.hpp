@@ -55,7 +55,7 @@ public:
      * Initialize a whole DDSRouterImpl:
      * - Create its associated AllowedTopicList
      * - Create Participants and add them to \c ParticipantsDatabase
-     * - Create the Bridges for DdsTopics as disabled (TODO: remove when discovery is ready)
+     * - Create the Bridges for (allowed) builtin topics
      *
      * @param [in] configuration : Configuration for the new DDS Router
      *

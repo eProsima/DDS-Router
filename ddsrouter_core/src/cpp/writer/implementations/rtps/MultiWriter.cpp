@@ -102,7 +102,6 @@ QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificWrite
         return it->second;
     }
 
-    // TODO: create also Rpc writers
     // Create Writer
     QoSSpecificWriter* new_writer = create_writer_nts_(data_qos);
     // Add it to map
@@ -120,7 +119,7 @@ QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificWrite
 QoSSpecificWriter* MultiWriter::create_writer_nts_(const types::SpecificWriterQoS& data_qos)
 {
     logDebug(
-        DDSROUTER_PARTITIONSWRITER,
+        DDSROUTER_MULTIWRITER,
         "Creating a new Writer in " << *this << " for qos " << data_qos << ".");
 
     return new QoSSpecificWriter(
@@ -137,14 +136,14 @@ utils::ReturnCode MultiWriter::write_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
     logDebug(
-        DDSROUTER_PARTITIONSWRITER,
+        DDSROUTER_MULTIWRITER,
         "Writing in Partitions Writer " << *this << " a data with qos " << data->qos << " from " << data->qos.source_guid);
 
     // Take Writer
     auto this_qos_writer = get_writer_or_create_(data->qos.writer_qos);
 
     logDebug(
-        DDSROUTER_PARTITIONSWRITER,
+        DDSROUTER_MULTIWRITER,
         "Writer chosen to send is " << *this_qos_writer << ".");
 
     // Write

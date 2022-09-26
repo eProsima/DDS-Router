@@ -53,7 +53,6 @@ constexpr const char* TOPIC_QOS_TAG("qos");           //! QoS of a topic
 // QoS related tags
 constexpr const char* QOS_RELIABLE_TAG("reliable");     //! The Endpoints of that topic will be configured as RELIABLE
 constexpr const char* QOS_TRANSIENT_TAG("transient");   //! The Endpoints of that topic will be configured as TRANSIENT_LOCAL
-constexpr const char* QOS_KEEP_LAST_TAG("keep-last");   //! The Endpoints of that topic will be configured as KEEP LAST
 constexpr const char* QOS_HISTORY_DEPTH_TAG("depth");   //! The Endpoints of that topic will be configured as this History Depth
 constexpr const char* QOS_PARTITION_TAG("partitions");  //! The Endpoints of that topic will be configured with partitions
 

@@ -152,7 +152,7 @@ utils::ReturnCode CommonReader::take_(
     // Check that the data is consistent
     if (!(received_change->serializedPayload.max_size > 0))
     {
-        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+        logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
                 "Error taking data with length " << received_change->serializedPayload.length << ".");
 
         // Remove the change in the History and release it in the reader
@@ -164,7 +164,7 @@ utils::ReturnCode CommonReader::take_(
     // Check that the guid is consistent
     if (received_change->writerGUID == fastrtps::rtps::GUID_t::unknown())
     {
-        logWarning(DDSROUTER_RTPS_READER_LISTENER,
+        logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
                 "Error taking data without correct writer GUID.");
 
         // Remove the change in the History and release it in the reader
@@ -176,8 +176,8 @@ utils::ReturnCode CommonReader::take_(
     // Store the new data that has arrived in the Track data
     fill_received_data_(received_change, data);
 
-    logDebug(DDSROUTER_RTPS_READER_LISTENER,
-            "Data transmiting to track from CommonReader " << *this << " with payload " <<
+    logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+            "Data transmiting to track from Reader " << *this << " with payload " <<
             data->payload << " from remote writer " << data->qos.source_guid);
 
     // Remove the change in the History and release it in the reader
@@ -225,7 +225,6 @@ void CommonReader::fill_received_data_(
 
 void CommonReader::enable_() noexcept
 {
-    // TODO: refactor with the transparency module
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
     if (topic_.topic_qos.value.is_transient_local())
@@ -254,7 +253,6 @@ fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(const types:
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
 
     att.maximumReservedCaches = topic.topic_qos.value.history_depth;
-    // TODO: Check if history atts must be set from topics qos
 
     return att;
 }
@@ -347,8 +345,8 @@ void CommonReader::onNewCacheChangeAdded(
         if (enabled_)
         {
             // Call Track callback (by calling BaseReader callback method)
-            logDebug(DDSROUTER_RTPS_READER_LISTENER,
-                    "Data arrived to CommonReader " << *this << " with payload " << change->serializedPayload << " from " <<
+            logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+                    "Data arrived to Reader " << *this << " with payload " << change->serializedPayload << " from " <<
                     change->writerGUID);
             on_data_available_();
         }
@@ -358,7 +356,7 @@ void CommonReader::onNewCacheChangeAdded(
             if (!topic_.topic_qos.value.is_reliable())
             {
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
-                logDebug(DDSROUTER_RTPS_READER_LISTENER,
+                logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
                         "Change removed from history");
             }
         }
@@ -366,7 +364,7 @@ void CommonReader::onNewCacheChangeAdded(
     else
     {
         logWarning(
-            DDSROUTER_RTPS_READER_LISTENER,
+            DDSROUTER_RTPS_COMMONREADER_LISTENER,
             "Ignoring data from this same Participant in reader " << *this << ".");
 
         // If it is a message from this Participant, do not send it forward and remove it
@@ -383,13 +381,13 @@ void CommonReader::onReaderMatched(
     {
         if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
         {
-            logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                    "CommonReader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
+            logInfo(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+                    "Reader " << *this << " matched with a new Writer with guid " << info.remoteEndpointGuid);
         }
         else
         {
-            logInfo(DDSROUTER_RTPS_READER_LISTENER,
-                    "CommonReader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
+            logInfo(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+                    "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
         }
     }
 }

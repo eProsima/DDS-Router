@@ -54,7 +54,7 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
             std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist,
             std::set<std::shared_ptr<types::DdsTopic>> builtin_topics,
             std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
-            const SpecsConfiguration& advance_options);
+            const SpecsConfiguration& advanced_options);
 
     /////////////////////////
     // METHODS
@@ -72,7 +72,7 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
 
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations = {};
 
-    SpecsConfiguration advance_options;
+    SpecsConfiguration advanced_options;
 
 protected:
 

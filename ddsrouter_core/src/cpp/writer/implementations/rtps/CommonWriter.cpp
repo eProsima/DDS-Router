@@ -76,7 +76,7 @@ CommonWriter::~CommonWriter()
         delete rtps_history_;
     }
 
-    logInfo(DDSROUTER_RTPS_WRITER, "Deleting CommonWriter created in Participant " <<
+    logInfo(DDSROUTER_RTPS_COMMONWRITER, "Deleting CommonWriter created in Participant " <<
             participant_id_ << " for topic " << topic_);
 }
 
@@ -100,13 +100,13 @@ utils::ReturnCode CommonWriter::write_(
         eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
         if (!payload_pool_->get_payload(data->payload, payload_owner, (*new_change)))
         {
-            logDevError(DDSROUTER_RTPS_WRITER, "Error getting Payload.");
+            logDevError(DDSROUTER_RTPS_COMMONWRITER, "Error getting Payload.");
             return utils::ReturnCode::RETCODE_ERROR;
         }
     }
 
 
-    logDebug(DDSROUTER_RTPS_WRITER,
+    logDebug(DDSROUTER_RTPS_COMMONWRITER,
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
             data->qos.source_guid);
 
@@ -129,9 +129,8 @@ utils::ReturnCode CommonWriter::write_(
     // At this point, write params is now the output of adding change
     fill_sent_data_(write_params, data);
 
-    // TODO: check if this being synchronous means that we can remove the change in case of volatile and/or best_effort
-
     // When max history size is reached, remove oldest cache change
+    // WARNING: This could be done as it is synchronous. If this change in future, be careful.
     if (rtps_history_->isFull())
     {
         rtps_history_->remove_min_change();
@@ -163,17 +162,7 @@ void CommonWriter::fill_sent_data_(
         std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
 {
     // Set data output parameters
-    types::DataReceivedParametrized* parametrized_data =
-            dynamic_cast<types::DataReceivedParametrized*>(data_to_fill.get());
-    if (!parametrized_data)
-    {
-        // This case happens when Data is not DataReceivedParametrized => is not from RPCBridge
-        // So nothing to fill here, but no error
-    }
-    else
-    {
-        parametrized_data->writer_data_sent_sequence_number = params.sample_identity().sequence_number();
-    }
+    data_to_fill->sent_sequence_number = params.sample_identity().sequence_number();
 }
 
 void CommonWriter::internal_entities_creation_(
@@ -192,7 +181,7 @@ void CommonWriter::internal_entities_creation_(
     // Create CommonWriter
     if (repeater_)
     {
-        logDebug(DDSROUTER_RTPS_WRITER, "CommonWriter created with repeater filter");
+        logDebug(DDSROUTER_RTPS_COMMONWRITER, "CommonWriter created with repeater filter");
 
         rtps_writer_ = fastrtps::rtps::RTPSDomain::createRTPSWriter(
             rtps_participant_,
@@ -242,7 +231,7 @@ void CommonWriter::internal_entities_creation_(
     rtps_writer_->reader_data_filter(data_filter_.get());
 
     logInfo(
-        DDSROUTER_RTPS_WRITER,
+        DDSROUTER_RTPS_COMMONWRITER,
         "New CommonWriter created in Participant " << participant_id_ <<
         " for topic " << topic_ <<
         " with guid " << rtps_writer_->getGuid());
@@ -257,7 +246,6 @@ fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
 
     att.maximumReservedCaches = topic.topic_qos.value.history_depth;
-    // TODO: Check if history atts must be set from topics qos
 
     return att;
 }
@@ -283,9 +271,10 @@ fastrtps::rtps::WriterAttributes CommonWriter::writer_attributes_(
         att.endpoint.topicKind = eprosima::fastrtps::rtps::NO_KEY;
     }
 
-    // TODO Set ownership and partitions
+    // Other attributes as partitions and ownership are not used in this writer
 
     // Set write mode
+    // ATTENTION: Changing this will change the logic of removing changes added. Please be careful.
     att.mode = fastrtps::rtps::RTPSWriterPublishMode::SYNCHRONOUS_WRITER;
 
     return att;
@@ -342,10 +331,9 @@ utils::PoolConfiguration CommonWriter::cache_change_pool_configuration_(
         const types::DdsTopic& topic) noexcept
 {
     utils::PoolConfiguration config;
-    config.maximum_size = topic.topic_qos.value.history_depth; // No maximum
+    config.maximum_size = topic.topic_qos.value.history_depth;
     config.initial_size = 20;
     config.batch_size = 20;
-    // NOTE: Not use of memory policy or maximum yet
 
     return config;
 }

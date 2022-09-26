@@ -46,7 +46,6 @@ RPCTopic::RPCTopic(
 RPCTopic::RPCTopic(
         const DdsTopic& topic) noexcept
 {
-    // TODO add TopicQoS
     if (is_request_topic(topic))
     {
         request_topic_ = topic;

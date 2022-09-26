@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/Types.h>
 
-#include <ddsrouter_utils/types/AtomicableValue.hpp>
-
 #include <ddsrouter_core/library/library_dll.h>
 
 namespace eprosima {
@@ -40,7 +38,7 @@ using ReliabilityKind = eprosima::fastrtps::rtps::ReliabilityKind_t;
 //! History kind enumeration
 using HistoryDepthType = unsigned int;
 
-//! Partition configuration
+//! Ownership configuration
 using OwnershipQosPolicyKind = eprosima::fastdds::dds::OwnershipQosPolicyKind;
 
 /**
@@ -93,15 +91,16 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     //! Ownership kind of the topic
     OwnershipQosPolicyKind ownership_qos = OwnershipQosPolicyKind::SHARED_OWNERSHIP_QOS;
 
-    //! Wether the topics uses partitions
+    //! Whether the topics uses partitions
     bool use_partitions = false;
 
     /**
      * @brief History Qos
      *
+     * @note Default value is 5000 as in Fast DDS.
      * @note It only stores the depth because in router it will always be keep last, as RTPS has not resource limits.
      */
-    HistoryDepthType history_depth = 1000;
+    HistoryDepthType history_depth = 5000;
 };
 
 /**

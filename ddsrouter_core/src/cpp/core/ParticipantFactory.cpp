@@ -80,7 +80,6 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
                     std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(
                 participant_configuration);
-            // TMP: Until Transparency TopicQoS module is available
             if (!conf_)
             {
                 throw utils::ConfigurationException(
