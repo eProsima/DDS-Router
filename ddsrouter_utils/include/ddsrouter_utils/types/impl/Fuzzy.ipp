@@ -146,7 +146,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
-    os << "{(" << f.fuzzy_level << ")" << f.value << "}";
+    os << "Fuzzy{Level(" << f.fuzzy_level << ") " << f.value << "}";
     return os;
 }
 
