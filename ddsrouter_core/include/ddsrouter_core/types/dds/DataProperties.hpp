@@ -30,7 +30,7 @@
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
+#include <ddsrouter_core/types/dds/SpecificEndpointQoS.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
@@ -75,7 +75,7 @@ struct DDSROUTER_CORE_DllAPI DataProperties
     /////////////////////////
 
     //! Specific Writer QoS of the Data
-    SpecificWriterQoS writer_qos;
+    SpecificEndpointQoS writer_qos;
 
     //! Instance of the message (default no instance)
     InstanceHandle instanceHandle{};

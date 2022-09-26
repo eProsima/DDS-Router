@@ -83,13 +83,13 @@ void MultiWriter::disable_() noexcept
     }
 }
 
-bool MultiWriter::exist_partition_(const types::SpecificWriterQoS& data_qos)
+bool MultiWriter::exist_partition_(const types::SpecificEndpointQoS& data_qos)
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
     return writers_map_.find(data_qos) != writers_map_.end();
 }
 
-QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificWriterQoS& data_qos)
+QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificEndpointQoS& data_qos)
 {
     // NOTE: it uses unique lock because it may change the database, and there is no way
     // to do so if taking share and unique must be done.
@@ -116,7 +116,7 @@ QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificWrite
     return new_writer;
 }
 
-QoSSpecificWriter* MultiWriter::create_writer_nts_(const types::SpecificWriterQoS& data_qos)
+QoSSpecificWriter* MultiWriter::create_writer_nts_(const types::SpecificEndpointQoS& data_qos)
 {
     logDebug(
         DDSROUTER_MULTIWRITER,

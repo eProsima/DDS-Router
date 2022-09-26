@@ -35,7 +35,7 @@ Endpoint::Endpoint(
         const Guid& guid,
         const DdsTopic& topic,
         const ParticipantId& discoverer_participant_id,
-        const SpecificWriterQoS& specific_qos) noexcept
+        const SpecificEndpointQoS& specific_qos) noexcept
     : kind_(kind)
     , guid_(guid)
     , topic_(topic)
@@ -65,12 +65,12 @@ TopicQoS Endpoint::topic_qos() const noexcept
     return topic_.topic_qos;
 }
 
-SpecificWriterQoS Endpoint::specific_qos() const noexcept
+SpecificEndpointQoS Endpoint::specific_qos() const noexcept
 {
     return specific_qos_;
 }
 
-void Endpoint::specific_qos(const SpecificWriterQoS& specific_qos) noexcept
+void Endpoint::specific_qos(const SpecificEndpointQoS& specific_qos) noexcept
 {
     specific_qos_ = specific_qos;
 }

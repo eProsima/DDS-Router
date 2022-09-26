@@ -29,7 +29,7 @@
 #include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
 
 #include <writer/implementations/rtps/MultiWriter.hpp>
-#include <reader/implementations/rtps/PartitionsReader.hpp>
+#include <reader/implementations/rtps/SpecificQoSReader.hpp>
 #include <reader/implementations/rtps/SimpleReader.hpp>
 #include <writer/implementations/rtps/SimpleWriter.hpp>
 #include <writer/implementations/rtps/QoSSpecificWriter.hpp>
@@ -134,7 +134,7 @@ types::Endpoint CommonParticipant::create_common_endpoint_from_info_(
         this->id_nts_());
 
     // Parse specific QoS of the entity
-    types::SpecificWriterQoS specific_qos;
+    types::SpecificEndpointQoS specific_qos;
     if (discovered_topic_qos.has_partitions())
     {
         specific_qos.partitions = info.info.m_qos.m_partition;
@@ -311,7 +311,7 @@ std::shared_ptr<IReader> CommonParticipant::create_reader_(
 {
     if (topic.topic_qos.value.has_partitions() || topic.topic_qos.value.has_ownership())
     {
-        return std::make_shared<PartitionsReader>(
+        return std::make_shared<SpecificQoSReader>(
             this->id(),
             topic,
             this->payload_pool_,

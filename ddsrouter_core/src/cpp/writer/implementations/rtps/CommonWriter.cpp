@@ -110,18 +110,11 @@ utils::ReturnCode CommonWriter::write_(
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
             data->properties.source_guid);
 
-    // Fill cache change with specific data to send
-    fill_to_send_data_(new_change, data);
-
     // Get params to write (if set)
     eprosima::fastrtps::rtps::WriteParams write_params;
 
-    // RPC support
-    // If writer params has been set specifically, use them in change
-    if (data->properties.write_params.is_set())
-    {
-        write_params.related_sample_identity(data->properties.write_params.value.related_sample_identity());
-    }
+    // Fill cache change with specific data to send
+    fill_to_send_data_(new_change, write_params, data);
 
     // Send data by adding it to CommonWriter History
     rtps_history_->add_change(new_change, write_params);
@@ -129,8 +122,10 @@ utils::ReturnCode CommonWriter::write_(
     // At this point, write params is now the output of adding change
     fill_sent_data_(write_params, data);
 
+    // TODO: Remove change could be done here in non reliable as it is synchronous.
+    // However, this implies efficiency affairs that we should check more in detail.
+
     // When max history size is reached, remove oldest cache change
-    // WARNING: This could be done as it is synchronous. If this change in future, be careful.
     if (rtps_history_->isFull())
     {
         rtps_history_->remove_min_change();
@@ -141,6 +136,7 @@ utils::ReturnCode CommonWriter::write_(
 
 void CommonWriter::fill_to_send_data_(
         fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
+        eprosima::fastrtps::rtps::WriteParams& to_send_params,
         std::unique_ptr<types::DataReceived>& data) const noexcept
 {
     if (repeater_)
@@ -154,6 +150,16 @@ void CommonWriter::fill_to_send_data_(
     if (topic_.keyed)
     {
         to_send_change_to_fill->instanceHandle = data->properties.instanceHandle;
+    }
+
+    // Set source time stamp to be the original one
+    to_send_params.source_timestamp(data->properties.source_timestamp);
+
+    // RPC support
+    // If writer params has been set specifically, use them in change
+    if (data->properties.write_params.is_set())
+    {
+        to_send_params.related_sample_identity(data->properties.write_params.value.related_sample_identity());
     }
 }
 

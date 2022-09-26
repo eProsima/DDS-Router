@@ -54,7 +54,7 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/GuidPrefix.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/rpc/RPCTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/SpecificWriterQoS.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/SpecificEndpointQoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/DataProperties.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp

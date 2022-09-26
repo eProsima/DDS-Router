@@ -91,16 +91,16 @@ protected:
     virtual utils::ReturnCode write_(
         std::unique_ptr<types::DataReceived> &data) noexcept override;
 
-    bool exist_partition_(const types::SpecificWriterQoS &data_qos);
-    QoSSpecificWriter* get_writer_or_create_(const types::SpecificWriterQoS &data_qos);
-    QoSSpecificWriter* create_writer_nts_(const types::SpecificWriterQoS &data_qos);
+    bool exist_partition_(const types::SpecificEndpointQoS &data_qos);
+    QoSSpecificWriter* get_writer_or_create_(const types::SpecificEndpointQoS &data_qos);
+    QoSSpecificWriter* create_writer_nts_(const types::SpecificEndpointQoS &data_qos);
 
     /////
     // VARIABLES
 
-    // TODO: This could be an unordered_map avoiding the use of operator< with SpecificWriterQoS,
+    // TODO: This could be an unordered_map avoiding the use of operator< with SpecificEndpointQoS,
     // what may be a problem.
-    using WritersMapType = utils::SharedAtomicable<std::map<types::SpecificWriterQoS, QoSSpecificWriter*>>;
+    using WritersMapType = utils::SharedAtomicable<std::map<types::SpecificEndpointQoS, QoSSpecificWriter*>>;
     WritersMapType writers_map_;
 
     fastrtps::rtps::RTPSParticipant* rtps_participant_;

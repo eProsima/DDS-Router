@@ -227,7 +227,7 @@ void CommonReader::enable_() noexcept
 {
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
-    if (topic_.topic_qos.value.is_transient_local())
+    if (topic_.topic_qos.value.is_reliable())
     {
         std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_rtps_mutex());
         on_data_available_();
@@ -353,6 +353,7 @@ void CommonReader::onNewCacheChangeAdded(
         else
         {
             // Remove received change if the CommonReader is disbled and the topic is not reliable
+            // NOTE: this should be is_reliable and not is_transient_local for RPC sake
             if (!topic_.topic_qos.value.is_reliable())
             {
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);

@@ -30,7 +30,7 @@ QoSSpecificWriter::QoSSpecificWriter(
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
         fastrtps::rtps::RTPSParticipant* rtps_participant,
-        const types::SpecificWriterQoS& specific_qos,
+        const types::SpecificEndpointQoS& specific_qos,
         const bool repeater /* = false */)
     : CommonWriter(
         participant_id, topic, payload_pool, rtps_participant, repeater,
@@ -44,7 +44,7 @@ QoSSpecificWriter::QoSSpecificWriter(
 }
 
 fastrtps::WriterQos QoSSpecificWriter::writer_qos_(
-        const types::SpecificWriterQoS& specific_qos,
+        const types::SpecificEndpointQoS& specific_qos,
         const types::DdsTopic& topic) noexcept
 {
     // Get QoS from parent class

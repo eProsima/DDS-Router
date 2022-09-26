@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file PartitionsReader.hpp
+ * @file SpecificQoSReader.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_PARTITIONSREADER_HPP_
-#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_PARTITIONSREADER_HPP_
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_
 
 #include <reader/implementations/rtps/CommonReader.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
@@ -28,25 +28,25 @@ namespace core {
 namespace rtps {
 
 /**
- * Base PartitionsReader concrete class that implements CommonReader abstract one.
+ * Base SpecificQoSReader concrete class that implements CommonReader abstract one.
  */
-class PartitionsReader : public CommonReader
+class SpecificQoSReader : public CommonReader
 {
 public:
 
     /**
-     * @brief Construct a new PartitionsReader object
+     * @brief Construct a new SpecificQoSReader object
      *
-     * Get the Attributes and TopicQoS and create the PartitionsReader History and the RTPS PartitionsReader.
+     * Get the Attributes and TopicQoS and create the SpecificQoSReader History and the RTPS SpecificQoSReader.
      *
-     * @param participant_id    Router Id of the Participant that has created this PartitionsReader.
-     * @param topic             Topic that this PartitionsReader subscribes to.
+     * @param participant_id    Router Id of the Participant that has created this SpecificQoSReader.
+     * @param topic             Topic that this SpecificQoSReader subscribes to.
      * @param payload_pool      Shared Payload Pool to received data and take it.
      * @param rtps_participant  RTPS Participant pointer (this is not stored).
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    PartitionsReader(
+    SpecificQoSReader(
             const types::ParticipantId& participant_id,
             const types::DdsTopic& topic,
             std::shared_ptr<PayloadPool> payload_pool,
@@ -55,7 +55,7 @@ public:
 
 protected:
 
-    types::SpecificWriterQoS specific_qos_of_writer_(const types::Guid& guid) const;
+    types::SpecificEndpointQoS specific_qos_of_writer_(const types::Guid& guid) const;
 
     virtual void fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,
@@ -70,4 +70,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_PARTITIONSREADER_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_ */

@@ -390,20 +390,12 @@ void RPCBridge::transmit_(
                         continue;
                     }
 
-                    // Get Raw ptr to specialize by casting
-                    if (!data)
-                    {
-                        utils::tsnh(STR_ENTRY << "Sending a Non DataReceived data through a RPC Writer.");
-                    }
-                    else
-                    {
-                        eprosima::fastrtps::rtps::SequenceNumber_t sequence_number =
-                            data->sent_sequence_number;
-                        // Add entry to registry associated to the transmission of this request through this proxy client.
-                        service_registry.second->add(
-                            sequence_number,
-                            {data->properties.participant_receiver, reply_related_sample_identity});
-                    }
+                    eprosima::fastrtps::rtps::SequenceNumber_t sequence_number =
+                        data->sent_sequence_number;
+                    // Add entry to registry associated to the transmission of this request through this proxy client.
+                    service_registry.second->add(
+                        sequence_number,
+                        {data->properties.participant_receiver, reply_related_sample_identity});
 
                 }
             }

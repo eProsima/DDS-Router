@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * @file PartitionsReader.cpp
+ * @file SpecificQoSReader.cpp
  */
 
 #include <fastrtps/rtps/RTPSDomain.h>
@@ -22,7 +22,7 @@
 #include <ddsrouter_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_utils/Log.hpp>
 
-#include <reader/implementations/rtps/PartitionsReader.hpp>
+#include <reader/implementations/rtps/SpecificQoSReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -31,7 +31,7 @@ namespace rtps {
 
 using namespace eprosima::ddsrouter::core::types;
 
-PartitionsReader::PartitionsReader(
+SpecificQoSReader::SpecificQoSReader(
         const ParticipantId& participant_id,
         const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool,
@@ -47,12 +47,12 @@ PartitionsReader::PartitionsReader(
 {
 }
 
-types::SpecificWriterQoS PartitionsReader::specific_qos_of_writer_(const types::Guid& guid) const
+types::SpecificEndpointQoS SpecificQoSReader::specific_qos_of_writer_(const types::Guid& guid) const
 {
     return discovery_database_->get_endpoint(guid).specific_qos();
 }
 
-void PartitionsReader::fill_received_data_(
+void SpecificQoSReader::fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,
         std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
 {
@@ -63,7 +63,7 @@ void PartitionsReader::fill_received_data_(
     {
         data_to_fill->properties.writer_qos = specific_qos_of_writer_(data_to_fill->properties.source_guid);
         logDebug(
-            DDSROUTER_PARTITIONSREADER,
+            DDSROUTER_SpecificQoSReader,
             "Set QoS " << data_to_fill->properties << " for data from " << data_to_fill->properties.source_guid << ".");
     }
     catch(const utils::InconsistencyException& e)
@@ -71,7 +71,7 @@ void PartitionsReader::fill_received_data_(
         // Get a message from a writer not in database, this is an error.
         // Remove data and make as it has not been received.
         logError(
-            DDSROUTER_PARTITIONSREADER,
+            DDSROUTER_SpecificQoSReader,
             "Received a message from Writer " << data_to_fill->properties.source_guid << " that is not stored in DB.");
     }
 }

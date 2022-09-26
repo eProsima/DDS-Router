@@ -128,6 +128,7 @@ protected:
 
     virtual void fill_to_send_data_(
         fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
+        eprosima::fastrtps::rtps::WriteParams& to_send_params,
         std::unique_ptr<types::DataReceived>& data) const noexcept;
 
     virtual void fill_sent_data_(

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file SpecificWriterQoS.hpp
+ * @file SpecificEndpointQoS.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_
-#define _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_
+#ifndef _DDSROUTERCORE_TYPES_ENDPOINT_SpecificEndpointQoS_HPP_
+#define _DDSROUTERCORE_TYPES_ENDPOINT_SpecificEndpointQoS_HPP_
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/InstanceHandle.h>
@@ -38,23 +38,25 @@ using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosP
 
 /**
  * Collection of attributes of an Endpoint
+ *
+ * @todo Divide this in Common, Reader and Writer QoS
  */
-struct DDSROUTER_CORE_DllAPI SpecificWriterQoS
+struct DDSROUTER_CORE_DllAPI SpecificEndpointQoS
 {
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////
 
-    //! Default SpecificWriterQoS with reader less restrictive parameters
-    SpecificWriterQoS() = default;
+    //! Default SpecificEndpointQoS with reader less restrictive parameters
+    SpecificEndpointQoS() = default;
 
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
-    bool operator< (const SpecificWriterQoS& other) const noexcept;
+    bool operator< (const SpecificEndpointQoS& other) const noexcept;
 
-    bool operator== (const SpecificWriterQoS& other) const noexcept;
+    bool operator== (const SpecificEndpointQoS& other) const noexcept;
 
     /////////////////////////
     // VARIABLES
@@ -82,15 +84,15 @@ DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         const OwnershipStrengthQosPolicy& qos);
 
 /**
- * @brief \c SpecificWriterQoS to stream serialization
+ * @brief \c SpecificEndpointQoS to stream serialization
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const SpecificWriterQoS& qos);
+        const SpecificEndpointQoS& qos);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_SPECIFICWRITERQOS_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_ENDPOINT_SpecificEndpointQoS_HPP_ */

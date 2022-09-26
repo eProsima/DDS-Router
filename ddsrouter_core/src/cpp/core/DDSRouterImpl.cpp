@@ -573,9 +573,6 @@ void DDSRouterImpl::activate_all_topics_() noexcept
         {
             activate_topic_(it.first);
         }
-        else
-        {
-        }
     }
 }
 

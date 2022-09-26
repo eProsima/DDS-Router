@@ -13,11 +13,11 @@
 // limitations under the License.
 
 /**
- * @file SpecificWriterQoS.cpp
+ * @file SpecificEndpointQoS.cpp
  *
  */
 
-#include <ddsrouter_core/types/dds/SpecificWriterQoS.hpp>
+#include <ddsrouter_core/types/dds/SpecificEndpointQoS.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
 namespace eprosima {
@@ -25,7 +25,7 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool SpecificWriterQoS::operator< (const SpecificWriterQoS& other) const noexcept
+bool SpecificEndpointQoS::operator< (const SpecificEndpointQoS& other) const noexcept
 {
     // Ownership
     if (this->ownership_strength.value < other.ownership_strength.value)
@@ -65,7 +65,7 @@ bool SpecificWriterQoS::operator< (const SpecificWriterQoS& other) const noexcep
     return false;
 }
 
-bool SpecificWriterQoS::operator== (const SpecificWriterQoS& other) const noexcept
+bool SpecificEndpointQoS::operator== (const SpecificEndpointQoS& other) const noexcept
 {
     return this->partitions == other.partitions && this->ownership_strength == other.ownership_strength;
 }
@@ -93,10 +93,10 @@ std::ostream& operator <<(
 
 std::ostream& operator <<(
         std::ostream& os,
-        const SpecificWriterQoS& qos)
+        const SpecificEndpointQoS& qos)
 {
     os <<
-        "SpecificWriterQoS{" << qos.partitions <<
+        "SpecificEndpointQoS{" << qos.partitions <<
         ";" << qos.ownership_strength <<
         "}";
 
