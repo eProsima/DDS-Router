@@ -68,10 +68,8 @@ def _talker_command(args):
     :return: Command to execute the talker
     """
     command = [
-        'ros2',
-        'run',
-        'demo_nodes_cpp',
-        'talker']
+        'python3',
+        '/opt/ros/humble/lib/demo_nodes_py/talker']
 
     return command
 

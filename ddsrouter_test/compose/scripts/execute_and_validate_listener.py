@@ -74,10 +74,8 @@ def _listener_command(args):
     :return: Command to execute the listener
     """
     command = [
-        'ros2',
-        'run',
-        'demo_nodes_cpp',
-        'listener']
+        'python3',
+        '/opt/ros/humble/lib/demo_nodes_py/listener']
 
     return command
 
@@ -86,19 +84,22 @@ def _listener_parse_output(stdout, stderr):
     """
     Parse message and get only the numbers received.
     """
-    head_message_expected = '[INFO] [1664186953.395023916] [listener]: I heard: [Hello World: '
-    tail_message_expected = ']'
+    head_msg_expected = '[INFO] [1664186953.395023916] [listener]: I heard: [Hello World: '
+    head_len = len(head_msg_expected)
+    tail_msg_expected = ']'
+    tail_len = len(tail_msg_expected)
+    inner_msg_expected = '[listener]: I heard: [Hello World:'
 
-    lines = stdout.splitlines()
+    lines = stderr.splitlines()  # INFO traces are printed to stderr
+    stdout_lines = []
+    stderr_lines = []
+    for line in lines:
+        if inner_msg_expected in line:
+            stdout_lines.append(line[head_len:-tail_len])
+        else:
+            stderr_lines.append(line)
 
-    # Get only lines of format "Result { x,y,z }
-    filtered_lines = [
-        line[len(head_message_expected):-tail_message_expected]
-        for line
-        in lines
-        if head_message_expected in line]
-
-    return filtered_lines, stderr
+    return stdout_lines, stderr_lines
 
 
 def _listener_validate_duplicates(stdout_parsed, stderr_parsed):

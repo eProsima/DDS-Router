@@ -2,10 +2,6 @@ version: v3.0
 
 participants:
 
-  - name: Echo Participant
-    kind: echo
-    data: true
-
   - name: Simple_Participant
     kind: local
     domain: 2

@@ -174,8 +174,7 @@ def find_duplicates(data):
 
 def validate_default(stdout_parsed, stderr_parsed) -> ReturnCode:
     """Validate any data as correct."""
-    if stderr_parsed != '':
-        log.logger.error(f'stderr messages: <{stderr_parsed}>')
+    if stderr_parsed != '' and stderr_parsed != []:
         return ReturnCode.STDERR_OUTPUT
     else:
         return ReturnCode.SUCCESS
