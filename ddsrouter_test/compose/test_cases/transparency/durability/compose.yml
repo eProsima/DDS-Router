@@ -30,7 +30,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: sleep 1 && ddsrouter -c /config.yaml --timeout 12
+    command: bash -c "sleep 1 && source /ddsrouter/install/setup.bash && ddsrouter -c /config.yaml --timeout 12"
 
   # DOMAIN 0
   publisher_t0_0_0:
