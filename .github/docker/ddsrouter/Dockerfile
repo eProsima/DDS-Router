@@ -53,7 +53,7 @@ RUN mkdir src && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
     cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
-    cp -r src/fastdds/examples/cpp/dds/AdvanceConfigurationExample src/. && \
+    cp -r src/fastdds/examples/cpp/dds/AdvancedConfigurationExample src/. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON
 
 COPY run.bash /root/run.bash
