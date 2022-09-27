@@ -86,12 +86,11 @@ bool DdsTopic::is_valid(utils::Formatter& error_msg) const noexcept
 
 bool DdsTopic::operator< (const DdsTopic& other) const noexcept
 {
-    if(Topic::operator<(other))
+    if(Topic::operator==(other))
     {
-        return true;
+        return this->type_name < other.type_name;
     }
-
-    return this->type_name < other.type_name;
+    return Topic::operator<(other);
 }
 
 bool DdsTopic::operator== (const DdsTopic& other) const noexcept
