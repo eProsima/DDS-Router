@@ -13,14 +13,12 @@
 // limitations under the License.
 
 /**
- * @file SlotConnector.hpp
+ * @file ArgsReferenceTask.ipp
  *
- * This file contains class SlotConnector implementation.
+ * This file contains class OneShotConnector implementation.
  */
 
 #pragma once
-
-#include <ddsrouter_utils/thread/task/ArgsReferenceTask.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -28,32 +26,18 @@ namespace utils {
 namespace thread {
 
 template <typename ... Args>
-SlotConnector<Args...>::SlotConnector(
-        IManager* manager,
-        const std::function<void(Args...)>& callback)
-    : manager_(manager)
-    , callback_(callback)
+ArgsReferenceTask<Args...>::ArgsReferenceTask(
+        std::function<void (Args...)>* callback,
+        const Args&... args)
+    : callback_(callback)
+    , args_(args...)
 {
 }
 
 template <typename ... Args>
-SlotConnector<Args...>::SlotConnector(
-        IManager* manager,
-        std::function<void(Args...)>&& callback)
-    : manager_(manager)
-    , callback_(std::move(callback))
+void ArgsReferenceTask<Args...>::operator()() noexcept
 {
-}
-
-template <typename ... Args>
-void SlotConnector<Args...>::execute(Args... args)
-{
-    manager_->execute(
-        std::make_unique<ArgsReferenceTask<Args...>>(
-            &callback_,
-            args...
-        )
-    );
+    call_internal_callback_(helper::gen_seq<sizeof...(Args)>{});
 }
 
 } /* namespace thread */
