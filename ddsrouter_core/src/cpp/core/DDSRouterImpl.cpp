@@ -458,14 +458,14 @@ void DDSRouterImpl::discovered_endpoint_(
     if (endpoint.is_reader())
     {
         DdsTopic topic = endpoint.topic();
-        if (endpoint.is_server_endpoint())
+        if (!RPCTopic::is_service_topic(endpoint.topic()))
+        {
+            discovered_topic_(topic);
+        }
+        else if (endpoint.is_server_endpoint())
         {
             // Service server discovered
             discovered_service_(RPCTopic(topic), endpoint.discoverer_participant_id(), endpoint.guid().guid_prefix());
-        }
-        else
-        {
-            discovered_topic_(topic);
         }
     }
 }
