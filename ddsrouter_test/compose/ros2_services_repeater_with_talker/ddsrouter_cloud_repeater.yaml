@@ -7,7 +7,7 @@ participants:
     data: true
 
   - name: Cloud_Participant_Repeater
-    kind: local
+    kind: wan
     repeater: true
     listening-addresses:
       - domain: ddsrouter_cloud
