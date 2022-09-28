@@ -14,6 +14,7 @@
 
 import signal
 import subprocess
+import time
 from enum import Enum
 
 import log
@@ -25,10 +26,9 @@ class ReturnCode(Enum):
     SUCCESS = 0
     TIMEOUT = 1
     HARD_TIMEOUT = 2
-    DUPLICATES = 3
-    NOT_VALID_MESSAGES = 4
-    COMMAND_FAIL = 5
-    STDERR_OUTPUT = 6
+    NOT_VALID_MESSAGES = 3
+    COMMAND_FAIL = 4
+    STDERR_OUTPUT = 5
 
 
 def run_command(command, timeout):
@@ -59,6 +59,9 @@ def run_command(command, timeout):
             'Killing process before receiving all samples...')
         proc.send_signal(signal.SIGINT)
         ret_code = ReturnCode.TIMEOUT
+
+        # Wait a minimum elapsed time to the signal to be received
+        time.sleep(0.2)
 
     stdout, stderr = proc.communicate()
 

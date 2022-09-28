@@ -399,6 +399,44 @@ void YamlReader::fill(
             object.reliability_qos = eprosima::ddsrouter::core::types::ReliabilityKind::BEST_EFFORT;
         }
     }
+
+    // Durability optional
+    if (is_tag_present(yml, QOS_TRANSIENT_TAG))
+    {
+        if(get<bool>(yml, QOS_TRANSIENT_TAG, version))
+        {
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::TRANSIENT_LOCAL;
+        }
+        else
+        {
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::VOLATILE;
+        }
+    }
+
+    // History depth optional
+    if (is_tag_present(yml, QOS_HISTORY_DEPTH_TAG))
+    {
+        object.history_depth = get<HistoryDepthType>(yml, QOS_HISTORY_DEPTH_TAG, version);
+    }
+
+    // Durability optional
+    if (is_tag_present(yml, QOS_PARTITION_TAG))
+    {
+        object.use_partitions = get<bool>(yml, QOS_PARTITION_TAG, version);
+    }
+
+    // Ownership optional
+    if (is_tag_present(yml, QOS_OWNERSHIP_TAG))
+    {
+        if(get<bool>(yml, QOS_OWNERSHIP_TAG, version))
+        {
+            object.ownership_qos = eprosima::ddsrouter::core::types::OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS;
+        }
+        else
+        {
+            object.ownership_qos = eprosima::ddsrouter::core::types::OwnershipQosPolicyKind::SHARED_OWNERSHIP_QOS;
+        }
+    }
 }
 
 /************************

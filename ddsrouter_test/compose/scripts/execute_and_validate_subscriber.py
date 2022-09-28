@@ -13,30 +13,14 @@
 # limitations under the License.
 
 import argparse
-import logging
 import re
-import signal
-import subprocess
 import time
-from enum import Enum
+
+import log
+import validation
 
 DESCRIPTION = """Script to validate subscribers output"""
 USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>')
-
-PIPE = subprocess.PIPE
-STDOUT = subprocess.STDOUT
-DEVNULL = subprocess.DEVNULL
-
-
-class ReturnCode(Enum):
-    """Enumeration for return codes of this script."""
-
-    SUCCESS = 0
-    TIMEOUT = 1
-    HARD_TIMEOUT = 2
-    DUPLICATES = 3
-    MISSING_MESSAGES = 4
-    NOT_VALID_MESSAGES = 5
 
 
 def parse_options():
@@ -80,8 +64,11 @@ def parse_options():
     )
     parser.add_argument(
         '--allow-duplicates',
-        action='store_true',
-        help='Allow receive duplicated data.'
+        type=int,
+        default=0,
+        help=('Allow receive N first messages duplicated. '
+              '(N=0 => none can be duplicated) '
+              '(N=-1 => all can be duplicated)[Default = -1]')
     )
     parser.add_argument(
         '--debug',
@@ -103,44 +90,23 @@ def parse_options():
     return parser.parse_args()
 
 
-def run(command, timeout):
+def _subscriber_command(args):
     """
-    Run command with timeout.
+    Build the command to execute the subscriber.
 
-    :param command: Command to run in list format
-    :param timeout: Timeout for the process
-    :return:
-        - ret_code - The process exit code
-        - stdout - Output of the process
-        - stderr - Error output of the process
+    :param args: Arguments parsed
+    :return: Command to execute the subscriber
     """
-    ret_code = ReturnCode.SUCCESS
+    command = [
+        args.exe,
+        'subscriber']
 
-    proc = subprocess.Popen(command,
-                            stdout=subprocess.PIPE,
-                            universal_newlines=True)
-    try:
-        proc.wait(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        logger.error('Timeout expired. '
-                     'Killing subscriber before receiving all samples...')
-        proc.send_signal(signal.SIGINT)
-        ret_code = ReturnCode.TIMEOUT
+    command += args.args.split(' ')
 
-    # Check whether SIGINT was able to terminate the process
-    if proc.poll() is None:
-        # SIGINT couldn't terminate the process
-        logger.error('SIGINT could not kill process. '
-                     'Killing subscriber hardly...')
-        proc.kill()
-        ret_code = ReturnCode.HARD_TIMEOUT
-
-    stdout, stderr = proc.communicate()
-
-    return (ret_code, stdout, stderr)
+    return command
 
 
-def parse_output(data):
+def _subscriber_parse_output(stdout, stderr):
     """
     Transform the output of the program in a list of received messages.
 
@@ -148,10 +114,41 @@ def parse_output(data):
     :return: List of received messages
     """
     regex = re.compile('^Message\sHelloWorld\s+\d+\sRECEIVED$')
-    lines = data.splitlines()
+    lines = stdout.splitlines()
     filtered_data = [line for line in lines if regex.match(line)]
 
-    return filtered_data
+    return filtered_data, stderr
+
+
+def _subscriber_validate(
+        stdout_parsed,
+        stderr_parsed,
+        samples,
+        duplicates_allow,
+        transient):
+
+    # Check default validator
+    ret_code = validation.validate_default(stdout_parsed, stderr_parsed)
+
+    if duplicates_allow != -1:
+        duplicated_n = len(find_duplicates(stdout_parsed))
+        if duplicated_n > duplicates_allow:
+            log.logger.error(
+                f'{duplicated_n} duplicated messages found. '
+                f'Maximum allowed {duplicates_allow}.')
+            return validation.ReturnCode.NOT_VALID_MESSAGES
+
+    if transient:
+        if not check_transient(stdout_parsed):
+            log.logger.error('Transient messages incorrect reception.')
+            return validation.ReturnCode.NOT_VALID_MESSAGES
+
+    if len(stdout_parsed) != samples:
+        log.logger.error(f'Number of messages received: {len(stdout_parsed)}. '
+                         f'Expected {samples}')
+        return validation.ReturnCode.NOT_VALID_MESSAGES
+
+    return ret_code
 
 
 def find_duplicates(data):
@@ -161,6 +158,7 @@ def find_duplicates(data):
     :param data: List of strings
     :return: List of tuples with the index of the duplicated strings
     """
+    # TODO: add more logic so duplicated allow are only first messages
     duplicates = []
     lines_seen = {}
 
@@ -171,9 +169,9 @@ def find_duplicates(data):
             duplicates.append((lines_seen[line], idx))
 
     if duplicates:
-        logger.info('Found duplicated messages')
+        log.logger.info('Found duplicated messages')
     else:
-        logger.debug('None duplicated messages found')
+        log.logger.debug('None duplicated messages found')
 
     return duplicates
 
@@ -195,103 +193,42 @@ def check_transient(data):
     # NOTE: idx starts in 0 and messages start in 1
     for idx, number in enumerate(numbers_received):
         if (idx + 1) != int(number):
-            logger.info(
+            log.logger.warn(
                 f'Message received in position {idx+1} is {number}')
             return False
 
-    logger.debug('All messages received and in correct order.')
+    log.logger.debug('All messages received and in correct order.')
     return True
 
 
-def validate(
-        command,
-        samples,
-        timeout,
-        allow_duplicates=False,
-        transient=False):
-    """
-    Validate the output of a subscriber run.
-
-    :param command: Command to run in list format
-    :param samples: Number of samples to receive
-    :param timeout: Timeout for the process
-    :param allow_duplicates: Allow duplicated messages (Default: False)
-    :return: The exit code
-    """
-    logger.info(f'Executing command: {command}')
-
-    ret_code, stdout, stderr = run(command, timeout)
-
-    if ret_code != ReturnCode.SUCCESS:
-        logger.error('Subscriber application exited with '
-                     f'return code {ret_code}')
-
-        logger.error(f'Subscriber output: \n {stdout}')
-        logger.error(f'Subscriber stderr output: \n {stderr}')
-
-        return ret_code
-
-    else:
-
-        logger.debug(f'Subscriber output: \n {stdout}')
-        logger.debug(f'Subscriber stderr output: \n {stderr}')
-
-        data_received = parse_output(stdout)
-
-        logger.debug(f'Subscriber received... \n {data_received}')
-
-        if not allow_duplicates:
-            if find_duplicates(data_received):
-                logger.error('Duplicated messages found')
-                return ReturnCode.DUPLICATES
-
-        if transient:
-            if not check_transient(data_received):
-                logger.error('Transient messages incorrect reception.')
-                return ReturnCode.MISSING_MESSAGES
-
-        if len(data_received) < samples:
-            logger.error(f'Number of messages received: {len(data_received)}. '
-                         f'Expected {samples}')
-            return ReturnCode.NOT_VALID_MESSAGES
-
-    return ReturnCode.SUCCESS
-
-
 if __name__ == '__main__':
+
     # Parse arguments
     args = parse_options()
 
-    # Create a custom logger
-    logger = logging.getLogger('VALIDATION')
-    # Create handlers
-    l_handler = logging.StreamHandler()
-    # Create formatters and add it to handlers
-    l_format = '[%(asctime)s][%(name)s][%(levelname)s] %(message)s'
-    l_format = logging.Formatter(l_format)
-    l_handler.setFormatter(l_format)
-    # Add handlers to the logger
-    logger.addHandler(l_handler)
-
     # Set log level
     if args.debug:
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.INFO)
-
-    command = [
-        args.exe,
-        'subscriber'] + args.args.split(' ')
+        log.activate_debug()
 
     # Wait for delay
     time.sleep(args.delay)
 
-    ret_code = validate(command,
-                        args.samples,
-                        args.timeout,
-                        args.allow_duplicates,
-                        args.transient)
+    command = _subscriber_command(args)
 
-    logger.info(f'Subscriber validator exited with code {ret_code}')
+    validate_func = (lambda stdout_parsed, stderr_parsed: (
+        _subscriber_validate(
+            stdout_parsed=stdout_parsed,
+            stderr_parsed=stderr_parsed,
+            samples=args.samples,
+            duplicates_allow=args.allow_duplicates,
+            transient=args.transient)))
+
+    ret_code = validation.run_and_validate(
+        command=command,
+        timeout=args.timeout,
+        parse_output_function=_subscriber_parse_output,
+        validate_output_function=validate_func)
+
+    log.logger.info(f'Subscriber validator exited with code {ret_code}')
 
     exit(ret_code.value)

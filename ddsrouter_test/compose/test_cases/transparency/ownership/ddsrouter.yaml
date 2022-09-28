@@ -1,9 +1,5 @@
 version: v3.0
 
-builtin-topics:
-  - name: "HelloWorldTopic"
-  - type: "HelloWorld"
-
 participants:
 
   - name: Simple_0

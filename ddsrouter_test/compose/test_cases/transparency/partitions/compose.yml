@@ -87,7 +87,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates --args "--domain 2 --samples 20 --partitions bbb"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 2 --samples 20 --partitions bbb"
 
   subscriber_2_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -110,7 +110,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates --args "--domain 3 --samples 20 --partitions *"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 3 --samples 20 --partitions *"
 
   subscriber_3_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}

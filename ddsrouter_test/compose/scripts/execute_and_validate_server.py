@@ -96,6 +96,6 @@ if __name__ == '__main__':
         parse_output_function=validation.parse_default,
         validate_output_function=validation.validate_default)
 
-    print(f'Server validator exited with code {ret_code}')
+    log.logger.info(f'Server validator exited with code {ret_code}')
 
     exit(ret_code.value)

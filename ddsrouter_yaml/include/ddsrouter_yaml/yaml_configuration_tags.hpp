@@ -55,6 +55,7 @@ constexpr const char* QOS_RELIABLE_TAG("reliable");     //! The Endpoints of tha
 constexpr const char* QOS_TRANSIENT_TAG("transient");   //! The Endpoints of that topic will be configured as TRANSIENT_LOCAL
 constexpr const char* QOS_HISTORY_DEPTH_TAG("depth");   //! The Endpoints of that topic will be configured as this History Depth
 constexpr const char* QOS_PARTITION_TAG("partitions");  //! The Endpoints of that topic will be configured with partitions
+constexpr const char* QOS_OWNERSHIP_TAG("ownership");   //! The Endpoints of that topic will be configured with EXCLUSIVE_OWNERSHIP
 
 // Participant related tags
 constexpr const char* PARTICIPANT_KIND_TAG("kind");   //! Participant Kind
