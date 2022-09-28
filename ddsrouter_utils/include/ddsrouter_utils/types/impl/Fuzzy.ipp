@@ -47,7 +47,13 @@ Fuzzy<T>::Fuzzy(
 /////////////////////////
 
 template <typename T>
-Fuzzy<T>::operator const T&() const noexcept
+Fuzzy<T>::operator T&() noexcept
+{
+    return value;
+}
+
+template <typename T>
+Fuzzy<T>::operator T() const noexcept
 {
     return value;
 }
@@ -62,7 +68,7 @@ bool Fuzzy<T>::operator==(const Fuzzy<T>& other) const noexcept
     }
     else
     {
-        return this->fuzzy_level == other.fuzzy_level && this->value == other.value;
+        return this->fuzzy_level == other.fuzzy_level && this->value == other.get_reference();
     }
 }
 
@@ -108,9 +114,27 @@ bool Fuzzy<T>::is_set() const noexcept
 }
 
 template <typename T>
+T& Fuzzy<T>::get_reference() noexcept
+{
+    return value;
+}
+
+template <typename T>
 const T& Fuzzy<T>::get_reference() const noexcept
 {
     return value;
+}
+
+template <typename T>
+T Fuzzy<T>::get_value() const noexcept
+{
+    return value;
+}
+
+template <typename T>
+FuzzyLevelType Fuzzy<T>::get_level() const noexcept
+{
+    return fuzzy_level;
 }
 
 /////////////////////////
@@ -146,7 +170,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Fuzzy<T>& f)
 {
-    os << "Fuzzy{Level(" << f.fuzzy_level << ") " << f.value << "}";
+    os << "Fuzzy{Level(" << f.get_level() << ") " << f.get_reference() << "}";
     return os;
 }
 

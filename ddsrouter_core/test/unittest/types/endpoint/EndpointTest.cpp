@@ -108,7 +108,7 @@ TEST(EndpointTest, constructor)
 
     ASSERT_EQ(endpoint.kind(), kind);
     ASSERT_EQ(endpoint.guid(), guid);
-    ASSERT_EQ(endpoint.topic_qos(), topic.topic_qos);
+    ASSERT_EQ(endpoint.topic_qos(), topic.topic_qos.get_reference());
     ASSERT_EQ(endpoint.topic(), topic);
 }
 
@@ -184,7 +184,7 @@ TEST(EndpointTest, qos_getter)
         for (uint16_t i = 0; i < 8; i++)
         {
             Endpoint endpoint(kind, guid, topic);
-            ASSERT_EQ(endpoint.topic_qos(), topic.topic_qos) << i;
+            ASSERT_EQ(topic.topic_qos, endpoint.topic_qos()) << i;
         }
     }
 }

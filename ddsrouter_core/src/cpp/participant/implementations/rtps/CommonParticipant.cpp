@@ -286,7 +286,7 @@ void CommonParticipant::create_participant_(
 std::shared_ptr<IWriter> CommonParticipant::create_writer_(
         types::DdsTopic topic)
 {
-    if (topic.topic_qos.value.has_partitions() || topic.topic_qos.value.has_ownership())
+    if (topic.topic_qos.get_reference().has_partitions() || topic.topic_qos.get_reference().has_ownership())
     {
         return std::make_shared<MultiWriter>(
             this->id(),
@@ -309,7 +309,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
 std::shared_ptr<IReader> CommonParticipant::create_reader_(
         types::DdsTopic topic)
 {
-    if (topic.topic_qos.value.has_partitions() || topic.topic_qos.value.has_ownership())
+    if (topic.topic_qos.get_reference().has_partitions() || topic.topic_qos.get_reference().has_ownership())
     {
         return std::make_shared<SpecificQoSReader>(
             this->id(),

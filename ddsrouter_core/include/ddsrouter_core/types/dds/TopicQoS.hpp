@@ -42,7 +42,19 @@ using HistoryDepthType = unsigned int;
 using OwnershipQosPolicyKind = eprosima::fastdds::dds::OwnershipQosPolicyKind;
 
 /**
- * Collection of attributes of an Endpoint
+ * Collection of QoS related with a Topic.
+ *
+ * The QoS associated with Topic are:
+ * - Reliability
+ * - Durability
+ * - Ownership
+ * - Partitions
+ * - History Depth (history kind is always KEEP_LAST)
+ *
+ * @warning partitions are considered as a QoS, thus a Topic can only have partitions, or not have any, but cannot
+ * support empty partition and partitions.
+ *
+ * @todo add keys to Topic QoS
  */
 struct DDSROUTER_CORE_DllAPI TopicQoS
 {
@@ -57,6 +69,7 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     // OPERATORS
     /////////////////////////
 
+    //! Equality operator
     bool operator ==(
             const TopicQoS& other) const noexcept;
 
@@ -64,18 +77,28 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     // AUXILIARY METHODS
     /////////////////////////
 
+    //! Whether the Topic is RELIABLE, not BEST_EFFORT
     bool is_reliable() const noexcept;
 
+    //! Whether the Topic is TRANSIENT_LOCAL, not VOLATILE
     bool is_transient_local() const noexcept;
 
+    //! Whether the Topic has EXCLUSIVE_OWNERSHIP, not SHARED_OWNERSHIP
     bool has_ownership() const noexcept;
 
+    //! Whether the Topic has partitions, not empty partition
     bool has_partitions() const noexcept;
 
     /////////////////////////
     // GLOBAL VARIABLES
     /////////////////////////
 
+    /**
+     * @brief Global value to store the default history depth in this execution.
+     *
+     * This value can change along the execution.
+     * Every new TopicQoS object will use this value as \c history_depth default.
+     */
     static std::atomic<HistoryDepthType> default_history_depth;
 
     /////////////////////////
@@ -97,7 +120,7 @@ struct DDSROUTER_CORE_DllAPI TopicQoS
     /**
      * @brief History Qos
      *
-     * @note Default value is 5000 as in Fast DDS.
+     * @note Default value would be taken from \c default_history_depth in object creation.
      * @note It only stores the depth because in router it will always be keep last, as RTPS has not resource limits.
      */
     HistoryDepthType history_depth = 5000;

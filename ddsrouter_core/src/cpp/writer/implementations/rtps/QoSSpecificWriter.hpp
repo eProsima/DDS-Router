@@ -27,11 +27,9 @@ namespace core {
 namespace rtps {
 
 /**
- * RTPS Writer with Attributes set from QoS.
- * This is a concrete implementation of Writer class where a set of QoS is given
- * and the writer is created with them.
+ * RTPS Writer with specific QoS implements abstract CommonWriter.
  *
- * If QoS are not set, it uses a default Writer. If they are set, are given in construction.
+ * This class implements a RTPS Writer with specific QoS policies.
  */
 class QoSSpecificWriter : public CommonWriter
 {
@@ -64,6 +62,7 @@ protected:
             const types::SpecificEndpointQoS& specific_qos,
             const types::DdsTopic& topic) noexcept;
 
+    //! Specific QoS of the Endpoint
     const types::SpecificEndpointQoS& specific_qos_;
 };
 

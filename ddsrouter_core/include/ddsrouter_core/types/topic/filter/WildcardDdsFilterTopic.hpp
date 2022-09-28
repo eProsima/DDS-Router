@@ -62,6 +62,7 @@ struct WildcardDdsFilterTopic : public DdsFilterTopic
     // SERIALIZATION METHODS
     /////////////////////////
 
+    //! Override parent \c serialize method.
     DDSROUTER_CORE_DllAPI virtual std::ostream& serialize(
         std::ostream& os) const override;
 
@@ -69,8 +70,10 @@ struct WildcardDdsFilterTopic : public DdsFilterTopic
     // VARIABLES
     /////////////////////////
 
+    //! Topic name filter
     std::string topic_name;
 
+    //! Type name filter. If not set matches with all.
     utils::Fuzzy<std::string> type_name;
 
     //! Whether the topic has key or not

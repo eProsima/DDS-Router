@@ -474,7 +474,7 @@ void YamlReader::fill(
     // Optional QoS
     if (is_tag_present(yml, TOPIC_QOS_TAG))
     {
-        fill<types::TopicQoS>(object.topic_qos.value, get_value_in_tag(yml, TOPIC_QOS_TAG), version);
+        fill<types::TopicQoS>(object.topic_qos.get_reference(), get_value_in_tag(yml, TOPIC_QOS_TAG), version);
         object.topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_hard);
     }
 }

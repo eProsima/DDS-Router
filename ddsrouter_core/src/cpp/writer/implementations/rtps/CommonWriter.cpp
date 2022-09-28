@@ -179,7 +179,7 @@ utils::ReturnCode CommonWriter::fill_to_send_data_(
     // If writer params has been set specifically, use them in change
     if (data->properties.write_params.is_set())
     {
-        to_send_params.related_sample_identity(data->properties.write_params.value.related_sample_identity());
+        to_send_params.related_sample_identity(data->properties.write_params.get_reference().related_sample_identity());
     }
 
     return utils::ReturnCode::RETCODE_OK;
@@ -273,7 +273,7 @@ fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
 
-    att.maximumReservedCaches = topic.topic_qos.value.history_depth;
+    att.maximumReservedCaches = topic.topic_qos.get_reference().history_depth;
 
     return att;
 }
@@ -284,10 +284,10 @@ fastrtps::rtps::WriterAttributes CommonWriter::writer_attributes_(
     fastrtps::rtps::WriterAttributes att;
 
     // Set Durability
-    att.endpoint.durabilityKind = topic.topic_qos.value.durability_qos;
+    att.endpoint.durabilityKind = topic.topic_qos.get_reference().durability_qos;
 
     // Set Reliability
-    att.endpoint.reliabilityKind = topic.topic_qos.value.reliability_qos;
+    att.endpoint.reliabilityKind = topic.topic_qos.get_reference().reliability_qos;
 
     // Set if topic has key
     if (topic.keyed)
@@ -337,13 +337,13 @@ fastrtps::WriterQos CommonWriter::writer_qos_(
 
     // Set Durability
     qos.m_durability.kind =
-        (topic.topic_qos.value.is_transient_local()
+        (topic.topic_qos.get_reference().is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
     qos.m_reliability.kind =
-        (topic.topic_qos.value.is_reliable()
+        (topic.topic_qos.get_reference().is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 
@@ -359,7 +359,7 @@ utils::PoolConfiguration CommonWriter::cache_change_pool_configuration_(
         const types::DdsTopic& topic) noexcept
 {
     utils::PoolConfiguration config;
-    config.maximum_size = topic.topic_qos.value.history_depth;
+    config.maximum_size = topic.topic_qos.get_reference().history_depth;
     config.initial_size = 20;
     config.batch_size = 20;
 

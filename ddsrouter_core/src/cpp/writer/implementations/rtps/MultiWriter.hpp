@@ -31,7 +31,7 @@ namespace core {
 namespace rtps {
 
 /**
- * Standard RTPS MultiWriter with less restrictive Attributes.
+ * Writer collection implementation that contains multiple QoSSpecificWriter.
  *
  * @todo this class could have access to the Discovery DataBase and create writers in discovery and not when
  * data is received.
@@ -101,9 +101,13 @@ protected:
     // TODO: This could be an unordered_map avoiding the use of operator< with SpecificEndpointQoS,
     // what may be a problem.
     using WritersMapType = utils::SharedAtomicable<std::map<types::SpecificEndpointQoS, QoSSpecificWriter*>>;
+    //! Map of writer indexed by Specific QoS of each.
     WritersMapType writers_map_;
 
+    //! Reference to RTPS Participant.
     fastrtps::rtps::RTPSParticipant* rtps_participant_;
+
+    //! Whether this Writer is a repeater.
     bool repeater_;
 };
 

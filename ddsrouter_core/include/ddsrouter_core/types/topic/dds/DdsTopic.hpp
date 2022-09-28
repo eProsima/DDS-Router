@@ -35,6 +35,8 @@ namespace types {
 
 /**
  * Data struct that represents a DDS Topic of data flow in the Router.
+ *
+ * @todo remove argument constructors.
  */
 struct DdsTopic : public Topic
 {
@@ -43,38 +45,49 @@ struct DdsTopic : public Topic
     // CONSTRUCTORS
     /////////////////////////
 
+    //! Default constructor
     DDSROUTER_CORE_DllAPI DdsTopic() = default;
 
+    //! Main values constructor
     DDSROUTER_CORE_DllAPI DdsTopic(
             const std::string& topic_name,
             const std::string& type_name) noexcept;
 
+    //! Values constructor
     DDSROUTER_CORE_DllAPI DdsTopic(
             const std::string& topic_name,
             const std::string& type_name,
             const bool keyed,
             const types::TopicQoS& qos) noexcept;
 
-    // DdsTopic& operator=(const DdsTopic& other) noexcept;
-
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
+    //! Minor operator.
     DDSROUTER_CORE_DllAPI bool operator< (const DdsTopic& other) const noexcept;
 
+    //! Equal operator.
     DDSROUTER_CORE_DllAPI bool operator== (const DdsTopic& other) const noexcept;
 
     /////////////////////////
     // METHODS
     /////////////////////////
 
+    /**
+     * @brief Whether this object is valid.
+     *
+     * @param [out] error_msg not validity reason in case it is not valid.
+     * @return true if valid.
+     * @return false otherwise.
+     */
     DDSROUTER_CORE_DllAPI virtual bool is_valid(utils::Formatter& error_msg) const noexcept;
 
     /////////////////////////
     // STATIC METHODS
     /////////////////////////
 
+    //! Whether a name and type can refer to a correct DDS Topic.
     DDSROUTER_CORE_DllAPI static bool is_valid_dds_topic(
             const std::string& topic_name,
             const std::string& type_name) noexcept;

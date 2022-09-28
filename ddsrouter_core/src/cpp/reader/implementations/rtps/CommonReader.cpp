@@ -131,8 +131,6 @@ uint64_t CommonReader::get_unread_count() const noexcept
 utils::ReturnCode CommonReader::take_(
         std::unique_ptr<DataReceived>& data) noexcept
 {
-    std::lock_guard<std::recursive_mutex> lock(rtps_mutex_);
-
     // Check if there is data available
     if (!(get_unread_count() > 0))
     {
@@ -227,7 +225,7 @@ void CommonReader::enable_() noexcept
 {
     // If the topic is reliable, the reader will keep the samples received when it was disabled.
     // However, if the topic is best_effort, the reader will discard the samples received when it was disabled.
-    if (topic_.topic_qos.value.is_reliable())
+    if (topic_.topic_qos.get_reference().is_reliable())
     {
         std::lock_guard<eprosima::fastrtps::RecursiveTimedMutex> lock(get_rtps_mutex());
         on_data_available_();
@@ -252,7 +250,7 @@ fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(const types:
     att.memoryPolicy =
             eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
 
-    att.maximumReservedCaches = topic.topic_qos.value.history_depth;
+    att.maximumReservedCaches = topic.topic_qos.get_reference().history_depth;
 
     return att;
 }
@@ -262,10 +260,10 @@ fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(const types::D
     fastrtps::rtps::ReaderAttributes att;
 
     // Set Durability
-    att.endpoint.durabilityKind = topic.topic_qos.value.durability_qos;
+    att.endpoint.durabilityKind = topic.topic_qos.get_reference().durability_qos;
 
     // Set Reliability
-    att.endpoint.reliabilityKind = topic.topic_qos.value.reliability_qos;
+    att.endpoint.reliabilityKind = topic.topic_qos.get_reference().reliability_qos;
 
     // Set if topic has key
     if (topic.keyed)
@@ -302,7 +300,7 @@ fastrtps::TopicAttributes CommonReader::topic_attributes_(const types::DdsTopic&
 
     // Set Topic history attributes
     att.historyQos.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS;
-    att.historyQos.depth = topic.topic_qos.value.history_depth;
+    att.historyQos.depth = topic.topic_qos.get_reference().history_depth;
 
     return att;
 }
@@ -313,24 +311,24 @@ fastrtps::ReaderQos CommonReader::reader_qos_(const types::DdsTopic& topic) noex
 
     // Set Durability
     properties.m_durability.kind =
-        (topic.topic_qos.value.is_transient_local()
+        (topic.topic_qos.get_reference().is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
     properties.m_reliability.kind =
-        (topic.topic_qos.value.is_reliable()
+        (topic.topic_qos.get_reference().is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 
     // If topic with partitions, set this CommonReader in *
-    if (topic.topic_qos.value.use_partitions)
+    if (topic.topic_qos.get_reference().use_partitions)
     {
         properties.m_partition.push_back("*");
     }
 
     // If topic is with ownership
-    properties.m_ownership.kind = topic.topic_qos.value.ownership_qos;
+    properties.m_ownership.kind = topic.topic_qos.get_reference().ownership_qos;
 
     return properties;
 }
@@ -354,7 +352,7 @@ void CommonReader::onNewCacheChangeAdded(
         {
             // Remove received change if the CommonReader is disbled and the topic is not reliable
             // NOTE: this should be is_reliable and not is_transient_local for RPC sake
-            if (!topic_.topic_qos.value.is_reliable())
+            if (!topic_.topic_qos.get_reference().is_reliable())
             {
                 rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
                 logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,

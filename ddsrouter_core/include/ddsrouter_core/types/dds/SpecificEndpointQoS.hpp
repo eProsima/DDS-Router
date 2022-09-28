@@ -37,7 +37,7 @@ using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
 using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosPolicy;
 
 /**
- * Collection of attributes of an Endpoint
+ * Collection of QoS of an Endpoint
  *
  * @todo Divide this in Common, Reader and Writer QoS
  */
@@ -54,8 +54,10 @@ struct DDSROUTER_CORE_DllAPI SpecificEndpointQoS
     // OPERATORS
     /////////////////////////
 
+    //! Minor comparison operator
     bool operator< (const SpecificEndpointQoS& other) const noexcept;
 
+    //! Equality operator
     bool operator== (const SpecificEndpointQoS& other) const noexcept;
 
     /////////////////////////

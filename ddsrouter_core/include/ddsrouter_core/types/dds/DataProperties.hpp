@@ -51,7 +51,7 @@ using InstanceHandle = eprosima::fastrtps::rtps::InstanceHandle_t;
 using DataTime = eprosima::fastrtps::rtps::Time_t;
 
 /**
- * Collection of attributes of an Endpoint
+ * Collection of attributes related with a Data.
  */
 struct DDSROUTER_CORE_DllAPI DataProperties
 {
@@ -66,8 +66,10 @@ struct DDSROUTER_CORE_DllAPI DataProperties
     // OPERATORS
     /////////////////////////
 
+    //! Minor comparison operator
     bool operator< (const DataProperties& other) const noexcept;
 
+    //! Equality operator
     bool operator== (const DataProperties& other) const noexcept;
 
     /////////////////////////

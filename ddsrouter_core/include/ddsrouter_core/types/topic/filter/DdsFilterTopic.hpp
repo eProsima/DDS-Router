@@ -76,6 +76,15 @@ struct DDSROUTER_CORE_DllAPI DdsFilterTopic
     virtual bool matches(
             const DdsTopic& real_topic) const = 0;
 
+    /**
+     * @brief Serialize the method in a \c ostream object.
+     *
+     * This method is the same as \c operator<< .
+     * It is implemented to allow virtual \c operator<< .
+     *
+     * @param [out] os return value of this serialized.
+     * @return std::ostream& this serialized inside \c os .
+     */
     virtual std::ostream& serialize(
         std::ostream& os) const = 0;
 };

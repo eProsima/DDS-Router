@@ -27,7 +27,7 @@ namespace core {
 namespace rtps {
 
 /**
- * Base SimpleReader concrete class that implements CommonReader abstract one.
+ * Base RTPS Reader concrete class that implements abstract CommonReader one.
  */
 class SimpleReader : public CommonReader
 {

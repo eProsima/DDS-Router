@@ -54,7 +54,7 @@ bool WildcardDdsFilterTopic::matches(
     // Compare type_name
     if (this->type_name.is_set())
     {
-        if (!utils::match_pattern(this->type_name, other.type_name))
+        if (!utils::match_pattern(this->type_name.get_reference(), other.type_name))
         {
             return false;
         }

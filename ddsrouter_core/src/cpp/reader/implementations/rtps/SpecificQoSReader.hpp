@@ -28,7 +28,10 @@ namespace core {
 namespace rtps {
 
 /**
- * Base SpecificQoSReader concrete class that implements CommonReader abstract one.
+ * RTPS Reader with specific QoS implements abstract CommonReader.
+ *
+ * This class fills the data receive information with the QoS of the Writer that has sent the data.
+ * In order to access this QoS it has a reference to the DiscoveryDatabase.
  */
 class SpecificQoSReader : public CommonReader
 {
@@ -55,12 +58,19 @@ public:
 
 protected:
 
+    /**
+     * @brief Get the QoS from a Writer from the \c DiscoveryDatabase .
+     */
     types::SpecificEndpointQoS specific_qos_of_writer_(const types::Guid& guid) const;
 
+    /**
+     * Specializes \c CommonReader method and set the QoS of the data received.
+     */
     virtual void fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,
         std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept override;
 
+    //! Reference to the \c DiscoveryDatabase .
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
 };

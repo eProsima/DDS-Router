@@ -37,9 +37,7 @@ namespace core {
 namespace rtps {
 
 /**
- * Standard RTPS SimpleWriter.
- *
- * This is just the concrete implementation of CommonWriter
+ * Base RTPS Writer concrete class that implements abstract CommonWriter one.
  */
 class SimpleWriter : public CommonWriter
 {

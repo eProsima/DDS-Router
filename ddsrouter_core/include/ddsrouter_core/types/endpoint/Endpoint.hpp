@@ -68,6 +68,7 @@ public:
     //! Endpoint kind getter
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
 
+    //! Endpoint kind setter
     DDSROUTER_CORE_DllAPI void kind(const EndpointKind& kind) noexcept;
 
     //! Guid getter
@@ -79,6 +80,7 @@ public:
     //! SpecificQoS getter
     DDSROUTER_CORE_DllAPI SpecificEndpointQoS specific_qos() const noexcept;
 
+    //! SpecificQoS setter
     DDSROUTER_CORE_DllAPI void specific_qos(const SpecificEndpointQoS& specific_qos) noexcept;
 
     //! Topic getter

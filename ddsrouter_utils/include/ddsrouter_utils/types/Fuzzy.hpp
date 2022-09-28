@@ -30,8 +30,16 @@ namespace eprosima {
 namespace ddsrouter {
 namespace utils {
 
+//! Data Type of the value that stores the Fuzzy level
 using FuzzyLevelType = short;
 
+/**
+ * @brief Guide values for the meaning of the Fuzzy level
+ *
+ * This values are not all the possible values of a Fuzzy level.
+ * A Fuzzy level could be any number in range of \c FuzzyLevelType .
+ * This values are only a guide to know what each level refers to.
+ */
 enum FuzzyLevelValues : FuzzyLevelType
 {
     fuzzy_level_unset = -20,
@@ -56,14 +64,19 @@ enum FuzzyLevelValues : FuzzyLevelType
  *
  * int main() {
  *   Fuzzy<A> a;  // This is not set, calling use_if_set will do nothing
- *   Fuzzy<A> b(...);  // This has been set, calling use_if_set will call foo
+ *   Fuzzy<A> b(...);  // This has been set, calling use_if_set will call foo()
  * }
  *
+ * @tparam T type of the internal element.
  *
- * @note This does not inherit from T because inheritance is not supported for native types
+ * @warning \c T must have a default constructor.
+ *
+ * @note This does not inherit from T because inheritance is not supported for native types.
+ *
+ * @todo Create this class as inheritance of T and create a parallel function for native types.
  */
 template <typename T>
-struct Fuzzy
+class Fuzzy
 {
 public:
 
@@ -71,12 +84,29 @@ public:
     // CONSTRUCTORS
     /////////////////////////
 
+    /**
+     * @brief Default constructor of a T object without arguments.
+     *
+     * Fuzzy Level is set to \c fuzzy_level_default .
+     */
     Fuzzy() = default;
 
+    /**
+     * @brief Construct a new Fuzzy object copying from \c other .
+     *
+     * @param other \c T value to copy in new object
+     * @param level level of fuzzy with it is set (Default: \c fuzzy_level_set ).
+     */
     Fuzzy(
         const T& other,
         FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
+    /**
+     * @brief Construct a new Fuzzy object moving from \c other .
+     *
+     * @param other \c T value to move in new object
+     * @param level level of fuzzy with it is set (Default: \c fuzzy_level_set ).
+     */
     Fuzzy(
         T&& other,
         FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
@@ -85,42 +115,88 @@ public:
     // OPERATORS
     /////////////////////////
 
-    operator const T&() const noexcept;
+    //! Access to internal value reference
+    operator T&() noexcept;
 
+    //! Implicit cast to object T
+    operator T() const noexcept;
+
+    /**
+     * @brief Comparison operator with a Fuzzy object.
+     *
+     * @param other value to compare
+     * @return true if both are invalid, or if both are set and internal value is the same
+     * @return false otherwise
+     */
     bool operator==(const Fuzzy<T>& other) const noexcept;
 
+    /**
+     * @brief Comparison operator with a \c T object.
+     *
+     * @param other value to compare
+     * @return true if this is valid and internal value is the same as \c other .
+     * @return false otherwise
+     */
     bool operator==(const T& other) const noexcept;
 
+    //! Opposite of \c operator== .
     bool operator!=(const Fuzzy<T>& other) const noexcept;
 
+    //! Opposite of \c operator== .
     bool operator!=(const T& other) const noexcept;
 
     /////////////////////////
     // GET METHODS
     /////////////////////////
 
+    //! Whether the internal Fuzzy Level is equal or higher \c fuzzy_level_default .
     bool is_valid() const noexcept;
 
+    //! Whether the internal Fuzzy Level is equal or higher \c fuzzy_level_fuzzy .
     bool is_set() const noexcept;
 
+    //! Get reference of the internal value
+    T& get_reference() noexcept;
     const T& get_reference() const noexcept;
+
+    //! Get internal value
+    T get_value() const noexcept;
+
+    //! Get the Fuzzy Level internal value.
+    FuzzyLevelType get_level() const noexcept;
 
     /////////////////////////
     // SET METHODS
     /////////////////////////
 
+    //! Set Fuzzy Level to \c fuzzy_level_unset .
     void unset();
 
+    //! Set internal value to \c new_value and Fuzzy Level to \c level .
     void set_value(const T& new_value, FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
+    //! Set Fuzzy Level to \c level .
     void set_level(FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
+
+protected:
 
     /////////////////////////
     // VARIABLES
     /////////////////////////
 
+    /**
+     * @brief Fuzzy level of this object.
+     *
+     * This defines the certainty with which the internal \c value has been set.
+     * By default is set to \c fuzzy_level_default if the internal value has not been set.
+     */
     FuzzyLevelType fuzzy_level = FuzzyLevelValues::fuzzy_level_default;
 
+    /**
+     * @brief Internal value of type \c T .
+     *
+     * By default this value would be initialized with default constructor.
+     */
     T value = T();
 };
 

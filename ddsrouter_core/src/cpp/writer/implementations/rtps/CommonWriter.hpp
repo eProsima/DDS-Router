@@ -61,36 +61,31 @@ using WriteParams = eprosima::fastrtps::rtps::WriteParams;
 using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
 
 /**
- * Standard RTPS CommonWriter with less restrictive Attributes.
+ * Abstract generic class for a RTPS Writer wrapper.
+ *
+ * It implements the WriterListener for itself with \c onWriterMatched callbacks.
+ *
+ * @todo remove those variables that are not needed (e.g. rtps_participant_)
  */
 class CommonWriter : public BaseWriter , public fastrtps::rtps::WriterListener
 {
 public:
 
     /**
-     * @brief Destroy the CommonWriter object
+     * @brief Destroy the Writer object
      *
-     * Remove CommonWriter RTPS
-     * Remove History
-     *
-     * @todo Remove every change and release it in PayloadPool
+     * Delete the RTPS Writer and Writer History in case they are set.
      */
     virtual ~CommonWriter();
 
 protected:
 
     /**
-     * @brief Construct a new CommonWriter object
+     * @brief Construct a new Writer object
      *
-     * Get the Attributes and TopicQoS and create the CommonWriter History and the RTPS CommonWriter.
+     * It receives all the attributes and QoS needed to create the internal entities.
      *
-     * @note use protected constructor so this class is not called but from subclasses
-     * (Basically make abstract class without a pure virtual function).
-     *
-     * @param participant_id    Router Id of the Participant that has created this CommonWriter.
-     * @param topic             Topic that this CommonWriter subscribes to.
-     * @param payload_pool      Shared Payload Pool to received data and take it.
-     * @param rtps_participant  RTPS Participant pointer (this is not stored).
+     * @note Only protected so only concrete classes are instantiated.
      *
      * @throw \c InitializationException in case any creation has failed
      */
@@ -126,11 +121,24 @@ protected:
     virtual utils::ReturnCode write_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
+    /**
+     * @brief Auxiliary method used in \c write to fill the cache change to send.
+     *
+     * @param [out] to_send_change_to_fill cache change to be filled and sent.
+     * @param [out] to_send_params write params to be filled and sent.
+     * @param [in] data data received that must be sent.
+     */
     virtual utils::ReturnCode fill_to_send_data_(
         fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
         eprosima::fastrtps::rtps::WriteParams& to_send_params,
         std::unique_ptr<types::DataReceived>& data) const noexcept;
 
+    /**
+     * @brief Auxiliary method used after \c write to fill data value.
+     *
+     * @param [in] to_send_params write params of the cache change sent.
+     * @param [out] data data to be fulfilled with params.
+     */
     virtual void fill_sent_data_(
         const eprosima::fastrtps::rtps::WriteParams& params,
         std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;

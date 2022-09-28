@@ -33,6 +33,8 @@ namespace types {
 
 /**
  * Generic data struct that represents a Topic of data flow in the Router.
+ *
+ * @todo remove argument constructors.
  */
 struct Topic
 {
@@ -41,6 +43,7 @@ struct Topic
     // CONSTRUCTORS
     /////////////////////////
 
+    //! Default constructor
     DDSROUTER_CORE_DllAPI Topic() = default;
 
     //! Construct a Topic with name
@@ -51,14 +54,23 @@ struct Topic
     // METHODS
     /////////////////////////
 
+    /**
+     * @brief Whether this object is valid.
+     *
+     * @param [out] error_msg not validity reason in case it is not valid.
+     * @return true if valid.
+     * @return false otherwise.
+     */
     DDSROUTER_CORE_DllAPI virtual bool is_valid(utils::Formatter& error_msg) const noexcept;
 
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
+    //! Minor operator. Compares \c topic_name .
     DDSROUTER_CORE_DllAPI bool operator< (const Topic& other) const noexcept;
 
+    //! Equal operator. Compares \c topic_name .
     DDSROUTER_CORE_DllAPI bool operator== (const Topic& other) const noexcept;
 
     /////////////////////////
@@ -66,7 +78,7 @@ struct Topic
     /////////////////////////
 
     //! Topic name
-    std::string topic_name;
+    std::string topic_name{};
 };
 
 /**

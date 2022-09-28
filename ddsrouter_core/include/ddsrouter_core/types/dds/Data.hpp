@@ -36,13 +36,17 @@ using PayloadUnit = eprosima::fastrtps::rtps::octet;
 //! Payload references the raw data received.
 using Payload = eprosima::fastrtps::rtps::SerializedPayload_t;
 
-//! Structure of the Data received from a Reader containing the data itself and the attributes of the source
+/**
+ * @brief Structure of the Data received from a Reader containing the data itself and its properties.
+ *
+ * Properties are related information regarding the data and QoS of the source.
+ */
 struct DataReceived
 {
     /**
      * @brief Destroy the Data Received object
      *
-     * @note Default destructor. Force \c DataReceived to be polymorphic
+     * @note Default destructor. Force \c DataReceived to be polymorphic. Implemented here to avoid creating a .cpp .
      */
     virtual ~DataReceived()
     {}
@@ -57,6 +61,9 @@ struct DataReceived
      * @brief Sequence Number with which the internal writer (ddsrouter writer) has sent this message
      *
      * @warning This is not the sequence number of the data received. It is the one set by writer when sending it.
+     *
+     * @todo This could be removed in the future if ServiceRegistry is internal to a specific class and not in
+     * RPCBridge.
      */
     eprosima::fastrtps::rtps::SequenceNumber_t sent_sequence_number;
 };

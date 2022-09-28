@@ -37,8 +37,10 @@ namespace core {
 namespace configuration {
 
 /**
- * This class joins every DDSRouter feature configuration and includes methods
- * to interact with this configuration.
+ * This data struct joins every DDSRouter feature configuration such as:
+ * - Modifiable values (from \c DDSRouterReloadConfiguration ).
+ * - Participant configurations.
+ * - Advanced configurations.
  */
 struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
 {
@@ -47,8 +49,14 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     // CONSTRUCTORS
     /////////////////////////
 
+    //! Default constructor
     DDSROUTER_CORE_DllAPI DDSRouterConfiguration() = default;
 
+    /**
+     * @brief Constructor with arguments to fill new object.
+     *
+     * @todo use const & references or even eliminate this constructor
+     */
     DDSROUTER_CORE_DllAPI DDSRouterConfiguration(
             std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist,
             std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist,
@@ -60,9 +68,11 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     // METHODS
     /////////////////////////
 
+    //! Set internal values with the values reloaded
     DDSROUTER_CORE_DllAPI void reload(
             const DDSRouterReloadConfiguration& new_configuration);
 
+    //! Override \c is_valid method.
     DDSROUTER_CORE_DllAPI bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
@@ -70,12 +80,15 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     // VARIABLES
     /////////////////////////
 
+    //! Participant configurations
     std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations = {};
 
+    //! Advanced configurations
     SpecsConfiguration advanced_options;
 
 protected:
 
+    //! Auxiliar method to validate that class type of the participants are compatible with their kinds.
     static bool check_correct_configuration_object_(
             const std::shared_ptr<ParticipantConfiguration> configuration);
 

@@ -94,7 +94,7 @@ void compare_topic(
             expected_reliability_qos = core::types::ReliabilityKind::BEST_EFFORT;
         }
 
-        ASSERT_EQ(topic.topic_qos.value.reliability_qos, expected_reliability_qos);
+        ASSERT_EQ(topic.topic_qos.get_reference().reliability_qos, expected_reliability_qos);
     }
 }
 
@@ -112,13 +112,13 @@ void compare_wildcard_topic(
     if (type_set)
     {
         ASSERT_TRUE(topic.type_name.is_set());
-        ASSERT_EQ(topic.type_name.value, type);
+        ASSERT_EQ(topic.type_name.get_reference(), type);
     }
 
     if (key_set)
     {
         ASSERT_TRUE(topic.keyed.is_set());
-        ASSERT_EQ(topic.keyed.value, keyed);
+        ASSERT_EQ(topic.keyed.get_reference(), keyed);
     }
 }
 

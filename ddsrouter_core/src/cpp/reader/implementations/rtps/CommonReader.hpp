@@ -44,9 +44,11 @@ namespace rtps {
 using RecursiveTimedMutex = eprosima::fastrtps::RecursiveTimedMutex;
 
 /**
- * Standard RTPS CommonReader with less restrictive Attributes.
+ * Abstract generic class for a RTPS Reader wrapper.
  *
  * It implements the ReaderListener for itself with \c onNewCacheChangeAdded and \c onReaderMatched callbacks.
+ *
+ * @todo remove those variables that are not needed (e.g. rtps_participant_)
  */
 class CommonReader : public BaseReader, public fastrtps::rtps::ReaderListener
 {
@@ -101,12 +103,9 @@ protected:
     /**
      * @brief Construct a new CommonReader object
      *
-     * Get the Attributes and TopicQoS and create the CommonReader History and the RTPS CommonReader.
+     * It receives all the attributes and QoS needed to create the internal entities.
      *
-     * @param participant_id    Router Id of the Participant that has created this CommonReader.
-     * @param topic             Topic that this CommonReader subscribes to.
-     * @param payload_pool      Shared Payload Pool to received data and take it.
-     * @param rtps_participant  RTPS Participant pointer (this is not stored).
+     * @note Only protected so only concrete classes are instantiated.
      *
      * @throw \c InitializationException in case any creation has failed
      */
@@ -120,12 +119,20 @@ protected:
             const fastrtps::TopicAttributes& topic_attributes,
             const fastrtps::ReaderQos& reader_qos);
 
+    // Specific enable/disable do not need to be implemented
+
+    /**
+     * @brief Auxiliary method to create the internal RTPS Reader and History.
+     */
     virtual void internal_entities_creation_(
         const fastrtps::rtps::HistoryAttributes& history_attributes,
         const fastrtps::rtps::ReaderAttributes& reader_attributes,
         const fastrtps::TopicAttributes& topic_attributes,
         const fastrtps::ReaderQos& reader_qos);
 
+    /**
+     * @brief Auxiliary method used in \c take to fill the received data.
+     */
     virtual void fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,
         std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
@@ -137,7 +144,6 @@ protected:
      *
      * Check if there is data available to read
      */
-
     void enable_() noexcept;
 
     /**
@@ -199,14 +205,11 @@ protected:
     /////
     // INTERNAL VARIABLES
 
-    //! RTPS CommonReader pointer
+    //! RTPS Reader pointer
     fastrtps::rtps::RTPSReader* rtps_reader_;
 
-    //! RTPS CommonReader History associated to \c rtps_reader_
+    //! RTPS Reader History associated to \c rtps_reader_
     fastrtps::rtps::ReaderHistory* rtps_history_;
-
-    //! Mutex that guards every access to the RTPS CommonReader
-    mutable std::recursive_mutex rtps_mutex_;
 };
 
 } /* namespace rtps */

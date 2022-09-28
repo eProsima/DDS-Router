@@ -51,16 +51,16 @@ fastrtps::WriterQos QoSSpecificWriter::writer_qos_(
     fastrtps::WriterQos qos = CommonWriter::writer_qos_(topic);
 
     // Set Partitions
-    if (topic.topic_qos.value.has_partitions())
+    if (topic.topic_qos.get_reference().has_partitions())
     {
         qos.m_partition = specific_qos.partitions;
     }
 
     // Set Ownership
-    if (topic.topic_qos.value.has_ownership())
+    if (topic.topic_qos.get_reference().has_ownership())
     {
         // Set ownership
-        qos.m_ownership.kind = topic.topic_qos.value.ownership_qos;
+        qos.m_ownership.kind = topic.topic_qos.get_reference().ownership_qos;
 
         qos.m_ownershipStrength = specific_qos.ownership_strength;
     }

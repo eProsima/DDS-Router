@@ -161,7 +161,15 @@ DDSROUTER_UTILS_DllAPI bool is_file_accessible(
         const char* file_path,
         FileAccessMode access_mode = FileAccessMode::exist) noexcept;
 
-
+/**
+ * @brief Common function for every method with \c operator<< to convert it to string.
+ *
+ * This function uses \c operator<< of class \c T to parse any object to a string.
+ *
+ * @tparam T type of the element to convert to string
+ * @param element element to parse to string
+ * @return to string convertion of the element
+ */
 template <typename T>
 DDSROUTER_UTILS_DllAPI std::string generic_to_string(
         const T& element);
