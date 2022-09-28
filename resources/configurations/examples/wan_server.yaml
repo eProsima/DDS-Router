@@ -34,9 +34,11 @@ participants:
 
   - name: WanParticipant                                          # 6
     kind: wan                                                     # 7
-    listening-addresses:                                          # 8
-      - ip: 1.1.1.1
-        port: 12666
+    listening-addresses:
+      - ip: 1.1.1.1                                               # 8
+        port: 11666                                               # 9
+        external-port: 11777                                      # 10
+        transport: tcp                                            # 11
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -67,6 +69,15 @@ participants:
 # 7: Kind of WANClient: <wan>.
 # InitialPeers discovery to discover and communicate with another WAN DDS Router.
 
-# 8: Add the listening addresses where this DDS Routers will be available
-# In this case using localhost (127.0.0.1) port 12666 (UDP by default).
-# Add as many listening-addresses as needed.
+# 8: Listen in public IP (1.1.1.1) for remote traffic.
+# This IP must be set to the public IP of the host where this DDS Router will run.
+
+# 9: Listening port is 11666.
+# Remember that if the host is under a NAT, this port is the one that the host will open, but not the one
+# used as public in the router.
+
+# 10: External port is 11777.
+# This port is used in case the host is under a NAT. This is the public port accessible from any external point
+# in the network, and should be forwarded from the network router to the "port" value.
+
+# 11: It uses TCP transport by default if not set. Could be set to "udp" or "tcp".

@@ -204,11 +204,6 @@ This configuration will depend on your network router, but it should be similar 
 .. figure:: /rst/figures/use_cases/router_settings.png
    :align: center
 
-.. warning::
-
-    Due to a current limitation of DDS Router, the external port and internal port must match.
-    Stay tuned for new versions of DDS Router that are intended to address this limitation.
-
 Configure the DDS Router Net B
 ''''''''''''''''''''''''''''''
 

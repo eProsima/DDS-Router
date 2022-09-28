@@ -310,6 +310,7 @@ An Address is defined by:
 
 * *IP*: IP of the host (public IP in case of WAN communication).
 * *Port*: Port where the Participant is listening.
+* *External Port*: Public port accessible for external entities.
 * *Transport Protocol*: ``UDP`` or ``TCP``.
   If it is not set, it would be chosen by default depending on the Participant Kind.
 * *IP version*: ``v4`` or ``v6``.
@@ -321,6 +322,7 @@ An Address is defined by:
 
     ip: 127.0.0.1
     port: 11666
+    external-port: 11670
     transport: tcp
     ip-version: v4
 
@@ -333,6 +335,16 @@ An Address is defined by:
 
     domain: localhost             # DNS call return value = 127.0.0.1
     port: 33333
+
+
+External Port
+-------------
+
+External port is used to configure a Server (Discovery Server or Initial Peers) that runs under a NAT.
+In case this value is not set, the external port is supposed to be the same as the internal one.
+In this case the external and internal port in the network router port forwarding must coincide.
+For more information, check section :ref:`user_manual_wan_configuration_nat_traversal_port_forwarding`.
+
 
 .. _user_manual_configuration_discovery_server_guidprefix:
 
@@ -409,7 +421,8 @@ listen for remote Participants.
       - ip: 127.0.0.1                # UDP by default
         port: 11667
       - ip: 2001:4860:4860::8844     # Recognized as IPv6
-        port: 11668
+        port: 11666
+        external-port: 11668
         transport: tcp
 
 
@@ -512,7 +525,8 @@ A complete example of all the configurations described on this page can be found
             port: 11600                 # Port = 11600
           - ip: 127.0.0.1               # IP = localhost
             port: 11601                 # Port = 11601
-            transport: udp              # Transport = UDP
+            external-port: 11602        # External Port = 11602
+            transport: tcp              # Transport = TCP
 
     ####################
 
@@ -532,4 +546,4 @@ A complete example of all the configurations described on this page can be found
             addresses:
               - ip: 8.8.8.8             # IP = 8.8.8.8
                 port: 11666             # Port = 11666
-                transport: tcp          # Transport = TCP
+                transport: udp          # Transport = UDP

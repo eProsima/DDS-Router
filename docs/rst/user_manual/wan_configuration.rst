@@ -19,22 +19,20 @@ Thus, NAT traversal methods will be required.
 The most common method that we recommend is configuring the network router so it forwards a specific port from
 the internet to a specific host.
 
+.. note::
+
+    NAT Traversal communication only affects to IPv4 communication.
+    Using IPv6 would not create NAT under network routers so every device could be accessed externally.
+    Thus, configurations explained in this section does not apply to IPv6 deployments.
+
+
+.. _user_manual_wan_configuration_nat_traversal_port_forwarding:
 
 Port Forwarding
 ---------------
 
 This is the easiest way to achieve NAT traversal.
 Most network routers support a graphical interface where port forwarding could be easily set.
-
-
-.. note:
-
-    NAT Traversal communication only affects to IPv4 communication.
-    Using IPv6 would not require specific network router configurations (as long as the router supports it).
-
-.. note:
-
-    It is needed to use same public port and internal port due to of Fast DDS configuration requirements.
 
 
 TCP vs UDP
@@ -76,7 +74,7 @@ These are a list of tips to help choosing whether to use one or the other.
 
 
 TLS
----
+===
 
 |eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
 and its configuration can be set per participant for types Local Discovery Server and WAN. Following is a list of the
@@ -129,9 +127,8 @@ Let user *B* with host *H*:sub:`B` has a private IP ``192.168.2.2`` given by net
 with a public IP ``2.2.2.2``.
 *A* will act as server of the TCP communication, while *B* will act as client.
 
-User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(it is required to use the same public port as the internal one).
+User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11667``.
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11667``.
 User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
@@ -143,7 +140,8 @@ User *A* should set its *listening-addresses* as follows:
         id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
-          port: 11666                     # Port forwarded router Ra
+          port: 11667                     # Physical port used for the dds router host
+          external-port: 11666            # Port forwarded router Ra
           transport: tcp                  # Transport protocol
 
 User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
@@ -180,9 +178,8 @@ with a public IP ``2.2.2.2``.
 It does not matter whether *A* knows *B* address, *B* knows *A*, or both know each other.
 In this example, *B* will know *A* address, and not the other way around.
 
-User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(it is required to use same public port as the internal one).
+User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11667``.
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11667``.
 User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
@@ -194,11 +191,11 @@ User *A* should set its *listening-addresses* as follows:
         id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
-          port: 11666                     # Port forwarded router Ra
+          port: 11667                     # This device physical port forwarded internally
+          external-port: 11666            # Port forwarded router Ra
 
-User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11777``.
-This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11777``
-(It is necessary to use same public port as the internal one).
+User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11778``.
+This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11778``.
 User *B* should set its *listening-addresses* and *connection-addresses* as follows:
 
 .. code-block:: yaml
@@ -210,7 +207,8 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
         id: 3                             # Must be different than A one
       listening-addresses:
         - ip: 2.2.2.2                     # Public IP of host Hb
-          port: 11777                     # Port forwarded router Rb
+          port: 11778                     # This device physical port forwarded internally
+          external-port: 11777            # Port forwarded router Rb
       connection-addresses:
         - discovery-server-guid:
             id: 2                         # Id of the Discovery Server of A
