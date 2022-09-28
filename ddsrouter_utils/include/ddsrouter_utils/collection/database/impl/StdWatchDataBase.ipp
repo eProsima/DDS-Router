@@ -157,10 +157,11 @@ void StdWatchDataBase<Key, Value>::async_remove(Key key)
 }
 
 template <typename Key, typename Value>
-void StdWatchDataBase<Key, Value>::call_callback_common_(
+void StdWatchDataBase<Key, Value>::call_callbacks_common_(
         const Key& key,
         const Value& value,
-        DataBaseActionKind action_kind)
+        DataBaseActionKind action_kind,
+        bool sync)
 {
     std::shared_lock<std::shared_timed_mutex> lock_db(callbacks_[action_kind]);
     for (auto& slot : callbacks_[action_kind])

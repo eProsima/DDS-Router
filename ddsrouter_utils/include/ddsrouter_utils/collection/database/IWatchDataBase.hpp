@@ -37,7 +37,7 @@ public:
     virtual void register_modification_callback(
         const std::function<void(Key, Value)>& callback) = 0;
 
-    virtual void register_deletion_callback(
+    virtual void register_remove_callback(
         const std::function<void(Key, Value)>& callback) = 0;
 
 };

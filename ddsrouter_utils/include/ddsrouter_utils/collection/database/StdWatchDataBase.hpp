@@ -66,18 +66,27 @@ public:
     virtual void register_modification_callback(
             const CallbackType& callback) override;
 
-    virtual void register_deletion_callback(
+    virtual void register_remove_callback(
             const CallbackType& callback) override;
 
-    virtual void async_add(Key key, Value value);
+    virtual void add(Key key, Value value, bool sync_insertion, bool sync_callback_call, bool sync_all_callbacks);
 
-    virtual void async_modify(Key key, Value value);
+    virtual void modify(Key key, Value value, bool sync_insertion, bool sync_callback_call, bool sync_all_callbacks);
 
-    virtual void async_remove(Key key);
+    virtual void remove(Key key, bool sync_insertion, bool sync_callback_call, bool sync_all_callbacks);
 
 protected:
 
-    void call_callback_common_(
+    void sync_add_(const Key& key, const Value& value);
+    void sync_modify_(const Key& key, const Value& value);
+    void sync_remove_(const Key& key, const Value& value);
+
+    void sync_call_callbacks_common_(
+            const Key& key,
+            const Value& value,
+            DataBaseActionKind action_kind);
+
+    void call_callbacks_common_sync_(
             const Key& key,
             const Value& value,
             DataBaseActionKind action_kind);
@@ -99,6 +108,7 @@ protected:
     thread::SlotConnector<Key, Value> add_slot_connector_;
     thread::SlotConnector<Key, Value> modify_slot_connector_;
     thread::SlotConnector<Key> remove_slot_connector_;
+    thread::SlotConnector<Key, Value, DataBaseActionKind> call_callbacks_slot_connector_;
 
 };
 

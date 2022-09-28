@@ -28,15 +28,18 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        parametrize
-        add
-        modify
-        delete
-        exist
-        get
-        addition_callback
-        modification_callback
-        deletion_callback
+        basic_functionality_test
+        sync_callback_functionality_test
+        semisync_callback_functionality_test
+        # parametrize
+        # add
+        # modify
+        # delete
+        # exist
+        # get
+        # addition_callback
+        # modification_callback
+        # deletion_callback
     )
 
 set(TEST_EXTRA_LIBRARIES
