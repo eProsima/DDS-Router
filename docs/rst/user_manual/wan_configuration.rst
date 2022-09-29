@@ -54,7 +54,7 @@ to a different value of internal host port.
 
 .. warning::
 
-    External port is also available for TCP communication.
+    External port is only available for TCP communication.
     In UDP communication the internal and the external port must coincide in the network router port forwarding rules.
 
 
@@ -247,7 +247,7 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
         id: 3                             # Must be different than A one
       listening-addresses:
         - ip: 2.2.2.2                     # Public IP of host Hb
-          port: 1177t                     # Internal and External port
+          port: 11777                     # Internal and External port
       connection-addresses:
         - discovery-server-guid:
             id: 2                         # Id of the Discovery Server of A

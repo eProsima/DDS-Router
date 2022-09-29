@@ -41,12 +41,8 @@ participants:
           id: 1                                                   # 10
         addresses:                                                # 11
           - ip: 1.1.1.1
-            port: 11666
-    listening-addresses:                                          # 12
-      - ip: 2.2.2.2
-        port: 11670                                               # 13
-        external-port: 11680                                      # 14
-        transport: tcp                                            # 15
+            port: 11777
+            transport: tcp
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -87,17 +83,3 @@ participants:
 # 11: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11666 over UDP transport (default).
 # This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
 # Add every other address where trying to reach this same remote WAN Discovery Server.
-
-# 12: Add the interfaces where this Participant will listen in WAN.
-# This is only needed if Remote WAN Server is using only UDP.
-# Add as many listening-addresses as needed.
-
-# 13: Listening port is 11666.
-# Remember that if the host is under a NAT, this port is the one that the host will open, but not the one
-# used as public in the router.
-
-# 14: External port is 11777.
-# This port is used in case the host is under a NAT. This is the public port accessible from any external point
-# in the network, and should be forwarded from the network router to the "port" value.
-
-# 15: It uses TCP. UDP transport is used by default if not set. Could be set to "udp" or "tcp".
