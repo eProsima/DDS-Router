@@ -30,7 +30,8 @@ Topic::Topic(
 {
 }
 
-bool Topic::is_valid(utils::Formatter& error_msg) const noexcept
+bool Topic::is_valid(
+        utils::Formatter& error_msg) const noexcept
 {
     if (topic_name.empty())
     {
@@ -41,12 +42,14 @@ bool Topic::is_valid(utils::Formatter& error_msg) const noexcept
     return true;
 }
 
-bool Topic::operator< (const Topic& other) const noexcept
+bool Topic::operator < (
+        const Topic& other) const noexcept
 {
     return this->topic_name < other.topic_name;
 }
 
-bool Topic::operator== (const Topic& other) const noexcept
+bool Topic::operator == (
+        const Topic& other) const noexcept
 {
     return this->topic_name == other.topic_name;
 }

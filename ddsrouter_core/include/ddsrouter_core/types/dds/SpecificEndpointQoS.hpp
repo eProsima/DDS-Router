@@ -55,10 +55,12 @@ struct DDSROUTER_CORE_DllAPI SpecificEndpointQoS
     /////////////////////////
 
     //! Minor comparison operator
-    bool operator< (const SpecificEndpointQoS& other) const noexcept;
+    bool operator < (
+            const SpecificEndpointQoS& other) const noexcept;
 
     //! Equality operator
-    bool operator== (const SpecificEndpointQoS& other) const noexcept;
+    bool operator == (
+            const SpecificEndpointQoS& other) const noexcept;
 
     /////////////////////////
     // VARIABLES

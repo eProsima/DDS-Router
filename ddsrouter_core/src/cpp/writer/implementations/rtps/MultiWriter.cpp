@@ -55,7 +55,7 @@ MultiWriter::~MultiWriter()
     std::unique_lock<WritersMapType> lock(writers_map_);
 
     // Disable every inside writer and kill it
-    for(auto& writer : writers_map_)
+    for (auto& writer : writers_map_)
     {
         writer.second->disable();
         delete writer.second;
@@ -68,7 +68,7 @@ MultiWriter::~MultiWriter()
 void MultiWriter::enable_() noexcept
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
-    for(auto& writer : writers_map_)
+    for (auto& writer : writers_map_)
     {
         writer.second->enable();
     }
@@ -77,19 +77,21 @@ void MultiWriter::enable_() noexcept
 void MultiWriter::disable_() noexcept
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
-    for(auto& writer : writers_map_)
+    for (auto& writer : writers_map_)
     {
         writer.second->disable();
     }
 }
 
-bool MultiWriter::exist_partition_(const types::SpecificEndpointQoS& data_qos)
+bool MultiWriter::exist_partition_(
+        const types::SpecificEndpointQoS& data_qos)
 {
     std::shared_lock<WritersMapType> lock(writers_map_);
     return writers_map_.find(data_qos) != writers_map_.end();
 }
 
-QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificEndpointQoS& data_qos)
+QoSSpecificWriter* MultiWriter::get_writer_or_create_(
+        const types::SpecificEndpointQoS& data_qos)
 {
     // NOTE: it uses unique lock because it may change the database, and there is no way
     // to do so if taking share and unique must be done.
@@ -116,19 +118,20 @@ QoSSpecificWriter* MultiWriter::get_writer_or_create_(const types::SpecificEndpo
     return new_writer;
 }
 
-QoSSpecificWriter* MultiWriter::create_writer_nts_(const types::SpecificEndpointQoS& data_qos)
+QoSSpecificWriter* MultiWriter::create_writer_nts_(
+        const types::SpecificEndpointQoS& data_qos)
 {
     logDebug(
         DDSROUTER_MULTIWRITER,
         "Creating a new Writer in " << *this << " for qos " << data_qos << ".");
 
     return new QoSSpecificWriter(
-            this->participant_id_,
-            this->topic_,
-            this->payload_pool_,
-            this->rtps_participant_,
-            data_qos,
-            repeater_);
+        this->participant_id_,
+        this->topic_,
+        this->payload_pool_,
+        this->rtps_participant_,
+        data_qos,
+        repeater_);
 }
 
 // Specific enable/disable do not need to be implemented
@@ -137,7 +140,8 @@ utils::ReturnCode MultiWriter::write_(
 {
     logDebug(
         DDSROUTER_MULTIWRITER,
-        "Writing in Partitions Writer " << *this << " a data with qos " << data->properties << " from " << data->properties.source_guid);
+        "Writing in Partitions Writer " << *this << " a data with qos " << data->properties << " from " <<
+            data->properties.source_guid);
 
     // Take Writer
     auto this_qos_writer = get_writer_or_create_(data->properties.writer_qos);

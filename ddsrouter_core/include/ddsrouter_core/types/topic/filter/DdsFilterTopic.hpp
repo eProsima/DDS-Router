@@ -40,9 +40,11 @@ struct DDSROUTER_CORE_DllAPI DdsFilterTopic
     // OPERATORS
     /////////////////////////
 
-    virtual bool operator< (const DdsFilterTopic& other) const noexcept;
+    virtual bool operator < (
+            const DdsFilterTopic& other) const noexcept;
 
-    virtual bool operator== (const DdsFilterTopic& other) const noexcept;
+    virtual bool operator == (
+            const DdsFilterTopic& other) const noexcept;
 
     /////////////////////////
     // FILTER METHODS
@@ -86,7 +88,7 @@ struct DDSROUTER_CORE_DllAPI DdsFilterTopic
      * @return std::ostream& this serialized inside \c os .
      */
     virtual std::ostream& serialize(
-        std::ostream& os) const = 0;
+            std::ostream& os) const = 0;
 };
 
 /**

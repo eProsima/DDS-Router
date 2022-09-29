@@ -24,18 +24,33 @@ namespace test {
 // Dummy class to test Fuzzy class
 struct A
 {
-    A() : x(-1) {}
-    A(int x) : x(x) {}
-    bool operator==(const A& other) const { return x == other.x; }
+    A()
+        : x(-1)
+    {
+    }
+
+    A(
+            int x)
+        : x(x)
+    {
+    }
+
+    bool operator ==(
+            const A& other) const
+    {
+        return x == other.x;
+    }
+
     int x;
 };
 
-std::ostream& operator <<(std::ostream& os, const A& a)
+std::ostream& operator <<(
+        std::ostream& os,
+        const A& a)
 {
     os << a.x;
     return os;
 }
-
 
 } /* namespace test */
 

@@ -185,8 +185,8 @@ utils::ReturnCode CommonReader::take_(
 }
 
 void CommonReader::fill_received_data_(
-    fastrtps::rtps::CacheChange_t* received_change,
-    std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
+        fastrtps::rtps::CacheChange_t* received_change,
+        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept
 {
     // Store the new data that has arrived in the Track data
     // Get the writer guid
@@ -244,7 +244,8 @@ bool CommonReader::come_from_this_participant_(
     return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
 }
 
-fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(const types::DdsTopic& topic) noexcept
+fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
     att.memoryPolicy =
@@ -255,7 +256,8 @@ fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(const types:
     return att;
 }
 
-fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(const types::DdsTopic& topic) noexcept
+fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
 
@@ -280,7 +282,8 @@ fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(const types::D
     return att;
 }
 
-fastrtps::TopicAttributes CommonReader::topic_attributes_(const types::DdsTopic& topic) noexcept
+fastrtps::TopicAttributes CommonReader::topic_attributes_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::TopicAttributes att;
 
@@ -305,19 +308,20 @@ fastrtps::TopicAttributes CommonReader::topic_attributes_(const types::DdsTopic&
     return att;
 }
 
-fastrtps::ReaderQos CommonReader::reader_qos_(const types::DdsTopic& topic) noexcept
+fastrtps::ReaderQos CommonReader::reader_qos_(
+        const types::DdsTopic& topic) noexcept
 {
     fastrtps::ReaderQos properties;
 
     // Set Durability
     properties.m_durability.kind =
-        (topic.topic_qos.get_reference().is_transient_local()
+            (topic.topic_qos.get_reference().is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
     properties.m_reliability.kind =
-        (topic.topic_qos.get_reference().is_reliable()
+            (topic.topic_qos.get_reference().is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 

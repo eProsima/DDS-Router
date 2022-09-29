@@ -47,7 +47,8 @@ SpecificQoSReader::SpecificQoSReader(
 {
 }
 
-types::SpecificEndpointQoS SpecificQoSReader::specific_qos_of_writer_(const types::Guid& guid) const
+types::SpecificEndpointQoS SpecificQoSReader::specific_qos_of_writer_(
+        const types::Guid& guid) const
 {
     return discovery_database_->get_endpoint(guid).specific_qos();
 }
@@ -66,7 +67,7 @@ void SpecificQoSReader::fill_received_data_(
             DDSROUTER_SpecificQoSReader,
             "Set QoS " << data_to_fill->properties << " for data from " << data_to_fill->properties.source_guid << ".");
     }
-    catch(const utils::InconsistencyException& e)
+    catch (const utils::InconsistencyException& e)
     {
         // Get a message from a writer not in database, this is an error.
         // Remove data and make as it has not been received.

@@ -25,13 +25,14 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool DataProperties::operator< (const DataProperties& other) const noexcept
+bool DataProperties::operator < (
+        const DataProperties& other) const noexcept
 {
-    if(this->writer_qos < other.writer_qos)
+    if (this->writer_qos < other.writer_qos)
     {
         return true;
     }
-    else if(this->writer_qos == other.writer_qos)
+    else if (this->writer_qos == other.writer_qos)
     {
         return this->instanceHandle < other.instanceHandle;
     }
@@ -42,7 +43,8 @@ bool DataProperties::operator< (const DataProperties& other) const noexcept
 
 }
 
-bool DataProperties::operator== (const DataProperties& other) const noexcept
+bool DataProperties::operator == (
+        const DataProperties& other) const noexcept
 {
     // NOTE: Ownership not supported
     return this->writer_qos == other.writer_qos && this->instanceHandle == other.instanceHandle;

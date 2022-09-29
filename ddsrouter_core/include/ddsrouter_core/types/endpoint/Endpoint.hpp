@@ -38,10 +38,10 @@ using EndpointKindType = unsigned int;
 //! Possible kinds of the endpoint
 ENUMERATION_BUILDER(
     EndpointKind,
-        invalid,
-        writer,
-        reader
-);
+    invalid,
+    writer,
+    reader
+    );
 
 /**
  * Data collection to describe an Endpoint
@@ -69,7 +69,8 @@ public:
     DDSROUTER_CORE_DllAPI EndpointKind kind() const noexcept;
 
     //! Endpoint kind setter
-    DDSROUTER_CORE_DllAPI void kind(const EndpointKind& kind) noexcept;
+    DDSROUTER_CORE_DllAPI void kind(
+            const EndpointKind& kind) noexcept;
 
     //! Guid getter
     DDSROUTER_CORE_DllAPI Guid guid() const noexcept;
@@ -81,7 +82,8 @@ public:
     DDSROUTER_CORE_DllAPI SpecificEndpointQoS specific_qos() const noexcept;
 
     //! SpecificQoS setter
-    DDSROUTER_CORE_DllAPI void specific_qos(const SpecificEndpointQoS& specific_qos) noexcept;
+    DDSROUTER_CORE_DllAPI void specific_qos(
+            const SpecificEndpointQoS& specific_qos) noexcept;
 
     //! Topic getter
     DDSROUTER_CORE_DllAPI DdsTopic topic() const noexcept;

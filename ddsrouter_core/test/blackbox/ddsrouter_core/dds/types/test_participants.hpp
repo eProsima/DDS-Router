@@ -444,7 +444,7 @@ private:
                         (*samples_received_)++;
                     }
                 }
-                else if(info.instance_state == eprosima::fastdds::dds::NOT_ALIVE_DISPOSED_INSTANCE_STATE)
+                else if (info.instance_state == eprosima::fastdds::dds::NOT_ALIVE_DISPOSED_INSTANCE_STATE)
                 {
                     n_key_disposed_++;
                 }

@@ -24,7 +24,8 @@ namespace ddsrouter {
 namespace core {
 namespace configuration {
 
-bool SpecsConfiguration::is_valid(utils::Formatter& error_msg) const noexcept
+bool SpecsConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
 {
     if (number_of_threads < 1)
     {

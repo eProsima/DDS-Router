@@ -98,8 +98,8 @@ public:
      * @param level level of fuzzy with it is set (Default: \c fuzzy_level_set ).
      */
     Fuzzy(
-        const T& other,
-        FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
+            const T& other,
+            FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
     /**
      * @brief Construct a new Fuzzy object moving from \c other .
@@ -108,8 +108,8 @@ public:
      * @param level level of fuzzy with it is set (Default: \c fuzzy_level_set ).
      */
     Fuzzy(
-        T&& other,
-        FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
+            T&& other,
+            FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
     /////////////////////////
     // OPERATORS
@@ -128,7 +128,8 @@ public:
      * @return true if both are invalid, or if both are set and internal value is the same
      * @return false otherwise
      */
-    bool operator==(const Fuzzy<T>& other) const noexcept;
+    bool operator ==(
+            const Fuzzy<T>& other) const noexcept;
 
     /**
      * @brief Comparison operator with a \c T object.
@@ -137,13 +138,16 @@ public:
      * @return true if this is valid and internal value is the same as \c other .
      * @return false otherwise
      */
-    bool operator==(const T& other) const noexcept;
+    bool operator ==(
+            const T& other) const noexcept;
 
     //! Opposite of \c operator== .
-    bool operator!=(const Fuzzy<T>& other) const noexcept;
+    bool operator !=(
+            const Fuzzy<T>& other) const noexcept;
 
     //! Opposite of \c operator== .
-    bool operator!=(const T& other) const noexcept;
+    bool operator !=(
+            const T& other) const noexcept;
 
     /////////////////////////
     // GET METHODS
@@ -173,10 +177,13 @@ public:
     void unset();
 
     //! Set internal value to \c new_value and Fuzzy Level to \c level .
-    void set_value(const T& new_value, FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
+    void set_value(
+            const T& new_value,
+            FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
     //! Set Fuzzy Level to \c level .
-    void set_level(FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
+    void set_level(
+            FuzzyLevelType level = FuzzyLevelValues::fuzzy_level_set);
 
 protected:
 

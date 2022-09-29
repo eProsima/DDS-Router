@@ -50,7 +50,8 @@ EndpointKind Endpoint::kind() const noexcept
     return kind_;
 }
 
-void Endpoint::kind(const EndpointKind& kind) noexcept
+void Endpoint::kind(
+        const EndpointKind& kind) noexcept
 {
     kind_ = kind;
 }
@@ -70,7 +71,8 @@ SpecificEndpointQoS Endpoint::specific_qos() const noexcept
     return specific_qos_;
 }
 
-void Endpoint::specific_qos(const SpecificEndpointQoS& specific_qos) noexcept
+void Endpoint::specific_qos(
+        const SpecificEndpointQoS& specific_qos) noexcept
 {
     specific_qos_ = specific_qos;
 }

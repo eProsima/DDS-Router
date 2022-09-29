@@ -67,10 +67,12 @@ struct DDSROUTER_CORE_DllAPI DataProperties
     /////////////////////////
 
     //! Minor comparison operator
-    bool operator< (const DataProperties& other) const noexcept;
+    bool operator < (
+            const DataProperties& other) const noexcept;
 
     //! Equality operator
-    bool operator== (const DataProperties& other) const noexcept;
+    bool operator == (
+            const DataProperties& other) const noexcept;
 
     /////////////////////////
     // VARIABLES

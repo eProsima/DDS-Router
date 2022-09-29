@@ -350,14 +350,16 @@ void RPCBridge::transmit_(
                     "RPCBridge for service " << topic_ <<
                     " transmitting request from remote endpoint " << data->properties.source_guid << ".");
 
-            SampleIdentity reply_related_sample_identity = data->properties.write_params.get_reference().sample_identity();
+            SampleIdentity reply_related_sample_identity =
+                    data->properties.write_params.get_reference().sample_identity();
             reply_related_sample_identity.sequence_number(data->properties.origin_sequence_number);
 
             if (reply_related_sample_identity == SampleIdentity::unknown())
             {
                 logWarning(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << topic_ <<
-                        " received ill-formed request from remote endpoint " << data->properties.source_guid << ". Ignoring...");
+                        " received ill-formed request from remote endpoint " << data->properties.source_guid <<
+                        ". Ignoring...");
             }
             else
             {
@@ -391,7 +393,7 @@ void RPCBridge::transmit_(
                     }
 
                     eprosima::fastrtps::rtps::SequenceNumber_t sequence_number =
-                        data->sent_sequence_number;
+                            data->sent_sequence_number;
                     // Add entry to registry associated to the transmission of this request through this proxy client.
                     service_registry.second->add(
                         sequence_number,
@@ -420,7 +422,8 @@ void RPCBridge::transmit_(
                 std::pair<ParticipantId, SampleIdentity> registry_entry;
                 {
                     // Wait for request transmission to be finished (entry added to registry)
-                    std::lock_guard<std::recursive_mutex> lock(service_registries_[reader->participant_id()]->get_mutex());
+                    std::lock_guard<std::recursive_mutex> lock(
+                        service_registries_[reader->participant_id()]->get_mutex());
 
                     // Fetch information required for transmission; which proxy server should send it and with what parameters
                     registry_entry = service_registries_[reader->participant_id()]->get(

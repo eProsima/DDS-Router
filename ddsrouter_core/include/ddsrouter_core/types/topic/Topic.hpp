@@ -61,17 +61,20 @@ struct Topic
      * @return true if valid.
      * @return false otherwise.
      */
-    DDSROUTER_CORE_DllAPI virtual bool is_valid(utils::Formatter& error_msg) const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept;
 
     /////////////////////////
     // OPERATORS
     /////////////////////////
 
     //! Minor operator. Compares \c topic_name .
-    DDSROUTER_CORE_DllAPI bool operator< (const Topic& other) const noexcept;
+    DDSROUTER_CORE_DllAPI bool operator < (
+            const Topic& other) const noexcept;
 
     //! Equal operator. Compares \c topic_name .
-    DDSROUTER_CORE_DllAPI bool operator== (const Topic& other) const noexcept;
+    DDSROUTER_CORE_DllAPI bool operator == (
+            const Topic& other) const noexcept;
 
     /////////////////////////
     // VARIABLES

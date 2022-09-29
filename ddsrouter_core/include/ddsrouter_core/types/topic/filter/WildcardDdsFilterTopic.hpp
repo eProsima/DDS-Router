@@ -44,7 +44,7 @@ struct WildcardDdsFilterTopic : public DdsFilterTopic
     using DdsFilterTopic::DdsFilterTopic;
 
     DDSROUTER_CORE_DllAPI WildcardDdsFilterTopic(
-        const std::string topic_name = "*");
+            const std::string topic_name = "*");
 
     /////////////////////////
     // FILTER METHODS
@@ -64,7 +64,7 @@ struct WildcardDdsFilterTopic : public DdsFilterTopic
 
     //! Override parent \c serialize method.
     DDSROUTER_CORE_DllAPI virtual std::ostream& serialize(
-        std::ostream& os) const override;
+            std::ostream& os) const override;
 
     /////////////////////////
     // VARIABLES

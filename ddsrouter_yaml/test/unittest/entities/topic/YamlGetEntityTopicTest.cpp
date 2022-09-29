@@ -292,7 +292,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST);
+        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                        LATEST);
 
         test::compare_wildcard_topic(topic, name, true, type, false, false); // By default no keyed
     }
@@ -310,7 +311,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST);
+        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                        LATEST);
 
         test::compare_wildcard_topic(topic, name, false, "*", false, false); // By default no keyed
     }
@@ -328,7 +330,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST);
+        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                        LATEST);
 
         test::compare_wildcard_topic(topic, name, true, type, true, true);
     }
@@ -346,7 +349,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST);
+        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                        LATEST);
 
         test::compare_wildcard_topic(topic, name, true, type, true, false);
     }
@@ -364,7 +368,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST);
+        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                        LATEST);
 
         test::compare_wildcard_topic(topic, name, false, "*", true, true);
     }
@@ -388,7 +393,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                LATEST), utils::ConfigurationException);
     }
 
     // Topic without type
@@ -404,7 +410,8 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
+                LATEST), utils::ConfigurationException);
     }
 }
 

@@ -25,12 +25,14 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool DdsFilterTopic::operator< (const DdsFilterTopic& other) const noexcept
+bool DdsFilterTopic::operator < (
+        const DdsFilterTopic& other) const noexcept
 {
     return utils::generic_to_string(other) < utils::generic_to_string(*this);
 }
 
-bool DdsFilterTopic::operator== (const DdsFilterTopic& other) const noexcept
+bool DdsFilterTopic::operator == (
+        const DdsFilterTopic& other) const noexcept
 {
     return utils::generic_to_string(other) == utils::generic_to_string(*this);
 }

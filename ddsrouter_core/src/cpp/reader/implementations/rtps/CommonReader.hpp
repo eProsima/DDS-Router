@@ -125,17 +125,17 @@ protected:
      * @brief Auxiliary method to create the internal RTPS Reader and History.
      */
     virtual void internal_entities_creation_(
-        const fastrtps::rtps::HistoryAttributes& history_attributes,
-        const fastrtps::rtps::ReaderAttributes& reader_attributes,
-        const fastrtps::TopicAttributes& topic_attributes,
-        const fastrtps::ReaderQos& reader_qos);
+            const fastrtps::rtps::HistoryAttributes& history_attributes,
+            const fastrtps::rtps::ReaderAttributes& reader_attributes,
+            const fastrtps::TopicAttributes& topic_attributes,
+            const fastrtps::ReaderQos& reader_qos);
 
     /**
      * @brief Auxiliary method used in \c take to fill the received data.
      */
     virtual void fill_received_data_(
-        fastrtps::rtps::CacheChange_t* received_change,
-        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
+            fastrtps::rtps::CacheChange_t* received_change,
+            std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
 
     // Specific enable/disable do not need to be implemented
 
@@ -172,18 +172,22 @@ protected:
      *
      * @return Default HistoryAttributes
      */
-    static fastrtps::rtps::HistoryAttributes history_attributes_(const types::DdsTopic& topic) noexcept;
+    static fastrtps::rtps::HistoryAttributes history_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Reader Attributes to create RTPS Reader
      */
-    static fastrtps::rtps::ReaderAttributes reader_attributes_(const types::DdsTopic& topic) noexcept;
+    static fastrtps::rtps::ReaderAttributes reader_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
     //! Topic Attributes to create RTPS Reader
-    static fastrtps::TopicAttributes topic_attributes_(const types::DdsTopic& topic) noexcept;
+    static fastrtps::TopicAttributes topic_attributes_(
+            const types::DdsTopic& topic) noexcept;
 
     //! Reader QoS to create RTPS Reader
-    static fastrtps::ReaderQos reader_qos_(const types::DdsTopic& topic) noexcept;
+    static fastrtps::ReaderQos reader_qos_(
+            const types::DdsTopic& topic) noexcept;
 
     /////
     // CommonReader specific methods

@@ -90,9 +90,9 @@ utils::ReturnCode CommonWriter::write_(
     if (topic_.keyed)
     {
         new_change =
-            rtps_writer_->new_change(
-                eprosima::fastrtps::rtps::ChangeKind_t::ALIVE,
-                data->properties.instanceHandle);
+                rtps_writer_->new_change(
+            eprosima::fastrtps::rtps::ChangeKind_t::ALIVE,
+            data->properties.instanceHandle);
     }
     else
     {
@@ -264,8 +264,8 @@ void CommonWriter::internal_entities_creation_(
     logInfo(
         DDSROUTER_RTPS_COMMONWRITER,
         "New CommonWriter created in Participant " << participant_id_ <<
-        " for topic " << topic_ <<
-        " with guid " << rtps_writer_->getGuid());
+            " for topic " << topic_ <<
+            " with guid " << rtps_writer_->getGuid());
 }
 
 fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
@@ -340,13 +340,13 @@ fastrtps::WriterQos CommonWriter::writer_qos_(
 
     // Set Durability
     qos.m_durability.kind =
-        (topic.topic_qos.get_reference().is_transient_local()
+            (topic.topic_qos.get_reference().is_transient_local()
             ? eprosima::fastdds::dds::DurabilityQosPolicyKind_t::TRANSIENT_LOCAL_DURABILITY_QOS
             : eprosima::fastdds::dds::DurabilityQosPolicyKind_t::VOLATILE_DURABILITY_QOS);
 
     // Set Reliability
     qos.m_reliability.kind =
-        (topic.topic_qos.get_reference().is_reliable()
+            (topic.topic_qos.get_reference().is_reliable()
             ? eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS
             : eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS);
 

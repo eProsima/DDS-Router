@@ -59,7 +59,8 @@ Fuzzy<T>::operator T() const noexcept
 }
 
 template <typename T>
-bool Fuzzy<T>::operator==(const Fuzzy<T>& other) const noexcept
+bool Fuzzy<T>::operator ==(
+        const Fuzzy<T>& other) const noexcept
 {
     // If both unset, the object is the same
     if (!this->is_set() && !other.is_set())
@@ -73,7 +74,8 @@ bool Fuzzy<T>::operator==(const Fuzzy<T>& other) const noexcept
 }
 
 template <typename T>
-bool Fuzzy<T>::operator==(const T& other) const noexcept
+bool Fuzzy<T>::operator ==(
+        const T& other) const noexcept
 {
     if (!this->is_valid())
     {
@@ -86,15 +88,17 @@ bool Fuzzy<T>::operator==(const T& other) const noexcept
 }
 
 template <typename T>
-bool Fuzzy<T>::operator!=(const Fuzzy<T>& other) const noexcept
+bool Fuzzy<T>::operator !=(
+        const Fuzzy<T>& other) const noexcept
 {
-    return !(this->operator==(other));
+    return !(this->operator ==(other));
 }
 
 template <typename T>
-bool Fuzzy<T>::operator!=(const T& other) const noexcept
+bool Fuzzy<T>::operator !=(
+        const T& other) const noexcept
 {
-    return !(this->operator==(other));
+    return !(this->operator ==(other));
 }
 
 /////////////////////////
@@ -149,14 +153,17 @@ void Fuzzy<T>::unset()
 }
 
 template <typename T>
-void Fuzzy<T>::set_value(const T& new_value, FuzzyLevelType level /* = FuzzyLevelValues::SET */)
+void Fuzzy<T>::set_value(
+        const T& new_value,
+        FuzzyLevelType level /* = FuzzyLevelValues::SET */)
 {
     value = new_value;
     fuzzy_level = level;
 }
 
 template <typename T>
-void Fuzzy<T>::set_level(FuzzyLevelType level /* = FuzzyLevelValues::fuzzy_level_set */)
+void Fuzzy<T>::set_level(
+        FuzzyLevelType level /* = FuzzyLevelValues::fuzzy_level_set */)
 {
     fuzzy_level = level;
 }

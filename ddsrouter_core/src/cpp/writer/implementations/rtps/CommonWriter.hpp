@@ -67,7 +67,7 @@ using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
  *
  * @todo remove those variables that are not needed (e.g. rtps_participant_)
  */
-class CommonWriter : public BaseWriter , public fastrtps::rtps::WriterListener
+class CommonWriter : public BaseWriter, public fastrtps::rtps::WriterListener
 {
 public:
 
@@ -129,9 +129,9 @@ protected:
      * @param [in] data data received that must be sent.
      */
     virtual utils::ReturnCode fill_to_send_data_(
-        fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
-        eprosima::fastrtps::rtps::WriteParams& to_send_params,
-        std::unique_ptr<types::DataReceived>& data) const noexcept;
+            fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
+            eprosima::fastrtps::rtps::WriteParams& to_send_params,
+            std::unique_ptr<types::DataReceived>& data) const noexcept;
 
     /**
      * @brief Auxiliary method used after \c write to fill data value.
@@ -140,8 +140,8 @@ protected:
      * @param [out] data data to be fulfilled with params.
      */
     virtual void fill_sent_data_(
-        const eprosima::fastrtps::rtps::WriteParams& params,
-        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
+            const eprosima::fastrtps::rtps::WriteParams& params,
+            std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept;
 
     /////
     // RTPS specific methods

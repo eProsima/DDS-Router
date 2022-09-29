@@ -61,14 +61,15 @@ protected:
     /**
      * @brief Get the QoS from a Writer from the \c DiscoveryDatabase .
      */
-    types::SpecificEndpointQoS specific_qos_of_writer_(const types::Guid& guid) const;
+    types::SpecificEndpointQoS specific_qos_of_writer_(
+            const types::Guid& guid) const;
 
     /**
      * Specializes \c CommonReader method and set the QoS of the data received.
      */
     virtual void fill_received_data_(
-        fastrtps::rtps::CacheChange_t* received_change,
-        std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept override;
+            fastrtps::rtps::CacheChange_t* received_change,
+            std::unique_ptr<types::DataReceived>& data_to_fill) const noexcept override;
 
     //! Reference to the \c DiscoveryDatabase .
     std::shared_ptr<DiscoveryDatabase> discovery_database_;

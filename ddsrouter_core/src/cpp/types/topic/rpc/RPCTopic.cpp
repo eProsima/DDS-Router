@@ -52,11 +52,11 @@ RPCTopic::RPCTopic(
 
         reply_topic_ = topic;
         reply_topic_.topic_name =
-            std::regex_replace(reply_topic_.topic_name, std::regex(REQUEST_PREFIX_STR), REPLY_PREFIX_STR);
+                std::regex_replace(reply_topic_.topic_name, std::regex(REQUEST_PREFIX_STR), REPLY_PREFIX_STR);
         reply_topic_.topic_name =
-            std::regex_replace(reply_topic_.topic_name, std::regex(REQUEST_STR), REPLY_STR);
+                std::regex_replace(reply_topic_.topic_name, std::regex(REQUEST_STR), REPLY_STR);
         reply_topic_.type_name =
-            std::regex_replace(reply_topic_.type_name, std::regex(REQUEST_STR), RESPONSE_STR);
+                std::regex_replace(reply_topic_.type_name, std::regex(REQUEST_STR), RESPONSE_STR);
 
         service_name_ = std::regex_replace(topic.topic_name, std::regex(REQUEST_PREFIX_STR + "|" + REQUEST_STR), "");
     }
@@ -66,11 +66,11 @@ RPCTopic::RPCTopic(
 
         request_topic_ = topic;
         request_topic_.topic_name =
-            std::regex_replace(request_topic_.topic_name, std::regex(REPLY_PREFIX_STR), REQUEST_PREFIX_STR);
+                std::regex_replace(request_topic_.topic_name, std::regex(REPLY_PREFIX_STR), REQUEST_PREFIX_STR);
         request_topic_.topic_name =
-            std::regex_replace(request_topic_.topic_name, std::regex(REPLY_STR), REQUEST_STR);
+                std::regex_replace(request_topic_.topic_name, std::regex(REPLY_STR), REQUEST_STR);
         request_topic_.type_name =
-            std::regex_replace(request_topic_.type_name, std::regex(RESPONSE_STR), REQUEST_STR);
+                std::regex_replace(request_topic_.type_name, std::regex(RESPONSE_STR), REQUEST_STR);
 
         service_name_ = std::regex_replace(topic.topic_name, std::regex(REPLY_PREFIX_STR + "|" + REPLY_STR), "");
     }

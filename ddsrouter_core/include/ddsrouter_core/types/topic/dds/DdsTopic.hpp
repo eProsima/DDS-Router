@@ -65,10 +65,12 @@ struct DdsTopic : public Topic
     /////////////////////////
 
     //! Minor operator.
-    DDSROUTER_CORE_DllAPI bool operator< (const DdsTopic& other) const noexcept;
+    DDSROUTER_CORE_DllAPI bool operator < (
+            const DdsTopic& other) const noexcept;
 
     //! Equal operator.
-    DDSROUTER_CORE_DllAPI bool operator== (const DdsTopic& other) const noexcept;
+    DDSROUTER_CORE_DllAPI bool operator == (
+            const DdsTopic& other) const noexcept;
 
     /////////////////////////
     // METHODS
@@ -81,7 +83,8 @@ struct DdsTopic : public Topic
      * @return true if valid.
      * @return false otherwise.
      */
-    DDSROUTER_CORE_DllAPI virtual bool is_valid(utils::Formatter& error_msg) const noexcept;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept;
 
     /////////////////////////
     // STATIC METHODS

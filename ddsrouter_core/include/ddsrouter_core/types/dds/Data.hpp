@@ -49,7 +49,8 @@ struct DataReceived
      * @note Default destructor. Force \c DataReceived to be polymorphic. Implemented here to avoid creating a .cpp .
      */
     virtual ~DataReceived()
-    {}
+    {
+    }
 
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;

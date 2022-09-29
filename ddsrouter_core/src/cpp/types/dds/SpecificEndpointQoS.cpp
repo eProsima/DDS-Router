@@ -25,7 +25,8 @@ namespace ddsrouter {
 namespace core {
 namespace types {
 
-bool SpecificEndpointQoS::operator< (const SpecificEndpointQoS& other) const noexcept
+bool SpecificEndpointQoS::operator < (
+        const SpecificEndpointQoS& other) const noexcept
 {
     // Ownership
     if (this->ownership_strength.value < other.ownership_strength.value)
@@ -38,11 +39,11 @@ bool SpecificEndpointQoS::operator< (const SpecificEndpointQoS& other) const noe
     }
 
     // NOTE: PartitionQosPolicy operator< out of class implementation, this should be in Fast DDS file.
-    if(this->partitions.size() < other.partitions.size())
+    if (this->partitions.size() < other.partitions.size())
     {
         return true;
     }
-    else if(this->partitions.size() > other.partitions.size())
+    else if (this->partitions.size() > other.partitions.size())
     {
         return false;
     }
@@ -50,7 +51,7 @@ bool SpecificEndpointQoS::operator< (const SpecificEndpointQoS& other) const noe
     auto const this_names = this->partitions.getNames();
     auto const other_names = other.partitions.getNames();
 
-    for (int i=0; i<this_names.size(); ++i)
+    for (int i = 0; i < this_names.size(); ++i)
     {
         if (this_names[i] < other_names[i])
         {
@@ -65,7 +66,8 @@ bool SpecificEndpointQoS::operator< (const SpecificEndpointQoS& other) const noe
     return false;
 }
 
-bool SpecificEndpointQoS::operator== (const SpecificEndpointQoS& other) const noexcept
+bool SpecificEndpointQoS::operator == (
+        const SpecificEndpointQoS& other) const noexcept
 {
     return this->partitions == other.partitions && this->ownership_strength == other.ownership_strength;
 }

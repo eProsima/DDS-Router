@@ -390,7 +390,7 @@ void YamlReader::fill(
     // Reliability optional
     if (is_tag_present(yml, QOS_RELIABLE_TAG))
     {
-        if(get<bool>(yml, QOS_RELIABLE_TAG, version))
+        if (get<bool>(yml, QOS_RELIABLE_TAG, version))
         {
             object.reliability_qos = eprosima::ddsrouter::core::types::ReliabilityKind::RELIABLE;
         }
@@ -403,7 +403,7 @@ void YamlReader::fill(
     // Durability optional
     if (is_tag_present(yml, QOS_TRANSIENT_TAG))
     {
-        if(get<bool>(yml, QOS_TRANSIENT_TAG, version))
+        if (get<bool>(yml, QOS_TRANSIENT_TAG, version))
         {
             object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::TRANSIENT_LOCAL;
         }
@@ -428,7 +428,7 @@ void YamlReader::fill(
     // Ownership optional
     if (is_tag_present(yml, QOS_OWNERSHIP_TAG))
     {
-        if(get<bool>(yml, QOS_OWNERSHIP_TAG, version))
+        if (get<bool>(yml, QOS_OWNERSHIP_TAG, version))
         {
             object.ownership_qos = eprosima::ddsrouter::core::types::OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS;
         }
@@ -913,8 +913,8 @@ void _fill_ddsrouter_configuration_v1(
             if (DdsTopic::is_valid_dds_topic(wildcard_topic->topic_name, wildcard_topic->type_name))
             {
                 auto real_topic = std::make_shared<types::DdsTopic>(
-                        wildcard_topic->topic_name,
-                        wildcard_topic->type_name);
+                    wildcard_topic->topic_name,
+                    wildcard_topic->type_name);
 
                 if (wildcard_topic->keyed.is_set())
                 {

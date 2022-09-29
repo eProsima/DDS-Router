@@ -39,6 +39,7 @@ namespace rtps {
 class MultiWriter : public BaseWriter
 {
 public:
+
     /**
      * @brief Construct a new MultiWriter object
      *
@@ -52,11 +53,11 @@ public:
      * @throw \c InitializationException in case any creation has failed
      */
     MultiWriter(
-        const types::ParticipantId &participant_id,
-        const types::DdsTopic &topic,
-        std::shared_ptr<PayloadPool> payload_pool,
-        fastrtps::rtps::RTPSParticipant *rtps_participant,
-        const bool repeater = false);
+            const types::ParticipantId& participant_id,
+            const types::DdsTopic& topic,
+            std::shared_ptr<PayloadPool> payload_pool,
+            fastrtps::rtps::RTPSParticipant* rtps_participant,
+            const bool repeater = false);
 
     /**
      * @brief Destroy the MultiWriter object
@@ -69,6 +70,7 @@ public:
     virtual ~MultiWriter();
 
 protected:
+
     // Specific enable/disable.
     virtual void enable_() noexcept override;
     virtual void disable_() noexcept override;
@@ -89,11 +91,14 @@ protected:
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     virtual utils::ReturnCode write_(
-        std::unique_ptr<types::DataReceived> &data) noexcept override;
+            std::unique_ptr<types::DataReceived>& data) noexcept override;
 
-    bool exist_partition_(const types::SpecificEndpointQoS &data_qos);
-    QoSSpecificWriter* get_writer_or_create_(const types::SpecificEndpointQoS &data_qos);
-    QoSSpecificWriter* create_writer_nts_(const types::SpecificEndpointQoS &data_qos);
+    bool exist_partition_(
+            const types::SpecificEndpointQoS& data_qos);
+    QoSSpecificWriter* get_writer_or_create_(
+            const types::SpecificEndpointQoS& data_qos);
+    QoSSpecificWriter* create_writer_nts_(
+            const types::SpecificEndpointQoS& data_qos);
 
     /////
     // VARIABLES
