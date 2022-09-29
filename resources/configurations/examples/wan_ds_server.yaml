@@ -40,7 +40,7 @@ participants:
       - ip: 1.1.1.1                                               # 10
         port: 11666                                               # 11
         external-port: 11777                                      # 12
-        transport: udp                                            # 13
+        transport: tcp                                            # 13
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -88,4 +88,4 @@ participants:
 # This port is used in case the host is under a NAT. This is the public port accessible from any external point
 # in the network, and should be forwarded from the network router to the "port" value.
 
-# 13: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
+# 13: It uses TCP. UDP transport is used by default if not set. Could be set to "udp" or "tcp".

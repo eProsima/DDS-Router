@@ -37,6 +37,7 @@ participants:
     connection-addresses:                                         # 8
       - ip: 1.1.1.1
         port: 11777
+        transport: udp
 
 ##################################
 # CONFIGURATION DESCRIPTION

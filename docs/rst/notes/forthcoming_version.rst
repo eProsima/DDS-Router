@@ -14,8 +14,7 @@ Next release will include the following **features**:
 * Timeout argument ``--timeout`` to close the application after the time set has passed.
   Check section :ref:`user_manual_user_interface_timeout_argument` for more information.
 * Add TLS-SNI support.
-* Add TLS-SNI support.
-* Add **external port** support so internal and external port in router configuration could be different.
+* Add **external port** support so internal and external port in network router configuration could be different.
 
 Next release will include the following **DDS features**:
 
@@ -27,7 +26,7 @@ Next release will include the following **configuration changes**:
 
 * New Configuration Version ``v3.0`` that allow Repeater and initial peers configuration.
 * Yaml Validator only validates ``v3.0`` configurations.
-* Address support an :code:`external-port` value to set this in a listening address.
+* Address supports an :code:`external-port` value to set this in a listening address.
 
 Next release will include the following **major changes**:
 

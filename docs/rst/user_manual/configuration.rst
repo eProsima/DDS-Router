@@ -330,20 +330,23 @@ An Address is defined by:
 
     ip: 2001:4860:4860::8844      # Recognized as IPv6
     port: 1616
+    transport: udp
 
     ################
 
     domain: localhost             # DNS call return value = 127.0.0.1
-    port: 33333
+    port: 33333                   # Uses UDP by default
 
 
 External Port
 -------------
 
-External port is used to configure a Server (Discovery Server or Initial Peers) that runs under a NAT.
-In case this value is not set, the external port is supposed to be the same as the internal one.
-In this case the external and internal port in the network router port forwarding must coincide.
-For more information, check section :ref:`user_manual_wan_configuration_nat_traversal_port_forwarding`.
+External port is used to configure a Server (Discovery Server or Initial Peers) that runs under a NAT and uses
+TCP transport.
+This value could be set in a TCP listening address to differentiate the public and the internal port.
+**In case this value is not set, the external port is considered to be the same as the internal one.**
+If both ports coincide, external and internal port in the network router port forwarding rules must coincide.
+For more information, check section :ref:`user_manual_wan_configuration_nat_traversal_port_forwarding_external_port`.
 
 
 .. _user_manual_configuration_discovery_server_guidprefix:

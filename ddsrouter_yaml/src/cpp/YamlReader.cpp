@@ -295,6 +295,9 @@ Address YamlReader::get<Address>(
         port = Address::default_port();
     }
 
+    // WARNING: This adds logic to the parse of the entity,
+    // This may not be the best place to do so. In the future move this logic to the Address class.
+
     // Optional get external port
     // If it is not set, same as internal port is used
     PortType external_port;
