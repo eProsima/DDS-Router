@@ -126,12 +126,15 @@ utils::ReturnCode CommonWriter::write_(
     // At this point, write params is now the output of adding change
     fill_sent_data_(write_params, data);
 
-    // TODO: Remove change could be done here in non reliable as it is synchronous.
-    // However, this implies efficiency affairs that we should check more in detail.
-
-    // When max history size is reached, remove oldest cache change
-    if (rtps_history_->isFull())
+    // Remove change could be done here in non reliable as it is synchronous because change has already been sent
+    // and does not require to be resent under any circumstance.
+    if (!topic_.topic_qos.get_reference().is_reliable())
     {
+        rtps_history_->remove_change(new_change);
+    }
+    else if (rtps_history_->isFull())
+    {
+        // When max history size is reached, remove oldest cache change
         rtps_history_->remove_min_change();
     }
 
