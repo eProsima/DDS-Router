@@ -147,29 +147,14 @@ utils::ReturnCode CommonReader::take_(
         return utils::ReturnCode::RETCODE_ERROR;
     }
 
-    // Check that the guid is consistent
-    if (received_change->writerGUID == fastrtps::rtps::GUID_t::unknown())
+    // If data received is not correct, discard it and remove it from history
+    auto ret = is_data_correct_(received_change);
+    if (!ret)
     {
-        logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
-                "Error taking data without correct writer GUID.");
-
         // Remove the change in the History and release it in the reader
         rtps_reader_->getHistory()->remove_change(received_change);
-
-        return utils::ReturnCode::RETCODE_ERROR;
+        return ret;
     }
-
-    // Check that the data is consistent
-    // if (!(received_change->serializedPayload.max_size > 0))
-    // {
-    //     logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
-    //             "Error taking data with length " << received_change->serializedPayload.length << ".");
-
-    //     // Remove the change in the History and release it in the reader
-    //     rtps_reader_->getHistory()->remove_change(received_change);
-
-    //     return utils::ReturnCode::RETCODE_ERROR;
-    // }
 
     // Store the new data that has arrived in the Track data
     fill_received_data_(received_change, data);
@@ -212,6 +197,9 @@ void CommonReader::fill_received_data_(
     {
         data_to_fill->properties.instanceHandle = received_change->instanceHandle;
     }
+
+    // Set change kind
+    data_to_fill->properties.kind = received_change->kind;
 
     data_to_fill->properties.write_params.set_value(received_change->write_params);
 
@@ -393,6 +381,34 @@ void CommonReader::onReaderMatched(
                     "Reader " << *this << " unmatched with Writer " << info.remoteEndpointGuid);
         }
     }
+}
+
+utils::ReturnCode CommonReader::is_data_correct_(
+        const fastrtps::rtps::CacheChange_t* received_change) const noexcept
+{
+    // Check that the guid is consistent
+    if (received_change->writerGUID == fastrtps::rtps::GUID_t::unknown())
+    {
+        logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+                "Error taking data without correct writer GUID.");
+
+        return utils::ReturnCode::RETCODE_ERROR;
+    }
+
+    // Check that the data is consistent
+    if (!(received_change->serializedPayload.max_size > 0))
+    {
+        // Data with 0 bytes is only correct if keyed topic and if data is being disposed
+        if (!(topic_.keyed && received_change->kind != eprosima::fastrtps::rtps::ChangeKind_t::ALIVE))
+        {
+            logWarning(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+                    "Error taking data with length " << received_change->serializedPayload.length << ".");
+
+            return utils::ReturnCode::RETCODE_ERROR;
+        }
+    }
+
+    return utils::ReturnCode::RETCODE_OK;
 }
 
 } /* namespace rtps */

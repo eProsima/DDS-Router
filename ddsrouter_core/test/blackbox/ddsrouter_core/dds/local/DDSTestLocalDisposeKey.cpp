@@ -45,9 +45,7 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  *
  * @return configuration::DDSRouterConfiguration
  */
-configuration::DDSRouterConfiguration dds_test_simple_configuration(
-        bool disable_dynamic_discovery = false,
-        bool reliable_readers = false)
+configuration::DDSRouterConfiguration dds_test_simple_configuration()
 {
     // Always filter the test topics by topic name
     std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // only this topic
@@ -56,26 +54,6 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
     std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
 
     std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
-
-    if (disable_dynamic_discovery || reliable_readers)
-    {
-        types::TopicQoS qos;
-        if (reliable_readers)
-        {
-            qos.reliability_qos = types::ReliabilityKind::RELIABLE;
-            qos.durability_qos = types::DurabilityKind::TRANSIENT_LOCAL;
-        }
-        else
-        {
-            qos.reliability_qos = types::ReliabilityKind::BEST_EFFORT;
-            qos.durability_qos = types::DurabilityKind::VOLATILE;
-        }
-
-        builtin_topics.insert(
-            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));
-        builtin_topics.insert(
-            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorldKeyed", true, qos));
-    }
 
     // Two simple participants
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
@@ -203,8 +181,7 @@ using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
 /**
- * Test reliable communication in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
+ * Test that dispose values from the publisher are correctly received by the subscriber from the router.
  */
 TEST(DDSTestLocalDisposeKey, end_to_end_local_communication_key_dispose)
 {

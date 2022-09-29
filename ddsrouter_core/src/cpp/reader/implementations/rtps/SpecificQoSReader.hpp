@@ -16,8 +16,8 @@
  * @file SpecificQoSReader.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_
-#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_
+#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SPECIFICQOSREADER_HPP_
+#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SPECIFICQOSREADER_HPP_
 
 #include <reader/implementations/rtps/CommonReader.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
@@ -81,4 +81,4 @@ protected:
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SpecificQoSReader_HPP_ */
+#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SPECIFICQOSREADER_HPP_ */

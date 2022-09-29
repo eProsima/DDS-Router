@@ -40,7 +40,7 @@ namespace rtps {
 /**
  * Abstract generic class for a RTPS Participant wrapper.
  *
- * Concrete classes that inherits from this would only need to specialize specific methods related with the
+ * Concrete classes that inherit from this would only need to specialize specific methods related with the
  * qos and attributes.
  */
 class CommonParticipant
@@ -69,7 +69,7 @@ public:
     /**
      * @brief Override method from \c RTPSParticipantListener .
      *
-     * This method only is for debugging propose.
+     * This method only is for debugging purposes.
      */
     virtual void onParticipantDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,

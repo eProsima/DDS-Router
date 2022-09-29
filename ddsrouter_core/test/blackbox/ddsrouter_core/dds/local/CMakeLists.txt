@@ -34,7 +34,8 @@ set(TEST_LIST
     end_to_end_local_communication_high_frequency
     end_to_end_local_communication_high_size
     end_to_end_local_communication_high_throughput
-    end_to_end_local_communication_reliable)
+    end_to_end_local_communication_transient_local
+    end_to_end_local_communication_transient_local_disable_dynamic_discovery)
 
 set(TEST_NEEDED_SOURCES
     )

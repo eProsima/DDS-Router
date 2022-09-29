@@ -158,8 +158,8 @@ protected:
      *
      * @param data : oldest data to take
      * @return \c RETCODE_OK if data has been correctly taken
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
-     * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
+     * @return \c RETCODE_NO_DATA if there is no data to send
+     * @return \c RETCODE_ERROR if there has been an error reading the data or the data read is corrupted
      */
     virtual utils::ReturnCode take_(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
@@ -199,6 +199,9 @@ protected:
     //! Whether a guid references this Participant (to avoid auto-feedback)
     bool come_from_this_participant_(
             const fastrtps::rtps::GUID_t guid) const noexcept;
+
+    utils::ReturnCode is_data_correct_(
+            const fastrtps::rtps::CacheChange_t* received_change) const noexcept;
 
     /////
     // EXTERNAL VARIABLES

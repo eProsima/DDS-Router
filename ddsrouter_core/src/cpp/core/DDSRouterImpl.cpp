@@ -458,7 +458,7 @@ void DDSRouterImpl::discovered_endpoint_(
     if (endpoint.is_reader())
     {
         DdsTopic topic = endpoint.topic();
-        if (!RPCTopic::is_service_topic(endpoint.topic()))
+        if (!RPCTopic::is_service_topic(topic))
         {
             discovered_topic_(topic);
         }

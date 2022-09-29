@@ -21,6 +21,7 @@
 
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 #include <fastdds/rtps/common/InstanceHandle.h>
+#include <fastdds/rtps/common/ChangeKind_t.hpp>
 #include <fastdds/rtps/common/Types.h>
 #include <fastdds/rtps/common/Time_t.h>
 #include <fastdds/rtps/common/WriteParams.h>
@@ -46,6 +47,9 @@ using OwnershipStrengthQosPolicy = eprosima::fastdds::dds::OwnershipStrengthQosP
 
 //! Instance Handler type
 using InstanceHandle = eprosima::fastrtps::rtps::InstanceHandle_t;
+
+//! Instance Handler type
+using ChangeKind = eprosima::fastrtps::rtps::ChangeKind_t;
 
 //! Fast DDS Time
 using DataTime = eprosima::fastrtps::rtps::Time_t;
@@ -79,25 +83,28 @@ struct DDSROUTER_CORE_DllAPI DataProperties
     /////////////////////////
 
     //! Specific Writer QoS of the Data
-    SpecificEndpointQoS writer_qos;
+    SpecificEndpointQoS writer_qos{};
 
     //! Instance of the message (default no instance)
     InstanceHandle instanceHandle{};
 
+    //! Kind of the change
+    ChangeKind kind{};
+
     //! Source time stamp of the message
-    DataTime source_timestamp;
+    DataTime source_timestamp{};
 
     //! Guid of the source entity that has transmit the data
-    Guid source_guid;
+    Guid source_guid{};
 
     //! Id of the participant from which the Reader has received the data.
-    ParticipantId participant_receiver;
+    ParticipantId participant_receiver{};
 
     //! Write params associated to the received cache change
-    utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params;
+    utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params{};
 
     //! Sequence number of the received cache change
-    eprosima::fastrtps::rtps::SequenceNumber_t origin_sequence_number;
+    eprosima::fastrtps::rtps::SequenceNumber_t origin_sequence_number{};
 };
 
 /**

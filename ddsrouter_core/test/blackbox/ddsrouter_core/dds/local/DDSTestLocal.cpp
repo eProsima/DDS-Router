@@ -45,7 +45,7 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  */
 configuration::DDSRouterConfiguration dds_test_simple_configuration(
         bool disable_dynamic_discovery = false,
-        bool reliable_readers = false)
+        bool transient_local_readers = false)
 {
     // Always filter the test topics by topic name
     std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // empty
@@ -55,10 +55,10 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
 
     std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
 
-    if (disable_dynamic_discovery || reliable_readers)
+    if (disable_dynamic_discovery)
     {
         types::TopicQoS qos;
-        if (reliable_readers)
+        if (transient_local_readers)
         {
             qos.reliability_qos = types::ReliabilityKind::RELIABLE;
             qos.durability_qos = types::DurabilityKind::TRANSIENT_LOCAL;
@@ -105,7 +105,7 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
  * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
  *
- * The reliable option changes the test behavior to verify that the communication is reliable and all old data is sent
+ * The transient_local option changes the test behavior to verify that the communication is transient_local and all old data is sent
  * to Late Joiners.
  */
 template <class MsgStruct>
@@ -114,7 +114,7 @@ void test_local_communication(
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
-        bool reliable = false)
+        bool transient_local = false)
 {
 
     // Check there are no warnings/errors
@@ -140,16 +140,16 @@ void test_local_communication(
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), reliable);
+    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), transient_local);
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DDSRouter entity
-    // The DDS Router does not start here in order to test a reliable communication
+    // The DDS Router does not start here in order to test a transient_local communication
     DDSRouter router(ddsrouter_configuration);
 
-    if (reliable)
+    if (transient_local)
     {
-        // To check that the communication is reliable and all previous published samples are sent to late joiner,
+        // To check that the communication is transient_local and all previous published samples are sent to late joiner,
         // the publisher publish all data at once.
         for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
@@ -290,10 +290,24 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
 }
 
 /**
- * Test reliable communication in HelloWorld topic between two DDS participants created in different domains,
+ * Test transient_local communication in HelloWorld topic between two DDS participants created in different domains,
  * by using a router with two Simple Participants at each domain.
  */
-TEST(DDSTestLocal, end_to_end_local_communication_reliable)
+TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
+{
+    test::test_local_communication<HelloWorld>(
+        test::dds_test_simple_configuration(),
+        test::DEFAULT_SAMPLES_TO_RECEIVE,
+        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+        test::DEFAULT_MESSAGE_SIZE,
+        true);
+}
+
+/**
+ * Test transient_local communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain and using builtin-topics
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynamic_discovery)
 {
     test::test_local_communication<HelloWorld>(
         test::dds_test_simple_configuration(true, true),

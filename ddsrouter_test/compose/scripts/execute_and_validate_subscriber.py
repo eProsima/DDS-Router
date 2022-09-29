@@ -68,7 +68,7 @@ def parse_options():
         default=0,
         help=('Allow receive N first messages duplicated. '
               '(N=0 => none can be duplicated) '
-              '(N=-1 => all can be duplicated)[Default = -1]')
+              '(N=-1 => all can be duplicated)[Default = 0]')
     )
     parser.add_argument(
         '--debug',

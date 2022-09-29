@@ -168,14 +168,9 @@ public:
         return writer_->write(&hello_);
     }
 
-    //! Publish a sample
+    //! Dispose instance
     eprosima::fastrtps::types::ReturnCode_t dispose_key(
-            MsgStruct msg)
-    {
-        hello_.index(msg.index());
-        hello_.message(msg.message());
-        return writer_->dispose(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
-    }
+            MsgStruct msg);
 
     void wait_discovery(
             uint32_t n_subscribers = 1)
@@ -202,19 +197,19 @@ private:
     public:
 
         PubListener()
-            : discovered_(0)
+            : discovered(0)
         {
         }
 
         void wait_discovery(
                 uint32_t n_subscribers = 1)
         {
-            if (discovered_ < n_subscribers)
+            if (discovered < n_subscribers)
             {
-                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
-                wait_discovery_cv_.wait(lock, [this, n_subscribers]
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx);
+                wait_discovery_cv.wait(lock, [this, n_subscribers]
                         {
-                            return discovered_ >= n_subscribers;
+                            return discovered >= n_subscribers;
                         });
             }
         }
@@ -225,25 +220,25 @@ private:
         {
             if (info.current_count_change == 1)
             {
-                discovered_ = info.current_count;
-                wait_discovery_cv_.notify_all();
+                discovered = info.current_count;
+                wait_discovery_cv.notify_all();
             }
             else if (info.current_count_change == -1)
             {
-                discovered_ = info.current_count;
+                discovered = info.current_count;
             }
         }
 
     private:
 
         //! Number of DataReaders discovered
-        std::atomic<std::uint32_t> discovered_;
+        std::atomic<std::uint32_t> discovered;
 
         //! Protects wait_discovery condition variable
-        std::mutex wait_discovery_cv_mtx_;
+        std::mutex wait_discovery_cv_mtx;
 
         //! Waits to discovery enough DataReaders
-        std::condition_variable wait_discovery_cv_;
+        std::condition_variable wait_discovery_cv;
     }
     listener_;
 };
@@ -256,6 +251,14 @@ bool TestPublisher<HelloWorldKeyed>::publish(
     hello_.message(msg.message());
     hello_.id(msg.id());
     return writer_->write(&hello_);
+}
+
+template <>
+eprosima::fastrtps::types::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
+        HelloWorldKeyed msg)
+{
+    hello_.id(msg.id());
+    return writer_->dispose(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
 }
 
 /**
@@ -378,7 +381,7 @@ public:
 
     uint32_t n_disposed() const
     {
-        return listener_.n_key_disposed_;
+        return listener_.n_key_disposed;
     }
 
 private:
@@ -403,29 +406,29 @@ private:
     public:
 
         SubListener()
-            : discovered_(0)
+            : discovered(0)
         {
         }
 
         //! Initialize the listener
         void init(
-                MsgStruct* msg_should_receive,
-                std::atomic<uint32_t>* samples_received)
+                MsgStruct* msg_should_receive_arg,
+                std::atomic<uint32_t>* samples_received_arg)
         {
-            msg_should_receive_ = msg_should_receive;
-            samples_received_ = samples_received;
-            n_key_disposed_ = 0;
+            msg_should_receive = msg_should_receive_arg;
+            samples_received = samples_received_arg;
+            n_key_disposed = 0;
         }
 
         void wait_discovery(
                 uint32_t n_publishers = 1)
         {
-            if (discovered_ < n_publishers)
+            if (discovered < n_publishers)
             {
-                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx_);
-                wait_discovery_cv_.wait(lock, [this, n_publishers]
+                std::unique_lock<std::mutex> lock(wait_discovery_cv_mtx);
+                wait_discovery_cv.wait(lock, [this, n_publishers]
                         {
-                            return discovered_ >= n_publishers;
+                            return discovered >= n_publishers;
                         });
             }
         }
@@ -435,18 +438,18 @@ private:
                 eprosima::fastdds::dds::DataReader* reader) override
         {
             eprosima::fastdds::dds::SampleInfo info;
-            while (reader->take_next_sample(&msg_received_, &info) == ReturnCode_t::RETCODE_OK)
+            while (reader->take_next_sample(&msg_received, &info) == ReturnCode_t::RETCODE_OK)
             {
                 if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
                 {
-                    if (msg_received_.message() == msg_should_receive_->message())
+                    if (msg_received.message() == msg_should_receive->message())
                     {
-                        (*samples_received_)++;
+                        (*samples_received)++;
                     }
                 }
                 else if (info.instance_state == eprosima::fastdds::dds::NOT_ALIVE_DISPOSED_INSTANCE_STATE)
                 {
-                    n_key_disposed_++;
+                    n_key_disposed++;
                 }
             }
         }
@@ -457,34 +460,34 @@ private:
         {
             if (info.current_count_change == 1)
             {
-                discovered_ = info.current_count;
-                wait_discovery_cv_.notify_all();
+                discovered = info.current_count;
+                wait_discovery_cv.notify_all();
             }
             else if (info.current_count_change == -1)
             {
-                discovered_ = info.current_count;
+                discovered = info.current_count;
             }
         }
 
         //! Placeholder where received data is stored
-        MsgStruct msg_received_;
+        MsgStruct msg_received;
 
-        std::atomic<std::uint32_t> n_key_disposed_;
+        std::atomic<std::uint32_t> n_key_disposed;
 
         //! Reference to the sample sent by the publisher
-        MsgStruct* msg_should_receive_;
+        MsgStruct* msg_should_receive;
 
         //! Reference to received messages counter
-        std::atomic<uint32_t>* samples_received_;
+        std::atomic<uint32_t>* samples_received;
 
         //! Number of DataWriters discovered
-        std::atomic<std::uint32_t> discovered_;
+        std::atomic<std::uint32_t> discovered;
 
         //! Protects wait_discovery condition variable
-        std::mutex wait_discovery_cv_mtx_;
+        std::mutex wait_discovery_cv_mtx;
 
         //! Waits to discovery enough DataWriters
-        std::condition_variable wait_discovery_cv_;
+        std::condition_variable wait_discovery_cv;
     }
     listener_;
 };

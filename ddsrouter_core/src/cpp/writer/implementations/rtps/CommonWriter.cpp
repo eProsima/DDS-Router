@@ -169,11 +169,9 @@ utils::ReturnCode CommonWriter::fill_to_send_data_(
             return utils::ReturnCode::RETCODE_ERROR;
         }
     }
-    else
-    {
-        // this
-        to_send_change_to_fill->kind = eprosima::fastrtps::rtps::ChangeKind_t::NOT_ALIVE_DISPOSED;
-    }
+
+    // Set Change kind
+    to_send_change_to_fill->kind = data->properties.kind;
 
     // Set source time stamp to be the original one
     to_send_params.source_timestamp(data->properties.source_timestamp);
