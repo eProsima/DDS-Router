@@ -1,2 +1,4 @@
+DDSTestWAN.end_to_end_WAN_communication_TCPv4
+DDSTestWAN.end_to_end_WAN_communication_TCPv6
 DDSTestWAN.end_to_end_WAN_communication_TLSv4
 DDSTestWAN.end_to_end_WAN_communication_TLSv6
