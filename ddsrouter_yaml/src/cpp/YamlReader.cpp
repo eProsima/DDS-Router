@@ -30,8 +30,8 @@
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/WildcardTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_utils/Log.hpp>
 #include <ddsrouter_utils/utils.hpp>
 
@@ -377,105 +377,155 @@ DiscoveryServerConnectionAddress YamlReader::get<DiscoveryServerConnectionAddres
     }
 }
 
+/************************
+* QoS                   *
+************************/
+
 template <>
-RealTopic YamlReader::get<RealTopic>(
+void YamlReader::fill(
+        types::TopicQoS& object,
         const Yaml& yml,
-        const YamlReaderVersion /* version */)
+        const YamlReaderVersion version)
 {
-    // Mandatory name
-    std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
-
-    // Mandatory type
-    std::string type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
-
-    // Optional keyed
-    bool keyed;
-    bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
-    if (keyed_set)
+    // Reliability optional
+    if (is_tag_present(yml, QOS_RELIABLE_TAG))
     {
-        keyed = get_scalar<bool>(yml, TOPIC_KIND_TAG);
-    }
-
-    // Optional reliable DataReader
-    bool reliable;
-    bool reliable_set = is_tag_present(yml, TOPIC_RELIABLE_TAG);
-    if (reliable_set)
-    {
-        reliable = get_scalar<bool>(yml, TOPIC_RELIABLE_TAG);
-    }
-
-    if (keyed_set)
-    {
-        if (reliable_set)
+        if (get<bool>(yml, QOS_RELIABLE_TAG, version))
         {
-            return RealTopic(name, type, keyed, reliable);
+            object.reliability_qos = eprosima::ddsrouter::core::types::ReliabilityKind::RELIABLE;
         }
         else
         {
-            return RealTopic(name, type, keyed);
+            object.reliability_qos = eprosima::ddsrouter::core::types::ReliabilityKind::BEST_EFFORT;
         }
     }
-    else
+
+    // Durability optional
+    if (is_tag_present(yml, QOS_TRANSIENT_TAG))
     {
-        if (reliable_set)
+        if (get<bool>(yml, QOS_TRANSIENT_TAG, version))
         {
-            return RealTopic(reliable, name, type);
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::TRANSIENT_LOCAL;
         }
         else
         {
-            return RealTopic(name, type);
+            object.durability_qos = eprosima::ddsrouter::core::types::DurabilityKind::VOLATILE;
+        }
+    }
+
+    // History depth optional
+    if (is_tag_present(yml, QOS_HISTORY_DEPTH_TAG))
+    {
+        object.history_depth = get<HistoryDepthType>(yml, QOS_HISTORY_DEPTH_TAG, version);
+    }
+
+    // Durability optional
+    if (is_tag_present(yml, QOS_PARTITION_TAG))
+    {
+        object.use_partitions = get<bool>(yml, QOS_PARTITION_TAG, version);
+    }
+
+    // Ownership optional
+    if (is_tag_present(yml, QOS_OWNERSHIP_TAG))
+    {
+        if (get<bool>(yml, QOS_OWNERSHIP_TAG, version))
+        {
+            object.ownership_qos = eprosima::ddsrouter::core::types::OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS;
+        }
+        else
+        {
+            object.ownership_qos = eprosima::ddsrouter::core::types::OwnershipQosPolicyKind::SHARED_OWNERSHIP_QOS;
         }
     }
 }
 
-template <>
-WildcardTopic YamlReader::get<WildcardTopic>(
-        const Yaml& yml,
-        const YamlReaderVersion /* version */)
-{
-    // Mandatory name
-    std::string name = get_scalar<std::string>(yml, TOPIC_NAME_TAG);
+/************************
+* TOPICS                *
+************************/
 
-    // Optional type
-    std::string type;
-    bool type_set = is_tag_present(yml, TOPIC_TYPE_NAME_TAG);
-    if (type_set)
+template <>
+void YamlReader::fill(
+        types::Topic& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Name required
+    object.topic_name = get<std::string>(yml, TOPIC_NAME_TAG, version);
+}
+
+template <>
+void YamlReader::fill(
+        types::DdsTopic& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Fill parent class
+    fill<types::Topic>(object, yml, version);
+
+    // Data Type required
+    object.type_name = get<std::string>(yml, TOPIC_TYPE_NAME_TAG, version);
+
+    // Optional keyed
+    if (is_tag_present(yml, TOPIC_KIND_TAG))
     {
-        type = get_scalar<std::string>(yml, TOPIC_TYPE_NAME_TAG);
+        object.keyed = get<bool>(yml, TOPIC_KIND_TAG, version);
+    }
+
+    // Optional QoS
+    if (is_tag_present(yml, TOPIC_QOS_TAG))
+    {
+        fill<types::TopicQoS>(object.topic_qos.get_reference(), get_value_in_tag(yml, TOPIC_QOS_TAG), version);
+        object.topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_hard);
+    }
+}
+
+template <>
+types::DdsTopic YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    types::DdsTopic object;
+    fill<types::DdsTopic>(object, yml, version);
+    return object;
+}
+
+template <>
+void YamlReader::fill(
+        types::WildcardDdsFilterTopic& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    // Required name
+    object.topic_name = get<std::string>(yml, TOPIC_NAME_TAG, version);
+
+    // Optional data type
+    if (is_tag_present(yml, TOPIC_TYPE_NAME_TAG))
+    {
+        object.type_name = get<std::string>(yml, TOPIC_TYPE_NAME_TAG, version);
     }
 
     // Optional keyed
-    bool keyed;
-    bool keyed_set = is_tag_present(yml, TOPIC_KIND_TAG);
-    if (keyed_set)
+    if (is_tag_present(yml, TOPIC_KIND_TAG))
     {
-        keyed = get_scalar<bool>(yml, TOPIC_KIND_TAG);
+        object.keyed = get<bool>(yml, TOPIC_KIND_TAG, version);
     }
 
-    // Create Topic
-    if (keyed_set)
-    {
-        if (type_set)
-        {
-            return WildcardTopic(name, type, true, keyed);
-        }
-        else
-        {
-            return WildcardTopic(name, true, keyed);
-        }
-    }
-    else
-    {
-        if (type_set)
-        {
-            return WildcardTopic(name, type, false);
-        }
-        else
-        {
-            return WildcardTopic(name, false);
-        }
-    }
+    // TODO: decide whether we want to use QoS as filtering
 }
+
+template <>
+types::WildcardDdsFilterTopic YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    types::WildcardDdsFilterTopic object;
+    fill<types::WildcardDdsFilterTopic>(object, yml, version);
+    return object;
+}
+
+/************************
+* TLS CONFIGURATION     *
+************************/
 
 template <>
 security::TlsConfiguration YamlReader::get<security::TlsConfiguration>(
@@ -762,6 +812,29 @@ configuration::InitialPeersParticipantConfiguration YamlReader::get(
     return object;
 }
 
+//////////////////////////////////
+// SpecsConfiguration
+template <>
+void YamlReader::fill(
+        configuration::SpecsConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    /////
+    // Get optional number of threads
+    if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
+    {
+        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+    }
+
+    /////
+    // Get optional maximum history depth
+    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
+    {
+        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
+    }
+}
+
 /***************************
  * DDS ROUTER CONFIGURATION *
  ****************************/
@@ -817,30 +890,41 @@ void _fill_ddsrouter_configuration_v1(
     // Get optional allowlist
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
+        object.allowlist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, ALLOWLIST_TAG, version));
     }
 
     /////
     // Get optional blocklist
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
+        object.blocklist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, BLOCKLIST_TAG, version));
     }
 
     /////
     // Get builtin topics from allowlist
-    for (const std::shared_ptr<FilterTopic>& topic : object.allowlist)
+    for (const std::shared_ptr<DdsFilterTopic>& topic : object.allowlist)
     {
-        if (RealTopic::is_real_topic(topic->topic_name(), topic->topic_type()))
+        auto wildcard_topic = std::dynamic_pointer_cast<types::WildcardDdsFilterTopic>(topic);
+
+        if (wildcard_topic)
         {
-            object.builtin_topics.emplace(
-                std::make_shared<types::RealTopic>(
-                    topic->topic_name(),
-                    topic->topic_type(),
-                    topic->topic_with_key()));
+            if (DdsTopic::is_valid_dds_topic(wildcard_topic->topic_name, wildcard_topic->type_name))
+            {
+                auto real_topic = std::make_shared<types::DdsTopic>(
+                    wildcard_topic->topic_name,
+                    wildcard_topic->type_name);
+
+                if (wildcard_topic->keyed.is_set())
+                {
+                    real_topic->keyed = wildcard_topic->keyed;
+                }
+
+                object.builtin_topics.emplace(real_topic);
+            }
         }
+
     }
 
     /////
@@ -899,24 +983,24 @@ void _fill_ddsrouter_configuration_latest(
     // Get optional allowlist
     if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
     {
-        object.allowlist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, ALLOWLIST_TAG, version));
+        object.allowlist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, ALLOWLIST_TAG, version));
     }
 
     /////
     // Get optional blocklist
     if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
     {
-        object.blocklist = utils::convert_set_to_shared<types::FilterTopic, types::WildcardTopic>(
-            YamlReader::get_set<types::WildcardTopic>(yml, BLOCKLIST_TAG, version));
+        object.blocklist = utils::convert_set_to_shared<types::DdsFilterTopic, types::WildcardDdsFilterTopic>(
+            YamlReader::get_set<types::WildcardDdsFilterTopic>(yml, BLOCKLIST_TAG, version));
     }
 
     /////
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics = utils::convert_set_to_shared<types::RealTopic, types::RealTopic>(
-            YamlReader::get_set<types::RealTopic>(yml, BUILTIN_TAG, version));
+        object.builtin_topics = utils::convert_set_to_shared<types::DdsTopic, types::DdsTopic>(
+            YamlReader::get_set<types::DdsTopic>(yml, BUILTIN_TAG, version));
     }
 
     /////
@@ -940,19 +1024,14 @@ void _fill_ddsrouter_configuration_latest(
     }
 
     /////
-    // Get optional number of threads
-    if (YamlReader::is_tag_present(yml, NUMBER_THREADS_TAG))
+    // Get optional specs configuration
+    if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
-        object.number_of_threads = YamlReader::get<unsigned int>(yml, NUMBER_THREADS_TAG, version);
+        YamlReader::fill<configuration::SpecsConfiguration>(
+            object.advanced_options,
+            YamlReader::get_value_in_tag(yml, SPECS_TAG),
+            version);
     }
-
-    /////
-    // Get optional maximum history depth
-    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
-    {
-        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
-    }
-
 }
 
 template <>
@@ -967,6 +1046,7 @@ core::configuration::DDSRouterConfiguration YamlReader::get<core::configuration:
             _fill_ddsrouter_configuration_v1(object, yml, version);
             break;
 
+        case V_2_0:
         default:
             _fill_ddsrouter_configuration_latest(object, yml, version);
             break;

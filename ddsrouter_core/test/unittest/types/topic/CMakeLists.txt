@@ -24,12 +24,7 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        constructor
-        equal_operator
-        minor_operator
-        non_equal_operator
-        non_minor_operator
-        stdout_operator
+        is_valid
     )
 
 set(TEST_EXTRA_LIBRARIES
@@ -44,23 +39,26 @@ add_unittest_executable(
     )
 
 #############
-# RealTopic #
+# DdsTopic #
 #############
 
-set(TEST_NAME RealTopicTest)
+set(TEST_NAME DdsTopicTest)
 
 set(TEST_SOURCES
-        RealTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        DdsTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
     )
 
 set(TEST_LIST
-        is_real_topic
-        is_non_real_topic
+        is_valid_dds_topic
+        is_valid_dds_topic_negative
     )
 
 set(TEST_EXTRA_LIBRARIES
+        fastcdr
+        fastrtps
         ddsrouter_utils
     )
 
@@ -72,17 +70,18 @@ add_unittest_executable(
     )
 
 #################
-# WildcardTopic #
+# WildcardDdsFilterTopic #
 #################
 
 set(TEST_NAME WildcardTopicTest)
 
 set(TEST_SOURCES
-        WildcardTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/FilterTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/RealTopic.cpp
+        WildcardDdsFilterTopicTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/WildcardTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/DdsFilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/WildcardDdsFilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
     )
 
 set(TEST_LIST

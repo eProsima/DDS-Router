@@ -19,6 +19,8 @@
 #ifndef _DDSROUTERYAML_YAMLREADER_HPP_
 #define _DDSROUTERYAML_YAMLREADER_HPP_
 
+#include <ddsrouter_utils/types/Fuzzy.hpp>
+
 #include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/Yaml.hpp>
 
@@ -75,6 +77,7 @@ enum YamlReaderVersion
      * @version 0.5.0
      *
      * - Change wan to initial peers participant
+     * - Add Specs
      */
     V_3_0,
 

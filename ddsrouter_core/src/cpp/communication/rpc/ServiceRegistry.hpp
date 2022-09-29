@@ -27,7 +27,7 @@
 
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/topic/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -56,14 +56,12 @@ public:
      *
      * @param topic: Topic (service) of which this ServiceRegistry manages communication
      * @param participant_id: Id of participant for which this registry is created
-     * @param related_sample_identity: Proxy client identifier
      *
      * @note Always created disabled. It is first enabled when a server is discovered.
      */
     ServiceRegistry(
             const types::RPCTopic& topic,
-            const types::ParticipantId& participant_id,
-            const SampleIdentity& related_sample_identity);
+            const types::ParticipantId& participant_id);
 
     //! Enable registry
     void enable() noexcept;
@@ -92,6 +90,9 @@ public:
     //! RPCTopic getter
     types::RPCTopic topic() const noexcept;
 
+    //! Get \c mutex_
+    std::recursive_mutex& get_mutex() noexcept;
+
 protected:
 
     //! RPCTopic (service) that this ServiceRegistry manages communication
@@ -99,9 +100,6 @@ protected:
 
     //! Id of participant for which this registry is created
     types::ParticipantId participant_id_;
-
-    //! Proxy client identifier, required for a server to set the target of replies
-    SampleIdentity related_sample_identity_;
 
     //! Whether the registry is activated
     std::atomic<bool> enabled_;
@@ -113,7 +111,7 @@ protected:
     static const unsigned int DEFAULT_MAX_ENTRIES_;
 
     //! Mutex to protect concurrent access to \c registry_
-    mutable std::mutex mutex_;
+    mutable std::recursive_mutex mutex_;
 };
 
 } /* namespace core */

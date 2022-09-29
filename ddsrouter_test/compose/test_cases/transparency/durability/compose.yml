@@ -1,0 +1,97 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with transient_local topics
+#
+# Test architecture:
+#  topic0 -> non reliable
+#  topic1 -> reliable transient_local
+#  topic2 -> reliable transient_local
+#
+#   Domain 0         <-->  Router  <-->     Domain 1
+# publisher_t0_0_0                        subscriber_t0_1_0
+# publisher_t1_0_0                        subscriber_t1_1_0
+#                                         subscriber_t1_1_1
+# subscriber_t2_0_0                       publisher_t2_1_0
+#
+# NOTE:
+#   Subscribers transient do not need to receive everything, but to received from 0 to N.
+#   This is because last message of Publisher cannot assure that exists before closing Pub.
+#
+#   DDS Router has a delay to start, so to probe transient local in router.
+#   sleep command is use for this
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: bash -c "sleep 1 && source /ddsrouter/install/setup.bash && ddsrouter -c /config.yaml --timeout 12"
+
+  # DOMAIN 0
+  publisher_t0_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t0_0_0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --topic topic0
+
+  publisher_t1_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t1_0_0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --reliable --transient --topic topic1
+
+  subscriber_t2_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t2_0_0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 0 --topic topic2 --reliable --transient"
+
+  # DOMAIN 1
+  subscriber_t0_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t0_1_0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 12 --args "--samples 20 --domain 1 --topic topic0"
+
+  subscriber_t1_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t1_1_0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
+
+  subscriber_t1_1_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t1_1_1
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 1 --topic topic1 --reliable --transient"
+
+  publisher_t2_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t2_1_0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --reliable --transient --topic topic2
+
+networks:
+  std_net:
+  default:
+    driver: none

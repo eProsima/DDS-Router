@@ -23,6 +23,7 @@
 
 #include <ddsrouter_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_utils/utils.hpp>
+#include <ddsrouter_utils/Log.hpp>
 
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 
@@ -42,8 +43,7 @@ DiscoveryServerParticipant::DiscoveryServerParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        participant_attributes_(participant_configuration.get()),
-        participant_configuration->max_history_depth)
+        participant_attributes_(participant_configuration.get()))
 {
 }
 

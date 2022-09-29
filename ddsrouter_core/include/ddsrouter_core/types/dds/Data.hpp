@@ -20,11 +20,10 @@
 #define _DDSROUTERCORE_TYPES_DDS_DATA_HPP_
 
 #include <fastdds/rtps/common/SerializedPayload.h>
-#include <fastdds/rtps/common/WriteParams.h>
+#include <fastdds/rtps/common/SequenceNumber.h>
 
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/Guid.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/dds/DataProperties.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -37,23 +36,37 @@ using PayloadUnit = eprosima::fastrtps::rtps::octet;
 //! Payload references the raw data received.
 using Payload = eprosima::fastrtps::rtps::SerializedPayload_t;
 
-//! Structure of the Data received from a Reader containing the data itself and the attributes of the source
+/**
+ * @brief Structure of the Data received from a Reader containing the data itself and its properties.
+ *
+ * Properties are related information regarding the data and QoS of the source.
+ */
 struct DataReceived
 {
+    /**
+     * @brief Destroy the Data Received object
+     *
+     * @note Default destructor. Force \c DataReceived to be polymorphic. Implemented here to avoid creating a .cpp .
+     */
+    virtual ~DataReceived()
+    {
+    }
+
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     Payload payload;
 
-    //! Guid of the source entity that has transmit the data
-    Guid source_guid;
+    //! Specific QoS and attributes of the data received
+    DataProperties properties;
 
-    //! Id of the participant from which the Reader has received the data.
-    ParticipantId participant_receiver;
-
-    //! Sequence number of the received cache change
-    eprosima::fastrtps::rtps::SequenceNumber_t sequenceNumber;
-
-    //! Write params associated to the received cache change
-    eprosima::fastrtps::rtps::WriteParams write_params;
+    /**
+     * @brief Sequence Number with which the internal writer (ddsrouter writer) has sent this message
+     *
+     * @warning This is not the sequence number of the data received. It is the one set by writer when sending it.
+     *
+     * @todo This could be removed in the future if ServiceRegistry is internal to a specific class and not in
+     * RPCBridge.
+     */
+    eprosima::fastrtps::rtps::SequenceNumber_t sent_sequence_number;
 };
 
 //! \c octet to stream serializator

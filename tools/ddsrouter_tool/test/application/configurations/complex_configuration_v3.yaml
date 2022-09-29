@@ -15,6 +15,19 @@ builtin-topics:
     type: "std_msgs::msg::dds_::String_"
     keyed: true
 
+allowlist:
+  - name: "rt/*"
+  - name: "rq/service_custom*"
+    type: "rq/*"
+
+blocklist:
+  - name: "rt/ros_discovery_info*"
+
+specs:
+  threads: 10
+  max-depth: 1000
+
+
 participants:
 
   - name: simple_0
@@ -29,6 +42,7 @@ participants:
     kind: local-discovery-server
     discovery-server-guid:
       id: 0
+
     listening-addresses:
       - ip: "127.0.0.1"
         port: 11666
@@ -52,6 +66,7 @@ participants:
       - ip: "127.0.0.1"
         port: 11668
         transport: tcp
+      - ip: "0.0.0.0"
     listening-addresses:
       - ip: "127.0.0.1"
         port: 11669

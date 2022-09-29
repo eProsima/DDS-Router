@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+from asyncio.log import logger
 
 import log
 import validation
@@ -142,6 +143,6 @@ if __name__ == '__main__':
         parse_output_function=_client_parse_output,
         validate_output_function=_client_validate)
 
-    print(f'Client validator exited with code {ret_code}')
+    log.logger.info(f'Client validator exited with code {ret_code}')
 
     exit(ret_code.value)

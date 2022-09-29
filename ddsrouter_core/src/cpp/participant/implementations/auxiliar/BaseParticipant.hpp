@@ -107,7 +107,7 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     std::shared_ptr<IWriter> create_writer(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     /**
      * @brief Override create_reader() IParticipant method
@@ -118,7 +118,7 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     std::shared_ptr<IReader> create_reader(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
     /**
      * @brief Override delete_writer() IParticipant method
@@ -151,7 +151,7 @@ protected:
      * @return Writer
      */
     virtual std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) = 0;
+            types::DdsTopic topic) = 0;
 
     /**
      * @brief Create a reader object
@@ -162,7 +162,7 @@ protected:
      * @return Reader
      */
     virtual std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) = 0;
+            types::DdsTopic topic) = 0;
 
     /**
      * @brief Do nothing
@@ -206,10 +206,10 @@ protected:
     std::shared_ptr<DiscoveryDatabase> discovery_database_;
 
     //! Writers created by this Participant indexed by topic
-    std::map<types::RealTopic, std::shared_ptr<IWriter>> writers_;
+    std::map<types::DdsTopic, std::shared_ptr<IWriter>> writers_;
 
     //! Readers created by this Participant indexed by topic
-    std::map<types::RealTopic, std::shared_ptr<IReader>> readers_;
+    std::map<types::DdsTopic, std::shared_ptr<IReader>> readers_;
 
     //! Mutex that guards every access to the Participant
     mutable std::recursive_mutex mutex_;

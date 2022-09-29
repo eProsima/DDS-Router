@@ -78,7 +78,7 @@ configuration::DDSRouterConfiguration simple_configuration(
 
     configuration.builtin_topics =
     {
-        std::set<std::shared_ptr<RealTopic>>({std::make_shared<RealTopic>(topic_name, topic_type)}),
+        std::set<std::shared_ptr<DdsTopic>>({std::make_shared<DdsTopic>(topic_name, topic_type)}),
     };
 
     configuration.participants_configurations =
@@ -112,7 +112,7 @@ TEST(TrivialTest, trivial_void_initialization)
 }
 
 /**
- * Test Whole DDSRouter initialization by initializing two DummyParticipants and a RealTopic
+ * Test Whole DDSRouter initialization by initializing two DummyParticipants and a DdsTopic
  */
 TEST(TrivialTest, trivial_dummy_initialization)
 {
@@ -139,7 +139,7 @@ TEST(TrivialTest, trivial_communication)
     ASSERT_NE(participant_1, nullptr);
     ASSERT_NE(participant_2, nullptr);
 
-    RealTopic topic("topic_dummy", "type_dummy");
+    DdsTopic topic("topic_dummy", "type_dummy");
     Guid guid = random_guid();
     std::vector<PayloadUnit> payload = random_payload(3);
 

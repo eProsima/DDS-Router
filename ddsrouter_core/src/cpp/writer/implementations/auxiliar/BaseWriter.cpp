@@ -28,7 +28,7 @@ using namespace eprosima::ddsrouter::core::types;
 
 BaseWriter::BaseWriter(
         const ParticipantId& participant_id,
-        const RealTopic& topic,
+        const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool)
     : participant_id_(participant_id)
     , topic_(topic)
@@ -81,11 +81,6 @@ utils::ReturnCode BaseWriter::write(
                 topic_ << " in Participant " << participant_id_);
         return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
-}
-
-std::recursive_mutex& BaseWriter::get_mutex()
-{
-    return mutex_;
 }
 
 void BaseWriter::enable_() noexcept

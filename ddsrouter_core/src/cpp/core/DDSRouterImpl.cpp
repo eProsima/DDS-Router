@@ -45,7 +45,7 @@ DDSRouterImpl::DDSRouterImpl(
     , discovery_database_(new DiscoveryDatabase())
     , configuration_(configuration)
     , enabled_(false)
-    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.number_of_threads))
+    , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advanced_options.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
 
@@ -57,6 +57,10 @@ DDSRouterImpl::DDSRouterImpl(
                   utils::Formatter() <<
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
+
+    // Set default value for history
+    types::TopicQoS::default_history_depth.store(
+        configuration_.advanced_options.max_history_depth);
 
     // Add callback to be called by the discovery database when an Endpoint is discovered
     discovery_database_->add_endpoint_discovered_callback(std::bind(&DDSRouterImpl::discovered_endpoint_, this,
@@ -142,7 +146,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
             new_configuration.blocklist);
 
         // Check if there are any new builtin topics
-        std::set<RealTopic> new_builtin_topics;
+        std::set<DdsTopic> new_builtin_topics;
         for (auto builtin_topic : new_configuration.builtin_topics)
         {
             if (current_topics_.find(*builtin_topic) == current_topics_.end())
@@ -185,7 +189,7 @@ utils::ReturnCode DDSRouterImpl::reload_configuration(
         }
 
         // Create bridges for newly added builtin topics
-        for (RealTopic topic : new_builtin_topics)
+        for (DdsTopic topic : new_builtin_topics)
         {
             discovered_topic_(topic);
         }
@@ -324,8 +328,7 @@ void DDSRouterImpl::init_participants_()
                 participant_factory_.create_participant(
             participant_config,
             payload_pool_,
-            discovery_database_,
-            configuration_.max_history_depth);
+            discovery_database_);
 
         // create_participant should throw an exception in fail, never return nullptr
         if (!new_participant || !new_participant->id().is_valid() ||
@@ -364,14 +367,14 @@ void DDSRouterImpl::init_participants_()
 
 void DDSRouterImpl::init_bridges_()
 {
-    for (std::shared_ptr<RealTopic> topic : configuration_.builtin_topics)
+    for (std::shared_ptr<DdsTopic> topic : configuration_.builtin_topics)
     {
         discovered_topic_(*topic);
     }
 }
 
 void DDSRouterImpl::discovered_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -450,18 +453,20 @@ void DDSRouterImpl::discovered_endpoint_(
 {
     logDebug(DDSROUTER, "Endpoint discovered in DDS Router core: " << endpoint << ".");
 
-    RealTopic topic = endpoint.topic();
-    if (RPCTopic::is_service_topic(topic))
+    // Set as discovered only if the endpoint is a Reader
+    // If non Readers in topics, it is considered as non discovered
+    if (endpoint.is_reader())
     {
-        if (endpoint.is_server_endpoint())
+        DdsTopic topic = endpoint.topic();
+        if (!RPCTopic::is_service_topic(topic))
+        {
+            discovered_topic_(topic);
+        }
+        else if (endpoint.is_server_endpoint())
         {
             // Service server discovered
             discovered_service_(RPCTopic(topic), endpoint.discoverer_participant_id(), endpoint.guid().guid_prefix());
         }
-    }
-    else
-    {
-        discovered_topic_(topic);
     }
 }
 
@@ -470,7 +475,7 @@ void DDSRouterImpl::removed_endpoint_(
 {
     logDebug(DDSROUTER, "Endpoint removed/dropped: " << endpoint << ".");
 
-    RealTopic topic = endpoint.topic();
+    DdsTopic topic = endpoint.topic();
     if (RPCTopic::is_service_topic(topic))
     {
         if (endpoint.is_server_endpoint())
@@ -482,7 +487,7 @@ void DDSRouterImpl::removed_endpoint_(
 }
 
 void DDSRouterImpl::create_new_bridge(
-        const RealTopic& topic,
+        const DdsTopic& topic,
         bool enabled /*= false*/) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -514,7 +519,7 @@ void DDSRouterImpl::create_new_service(
 }
 
 void DDSRouterImpl::activate_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -539,7 +544,7 @@ void DDSRouterImpl::activate_topic_(
 }
 
 void DDSRouterImpl::deactivate_topic_(
-        const RealTopic& topic) noexcept
+        const DdsTopic& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 

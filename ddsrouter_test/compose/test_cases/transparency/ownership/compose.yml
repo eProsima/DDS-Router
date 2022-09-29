@@ -1,0 +1,109 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with ownership
+#
+# Test architecture:
+#   Publishers are created with different ownerships so only one should be the one that Readers read.
+#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
+#   Readers must read without duplicities even when there are multiple writers. However it is possible
+#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
+#    message received could be duplicated.
+#
+#   Domain 0                                  Domain 1
+# publisher_0_6  (6)                        publisher_1_3 (3)
+# publisher_0_3  (3)                        subscriber_1_0
+# subscriber_0_0
+#                         <->  Router  <->
+# subscriber_2_0
+# subscriber_2_1
+#   Domain 2                                  Domain 3
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 14
+
+  # DOMAIN 0
+  publisher_0_6:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_6
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --strength 6
+
+  publisher_0_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_3
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --strength 3
+
+  subscriber_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_0_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --delay 1 --allow-duplicates 10 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 14 --args "--domain 0 --samples 40 --ownership"
+
+  # DOMAIN 1
+  publisher_1_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1_3
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 130 --domain 1 --strength 3
+
+  subscriber_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --delay 1 --allow-duplicates 10 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 14 --args "--domain 1 --samples 40 --ownership"
+
+  # DOMAIN 2
+  subscriber_2_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --delay 1 --allow-duplicates 10 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 14 --args "--domain 2 --samples 40 --ownership"
+
+  subscriber_2_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --delay 1 --allow-duplicates 10 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 14 --args "--domain 2 --samples 40 --ownership"
+
+networks:
+  std_net:
+  default:
+    driver: none

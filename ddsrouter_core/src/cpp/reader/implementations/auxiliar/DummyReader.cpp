@@ -55,7 +55,7 @@ utils::ReturnCode DummyReader::take_(
     data_to_send_.pop();
 
     // Write (copy) values in data
-    data->source_guid = next_data_to_send.source_guid;
+    data->properties.source_guid = next_data_to_send.source_guid;
 
     // Move Payload to DDSRouter Payload Pool
     payload_pool_->get_payload(

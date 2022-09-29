@@ -27,7 +27,7 @@ namespace core {
 using namespace eprosima::ddsrouter::core::types;
 
 EchoWriter::EchoWriter(
-        const types::RealTopic& topic,
+        const types::DdsTopic& topic,
         bool verbose)
     : topic_(topic)
     , verbose_(verbose)
@@ -46,7 +46,7 @@ utils::ReturnCode EchoWriter::write(
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "Received data in Participant: " << data->participant_receiver <<
+            "Received data in Participant: " << data->properties.participant_receiver <<
                 " in topic: " << topic_ <<
                 ".");
     }
@@ -54,10 +54,11 @@ utils::ReturnCode EchoWriter::write(
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "In Endpoint: " << data->source_guid <<
-                " from Participant: " << data->participant_receiver <<
+            "In Endpoint: " << data->properties.source_guid <<
+                " from Participant: " << data->properties.participant_receiver <<
                 " in topic: " << topic_ <<
                 " payload received: " << data->payload <<
+                " with specific qos: " << data->properties.writer_qos <<
                 ".");
     }
 

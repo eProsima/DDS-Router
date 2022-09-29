@@ -26,9 +26,9 @@
 #include <set>
 
 #include <ddsrouter_core/types/topic/Topic.hpp>
-#include <ddsrouter_core/types/topic/FilterTopic.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
-#include <ddsrouter_core/types/topic/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
+#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -51,8 +51,8 @@ public:
 
     //! Constructor by initialization lists
     AllowedTopicList(
-            const std::set<std::shared_ptr<types::FilterTopic>>& allowlist,
-            const std::set<std::shared_ptr<types::FilterTopic>>& blocklist) noexcept;
+            const std::set<std::shared_ptr<types::DdsFilterTopic>>& allowlist,
+            const std::set<std::shared_ptr<types::DdsFilterTopic>>& blocklist) noexcept;
 
     //! Copy constructor. It copies internal lists.
     AllowedTopicList& operator =(
@@ -77,7 +77,7 @@ public:
      * @return True if the topic is allowed, false otherwise
      */
     bool is_topic_allowed(
-            const types::RealTopic& topic) const noexcept;
+            const types::DdsTopic& topic) const noexcept;
 
     /**
      * Whether RPCTopic \c topic is allowed by the lists that constitute this object
@@ -99,7 +99,7 @@ public:
      * Two lists are the same if they have the same topics stored.
      *
      * @todo: Two lists are the same when they filter the same topics. Thus, method \c contains in
-     * \c FilterTopic must be implemented completely.
+     * \c DdsFilterTopic must be implemented completely.
      *
      * @param other: other \c AllowedTopicList object to compare with \c this
      *
@@ -116,14 +116,14 @@ protected:
      * @param [in] list: list of topics with redundancy
      * @return Set of topics without redundancy
      */
-    static std::set<std::shared_ptr<types::FilterTopic>> get_topic_list_without_repetition_(
-            const std::set<std::shared_ptr<types::FilterTopic>>& list) noexcept;
+    static std::set<std::shared_ptr<types::DdsFilterTopic>> get_topic_list_without_repetition_(
+            const std::set<std::shared_ptr<types::DdsFilterTopic>>& list) noexcept;
 
     //! List of topics that are not allowed
-    std::set<std::shared_ptr<types::FilterTopic>> blocklist_;
+    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist_;
 
     //! List of topics that are allowed
-    std::set<std::shared_ptr<types::FilterTopic>> allowlist_;
+    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist_;
 
     //! Mutex to restrict access to the class
     mutable std::recursive_mutex mutex_;

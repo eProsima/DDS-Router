@@ -22,7 +22,7 @@
 #include <ddsrouter_utils/ReturnCode.hpp>
 
 #include <ddsrouter_core/types/dds/Data.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 #include <efficiency/payload/PayloadPool.hpp>
 

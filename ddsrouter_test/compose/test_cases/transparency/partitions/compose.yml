@@ -1,0 +1,129 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with partitions
+#
+# Test architecture:
+# DefaultTopic: with partitions
+# NonPartitionTopic: without partitions
+#
+#   Domain 0                                  Domain 1
+# publisher_0_0  (A)                        publisher_1_0 (bbb;ccc)
+# subscriber_0_0 (bbb)                      publisher_1_1 ()
+#                         <->  Router  <->
+# subscriber_2_0 (A)                        subscriber_3_0 (*)
+# subscriber_2_1 (bbb)                      subscriber_3_1 ()
+# subscriber_2_2 (ccc)
+#   Domain 2                                  Domain 3
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+  # DOMAIN 0
+  publisher_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --partitions "A"
+
+  subscriber_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_0_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 0 --samples 20 --partitions bbb"
+
+  # DOMAIN 1
+  publisher_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --partitions "bbb;ccc"
+
+  publisher_1_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --topic NonPartitionTopic
+
+  # DOMAIN 2
+  subscriber_2_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions A"
+
+  subscriber_2_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 2 --samples 20 --partitions bbb"
+
+  subscriber_2_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_2
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions ccc"
+
+  # DOMAIN 3
+  subscriber_3_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 3 --samples 20 --partitions *"
+
+  subscriber_3_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 3 --samples 20 --topic NonPartitionTopic"
+
+networks:
+  std_net:
+  default:
+    driver: none

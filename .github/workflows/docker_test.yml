@@ -109,3 +109,17 @@ jobs:
             --ctest-args \
               --label-exclude xfail \
               --timeout 60
+
+      - name: Run flaky tests
+        continue-on-error: true
+        run: |
+          export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
+          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
+          colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
+          colcon test \
+            --packages-select ddsrouter_test \
+            --event-handlers console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-regex xfail \
+              --timeout 60

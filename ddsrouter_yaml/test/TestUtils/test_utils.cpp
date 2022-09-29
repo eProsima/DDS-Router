@@ -50,7 +50,7 @@ TopicInput::TopicInput(
 {
 }
 
-RealTopicInput::RealTopicInput(
+DdsTopicInput::DdsTopicInput(
         std::string name,
         std::string type,
         bool keyed,
@@ -74,91 +74,59 @@ WildcardTopicInput::WildcardTopicInput(
 {
 }
 
-std::set<std::shared_ptr<RealTopic>> topic_set(
-        std::vector<RealTopicInput> topics)
+std::set<std::shared_ptr<DdsTopic>> topic_set(
+        std::vector<DdsTopicInput> topics)
 {
-    std::set<std::shared_ptr<RealTopic>> result;
-    for (RealTopicInput input : topics)
+    std::set<std::shared_ptr<DdsTopic>> result;
+    for (DdsTopicInput input : topics)
     {
+        auto new_topic = std::make_shared<DdsTopic>();
+        new_topic->topic_name = input.name;
+        new_topic->type_name = input.type;
+
         if (input.key_set)
         {
-            if (input.reliable_set)
-            {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            input.keyed,
-                            input.reliable));
-            }
-            else
-            {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            input.keyed));
-            }
+            new_topic->keyed = input.keyed;
         }
-        else
+
+
+        if (input.reliable_set)
         {
-            if (input.reliable_set)
+            TopicQoS qos;
+            if (input.reliable)
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type,
-                            false,
-                            input.reliable));
+                qos.reliability_qos = ReliabilityKind::RELIABLE;
             }
             else
             {
-                result.insert(std::make_shared<RealTopic>(
-                            input.name,
-                            input.type));
+                qos.reliability_qos = ReliabilityKind::BEST_EFFORT;
             }
+            new_topic->topic_qos = qos;
+            new_topic->topic_qos.set_level(utils::FuzzyLevelValues::fuzzy_level_fuzzy);
         }
+
+        result.insert(new_topic);
     }
     return result;
 }
 
-std::set<std::shared_ptr<FilterTopic>> topic_set(
+std::set<std::shared_ptr<DdsFilterTopic>> topic_set(
         std::vector<WildcardTopicInput> topics)
 {
-    std::set<std::shared_ptr<FilterTopic>> result;
+    std::set<std::shared_ptr<DdsFilterTopic>> result;
     for (WildcardTopicInput input : topics)
     {
+        auto new_topic = std::make_shared<WildcardDdsFilterTopic>();
+        new_topic->topic_name = input.name;
+        new_topic->type_name = input.type;
+
         if (input.key_set)
         {
-            if (input.type_set)
-            {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            input.type,
-                            true,
-                            input.keyed));
-            }
-            else
-            {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            true,
-                            input.keyed));
-            }
+            new_topic->keyed = input.type_set;
         }
-        else
-        {
-            if (input.type_set)
-            {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            input.type,
-                            false));
-            }
-            else
-            {
-                result.insert(std::make_shared<WildcardTopic>(
-                            input.name,
-                            false));
-            }
-        }
+
+        result.insert(new_topic);
+
     }
     return result;
 }

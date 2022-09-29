@@ -48,8 +48,16 @@ constexpr const char* BUILTIN_TAG("builtin-topics");  //! List of builtin topics
 constexpr const char* TOPIC_NAME_TAG("name");         //! Name of a topic
 constexpr const char* TOPIC_TYPE_NAME_TAG("type");    //! Type name of a topic
 constexpr const char* TOPIC_KIND_TAG("keyed");        //! Kind of a topic (with or without key)
-constexpr const char* TOPIC_RELIABLE_TAG("reliable"); //! The DataReaders of that topic will be configured as RELIABLE
+constexpr const char* TOPIC_QOS_TAG("qos");           //! QoS of a topic
 
+// QoS related tags
+constexpr const char* QOS_RELIABLE_TAG("reliable");     //! The Endpoints of that topic will be configured as RELIABLE
+constexpr const char* QOS_TRANSIENT_TAG("transient");   //! The Endpoints of that topic will be configured as TRANSIENT_LOCAL
+constexpr const char* QOS_HISTORY_DEPTH_TAG("depth");   //! The Endpoints of that topic will be configured as this History Depth
+constexpr const char* QOS_PARTITION_TAG("partitions");  //! The Endpoints of that topic will be configured with partitions
+constexpr const char* QOS_OWNERSHIP_TAG("ownership");   //! The Endpoints of that topic will be configured with EXCLUSIVE_OWNERSHIP
+
+// Participant related tags
 constexpr const char* PARTICIPANT_KIND_TAG("kind");   //! Participant Kind
 constexpr const char* PARTICIPANT_NAME_TAG("name");   //! Participant Name
 constexpr const char* COLLECTION_PARTICIPANTS_TAG("participants"); //! TODO: add comment
@@ -96,7 +104,8 @@ constexpr const char* DISCOVERY_SERVER_GUID_TAG("guid"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_TAG("id"); //! TODO: add comment
 constexpr const char* DISCOVERY_SERVER_ID_ROS_TAG("ros-discovery-server"); //! TODO: add comment
 
-// Advance configuration
+// Advanced configuration
+constexpr const char* SPECS_TAG("specs"); //! Specs options for DDS Router configuration
 constexpr const char* NUMBER_THREADS_TAG("threads"); //! Number of threads to configure the thread pool
 constexpr const char* MAX_HISTORY_DEPTH_TAG("max-depth"); //! Maximum size (number of stored cache changes) for RTPS History instances
 

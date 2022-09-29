@@ -24,14 +24,14 @@
 #include <communication/Bridge.hpp>
 
 #include <communication/Track.hpp>
-#include <ddsrouter_core/types/topic/RealTopic.hpp>
+#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
 /**
- * Bridge object manages the communication of a \c RealTopic.
+ * Bridge object manages the communication of a \c DdsTopic.
  * It could be seen as a channel of communication as a DDS Topic, whit several Participants that
  * could publish or subscribe in this specific Topic.
  *
@@ -57,7 +57,7 @@ public:
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
     DDSBridge(
-            const types::RealTopic& topic,
+            const types::DdsTopic& topic,
             std::shared_ptr<ParticipantsDatabase> participants_database,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<utils::SlotThreadPool> thread_pool,
@@ -104,7 +104,7 @@ protected:
      *
      * @note: This variable is only used for log
      */
-    const types::RealTopic topic_;
+    const types::DdsTopic topic_;
 
     /**
      * Inside \c Tracks

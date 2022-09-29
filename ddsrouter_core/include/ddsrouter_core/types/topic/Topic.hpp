@@ -16,11 +16,13 @@
  * @file Topic.hpp
  */
 
-#ifndef _DDSROUTERCORE_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
-#define _DDSROUTERCORE_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_
+#ifndef _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_
+#define _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_
 
 #include <iostream>
 #include <string>
+
+#include <ddsrouter_utils/Formatter.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 
@@ -30,84 +32,68 @@ namespace core {
 namespace types {
 
 /**
- * Generic class that contains all the data required by a DDSRouter Topic
+ * Generic data struct that represents a Topic of data flow in the Router.
+ *
+ * @todo remove argument constructors.
  */
 struct Topic
 {
-    /**
-     * Std constructor by topic name, topic type name and (optionally) topic kind
-     */
+
+    /////////////////////////
+    // CONSTRUCTORS
+    /////////////////////////
+
+    //! Default constructor
+    DDSROUTER_CORE_DllAPI Topic() = default;
+
+    //! Construct a Topic with name
     DDSROUTER_CORE_DllAPI Topic(
-            std::string topic_name,
-            std::string topic_type,
-            bool topic_with_key = false) noexcept;
+            const std::string& topic_name) noexcept;
 
-    //! Copy constructor
-    DDSROUTER_CORE_DllAPI Topic& operator =(
-            const Topic& other);
-
-    //! Topic name getter
-    DDSROUTER_CORE_DllAPI const std::string& topic_name() const;
-
-    //! Topic name setter
-    DDSROUTER_CORE_DllAPI void topic_name(
-            const std::string& topic_name);
-
-    //! Topic type name getter
-    DDSROUTER_CORE_DllAPI const std::string& topic_type() const;
-
-    //! Topic type setter
-    DDSROUTER_CORE_DllAPI void topic_type(
-            const std::string& topic_type);
-
-    //! Topic kind getter
-    DDSROUTER_CORE_DllAPI bool topic_with_key() const;
-
-    // OPERATOR OVERLOAD
-    /**
-     * Equal operator
-     *
-     * It compares that the topic name and topic type are equal
-     */
-    DDSROUTER_CORE_DllAPI bool operator ==(
-            const Topic& other) const;
+    /////////////////////////
+    // METHODS
+    /////////////////////////
 
     /**
-     * Minor operator
+     * @brief Whether this object is valid.
      *
-     * It compares first the topic name, and if it is the same, it compares the topic type, and if it is the same,
-     * it compares keyed attribute
+     * @param [out] error_msg not validity reason in case it is not valid.
+     * @return true if valid.
+     * @return false otherwise.
      */
-    DDSROUTER_CORE_DllAPI bool operator <(
-            const Topic& other) const;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept;
 
-    DDSROUTER_CORE_DllAPI virtual bool is_valid() const noexcept;
+    /////////////////////////
+    // OPERATORS
+    /////////////////////////
 
-protected:
+    //! Minor operator. Compares \c topic_name .
+    DDSROUTER_CORE_DllAPI bool operator < (
+            const Topic& other) const noexcept;
+
+    //! Equal operator. Compares \c topic_name .
+    DDSROUTER_CORE_DllAPI bool operator == (
+            const Topic& other) const noexcept;
+
+    /////////////////////////
+    // VARIABLES
+    /////////////////////////
 
     //! Topic name
-    std::string topic_name_;
-
-    //! Topic type name
-    std::string topic_type_;
-
-    //! Topic kind; WITH_KEY(true), NO_KEY(false)
-    bool topic_with_key_;
+    std::string topic_name{};
 };
 
 /**
- * Serialization method
- *
- * It prints the topic name, type and kind inside "{}" and separated by ";"
- * Example: {TopicName;TopicType;no_key}
+ * Serialization method for \c Topic object.
  */
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
-        const Topic& a);
+        const Topic& t);
 
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
 
-#endif /* _DDSROUTERCORE_TYPES_TOPIC_DDS_ROUTERTOPIC_HPP_ */
+#endif /* _DDSROUTERCORE_TYPES_TOPIC_TOPIC_HPP_ */

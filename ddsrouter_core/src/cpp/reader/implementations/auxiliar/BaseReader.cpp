@@ -34,7 +34,7 @@ const std::function<void()> BaseReader::DEFAULT_ON_DATA_AVAILABLE_CALLBACK =
 
 BaseReader::BaseReader(
         const ParticipantId& participant_id,
-        const RealTopic& topic,
+        const DdsTopic& topic,
         std::shared_ptr<PayloadPool> payload_pool)
     : participant_id_(participant_id)
     , topic_(topic)
@@ -125,7 +125,7 @@ ParticipantId BaseReader::participant_id() const noexcept
     return participant_id_;
 }
 
-RealTopic BaseReader::topic() const noexcept
+DdsTopic BaseReader::topic() const noexcept
 {
     return topic_;
 }

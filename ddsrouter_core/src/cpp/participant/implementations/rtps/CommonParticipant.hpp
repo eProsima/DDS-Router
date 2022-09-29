@@ -31,8 +31,6 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
-#include <reader/implementations/rtps/Reader.hpp>
-#include <writer/implementations/rtps/Writer.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -40,7 +38,10 @@ namespace core {
 namespace rtps {
 
 /**
- * TODO
+ * Abstract generic class for a RTPS Participant wrapper.
+ *
+ * Concrete classes that inherit from this would only need to specialize specific methods related with the
+ * qos and attributes.
  */
 class CommonParticipant
     : public BaseParticipant
@@ -48,59 +49,104 @@ class CommonParticipant
 {
 public:
 
+    /**
+     * @brief Construct a CommonParticipant
+     *
+     * This constructor creates the internal RTPS Participant using the attributes given.
+     *
+     * @throw InitializationException if RTPS Participant creation fails
+     */
     CommonParticipant(
             std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
             std::shared_ptr<PayloadPool> payload_pool,
             std::shared_ptr<DiscoveryDatabase> discovery_database,
             const types::DomainId& domain_id,
-            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes,
-            unsigned int max_history_depth);
+            const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
+    //! Remove internal RTPS Participant
     virtual ~CommonParticipant();
 
+    /**
+     * @brief Override method from \c RTPSParticipantListener .
+     *
+     * This method only is for debugging purposes.
+     */
     virtual void onParticipantDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
             fastrtps::rtps::ParticipantDiscoveryInfo&& info) override;
 
+    /**
+     * @brief Override method from \c RTPSParticipantListener .
+     *
+     * This method adds to database the endpoint discovered or modified.
+     */
     virtual void onReaderDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
             fastrtps::rtps::ReaderDiscoveryInfo&& info) override;
 
+    /**
+     * @brief Override method from \c RTPSParticipantListener .
+     *
+     * This method adds to database the endpoint discovered or modified.
+     */
     virtual void onWriterDiscovery(
             fastrtps::rtps::RTPSParticipant* participant,
             fastrtps::rtps::WriterDiscoveryInfo&& info) override;
 
 protected:
 
+    /**
+     * @brief Auxiliary method to create the internal RTPS participant.
+     */
     void create_participant_(
             const types::DomainId& domain,
             const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes);
 
+    /**
+     * @brief Create a writer object
+     *
+     * Depending on the Topic QoS creates a Basic or Specific Writer.
+     */
     std::shared_ptr<IWriter> create_writer_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
+    /**
+     * @brief Create a reader object
+     *
+     * Depending on the Topic QoS creates a Basic or Specific Reader.
+     */
     std::shared_ptr<IReader> create_reader_(
-            types::RealTopic topic) override;
+            types::DdsTopic topic) override;
 
+    /**
+     * @brief Create a endpoint from info object
+     *
+     * Specialized for \c WriterDiscoveryInfo and \c ReaderDiscoveryInfo .
+     */
     template<class DiscoveryInfoKind>
     types::Endpoint create_endpoint_from_info_(
+            DiscoveryInfoKind& info);
+
+    //! Create a endpoint from common info from method \c create_endpoint_from_info_ .
+    template<class DiscoveryInfoKind>
+    types::Endpoint create_common_endpoint_from_info_(
             DiscoveryInfoKind& info);
 
     /////
     // RTPS specific methods
 
+    /**
+     * @brief Static method that gives the std attributes for a Participant.
+     *
+     * @note This method must be specialized from inherit classes.
+     */
     static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
             const configuration::ParticipantConfiguration* participant_configuration);
 
     /////
     // VARIABLES
+    //! Internal RTPS Participant
     eprosima::fastrtps::rtps::RTPSParticipant* rtps_participant_;
-
-    //! Mutex that guards every access to the RTPS Participant
-    mutable std::recursive_mutex rtps_mutex_;
-
-    //! Maximum depth of RTPS History instances
-    unsigned int max_history_depth_;
 };
 
 } /* namespace rtps */

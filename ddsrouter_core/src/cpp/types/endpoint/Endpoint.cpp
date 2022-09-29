@@ -33,15 +33,15 @@ Endpoint::Endpoint() noexcept
 Endpoint::Endpoint(
         const EndpointKind& kind,
         const Guid& guid,
-        const QoS& qos,
-        const RealTopic& topic,
-        const ParticipantId& discoverer_participant_id) noexcept
+        const DdsTopic& topic,
+        const ParticipantId& discoverer_participant_id,
+        const SpecificEndpointQoS& specific_qos) noexcept
     : kind_(kind)
     , guid_(guid)
-    , qos_(qos)
     , topic_(topic)
     , active_(true)
     , discoverer_participant_id_(discoverer_participant_id)
+    , specific_qos_(specific_qos)
 {
 }
 
@@ -50,17 +50,34 @@ EndpointKind Endpoint::kind() const noexcept
     return kind_;
 }
 
+void Endpoint::kind(
+        const EndpointKind& kind) noexcept
+{
+    kind_ = kind;
+}
+
 Guid Endpoint::guid() const noexcept
 {
     return guid_;
 }
 
-QoS Endpoint::qos() const noexcept
+TopicQoS Endpoint::topic_qos() const noexcept
 {
-    return qos_;
+    return topic_.topic_qos;
 }
 
-RealTopic Endpoint::topic() const noexcept
+SpecificEndpointQoS Endpoint::specific_qos() const noexcept
+{
+    return specific_qos_;
+}
+
+void Endpoint::specific_qos(
+        const SpecificEndpointQoS& specific_qos) noexcept
+{
+    specific_qos_ = specific_qos;
+}
+
+DdsTopic Endpoint::topic() const noexcept
 {
     return topic_;
 }
@@ -107,7 +124,6 @@ Endpoint& Endpoint::operator =(
     this->guid_ = other.guid_;
     this->active_ = other.active_;
     this->kind_ = other.kind_;
-    this->qos_ = other.qos_;
     this->topic_ = other.topic_;
     this->discoverer_participant_id_ = other.discoverer_participant_id_;
     return *this;
@@ -116,25 +132,8 @@ Endpoint& Endpoint::operator =(
 bool Endpoint::operator ==(
         const Endpoint& other) const noexcept
 {
-    return guid_ == other.guid() && kind_ == other.kind() && qos_ == other.qos() && topic_ == other.topic();
     // TODO: compare discoverer_participant_id_?
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const EndpointKind& kind)
-{
-    try
-    {
-
-        os << ENDPOINT_KIND_STRINGS.at(static_cast<EndpointKindType>(kind));
-
-    }
-    catch (const std::out_of_range& oor)
-    {
-        utils::tsnh(utils::Formatter() << "Invalid Endpoint Kind." << static_cast<EndpointKindType>(kind));
-    }
-    return os;
+    return guid_ == other.guid() && kind_ == other.kind() && topic_ == other.topic();
 }
 
 std::ostream& operator <<(
@@ -143,8 +142,15 @@ std::ostream& operator <<(
 {
     std::string active_str = endpoint.active_ ? "Active" : "Inactive";
 
-    os << "Endpoint{" << endpoint.guid_ << ";" << endpoint.topic_ << ";" << endpoint.qos_ << ";" <<
-        endpoint.kind_ << ";" << active_str << ";" << endpoint.discoverer_participant_id_ << "}";
+    os <<
+        "Endpoint{" << endpoint.guid_ <<
+        ";" << endpoint.kind_ <<
+        ";" << endpoint.topic_ <<
+        ";" << endpoint.specific_qos_ <<
+        ";" << active_str <<
+        ";" << endpoint.discoverer_participant_id_ <<
+        "}";
+
     return os;
 }
 
