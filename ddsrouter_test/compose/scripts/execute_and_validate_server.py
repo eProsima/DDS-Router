@@ -16,8 +16,6 @@ import argparse
 
 import log
 
-from ros2_nodes.utils import delay
-
 import validation
 
 DESCRIPTION = """Script to validate servers output"""
@@ -97,14 +95,12 @@ if __name__ == '__main__':
     if args.debug:
         log.activate_debug()
 
-    # Delay
-    delay(args.delay)
-
     command = _server_command(args)
 
     ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
+        delay=args.delay,
         parse_output_function=validation.parse_default,
         validate_output_function=validation.validate_default)
 

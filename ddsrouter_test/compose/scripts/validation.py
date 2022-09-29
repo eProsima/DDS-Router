@@ -16,8 +16,11 @@ import signal
 import subprocess
 import time
 from enum import Enum
+from typing import List
 
 import log
+
+import utils
 
 
 class ReturnCode(Enum):
@@ -34,6 +37,7 @@ class ReturnCode(Enum):
 def run_command(
         command: 'list[str]',
         timeout: float,
+        delay: float = 0,
         timeout_as_error: bool = True):
     """
     Run command with timeout.
@@ -46,6 +50,9 @@ def run_command(
         - stderr - Error output of the process
     """
     ret_code = ReturnCode.SUCCESS
+
+    # Delay
+    utils.delay(delay)
 
     log.logger.debug(f'Running command: {command}')
 
@@ -96,10 +103,11 @@ def run_command(
 
 
 def run_and_validate(
-        command: 'list[str]',
+        command: List[str],
         timeout: int,
         parse_output_function,
         validate_output_function,
+        delay: float = 0,
         timeout_as_error: bool = True):
     """
     Run the subscriber and validate its output.
@@ -112,7 +120,11 @@ def run_and_validate(
 
     :return: exit code
     """
-    ret_code, stdout, stderr = run_command(command, timeout, timeout_as_error)
+    ret_code, stdout, stderr = run_command(
+        command=command,
+        timeout=timeout,
+        delay=delay,
+        timeout_as_error=timeout_as_error)
 
     if ret_code != ReturnCode.SUCCESS:
         log.logger.error(

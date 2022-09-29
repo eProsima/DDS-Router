@@ -16,8 +16,6 @@ import argparse
 
 import log
 
-from ros2_nodes.utils import delay
-
 import validation
 
 DESCRIPTION = """Script to validate talkers output"""
@@ -101,9 +99,6 @@ if __name__ == '__main__':
     if args.debug:
         log.activate_debug()
 
-    # Delay
-    delay(args.delay)
-
     # Prepare command
     command = _talker_command(args)
 
@@ -111,6 +106,7 @@ if __name__ == '__main__':
     ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
+        delay=args.delay,
         parse_output_function=_talker_parse_output,
         validate_output_function=_talker_validate,
         timeout_as_error=False)
