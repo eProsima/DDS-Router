@@ -44,7 +44,7 @@ ENUMERATION_BUILDER(
     client,
     server,
     both
-)
+    )
 
 /**
  * Configuration holding TLS parameters.
@@ -79,7 +79,8 @@ struct TlsConfiguration : public configuration::BaseConfiguration
     }
 
     template <TlsKind Kind>
-    DDSROUTER_CORE_DllAPI bool is_valid_kind(utils::Formatter& error_msg) const noexcept;
+    DDSROUTER_CORE_DllAPI bool is_valid_kind(
+            utils::Formatter& error_msg) const noexcept;
 
     //! Activate TLS configuration in a TCP transport descriptor
     DDSROUTER_CORE_DllAPI void enable_tls(

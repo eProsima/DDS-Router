@@ -185,22 +185,22 @@ DDSROUTER_CORE_DllAPI bool TlsConfiguration::is_valid_kind<TlsKind::both>(
 }
 
 bool TlsConfiguration::is_valid(
-            utils::Formatter& error_msg) const noexcept
+        utils::Formatter& error_msg) const noexcept
 {
     switch (kind)
     {
-    case TlsKind::client:
-        return is_valid_kind<TlsKind::client>(error_msg);
+        case TlsKind::client:
+            return is_valid_kind<TlsKind::client>(error_msg);
 
-    case TlsKind::server:
-        return is_valid_kind<TlsKind::server>(error_msg);
+        case TlsKind::server:
+            return is_valid_kind<TlsKind::server>(error_msg);
 
-    case TlsKind::both:
-        return is_valid_kind<TlsKind::both>(error_msg);
+        case TlsKind::both:
+            return is_valid_kind<TlsKind::both>(error_msg);
 
-    default:
-        // None
-        return true;
+        default:
+            // None
+            return true;
     }
 }
 

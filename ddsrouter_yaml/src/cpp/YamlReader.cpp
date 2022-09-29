@@ -608,11 +608,11 @@ void YamlReader::fill(
     else
     {
         throw utils::ConfigurationException(
-                STR_ENTRY << "Incorrect TLS configuration." <<
-                " Could not be client because: " << error_msg_client <<
-                " Neither server because: " << error_msg_server <<
-                "."
-            );
+                  STR_ENTRY << "Incorrect TLS configuration." <<
+                      " Could not be client because: " << error_msg_client <<
+                      " Neither server because: " << error_msg_server <<
+                      "."
+                  );
     }
 }
 
