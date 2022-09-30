@@ -30,25 +30,24 @@ participants:
 
 ##################################
 # WAN CLIENT
-# This participant will subscribe to topics in allowlist using Discovery Server protocol as SuperClient.
+# This participant will subscribe to topics in allowlist and connect with the server through Initial Peers.
 
   - name: WANClient                                               # 6
     kind: wan                                                     # 7
     connection-addresses:                                         # 8
-        addresses:                                                # 9
-          - ip: 1.1.1.1                                           # 10
-            port: 11666
-    listening-addresses:                                          # 11
-      - ip: 2.2.2.2                                               # 12
-        port: 11670                                               # 13
-        transport: udp                                            # 14
+      - ip: 1.1.1.1                                               # 9
+        port: 11666
+    listening-addresses:                                          # 10
+      - ip: 2.2.2.2                                               # 11
+        port: 11670                                               # 12
+        transport: udp                                            # 13
 
 ##################################
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 1 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# through a WAN Participant (configured as Super Client) to another WAN Participant.
+# through a WAN Participant (configured as Client) to another WAN Participant.
 # The other direction of communication is also possible; receive messages at the WAN Participant and locally
 # publish them in domain 1.
 # Client specifies which DDS Router starts the communication with the other, and after communication has been
@@ -72,22 +71,22 @@ participants:
 # 7: Kind of WANClient: <wan>.
 # WAN communication with another DDS Router.
 
-# 9: Add the addresses where to reach the remote DDS Routers that will connect to.
+# 8: Add the addresses where to reach the remote DDS Routers that will connect to.
 # Add as many connection-addresses as needed.
 
-# 10: Connect to a WAN Participant in IP <1.1.1.1> listening in port 11666 over UDP transport (default).
+# 9: Connect to a WAN Participant in IP <1.1.1.1> listening in port 11666 over UDP transport (default).
 # This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
-# Add every other address where trying to reach this same remote WAN Discovery Server.
+# Add every other address where trying to reach this same remote WAN Server.
 
-# 11: Add the interfaces where this Participant will listen in WAN.
+# 10: Add the interfaces where this Participant will listen in WAN.
 # This is only needed if Remote WAN Server is using only UDP.
 # Add as many listening-addresses as needed.
 
-# 12: Listen in public IP (2.2.2.2) for remote traffic.
+# 11: Listen in public IP (2.2.2.2) for remote traffic.
 # This IP must be set to the public IP of the host where this DDS Router will run.
 
-# 13: Listening port is 11670.
+# 12: Listening port is 11670.
 # Remember that if the host is under a NAT, the IP must be the public one and must be forwarded from network
 # router to this host to the same port.
 
-# 14: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
+# 13: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".

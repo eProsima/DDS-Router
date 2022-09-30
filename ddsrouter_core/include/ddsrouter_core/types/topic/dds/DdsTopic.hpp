@@ -102,6 +102,7 @@ struct DdsTopic : public Topic
     //! Topic Type name
     std::string type_name;
 
+    // TODO: this could be set as TopicQoS
     //! Whether the topic has key or not
     bool keyed = false;
 

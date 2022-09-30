@@ -1,6 +1,6 @@
-###############
-# WAN EXAMPLE #
-###############
+###########################
+# REPEATER CLIENT EXAMPLE #
+###########################
 
 ##################################
 # CONFIGURATION VERSION
@@ -37,13 +37,12 @@ participants:
         port: 11666
         transport: tcp
 
-
 ##################################
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topic
-# rt/chatter from ROS2 demo_nodes, and to transmit these messages through a WAN
-# to a WAN DDS Router (this configuration is independent to the remote Participant to be repeater or not).
+# rt/chatter from ROS2 demo_nodes, and to transmit these messages through a WAN Participant (configured as Client)
+# to another DDS Router (this configuration is independent of the remote Participant being repeater or not).
 # The other direction of communication is also possible; receive messages at the WAN Participant and locally
 # publish them in domain 0.
 
@@ -60,8 +59,8 @@ participants:
 
 # 4: SimpleROS2 will use DDS Domain ID <0>.
 
-# 5: New Participant with name <ClientROS2>.
+# 5: New Participant with name <Client>.
 
-# 6: Kind of ClientROS2: <WAN>.
+# 6: Kind of Client: <WAN>.
 
 # 7: Add the configuration to connect with the WAN Repeater Participant raised in the other side.

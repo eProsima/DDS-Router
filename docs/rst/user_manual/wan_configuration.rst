@@ -43,7 +43,8 @@ External port
 In order to configure the |ddsrouter| to connect under a NAT, two ports must be taken into account.
 The internal port (a.k.a. ``port``) is the one that the host of the |ddsrouter| will use to open a socket and
 to receive information.
-The external port references the public port meant for other entities to be able to locate this |ddsrouter|.
+The external port (:code:`external-port`) references the public port meant for other entities to be able
+to locate this |ddsrouter|.
 Setting the external port is useful so the network router port forwarding could redirect from a public port
 to a different value of internal host port.
 
@@ -101,7 +102,7 @@ TLS
 ===
 
 |eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
-and its configuration can be set per participant for types Local Discovery Server and WAN. Following is a list of the
+and its configuration can be set per participant for types WAN Discovery Server and WAN. Following is a list of the
 accepted entries under the ``tls`` tag:
 
 .. list-table::
@@ -150,9 +151,9 @@ accepted entries under the ``tls`` tag:
 
 .. note::
 
-    Although in principle only required for TLS clients, the CA (Certification- Authority) file must also be provided
-    for TLS servers, as they might assume the client role when connecting to other participants configured as servers.
-
+    Although in principle only required for TLS clients (with peer verification),
+    the CA (Certification- Authority) file may also be provided
+    for TLS servers when willing to connect them to other participants configured as servers.
 
 Examples
 ========
@@ -177,8 +178,6 @@ User *A* should set its *listening-addresses* as follows:
     - name: WANServerParticipant_userA
       kind: wan
 
-      discovery-server-guid:
-        id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
           port: 11667                     # Physical port used for the dds router host
@@ -192,15 +191,10 @@ User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
     - name: WANClientParticipant_userB
       kind: wan
 
-      discovery-server-guid:
-        id: 3                             # Must be different than A one
       connection-addresses:
-        - discovery-server-guid:
-            id: 2                         # Id of the Discovery Server of A
-          addresses:
-            - ip: 1.1.1.1                 # Public IP of Ha
-              port: 11666                 # Port forwarded in Ra
-              transport: tcp              # Transport protocol
+        - ip: 1.1.1.1                     # Public IP of Ha
+          port: 11666                     # Port forwarded in Ra
+          transport: tcp                  # Transport protocol
 
 This way, *B* will connect to *A*.
 *A* will be able to receive the message because *R*:sub:`A` will forward the message to *H*:sub:`A`.
@@ -228,8 +222,6 @@ User *A* should set its *listening-addresses* as follows:
     - name: WANServerParticipant_userA
       kind: wan
 
-      discovery-server-guid:
-        id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
           port: 11666                     # Internal and External port
@@ -243,17 +235,12 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
     - name: WANClientParticipant_userB
       kind: wan
 
-      discovery-server-guid:
-        id: 3                             # Must be different than A one
       listening-addresses:
         - ip: 2.2.2.2                     # Public IP of host Hb
           port: 11777                     # Internal and External port
       connection-addresses:
-        - discovery-server-guid:
-            id: 2                         # Id of the Discovery Server of A
-          addresses:
-            - ip: 1.1.1.1                 # Public IP of Ha
-              port: 11666                 # Port forwarded in Ra
+        - ip: 1.1.1.1                     # Public IP of Ha
+          port: 11666                     # Port forwarded in Ra
 
 This way, *B* will connect to *A*.
 Once *A* receives the message from *B*, it will communicate with it via address ``2.2.2.2:11777``.
@@ -270,8 +257,6 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
     - name: TLS_Server
       kind: wan
 
-      discovery-server-guid:
-        id: 0
       listening-addresses:
         - ip: 1.1.1.1
           port: 11666
@@ -289,15 +274,10 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
     - name: TLS_Client
       kind: wan
 
-      discovery-server-guid:
-        id: 1
       connection-addresses:
-        - discovery-server-guid:
-            id: 0
-          addresses:
-            - ip: 1.1.1.1
-              port: 11666
-              transport: tcp
+        - ip: 1.1.1.1
+          port: 11666
+          transport: tcp
 
       tls:
         ca: ca.crt

@@ -1092,9 +1092,6 @@ std::ostream& operator <<(
             break;
 
         case V_3_0:
-            os << VERSION_TAG_V_3_0;
-            break;
-
         case LATEST:
             os << VERSION_TAG_V_3_0;
             break;

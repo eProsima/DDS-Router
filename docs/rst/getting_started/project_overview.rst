@@ -45,8 +45,8 @@ and will route every message received in LAN to the remote |ddsrouter|.
 Once the remote Router receives data, it will transmit it to the local networks to which it is connected.
 This way, both DDS networks will behave as if they would belong to the same LAN.
 
-Another important feature is that WAN communications is not limited to a single pair of |ddsrouter|.
-The WAN communication is performed using the
+Another important feature is that WAN communications are not limited to a single pair of |ddsrouter|.
+The WAN communication may be performed using the
 `eProsima Discovery Server discovery mechanism <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html#discovery-server>`__
 (dynamic discovery over non-multicast networks).
 Thus, any DDS Router connected to the same Discovery Servers will works as a standard DDS node, publishing
@@ -70,7 +70,7 @@ The whole application has been thought to be user-friendly, following a user-ori
 * **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication could be
   changed in runtime by just changing the *YAML* configuration file
   (see section :ref:`user_manual_user_interface_reload_topics`
-  for more details about re-configuring a running |ddsrouter|)..
+  for more details about re-configuring a running |ddsrouter|).
 * **STOP**: To stop the |ddsrouter| just send a `^C` signal to the process, and it will gracefully close the whole
   application
   (see section :ref:`user_manual_user_interface_close_application` for more details on how to close the application).

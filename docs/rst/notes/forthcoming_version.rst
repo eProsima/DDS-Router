@@ -6,6 +6,10 @@
 Forthcoming Version
 ###################
 
+Next release will include the following **major features**:
+
+* New **QoS Transparency Module**.
+
 Next release will include the following **features**:
 
 * New :ref:`Repeater behaviour <use_case_repeater>`,

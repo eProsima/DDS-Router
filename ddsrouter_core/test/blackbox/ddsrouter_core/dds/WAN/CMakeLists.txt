@@ -27,13 +27,26 @@ set(TEST_SOURCES
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx)
 
 set(TEST_LIST
-    end_to_end_WAN_communication_UDPv4
-    end_to_end_WAN_communication_UDPv6
-    end_to_end_WAN_communication_TCPv4
-    end_to_end_WAN_communication_TCPv6
-    end_to_end_WAN_communication_TLSv4
-    end_to_end_WAN_communication_TLSv6
-    end_to_end_WAN_communication_high_throughput
+    end_to_end_discovery_server_WAN_communication_UDPv4
+    end_to_end_initial_peers_WAN_communication_UDPv4
+
+    end_to_end_discovery_server_WAN_communication_UDPv6
+    end_to_end_initial_peers_WAN_communication_UDPv6
+
+    end_to_end_discovery_server_WAN_communication_TCPv4
+    end_to_end_initial_peers_WAN_communication_TCPv4
+
+    end_to_end_discovery_server_WAN_communication_TCPv6
+    end_to_end_initial_peers_WAN_communication_TCPv6
+
+    end_to_end_discovery_server_WAN_communication_TLSv4
+    end_to_end_initial_peers_WAN_communication_TLSv4
+
+    end_to_end_discovery_server_WAN_communication_TLSv6
+    end_to_end_initial_peers_WAN_communication_TLSv6
+
+    end_to_end_discovery_server_WAN_communication_high_throughput
+    end_to_end_initial_peers_WAN_communication_high_throughput
     )
 
 

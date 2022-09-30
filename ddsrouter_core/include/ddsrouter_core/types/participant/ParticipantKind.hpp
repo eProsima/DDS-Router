@@ -40,7 +40,7 @@ enum class ParticipantKind : ParticipantKindType
     simple_rtps,                //! Simple RTPS Participant Kind
     local_discovery_server,     //! Discovery Server RTPS Participant Kind
     wan_discovery_server,       //! Discovery Server Inter Router Participant Kind
-    wan_initial_peers,              //! Initial Peers Inter Router Participant Kind
+    wan_initial_peers,          //! Initial Peers Inter Router Participant Kind
 };
 
 static constexpr unsigned PARTICIPANT_KIND_COUNT = 8;

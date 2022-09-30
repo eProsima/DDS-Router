@@ -23,7 +23,7 @@ data:
             transport: udp
 
       - name: CloudWAN
-        kind: wan
+        kind: wan-discovery-server
         discovery-server-guid:
           id: 2
         listening-addresses:

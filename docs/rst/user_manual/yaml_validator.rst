@@ -13,7 +13,7 @@ purpose of validating user-defined configuration files in an easy manner.
 
 .. note::
 
-    Yaml Validator tool is supported for ``2.0`` configuration version only.
+    Yaml Validator tool is supported for ``3.0`` configuration version only.
 
 After having sourced the |ddsrouter| workspace, execute the following command in order to validate a YAML configuration
 file:

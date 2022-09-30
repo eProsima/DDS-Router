@@ -21,6 +21,7 @@
 #include <TestLogHandler.hpp>
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
@@ -32,6 +33,12 @@ namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace test {
+
+enum class WanParticipantKind
+{
+    discovery_server,
+    initial_peers
+};
 
 enum class WanKind
 {
@@ -78,7 +85,7 @@ types::security::TlsConfiguration tls_configuration(
     }
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configuration(
+std::shared_ptr<configuration::ParticipantConfiguration> discovery_server_participant_configuration(
         bool this_server_id_is_1,
         WanKind wan_kind,
         types::TransportProtocol transport_protocol,
@@ -144,6 +151,86 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
     }
 }
 
+std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participant_configuration(
+        bool this_server_id_is_1,
+        WanKind wan_kind,
+        types::TransportProtocol transport_protocol,
+        types::IpVersion ip_version,
+        bool tls = false)
+{
+    std::set<types::Address> listening_addresses;
+    std::set<types::Address> connection_addresses;
+    types::DomainId domain(60u);
+
+    if (is_client(wan_kind))
+    {
+        connection_addresses.insert(
+            types::Address(
+                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                11666 + (this_server_id_is_1 ? 0u : 1u),
+                11666 + (this_server_id_is_1 ? 0u : 1u),
+                ip_version,
+                transport_protocol)
+            );
+    }
+
+    if (is_server(wan_kind))
+    {
+        listening_addresses.insert(
+            types::Address(
+                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                11666 + (this_server_id_is_1 ? 1u : 0u),
+                11666 + (this_server_id_is_1 ? 1u : 0u),
+                ip_version,
+                transport_protocol)
+            );
+    }
+
+    if (tls)
+    {
+        return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
+            types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan_initial_peers,
+            false,
+            domain,
+            listening_addresses,
+            connection_addresses,
+            tls_configuration(wan_kind));
+
+    }
+    else
+    {
+        return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
+            types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
+            types::ParticipantKind::wan_initial_peers,
+            false,
+            domain,
+            listening_addresses,
+            connection_addresses,
+            types::security::TlsConfiguration());
+    }
+}
+
+std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configuration(
+        WanParticipantKind wan_participant_kind,
+        bool this_server_id_is_1,
+        WanKind wan_kind,
+        types::TransportProtocol transport_protocol,
+        types::IpVersion ip_version,
+        bool tls = false)
+{
+    if (wan_participant_kind == WanParticipantKind::discovery_server)
+    {
+        return discovery_server_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version,
+                       tls);
+    }
+    else // WanParticipantKind::initial_peers
+    {
+        return initial_peers_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version,
+                       tls);
+    }
+}
+
 /**
  * @brief Create a simple configuration for a DDS Router
  *
@@ -176,7 +263,7 @@ configuration::DDSRouterConfiguration router_configuration(
 
                         // simple
                         std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("simple_participant"),
+                            types::ParticipantId("simple_participant_" + std::to_string(domain)),
                             types::ParticipantKind(types::ParticipantKind::simple_rtps),
                             false,
                             types::DomainId(domain)
@@ -266,6 +353,7 @@ void test_WAN_communication(
  *  server-client <-> server-client (only when basic_only is deactivate)
  */
 void test_WAN_communication_all(
+        WanParticipantKind wan_participant_kind,
         types::TransportProtocol transport_protocol,
         types::IpVersion ip_version,
         bool basic_only = false,
@@ -275,6 +363,7 @@ void test_WAN_communication_all(
     test::test_WAN_communication(
         test::router_configuration(
             test::wan_participant_configuration(
+                wan_participant_kind,
                 true, // is server 1
                 WanKind::server,
                 transport_protocol, // transport protocol
@@ -286,6 +375,7 @@ void test_WAN_communication_all(
 
         test::router_configuration(
             test::wan_participant_configuration(
+                wan_participant_kind,
                 false, // is server 1
                 WanKind::client,
                 transport_protocol, // transport protocol
@@ -300,6 +390,7 @@ void test_WAN_communication_all(
     test::test_WAN_communication(
         test::router_configuration(
             test::wan_participant_configuration(
+                wan_participant_kind,
                 true, // is server 1
                 WanKind::server,
                 transport_protocol, // transport protocol
@@ -311,6 +402,7 @@ void test_WAN_communication_all(
 
         test::router_configuration(
             test::wan_participant_configuration(
+                wan_participant_kind,
                 false, // is server 1
                 WanKind::server_and_client,
                 transport_protocol, // transport protocol
@@ -330,6 +422,7 @@ void test_WAN_communication_all(
         test::test_WAN_communication(
             test::router_configuration(
                 test::wan_participant_configuration(
+                    wan_participant_kind,
                     true, // is server 1
                     WanKind::server_and_client,
                     transport_protocol, // transport protocol
@@ -341,6 +434,7 @@ void test_WAN_communication_all(
 
             test::router_configuration(
                 test::wan_participant_configuration(
+                    wan_participant_kind,
                     false, // is server 1
                     WanKind::server_and_client,
                     transport_protocol, // transport protocol
@@ -363,48 +457,91 @@ using namespace eprosima::ddsrouter::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
  * through UDPv4.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv4)
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
         types::TransportProtocol::udp,
         types::IpVersion::v4);
 }
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through UDPv6.
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through UDPv4.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_UDPv6)
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
+        types::TransportProtocol::udp,
+        types::IpVersion::v4);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
+ * through UDPv6.
+ */
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_UDPv6)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
         types::TransportProtocol::udp,
         types::IpVersion::v6);
 }
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TCPv4.
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through UDPv6.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv4)
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
+        types::TransportProtocol::udp,
+        types::IpVersion::v6);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
+ * through TCPv4.
+ */
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TCPv4)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
         types::TransportProtocol::tcp,
         types::IpVersion::v4);
 }
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TCPv6.
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through TCPv4.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v4);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
+ * through TCPv6.
+ */
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TCPv6)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
         types::TransportProtocol::tcp,
         types::IpVersion::v6,
         true);
@@ -412,12 +549,27 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TCPv6)
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TLSv4.
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through TCPv6.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v6,
+        true);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
+ * through TLSv4.
+ */
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TLSv4)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
         types::TransportProtocol::tcp,
         types::IpVersion::v4,
         false,
@@ -426,12 +578,43 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv4)
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
- * through TLSv6.
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through TLSv4.
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v4,
+        false,
+        true);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
+ * through TLSv6.
+ */
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TLSv6)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::discovery_server,
+        types::TransportProtocol::tcp,
+        types::IpVersion::v6,
+        true,
+        true);
+}
+
+/**
+ * Test communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through TLSv6.
+ */
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TLSv6)
+{
+    test::test_WAN_communication_all(
+        test::WanParticipantKind::initial_peers,
         types::TransportProtocol::tcp,
         types::IpVersion::v6,
         true,
@@ -440,7 +623,7 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
 
 /**
  * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
- * by using two routers with two Simple Participants at each domain, and two WAN Participants connected
+ * by using two routers with two Simple Participants at each domain, and two Discovery Server Participants connected
  * through UDPv4.
  *
  * PARAMETERS:
@@ -448,11 +631,11 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_TLSv6)
  * - Sample size: 50K
  * -> Throughput: 50MBps
  */
-TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
+TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_high_throughput)
 {
     test::test_WAN_communication(
         test::router_configuration(
-            test::wan_participant_configuration(
+            test::discovery_server_participant_configuration(
                 true, // is server 1
                 test::WanKind::server,
                 types::TransportProtocol::udp, // transport protocol
@@ -462,7 +645,45 @@ TEST(DDSTestWAN, end_to_end_WAN_communication_high_throughput)
             ),
 
         test::router_configuration(
-            test::wan_participant_configuration(
+            test::discovery_server_participant_configuration(
+                false, // is server 1
+                test::WanKind::client,
+                types::TransportProtocol::udp, // transport protocol
+                types::IpVersion::v4 // ip version
+                ),
+            1 // domain
+            ),
+
+        500,
+        1,
+        1000); // 50K message size
+}
+
+/**
+ * Test high throughput communication in HelloWorld topic between two DDS participants created in different domains,
+ * by using two routers with two Simple Participants at each domain, and two Initial Peers Participants connected
+ * through UDPv4.
+ *
+ * PARAMETERS:
+ * - Frequency: 1ms
+ * - Sample size: 50K
+ * -> Throughput: 50MBps
+ */
+TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_high_throughput)
+{
+    test::test_WAN_communication(
+        test::router_configuration(
+            test::initial_peers_participant_configuration(
+                true, // is server 1
+                test::WanKind::server,
+                types::TransportProtocol::udp, // transport protocol
+                types::IpVersion::v4 // ip version
+                ),
+            0 // domain
+            ),
+
+        test::router_configuration(
+            test::initial_peers_participant_configuration(
                 false, // is server 1
                 test::WanKind::client,
                 types::TransportProtocol::udp, // transport protocol

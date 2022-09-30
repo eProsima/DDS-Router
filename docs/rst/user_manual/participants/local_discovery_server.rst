@@ -25,6 +25,7 @@ Kind aliases
 * ``discovery-server``
 * ``local-ds``
 * ``ds``
+* ``local-discovery-server``
 
 
 Configuration

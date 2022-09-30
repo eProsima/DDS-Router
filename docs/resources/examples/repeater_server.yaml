@@ -1,6 +1,6 @@
-####################
-# REPEATER EXAMPLE #
-####################
+###########################
+# REPEATER SERVER EXAMPLE #
+###########################
 
 ##################################
 # CONFIGURATION VERSION
@@ -21,7 +21,7 @@ allowlist:
 participants:
 
 ##################################
-# WAN REPEATER
+# WAN SERVER REPEATER
 # This participant will repeat the messages that arrive to it.
 
   - name: RepeaterParticipant                                     # 3
