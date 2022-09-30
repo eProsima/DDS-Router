@@ -171,7 +171,7 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
                 11666 + (this_server_id_is_1 ? 0u : 1u),
                 ip_version,
                 transport_protocol)
-        );
+            );
     }
 
     if (is_server(wan_kind))
@@ -221,11 +221,13 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
 {
     if (wan_participant_kind == WanParticipantKind::discovery_server)
     {
-        return discovery_server_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version, tls);
+        return discovery_server_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version,
+                       tls);
     }
     else // WanParticipantKind::initial_peers
     {
-        return initial_peers_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version, tls);
+        return initial_peers_participant_configuration(this_server_id_is_1, wan_kind, transport_protocol, ip_version,
+                       tls);
     }
 }
 
