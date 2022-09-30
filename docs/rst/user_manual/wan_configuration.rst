@@ -43,7 +43,8 @@ External port
 In order to configure the |ddsrouter| to connect under a NAT, two ports must be taken into account.
 The internal port (a.k.a. ``port``) is the one that the host of the |ddsrouter| will use to open a socket and
 to receive information.
-The external port references the public port meant for other entities to be able to locate this |ddsrouter|.
+The external port (:code:`external-port`) references the public port meant for other entities to be able
+to locate this |ddsrouter|.
 Setting the external port is useful so the network router port forwarding could redirect from a public port
 to a different value of internal host port.
 
@@ -150,9 +151,9 @@ accepted entries under the ``tls`` tag:
 
 .. note::
 
-    Although in principle only required for TLS clients, the CA (Certification- Authority) file must also be provided
-    for TLS servers, as they might assume the client role when connecting to other participants configured as servers.
-
+    Although in principle only required for TLS clients (with peer verification),
+    the CA (Certification- Authority) file may also be provided
+    for TLS servers when willing to connect them to other participants configured as servers.
 
 Examples
 ========

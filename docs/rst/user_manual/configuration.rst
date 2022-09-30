@@ -385,7 +385,7 @@ An Address is defined by:
 
 * *IP*: IP of the host (public IP in case of WAN communication).
 * *Port*: Port where the Participant is listening.
-* *External Port*: Public port accessible for external entities.
+* *External Port*: Public port accessible for external entities (only for TCP).
 * *Transport Protocol*: ``UDP`` or ``TCP``.
   If it is not set, it would be chosen by default depending on the Participant Kind.
 * *IP version*: ``v4`` or ``v6``.

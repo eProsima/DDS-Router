@@ -203,7 +203,16 @@ bool Address::is_valid() const noexcept
         return false;
     }
 
-    // TODO check port and maybe UDP/TCP specific rules
+    // Check that if UDP, external port must be not set (must be equal to internal port)
+    if (is_udp())
+    {
+        if (port_ != external_port_)
+        {
+            return false;
+        }
+    }
+
+    // Check correct ip
     switch (ip_version_)
     {
         case IpVersion::v4:

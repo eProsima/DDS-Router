@@ -127,7 +127,7 @@ Below is the list with all the available Participant Kinds.
           ``listening-addresses`` |br|
           ``connection-addresses`` |br|
           ``tls``
-        - Discovery Server DDS DomainParticipant |br|
+        - Initial Peers DDS DomainParticipant |br|
           for WAN communication.
 
 

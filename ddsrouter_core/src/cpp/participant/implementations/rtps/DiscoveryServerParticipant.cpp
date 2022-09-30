@@ -179,8 +179,13 @@ DiscoveryServerParticipant::participant_attributes_(
         }
 
         // Port
-        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.external_port());
-        eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.external_port());
+        eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.port());
+
+        if (address.is_tcp())
+        {
+            eprosima::fastrtps::rtps::IPLocator::setPhysicalPort(locator, address.external_port());
+            eprosima::fastrtps::rtps::IPLocator::setLogicalPort(locator, address.external_port());
+        }
 
         // Add listening address to builtin
         params.builtin.metatrafficUnicastLocatorList.push_back(locator);
