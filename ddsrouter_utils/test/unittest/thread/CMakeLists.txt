@@ -1,4 +1,4 @@
-# Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,30 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(TEST_NAME mathTest)
-
-set(TEST_SOURCES
-        mathTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/math/math.cpp
-    )
-
-set(TEST_LIST
-        is_even
-        fast_module
-        fast_division
-        arithmetic_progression_sum
-    )
-
-set(TEST_EXTRA_LIBRARIES
-    )
-
-set(TEST_NEEDED_SOURCES
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-        "${TEST_NEEDED_SOURCES}"
-    )
+# Add test subdirectories
+add_subdirectory(connector)
+add_subdirectory(manager)
+add_subdirectory(task)
