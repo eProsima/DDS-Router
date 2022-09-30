@@ -119,8 +119,15 @@ bool YamlReader::get<bool>(
         const Yaml& yml,
         const YamlReaderVersion version /* version */)
 {
-    bool value = get_scalar<bool>(yml);
     return get_scalar<bool>(yml);
+}
+
+template <>
+std::string YamlReader::get<std::string>(
+        const Yaml& yml,
+        const YamlReaderVersion version /* version */)
+{
+    return get_scalar<std::string>(yml);
 }
 
 /************************
@@ -160,15 +167,6 @@ PortType YamlReader::get<PortType>(
 {
     // Domain id required
     return PortType(get_scalar<PortType>(yml));
-}
-
-template <>
-IpType YamlReader::get<IpType>(
-        const Yaml& yml,
-        const YamlReaderVersion /* version */)
-{
-    // Domain id required
-    return IpType(get_scalar<IpType>(yml));
 }
 
 template <>
@@ -297,6 +295,22 @@ Address YamlReader::get<Address>(
         port = Address::default_port();
     }
 
+    // WARNING: This adds logic to the parse of the entity,
+    // This may not be the best place to do so. In the future move this logic to the Address class.
+
+    // Optional get external port
+    // If it is not set, same as internal port is used
+    PortType external_port;
+    bool external_port_set = is_tag_present(yml, ADDRESS_EXTERNAL_PORT_TAG);
+    if (external_port_set)
+    {
+        external_port = get<PortType>(yml, ADDRESS_EXTERNAL_PORT_TAG, version);
+    }
+    else
+    {
+        external_port = port;
+    }
+
     // Optional get Transport protocol
     TransportProtocol tp;
     bool tp_set = is_tag_present(yml, ADDRESS_TRANSPORT_TAG);
@@ -314,22 +328,22 @@ Address YamlReader::get<Address>(
     {
         if (ip_version_set)
         {
-            return Address(port, ip_version, domain_name, tp);
+            return Address(port, external_port, ip_version, domain_name, tp);
         }
         else
         {
-            return Address(port, domain_name, tp);
+            return Address(port, external_port, domain_name, tp);
         }
     }
     else
     {
         if (ip_version_set)
         {
-            return Address(ip, port, ip_version, tp);
+            return Address(ip, port, external_port, ip_version, tp);
         }
         else
         {
-            return Address(ip, port, tp);
+            return Address(ip, port, external_port, tp);
         }
     }
 }
@@ -528,85 +542,88 @@ types::WildcardDdsFilterTopic YamlReader::get(
 ************************/
 
 template <>
-security::TlsConfiguration YamlReader::get<security::TlsConfiguration>(
+void YamlReader::fill(
+        security::TlsConfiguration& object,
         const Yaml& yml,
-        const YamlReaderVersion /* version */)
+        const YamlReaderVersion version)
 {
     // Optional private key
-    std::string private_key_file;
-    bool has_private_key_file = is_tag_present(yml, TLS_PRIVATE_KEY_TAG);
-    if (has_private_key_file)
+    if (is_tag_present(yml, TLS_PRIVATE_KEY_TAG))
     {
-        private_key_file = get_scalar<std::string>(yml, TLS_PRIVATE_KEY_TAG);
+        object.private_key_file = get<std::string>(yml, TLS_PRIVATE_KEY_TAG, version);
     }
 
     // Optional private key password
-    std::string private_key_file_password;
-    bool has_private_key_file_password = is_tag_present(yml, TLS_PASSWORD_TAG);
-    if (has_private_key_file_password)
+    if (is_tag_present(yml, TLS_PASSWORD_TAG))
     {
-        private_key_file_password = get_scalar<std::string>(yml, TLS_PASSWORD_TAG);
+        object.private_key_file_password = get<std::string>(yml, TLS_PASSWORD_TAG, version);
     }
 
     // Optional certificate authority
-    std::string certificate_authority_file;
-    bool has_certificate_authority_file = is_tag_present(yml, TLS_CA_TAG);
-    if (has_certificate_authority_file)
+    if (is_tag_present(yml, TLS_CA_TAG))
     {
-        certificate_authority_file = get_scalar<std::string>(yml, TLS_CA_TAG);
+        object.certificate_authority_file = get<std::string>(yml, TLS_CA_TAG, version);
     }
 
     // Optional certificate chain
-    std::string certificate_chain_file;
-    bool has_certificate_chain_file = is_tag_present(yml, TLS_CERT_TAG);
-    if (has_certificate_chain_file)
+    if (is_tag_present(yml, TLS_CERT_TAG))
     {
-        certificate_chain_file = get_scalar<std::string>(yml, TLS_CERT_TAG);
+        object.certificate_chain_file = get<std::string>(yml, TLS_CERT_TAG, version);
+    }
+
+    // Optional SNI server name
+    if (is_tag_present(yml, TLS_SNI_HOST_TAG))
+    {
+        object.sni_server_name = get<std::string>(yml, TLS_SNI_HOST_TAG, version);
     }
 
     // Optional dh params
-    std::string dh_params_file;
-    bool has_dh_params_file = is_tag_present(yml, TLS_DHPARAMS_TAG);
-    if (has_dh_params_file)
+    if (is_tag_present(yml, TLS_DHPARAMS_TAG))
     {
-        dh_params_file = get_scalar<std::string>(yml, TLS_DHPARAMS_TAG);
+        object.dh_params_file = get<std::string>(yml, TLS_DHPARAMS_TAG, version);
     }
 
-    if (has_private_key_file && has_certificate_chain_file && has_dh_params_file)
+    // Optional peer verification
+    if (is_tag_present(yml, TLS_PEER_VERIFICATION_TAG))
     {
-        if (has_certificate_authority_file)
-        {
-            // Both TLS configuration
-            return security::TlsConfiguration(
-                certificate_authority_file,
-                private_key_file_password,
-                private_key_file,
-                certificate_chain_file,
-                dh_params_file);
-        }
-        else
-        {
-            // Server TLS configuration
-            return security::TlsConfiguration(
-                private_key_file_password,
-                private_key_file,
-                certificate_chain_file,
-                dh_params_file);
-        }
+        object.verify_peer = get<bool>(yml, TLS_PEER_VERIFICATION_TAG, version);
+    }
+
+    // Check if it should be client or server
+    utils::Formatter dummy_formatter__;
+    utils::Formatter error_msg_client;
+    utils::Formatter error_msg_server;
+    if (object.is_valid_kind<security::TlsKind::both>(dummy_formatter__))
+    {
+        object.kind = security::TlsKind::both;
+    }
+    else if (object.is_valid_kind<security::TlsKind::client>(error_msg_client))
+    {
+        object.kind = security::TlsKind::client;
+    }
+    else if (object.is_valid_kind<security::TlsKind::server>(error_msg_server))
+    {
+        object.kind = security::TlsKind::server;
     }
     else
     {
-        if (has_certificate_authority_file)
-        {
-            // Client TLS configuration
-            return security::TlsConfiguration(certificate_authority_file);
-        }
-        else
-        {
-            throw utils::ConfigurationException(
-                      "TLS Configuration is set and does not fit with Client or Server parameters.");
-        }
+        throw utils::ConfigurationException(
+                  STR_ENTRY << "Incorrect TLS configuration." <<
+                      " Could not be client because: " << error_msg_client <<
+                      " Neither server because: " << error_msg_server <<
+                      "."
+                  );
     }
+}
+
+template <>
+security::TlsConfiguration YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    security::TlsConfiguration object;
+    fill<security::TlsConfiguration>(object, yml, version);
+    return object;
 }
 
 /************************
@@ -735,7 +752,10 @@ void YamlReader::fill(
     // Optional TLS
     if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
-        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+        YamlReader::fill<security::TlsConfiguration>(
+            object.tls_configuration,
+            YamlReader::get_value_in_tag(yml, TLS_TAG),
+            version);
     }
 
     // NOTE: The only field that change regarding the version is the GuidPrefix.
@@ -792,7 +812,10 @@ void YamlReader::fill(
     // Optional TLS
     if (YamlReader::is_tag_present(yml, TLS_TAG))
     {
-        object.tls_configuration = YamlReader::get<types::security::TlsConfiguration>(yml, TLS_TAG, version);
+        YamlReader::fill<security::TlsConfiguration>(
+            object.tls_configuration,
+            YamlReader::get_value_in_tag(yml, TLS_TAG),
+            version);
     }
 
     // Optional Repeater

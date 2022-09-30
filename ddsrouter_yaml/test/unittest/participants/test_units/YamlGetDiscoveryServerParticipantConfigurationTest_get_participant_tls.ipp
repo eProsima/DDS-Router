@@ -47,6 +47,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     // Add TLS
     yml[TLS_TAG] = Yaml();
     yml[TLS_TAG][TLS_CA_TAG] = "ca.pem";
+    yml[TLS_TAG][TLS_SNI_HOST_TAG] = "my_server.com";
 
     core::types::security::TlsConfiguration tls_configuration =
             YamlReader::get<core::types::security::TlsConfiguration>(yml, TLS_TAG, LATEST);
@@ -57,11 +58,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     ASSERT_FALSE(tls_configuration.compatible<core::types::security::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
-    ASSERT_EQ(tls_configuration.certificate_authority_file(), "ca.pem");
-    ASSERT_THROW(tls_configuration.private_key_file_password(), utils::InconsistencyException);
-    ASSERT_THROW(tls_configuration.private_key_file(), utils::InconsistencyException);
-    ASSERT_THROW(tls_configuration.certificate_chain_file(), utils::InconsistencyException);
-    ASSERT_THROW(tls_configuration.dh_params_file(), utils::InconsistencyException);
+    ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
+    ASSERT_EQ(tls_configuration.sni_server_name, "my_server.com");
 }
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_server)
@@ -84,11 +82,10 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_serve
     ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
-    ASSERT_THROW(tls_configuration.certificate_authority_file(), utils::InconsistencyException);
-    ASSERT_EQ(tls_configuration.private_key_file_password(), "pwd-file");
-    ASSERT_EQ(tls_configuration.private_key_file(), "pk-file");
-    ASSERT_EQ(tls_configuration.certificate_chain_file(), "cert-chain-file");
-    ASSERT_EQ(tls_configuration.dh_params_file(), "dhp-file");
+    ASSERT_EQ(tls_configuration.private_key_file_password, "pwd-file");
+    ASSERT_EQ(tls_configuration.private_key_file, "pk-file");
+    ASSERT_EQ(tls_configuration.certificate_chain_file, "cert-chain-file");
+    ASSERT_EQ(tls_configuration.dh_params_file, "dhp-file");
 }
 
 
@@ -113,11 +110,11 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
-    ASSERT_EQ(tls_configuration.certificate_authority_file(), "ca.pem");
-    ASSERT_EQ(tls_configuration.private_key_file_password(), "pwd-file");
-    ASSERT_EQ(tls_configuration.private_key_file(), "pk-file");
-    ASSERT_EQ(tls_configuration.certificate_chain_file(), "cert-chain-file");
-    ASSERT_EQ(tls_configuration.dh_params_file(), "dhp-file");
+    ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
+    ASSERT_EQ(tls_configuration.private_key_file_password, "pwd-file");
+    ASSERT_EQ(tls_configuration.private_key_file, "pk-file");
+    ASSERT_EQ(tls_configuration.certificate_chain_file, "cert-chain-file");
+    ASSERT_EQ(tls_configuration.dh_params_file, "dhp-file");
 }
 
 
@@ -160,12 +157,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inact
     ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::both>());
     ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::server>());
     ASSERT_FALSE(ds_participant_cfg.tls_configuration.is_active());
-
-    ASSERT_THROW(ds_participant_cfg.tls_configuration.certificate_authority_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration.private_key_file_password(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration.private_key_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration.certificate_chain_file(), utils::InconsistencyException);
-    ASSERT_THROW(ds_participant_cfg.tls_configuration.dh_params_file(), utils::InconsistencyException);
 }
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incorrect_empty)

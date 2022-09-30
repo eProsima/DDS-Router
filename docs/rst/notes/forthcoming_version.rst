@@ -13,8 +13,10 @@ Next release will include the following **features**:
 * Add RPC support (compatibility with *ROS 2* services).
 * Timeout argument ``--timeout`` to close the application after the time set has passed.
   Check section :ref:`user_manual_user_interface_timeout_argument` for more information.
+* Add TLS-SNI support.
+* Add **external port** support so internal and external port in network router configuration could be different.
 
-Next release will include the following **Fast DDS features**:
+Next release will include the following **DDS features**:
 
 * New :term:`Initial Peers` Participant that allows to create a fast WAN communication
   avoiding the Discovery Server configuration.
@@ -24,6 +26,7 @@ Next release will include the following **configuration changes**:
 
 * New Configuration Version ``v3.0`` that allow Repeater and initial peers configuration.
 * Yaml Validator only validates ``v3.0`` configurations.
+* Address supports an :code:`external-port` value to set this in a listening address.
 
 Next release will include the following **major changes**:
 

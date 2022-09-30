@@ -24,7 +24,10 @@
 
 #include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
+#include <ddsrouter_utils/macros/custom_enumeration.hpp>
+
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/configuration/BaseConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -35,71 +38,24 @@ namespace security {
 /**
  * @brief Enumeration of kinds of TLS configurations.
  */
-enum class TlsKind
-{
+ENUMERATION_BUILDER(
+    TlsKind,
     inactive,
     client,
     server,
-    both,
-};
-
+    both
+    )
 
 /**
  * Configuration holding TLS parameters.
  */
-class TlsConfiguration
+struct TlsConfiguration : public configuration::BaseConfiguration
 {
-public:
 
     /**
      * @brief Constructs an undefined or inactive (valid nonetheless) TLSConfiguration
-     *
      */
-    DDSROUTER_CORE_DllAPI TlsConfiguration();
-
-    /**
-     * @brief Constructs client-oriented TLSConfiguration
-     *
-     * @param certificate_authority_file for the client
-     *
-     * @throw \c InitializationException if file is invalid.
-     */
-    DDSROUTER_CORE_DllAPI TlsConfiguration(
-            std::string certificate_authority_file);
-
-    /**
-     * @brief Constructs server-oriented TLSConfiguration
-     *
-     * @param std::string private_key_file_password file for the server
-     * @param std::string private_key_file file for the server
-     * @param std::string certificate_chain_file file for the server
-     * @param std::string dh_params_file file for the server
-     *
-     * @throw \c InitializationException if any file is invalid.
-     */
-    DDSROUTER_CORE_DllAPI TlsConfiguration(
-            std::string private_key_file_password,
-            std::string private_key_file,
-            std::string certificate_chain_file,
-            std::string dh_params_file);
-
-    /**
-     * @brief Constructs client-and-server-oriented TLSConfiguration
-     *
-     * @param certificate_authority_file for the client
-     * @param std::string private_key_file_password file for the server
-     * @param std::string private_key_file for the server
-     * @param std::string certificate_chain_file for the server
-     * @param std::string dh_params_file for the server
-     *
-     * @throw \c InitializationException if any file is invalid.
-     */
-    DDSROUTER_CORE_DllAPI TlsConfiguration(
-            std::string certificate_authority_file,
-            std::string private_key_file_password,
-            std::string private_key_file,
-            std::string certificate_chain_file,
-            std::string dh_params_file);
+    DDSROUTER_CORE_DllAPI TlsConfiguration() = default;
 
     /**
      * @brief Returns whether configuration is active
@@ -112,48 +68,19 @@ public:
      * @tparam Kind TlsConfiguration kind
      *
      * @return Whether configuration is compatible with parameter \c TlsKind
+     *
+     * @note this function is implemented in hpp to avoid a new file for only this method.
      */
     template <TlsKind Kind>
     bool compatible() const noexcept
     {
-        return this->kind_ != TlsKind::inactive &&
-               (Kind == this->kind_ || (this->kind_ == TlsKind::both && Kind != TlsKind::inactive));
+        return this->kind != TlsKind::inactive &&
+               (Kind == this->kind || (this->kind == TlsKind::both && Kind != TlsKind::inactive));
     }
 
-    /**
-     * @brief certificate_authority_file getter
-     *
-     * @throw \c InconsistencyException if configuration is not client-compatible
-     */
-    DDSROUTER_CORE_DllAPI const std::string& certificate_authority_file() const;
-
-    /**
-     * @brief private_key_file_password getter
-     *
-     * @throw \c InconsistencyException if configuration is not server-compatible
-     */
-    DDSROUTER_CORE_DllAPI const std::string& private_key_file_password() const;
-
-    /**
-     * @brief private_key_file getter
-     *
-     * @throw \c InconsistencyException if configuration is not server-compatible
-     */
-    DDSROUTER_CORE_DllAPI const std::string& private_key_file() const;
-
-    /**
-     * @brief certificate_chain_file getter
-     *
-     * @throw \c InconsistencyException if configuration is not server-compatible
-     */
-    DDSROUTER_CORE_DllAPI const std::string& certificate_chain_file() const;
-
-    /**
-     * @brief dh_params_file getter
-     *
-     * @throw \c InconsistencyException if configuration is not server-compatible
-     */
-    DDSROUTER_CORE_DllAPI const std::string& dh_params_file() const;
+    template <TlsKind Kind>
+    DDSROUTER_CORE_DllAPI bool is_valid_kind(
+            utils::Formatter& error_msg) const noexcept;
 
     //! Activate TLS configuration in a TCP transport descriptor
     DDSROUTER_CORE_DllAPI void enable_tls(
@@ -169,28 +96,27 @@ public:
     DDSROUTER_CORE_DllAPI void enable_tls_server(
             std::shared_ptr<eprosima::fastdds::rtps::TCPTransportDescriptor> descriptor) const;
 
-private:
-
-    //! Internal throwing check
-    template <TlsKind Kind>
-    void check_valid_() const;
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
     ////////
     // MEMBERS
 
     //! Configuration Kind
-    TlsKind kind_;
+    TlsKind kind = TlsKind::inactive;
+    bool verify_peer = true;
 
     ////////
     // CLIENT-ONLY VARIABLES
-    std::string certificate_authority_file_;
+    std::string certificate_authority_file = "";
+    std::string sni_server_name = "";
 
     ////////
     // SERVER-ONLY VARIABLES
-    std::string private_key_file_password_;
-    std::string private_key_file_;
-    std::string certificate_chain_file_;
-    std::string dh_params_file_;
+    std::string private_key_file_password = "";
+    std::string private_key_file = "";
+    std::string certificate_chain_file = "";
+    std::string dh_params_file = "";
 };
 
 } /* namespace security */

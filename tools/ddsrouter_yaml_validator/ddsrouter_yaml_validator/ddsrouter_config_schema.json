@@ -400,6 +400,12 @@
                 },
                 "dh_params":{
                     "type":"string"
+                },
+                "peer_verification":{
+                    "type":"boolean"
+                },
+                "sni_host":{
+                    "type":"string"
                 }
             },
             "required":[
@@ -498,6 +504,11 @@
                     "type":"string"
                 },
                 "port":{
+                    "type":"integer",
+                    "minimum":0,
+                    "maximum":65535
+                },
+                "external-port":{
                     "type":"integer",
                     "minimum":0,
                     "maximum":65535

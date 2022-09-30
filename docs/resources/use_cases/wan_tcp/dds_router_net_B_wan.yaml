@@ -9,5 +9,6 @@ participants:
     kind: wan
     listening-addresses:
       - ip: 123.123.123.123
-        port: 45678
+        port: 45680
+        external-port: 45678
         transport: tcp

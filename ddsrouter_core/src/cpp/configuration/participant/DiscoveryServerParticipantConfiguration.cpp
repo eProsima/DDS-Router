@@ -36,7 +36,7 @@ DiscoveryServerParticipantConfiguration::DiscoveryServerParticipantConfiguration
         const GuidPrefix& discovery_server_guid_prefix,
         const std::set<Address>& listening_addresses,
         const std::set<DiscoveryServerConnectionAddress>& connection_addresses,
-        const types::security::TlsConfiguration tls_configuration)
+        const types::security::TlsConfiguration& tls_configuration)
     : SimpleParticipantConfiguration(id, kind, is_repeater, domain_id)
     , discovery_server_guid_prefix(discovery_server_guid_prefix)
     , listening_addresses(listening_addresses)

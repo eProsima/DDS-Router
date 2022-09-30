@@ -53,7 +53,7 @@ struct DiscoveryServerParticipantConfiguration : public SimpleParticipantConfigu
             const types::GuidPrefix& discovery_server_guid_prefix,
             const std::set<types::Address>& listening_addresses,
             const std::set<types::DiscoveryServerConnectionAddress>& connection_addresses,
-            const types::security::TlsConfiguration tls_configuration);
+            const types::security::TlsConfiguration& tls_configuration);
 
     /////////////////////////
     // METHODS

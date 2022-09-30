@@ -19,6 +19,14 @@ Thus, NAT traversal methods will be required.
 The most common method that we recommend is configuring the network router so it forwards a specific port from
 the internet to a specific host.
 
+.. note::
+
+    NAT Traversal communication only affects to IPv4 communication.
+    Using IPv6 would not create NAT under network routers so every device could be accessed externally.
+    Thus, configurations explained in this section do not apply to IPv6 deployments.
+
+
+.. _user_manual_wan_configuration_nat_traversal_port_forwarding:
 
 Port Forwarding
 ---------------
@@ -27,14 +35,27 @@ This is the easiest way to achieve NAT traversal.
 Most network routers support a graphical interface where port forwarding could be easily set.
 
 
-.. note:
+.. _user_manual_wan_configuration_nat_traversal_port_forwarding_external_port:
 
-    NAT Traversal communication only affects to IPv4 communication.
-    Using IPv6 would not require specific network router configurations (as long as the router supports it).
+External port
+^^^^^^^^^^^^^
 
-.. note:
+In order to configure the |ddsrouter| to connect under a NAT, two ports must be taken into account.
+The internal port (a.k.a. ``port``) is the one that the host of the |ddsrouter| will use to open a socket and
+to receive information.
+The external port references the public port meant for other entities to be able to locate this |ddsrouter|.
+Setting the external port is useful so the network router port forwarding could redirect from a public port
+to a different value of internal host port.
 
-    It is needed to use same public port and internal port due to of Fast DDS configuration requirements.
+.. note::
+
+    External port configuration is not mandatory. If not set the internal and the external port must coincide
+    in the network router port forwarding rules.
+
+.. warning::
+
+    External port is only available for TCP communication.
+    In UDP communication the internal and the external port must coincide in the network router port forwarding rules.
 
 
 TCP vs UDP
@@ -64,7 +85,8 @@ These are a list of tips to help choosing whether to use one or the other.
 
     *   - **Port Forwarding**
         - Require both sides of the communication |br|
-          to have ports forwarded from the router.
+          to have ports forwarded from the router. |br|
+          Require internal and external port to coincide.
         - Require only server side of the communication |br|
           to have port forwarded from the router.
 
@@ -76,7 +98,7 @@ These are a list of tips to help choosing whether to use one or the other.
 
 
 TLS
----
+===
 
 |eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
 and its configuration can be set per participant for types Local Discovery Server and WAN. Following is a list of the
@@ -88,26 +110,43 @@ accepted entries under the ``tls`` tag:
     *   - Tag
         - Requiredness
         - Description
+        - Example
 
     *   - ``ca``
-        - Mandatory for TLS servers and clients
+        - Mandatory for TLS clients if |br|
+          ``peer_verification`` active.
         - Path to the CA (Certification- Authority) file.
+        - ``ca.crt``
 
     *   - ``password``
         - Optional for TLS servers
         - Password of the ``private_key`` file.
+        - ``<private_key_file_password>``
 
     *   - ``private_key``
         - Mandatory for TLS servers
         - Path to the private key certificate file.
+        - ``ddsrouter.key``
 
     *   - ``cert``
         - Mandatory for TLS servers
         - Path to the public certificate chain file.
+        - ``ddsrouter.crt``
 
     *   - ``dh_params``
         - Mandatory for TLS servers
         - Path to the Diffie-Hellman parameters file.
+        - ``dh_params.pem``
+
+    *   - ``peer_verification``
+        - Optional for clients.
+        - Whether to verify the server. (Default true).
+        - ``true``
+
+    *   - ``sni_host``
+        - Optional for clients if using SNI.
+        - Name of the server to connect with.
+        - ``my_server.com``
 
 .. note::
 
@@ -129,9 +168,8 @@ Let user *B* with host *H*:sub:`B` has a private IP ``192.168.2.2`` given by net
 with a public IP ``2.2.2.2``.
 *A* will act as server of the TCP communication, while *B* will act as client.
 
-User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(it is required to use the same public port as the internal one).
+User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11667``.
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11667``.
 User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
@@ -143,7 +181,8 @@ User *A* should set its *listening-addresses* as follows:
         id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
-          port: 11666                     # Port forwarded router Ra
+          port: 11667                     # Physical port used for the dds router host
+          external-port: 11666            # Port forwarded router Ra
           transport: tcp                  # Transport protocol
 
 User *B* should set *connection-addresses* to connect to *H*:sub:`A` as follows:
@@ -181,8 +220,7 @@ It does not matter whether *A* knows *B* address, *B* knows *A*, or both know ea
 In this example, *B* will know *A* address, and not the other way around.
 
 User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11666``.
-That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``
-(it is required to use same public port as the internal one).
+That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11666``.
 User *A* should set its *listening-addresses* as follows:
 
 .. code-block:: yaml
@@ -194,11 +232,10 @@ User *A* should set its *listening-addresses* as follows:
         id: 2                             # Id to generate the GuidPrefix of the Discovery Server of A
       listening-addresses:
         - ip: 1.1.1.1                     # Public IP of host Ha
-          port: 11666                     # Port forwarded router Ra
+          port: 11666                     # Internal and External port
 
 User *B* should set a port forwarding rule in router *R*:sub:`B` as ``11777 -> 192.168.2.2:11777``.
-This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11777``
-(It is necessary to use same public port as the internal one).
+This is, every datagram that arrives to IP ``2.2.2.2:11777`` will be forwarded to ``192.168.2.2:11777``.
 User *B* should set its *listening-addresses* and *connection-addresses* as follows:
 
 .. code-block:: yaml
@@ -210,7 +247,7 @@ User *B* should set its *listening-addresses* and *connection-addresses* as foll
         id: 3                             # Must be different than A one
       listening-addresses:
         - ip: 2.2.2.2                     # Public IP of host Hb
-          port: 11777                     # Port forwarded router Rb
+          port: 11777                     # Internal and External port
       connection-addresses:
         - discovery-server-guid:
             id: 2                         # Id of the Discovery Server of A

@@ -300,7 +300,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
                 address,
                 (core::types::DiscoveryServerConnectionAddress(
                     core::types::GuidPrefix("01.0f.00.00.00.00.00.00.00.00.00.00"),
-                    {core::types::Address("127.0.0.1", 3333, core::types::Address::default_transport_protocol())}
+                    {core::types::Address("127.0.0.1", 3333, 3333, core::types::Address::default_transport_protocol())}
                     ))
                 );
         }
