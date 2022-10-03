@@ -9,6 +9,10 @@ inputs:
     description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
     required: true
     default: 'master'
+  utils_branch:
+    description: 'Branch or tag of Dev Utils repository (https://github.com/eProsima/dev-utils)'
+    required: true
+    default: 'main'
 runs:
   using: composite
   steps:
@@ -39,3 +43,32 @@ runs:
           -DTHIRDPARTY=ON -DSECURITY=ON -DCOMPILE_EXAMPLES=OFF -DEPROSIMA_BUILD_TESTS=OFF `
           -DINTERNAL_DEBUG=ON -Ax64 -T host=x64 -B build\fastdds Fast-DDS;
         cmake --build build\fastdds --config ${{ inputs.cmake_build_type }} --target install
+
+    # This is needed for windows 2019 to use /Zc:preprocessor to use c++ std preprocessor for ENUMERATION_BUILDER
+    # due to a windows 2019 SDK non bug
+    - name: Set environment variables for Windows 2019 build
+      shell: pwsh
+      run: >
+        echo ("W2019_CMAKE_EXTRA_ARGS=-DCMAKE_SYSTEM_VERSION=10.0.19041.0") >> $env:GITHUB_ENV
+      if: contains( matrix.windows-version , '2019')
+
+    - name: Install Dev Utils
+      shell: pwsh
+      run: >
+        git clone https://github.com/eProsima/dev-utils.git --branch ${{ inputs.utils_branch }};
+        cmake `
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\eprosima\install `
+          -DCMAKE_PREFIX_PATH=${{ github.workspace }}\eprosima\install `
+          -DCMAKE_CXX_FLAGS="/WX /EHsc" `
+          ${{ env.W2019_CMAKE_EXTRA_ARGS }} `
+          -Ax64 -T host=x64 `
+          -B build\cmake_utils -S dev-utils\cmake_utils;
+        cmake --build build\cmake_utils --config ${{ inputs.cmake_build_type }} --target install;
+        cmake `
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\eprosima\install `
+          -DCMAKE_PREFIX_PATH=${{ github.workspace }}\eprosima\install `
+          -DCMAKE_CXX_FLAGS="/WX /EHsc" `
+          ${{ env.W2019_CMAKE_EXTRA_ARGS }} `
+          -Ax64 -T host=x64 `
+          -B build\cpp_utils -S dev-utils\cpp_utils;
+        cmake --build build\cpp_utils --config ${{ inputs.cmake_build_type }} --target install;
