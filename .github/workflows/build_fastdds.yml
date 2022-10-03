@@ -10,7 +10,7 @@ on:
       utils_branch:
         description: 'Branch or tag of Dev Utils repository (https://github.com/eProsima/dev-utils)'
         required: true
-        default: 'master'
+        default: 'main'
   schedule:
     - cron: '0 0 * * *'
 
