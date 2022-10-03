@@ -61,6 +61,8 @@ WAN Configuration
 Refer to section :ref:`user_manual_wan_configuration` for detailed explanation on how to correctly configure
 the |ddsrouter| for WAN communication.
 
+.. _user_manual_participants_wan_example:
+
 Configuration Example
 =====================
 

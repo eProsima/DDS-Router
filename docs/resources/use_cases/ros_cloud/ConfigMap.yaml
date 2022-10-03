@@ -23,9 +23,7 @@ data:
             transport: udp
 
       - name: CloudWAN
-        kind: wan-discovery-server
-        discovery-server-guid:
-          id: 2
+        kind: wan
         listening-addresses:
           - ip: 2.2.2.2           # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
             port: 30002

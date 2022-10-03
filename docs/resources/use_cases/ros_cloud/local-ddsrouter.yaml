@@ -13,17 +13,12 @@ participants:
     domain: 0
 
   - name: LocalWAN
-    kind: wan-discovery-server
-    discovery-server-guid:
-      id: 3
+    kind: wan
     listening-addresses:      # Needed for UDP communication
       - ip: 3.3.3.3           # LAN public IP
         port: 30003
         transport: udp
     connection-addresses:
-      - discovery-server-guid:
-          id: 2
-        addresses:
-          - ip: 2.2.2.2       # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
-            port: 30002
-            transport: udp
+      - ip: 2.2.2.2           # Public IP exposed by the k8s cluster to reach the cloud DDS-Router
+        port: 30002
+        transport: udp
