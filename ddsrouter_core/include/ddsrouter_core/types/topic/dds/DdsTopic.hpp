@@ -22,7 +22,7 @@
 #include <iostream>
 #include <string>
 
-#include <ddsrouter_utils/types/Fuzzy.hpp>
+#include <cpp_utils/types/Fuzzy.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/TopicQoS.hpp>

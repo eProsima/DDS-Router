@@ -17,13 +17,13 @@
  *
  */
 
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/exception/UnsupportedException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/UnsupportedException.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 #include <core/ParticipantFactory.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>

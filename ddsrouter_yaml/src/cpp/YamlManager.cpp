@@ -17,7 +17,7 @@
  *
  */
 
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 
 #include <ddsrouter_yaml/YamlManager.hpp>
 #include <ddsrouter_yaml/Yaml.hpp>
@@ -35,7 +35,7 @@ Yaml YamlManager::load_file(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
+        throw eprosima::utils::ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
                                                                << file_path << " : " << e.what());
     }
 }

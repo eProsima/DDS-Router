@@ -17,7 +17,7 @@
  */
 
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 

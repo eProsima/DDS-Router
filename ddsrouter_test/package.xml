@@ -17,7 +17,7 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>ddsrouter_cmake</depend>
+  <depend>cmake_utils</depend>
 
   <export>
     <build_type>cmake</build_type>

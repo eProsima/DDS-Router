@@ -16,7 +16,7 @@
  * @file EchoWriter.cpp
  */
 
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <writer/implementations/auxiliar/EchoWriter.hpp>
 

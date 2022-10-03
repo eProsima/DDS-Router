@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
 #include <dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/TopicQoS.hpp>
-#include <ddsrouter_utils/ReturnCode.hpp>
+#include <cpp_utils/ReturnCode.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 using namespace eprosima::ddsrouter::test;
-using namespace eprosima::ddsrouter::utils;
+using namespace eprosima::utils;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 

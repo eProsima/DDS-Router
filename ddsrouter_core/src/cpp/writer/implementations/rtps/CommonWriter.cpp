@@ -20,8 +20,8 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/common/CacheChange.h>
 
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
 #include <efficiency/cache_change/CacheChangePool.hpp>
 #include <writer/implementations/rtps/CommonWriter.hpp>
 #include <writer/implementations/rtps/filter/RepeaterDataFilter.hpp>

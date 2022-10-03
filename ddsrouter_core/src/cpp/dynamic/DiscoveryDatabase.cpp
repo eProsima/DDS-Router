@@ -17,8 +17,8 @@
  *
  */
 
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <dynamic/DiscoveryDatabase.hpp>
 

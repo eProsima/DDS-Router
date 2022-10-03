@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
@@ -44,7 +44,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
 
         ASSERT_THROW(
             YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // no guid prefix
@@ -63,7 +63,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
             YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // no addresses
@@ -80,7 +80,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
             YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // error format in guid prefix
@@ -107,7 +107,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
             YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // error format in addresses
@@ -132,6 +132,6 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         yml["connection-address"] = yml_ds_address;
         ASSERT_THROW(
             YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "connection-address", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 }

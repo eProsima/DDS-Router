@@ -15,16 +15,16 @@
 #include <algorithm>
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 using namespace eprosima::ddsrouter::test;
 using namespace eprosima::ddsrouter::core;

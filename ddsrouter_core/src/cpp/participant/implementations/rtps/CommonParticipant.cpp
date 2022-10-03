@@ -21,9 +21,9 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 #include <fastrtps/rtps/RTPSDomain.h>
 
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/utils.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/utils.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>

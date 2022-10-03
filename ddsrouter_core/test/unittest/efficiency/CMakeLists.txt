@@ -38,7 +38,7 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(
@@ -75,7 +75,7 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(
@@ -112,7 +112,7 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(

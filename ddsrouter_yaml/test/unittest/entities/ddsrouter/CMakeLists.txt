@@ -38,7 +38,7 @@ set(TEST_EXTRA_LIBRARIES
         yaml-cpp
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
 
         ddsrouter_core
     )

@@ -21,9 +21,9 @@
 
 #include <communication/rpc/RPCBridge.hpp>
 
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

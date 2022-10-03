@@ -16,7 +16,7 @@
  * @file EchoParticipant.cpp
  */
 
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <participant/implementations/auxiliar/EchoParticipant.hpp>
 #include <reader/implementations/auxiliar/BlankReader.hpp>

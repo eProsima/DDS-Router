@@ -19,8 +19,8 @@
 #include <memory>
 
 #include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
 #include <participant/implementations/auxiliar/BaseParticipant.hpp>
 #include <reader/implementations/auxiliar/BaseReader.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>

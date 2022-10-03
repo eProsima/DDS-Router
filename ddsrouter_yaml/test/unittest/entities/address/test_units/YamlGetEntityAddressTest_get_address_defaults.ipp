@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -41,7 +41,7 @@ TEST(YamlGetEntityAddressTest, get_address_defaults)
         yml["address"] = yml_address;
 
         // Get core::types::Address from Yaml
-        ASSERT_THROW(YamlReader::get<core::types::Address>(yml, "address", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::Address>(yml, "address", LATEST), eprosima::utils::ConfigurationException);
     }
 
     // with ip version ipv6

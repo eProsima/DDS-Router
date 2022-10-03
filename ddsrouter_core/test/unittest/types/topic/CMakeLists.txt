@@ -28,7 +28,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(
@@ -59,7 +59,7 @@ set(TEST_LIST
 set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(
@@ -97,7 +97,7 @@ set(TEST_EXTRA_LIBRARIES
         $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
         fastcdr
         fastrtps
-        ddsrouter_utils
+        cpp_utils
 
     )
 

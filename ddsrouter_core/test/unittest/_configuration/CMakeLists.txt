@@ -27,7 +27,7 @@ set(TEST_LIST
     )
 
 set(TEST_EXTRA_LIBRARIES
-        ddsrouter_utils
+        cpp_utils
     )
 
 add_unittest_executable(

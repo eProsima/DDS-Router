@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -74,7 +74,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // Incorrect tag
@@ -90,7 +90,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // Incorrect format
@@ -106,6 +106,6 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 }

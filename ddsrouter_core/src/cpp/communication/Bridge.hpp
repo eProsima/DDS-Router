@@ -21,7 +21,7 @@
 
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

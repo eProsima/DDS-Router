@@ -22,12 +22,12 @@
 #include <atomic>
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>

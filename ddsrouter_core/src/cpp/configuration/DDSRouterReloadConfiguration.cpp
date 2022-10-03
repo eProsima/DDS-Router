@@ -18,9 +18,9 @@
  */
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

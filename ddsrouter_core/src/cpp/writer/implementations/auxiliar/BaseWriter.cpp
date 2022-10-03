@@ -16,7 +16,7 @@
  * @file BaseWriter.cpp
  */
 
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <writer/implementations/auxiliar/BaseWriter.hpp>
 

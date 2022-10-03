@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

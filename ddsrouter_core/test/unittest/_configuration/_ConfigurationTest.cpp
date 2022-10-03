@@ -15,11 +15,11 @@
 #include <algorithm>
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_utils/exception/utils::ConfigurationException.hpp>
+#include <cpp_utils/exception/utils::ConfigurationException.hpp>
 #include <ddsrouter_core/types/configuration_tags.hpp>
 #include <ddsrouter_core/types/RawConfiguration.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>

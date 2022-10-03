@@ -18,10 +18,10 @@
 cmake_minimum_required(VERSION 3.5)
 
 ###############################################################################
-# Find package ddsrouter_cmake
+# Find package cmake_utils
 ###############################################################################
-# Package ddsrouter_cmake is required to get every cmake macro needed
-find_package(ddsrouter_cmake REQUIRED)
+# Package cmake_utils is required to get every cmake macro needed
+find_package(cmake_utils REQUIRED)
 
 ###############################################################################
 # Project

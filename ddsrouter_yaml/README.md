@@ -26,7 +26,7 @@ core::configuration::DDSRouterConfiguration router_configuration =
 ## Dependencies
 
 * `yaml-cpp`
-* `ddsrouter_utils`
+* `cpp_utils`
 * `ddsrouter_core`
 
 

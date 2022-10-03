@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>
-#include <TestLogHandler.hpp>
+
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
@@ -33,7 +34,8 @@ using namespace eprosima::ddsrouter::yaml;
 TEST(YamlGetEntityAddressTest, ip_and_domain)
 {
     // Check a warning is shown
-    eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
+    // eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Warning, 1, 0);
 
     // Set address
     Yaml yml_address;

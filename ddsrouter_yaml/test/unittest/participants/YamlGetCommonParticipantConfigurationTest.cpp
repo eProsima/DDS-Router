@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
@@ -81,7 +81,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
             YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // no id
@@ -98,7 +98,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
             YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // no type
@@ -115,7 +115,7 @@ TEST(YamlGetCommonParticipantConfigurationTest, get_participant_negative)
         ASSERT_THROW(
             core::configuration::ParticipantConfiguration result =
             YamlReader::get<core::configuration::ParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 }
 

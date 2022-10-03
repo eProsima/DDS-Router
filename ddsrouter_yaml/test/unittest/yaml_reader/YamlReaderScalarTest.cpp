@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 
 #include "YamlReaderTest_common.hpp"
 
@@ -47,7 +47,7 @@ TEST(YamlReaderScalarTest, get_scalar_bool)
     // fail with int
     {
         Yaml yml(0);
-        ASSERT_THROW(test::MockYamlReader::get_scalar<bool>(yml), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<bool>(yml), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -101,7 +101,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
 
     // fail with bool
     {
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(Yaml(false)), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(Yaml(false)), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -194,7 +194,7 @@ TEST(YamlReaderScalarTest, get_scalar_from_tag)
     {
         Yaml yml;
         yml["other_tag"] = 3;
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml, tag), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml, tag), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -212,7 +212,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
     {
         Yaml yml;
         ASSERT_TRUE(yml.IsNull());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 
     // sequence
@@ -221,7 +221,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
         yml.push_back(3);
         yml.push_back(4);
         ASSERT_TRUE(yml.IsSequence());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 
     // map
@@ -230,7 +230,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
         yml["1"] = 3;
         yml["2"] = 4;
         ASSERT_TRUE(yml.IsMap());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), utils::ConfigurationException);
+        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 }
 

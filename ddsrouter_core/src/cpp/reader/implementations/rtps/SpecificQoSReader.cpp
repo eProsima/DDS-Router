@@ -19,8 +19,8 @@
 #include <fastrtps/rtps/RTPSDomain.h>
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <reader/implementations/rtps/SpecificQoSReader.hpp>
 

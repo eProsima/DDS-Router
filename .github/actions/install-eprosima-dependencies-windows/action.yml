@@ -60,7 +60,6 @@ runs:
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}\eprosima\install `
           -DCMAKE_PREFIX_PATH=${{ github.workspace }}\eprosima\install `
           -DCMAKE_CXX_FLAGS="/WX /EHsc" `
-          ${{ env.W2019_CMAKE_EXTRA_ARGS }} `
           -Ax64 -T host=x64 `
           -B build\cmake_utils -S dev-utils\cmake_utils;
         cmake --build build\cmake_utils --config ${{ inputs.cmake_build_type }} --target install;

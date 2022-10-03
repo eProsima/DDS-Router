@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
@@ -88,7 +88,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
 
         ASSERT_THROW(
             YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // TODO: this tests requires to modify fastrtps core::types::GuidPrefix >> operator so it returns a non valid guid
@@ -174,7 +174,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
         yml["guid_prefix"] = yml_gp;
 
         ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
-                utils::ConfigurationException);
+                eprosima::utils::ConfigurationException);
     }
 }
 
@@ -262,7 +262,7 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
         yml["guid_prefix"] = yml_gp;
 
         ASSERT_THROW(YamlReader::get<core::types::GuidPrefix>(yml, "guid_prefix", LATEST),
-                utils::ConfigurationException);
+                eprosima::utils::ConfigurationException);
     }
 }
 

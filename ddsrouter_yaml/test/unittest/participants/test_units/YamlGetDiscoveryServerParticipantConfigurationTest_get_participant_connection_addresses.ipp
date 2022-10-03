@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
@@ -236,7 +236,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
             YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // incorrect guid format
@@ -270,7 +270,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
             YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // not list of addresses
@@ -309,7 +309,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
             YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // incorrect address format
@@ -344,6 +344,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         ASSERT_THROW(
             core::configuration::DiscoveryServerParticipantConfiguration result =
             YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 }

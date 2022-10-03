@@ -189,12 +189,6 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
-      - name: Run tests ddsrouter_utils
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_utils
-        if: always()
-
       - name: Run tests ddsrouter_core
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:

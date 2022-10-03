@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
 
 #include "../../YamlConfigurationTestUtils.hpp"
 
@@ -171,7 +171,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incor
         core::types::security::TlsConfiguration tls_configuration = YamlReader::get<core::types::security::TlsConfiguration>(
             yml, TLS_TAG,
             LATEST),
-        utils::ConfigurationException);
+        eprosima::utils::ConfigurationException);
 }
 
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incorrect_format)
@@ -189,5 +189,5 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incor
         core::types::security::TlsConfiguration tls_configuration = YamlReader::get<core::types::security::TlsConfiguration>(
             yml, TLS_TAG,
             LATEST),
-        utils::ConfigurationException);
+        eprosima::utils::ConfigurationException);
 }

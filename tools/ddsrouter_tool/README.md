@@ -28,7 +28,7 @@ ddsrouter --help
 
 ## Dependencies
 
-* `ddsrouter_utils`
+* `cpp_utils`
 * `ddsrouter_core`
 * `ddsrouter_yaml`
 
