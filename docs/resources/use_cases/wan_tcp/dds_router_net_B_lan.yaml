@@ -6,7 +6,7 @@ participants:
     kind: local
     domain: 1
 
-  - name: Router_Client
+  - name: Router_Server
     kind: wan
     listening-addresses:
       - ip: 123.123.123.123
