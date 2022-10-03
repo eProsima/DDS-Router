@@ -30,3 +30,10 @@ def print_with_timestamp(
     """Print a message with a timestamp."""
     print(f'{time.time()}$ {msg}')
     # This has been made by copilot... Respect
+
+
+def delay(
+        time_s: float):
+    """Wait for time_s seconds."""
+    if (time_s > 0):
+        time.sleep(time_s)

@@ -22,6 +22,7 @@ set(TESTS
 
     rpc/ros2_services_cloud
     rpc/ros2_services_repeater
+    rpc/ros2_services_repeater_with_talker
     rpc/ros2_services_correct_target
     rpc/ros2_services_simple
     rpc/ros2_services_without_router
@@ -31,6 +32,7 @@ set(TESTS
     transparency/partitions
     transparency/durability
     transparency/ownership
+
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

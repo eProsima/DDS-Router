@@ -1,0 +1,134 @@
+# Test description:
+#   This test checks a specific scenario where a talker-listener and a server-client are running each in
+#   different nets and are connected by a repeater ddsrouter
+#
+# Test architecture:
+#
+#          ┌────────────────────────────────────────────────────────────────┐
+#          │ cloud_edge_net                                                 │
+#          │                                                                │
+#          │                        ┌──────────────────┐                    │
+#          │                        │ ddsrouter_cloud  │                    │
+#          │                        │ (wan [repeater]) │                    │
+#          │                        └─▲──────────────▲─┘                    │
+#          │                          │              │                      │
+#          │           ┌──────────────┘              └─────────┐            │
+#   ┌──────┼───────────┼──────────────────┐        ┌───────────┼────────────┼──────────────┐
+#   │      │           │                  │        │           │            │              │
+#   │      │ ┌─────────▼────────┐         │        │   ┌───────▼──────────┐ │              │
+#   │      │ │ ddsrouter_edge_1 │         │        │   │ ddsrouter_edge_2 │─┼────┐         │
+#   │      │ │ (local + wan)    │         │        │   │ (local + wan)    │ │    │         │
+#   │      │ └───────┬────▲─────┘         │        │   └───────┬──────────┘ │    │         │
+#   │      │         │    │               │        │           │            │    │         │
+#   │      └─────────┼────┼───────────────┼────────┼───────────┼────────────┘    │         │
+#   │                │    │               │        │           │                 │         │
+#   │  ┌─────────────▼┐  ┌┴────────────┐  │        │    ┌──────▼───────┐  ┌──────▼───────┐ │
+#   │  │   talker_1   │  │ ser_edge_1  │  │        │    │  cli_edge_2  │  │  listener_2  │ │
+#   │  │              │  │  (server)   │  │        │    │   (client)   │  │              │ │
+#   │  └──────────────┘  └─────────────┘  │        │    └──────────────┘  └──────────────┘ │
+#   │                                     │        │                                       │
+#   │ edge_1_net (domain 1)               │        │                 edge_2_net (domain 2) │
+#   └─────────────────────────────────────┘        └───────────────────────────────────────┘
+
+services:
+
+  #####
+  # Cloud
+
+  ddsrouter_cloud:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_cloud
+    networks:
+      - cloud_edge_net
+    volumes:
+      - ./ddsrouter_cloud_repeater.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 16
+
+  #####
+  # Edge 1
+
+  ddsrouter_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_1
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_edge_net
+      - edge_1_net
+    volumes:
+      - ./ddsrouter_edge_1.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 16
+
+  talker_1:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: talker_1
+    depends_on:
+      - ddsrouter_edge_1
+    networks:
+      - edge_1_net
+    environment:
+      - ROS_DOMAIN_ID=1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_talker.py --timeout 14 --delay 1
+
+  ser_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: ser_edge_1
+    depends_on:
+      - ddsrouter_edge_1
+    networks:
+      - edge_1_net
+    environment:
+      - ROS_DOMAIN_ID=1
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_server.py --samples 10 --timeout 15 --delay 1
+
+  #####
+  # Edge 2
+
+  ddsrouter_edge_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_2
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_edge_net
+      - edge_2_net
+    volumes:
+      - ./ddsrouter_edge_2.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 16
+
+  listener_2:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: listener_2
+    depends_on:
+      - ddsrouter_edge_2
+    networks:
+      - edge_2_net
+    environment:
+      - ROS_DOMAIN_ID=2
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_listener.py --timeout 13 --delay 1
+
+  cli_edge_2:
+    image: ${DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE}
+    container_name: cli_edge_2
+    depends_on:
+      - ddsrouter_edge_2
+    networks:
+      - edge_2_net
+    environment:
+      - ROS_DOMAIN_ID=2
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_client.py --samples 10 --timeout 15 --delay 1
+
+networks:
+  edge_1_net:
+  edge_2_net:
+  cloud_edge_net:
+  default:
+    driver: none

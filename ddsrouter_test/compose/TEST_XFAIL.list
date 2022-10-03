@@ -1,3 +1,11 @@
+tool.application.ddsrouter.compose.discovery_server
+tool.application.ddsrouter.compose.repeater_tcp
+tool.application.ddsrouter.compose.tcp
 tool.application.ddsrouter.compose.rpc_ros2_services_cloud
+tool.application.ddsrouter.compose.rpc_ros2_services_correct_target
 tool.application.ddsrouter.compose.rpc_ros2_services_repeater
+tool.application.ddsrouter.compose.rpc_ros2_services_repeater_with_talker
 tool.application.ddsrouter.compose.rpc_ros2_services_simple
+tool.application.ddsrouter.compose.rpc_ros2_services_trivial
+tool.application.ddsrouter.compose.rpc_ros2_services_trivial_multiple
+tool.application.ddsrouter.compose.rpc_ros2_services_without_router

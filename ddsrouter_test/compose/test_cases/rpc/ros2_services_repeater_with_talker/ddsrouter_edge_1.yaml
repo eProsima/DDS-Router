@@ -1,0 +1,14 @@
+version: v3.0
+
+participants:
+
+  - name: Simple_Participant
+    kind: local
+    domain: 1
+
+  - name: Edge_1_Participant
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: tcp

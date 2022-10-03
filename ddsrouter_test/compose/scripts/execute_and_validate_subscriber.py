@@ -210,9 +210,6 @@ if __name__ == '__main__':
     if args.debug:
         log.activate_debug()
 
-    # Wait for delay
-    time.sleep(args.delay)
-
     command = _subscriber_command(args)
 
     validate_func = (lambda stdout_parsed, stderr_parsed: (
@@ -226,6 +223,7 @@ if __name__ == '__main__':
     ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
+        delay=args.delay,
         parse_output_function=_subscriber_parse_output,
         validate_output_function=validate_func)
 

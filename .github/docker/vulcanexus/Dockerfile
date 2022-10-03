@@ -16,11 +16,14 @@ SHELL ["/bin/bash", "-c"]
 ARG docker_image_base
 RUN echo "Docker Base image used: ${docker_image_base}"
 
-# Install message interface required package
+# Install message interface and demo nodes required packages
 RUN source "/opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash" && \
         apt-get update && \
         apt-get install -y \
-            ros-humble-example-interfaces
+            ros-humble-example-interfaces \
+            ros-humble-example-interfaces \
+            ros-humble-demo-nodes-cpp \
+            ros-humble-demo-nodes-py
 
 # Copy and use run.bash as entrypoint
 COPY run.bash /root/run.bash

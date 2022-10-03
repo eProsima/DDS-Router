@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import argparse
-from asyncio.log import logger
 
 import log
+
 import validation
 
 DESCRIPTION = """Script to validate clients output"""
@@ -55,6 +55,12 @@ def parse_options():
         type=str,
         default='/scripts/ros2_nodes/node_main.py',
         help='Timeout for the server application.'
+    )
+    parser.add_argument(
+        '--delay',
+        type=float,
+        default=0,
+        help='Time to wait before starting execution.'
     )
     parser.add_argument(
         '-d',
@@ -140,6 +146,7 @@ if __name__ == '__main__':
     ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
+        delay=args.delay,
         parse_output_function=_client_parse_output,
         validate_output_function=_client_validate)
 

@@ -1,0 +1,11 @@
+version: v3.0
+
+participants:
+
+  - name: Cloud_Participant_Repeater
+    kind: wan
+    repeater: true
+    listening-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: tcp

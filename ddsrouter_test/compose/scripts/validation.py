@@ -16,8 +16,11 @@ import signal
 import subprocess
 import time
 from enum import Enum
+from typing import List
 
 import log
+
+import utils
 
 
 class ReturnCode(Enum):
@@ -31,7 +34,11 @@ class ReturnCode(Enum):
     STDERR_OUTPUT = 5
 
 
-def run_command(command, timeout):
+def run_command(
+        command: 'list[str]',
+        timeout: float,
+        delay: float = 0,
+        timeout_as_error: bool = True):
     """
     Run command with timeout.
 
@@ -44,6 +51,9 @@ def run_command(command, timeout):
     """
     ret_code = ReturnCode.SUCCESS
 
+    # Delay
+    utils.delay(delay)
+
     log.logger.debug(f'Running command: {command}')
 
     proc = subprocess.Popen(command,
@@ -53,12 +63,22 @@ def run_command(command, timeout):
 
     try:
         proc.wait(timeout=timeout)
+
     except subprocess.TimeoutExpired:
-        log.logger.error(
-            'Timeout expired. '
-            'Killing process before receiving all samples...')
-        proc.send_signal(signal.SIGINT)
-        ret_code = ReturnCode.TIMEOUT
+        if timeout_as_error:
+            log.logger.error(
+                'Timeout expired. '
+                'Killing process before receiving all samples...')
+            proc.send_signal(signal.SIGINT)
+            ret_code = ReturnCode.TIMEOUT
+
+        else:
+            proc.send_signal(signal.SIGINT)
+
+    else:
+        if not timeout_as_error:
+            log.logger.error(f'Command finished before expected.')
+            ret_code = ReturnCode.COMMAND_FAIL
 
         # Wait a minimum elapsed time to the signal to be received
         time.sleep(0.2)
@@ -83,10 +103,12 @@ def run_command(command, timeout):
 
 
 def run_and_validate(
-        command,
+        command: List[str],
         timeout: int,
         parse_output_function,
-        validate_output_function):
+        validate_output_function,
+        delay: float = 0,
+        timeout_as_error: bool = True):
     """
     Run the subscriber and validate its output.
 
@@ -94,10 +116,15 @@ def run_and_validate(
     :param timeout: Timeout for the process
     :param parse_output_function: Function to parse the output of the process
     :param validate_output_function: Function to validate the output of process
+    :param timeout_as_error: Whether the timeout reach should be taken as error
 
     :return: exit code
     """
-    ret_code, stdout, stderr = run_command(command, timeout)
+    ret_code, stdout, stderr = run_command(
+        command=command,
+        timeout=timeout,
+        delay=delay,
+        timeout_as_error=timeout_as_error)
 
     if ret_code != ReturnCode.SUCCESS:
         log.logger.error(
@@ -112,8 +139,12 @@ def run_and_validate(
 
         log.logger.debug(
             f'Executable execution output:'
-            f'\n stdout output: \n{stdout}'
-            f'\n stderr output: \n{stderr}')
+            f'\n stdout output: \n{stdout}')
+
+        if stderr != '':
+            log.logger.warning(
+                f'Executable execution output in stderr:'
+                f'\n{stderr}')
 
         stdout_parsed, stderr_parsed = parse_output_function(stdout, stderr)
 
@@ -155,8 +186,7 @@ def find_duplicates(data):
 
 def validate_default(stdout_parsed, stderr_parsed) -> ReturnCode:
     """Validate any data as correct."""
-    if stderr_parsed != '':
-        log.logger.error(f'stderr messages: <{stderr_parsed}>')
+    if stderr_parsed != '' and stderr_parsed != []:
         return ReturnCode.STDERR_OUTPUT
     else:
         return ReturnCode.SUCCESS
