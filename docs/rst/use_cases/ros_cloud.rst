@@ -18,8 +18,8 @@ Local setup
 ===========
 The local instance of |ddsrouter| (local router) only requires to have a
 :ref:`Simple Participant <user_manual_participants_simple>`, and a
-:ref:`Discovery Server WAN Participant <user_manual_participants_discovery_server_wan>` that will play the client role
-in the discovery process of remote participants (see :term:`Discovery Server discovery mechanism <Discovery Server>`).
+:ref:`WAN Participant <user_manual_participants_wan>` that will play the client role in the discovery process of remote
+participants (see :term:`Initial Peers discovery mechanism <Initial Peers>`).
 
 After having acknowledged each other’s existence through `Simple DDS discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_
 (multicast communication), the local participant will start receiving messages published by the ROS 2 talker node, and
@@ -44,7 +44,7 @@ participant, even when behaving as client in the participant discovery process. 
 reachable from outside this local network by properly configuring port forwarding in your Internet router device.
 The connection address points to the remote WAN participant deployed in the |k8s| cluster. For further details on how to
 configure WAN communication, please have a look at :ref:`WAN Configuration <user_manual_wan_configuration>` and
-:ref:`DS WAN Participant Configuration Example <user_manual_participants_discovery_server_wan_example>`.
+:ref:`WAN Participant Configuration Example <user_manual_participants_wan_example>`.
 
 .. note::
 
@@ -73,14 +73,13 @@ Once *ROS 2* is installed, start publishing messages in DDS domain ``0`` by exec
     RMW_IMPLEMENTATION=rmw_fastrtps_cpp ros2 run demo_nodes_cpp talker
 
 
-
 Kubernetes setup
 ================
 Two different deployments will be used for this example, each in a different |k8s| pod. The |ddsrouter| cloud instance
 (cloud router) consists of two participants:
 
-* A :ref:`Discovery Server WAN Participant <user_manual_participants_discovery_server_wan>` that receives the messages
-  coming from our LAN through the aforementioned UDP communication channel.
+* A :ref:`WAN Participant <user_manual_participants_wan>` that receives the messages coming from our LAN through the
+  aforementioned UDP communication channel.
 * A :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` (local DS) that propagates them to a
   ROS 2 listener node hosted in a different |k8s| pod.
 

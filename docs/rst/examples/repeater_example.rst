@@ -91,7 +91,7 @@ Host *H*:sub:`A`
 This host runs the |ddsrouter| Repeater Server, which will receive data from both edges and redirect the messages
 between them.
 Execute |ddsrouter| using file
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_server.yaml``.
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater.yaml``.
 Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
 
@@ -101,7 +101,7 @@ Hosts *H*:sub:`B` and *H*:sub:`C`
 
 These hosts run the |ddsrouter| WAN Clients, which will connect to the previously launched Repeater Server.
 Execute |ddsrouter| using file
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_client.yaml``.
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/wan_client.yaml``.
 Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`.
 **In this example the port forwarding is not required, as the Repeater will allow the communication through it,
 and TCP protocol is being used.**.

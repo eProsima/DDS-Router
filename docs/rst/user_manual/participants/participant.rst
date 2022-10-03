@@ -122,7 +122,8 @@ Below is the list with all the available Participant Kinds.
 
     *   - :ref:`user_manual_participants_wan`
         - ``wan`` |br|
-          ``router``
+          ``router`` |br|
+          ``initial-peers``
         - ``guid`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses`` |br|
