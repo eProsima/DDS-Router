@@ -3,54 +3,57 @@
 .. _release_notes:
 
 .. comment the include of forthcoming when new info is added
-
-.. include:: forthcoming_version.rst
+..
+    .. include:: forthcoming_version.rst
 
 ##############
-Version v0.4.0
+Version v1.0.0
 ##############
+
+This is the first **stable release** of eProsima *DDS Router*.
+
+This release includes the following **major features**:
+
+* New **QoS Transparency Module**.
 
 This release includes the following **features**:
 
-* New :ref:`yaml_validator`, a simple tool to assert the correctness of DDS Router configuration files.
-* New :ref:`user_manual_user_interface_version_argument` to show the current version of DDS Router.
+* New :ref:`Repeater behaviour <use_case_repeater>`, a new configuration to create :term:`TURN` servers.
+* Add RPC support (compatibility with *ROS 2* services).
+* Timeout argument ``--timeout`` to close the application after the time set has passed.
+  Check section :ref:`user_manual_user_interface_timeout_argument` for more information.
+* Add TLS-SNI support.
+* Add **external port** support so internal and external port in network router configuration could be different.
 
-This release includes the following **improvementes**:
+This release includes the following **DDS features**:
 
-* New :code:`FastPayloalPool` class that will allow unblocking access to shared payloads stored by FastDDS and
-  DDS Router.
-  This slightly improves the **performance** of the router.
+* New :term:`Initial Peers` Participant that allows to create a fast WAN communication
+  avoiding the Discovery Server configuration.
+* Participants names are set from ParticipantIds.
 
-* New :code:`ThreadPool` class for handling parallel processing.
-  Limit the number of threads spawned by the DDS Router, improving the performance of the application.
-  The user can set-up this parameter on the YAML configuration :ref:`thread_configuration`.
+This release includes the following **configuration changes**:
+
+* New Configuration Version ``v3.0`` that allow Repeater and initial peers configuration.
+* Yaml Validator only validates ``v3.0`` configurations.
+* Address supports an :code:`external-port` value to set this in a listening address.
 
 This release includes the following **major changes**:
 
-* New auxiliary package :code:`cmake_utils` to implement general CMake functions and tools.
-* The internal package :code:`ddsrouter_event` is joint within the internal package :code:`cpp_utils`.
+* ``wan`` Participant Kind uses now Initial Peers Discovery Protocol, while Discovery Server
+  requires a new Participant Kind ``wan-discovery-server``.
+* Internal packages for utils as ``ddsrouter_cmake`` and ``ddsrouter_utils`` have been moved to
+  an `external repository <https://github.com/eProsima/dev-utils>`_.
 
-This release includes the following **minor changes**:
+This release includes the following **performance improvements**:
 
-* Refactor all :code:`enum` to :code:`enum class`.
+* No locking in the :code:`Track` hot-path.
 
-This release includes the following **Continuous-Integration features**:
-
-* New CI workflow to build dependencies nightly.
-  This allows to run the CI faster, as the build is only done for the ddsrouter packages and not the whole fastdds.
-* Add :code:`ubuntu 22.04` to platforms in CI.
-* Add :code:`windows 19` to platforms in CI.
-
-This release fixes the following **minor bugs**:
-
-* Fix race condition occurred when handling signals (due to concurrent access to *SignalManager* singleton).
-* Bug in TLS Configuration initialization when setting server configuration files.
-* Set FastDDS DomainParticipants and Readers listeners after creation to avoid race conditions in entities creation.
 
 #################
 Previous Versions
 #################
 
+.. include:: previous_versions/v0.4.0.rst
 .. include:: previous_versions/v0.3.0.rst
 .. include:: previous_versions/v0.2.0.rst
 .. include:: previous_versions/v0.1.0.rst

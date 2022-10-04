@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>ddsrouter_yaml</name>
-  <version>0.4.0</version>
+  <version>1.0.0</version>
   <description>
      *eprosima DDS Router* Yaml Module is a C++ implementation for handling events in multithreading executions as PeriodicTimers, Signals, FileWatchers, etc.
   </description>
