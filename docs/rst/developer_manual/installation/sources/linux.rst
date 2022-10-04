@@ -303,7 +303,7 @@ Local installation
         .. code-block:: bash
 
             cd ~/DDS-Router
-            git clone https://github.com/eProsima/Fast-DDS.git
+            git clone https://github.com/eProsima/dev-utils.git
             mkdir dev-utils/build
             cd dev-util/build
             cmake ../cmake_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
