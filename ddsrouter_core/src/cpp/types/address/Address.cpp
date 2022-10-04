@@ -19,9 +19,9 @@
 
 #include <fastrtps/utils/IPLocator.h>
 
-#include <ddsrouter_utils/exception/DNSException.hpp>
+#include <cpp_utils/exception/DNSException.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

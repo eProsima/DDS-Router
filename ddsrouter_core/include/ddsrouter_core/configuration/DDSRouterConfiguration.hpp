@@ -22,7 +22,7 @@
 #include <memory>
 #include <set>
 
-#include <ddsrouter_utils/Formatter.hpp>
+#include <cpp_utils/Formatter.hpp>
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/configuration/SpecsConfiguration.hpp>

@@ -17,7 +17,7 @@
  */
 
 #include <reader/implementations/auxiliar/BaseReader.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {

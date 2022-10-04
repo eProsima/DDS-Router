@@ -18,7 +18,7 @@
  */
 
 #include <ddsrouter_core/types/dds/TopicQoS.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

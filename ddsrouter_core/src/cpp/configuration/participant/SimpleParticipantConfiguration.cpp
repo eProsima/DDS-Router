@@ -17,7 +17,7 @@
  */
 
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -19,8 +19,8 @@
 
 #include <communication/DDSBridge.hpp>
 
-#include <ddsrouter_utils/exception/UnsupportedException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/UnsupportedException.hpp>
+#include <cpp_utils/Log.hpp>
 #include <participant/implementations/rtps/CommonParticipant.hpp>
 
 namespace eprosima {

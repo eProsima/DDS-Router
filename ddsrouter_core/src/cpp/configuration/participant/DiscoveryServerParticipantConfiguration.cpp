@@ -17,9 +17,9 @@
  */
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -15,14 +15,15 @@
 #include <atomic>
 #include <thread>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
-#include <TestLogHandler.hpp>
+
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <test_participants.hpp>
 
@@ -100,7 +101,8 @@ void test_local_communication_key_dispose(
 {
     // Check there are no warnings/errors
     // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
-    eprosima::ddsrouter::test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    // eprosima::ddsrouter::test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);

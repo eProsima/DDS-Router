@@ -19,15 +19,15 @@
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_utils/event/FileWatcherHandler.hpp>
-#include <ddsrouter_utils/event/MultipleEventHandler.hpp>
-#include <ddsrouter_utils/event/PeriodicEventHandler.hpp>
-#include <ddsrouter_utils/event/SignalEventHandler.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_utils/time/time_utils.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/event/FileWatcherHandler.hpp>
+#include <cpp_utils/event/MultipleEventHandler.hpp>
+#include <cpp_utils/event/PeriodicEventHandler.hpp>
+#include <cpp_utils/event/SignalEventHandler.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/ReturnCode.hpp>
+#include <cpp_utils/time/time_utils.hpp>
+#include <cpp_utils/utils.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>
 
@@ -45,10 +45,10 @@ int main(
     std::string file_path = "";
 
     // Reload time
-    utils::Duration_ms reload_time = 0;
+    eprosima::utils::Duration_ms reload_time = 0;
 
     // Maximum timeout
-    utils::Duration_ms timeout = 0;
+    eprosima::utils::Duration_ms timeout = 0;
 
     // Debug option active
     bool activate_debug = false;
@@ -82,7 +82,7 @@ int main(
 
     // Check file exists and it is readable
     // NOTE: this check is redundant with option parse arg check
-    if (!is_file_accessible(file_path.c_str(), utils::FileAccessMode::read))
+    if (!is_file_accessible(file_path.c_str(), eprosima::utils::FileAccessMode::read))
     {
         logError(
             DDSROUTER_ARGS,
@@ -96,32 +96,34 @@ int main(
     if (activate_debug)
     {
         // Activate log
-        utils::Log::SetVerbosity(utils::Log::Kind::Info);
+        eprosima::utils::Log::SetVerbosity(eprosima::utils::Log::Kind::Info);
 
         // NOTE:
         // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
         // in non debug or with LOG_NO_INFO=ON.
         // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
         // Change it when Log Module is independent and with more extensive API.
-        // utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+        // eprosima::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
         // Create a multiple event handler that handles all events that make the router stop
-        event::MultipleEventHandler close_handler;
+        eprosima::utils::event::MultipleEventHandler close_handler;
 
         // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
-        close_handler.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
-            std::make_unique<event::SignalEventHandler<event::Signal::sigint>>());     // Add SIGINT
-        close_handler.register_event_handler<event::EventHandler<event::Signal>, event::Signal>(
-            std::make_unique<event::SignalEventHandler<event::Signal::sigterm>>());    // Add SIGTERM
+        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>,
+                eprosima::utils::event::Signal>(
+            std::make_unique<eprosima::utils::event::SignalEventHandler<eprosima::utils::event::Signal::sigint>>());     // Add SIGINT
+        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>,
+                eprosima::utils::event::Signal>(
+            std::make_unique<eprosima::utils::event::SignalEventHandler<eprosima::utils::event::Signal::sigterm>>());    // Add SIGTERM
 
         // If it must be a maximum time, register a periodic handler to finish handlers
         if (timeout > 0)
         {
-            close_handler.register_event_handler<event::PeriodicEventHandler>(
-                std::make_unique<event::PeriodicEventHandler>(
+            close_handler.register_event_handler<eprosima::utils::event::PeriodicEventHandler>(
+                std::make_unique<eprosima::utils::event::PeriodicEventHandler>(
                     []()
                     {
                         /* Do nothing */ },
@@ -165,14 +167,14 @@ int main(
                 };
 
         // Creating FileWatcher event handler
-        std::unique_ptr<event::FileWatcherHandler> file_watcher_handler =
-                std::make_unique<event::FileWatcherHandler>(filewatcher_callback, file_path);
+        std::unique_ptr<eprosima::utils::event::FileWatcherHandler> file_watcher_handler =
+                std::make_unique<eprosima::utils::event::FileWatcherHandler>(filewatcher_callback, file_path);
 
         /////
         // Periodic Handler for reload configuration in periodic time
 
         // It must be a ptr, so the object is only created when required by a specific configuration
-        std::unique_ptr<event::PeriodicEventHandler> periodic_handler;
+        std::unique_ptr<eprosima::utils::event::PeriodicEventHandler> periodic_handler;
 
         // If reload time is higher than 0, create a periodic event to reload configuration
         if (reload_time > 0)
@@ -199,7 +201,8 @@ int main(
                         }
                     };
 
-            periodic_handler = std::make_unique<event::PeriodicEventHandler>(periodic_callback, reload_time);
+            periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback,
+                            reload_time);
         }
 
         // Start Router
@@ -228,7 +231,7 @@ int main(
 
         logUser(DDSROUTER_EXECUTION, "DDS Router stopped correctly.");
     }
-    catch (const utils::ConfigurationException& e)
+    catch (const eprosima::utils::ConfigurationException& e)
     {
         logError(DDSROUTER_ERROR,
                 "Error Loading DDS Router Configuration from file " << file_path <<
@@ -236,7 +239,7 @@ int main(
                 e.what());
         return static_cast<int>(ui::ProcessReturnCode::execution_failed);
     }
-    catch (const utils::InitializationException& e)
+    catch (const eprosima::utils::InitializationException& e)
     {
         logError(DDSROUTER_ERROR,
                 "Error Initializing DDS Router. Error message:\n " <<
@@ -247,7 +250,7 @@ int main(
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router Tool execution correctly.");
 
     // Force print every log before closing
-    utils::Log::Flush();
+    eprosima::utils::Log::Flush();
 
     return static_cast<int>(ui::ProcessReturnCode::success);
 }

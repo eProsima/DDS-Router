@@ -14,10 +14,10 @@
 
 #include <set>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
 #include <participant/implementations/auxiliar/BlankParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
@@ -108,7 +108,7 @@ TEST(ParticipantsDatabaseTest, add_participant)
         participants_database->add_participant(
             participant->id(),
             participant, 1),
-        utils::InconsistencyException);
+        eprosima::utils::InconsistencyException);
 }
 
 /**

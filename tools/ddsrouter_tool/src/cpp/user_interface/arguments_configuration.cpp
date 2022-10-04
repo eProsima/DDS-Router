@@ -22,8 +22,8 @@
 #include <vector>
 
 #include <ddsrouter_core/library/config.h>
-#include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
 
 #include "arguments_configuration.hpp"
 

@@ -17,7 +17,7 @@
  */
 
 #include <reader/implementations/auxiliar/DummyReader.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

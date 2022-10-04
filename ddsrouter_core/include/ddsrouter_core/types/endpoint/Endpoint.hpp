@@ -19,7 +19,7 @@
 #ifndef _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 #define _DDSROUTERCORE_TYPES_ENDPOINT_ENDPOINT_HPP_
 
-#include <ddsrouter_utils/macros/custom_enumeration.hpp>
+#include <cpp_utils/macros/custom_enumeration.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/dds/Guid.hpp>

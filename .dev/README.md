@@ -18,21 +18,6 @@ the requirements or dependencies of higher level packages are not fulfilled
 
 The modules contained in this repository are the following:
 
-* **ddsrouter_cmake** This is intend to be a generic cmake library that offer general function and macros to
-  facilitate the written of CMake files for the rest of the packages.
-  * `cmake`: CMake files with different functions and macros
-  * `loader`: Files to load every `ddsrouter_cmake` when package is added into another CMake
-  * `modules`: CMake files to find different modules or packages
-  * `templates`: Template files that will be installed for different proposes
-  * `test_installer`: Files installed for testing
-
-* **ddsrouter_utils** This is intend to be a generic utils library that could in the future be a generic utils for
-  other libraries. It contains:
-  * `Log`: `fastrtps` log module
-  * `Exception`: centralize exception and subclasses
-  * `Types`: generic types, as Time, ReturnCode or serialization helpers
-  * `utils`: generic methods
-
 * **ddsrouter_core** This is the main library that implements the operation of the DDS Router.
   The `DDSRouter` class could be instantiate and has some methods to handle the operation of a DDS Router
   (e.g `start`, `reload`, `stop`).
@@ -57,12 +42,10 @@ This is the dependency graph of the packages:
 #  *  = dependency
 # (*) = test dependency
 
-ddsrouter_cmake  +  *  *  *  *  *
-ddsrouter_docs      +
-ddsrouter_utils        +  *  *  *
-ddsrouter_core            +  *  *
-ddsrouter_yaml               +  *
-ddsrouter_tool                  +
+ddsrouter_docs  +
+ddsrouter_core     +  *  *
+ddsrouter_yaml        +  *
+ddsrouter_tool           +
 ```
 
 The reasons of the packages division are:
@@ -100,7 +83,7 @@ The values that must be initialized are:
 * `MODULE_DEPENDENCIES` project dependencies (usually: `${MODULE_FIND_PACKAGES}`)
 
 Apart from this variable, there are other variables that may be useful to set.
-Check `ddsrouter_cmake` README to know the different values used.
+Check `cmake_utils` README to know the different values used.
 
 ---
 

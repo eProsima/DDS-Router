@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -20,7 +20,7 @@
 #include <fastdds/rtps/common/SerializedPayload.h>
 
 #include <efficiency/payload/PayloadPool.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
 #include <ddsrouter_core/types/dds/Data.hpp>
 
 using namespace eprosima::ddsrouter;
@@ -257,7 +257,7 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     ASSERT_EQ(pool.release_count_, 10);
 
     // release more values than reserved
-    ASSERT_THROW(pool.release_(payloads[10]), utils::InconsistencyException);
+    ASSERT_THROW(pool.release_(payloads[10]), eprosima::utils::InconsistencyException);
 }
 
 /**
@@ -371,7 +371,7 @@ TEST(PayloadPoolTest, release_payload_cache_change)
         eprosima::fastrtps::rtps::CacheChange_t cc;
         cc.payload_owner(nullptr);
 
-        EXPECT_THROW(pool.release_payload(cc), utils::InconsistencyException);
+        EXPECT_THROW(pool.release_payload(cc), eprosima::utils::InconsistencyException);
     }
 
     // this ownership release ok

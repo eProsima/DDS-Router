@@ -21,7 +21,7 @@
 
 #include <memory>
 
-#include <ddsrouter_utils/ReturnCode.hpp>
+#include <cpp_utils/ReturnCode.hpp>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>

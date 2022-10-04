@@ -22,7 +22,7 @@
 #include <iostream>
 #include <string>
 
-#include <ddsrouter_utils/Formatter.hpp>
+#include <cpp_utils/Formatter.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 

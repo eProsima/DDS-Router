@@ -20,7 +20,7 @@
 #include <regex>
 
 #include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/types/address/Address.hpp>
@@ -228,7 +228,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // Topic without name
@@ -244,7 +245,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // Topic without type
@@ -260,7 +262,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -394,7 +397,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
-                LATEST), utils::ConfigurationException);
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // Topic without type
@@ -411,7 +414,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
         yml["topic"] = yml_topic;
 
         ASSERT_THROW(YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
-                LATEST), utils::ConfigurationException);
+                LATEST), eprosima::utils::ConfigurationException);
     }
 }
 

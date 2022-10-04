@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
 #include <efficiency/payload/MapPayloadPool.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 #include <participant/IParticipant.hpp>
 #include <core/ParticipantFactory.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
@@ -75,7 +75,7 @@ TEST(ParticipantFactoryTest, create_participant)
  */
 TEST(ParticipantFactoryTest, create_invalid_participant)
 {
-    ASSERT_THROW(test::create_participant(ParticipantKind::invalid), utils::ConfigurationException);
+    ASSERT_THROW(test::create_participant(ParticipantKind::invalid), eprosima::utils::ConfigurationException);
 }
 
 /**

@@ -19,8 +19,8 @@
 
 #include <communication/Bridge.hpp>
 
-#include <ddsrouter_utils/exception/UnsupportedException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/UnsupportedException.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

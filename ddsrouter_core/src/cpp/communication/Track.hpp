@@ -25,7 +25,7 @@
 #include <participant/IParticipant.hpp>
 #include <reader/IReader.hpp>
 #include <writer/IWriter.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

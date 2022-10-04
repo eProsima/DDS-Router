@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
@@ -54,7 +54,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is valid
-        utils::Formatter error_msg;
+        eprosima::utils::Formatter error_msg;
         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 }
@@ -108,7 +108,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is valid
-        utils::Formatter error_msg;
+        eprosima::utils::Formatter error_msg;
         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 }
@@ -140,7 +140,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is valid
-        utils::Formatter error_msg;
+        eprosima::utils::Formatter error_msg;
         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 
@@ -162,7 +162,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is not valid
-        utils::Formatter error_msg;
+        eprosima::utils::Formatter error_msg;
         ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 }
@@ -195,7 +195,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
         // Load configuration
         ASSERT_THROW(
             YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 
     // not correct version: specify v1.0 and is v2.0
@@ -218,7 +218,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
                 YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is not valid
-        utils::Formatter error_msg;
+        eprosima::utils::Formatter error_msg;
         ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 
@@ -239,7 +239,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
         // Load configuration
         ASSERT_THROW(
             YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            utils::ConfigurationException);
+            eprosima::utils::ConfigurationException);
     }
 }
 

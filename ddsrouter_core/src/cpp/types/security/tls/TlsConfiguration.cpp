@@ -17,11 +17,11 @@
  *
  */
 
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
 
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 

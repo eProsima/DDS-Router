@@ -14,7 +14,7 @@
 
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
@@ -49,7 +49,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
             YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, LATEST);
 
     // Check is valid
-    utils::Formatter error_msg;
+    eprosima::utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
@@ -100,7 +100,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
             YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_2_0);
 
     // Check is valid
-    utils::Formatter error_msg;
+    eprosima::utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
@@ -150,7 +150,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
             YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
 
     // Check is valid
-    utils::Formatter error_msg;
+    eprosima::utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
@@ -197,7 +197,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
             YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
 
     // Check is valid
-    utils::Formatter error_msg;
+    eprosima::utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check block Topics are empty
@@ -256,7 +256,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
             YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
 
     // Check is valid
-    utils::Formatter error_msg;
+    eprosima::utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty

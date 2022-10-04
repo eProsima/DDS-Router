@@ -18,7 +18,7 @@
 
 #include <fastrtps/rtps/common/CacheChange.h>
 #include <fastrtps/rtps/common/Guid.h>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/Log.hpp>
 
 #include <types/dds/RouterCacheChange.hpp>
 #include <writer/implementations/rtps/filter/SelfDataFilter.hpp>

@@ -24,7 +24,7 @@
 
 #include <fastdds/rtps/transport/TCPTransportDescriptor.h>
 
-#include <ddsrouter_utils/macros/custom_enumeration.hpp>
+#include <cpp_utils/macros/custom_enumeration.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>

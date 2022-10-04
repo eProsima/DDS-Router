@@ -18,10 +18,10 @@
 cmake_minimum_required(VERSION 3.5)
 
 ###############################################################################
-# Find package ddsrouter_cmake
+# Find package cmake_utils
 ###############################################################################
-# Package ddsrouter_cmake is required to get every cmake macro needed
-find_package(ddsrouter_cmake REQUIRED)
+# Package cmake_utils is required to get every cmake macro needed
+find_package(cmake_utils REQUIRED)
 
 ###############################################################################
 # Project
@@ -54,7 +54,7 @@ if(BUILD_COMPOSE_TESTS)
     add_subdirectory(compose)
 endif()
 # NOTE: this is done explicitly and not by a CMake macro (compile_test) as other packages
-# because it does not feel like reusable, so adding it to ddsrouter_cmake does not seems appropiate.
+# because it does not feel like reusable, so adding it to cmake_utils does not seems appropiate.
 
 ###############################################################################
 # Packaging

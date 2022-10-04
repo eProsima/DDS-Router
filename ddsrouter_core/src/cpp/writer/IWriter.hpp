@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_WRITER_IDDS_ROUTERWRITER_HPP_
 #define __SRC_DDSROUTERCORE_WRITER_IDDS_ROUTERWRITER_HPP_
 
-#include <ddsrouter_utils/ReturnCode.hpp>
+#include <cpp_utils/ReturnCode.hpp>
 
 #include <ddsrouter_core/types/dds/Data.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>

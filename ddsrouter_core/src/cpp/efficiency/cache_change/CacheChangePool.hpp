@@ -21,8 +21,8 @@
 
 #include <fastdds/rtps/history/IChangePool.h>
 
-#include <ddsrouter_utils/pool/UnboundedPool.hpp>
-#include <ddsrouter_utils/pool/IPool.hpp>
+#include <cpp_utils/pool/UnboundedPool.hpp>
+#include <cpp_utils/pool/IPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

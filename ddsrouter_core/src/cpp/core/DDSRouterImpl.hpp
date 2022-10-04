@@ -23,8 +23,8 @@
 #include <map>
 #include <mutex>
 
-#include <ddsrouter_utils/ReturnCode.hpp>
-#include <ddsrouter_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <cpp_utils/ReturnCode.hpp>
+#include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 #include <communication/DDSBridge.hpp>
 #include <communication/rpc/RPCBridge.hpp>

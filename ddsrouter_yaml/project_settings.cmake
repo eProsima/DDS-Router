@@ -26,7 +26,7 @@ set(MODULE_FIND_PACKAGES
     yaml-cpp
     fastcdr
     fastrtps
-    ddsrouter_utils
+    cpp_utils
     ddsrouter_core)
 
 set(MODULE_DEPENDENCIES

@@ -22,6 +22,7 @@ set(TEST_LIST
     yaml_tags)
 
 set(TEST_EXTRA_LIBRARIES
+        cpp_utils
     )
 
 add_unittest_executable(

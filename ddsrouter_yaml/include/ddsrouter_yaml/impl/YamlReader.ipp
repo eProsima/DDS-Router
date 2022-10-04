@@ -20,10 +20,10 @@
 #ifndef _DDSROUTERYAML_IMPL_YAMLREADER_IPP_
 #define _DDSROUTERYAML_IMPL_YAMLREADER_IPP_
 
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_utils/macros/macros.hpp>
-#include <ddsrouter_utils/utils.hpp>
-#include <ddsrouter_utils/types/Fuzzy.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/macros/macros.hpp>
+#include <cpp_utils/utils.hpp>
+#include <cpp_utils/types/Fuzzy.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -42,7 +42,7 @@ T YamlReader::get(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() <<
                       "Error getting required value of type <" << TYPE_NAME(T) <<
                       "> in tag <" << tag << "> :\n " << e.what());
@@ -63,7 +63,7 @@ void YamlReader::fill(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() <<
                       "Error filling object of type <" << TYPE_NAME(T) <<
                       "> in tag <" << tag << "> :\n " << e.what());
@@ -81,7 +81,7 @@ T YamlReader::get_scalar(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error reading yaml scalar under tag <" << tag << "> :\n " << e.what());
     }
 }
@@ -92,7 +92,7 @@ T YamlReader::get_scalar(
 {
     if (!yml.IsScalar())
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() <<
                       "Trying to read a primitive value of type <" << TYPE_NAME(T) << "> from a non scalar yaml.");
     }
@@ -103,7 +103,7 @@ T YamlReader::get_scalar(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() <<
                       "Incorrect format for primitive value, expected <" << TYPE_NAME(T) << ">:\n " << e.what());
     }
@@ -121,7 +121,7 @@ std::list<T> YamlReader::get_list(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error reading yaml list under tag <" << tag << "> :\n " << e.what());
     }
 }
@@ -133,7 +133,7 @@ std::list<T> YamlReader::get_list(
 {
     if (!yml.IsSequence())
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Incorrect format, yaml Sequence expected.");
     }
 
@@ -148,7 +148,7 @@ std::list<T> YamlReader::get_list(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error reading yaml sequence of type <" << TYPE_NAME(T) << "> :\n " <<
                       e.what());
     }
@@ -178,7 +178,7 @@ T YamlReader::get_enumeration(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error reading enumeration value under tag <" << tag << "> :\n " << e.what());
     }
 }
@@ -195,7 +195,7 @@ T YamlReader::get_enumeration(
 
     if (it == enum_values.end())
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Value <" << value << "> is not valid in enumeration <" << TYPE_NAME(T) << ".");
     }
     else

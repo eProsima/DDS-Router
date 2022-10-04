@@ -67,7 +67,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error loading DDS Router configuration from yaml:\n " << e.what());
     }
 }
@@ -85,7 +85,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
     }
     catch (const std::exception& e)
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
                       "> :\n " << e.what());
     }

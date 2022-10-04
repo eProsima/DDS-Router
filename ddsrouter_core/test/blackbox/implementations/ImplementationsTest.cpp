@@ -15,25 +15,26 @@
 #include <algorithm>
 #include <iostream>
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
-#include <TestLogHandler.hpp>
+
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddsrouter_utils/utils.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -62,7 +63,8 @@ TEST(ImplementationsTest, pair_implementation)
     // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
     // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
     // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
-    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    // test::LogChecker test_log_handler(utils::Log::Kind::Error);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     // For each Participant Kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
@@ -108,7 +110,8 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
     // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
     // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
-    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    // test::LogChecker test_log_handler(utils::Log::Kind::Error);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     // For each Participant kind
     for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
@@ -158,7 +161,8 @@ TEST(ImplementationsTest, all_implementations)
     // [RTPS_MSG_OUT Warning] Error receiving data: receive_from: A blocking operation was interrupted by a call to WSACancelBlockingCall.:
     // A blocking operation was interrupted by a call to WSACancelBlockingCall. - 0000016CEBD18C10 (0000016CEBD17A40) ->
     // Function eprosima::fastdds::rtps::UDPChannelResource::Receive
-    test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    // test::LogChecker test_log_handler(utils::Log::Kind::Error);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     {
         // Set topic to active
@@ -229,7 +233,7 @@ TEST(ImplementationsTest, duplicated_ids)
             specs);
 
         // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), eprosima::ddsrouter::utils::ConfigurationException) << kind;
+        ASSERT_THROW(DDSRouter router(configuration), eprosima::utils::ConfigurationException) << kind;
     }
 }
 

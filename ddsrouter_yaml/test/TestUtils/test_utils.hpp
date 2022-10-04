@@ -30,7 +30,7 @@
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

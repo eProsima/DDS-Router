@@ -32,8 +32,8 @@
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddsrouter_utils/Log.hpp>
-#include <ddsrouter_utils/utils.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
 
 #include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -56,7 +56,7 @@ bool YamlReader::is_tag_present(
 {
     if (!yml.IsMap() && !yml.IsNull())
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Trying to find a tag: <" << tag << "> in a not yaml object map.");
     }
 
@@ -75,7 +75,7 @@ Yaml YamlReader::get_value_in_tag(
     }
     else
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() << "Required tag not found: <" << tag << ">.");
     }
 }
@@ -279,7 +279,7 @@ Address YamlReader::get<Address>(
     }
     else if (!ip_set && !domain_name_set)
     {
-        throw utils::ConfigurationException(utils::Formatter() <<
+        throw eprosima::utils::ConfigurationException(utils::Formatter() <<
                       "Address requires to specify <" << ADDRESS_IP_TAG << "> or <" << ADDRESS_DNS_TAG << ">.");
     }
 
@@ -607,7 +607,7 @@ void YamlReader::fill(
     }
     else
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   STR_ENTRY << "Incorrect TLS configuration." <<
                       " Could not be client because: " << error_msg_client <<
                       " Neither server because: " << error_msg_server <<
@@ -898,7 +898,7 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
                 YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
 
         default:
-            throw utils::ConfigurationException(
+            throw eprosima::utils::ConfigurationException(
                       utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
             break;
     }
@@ -973,12 +973,12 @@ void _fill_ddsrouter_configuration_v1(
         // It must be a map
         if (!participant_yml.IsMap())
         {
-            throw utils::ConfigurationException("Each Participant block must be a map.");
+            throw eprosima::utils::ConfigurationException("Each Participant block must be a map.");
         }
         // It must have "type" tag
         if (!participant_yml[PARTICIPANT_KIND_TAG_V1])
         {
-            throw utils::ConfigurationException(
+            throw eprosima::utils::ConfigurationException(
                       STR_ENTRY <<
                           "Each Participant block must have <" << PARTICIPANT_KIND_TAG_V1 <<
                           "> tag with Participant Kind.");
@@ -1034,7 +1034,7 @@ void _fill_ddsrouter_configuration_latest(
     // Check it is a list
     if (!participants_configurations_yml.IsSequence())
     {
-        throw utils::ConfigurationException(
+        throw eprosima::utils::ConfigurationException(
                   utils::Formatter() <<
                       "Participant configurations must be specified in an array under tag: " <<
                       COLLECTION_PARTICIPANTS_TAG);

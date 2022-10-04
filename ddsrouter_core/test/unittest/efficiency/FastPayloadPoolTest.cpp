@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest_aux.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
 #include <fastdds/rtps/common/CacheChange.h>
 
 #include <efficiency/payload/PayloadPool.hpp>
 #include <efficiency/payload/FastPayloadPool.hpp>
-#include <ddsrouter_utils/exception/InconsistencyException.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;
@@ -303,7 +303,7 @@ TEST(FastPayloadPoolTest, release_payload_negative)
 
     pool_aux.get_payload(DEFAULT_SIZE, payload);
 
-    ASSERT_THROW(pool.release_payload(payload), utils::InconsistencyException);
+    ASSERT_THROW(pool.release_payload(payload), eprosima::utils::InconsistencyException);
 }
 
 int main(

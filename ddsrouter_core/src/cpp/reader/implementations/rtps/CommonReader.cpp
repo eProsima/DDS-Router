@@ -20,8 +20,8 @@
 #include <fastrtps/rtps/participant/RTPSParticipant.h>
 
 #include <reader/implementations/rtps/CommonReader.hpp>
-#include <ddsrouter_utils/exception/InitializationException.hpp>
-#include <ddsrouter_utils/Log.hpp>
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/Log.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

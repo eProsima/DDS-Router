@@ -7,6 +7,10 @@ on:
         description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
         required: true
         default: 'master'
+      utils_branch:
+        description: 'Branch or tag of Dev Utils repository (https://github.com/eProsima/dev-utils)'
+        required: true
+        default: 'main'
   schedule:
     - cron: '0 0 * * *'
 
@@ -40,9 +44,11 @@ jobs:
         uses: ./DDS-Router/.github/actions/install-eprosima-dependencies-windows
         env:
           DEFAULT_FASTDDS_BRANCH: 'master'
+          DEFAULT_UTILS_BRANCH: 'main'
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
           fastdds_branch: ${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }}
+          utils_branch: ${{ github.event.inputs.utils_branch || env.DEFAULT_UTILS_BRANCH }}
 
       - name: Upload binaries
         uses: actions/upload-artifact@v3
@@ -75,12 +81,11 @@ jobs:
       - name: Install Python packages
         uses: ./src/DDS-Router/.github/actions/install-python-packages
 
-      - name: Fetch Fast DDS repositories
-        uses: ./src/DDS-Router/.github/actions/fetch-fastdds-repos
-        env:
-          DEFAULT_FASTDDS_BRANCH: 'master'
-        with:
-          fastdds_branch: ${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }}
+      - name: Fetch repositories
+        run: |
+          vcs import src <  src/DDS-Router/.github/workflows/ci.repos
+          cd src/fastrtps && git checkout ${{ inputs.fastdds_branch }} && cd ../..
+          cd src/dev-utils && git checkout ${{ inputs.utils_branch }} && cd ../..
 
       - name: Build workspace
         run: |
