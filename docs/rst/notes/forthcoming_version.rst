@@ -36,6 +36,8 @@ Next release will include the following **major changes**:
 
 * ``wan`` Participant Kind uses now Initial Peers Discovery Protocol, while Discovery Server
   requires a new Participant Kind ``wan-discovery-server``.
+* Internal packages for utils as ``ddsrouter_cmake`` and ``ddsrouter_utils`` have been moved to
+  an `external repository <https://github.com/eProsima/dev-utils>`_.
 
 Next release will include the following **performance improvements**:
 

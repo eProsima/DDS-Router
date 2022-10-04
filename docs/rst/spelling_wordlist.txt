@@ -34,6 +34,7 @@ Redistributable
 Requiredness
 runtime
 scalable
+utils
 validator
 Vulcanexus
 wget
