@@ -112,9 +112,11 @@ int main(
         eprosima::utils::event::MultipleEventHandler close_handler;
 
         // First of all, create signal handler so SIGINT and SIGTERM do not break the program while initializing
-        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>, eprosima::utils::event::Signal>(
+        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>,
+                eprosima::utils::event::Signal>(
             std::make_unique<eprosima::utils::event::SignalEventHandler<eprosima::utils::event::Signal::sigint>>());     // Add SIGINT
-        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>, eprosima::utils::event::Signal>(
+        close_handler.register_event_handler<eprosima::utils::event::EventHandler<eprosima::utils::event::Signal>,
+                eprosima::utils::event::Signal>(
             std::make_unique<eprosima::utils::event::SignalEventHandler<eprosima::utils::event::Signal::sigterm>>());    // Add SIGTERM
 
         // If it must be a maximum time, register a periodic handler to finish handlers
@@ -199,7 +201,8 @@ int main(
                         }
                     };
 
-            periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback, reload_time);
+            periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback,
+                            reload_time);
         }
 
         // Start Router

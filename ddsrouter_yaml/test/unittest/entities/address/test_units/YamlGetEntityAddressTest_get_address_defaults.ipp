@@ -41,7 +41,8 @@ TEST(YamlGetEntityAddressTest, get_address_defaults)
         yml["address"] = yml_address;
 
         // Get core::types::Address from Yaml
-        ASSERT_THROW(YamlReader::get<core::types::Address>(yml, "address", LATEST), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::Address>(yml, "address",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // with ip version ipv6

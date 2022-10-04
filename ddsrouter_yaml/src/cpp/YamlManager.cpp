@@ -35,8 +35,9 @@ Yaml YamlManager::load_file(
     }
     catch (const std::exception& e)
     {
-        throw eprosima::utils::ConfigurationException(utils::Formatter() << "Error occured while loading yaml from file: "
-                                                               << file_path << " : " << e.what());
+        throw eprosima::utils::ConfigurationException(
+                  utils::Formatter() << "Error occured while loading yaml from file: "
+                                     << file_path << " : " << e.what());
     }
 }
 

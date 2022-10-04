@@ -228,7 +228,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // Topic without name
@@ -244,7 +245,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 
     // Topic without type
@@ -260,7 +262,8 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
         Yaml yml;
         yml["topic"] = yml_topic;
 
-        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get<core::types::DdsTopic>(yml, "topic",
+                LATEST), eprosima::utils::ConfigurationException);
     }
 }
 
