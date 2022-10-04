@@ -96,11 +96,28 @@ jobs:
           [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }})" ] || echo "DDS Router Docker image does not exists"
           [ -n "$(docker images -q ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }})" ] || echo "Vulcanexus image does not exists"
 
+      # Get artifact to use cmake_utils
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
       # Run ddsrouter_test compose tests
       - name: Run tests
         run: |
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
           export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
+          source /home/runner/work/fastdds/install/setup.bash
           colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
           colcon test \
             --packages-select ddsrouter_test \
