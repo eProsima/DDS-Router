@@ -89,3 +89,8 @@ These options allow the developer to enable/disable certain *DDS Router* setting
           ``ON``
         - ``ON`` if ``Debug`` |br|
           ``OFF`` otherwise
+    *   - :class:`ASAN_BUILD`
+        - Activate address sanitizer build.
+        - ``OFF`` |br|
+          ``ON``
+        - ``OFF``
