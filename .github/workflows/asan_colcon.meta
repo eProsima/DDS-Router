@@ -30,16 +30,6 @@
                 "-DASAN_BUILD=ON",
                 "-DCMAKE_CXX_FLAGS='-Werror'"
             ]
-        },
-        "ddsrouter_docs":
-        {
-            "cmake-args":
-            [
-                "-DCMAKE_BUILD_TYPE=Debug",
-                "-DBUILD_TESTS=ON",
-                "-DASAN_BUILD=OFF",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
-            ]
         }
     }
 }
