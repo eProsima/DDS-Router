@@ -21,6 +21,10 @@
 #     - ubuntu-20.04
 #     - Debug
 #     - compile all ; run flaky tests
+#   - asan-test
+#     - [ ubuntu-20.04 ]
+#     - Debug
+#     - compile all ; run tests
 #   - clang-tidy
 #     - ubuntu-20.04
 #     - Release
@@ -349,8 +353,6 @@ jobs:
 
   ubuntu-build-test-flaky:
     runs-on: ubuntu-20.04
-    environment:
-      name: codecov
 
     steps:
       - name: Sync eProsima/DDS-Router repository
@@ -407,6 +409,80 @@ jobs:
             --ctest-args \
               --label-regex xfail \
               --timeout 60
+
+
+  asan-test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: src/DDS-Router
+
+      - name: Install apt packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          cat src/DDS-Router/.github/workflows/asan_colcon.meta
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/DDS-Router/.github/workflows/asan_colcon.meta
+
+      - name: Run tests ddsrouter_core
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_core
+
+      - name: Run tests ddsrouter_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_yaml
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddsrouter_tool
+        if: always()
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: asan-logs
+          path: log/
+        if: always()
+
 
   clang-tidy:
     runs-on: ubuntu-20.04
