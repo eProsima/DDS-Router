@@ -151,6 +151,15 @@
                 },
                 "tls":{
                     "$ref":"#/definitions/TLS"
+                },
+                "discovery":{
+                    "type":"boolean"
+                },
+                "data":{
+                    "type":"boolean"
+                },
+                "verbose":{
+                    "type":"boolean"
                 }
             },
             "required":[
@@ -165,8 +174,68 @@
                                 "type":"string",
                                 "enum":[
                                     "void",
-                                    "echo",
                                     "dummy"
+                                ]
+                            }
+                        }
+                    },
+                    "then":{
+                        "properties":{
+                            "domain":{
+                                "not":{
+
+                                }
+                            },
+                            "discovery-server-guid":{
+                                "not":{
+
+                                }
+                            },
+                            "listening-addresses":{
+                                "not":{
+
+                                }
+                            },
+                            "connection-addresses":{
+                                "not":{
+
+                                }
+                            },
+                            "tls":{
+                                "not":{
+
+                                }
+                            },
+                            "repeater":{
+                                "not":{
+
+                                }
+                            },
+                            "discovery":{
+                                "not":{
+
+                                }
+                            },
+                            "data":{
+                                "not":{
+
+                                }
+                            },
+                            "verbose":{
+                                "not":{
+
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if":{
+                        "properties":{
+                            "kind":{
+                                "type":"string",
+                                "enum":[
+                                    "echo"
                                 ]
                             }
                         }
@@ -227,12 +296,37 @@
 
                                         }
                                     },
+                                    "listening-addresses":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "connection-addresses":{
+                                        "not":{
+
+                                        }
+                                    },
                                     "tls":{
                                         "not":{
 
                                         }
                                     },
                                     "repeater":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "discovery":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "data":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "verbose":{
                                         "not":{
 
                                         }
@@ -263,6 +357,21 @@
                             {
                                 "properties":{
                                     "domain":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "discovery":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "data":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "verbose":{
                                         "not":{
 
                                         }
@@ -308,6 +417,21 @@
                             {
                                 "properties":{
                                     "discovery-server-guid":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "discovery":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "data":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "verbose":{
                                         "not":{
 
                                         }

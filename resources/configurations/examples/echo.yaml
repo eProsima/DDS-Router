@@ -67,4 +67,4 @@ participants:
 
 # 9: Print a trace to stdout every time a new data message arrives to the router.
 
-# 10: Display verbose information regarding received messages (receiver endpoint_guid and data payload);
+# 10: Display verbose information regarding received messages (receiver endpoint_guid and data payload).
