@@ -261,68 +261,86 @@ Local installation
 
     .. code-block:: bash
 
-        mkdir ~/DDS-Router
+        mkdir -p ~/DDS-Router/src
+        mkdir -p ~/DDS-Router/build
+        cd ~/DDS-Router
+        wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+        vcs import src < ddsrouter.repos
 
-#.  Clone the following dependencies and compile them using CMake_.
+#.  Compile all dependencies using CMake_.
 
     * `Foonathan memory <https://github.com/foonathan/memory>`_
 
         .. code-block:: bash
 
             cd ~/DDS-Router
-            git clone https://github.com/eProsima/foonathan_memory_vendor.git
-            mkdir foonathan_memory_vendor/build
-            cd foonathan_memory_vendor/build
-            cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DBUILD_SHARED_LIBS=ON
+            mkdir build/foonathan_memory_vendor
+            cd build/foonathan_memory_vendor
+            cmake ~/DDS-Router/src/foonathan_memory_vendor -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DBUILD_SHARED_LIBS=ON
             cmake --build . --target install
 
-    * `Fast CDR <https://github.com/eProsima/Fast-CDR.git>`_
+    * `Fast CDR <https://github.com/eProsima/Fast-CDR>`_
 
         .. code-block:: bash
 
             cd ~/DDS-Router
-            git clone https://github.com/eProsima/Fast-CDR.git
-            mkdir Fast-CDR/build
-            cd Fast-CDR/build
-            cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install
+            mkdir build/fastcdr
+            cd build/fastcdr
+            cmake ~/DDS-Router/src/fastcdr -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install
             cmake --build . --target install
 
-    * `Fast DDS <https://github.com/eProsima/Fast-DDS.git>`_
+    * `Fast DDS <https://github.com/eProsima/Fast-DDS>`_
 
         .. code-block:: bash
 
             cd ~/DDS-Router
-            git clone https://github.com/eProsima/Fast-DDS.git
-            mkdir Fast-DDS/build
-            cd Fast-DDS/build
-            cmake .. -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            mkdir build/fastdds
+            cd build/fastdds
+            cmake ~/DDS-Router/src/fastdds -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
-    * `Dev Utils <https://github.com/eProsima/dev-utils.git>`_
+    * `Dev Utils <https://github.com/eProsima/dev-utils>`_
 
         .. code-block:: bash
 
+            # CMake Utils
             cd ~/DDS-Router
-            git clone https://github.com/eProsima/dev-utils.git
-            mkdir dev-utils/build
-            cd dev-util/build
-            cmake ../cmake_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
-            cmake ../cpp_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            mkdir build/cmake_utils
+            cd build/cmake_utils
+            cmake ~/DDS-Router/src/dev-utils/cmake_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake --build . --target install
+
+            # C++ Utils
+            cd ~/DDS-Router
+            mkdir build/cpp_utils
+            cd build/cpp_utils
+            cmake ~/DDS-Router/src/dev-utils/cpp_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
 #.  Once all dependencies are installed, install |ddsrouter|:
 
     .. code-block:: bash
 
+        # ddsrouter_core
         cd ~/DDS-Router
-        git clone https://github.com/eProsima/DDS-Router.git
-        mkdir DDS-Router/build
-        cd DDS-Router/build
-        cmake ../ddsrouter_core -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
-        cmake ../ddsrouter_yaml -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
-        cmake ../tools/ddsrouter_tool -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+        mkdir build/ddsrouter_core
+        cd build/ddsrouter_core
+        cmake ~/DDS-Router/src/ddsrouter/ddsrouter_core -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
         cmake --build . --target install
 
+        # ddsrouter_yaml
+        cd ~/DDS-Router
+        mkdir build/ddsrouter_yaml
+        cd build/ddsrouter_yaml
+        cmake ~/DDS-Router/src/ddsrouter/ddsrouter_yaml -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+        cmake --build . --target install
+
+        # ddsrouter_tool
+        cd ~/DDS-Router
+        mkdir build/ddsrouter_tool
+        cd build/ddsrouter_tool
+        cmake ~/DDS-Router/src/ddsrouter/tools/ddsrouter_tool -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+        cmake --build . --target install
 
 .. note::
 
