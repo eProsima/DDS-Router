@@ -8,11 +8,12 @@ Echo Example
 
 The following YAML configuration file configures a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in :term:`Domain Id` ``0`` and an
-:ref:`Echo Participant <user_manual_participants_echo>` that will print in ``stdout`` every message get in Domain ``0``.
+:ref:`Echo Participant <user_manual_participants_echo>` that will print in ``stdout`` every message get in Domain ``0``,
+as well as information regarding discovery events.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 5-36
+    :lines: 5-39
 
 Configuration
 =============
@@ -44,11 +45,12 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 Echo Participant
 ----------------
 
-This Participant does not require further configuration than name and kind.
+This Participant is configured to display information regarding messages received, as well as discovery events.
+See :ref:`Echo Participant Configuration <user_manual_participants_echo_configuration>` for more details.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 35-36
+    :lines: 35-39
 
 
 Execute example
@@ -56,6 +58,11 @@ Execute example
 
 For a detailed explanation on how to execute the |ddsrouter|, refer to this :ref:`section <user_manual_user_interface>`.
 
+.. note::
+
+    Internal entities for a specific topic are only created once a data receiver (Reader/Subscriber) is discovered.
+    Hence, for these example to work, either substitute ``allowlist`` for :ref:`builtin-topics <topic_filtering>` in the
+    configuration file, or launch a subscriber/listener in the same domain (``0``).
 
 Execute with Fast DDS HelloWorld Example
 ----------------------------------------
@@ -72,10 +79,11 @@ The expected output from the DDS Router, printed by the ``Echo Participant`` is:
 
 .. code-block:: console
 
-    Echo Participant: ParticipantId{EchoParticipant} has received from Endpoint: 01.0f.44.59.e6.de.2a.c8.01.00.00.00|0.0.1.3 in topic: Topic{HelloWorldTopic, HelloWorld} the following payload: <Payload{00 01 00 00 01 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00}>
-    Echo Participant: ParticipantId{EchoParticipant} has received from Endpoint: 01.0f.44.59.e6.de.2a.c8.01.00.00.00|0.0.1.3 in topic: Topic{HelloWorldTopic, HelloWorld} the following payload: <Payload{00 01 00 00 02 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00}>
+    New endpoint discovered: Endpoint{01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3;writer;DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
+    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 01 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
+    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 02 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
     ...
-    Echo Participant: ParticipantId{EchoParticipant} has received from Endpoint: 01.0f.44.59.e6.de.2a.c8.01.00.00.00|0.0.1.3 in topic: Topic{HelloWorldTopic, HelloWorld} the following payload: <Payload{00 01 00 00 0a 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00}>
+    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 0a 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
 
 Execute with ROS 2 demo nodes
 -----------------------------
@@ -92,6 +100,10 @@ The expected output from the DDS Router, printed by the ``Echo Participant`` is:
 
 .. code-block:: console
 
-    Echo Participant: ParticipantId{EchoParticipant} has received from Endpoint: 01.0f.44.59.33.e0.2b.cf.01.00.00.00|0.0.12.3 in topic: Topic{rt/chatter, std_msgs::msg::dds_::String_} the following payload: <Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 34 00 00}>
-    Echo Participant: ParticipantId{EchoParticipant} has received from Endpoint: 01.0f.44.59.33.e0.2b.cf.01.00.00.00|0.0.12.3 in topic: Topic{rt/chatter, std_msgs::msg::dds_::String_} the following payload: <Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 35 00 00}>
+    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.1.3;writer;DdsTopic{ros_discovery_info;rmw_dds_common::msg::dds_::ParticipantEntitiesInfo_;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
+    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.2.4;reader;DdsTopic{ros_discovery_info;rmw_dds_common::msg::dds_::ParticipantEntitiesInfo_;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
+    ...
+    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3;writer;DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(20) TopicQoS{VOLATILE;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
+    In Endpoint: 01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(0) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(1000)}}} payload received: Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 31 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
+    In Endpoint: 01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(0) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(1000)}}} payload received: Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 32 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
     ...

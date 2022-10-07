@@ -49,8 +49,7 @@ Each participant configuration is specified as a different item of ``participant
 configurations has a unique Participant Name that should not be repeated in a |ddsrouter| execution.
 
 Each Participant Kind is associated with one or several names or aliases that represent it.
-In order to use a Participant of a specific kind, use ``kind`` tag in the yaml configuration file, or set the
-Participant Name as the alias of the kind.
+In order to use a Participant of a specific kind, use ``kind`` tag in the yaml configuration file.
 If the kind is not any of the valid aliases, the Participant will not be created and the
 execution will fail.
 
@@ -90,8 +89,10 @@ Below is the list with all the available Participant Kinds.
 
     *   - :ref:`user_manual_participants_echo`
         - ``echo``
-        -
-        - Print in `stdout` every data received.
+        - ``discovery`` |br|
+          ``data`` |br|
+          ``verbose``
+        - Print in `stdout` all user and/or discovery data received.
 
     *   - :ref:`user_manual_participants_simple`
         - ``simple`` |br|
