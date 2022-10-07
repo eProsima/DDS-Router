@@ -190,6 +190,8 @@ TEST(MapPayloadPoolTest, get_payload_from_src)
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool;
 }
 
 /**
@@ -230,6 +232,9 @@ TEST(MapPayloadPoolTest, get_payload_from_src_no_owner)
     // release payload
     pool_->release_payload(payload_target);
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool_aux;
+    delete pool;
 }
 
 /**
@@ -258,6 +263,8 @@ TEST(MapPayloadPoolTest, get_payload_from_src_negative)
 
         // END : release payload
         pool_aux.release_payload(payload_src);
+
+        delete pool;
     }
 
     // Source has size 0 and different owner
@@ -274,6 +281,8 @@ TEST(MapPayloadPoolTest, get_payload_from_src_negative)
                 payload_src,
                 pool_aux,
                 payload_target));
+
+        delete pool;
     }
 }
 
@@ -330,6 +339,8 @@ TEST(MapPayloadPoolTest, release_payload)
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool;
 }
 
 /**
