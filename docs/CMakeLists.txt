@@ -53,3 +53,9 @@ compile_documentation()
 compile_test_documentation(
     "${PROJECT_SOURCE_DIR}/test" # Test directory
 )
+
+###############################################################################
+# Packaging
+###############################################################################
+# Install package
+eprosima_packaging()
