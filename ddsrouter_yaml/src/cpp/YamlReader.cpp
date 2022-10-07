@@ -897,9 +897,11 @@ YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
             return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
                 YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
 
+        case types::ParticipantKind::invalid:
         default:
+            std::string invalid_kind = YamlReader::get<std::string>(yml, PARTICIPANT_KIND_TAG, version);
             throw eprosima::utils::ConfigurationException(
-                      utils::Formatter() << "Unkown or non valid Participant kind:" << kind << ".");
+                      utils::Formatter() << "Unkown or non valid Participant kind: " << invalid_kind << ".");
             break;
     }
 }
