@@ -190,6 +190,8 @@ TEST(MapPayloadPoolTest, get_payload_from_src)
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool;
 }
 
 /**
@@ -230,6 +232,9 @@ TEST(MapPayloadPoolTest, get_payload_from_src_no_owner)
     // release payload
     pool_->release_payload(payload_target);
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool_aux;
+    delete pool;
 }
 
 /**
@@ -258,13 +263,15 @@ TEST(MapPayloadPoolTest, get_payload_from_src_negative)
 
         // END : release payload
         pool_aux.release_payload(payload_src);
+
+        delete pool;
     }
 
     // Source has size 0 and different owner
     {
         eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
         test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
-        eprosima::fastrtps::rtps::IPayloadPool* pool_aux; // nullptr
+        eprosima::fastrtps::rtps::IPayloadPool* pool_aux = nullptr; // nullptr
 
         Payload payload_src;
         Payload payload_target;
@@ -274,6 +281,8 @@ TEST(MapPayloadPoolTest, get_payload_from_src_negative)
                 payload_src,
                 pool_aux,
                 payload_target));
+
+        delete pool;
     }
 }
 
@@ -330,6 +339,8 @@ TEST(MapPayloadPoolTest, release_payload)
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
     ASSERT_EQ(pool_->pointers_stored(), 0);
+
+    delete pool;
 }
 
 /**
