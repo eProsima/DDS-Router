@@ -7,7 +7,7 @@
             [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
+                "-DCMAKE_CXX_FLAGS='-Werror -Wall'",
             ]
         },
         "ddsrouter_yaml":
@@ -16,7 +16,7 @@
             [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
+                "-DCMAKE_CXX_FLAGS='-Werror -Wall'",
             ]
         },
         "ddsrouter_tool":
@@ -25,7 +25,7 @@
             [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
+                "-DCMAKE_CXX_FLAGS='-Werror -Wall'",
             ]
         },
         "ddsrouter_docs":
@@ -34,7 +34,7 @@
             [
                 "-DCMAKE_BUILD_TYPE=Release",
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                "-DCMAKE_CXX_FLAGS='-Werror'"
+                "-DCMAKE_CXX_FLAGS='-Werror -Wall'",
             ]
         }
     }
