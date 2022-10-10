@@ -63,7 +63,7 @@ utils::ReturnCode DummyReader::take_(
         data->payload);
 
     // Set values in Payload as the data was not in the DDSRouter Payload Pool
-    for (int i = 0; i < next_data_to_send.payload.size(); i++)
+    for (unsigned int i = 0; i < next_data_to_send.payload.size(); i++)
     {
         data->payload.data[i] = next_data_to_send.payload[i];
     }

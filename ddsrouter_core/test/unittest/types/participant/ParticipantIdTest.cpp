@@ -152,10 +152,10 @@ TEST(ParticipantIdTest, minor_operator)
     // Sort ids by string comparison
     std::sort(ids.begin(), ids.end());
 
-    for (int i = 0; i < ids.size(); ++i)
+    for (unsigned int i = 0; i < ids.size(); ++i)
     {
         // Remove equal case
-        for (int j = (i + 1); j < ids.size(); ++j)
+        for (unsigned int j = (i + 1); j < ids.size(); ++j)
         {
             ParticipantId pi1(ids[i]);
             ParticipantId pi2(ids[j]);
@@ -200,9 +200,9 @@ TEST(ParticipantIdTest, non_equal_operator)
 {
     std::vector<std::string> ids = random_valid_ids();
 
-    for (int i = 0; i < ids.size(); ++i)
+    for (unsigned int i = 0; i < ids.size(); ++i)
     {
-        for (int j = 0; j < ids.size(); ++j)
+        for (unsigned int j = 0; j < ids.size(); ++j)
         {
             // Remove equal case
             if (i != j)
@@ -225,10 +225,10 @@ TEST(ParticipantIdTest, non_minor_operator)
     // Sort ids by string comparison
     std::sort(ids.begin(), ids.end());
 
-    for (int i = 0; i < ids.size(); ++i)
+    for (unsigned int i = 0; i < ids.size(); ++i)
     {
         // Remove equal case
-        for (int j = i; j < ids.size(); ++j)
+        for (unsigned int j = i; j < ids.size(); ++j)
         {
             ParticipantId pi1(ids[i]);
             ParticipantId pi2(ids[j]);

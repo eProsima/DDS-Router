@@ -126,7 +126,7 @@ TEST(PayloadPoolTest, reserve)
         test::MockPayloadPool pool;
         Payload payload;
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
         ASSERT_EQ(payload.data, nullptr);
 
         ASSERT_TRUE(pool.reserve_(sizeof(PayloadUnit), payload));
@@ -143,7 +143,7 @@ TEST(PayloadPoolTest, reserve)
         test::MockPayloadPool pool;
         Payload payload;
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
         ASSERT_EQ(payload.data, nullptr);
 
         ASSERT_TRUE(pool.reserve_(sizeof(PayloadUnit) * 0x1000, payload));
@@ -161,11 +161,11 @@ TEST(PayloadPoolTest, reserve)
         test::MockPayloadPool pool;
         Payload payload;
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
 
         ASSERT_FALSE(pool.reserve_(0, payload));
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
     }
 }
 
@@ -189,7 +189,7 @@ TEST(PayloadPoolTest, release)
 
         ASSERT_TRUE(pool.release_(payload));
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
         ASSERT_EQ(payload.data, nullptr);
     }
 
@@ -204,7 +204,7 @@ TEST(PayloadPoolTest, release)
 
         ASSERT_TRUE(pool.release_(payload));
 
-        ASSERT_EQ(payload.max_size, 0);
+        ASSERT_EQ(payload.max_size, 0u);
         ASSERT_EQ(payload.data, nullptr);
     }
 }
@@ -225,36 +225,36 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
     std::vector<Payload> payloads(11);
 
     // store 5 values
-    for (int i = 0; i < 5; ++i)
+    for (unsigned int i = 0; i < 5u; ++i)
     {
         ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
     }
-    ASSERT_EQ(pool.reserve_count_, 5);
+    ASSERT_EQ(pool.reserve_count_, 5u);
 
     // release 4 values
-    for (int i = 0; i < 4; ++i)
+    for (unsigned int i = 0; i < 4u; ++i)
     {
         ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
     }
-    ASSERT_EQ(pool.release_count_, 4);
+    ASSERT_EQ(pool.release_count_, 4u);
 
     // store 5 values
-    for (int i = 5; i < 10; ++i)
+    for (unsigned int i = 5; i < 10u; ++i)
     {
         ASSERT_EQ(pool.reserve_count_, i);
         pool.reserve_(sizeof(PayloadUnit), payloads[i]);
     }
-    ASSERT_EQ(pool.reserve_count_, 10);
+    ASSERT_EQ(pool.reserve_count_, 10u);
 
     // release 6 values
-    for (int i = 4; i < 10; ++i)
+    for (unsigned int i = 4; i < 10u; ++i)
     {
         ASSERT_EQ(pool.release_count_, i);
         pool.release_(payloads[i]);
     }
-    ASSERT_EQ(pool.release_count_, 10);
+    ASSERT_EQ(pool.release_count_, 10u);
 
     // release more values than reserved
     ASSERT_THROW(pool.release_(payloads[10]), eprosima::utils::InconsistencyException);

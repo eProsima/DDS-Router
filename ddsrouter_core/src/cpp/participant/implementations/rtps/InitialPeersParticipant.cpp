@@ -56,7 +56,6 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
 
     // Needed values to check at the end if descriptor must be set
     bool has_listening_addresses = false;
-    bool has_connection_addresses = false;
     bool has_listening_tcp_ipv4 = false;
     bool has_listening_tcp_ipv6 = false;
     bool has_connection_tcp_ipv4 = false;
@@ -206,8 +205,6 @@ fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_a
                     " in Participant " << configuration->id << " initialization.");
             continue;
         }
-
-        has_connection_addresses = true;
 
         // Create Locator for connection initial peers
         eprosima::fastrtps::rtps::Locator_t locator;

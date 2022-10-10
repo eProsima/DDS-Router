@@ -51,7 +51,7 @@ bool SpecificEndpointQoS::operator < (
     auto const this_names = this->partitions.getNames();
     auto const other_names = other.partitions.getNames();
 
-    for (int i = 0; i < this_names.size(); ++i)
+    for (unsigned int i = 0; i < this_names.size(); ++i)
     {
         if (this_names[i] < other_names[i])
         {

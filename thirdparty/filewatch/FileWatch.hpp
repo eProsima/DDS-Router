@@ -521,7 +521,7 @@ private:
         {
             throw std::system_error(errno, std::system_category());
         }
-        const auto listen_filters = _listen_filters;
+        // const auto listen_filters = _listen_filters;  // Unused variable
 
         _watching_single_file = is_file(path);
 

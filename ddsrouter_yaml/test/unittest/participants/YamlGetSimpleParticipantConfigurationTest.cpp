@@ -37,10 +37,10 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 {
     for (core::types::ParticipantKind kind : core::types::ALL_VALID_PARTICIPANT_KINDS)
     {
-        for (int i = 0; i < TEST_ITERATION_MAX; i++)
+        for (unsigned int i = 0; i < TEST_ITERATION_MAX; i++)
         {
             core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
-            for (int j = 0; j < TEST_ITERATION_MAX; j++)
+            for (unsigned int j = 0; j < TEST_ITERATION_MAX; j++)
             {
                 core::types::DomainId domain = eprosima::ddsrouter::test::random_domain(j);
 

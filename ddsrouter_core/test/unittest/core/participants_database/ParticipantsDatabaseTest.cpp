@@ -231,19 +231,19 @@ TEST(ParticipantsDatabaseTest, size)
 {
     std::shared_ptr<test::ParticipantsDatabase> participants_database = std::make_shared<test::ParticipantsDatabase>();
     // Check database is empty
-    ASSERT_EQ(participants_database->size(), 0);
+    ASSERT_EQ(participants_database->size(), 0u);
 
     ParticipantId id_1("void_part");
     std::shared_ptr<BlankParticipant> participant_1 = std::make_shared<BlankParticipant>(id_1);
     // Insert participant_1
     participants_database->add_participant(participant_1->id(), participant_1, 1);
-    ASSERT_EQ(participants_database->size(), 1);
+    ASSERT_EQ(participants_database->size(), 1u);
 
     ParticipantId id_2("simple_part");
     std::shared_ptr<BlankParticipant> participant_2 = std::make_shared<BlankParticipant>(id_2);
     // Insert participant_2
     participants_database->add_participant(participant_2->id(), participant_2, 2);
-    ASSERT_EQ(participants_database->size(), 2);
+    ASSERT_EQ(participants_database->size(), 2u);
 }
 
 int main(

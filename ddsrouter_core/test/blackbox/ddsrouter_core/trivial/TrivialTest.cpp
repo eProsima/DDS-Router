@@ -154,7 +154,7 @@ TEST(TrivialTest, trivial_communication)
 
     std::vector<DummyDataStored> data_received = participant_2->get_data_that_should_have_been_sent(topic);
 
-    ASSERT_EQ(1, data_received.size());
+    ASSERT_EQ(data_received.size(), 1u);
     ASSERT_EQ(data_received[0].source_guid, guid);
     ASSERT_EQ(data_received[0].payload, payload);
 

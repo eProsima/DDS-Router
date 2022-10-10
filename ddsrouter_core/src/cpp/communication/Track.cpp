@@ -48,8 +48,8 @@ Track::Track(
     , enabled_(false)
     , exit_(false)
     , data_available_status_(DataAvailableStatus::no_more_data)
-    , thread_pool_(thread_pool)
     , transmit_task_id_(utils::new_unique_task_id())
+    , thread_pool_(thread_pool)
 {
     logDebug(DDSROUTER_TRACK, "Creating Track " << *this << ".");
 

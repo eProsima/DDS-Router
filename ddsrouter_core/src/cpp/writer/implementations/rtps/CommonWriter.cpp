@@ -47,8 +47,8 @@ CommonWriter::CommonWriter(
         const fastrtps::WriterQos& writer_qos,
         const utils::PoolConfiguration& pool_configuration)
     : BaseWriter(participant_id, topic, payload_pool)
-    , repeater_(repeater)
     , rtps_participant_(rtps_participant)
+    , repeater_(repeater)
 {
     internal_entities_creation_(
         history_attributes,

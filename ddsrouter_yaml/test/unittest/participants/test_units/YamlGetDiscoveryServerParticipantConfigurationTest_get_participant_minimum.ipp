@@ -66,8 +66,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                 ASSERT_EQ(guid, result.discovery_server_guid_prefix);
 
                 // Check default values
-                ASSERT_EQ(0, result.connection_addresses.size());
-                ASSERT_EQ(0, result.listening_addresses.size());
+                ASSERT_EQ(result.connection_addresses.size(), 0u);
+                ASSERT_EQ(result.listening_addresses.size(), 0u);
                 ASSERT_FALSE(result.tls_configuration.is_active());
                 ASSERT_EQ(
                     core::configuration::DiscoveryServerParticipantConfiguration().domain,
