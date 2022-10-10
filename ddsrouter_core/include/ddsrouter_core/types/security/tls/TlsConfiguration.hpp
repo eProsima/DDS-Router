@@ -44,7 +44,7 @@ ENUMERATION_BUILDER(
     client,
     server,
     both
-);
+    );
 
 /**
  * Configuration holding TLS parameters.
