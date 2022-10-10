@@ -22,6 +22,7 @@ sudo apt install -y \
     python3-venv \
     python3-sphinxcontrib.spelling \
     imagemagick
+pip3 install -U -r src/ddsrouter/docs/requirements.txt
 ```
 
 ### Build documentation

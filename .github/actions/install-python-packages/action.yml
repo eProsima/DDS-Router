@@ -6,17 +6,17 @@ runs:
     - id: install-python-packages
       run: |
         sudo pip3 install -U \
-          sphinx==3.0.3 \
-          doc8==0.8.0 \
-          sphinx_rtd_theme==0.4.3 \
-          sphinxcontrib.spelling==5.0.0 \
+          sphinx==4.3.1 \
+          doc8==0.10.1 \
+          sphinx_rtd_theme==0.5.2 \
+          sphinxcontrib.spelling==7.2.1 \
           sphinxcontrib-imagehelper==1.1.1 \
           sphinx-tabs==3.2.0 \
           colcon-common-extensions \
           colcon-mixin \
           vcstool \
-          GitPython \
-          setuptools \
+          GitPython==3.1.24 \
+          setuptools==58.2.0 \
           gcovr==5.0 \
           pyyaml \
           jsonschema

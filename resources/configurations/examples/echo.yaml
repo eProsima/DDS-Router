@@ -30,10 +30,13 @@ participants:
 
 ##################################
 # ECHO PARTICIPANT
-# This Participant will print in stdout every message received by the other Participants
+# This Participant will print in stdout every message received by the other Participants, as well as discovery information
 
   - name: EchoParticipant                                             # 6
     kind: echo                                                        # 7
+    discovery: true                                                   # 8
+    data: true                                                        # 9
+    verbose: true                                                     # 10
 
 
 ##################################
@@ -41,7 +44,7 @@ participants:
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to print the received
-# messages in stdout.
+# messages in stdout. Information regarding discovery events is also printed to stdout.
 
 # 0: Use YAML configuration version v3.0
 
@@ -59,4 +62,9 @@ participants:
 # 6: New Participant with name <EchoParticipant>.
 
 # 7: Kind of EchoParticipant: <echo>.
-# Prints in stdout every message received by the router, together with the source GUID, timestamp and Topic.
+
+# 8: Print a trace to stdout every time an Endpoint is discovered.
+
+# 9: Print a trace to stdout every time a new data message arrives to the router.
+
+# 10: Display verbose information regarding received messages (receiver endpoint_guid and data payload).
