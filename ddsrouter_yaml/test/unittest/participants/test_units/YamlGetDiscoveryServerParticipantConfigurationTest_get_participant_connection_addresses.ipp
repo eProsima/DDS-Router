@@ -81,8 +81,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.connection_addresses.size());
-        ASSERT_EQ(1, result.connection_addresses.begin()->addresses().size());
+        ASSERT_EQ(result.connection_addresses.size(), 1u);
+        ASSERT_EQ(result.connection_addresses.begin()->addresses().size(), 1u);
         ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
         ASSERT_EQ(address, *result.connection_addresses.begin()->addresses().begin());
     }
@@ -130,7 +130,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.connection_addresses.size());
+        ASSERT_EQ(result.connection_addresses.size(), 1u);
         ASSERT_EQ(addresses.size(), result.connection_addresses.begin()->addresses().size());
         ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
         // Check every address is inside connection addresses of the configuration
@@ -198,7 +198,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
             ASSERT_NE(
                 std::find(connection_guids.begin(), connection_guids.end(), connection.discovery_server_guid_prefix())
                 , connection_guids.end());
-            ASSERT_EQ(1, connection.addresses().size());
+            ASSERT_EQ(connection.addresses().size(), 1u);
         }
     }
 

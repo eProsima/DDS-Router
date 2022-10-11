@@ -79,7 +79,7 @@ GuidPrefix::GuidPrefix (
 GuidPrefix& GuidPrefix::operator = (
         const fastrtps::rtps::GuidPrefix_t& other) noexcept
 {
-    for (int i = 0; i < this->size; ++i)
+    for (unsigned int i = 0; i < this->size; ++i)
     {
         this->value[i] = other.value[i];
     }

@@ -25,7 +25,7 @@ using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
-const constexpr uint16_t TEST_NUMBER = 5;
+const constexpr unsigned int TEST_NUMBER = 5;
 const constexpr size_t DEFAULT_SIZE = sizeof(PayloadUnit);
 
 namespace eprosima {
@@ -82,7 +82,7 @@ TEST(FastPayloadPoolTest, get_payload)
         test::MockFastPayloadPool pool;
         std::vector<Payload> payloads(TEST_NUMBER);
 
-        for (int i = 0; i < TEST_NUMBER; i++)
+        for (unsigned int i = 0; i < TEST_NUMBER; i++)
         {
             pool.get_payload(DEFAULT_SIZE, payloads[i]);
 
@@ -130,37 +130,37 @@ TEST(FastPayloadPoolTest, get_payload_from_src)
 
     // get payload0
     ASSERT_TRUE(pool_->get_payload(DEFAULT_SIZE, payload0));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
 
     // get payload1 from src payload0
     ASSERT_TRUE(pool_->get_payload(payload0, pool, payload1));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
     ASSERT_EQ(payload1.max_size, payload0.max_size);
     ASSERT_EQ(payload1.data, payload0.data);
 
     // get payload2 from src payload1
     ASSERT_TRUE(pool_->get_payload(payload1, pool, payload2));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
     ASSERT_EQ(payload2.max_size, payload0.max_size);
     ASSERT_EQ(payload2.data, payload0.data);
 
     // release payload0
     ASSERT_TRUE(pool_->release_payload(payload0));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
 
     // get payload3 from src payload1
     ASSERT_TRUE(pool_->get_payload(payload1, pool, payload3));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
     ASSERT_EQ(payload3.max_size, payload1.max_size);
     ASSERT_EQ(payload3.data, payload1.data);
 
     // get payload4
     ASSERT_TRUE(pool_->get_payload(DEFAULT_SIZE * 0x100, payload4));
-    ASSERT_EQ(pool_->pointers_stored(), 2);
+    ASSERT_EQ(pool_->pointers_stored(), 2u);
 
     // get payload5 from src payload4
     ASSERT_TRUE(pool_->get_payload(payload4, pool, payload5));
-    ASSERT_EQ(pool_->pointers_stored(), 2);
+    ASSERT_EQ(pool_->pointers_stored(), 2u);
     ASSERT_EQ(payload5.max_size, payload4.max_size);
     ASSERT_EQ(payload5.data, payload4.data);
 
@@ -173,7 +173,7 @@ TEST(FastPayloadPoolTest, get_payload_from_src)
 
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
-    ASSERT_EQ(pool_->pointers_stored(), 0);
+    ASSERT_EQ(pool_->pointers_stored(), 0u);
 
     delete pool;
 }
@@ -201,21 +201,21 @@ TEST(FastPayloadPoolTest, get_payload_from_src_no_owner)
 
     // get payload aux from pool aux
     pool_aux_->get_payload(DEFAULT_SIZE, payload_src);
-    ASSERT_EQ(pool_aux_->pointers_stored(), 1);
-    ASSERT_EQ(pool_->pointers_stored(), 0);
+    ASSERT_EQ(pool_aux_->pointers_stored(), 1u);
+    ASSERT_EQ(pool_->pointers_stored(), 0u);
 
     // get payload from src payload aux
     ASSERT_TRUE(pool_->get_payload(payload_src, pool_aux, payload_target));
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
 
     // release payload aux from pool aux
     pool_aux_->release_payload(payload_src);
-    ASSERT_EQ(pool_aux_->pointers_stored(), 0);
-    ASSERT_EQ(pool_->pointers_stored(), 1);
+    ASSERT_EQ(pool_aux_->pointers_stored(), 0u);
+    ASSERT_EQ(pool_->pointers_stored(), 1u);
 
     // release payload
     pool_->release_payload(payload_target);
-    ASSERT_EQ(pool_->pointers_stored(), 0);
+    ASSERT_EQ(pool_->pointers_stored(), 0u);
 
     delete pool_aux;
     delete pool;
@@ -268,35 +268,35 @@ TEST(FastPayloadPoolTest, release_payload)
     pool_->get_payload(DEFAULT_SIZE, payloads[0]);
 
     // get N-1 payloads from first
-    for (int i = 1; i < TEST_NUMBER; i++)
+    for (unsigned int i = 1; i < TEST_NUMBER; i++)
     {
         pool_->get_payload(payloads[0], pool, payloads[i]);
     }
 
     // release N-2 payloads
-    for (int i = 2; i < TEST_NUMBER; i++)
+    for (unsigned int i = 2; i < TEST_NUMBER; i++)
     {
         ASSERT_TRUE(pool_->release_payload(payloads[i]));
     }
 
     // get N-2 more payloads from first
-    for (int i = 2; i < TEST_NUMBER; i++)
+    for (unsigned int i = 2; i < TEST_NUMBER; i++)
     {
         pool_->get_payload(payloads[0], pool, payloads[i]);
     }
 
     // release N payloads
-    for (int i = 1; i < TEST_NUMBER; i++)
+    for (unsigned int i = 1; i < TEST_NUMBER; i++)
     {
         ASSERT_TRUE(pool_->release_payload(payloads[i]));
     }
     // Removing last payload because if not the reference count cannot be done
     ASSERT_TRUE(pool_->release_payload(payloads[0]));
-    ASSERT_EQ(pool_->pointers_stored(), 0);
+    ASSERT_EQ(pool_->pointers_stored(), 0u);
 
     // Check payload pool is empty
     ASSERT_TRUE(pool_->is_clean());
-    ASSERT_EQ(pool_->pointers_stored(), 0);
+    ASSERT_EQ(pool_->pointers_stored(), 0u);
 
     delete pool;
 }

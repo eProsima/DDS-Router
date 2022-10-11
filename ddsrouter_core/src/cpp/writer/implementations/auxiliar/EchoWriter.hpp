@@ -52,12 +52,11 @@ protected:
     virtual utils::ReturnCode write(
             std::unique_ptr<types::DataReceived>& data) noexcept override;
 
-    // Specific enable/disable do not need to be implemented
-
-    bool verbose_;
-
     //! Topic that this Writer refers to
     types::DdsTopic topic_;
+
+    // Specific enable/disable do not need to be implemented
+    bool verbose_;
 };
 
 } /* namespace core */

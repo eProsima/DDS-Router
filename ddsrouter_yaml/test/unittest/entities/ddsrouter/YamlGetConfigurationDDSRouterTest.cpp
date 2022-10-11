@@ -61,7 +61,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 2);
+    ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
@@ -109,7 +109,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
 
     // Check Builtin Topics has one correct topic
     std::set<std::shared_ptr<core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
-    ASSERT_EQ(builtin_result.size(), 1);
+    ASSERT_EQ(builtin_result.size(), 1u);
     std::shared_ptr<core::types::DdsTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name, "rt/chatter");
     ASSERT_EQ(topic_result->type_name, "std_msgs::msg::dds_::String_");
@@ -120,7 +120,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 3);
+    ASSERT_EQ(participant_configurations.size(), 3u);
 
     for (auto participant : participant_configurations)
     {
@@ -162,7 +162,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 2);
+    ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
@@ -205,11 +205,11 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
 
     // Check allowlist has 2 topics
     std::set<std::shared_ptr<core::types::DdsFilterTopic>> allowlist_result = configuration_result.allowlist;
-    ASSERT_EQ(allowlist_result.size(), 2);
+    ASSERT_EQ(allowlist_result.size(), 2u);
 
     // Check Builtin Topics has one correct topic
     std::set<std::shared_ptr<core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
-    ASSERT_EQ(builtin_result.size(), 1);
+    ASSERT_EQ(builtin_result.size(), 1u);
     std::shared_ptr<core::types::DdsTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name, "topic1");
     ASSERT_EQ(topic_result->type_name, "type1");
@@ -219,7 +219,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 2);
+    ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
@@ -268,7 +268,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
     std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 2);
+    ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (std::shared_ptr<core::configuration::ParticipantConfiguration> participant : participant_configurations)
     {
@@ -289,12 +289,12 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
             // Check GuidPrefix
             ASSERT_EQ(
                 ds_participant->discovery_server_guid_prefix,
-                core::types::GuidPrefix(true, 3));
+                core::types::GuidPrefix(true, 3u));
 
             // Check Connection addresses
             ASSERT_EQ(
                 ds_participant->connection_addresses.size(),
-                1);
+                1u);
             core::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses.begin();
             ASSERT_EQ(
                 address,

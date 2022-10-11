@@ -69,7 +69,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
                         LATEST);
 
         // Check result
-        ASSERT_EQ(1, result.listening_addresses.size());
+        ASSERT_EQ(result.listening_addresses.size(), 1u);
         ASSERT_EQ(address, *result.listening_addresses.begin());
     }
 

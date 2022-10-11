@@ -25,7 +25,7 @@
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::yaml;
 
-const constexpr int TEST_ADDRESSES_NUMBER = 5;
+const constexpr unsigned int TEST_ADDRESSES_NUMBER = 5;
 
 /**
  * Test read a discovery server
@@ -67,7 +67,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());
-        ASSERT_EQ(1, result.addresses().size());
+        ASSERT_EQ(result.addresses().size(), 1u);
         ASSERT_EQ(address, *result.addresses().begin());
     }
 
@@ -85,7 +85,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         // Get random address and add it to yaml
         Yaml yml_addresses;
         std::vector<core::types::Address> addresses;
-        for (int i = 0; i < TEST_ADDRESSES_NUMBER; i++)
+        for (unsigned int i = 0; i < TEST_ADDRESSES_NUMBER; i++)
         {
             // Create new address and add it to already created addresses and to yaml
             Yaml yml_address;
@@ -108,7 +108,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());
-        ASSERT_EQ(TEST_ADDRESSES_NUMBER, result.addresses().size());
+        ASSERT_EQ(result.addresses().size(), TEST_ADDRESSES_NUMBER);
 
         // Check every address introduced in yaml is in result
         for (core::types::Address address : addresses)

@@ -199,11 +199,10 @@ TEST(EndpointTest, topic_getter)
 {
     Guid guid = random_valid_guid();
     EndpointKind kind = random_endpoint_kind();
-    TopicQoS qos = random_qos();
 
     // Random guids
     {
-        for (uint16_t i = 0; i < 10; i++)
+        for (uint16_t i = 0; i < 10u; i++)
         {
             DdsTopic topic = random_topic(i);
             Endpoint endpoint(kind, guid, topic);
@@ -225,7 +224,6 @@ TEST(EndpointTest, active_getter)
     Guid guid = random_valid_guid();
     DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
-    TopicQoS qos = random_qos();
 
     // Default value
     {
@@ -263,7 +261,6 @@ TEST(EndpointTest, active_setter)
     Guid guid = random_valid_guid();
     DdsTopic topic = random_topic();
     EndpointKind kind = random_endpoint_kind();
-    TopicQoS qos = random_qos();
 
     // Default value
     {
