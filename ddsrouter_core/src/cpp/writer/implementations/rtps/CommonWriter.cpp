@@ -66,6 +66,8 @@ CommonWriter::~CommonWriter()
     // Delete writer
     if (rtps_writer_)
     {
+        // Unset listener before destruction (not necessary in principle, but just in case)
+        rtps_writer_->set_listener(nullptr);
         // Delete the CommonWriter the History is cleaned
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
@@ -78,6 +80,31 @@ CommonWriter::~CommonWriter()
 
     logInfo(DDSROUTER_RTPS_COMMONWRITER, "Deleting CommonWriter created in Participant " <<
             participant_id_ << " for topic " << topic_);
+}
+
+void CommonWriter::onWriterMatched(
+        fastrtps::rtps::RTPSWriter*,
+        fastrtps::rtps::MatchingInfo& info) noexcept
+{
+    if (!come_from_this_participant_(info.remoteEndpointGuid))
+    {
+        if (info.status == fastrtps::rtps::MatchingStatus::MATCHED_MATCHING)
+        {
+            logInfo(DDSROUTER_RTPS_COMMONWRITER_LISTENER,
+                    "Writer " << *this << " matched with a new Reader with guid " << info.remoteEndpointGuid);
+        }
+        else
+        {
+            logInfo(DDSROUTER_RTPS_COMMONWRITER_LISTENER,
+                    "Writer " << *this << " unmatched with Reader " << info.remoteEndpointGuid);
+        }
+    }
+}
+
+bool CommonWriter::come_from_this_participant_(
+        const fastrtps::rtps::GUID_t guid) const noexcept
+{
+    return guid.guidPrefix == rtps_writer_->getGuid().guidPrefix;
 }
 
 // Specific enable/disable do not need to be implemented
@@ -236,6 +263,10 @@ void CommonWriter::internal_entities_creation_(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
                       participant_id_ << " in topic " << topic_ << ".");
     }
+
+    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_writer_ is
+    // invoked before the variable is fully set)
+    rtps_writer_->set_listener(this);
 
     // Register writer with topic
     if (!rtps_participant_->registerWriter(rtps_writer_, topic_attributes, writer_qos))

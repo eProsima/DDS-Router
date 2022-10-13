@@ -78,6 +78,18 @@ public:
      */
     virtual ~CommonWriter();
 
+    /**
+     * @brief CommonWriter Listener callback when a new Reader is matched or unmatched
+     *
+     * This method is call every time a new Reader is matched or unmatched from this CommonWriter.
+     * It only creates a log for matching and unmatching (in case it is not a reader from this same Participant)
+     *
+     * @param [in] info information about the matched Reader
+     */
+    void onWriterMatched(
+            fastrtps::rtps::RTPSWriter*,
+            fastrtps::rtps::MatchingInfo& info) noexcept override;
+
 protected:
 
     /**
