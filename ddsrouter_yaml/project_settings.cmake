@@ -29,6 +29,8 @@ set(MODULE_FIND_PACKAGES
     cpp_utils
     ddsrouter_core)
 
+set(ddsrouter_core_MINIMUM_VERSION "1.0")
+
 set(MODULE_DEPENDENCIES
     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
     ${MODULE_FIND_PACKAGES})
