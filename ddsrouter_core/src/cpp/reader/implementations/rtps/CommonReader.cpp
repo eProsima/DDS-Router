@@ -57,6 +57,8 @@ CommonReader::~CommonReader()
     // Delete reader
     if (rtps_reader_)
     {
+        // Unset listener before destruction (not necessary in principle, but just in case)
+        rtps_reader_->setListener(nullptr);
         fastrtps::rtps::RTPSDomain::removeRTPSReader(rtps_reader_);
     }
 

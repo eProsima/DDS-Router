@@ -66,6 +66,8 @@ CommonWriter::~CommonWriter()
     // Delete writer
     if (rtps_writer_)
     {
+        // Unset listener before destruction (not necessary in principle, but just in case)
+        rtps_writer_->set_listener(nullptr);
         // Delete the CommonWriter the History is cleaned
         fastrtps::rtps::RTPSDomain::removeRTPSWriter(rtps_writer_);
     }
