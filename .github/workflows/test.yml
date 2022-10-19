@@ -343,17 +343,53 @@ jobs:
             --event-handlers=console_direct+ \
             --cmake-args -DBUILD_TESTS=ON
 
-      - name: Run tests
+      - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select ddsrouter_core \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
               --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+      
+      - name: Run tests ddsrouter_docs
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_docs \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
 
       - name: Upload Logs
         uses: actions/upload-artifact@v1
@@ -410,17 +446,53 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
-      - name: Run tests
+      - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select ddsrouter_core \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
-              --label-regex xfail \
+              --label-exclude xfail \
               --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+      
+      - name: Run tests ddsrouter_docs
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_docs \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
 
 
   asan-test:
@@ -540,16 +612,43 @@ jobs:
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/tsan_colcon.meta
-      - name: Run tests
+
+      - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select ddsrouter_core ddsrouter_yaml ddsrouter_tool \
+            --packages-select ddsrouter_core \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude "xfail|xtsan" \
               --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
+
       - name: Upload Logs
         uses: actions/upload-artifact@v1
         with:
