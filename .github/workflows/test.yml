@@ -515,16 +515,16 @@ jobs:
 
       - name: Get build eProsima dependencies Job Id
         run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_dependencies.yml/runs | \
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
             jq '.workflow_runs[] | select(.status == "completed") | .id' | \
             head -n 1)
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_dependencies.yml
+          workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_eprosima_dependencies_install
+          name: ubuntu-20.04_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
