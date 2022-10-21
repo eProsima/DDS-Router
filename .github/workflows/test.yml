@@ -5,30 +5,42 @@
 # so they do not have to compile the whole fastrtps project. This saves huge amount of time.
 #
 # JOBS:
+#
 #   - windows-build-test
 #     - [ windows-2019 | windows-2022 ]
 #     - [ Debug | Release ]
 #     - compile up-to ddsrouter_tool ; run tests
+#
 #   - ubuntu-main-test
 #     - ubuntu-20.04
 #     - Debug
 #     - compile all ; run tests ; calculate coverage
+#
 #   - ubuntu-release-test
 #     - [ ubuntu-20.04 | ubuntu-22.04 ]
 #     - Release
 #     - compile all ; run tests
+#
 #   - ubuntu-build-test-flaky
 #     - ubuntu-20.04
 #     - Debug
 #     - compile all ; run flaky tests
+#
 #   - asan-test
 #     - [ ubuntu-20.04 ]
 #     - Debug
 #     - compile all ; run tests
+#
+#   - tsan-test
+#     - ubuntu-20.04
+#     - Debug
+#     - build code ; run tests
+#
 #   - clang-tidy
 #     - ubuntu-20.04
 #     - Release
 #     - compile all ; test clang-tidy
+#
 #   - uncrustify
 #     - ubuntu-20.04
 #     - test uncrustify
@@ -331,17 +343,53 @@ jobs:
             --event-handlers=console_direct+ \
             --cmake-args -DBUILD_TESTS=ON
 
-      - name: Run tests
+      - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select ddsrouter_core \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
               --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+      
+      - name: Run tests ddsrouter_docs
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_docs \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
 
       - name: Upload Logs
         uses: actions/upload-artifact@v1
@@ -398,18 +446,41 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
-      - name: Run tests
+      - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
           colcon test \
-            --packages-select-regex ddsrouter \
-            --packages-skip ddsrouter_yaml_validator \
+            --packages-select ddsrouter_core \
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-regex xfail \
               --timeout 60
+        if: always()
 
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-regex xfail \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-regex xfail \
+              --timeout 60
+        if: always()
 
   asan-test:
     runs-on: ubuntu-20.04
@@ -483,6 +554,94 @@ jobs:
           path: log/
         if: always()
 
+  tsan-test:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Sync eProsima/DDS-Router repository
+        uses: actions/checkout@v2
+        with:
+          path: src/DDS-Router
+
+      - name: Install apt packages
+        uses: ./src/DDS-Router/.github/actions/install-apt-packages
+
+      - name: Install GTest
+        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
+
+      - name: Install Python packages
+        uses: ./src/DDS-Router/.github/actions/install-python-packages
+
+      - name: Get build eProsima dependencies Job Id
+        run: |
+          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
+            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
+            head -n 1)
+          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+      - name: Download eProsima dependencies
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build_fastdds.yml
+          path: /home/runner/work/fastdds/install
+          name: ubuntu-20.04_fastdds_install
+          run_id: ${{ env.fastdds_job_id }}
+
+      - name: Update colcon mixin
+        run: |
+          colcon mixin add default \
+            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+        continue-on-error: true
+
+      - name: Build workspace
+        run: |
+          source /home/runner/work/fastdds/install/setup.bash
+          colcon build \
+            --event-handlers=console_direct+ \
+            --metas src/DDS-Router/.github/workflows/tsan_colcon.meta
+
+      - name: Run tests ddsrouter_core
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_core \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_yaml
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_yaml \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
+
+      - name: Run tests ddsrouter_tool
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select ddsrouter_tool \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v1
+        with:
+          name: tsan-logs
+          path: log/
+        if: always()
 
   clang-tidy:
     runs-on: ubuntu-20.04

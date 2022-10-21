@@ -1,0 +1,32 @@
+{
+    "names":
+    {
+        "ddsrouter_core":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_TESTS=ON",
+                "-DTSAN_BUILD=ON"
+            ]
+        },
+        "ddsrouter_yaml":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_TESTS=ON",
+                "-DTSAN_BUILD=ON"
+            ]
+        },
+        "ddsrouter_tool":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_TESTS=ON",
+                "-DTSAN_BUILD=ON"
+            ]
+        }
+    }
+}

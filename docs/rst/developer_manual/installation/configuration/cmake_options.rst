@@ -94,3 +94,8 @@ These options allow the developer to enable/disable certain *DDS Router* setting
         - ``OFF`` |br|
           ``ON``
         - ``OFF``
+    *   - :class:`TSAN_BUILD`
+        - Activate thread sanitizer build.
+        - ``OFF`` |br|
+          ``ON``
+        - ``OFF``

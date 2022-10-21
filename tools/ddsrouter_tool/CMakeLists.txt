@@ -53,6 +53,7 @@ project(
 # - Find external packages and thirdparties
 # - Activate Code coverage if flag CODE_COVERAGE
 # - Activate Address sanitizer build if flag ASAN_BUILD
+# - Activate Thread sanitizer build if flag TSAN_BUILD
 # - Configure log depending on LOG_INFO flag and CMake type
 configure_project_cpp()
 
