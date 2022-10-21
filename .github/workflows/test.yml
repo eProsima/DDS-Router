@@ -454,7 +454,7 @@ jobs:
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
-              --label-exclude xfail \
+              --label-regex xfail \
               --timeout 60
         if: always()
 
@@ -466,7 +466,7 @@ jobs:
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
-              --label-exclude xfail \
+              --label-regex xfail \
               --timeout 60
         if: always()
 
@@ -478,22 +478,9 @@ jobs:
             --event-handlers=console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
-              --label-exclude xfail \
+              --label-regex xfail \
               --timeout 60
         if: always()
-      
-      - name: Run tests ddsrouter_docs
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddsrouter_docs \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
-
 
   asan-test:
     runs-on: ubuntu-20.04
