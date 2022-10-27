@@ -36,7 +36,7 @@ jobs:
 
       # Sync current branch
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
