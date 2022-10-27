@@ -263,7 +263,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage-report/coverage.xml
+          files: ./coverage-report/coverage.xml
           root_dir: src/DDS-Router
           fail_ci_if_error: true
 
@@ -273,11 +273,18 @@ jobs:
           name: Documentation HTML
           path: install/ddsrouter_docs/docs/ddsrouter_docs/sphinx/html/
 
+      - name: Concatenate spelling errors
+        run: |
+          find ./build/ddsrouter_docs/docs/test/spelling \
+            -type f \
+            -name '*.spelling' \
+            -exec cat {} + > ./build/ddsrouter_docs/test/spelling/spelling_errors.txt
+
       - name: Upload spelling errors
         uses: actions/upload-artifact@v1
         with:
           name: spelling_errors.txt
-          path: build/ddsrouter_docs/docs/test/spelling/output.txt
+          path: build/ddsrouter_docs/test/spelling/spelling_errors.txt
         continue-on-error: true
 
       - name: Upload Logs
