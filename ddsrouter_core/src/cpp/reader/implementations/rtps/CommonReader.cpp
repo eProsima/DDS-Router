@@ -41,12 +41,12 @@ CommonReader::CommonReader(
         const fastrtps::ReaderQos& reader_qos)
     : BaseReader(participant_id, topic, payload_pool)
     , rtps_participant_(rtps_participant)
+    , history_attributes_(history_attributes)
+    , reader_attributes_(reader_attributes)
+    , topic_attributes_(topic_attributes)
+    , reader_qos_(reader_qos)
 {
-    internal_entities_creation_(
-        history_attributes,
-        reader_attributes,
-        topic_attributes,
-        reader_qos);
+    // Do nothing
 }
 
 CommonReader::~CommonReader()
@@ -70,6 +70,15 @@ CommonReader::~CommonReader()
 
     logInfo(DDSROUTER_RTPS_READER, "Deleting CommonReader created in Participant " <<
             participant_id_ << " for topic " << topic_);
+}
+
+void CommonReader::init()
+{
+    internal_entities_creation_(
+        history_attributes_,
+        reader_attributes_,
+        topic_attributes_,
+        reader_qos_);
 }
 
 void CommonReader::internal_entities_creation_(
@@ -234,7 +243,7 @@ bool CommonReader::come_from_this_participant_(
     return guid.guidPrefix == rtps_reader_->getGuid().guidPrefix;
 }
 
-fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(
+fastrtps::rtps::HistoryAttributes CommonReader::get_history_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
@@ -246,7 +255,7 @@ fastrtps::rtps::HistoryAttributes CommonReader::history_attributes_(
     return att;
 }
 
-fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(
+fastrtps::rtps::ReaderAttributes CommonReader::get_reader_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::ReaderAttributes att;
@@ -272,7 +281,7 @@ fastrtps::rtps::ReaderAttributes CommonReader::reader_attributes_(
     return att;
 }
 
-fastrtps::TopicAttributes CommonReader::topic_attributes_(
+fastrtps::TopicAttributes CommonReader::get_topic_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::TopicAttributes att;
@@ -298,7 +307,7 @@ fastrtps::TopicAttributes CommonReader::topic_attributes_(
     return att;
 }
 
-fastrtps::ReaderQos CommonReader::reader_qos_(
+fastrtps::ReaderQos CommonReader::get_reader_qos_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::ReaderQos properties;

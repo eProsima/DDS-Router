@@ -39,10 +39,10 @@ SpecificQoSReader::SpecificQoSReader(
         std::shared_ptr<DiscoveryDatabase> discovery_database)
     : CommonReader(
         participant_id, topic, payload_pool, rtps_participant,
-        history_attributes_(topic),
-        reader_attributes_(topic),
-        topic_attributes_(topic),
-        reader_qos_(topic))
+        get_history_attributes_(topic),
+        get_reader_attributes_(topic),
+        get_topic_attributes_(topic),
+        get_reader_qos_(topic))
     , discovery_database_(discovery_database)
 {
 }

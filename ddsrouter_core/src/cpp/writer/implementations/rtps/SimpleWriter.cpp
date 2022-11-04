@@ -43,10 +43,10 @@ SimpleWriter::SimpleWriter(
         const bool repeater /* = false */)
     : CommonWriter(
         participant_id, topic, payload_pool, rtps_participant, repeater,
-        history_attributes_(topic),
-        writer_attributes_(topic),
-        topic_attributes_(topic),
-        writer_qos_(topic),
+        get_history_attributes_(topic),
+        get_writer_attributes_(topic),
+        get_topic_attributes_(topic),
+        get_writer_qos_(topic),
         cache_change_pool_configuration_(topic))
 {
 }

@@ -125,13 +125,16 @@ QoSSpecificWriter* MultiWriter::create_writer_nts_(
         DDSROUTER_MULTIWRITER,
         "Creating a new Writer in " << *this << " for qos " << data_qos << ".");
 
-    return new QoSSpecificWriter(
+    auto writer = new QoSSpecificWriter(
         this->participant_id_,
         this->topic_,
         this->payload_pool_,
         this->rtps_participant_,
         data_qos,
         repeater_);
+    writer->init();
+
+    return writer;
 }
 
 // Specific enable/disable do not need to be implemented
