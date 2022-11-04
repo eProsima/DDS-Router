@@ -48,10 +48,10 @@ CommonParticipant::CommonParticipant(
         const types::DomainId& domain_id,
         const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)
     : BaseParticipant(participant_configuration, payload_pool, discovery_database)
+    , domain_id_(domain_id)
+    , participant_attributes_(participant_attributes)
 {
-    create_participant_(
-        domain_id,
-        participant_attributes);
+    // Do nothing
 }
 
 CommonParticipant::~CommonParticipant()
@@ -61,6 +61,14 @@ CommonParticipant::~CommonParticipant()
         fastrtps::rtps::RTPSDomain::removeRTPSParticipant(rtps_participant_);
     }
 }
+
+void CommonParticipant::init()
+{
+    create_participant_(
+        domain_id_,
+        participant_attributes_);
+}
+
 
 void CommonParticipant::onParticipantDiscovery(
         fastrtps::rtps::RTPSParticipant*,
@@ -288,6 +296,7 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
 {
     if (topic.topic_qos.get_reference().has_partitions() || topic.topic_qos.get_reference().has_ownership())
     {
+        // Notice that MultiWriter does not require an init call
         return std::make_shared<MultiWriter>(
             this->id(),
             topic,
@@ -297,12 +306,15 @@ std::shared_ptr<IWriter> CommonParticipant::create_writer_(
     }
     else
     {
-        return std::make_shared<SimpleWriter>(
+        auto writer = std::make_shared<SimpleWriter>(
             this->id(),
             topic,
             this->payload_pool_,
             rtps_participant_,
             this->configuration_->is_repeater);
+        writer->init();
+
+        return writer;
     }
 }
 
@@ -311,25 +323,31 @@ std::shared_ptr<IReader> CommonParticipant::create_reader_(
 {
     if (topic.topic_qos.get_reference().has_partitions() || topic.topic_qos.get_reference().has_ownership())
     {
-        return std::make_shared<SpecificQoSReader>(
+        auto reader = std::make_shared<SpecificQoSReader>(
             this->id(),
             topic,
             this->payload_pool_,
             rtps_participant_,
             discovery_database_);
+        reader->init();
+
+        return reader;
     }
     else
     {
-        return std::make_shared<SimpleReader>(
+        auto reader = std::make_shared<SimpleReader>(
             this->id(),
             topic,
             this->payload_pool_,
             rtps_participant_);
+        reader->init();
+
+        return reader;
     }
 }
 
 fastrtps::rtps::RTPSParticipantAttributes
-CommonParticipant::participant_attributes_(
+CommonParticipant::get_participant_attributes_(
         const configuration::ParticipantConfiguration* participant_configuration)
 {
     fastrtps::rtps::RTPSParticipantAttributes params;

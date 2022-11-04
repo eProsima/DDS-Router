@@ -41,15 +41,15 @@ InitialPeersParticipant::InitialPeersParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        participant_attributes_(participant_configuration.get()))
+        get_participant_attributes_(participant_configuration.get()))
 {
 }
 
-fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::participant_attributes_(
+fastrtps::rtps::RTPSParticipantAttributes InitialPeersParticipant::get_participant_attributes_(
         const configuration::InitialPeersParticipantConfiguration* configuration)
 {
     // Use default as base attributes
-    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::participant_attributes_(configuration);
+    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::get_participant_attributes_(configuration);
 
     // Auxiliary variable to save characters and improve readability
     const auto& tls_config = configuration->tls_configuration;

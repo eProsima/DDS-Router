@@ -87,10 +87,15 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               " is not for Participant Kind: " << participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::SimpleParticipant> (
+            auto participant = std::make_shared<rtps::SimpleParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
+
+            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
+            participant->init();
+
+            return participant;
         }
 
         case ParticipantKind::local_discovery_server:
@@ -108,10 +113,15 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::DiscoveryServerParticipant> (
+            auto participant =  std::make_shared<rtps::DiscoveryServerParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
+
+            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
+            participant->init();
+
+            return participant;
         }
 
         case ParticipantKind::wan_initial_peers:
@@ -128,10 +138,15 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                               participant_configuration->kind);
             }
 
-            return std::make_shared<rtps::InitialPeersParticipant> (
+            auto participant =  std::make_shared<rtps::InitialPeersParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
+
+            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
+            participant->init();
+
+            return participant;
         }
 
         case ParticipantKind::invalid:
