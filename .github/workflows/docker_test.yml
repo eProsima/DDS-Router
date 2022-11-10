@@ -54,11 +54,11 @@ jobs:
 
       # It enables the use of Vulcanexus container
       - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_CONTAINER_REGISTRY_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # Build Vulcanexus Docker image
       - name: Build custom Vulcanexus Docker image
