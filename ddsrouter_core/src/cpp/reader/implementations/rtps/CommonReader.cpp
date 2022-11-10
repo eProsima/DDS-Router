@@ -94,11 +94,14 @@ void CommonReader::internal_entities_creation_(
     rtps_history_ = new fastrtps::rtps::ReaderHistory(history_attributes);
 
     // Create CommonReader
+    // Listener must be set in creation as no callbacks could be missed
+    // It is safe to do so here as object is already created and callbacks does not require anything set in this method
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant_,
         non_const_reader_attributes,
         payload_pool_,
-        rtps_history_);
+        rtps_history_,
+        this);
 
     if (!rtps_reader_)
     {
@@ -337,7 +340,7 @@ fastrtps::ReaderQos CommonReader::get_reader_qos_(
 }
 
 void CommonReader::onNewCacheChangeAdded(
-        fastrtps::rtps::RTPSReader*,
+        fastrtps::rtps::RTPSReader* reader,
         const fastrtps::rtps::CacheChange_t* const change) noexcept
 {
     if (!come_from_this_participant_(change))
@@ -357,7 +360,7 @@ void CommonReader::onNewCacheChangeAdded(
             // NOTE: this should be is_reliable and not is_transient_local for RPC sake
             if (!topic_.topic_qos.get_reference().is_reliable())
             {
-                rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+                reader->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
                 logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
                         "Change removed from history");
             }
@@ -371,7 +374,7 @@ void CommonReader::onNewCacheChangeAdded(
 
         // If it is a message from this Participant, do not send it forward and remove it
         // TODO: do this more elegant
-        rtps_reader_->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
+        reader->getHistory()->remove_change((fastrtps::rtps::CacheChange_t*)change);
     }
 }
 

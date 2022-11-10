@@ -71,10 +71,10 @@ void CommonParticipant::init()
 
 
 void CommonParticipant::onParticipantDiscovery(
-        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::RTPSParticipant* participant,
         fastrtps::rtps::ParticipantDiscoveryInfo&& info)
 {
-    if (info.info.m_guid.guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
+    if (info.info.m_guid.guidPrefix != participant->getGuid().guidPrefix)
     {
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
@@ -188,10 +188,10 @@ types::Endpoint CommonParticipant::create_endpoint_from_info_<fastrtps::rtps::Re
 }
 
 void CommonParticipant::onReaderDiscovery(
-        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::RTPSParticipant* participant,
         fastrtps::rtps::ReaderDiscoveryInfo&& info)
 {
-    if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
+    if (info.info.guid().guidPrefix != participant->getGuid().guidPrefix)
     {
         types::Endpoint info_reader = create_endpoint_from_info_<fastrtps::rtps::ReaderDiscoveryInfo>(info);
 
@@ -226,10 +226,10 @@ void CommonParticipant::onReaderDiscovery(
 }
 
 void CommonParticipant::onWriterDiscovery(
-        fastrtps::rtps::RTPSParticipant*,
+        fastrtps::rtps::RTPSParticipant* participant,
         fastrtps::rtps::WriterDiscoveryInfo&& info)
 {
-    if (info.info.guid().guidPrefix != this->rtps_participant_->getGuid().guidPrefix)
+    if (info.info.guid().guidPrefix != participant->getGuid().guidPrefix)
     {
         types::Endpoint info_writer = create_endpoint_from_info_<fastrtps::rtps::WriterDiscoveryInfo>(info);
 
@@ -270,13 +270,12 @@ void CommonParticipant::create_participant_(
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
             "Creating Participant in domain " << domain);
 
+    // Listener must be set in creation as no callbacks could be missed
+    // It is safe to do so here as object is already created and callbacks does not require anything set in this method
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(
         domain,
-        participant_attributes);
-
-    // Set listener after participant creation to avoid SEGFAULT (produced when callback using rtps_participant_ is
-    // invoked before the variable is fully set)
-    rtps_participant_->set_listener(this);
+        participant_attributes,
+        this);
 
     if (!rtps_participant_)
     {
