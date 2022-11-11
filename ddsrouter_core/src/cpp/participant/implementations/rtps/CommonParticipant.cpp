@@ -269,8 +269,8 @@ void CommonParticipant::create_participant_(
     logInfo(DDSROUTER_RTPS_PARTICIPANT,
             "Creating Participant in domain " << domain);
 
-    // Listener must be set in creation as no callbacks could be missed
-    // It is safe to do so here as object is already created and callbacks does not require anything set in this method
+    // Listener must be set in creation as no callbacks should be missed
+    // It is safe to do so here as object is already created and callbacks do not require anything set in this method
     rtps_participant_ = fastrtps::rtps::RTPSDomain::createParticipant(
         domain,
         participant_attributes,

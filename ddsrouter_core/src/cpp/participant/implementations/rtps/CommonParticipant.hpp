@@ -160,8 +160,10 @@ protected:
     //! Internal RTPS Participant
     eprosima::fastrtps::rtps::RTPSParticipant* rtps_participant_;
 
+    //! Domain Id to create the internal RTPS Participant.
     types::DomainId domain_id_;
 
+    //! Participant attributes to create the internal RTPS Participant.
     fastrtps::rtps::RTPSParticipantAttributes participant_attributes_;
 };
 

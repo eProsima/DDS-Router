@@ -236,14 +236,19 @@ protected:
     //! Data Filter used to filter cache changes at the RTPSWriter level.
     std::unique_ptr<fastdds::rtps::IReaderDataFilter> data_filter_;
 
+    //! History attributes to create the History for the internal RTPS Writer.
     fastrtps::rtps::HistoryAttributes history_attributes_;
 
+    //! Writer attributes to create the internal RTPS Writer.
     fastrtps::rtps::WriterAttributes writer_attributes_;
 
+    //! Topic attributes to create the internal RTPS Writer.
     fastrtps::TopicAttributes topic_attributes_;
 
+    //! Writer QoS to create the internal RTPS Writer.
     fastrtps::WriterQos writer_qos_;
 
+    //! Pool Configuration to create the internal History.
     utils::PoolConfiguration pool_configuration_;
 };
 

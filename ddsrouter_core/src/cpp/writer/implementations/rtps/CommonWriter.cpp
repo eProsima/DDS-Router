@@ -245,8 +245,8 @@ void CommonWriter::internal_entities_creation_(
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_attributes);
 
     // Create CommonWriter
-    // Listener must be set in creation as no callbacks could be missed
-    // It is safe to do so here as object is already created and callbacks does not require anything set in this method
+    // Listener must be set in creation as no callbacks should be missed
+    // It is safe to do so here as object is already created and callbacks do not require anything set in this method
     if (repeater_)
     {
         logDebug(DDSROUTER_RTPS_COMMONWRITER, "CommonWriter created with repeater filter");

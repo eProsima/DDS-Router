@@ -94,8 +94,8 @@ void CommonReader::internal_entities_creation_(
     rtps_history_ = new fastrtps::rtps::ReaderHistory(history_attributes);
 
     // Create CommonReader
-    // Listener must be set in creation as no callbacks could be missed
-    // It is safe to do so here as object is already created and callbacks does not require anything set in this method
+    // Listener must be set in creation as no callbacks should be missed
+    // It is safe to do so here as object is already created and callbacks do not require anything set in this method
     rtps_reader_ = fastrtps::rtps::RTPSDomain::createRTPSReader(
         rtps_participant_,
         non_const_reader_attributes,

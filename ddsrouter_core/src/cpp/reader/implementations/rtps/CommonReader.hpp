@@ -232,12 +232,16 @@ protected:
     //! RTPS Reader History associated to \c rtps_reader_
     fastrtps::rtps::ReaderHistory* rtps_history_;
 
+    //! History attributes to create the History for the internal RTPS Reader.
     fastrtps::rtps::HistoryAttributes history_attributes_;
 
+    //! Reader attributes to create the internal RTPS Reader.
     fastrtps::rtps::ReaderAttributes reader_attributes_;
 
+    //! Topic attributes to create the internal RTPS Reader.
     fastrtps::TopicAttributes topic_attributes_;
 
+    //! Reader QoS to create the internal RTPS Reader.
     fastrtps::ReaderQos reader_qos_;
 
 };
