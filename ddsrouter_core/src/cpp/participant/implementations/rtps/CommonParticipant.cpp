@@ -69,7 +69,6 @@ void CommonParticipant::init()
         participant_attributes_);
 }
 
-
 void CommonParticipant::onParticipantDiscovery(
         fastrtps::rtps::RTPSParticipant* participant,
         fastrtps::rtps::ParticipantDiscoveryInfo&& info)
