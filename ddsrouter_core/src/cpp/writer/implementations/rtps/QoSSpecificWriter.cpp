@@ -34,21 +34,21 @@ QoSSpecificWriter::QoSSpecificWriter(
         const bool repeater /* = false */)
     : CommonWriter(
         participant_id, topic, payload_pool, rtps_participant, repeater,
-        history_attributes_(topic),
-        writer_attributes_(topic),
-        topic_attributes_(topic),
-        writer_qos_(specific_qos, topic),  // this modifies the qos of the Common Writer
+        get_history_attributes_(topic),
+        get_writer_attributes_(topic),
+        get_topic_attributes_(topic),
+        get_writer_qos_(specific_qos, topic),  // this modifies the qos of the Common Writer
         cache_change_pool_configuration_(topic))
     , specific_qos_(specific_qos)
 {
 }
 
-fastrtps::WriterQos QoSSpecificWriter::writer_qos_(
+fastrtps::WriterQos QoSSpecificWriter::get_writer_qos_(
         const types::SpecificEndpointQoS& specific_qos,
         const types::DdsTopic& topic) noexcept
 {
     // Get QoS from parent class
-    fastrtps::WriterQos qos = CommonWriter::writer_qos_(topic);
+    fastrtps::WriterQos qos = CommonWriter::get_writer_qos_(topic);
 
     // Set Partitions
     if (topic.topic_qos.get_reference().has_partitions())

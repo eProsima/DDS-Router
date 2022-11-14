@@ -49,13 +49,13 @@ CommonWriter::CommonWriter(
     : BaseWriter(participant_id, topic, payload_pool)
     , rtps_participant_(rtps_participant)
     , repeater_(repeater)
+    , history_attributes_(history_attributes)
+    , writer_attributes_(writer_attributes)
+    , topic_attributes_(topic_attributes)
+    , writer_qos_(writer_qos)
+    , pool_configuration_(pool_configuration)
 {
-    internal_entities_creation_(
-        history_attributes,
-        writer_attributes,
-        topic_attributes,
-        writer_qos,
-        pool_configuration);
+    // Do nothing
 }
 
 CommonWriter::~CommonWriter()
@@ -80,6 +80,16 @@ CommonWriter::~CommonWriter()
 
     logInfo(DDSROUTER_RTPS_COMMONWRITER, "Deleting CommonWriter created in Participant " <<
             participant_id_ << " for topic " << topic_);
+}
+
+void CommonWriter::init()
+{
+    internal_entities_creation_(
+        history_attributes_,
+        writer_attributes_,
+        topic_attributes_,
+        writer_qos_,
+        pool_configuration_);
 }
 
 void CommonWriter::onWriterMatched(
@@ -235,6 +245,8 @@ void CommonWriter::internal_entities_creation_(
     rtps_history_ = new fastrtps::rtps::WriterHistory(history_attributes);
 
     // Create CommonWriter
+    // Listener must be set in creation as no callbacks should be missed
+    // It is safe to do so here as object is already created and callbacks do not require anything set in this method
     if (repeater_)
     {
         logDebug(DDSROUTER_RTPS_COMMONWRITER, "CommonWriter created with repeater filter");
@@ -245,7 +257,7 @@ void CommonWriter::internal_entities_creation_(
             payload_pool_,
             std::make_shared<CacheChangePool>(pool_configuration),
             rtps_history_,
-            nullptr);
+            this);
     }
     else
     {
@@ -254,7 +266,7 @@ void CommonWriter::internal_entities_creation_(
             non_const_writer_attributes,
             payload_pool_,
             rtps_history_,
-            nullptr);
+            this);
     }
 
     if (!rtps_writer_)
@@ -263,10 +275,6 @@ void CommonWriter::internal_entities_creation_(
                   utils::Formatter() << "Error creating Simple RTPSWriter for Participant " <<
                       participant_id_ << " in topic " << topic_ << ".");
     }
-
-    // Set listener after entity creation to avoid SEGFAULT (produced when callback using rtps_writer_ is
-    // invoked before the variable is fully set)
-    rtps_writer_->set_listener(this);
 
     // Register writer with topic
     if (!rtps_participant_->registerWriter(rtps_writer_, topic_attributes, writer_qos))
@@ -297,7 +305,7 @@ void CommonWriter::internal_entities_creation_(
             " with guid " << rtps_writer_->getGuid());
 }
 
-fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
+fastrtps::rtps::HistoryAttributes CommonWriter::get_history_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::HistoryAttributes att;
@@ -310,7 +318,7 @@ fastrtps::rtps::HistoryAttributes CommonWriter::history_attributes_(
     return att;
 }
 
-fastrtps::rtps::WriterAttributes CommonWriter::writer_attributes_(
+fastrtps::rtps::WriterAttributes CommonWriter::get_writer_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::rtps::WriterAttributes att;
@@ -340,7 +348,7 @@ fastrtps::rtps::WriterAttributes CommonWriter::writer_attributes_(
     return att;
 }
 
-fastrtps::TopicAttributes CommonWriter::topic_attributes_(
+fastrtps::TopicAttributes CommonWriter::get_topic_attributes_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::TopicAttributes att;
@@ -362,7 +370,7 @@ fastrtps::TopicAttributes CommonWriter::topic_attributes_(
     return att;
 }
 
-fastrtps::WriterQos CommonWriter::writer_qos_(
+fastrtps::WriterQos CommonWriter::get_writer_qos_(
         const types::DdsTopic& topic) noexcept
 {
     fastrtps::WriterQos qos;

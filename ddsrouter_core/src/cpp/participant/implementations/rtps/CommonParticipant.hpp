@@ -42,6 +42,8 @@ namespace rtps {
  *
  * Concrete classes that inherit from this would only need to specialize specific methods related with the
  * qos and attributes.
+ *
+ * @warning This object is not RAII and must be initialized before used.
  */
 class CommonParticipant
     : public BaseParticipant
@@ -51,10 +53,6 @@ public:
 
     /**
      * @brief Construct a CommonParticipant
-     *
-     * This constructor creates the internal RTPS Participant using the attributes given.
-     *
-     * @throw InitializationException if RTPS Participant creation fails
      */
     CommonParticipant(
             std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
@@ -65,6 +63,20 @@ public:
 
     //! Remove internal RTPS Participant
     virtual ~CommonParticipant();
+
+    /**
+     * @brief Create the internal RTPS Participant using the attributes given.
+     *
+     * @attention this method should be called right after constructor to create enable internal entities.
+     * This is required as this object is a Listener that could be called before finishing construction.
+     * Other alternatives have been studied but none have really fit for this case.
+     *
+     * @throw InitializationException if RTPS Participant creation fails
+     *
+     * @warning this method is not thread safe.
+     * @pre this method can only be called once.
+     */
+    void init();
 
     /**
      * @brief Override method from \c RTPSParticipantListener .
@@ -140,13 +152,19 @@ protected:
      *
      * @note This method must be specialized from inherit classes.
      */
-    static fastrtps::rtps::RTPSParticipantAttributes participant_attributes_(
+    static fastrtps::rtps::RTPSParticipantAttributes get_participant_attributes_(
             const configuration::ParticipantConfiguration* participant_configuration);
 
     /////
     // VARIABLES
     //! Internal RTPS Participant
     eprosima::fastrtps::rtps::RTPSParticipant* rtps_participant_;
+
+    //! Domain Id to create the internal RTPS Participant.
+    types::DomainId domain_id_;
+
+    //! Participant attributes to create the internal RTPS Participant.
+    fastrtps::rtps::RTPSParticipantAttributes participant_attributes_;
 };
 
 } /* namespace rtps */

@@ -39,7 +39,7 @@ SimpleParticipant::SimpleParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        CommonParticipant::participant_attributes_(participant_configuration.get()))
+        CommonParticipant::get_participant_attributes_(participant_configuration.get()))
 {
 }
 

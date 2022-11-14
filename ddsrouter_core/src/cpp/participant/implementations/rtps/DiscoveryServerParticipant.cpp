@@ -43,16 +43,16 @@ DiscoveryServerParticipant::DiscoveryServerParticipant(
         payload_pool,
         discovery_database,
         participant_configuration->domain,
-        participant_attributes_(participant_configuration.get()))
+        get_participant_attributes_(participant_configuration.get()))
 {
 }
 
 fastrtps::rtps::RTPSParticipantAttributes
-DiscoveryServerParticipant::participant_attributes_(
+DiscoveryServerParticipant::get_participant_attributes_(
         const configuration::DiscoveryServerParticipantConfiguration* configuration)
 {
     // Use default as base attributes
-    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::participant_attributes_(configuration);
+    fastrtps::rtps::RTPSParticipantAttributes params = CommonParticipant::get_participant_attributes_(configuration);
 
     // Auxiliary variable to save characters and improve readability
     const types::GuidPrefix& discovery_server_guid_prefix = configuration->discovery_server_guid_prefix;

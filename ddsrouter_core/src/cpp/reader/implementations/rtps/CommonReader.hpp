@@ -48,7 +48,7 @@ using RecursiveTimedMutex = eprosima::fastrtps::RecursiveTimedMutex;
  *
  * It implements the ReaderListener for itself with \c onNewCacheChangeAdded and \c onReaderMatched callbacks.
  *
- * @todo remove those variables that are not needed (e.g. rtps_participant_)
+ * @warning This object is not RAII and must be initialized before used.
  */
 class CommonReader : public BaseReader, public fastrtps::rtps::ReaderListener
 {
@@ -60,6 +60,20 @@ public:
      * Delete the RTPS CommonReader and CommonReader History in case they are set.
      */
     virtual ~CommonReader();
+
+    /**
+     * @brief Create the internal RTPS Reader.
+     *
+     * @attention this method should be called right after constructor to create enable internal entities.
+     * This is required as this object is a Listener that could be called before finishing construction.
+     * Other alternatives have been studied but none have really fit for this case.
+     *
+     * @throw InitializationException if RTPS Reader creation fails
+     *
+     * @warning this method is not thread safe.
+     * @pre this method can only be called once.
+     */
+    void init();
 
     /////
     // LISTENER METHODS
@@ -172,21 +186,21 @@ protected:
      *
      * @return Default HistoryAttributes
      */
-    static fastrtps::rtps::HistoryAttributes history_attributes_(
+    static fastrtps::rtps::HistoryAttributes get_history_attributes_(
             const types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Reader Attributes to create RTPS Reader
      */
-    static fastrtps::rtps::ReaderAttributes reader_attributes_(
+    static fastrtps::rtps::ReaderAttributes get_reader_attributes_(
             const types::DdsTopic& topic) noexcept;
 
     //! Topic Attributes to create RTPS Reader
-    static fastrtps::TopicAttributes topic_attributes_(
+    static fastrtps::TopicAttributes get_topic_attributes_(
             const types::DdsTopic& topic) noexcept;
 
     //! Reader QoS to create RTPS Reader
-    static fastrtps::ReaderQos reader_qos_(
+    static fastrtps::ReaderQos get_reader_qos_(
             const types::DdsTopic& topic) noexcept;
 
     /////
@@ -217,6 +231,19 @@ protected:
 
     //! RTPS Reader History associated to \c rtps_reader_
     fastrtps::rtps::ReaderHistory* rtps_history_;
+
+    //! History attributes to create the History for the internal RTPS Reader.
+    fastrtps::rtps::HistoryAttributes history_attributes_;
+
+    //! Reader attributes to create the internal RTPS Reader.
+    fastrtps::rtps::ReaderAttributes reader_attributes_;
+
+    //! Topic attributes to create the internal RTPS Reader.
+    fastrtps::TopicAttributes topic_attributes_;
+
+    //! Reader QoS to create the internal RTPS Reader.
+    fastrtps::ReaderQos reader_qos_;
+
 };
 
 } /* namespace rtps */

@@ -58,7 +58,7 @@ public:
 protected:
 
     //! Specific writer QoS to override (more or less) the CommonWriter qos
-    static fastrtps::WriterQos writer_qos_(
+    static fastrtps::WriterQos get_writer_qos_(
             const types::SpecificEndpointQoS& specific_qos,
             const types::DdsTopic& topic) noexcept;
 
