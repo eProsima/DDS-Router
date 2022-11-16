@@ -156,7 +156,7 @@ const option::Descriptor usage[] = {
 
     {
         optionIndex::UNKNOWN_OPT, 0, "", "", Arg::None,
-        "\nDDS ROUTER TOOL\n"
+        "\n"
     },
 
     { 0, 0, 0, 0, 0, 0 }
