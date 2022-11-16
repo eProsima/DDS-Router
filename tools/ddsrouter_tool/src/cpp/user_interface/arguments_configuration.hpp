@@ -24,6 +24,7 @@
 
 #include <optionparser.h>
 
+#include <cpp_utils/macros/custom_enumeration.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 
 #include "ProcessReturnCode.hpp"
@@ -72,12 +73,22 @@ struct Arg : public option::Arg
     static option::ArgStatus Readable_File(
             const option::Option& option,
             bool msg);
+
+    //! Check that the argument is an option of kind
+    static option::ArgStatus Log_Kind_Correct_Argument(
+            const option::Option& option,
+            bool msg);
+
+    static option::ArgStatus Valid_Options(
+            const std::vector<std::string>& valid_options,
+            const option::Option& option,
+            bool msg);
 };
 
 /*
  * Option arguments available
  */
-enum  optionIndex
+enum optionIndex
 {
     UNKNOWN_OPT,
     HELP,
@@ -86,6 +97,8 @@ enum  optionIndex
     ACTIVATE_DEBUG,
     VERSION,
     TIMEOUT,
+    LOG_FILTER,
+    LOG_VERBOSITY,
 };
 
 /**
@@ -117,8 +130,9 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug,
-        utils::Duration_ms& timeout);
+        utils::Duration_ms& timeout,
+        std::string& log_filter,
+        eprosima::fastdds::dds::Log::Kind& log_verbosity);
 
 //! \c Option to stream serializator
 std::ostream& operator <<(
@@ -129,6 +143,13 @@ std::ostream& operator <<(
  * @brief Print version in console.
  */
 void print_version();
+
+ENUMERATION_BUILDER(
+    LogKind,
+    error,
+    warning,
+    info
+);
 
 } /* namespace ui */
 } /* namespace ddsrouter */

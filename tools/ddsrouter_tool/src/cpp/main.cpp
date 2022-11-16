@@ -25,6 +25,7 @@
 #include <cpp_utils/event/SignalEventHandler.hpp>
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/logging/CustomStdLogConsumer.hpp>
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
@@ -50,12 +51,13 @@ int main(
     // Maximum timeout
     eprosima::utils::Duration_ms timeout = 0;
 
-    // Debug option active
-    bool activate_debug = false;
+    // Debug options
+    std::string log_filter = "DDSROUTER";
+    eprosima::fastdds::dds::Log::Kind log_verbosity = eprosima::fastdds::dds::Log::Kind::Warning;
 
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-            ui::parse_arguments(argc, argv, file_path, reload_time, activate_debug, timeout);
+            ui::parse_arguments(argc, argv, file_path, reload_time, timeout, log_filter, log_verbosity);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
@@ -92,11 +94,16 @@ int main(
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
 
-    // Activate Debug
-    if (activate_debug)
+    // Debug
     {
-        // Activate log
+        // Remove every consumer
+        eprosima::utils::Log::ClearConsumers();
+
+        // Activate log info without regex so custom consumer receives all entries.
         eprosima::utils::Log::SetVerbosity(eprosima::utils::Log::Kind::Info);
+
+        eprosima::utils::Log::RegisterConsumer(
+            std::make_unique<eprosima::utils::CustomStdLogConsumer>(log_filter, log_verbosity));
 
         // NOTE:
         // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
@@ -105,6 +112,7 @@ int main(
         // Change it when Log Module is independent and with more extensive API.
         // eprosima::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
     }
+
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
