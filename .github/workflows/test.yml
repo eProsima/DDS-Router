@@ -98,10 +98,9 @@ jobs:
       - name: Get build eProsima dependencies Job Id
         shell: pwsh
         run: |
-          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
-          Invoke-RestMethod -Uri $RUNS_URI -OutFile content.json;
-          $job_id = jq -c '.workflow_runs[]  | select(.status == \"completed\") | .id' .\content.json | select -first 1;
-          echo "fastdds_job_id=$job_id" >> $env:GITHUB_ENV;
+          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_dependencies.yml/runs';
+          ((iwr $RUNS_URI).Content | ConvertFrom-Json).workflow_runs | ? status -eq 'completed' |
+           select -first 1 id | % { "fastdds_job_id=" + $_.id } | Out-File $env:GITHUB_ENV -Append
 
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
@@ -378,7 +377,7 @@ jobs:
               --label-exclude xfail \
               --timeout 60
         if: always()
-      
+
       - name: Run tests ddsrouter_docs
         run: |
           source install/setup.bash && \
