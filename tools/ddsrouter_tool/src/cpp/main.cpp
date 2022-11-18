@@ -99,8 +99,8 @@ int main(
         // Remove every consumer
         eprosima::utils::Log::ClearConsumers();
 
-        // Activate log info without regex so custom consumer receives all entries.
-        eprosima::utils::Log::SetVerbosity(eprosima::utils::Log::Kind::Info);
+        // Activate log with verbosity, as this will avoid running log thread with not desired kind
+        eprosima::utils::Log::SetVerbosity(log_verbosity);
 
         eprosima::utils::Log::RegisterConsumer(
             std::make_unique<eprosima::utils::CustomStdLogConsumer>(log_filter, log_verbosity));
