@@ -149,7 +149,7 @@ ENUMERATION_BUILDER(
     error,
     warning,
     info
-);
+    );
 
 } /* namespace ui */
 } /* namespace ddsrouter */
