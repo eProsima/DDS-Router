@@ -110,9 +110,8 @@ It shows the usage information of the application.
     -r --reload-time    Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). Value 0 does not reload file. [Default: 0].
     -t --timeout        Set a maximum time in seconds for the Router to run. Value 0 does not set maximum. [Default: 0].
 
-    Debug parameters
-    -d --debug          Set log verbosity to Info
-                                                (Using this option with --log-filter and/or --log-verbosity will head to undefined (not dangerous) behaviour).
+    Debug options
+    -d --debug          Set log verbosity to Info (Using this option with --log-filter and/or --log-verbosity will head to undefined behaviour).
         --log-filter     Set a Regex Filter to filter by category the info and warning log entries. [Default = "DDSROUTER"].
         --log-verbosity  Set a Log Verbosity Level higher or equal the one given. (Values accepted: "info","warning","error" no Case Sensitive) [Default = "warning"].
 

@@ -128,7 +128,7 @@ const option::Descriptor usage[] = {
         Arg::None,
         "  -d \t--debug\t  \t" \
         "Set log verbosity to Info \t" \
-        "(Using this option with --log-filter and/or --log-verbosity will head to undefined (not dangerous) behaviour)."
+        "(Using this option with --log-filter and/or --log-verbosity will head to undefined behaviour)."
     },
 
     {
