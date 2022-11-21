@@ -46,6 +46,13 @@ const option::Descriptor usage[] = {
         "General options:"
     },
 
+    ////////////////////
+    // Help options
+    {
+        optionIndex::UNKNOWN_OPT, 0, "", "", Arg::None,
+        "\nApplication help and information."
+    },
+
     {
         optionIndex::HELP,
         0,
@@ -54,6 +61,23 @@ const option::Descriptor usage[] = {
         Arg::None,
         "  -h \t--help\t  \t" \
         "Print this help message."
+    },
+
+    {
+        optionIndex::VERSION,
+        0,
+        "v",
+        "version",
+        Arg::None,
+        "  -v \t--version\t  \t" \
+        "Print version, branch and commit hash." \
+    },
+
+    ////////////////////
+    // Application options
+    {
+        optionIndex::UNKNOWN_OPT, 0, "", "", Arg::None,
+        "\nApplication parameters"
     },
 
     {
@@ -76,25 +100,7 @@ const option::Descriptor usage[] = {
         "Time period in seconds to reload configuration file. " \
         "This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). " \
         "Value 0 does not reload file. [Default: 0]."
-    },
 
-    {
-        optionIndex::ACTIVATE_DEBUG,
-        0,
-        "d",
-        "debug",
-        Arg::None,
-        "  -d \t--debug\t  \t" \
-        "Activate debug Logs (be aware that some logs may require specific CMAKE compilation options)." \
-    },
-    {
-        optionIndex::VERSION,
-        0,
-        "v",
-        "version",
-        Arg::None,
-        "  -v \t--version\t  \t" \
-        "Print version, branch and commit hash." \
     },
     {
         optionIndex::TIMEOUT,
@@ -105,6 +111,52 @@ const option::Descriptor usage[] = {
         "  -t \t--timeout\t  \t" \
         "Set a maximum time in seconds for the Router to run. " \
         "Value 0 does not set maximum. [Default: 0]."
+    },
+
+    ////////////////////
+    // Debug options
+    {
+        optionIndex::UNKNOWN_OPT, 0, "", "", Arg::None,
+        "\nDebug parameters"
+    },
+
+    {
+        optionIndex::ACTIVATE_DEBUG,
+        0,
+        "d",
+        "debug",
+        Arg::None,
+        "  -d \t--debug\t  \t" \
+        "Set log verbosity to Info \t" \
+        "(Using this option with --log-filter and/or --log-verbosity will head to undefined behaviour)."
+    },
+
+    {
+        optionIndex::LOG_FILTER,
+        0,
+        "",
+        "log-filter",
+        Arg::String,
+        "  \t--log-filter\t  \t" \
+        "Set a Regex Filter to filter by category the info and warning log entries. " \
+        "[Default = \"DDSROUTER\"]. "
+    },
+
+    {
+        optionIndex::LOG_VERBOSITY,
+        0,
+        "",
+        "log-verbosity",
+        Arg::Log_Kind_Correct_Argument,
+        "  \t--log-verbosity\t  \t" \
+        "Set a Log Verbosity Level higher or equal the one given. " \
+        "(Values accepted: \"info\",\"warning\",\"error\" no Case Sensitive) " \
+        "[Default = \"warning\"]. "
+    },
+
+    {
+        optionIndex::UNKNOWN_OPT, 0, "", "", Arg::None,
+        "\n"
     },
 
     { 0, 0, 0, 0, 0, 0 }
@@ -121,8 +173,9 @@ ProcessReturnCode parse_arguments(
         char** argv,
         std::string& file_path,
         utils::Duration_ms& reload_time,
-        bool& activate_debug,
-        utils::Duration_ms& timeout)
+        utils::Duration_ms& timeout,
+        std::string& log_filter,
+        eprosima::fastdds::dds::Log::Kind& log_verbosity)
 {
     // Variable to pretty print usage help
     int columns;
@@ -196,11 +249,20 @@ ProcessReturnCode parse_arguments(
                     break;
 
                 case optionIndex::ACTIVATE_DEBUG:
-                    activate_debug = true;
+                    log_filter = "DDSROUTER";
+                    log_verbosity = eprosima::fastdds::dds::Log::Kind::Info;
                     break;
 
                 case optionIndex::TIMEOUT:
                     timeout = std::stol(opt.arg) * 1000; // pass to milliseconds
+                    break;
+
+                case optionIndex::LOG_FILTER:
+                    log_filter = opt.arg;
+                    break;
+
+                case optionIndex::LOG_VERBOSITY:
+                    log_verbosity = eprosima::fastdds::dds::Log::Kind(static_cast<int>(from_string_LogKind(opt.arg)));
                     break;
 
                 case optionIndex::UNKNOWN_OPT:
@@ -323,6 +385,47 @@ option::ArgStatus Arg::Readable_File(
     {
         logError(DDSROUTER_ARGS, "Option '" << option << "' requires an existing readable file as argument.");
     }
+    return option::ARG_ILLEGAL;
+}
+
+option::ArgStatus Arg::Log_Kind_Correct_Argument(
+        const option::Option& option,
+        bool msg)
+{
+    return Arg::Valid_Options(string_vector_LogKind(), option, msg);
+}
+
+option::ArgStatus Arg::Valid_Options(
+        const std::vector<std::string>& valid_options,
+        const option::Option& option,
+        bool msg)
+{
+    if (nullptr == option.arg)
+    {
+        if (msg)
+        {
+            logError(DDSROUTER_ARGS, "Option '" << option.name << "' requires a text argument.");
+        }
+        return option::ARG_ILLEGAL;
+    }
+
+    if (std::find(valid_options.begin(), valid_options.end(), std::string(option.arg)) != valid_options.end())
+    {
+        return option::ARG_OK;
+    }
+    else if (msg)
+    {
+        utils::Formatter error_msg;
+        error_msg << "Option '" << option.name << "' requires a one of this values: {";
+        for (const auto& valid_option : valid_options)
+        {
+            error_msg << "\"" << valid_option << "\";";
+        }
+        error_msg << "}.";
+
+        logError(DDSROUTER_ARGS, error_msg);
+    }
+
     return option::ARG_ILLEGAL;
 }
 
