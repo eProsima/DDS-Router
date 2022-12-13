@@ -275,10 +275,15 @@ jobs:
 
       - name: Concatenate spelling errors
         run: |
-          find ./build/ddsrouter_docs/docs/test/spelling \
-            -type f \
-            -name '*.spelling' \
-            -exec cat {} + > ./build/ddsrouter_docs/test/spelling/spelling_errors.txt
+          SPELLING_ERRORS_DIR=./build/ddsrouter_docs/docs/test/spelling
+          if [ -d "$SPELLING_ERRORS_DIR" ]; then
+            find ./build/ddsrouter_docs/docs/test/spelling \
+              -type f \
+              -name '*.spelling' \
+              -exec cat {} + > ./build/ddsrouter_docs/test/spelling/spelling_errors.txt
+          else
+            echo "No spelling errors found."
+          fi
 
       - name: Upload spelling errors
         uses: actions/upload-artifact@v1
