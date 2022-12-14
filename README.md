@@ -172,7 +172,7 @@ is explained in the following section.
 ```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
-wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+wget https://raw.githubusercontent.com/eProsima/DDS-Router/v1.1.0/ddsrouter.repos
 vcs import src < ddsrouter.repos
 ```
 
