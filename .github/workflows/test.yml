@@ -99,7 +99,7 @@ jobs:
         shell: pwsh
         run: |
           $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs';
-          ((iwr $RUNS_URI).Content | ConvertFrom-Json).workflow_runs | ? status -eq 'completed' |
+          ((Invoke-WebRequest -Authentication OAuth -Token ${{ secrets.GITHUB_TOKEN }} -Uri $RUNS_URI).Content | ConvertFrom-Json).workflow_runs | ? status -eq 'completed' |
            select -first 1 id | % { "fastdds_job_id=" + $_.id } | Out-File $env:GITHUB_ENV -Append
 
       - name: Download eProsima dependencies
