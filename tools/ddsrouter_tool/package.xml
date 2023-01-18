@@ -17,7 +17,7 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>yamlcpp</depend>
+  <depend>yaml-cpp</depend>
   <depend>fastrtps</depend>
   <depend>cpp_utils</depend>
 
