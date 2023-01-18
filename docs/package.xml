@@ -18,7 +18,7 @@
   <buildtool_depend>cmake</buildtool_depend>
 
   <depend>cmake_utils</depend>
-  <depend>Sphinx</depend>
+  <depend>python3-sphinx</depend>
 
   <export>
     <build_type>cmake</build_type>
