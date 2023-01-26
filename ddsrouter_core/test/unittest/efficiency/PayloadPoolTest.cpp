@@ -155,7 +155,16 @@ TEST(PayloadPoolTest, reserve)
         payload.data[0] = 4u;
         payload.data[0x1000 - 1] = 5u;
     }
+}
 
+/**
+ * Test reserve_ method
+ *
+ * CASES:
+ *  0 size
+ */
+TEST(PayloadPoolTest, reserve_negative)
+{
     // 0 size
     {
         test::MockPayloadPool pool;
@@ -255,9 +264,37 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
         pool.release_(payloads[i]);
     }
     ASSERT_EQ(pool.release_count_, 10u);
+}
+
+/**
+ * Test release_ method
+ *
+ * STEPS:
+ *  store 5 values
+ *  release 5 values
+ *  release more values than reserved
+ */
+TEST(PayloadPoolTest, reserve_and_release_counter_negative)
+{
+    test::MockPayloadPool pool;
+    std::vector<Payload> payloads(5);
+
+    // store 5 values
+    for (unsigned int i = 0; i < 5u; ++i)
+    {
+        ASSERT_EQ(pool.reserve_count_, i);
+        pool.reserve_(sizeof(PayloadUnit), payloads[i]);
+    }
+
+    // release 5 values
+    for (unsigned int i = 0; i < 5u; ++i)
+    {
+        ASSERT_EQ(pool.release_count_, i);
+        pool.release_(payloads[i]);
+    }
 
     // release more values than reserved
-    ASSERT_THROW(pool.release_(payloads[10]), eprosima::utils::InconsistencyException);
+    ASSERT_THROW(pool.release_(payloads[4]), eprosima::utils::InconsistencyException);
 }
 
 /**
@@ -341,8 +378,17 @@ TEST(PayloadPoolTest, get_payload_from_src_cache_change)
         // Clean cache change correctly so process dont break
         target.payload_owner(nullptr);
     }
+}
 
-    // get_payload for payload goes ok
+/**
+ * Test get_payload cache_change with source fails if the child class fails
+ *
+ * CASES:
+ * - get_payload for payload fails
+ */
+TEST(PayloadPoolTest, get_payload_from_src_cache_change_negative)
+{
+    // get_payload for payload fails
     {
         test::MockPayloadPool pool;
         eprosima::fastrtps::rtps::CacheChange_t target;
@@ -361,7 +407,6 @@ TEST(PayloadPoolTest, get_payload_from_src_cache_change)
  * CASES:
  *  different ownership
  *  this ownership release ok
- *  this ownership release fail
  */
 TEST(PayloadPoolTest, release_payload_cache_change)
 {
@@ -386,7 +431,16 @@ TEST(PayloadPoolTest, release_payload_cache_change)
 
         EXPECT_TRUE(pool.release_payload(cc));
     }
+}
 
+/**
+ * Test release_payload cache_change method from a different owner
+ *
+ * CASES:
+ *  this ownership release fail
+ */
+TEST(PayloadPoolTest, release_payload_cache_change_negative)
+{
     // this ownership release fail
     {
         test::MockPayloadPool pool;

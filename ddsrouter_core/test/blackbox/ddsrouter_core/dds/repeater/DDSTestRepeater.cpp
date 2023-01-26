@@ -19,7 +19,6 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <cpp_utils/Log.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
@@ -59,22 +58,6 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
     );
 
     return conf;
-
-    // return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
-    //     types::ParticipantId("InitialPeersParticipant_Client_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-    //     types::ParticipantKind::wan_initial_peers,
-    //     false,
-    //     types::DomainId(60u),
-    //     {},
-    //     {
-    //         types::Address(
-    //             (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-    //             11666,
-    //             11666,
-    //             ip_version,
-    //             transport_protocol)
-    //     },
-    //     types::security::TlsConfiguration());
 }
 
 std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participant_configuration_server(
@@ -96,22 +79,6 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
     conf->is_repeater = true;
 
     return conf;
-
-    // return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
-    //     types::ParticipantId("InitialPeersParticipant_Server"),
-    //     types::ParticipantKind::wan_initial_peers,
-    //     false,
-    //     types::DomainId(60u),
-    //     {
-    //         types::Address(
-    //             (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-    //             11666,
-    //             11666,
-    //             ip_version,
-    //             transport_protocol)
-    //     },
-    //     {},
-    //     types::security::TlsConfiguration());
 }
 
 std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration(
@@ -302,9 +269,6 @@ int main(
         int argc,
         char** argv)
 {
-    eprosima::utils::Log::SetVerbosity(eprosima::utils::Log::Info);
-    eprosima::utils::Log::SetCategoryFilter(std::regex("LIMITLESS_POOL"));
-
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
