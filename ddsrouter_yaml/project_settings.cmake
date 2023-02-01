@@ -27,7 +27,8 @@ set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
     cpp_utils
-    ddsrouter_core)
+    ddsrouter_core
+    ddsrouter_participants)
 
 set(ddsrouter_core_MINIMUM_VERSION "1.0")
 

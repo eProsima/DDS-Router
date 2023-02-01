@@ -24,9 +24,9 @@
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>

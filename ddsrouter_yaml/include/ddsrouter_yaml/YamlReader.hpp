@@ -20,6 +20,7 @@
 #define _DDSROUTERYAML_YAMLREADER_HPP_
 
 #include <cpp_utils/types/Fuzzy.hpp>
+#include <cpp_utils/enum/EnumBuilder.hpp>
 
 #include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/Yaml.hpp>
@@ -226,6 +227,19 @@ public:
             const Yaml& yml,
             const TagType& tag,
             const std::map<TagType, T>& enum_values);
+
+    //! TODO comment
+    template <typename T>
+    static T get_enumeration_from_builder(
+            const Yaml& yml,
+            const utils::EnumBuilder<T>& enum_builder);
+
+    //! Get enumeration value inside \c tag
+    template <typename T>
+    static T get_enumeration_from_builder(
+            const Yaml& yml,
+            const TagType& tag,
+            const utils::EnumBuilder<T>& enum_builder);
 };
 
 /**

@@ -16,7 +16,7 @@
  * @file CacheChangePool.cpp
  */
 
-#include <efficiency/cache_change/CacheChangePool.hpp>
+#include <ddsrouter_core/efficiency/cache_change/CacheChangePool.hpp>
 #include <types/dds/RouterCacheChange.hpp>
 
 namespace eprosima {

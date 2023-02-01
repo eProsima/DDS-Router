@@ -18,14 +18,8 @@
  */
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
 #include <cpp_utils/Log.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+
 #include <cpp_utils/exception/ConfigurationException.hpp>
 
 namespace eprosima {
@@ -36,13 +30,11 @@ namespace configuration {
 using namespace eprosima::ddsrouter::core::types;
 
 DDSRouterConfiguration::DDSRouterConfiguration(
-        std::set<std::shared_ptr<DdsFilterTopic>> allowlist,
-        std::set<std::shared_ptr<DdsFilterTopic>> blocklist,
-        std::set<std::shared_ptr<DdsTopic>> builtin_topics,
-        std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+        const std::set<std::shared_ptr<DdsFilterTopic>>& allowlist,
+        const std::set<std::shared_ptr<DdsFilterTopic>>& blocklist,
+        const std::set<std::shared_ptr<DdsTopic>>& builtin_topics,
         const SpecsConfiguration& advanced_options)
     : DDSRouterReloadConfiguration (allowlist, blocklist, builtin_topics)
-    , participants_configurations(participants_configurations)
     , advanced_options(advanced_options)
 {
 }
@@ -56,51 +48,6 @@ bool DDSRouterConfiguration::is_valid(
         return false;
     }
 
-    // Check there are at least two participants
-    if (participants_configurations.size() < 1)
-    {
-        error_msg << "There must be at least 1 participant.";
-        return false;
-    }
-
-    // Check Participant Configurations AND
-    // check Participant Configuration IDs are not repeated
-    std::set<ParticipantId> ids;
-    for (std::shared_ptr<ParticipantConfiguration> configuration : participants_configurations)
-    {
-        // Check configuration is not null
-        if (!configuration)
-        {
-            logDevError(DDSROUTER_CONFIGURATION, "Invalid ptr in participant configurations.");
-            error_msg << "nullptr ParticipantConfiguration in participant configurations. ";
-            return false;
-        }
-
-        // Check configuration is valid
-        if (!configuration->is_valid(error_msg))
-        {
-            error_msg << "Error in Participant " << configuration->id << ". ";
-            return false;
-        }
-
-        // Check that the configuration is of type required
-        if (!check_correct_configuration_object_(configuration))
-        {
-            error_msg << "Participant " << configuration->id << " is not of correct Configuration class. ";
-            return false;
-        }
-
-        // Store every id in a set to see if there are repetitions
-        ids.insert(configuration->id);
-    }
-
-    // If the number of ids are not equal the number of configurations, is because they are repeated
-    if (ids.size() != participants_configurations.size())
-    {
-        error_msg << "Participant ids are not unique. ";
-        return false;
-    }
-
     return true;
 }
 
@@ -110,36 +57,6 @@ void DDSRouterConfiguration::reload(
     this->allowlist = new_configuration.allowlist;
     this->blocklist = new_configuration.blocklist;
     this->builtin_topics = new_configuration.builtin_topics;
-}
-
-template <typename T>
-bool check_correct_configuration_object_by_type_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
-{
-    return nullptr != std::dynamic_pointer_cast<T>(configuration);
-}
-
-bool DDSRouterConfiguration::check_correct_configuration_object_(
-        const std::shared_ptr<ParticipantConfiguration> configuration)
-{
-    switch (configuration->kind)
-    {
-        case ParticipantKind::simple_rtps:
-            return check_correct_configuration_object_by_type_<SimpleParticipantConfiguration>(configuration);
-
-        case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan_discovery_server:
-            return check_correct_configuration_object_by_type_<DiscoveryServerParticipantConfiguration>(configuration);
-
-        case ParticipantKind::wan_initial_peers:
-            return check_correct_configuration_object_by_type_<InitialPeersParticipantConfiguration>(configuration);
-
-        case ParticipantKind::echo:
-            return check_correct_configuration_object_by_type_<EchoParticipantConfiguration>(configuration);
-
-        default:
-            return check_correct_configuration_object_by_type_<ParticipantConfiguration>(configuration);
-    }
 }
 
 } /* namespace configuration */

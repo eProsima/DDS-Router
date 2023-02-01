@@ -19,11 +19,11 @@
 #ifndef _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 #define _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_
 
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/EchoParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>

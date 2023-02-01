@@ -24,7 +24,7 @@
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>

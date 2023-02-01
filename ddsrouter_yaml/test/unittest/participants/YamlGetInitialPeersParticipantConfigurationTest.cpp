@@ -16,8 +16,8 @@
 #include <gtest/gtest.h>
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
+
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>

@@ -28,7 +28,6 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 
 #include <core/DDSRouterImpl.hpp>
-#include <efficiency/payload/FastPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,10 +38,13 @@ using namespace eprosima::ddsrouter::core::types;
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouterImpl::DDSRouterImpl(
-        const configuration::DDSRouterConfiguration& configuration)
-    : payload_pool_(new FastPayloadPool())
-    , participants_database_(new ParticipantsDatabase())
-    , discovery_database_(new DiscoveryDatabase())
+        const configuration::DDSRouterConfiguration& configuration,
+        const std::shared_ptr<DiscoveryDatabase>& discovery_database,
+        const std::shared_ptr<core::PayloadPool>& payload_pool,
+        const std::shared_ptr<ParticipantsDatabase>& participants_database)
+    : participants_database_(participants_database)
+    , discovery_database_(discovery_database)
+    , payload_pool_(payload_pool)
     , configuration_(configuration)
     , enabled_(false)
     , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advanced_options.number_of_threads))
@@ -76,10 +78,12 @@ DDSRouterImpl::DDSRouterImpl(
     init_participants_();
     // Create Bridges for builtin topics
     init_bridges_();
+
     // Init discovery database
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
+    // TODO (custompart): this does not do anything, check
     discovery_database_->start();
 
 
@@ -101,21 +105,6 @@ DDSRouterImpl::~DDSRouterImpl()
 
     // Destroy RPCBridges, so Writers and Readers are destroyed before the Databases
     rpc_bridges_.clear();
-
-    // Destroy Participants
-    while (!participants_database_->empty())
-    {
-        auto participant = participants_database_->pop_();
-
-        if (!participant)
-        {
-            logDevError(DDSROUTER, "Error poping participant from database.");
-        }
-        else
-        {
-            participant_factory_.remove_participant(participant);
-        }
-    }
 
     // There is no need to destroy shared ptrs as they will delete itslefs with 0 references
 
@@ -317,51 +306,9 @@ void DDSRouterImpl::init_allowed_topics_()
 
 void DDSRouterImpl::init_participants_()
 {
-    for (std::shared_ptr<configuration::ParticipantConfiguration> participant_config :
-            configuration_.participants_configurations)
+    for (auto& participant : participants_database_->get_participants_map())
     {
-        std::shared_ptr<IParticipant> new_participant;
-
-        // Create participant
-        // This should not be in try catch case as if it fails the whole init must fail
-        new_participant =
-                participant_factory_.create_participant(
-            participant_config,
-            payload_pool_,
-            discovery_database_);
-
-        // create_participant should throw an exception in fail, never return nullptr
-        if (!new_participant || !new_participant->id().is_valid() ||
-                new_participant->kind() == ParticipantKind::invalid)
-        {
-            // Failed to create participant
-            throw utils::InitializationException(utils::Formatter()
-                          << "Failed to create creating Participant " << participant_config->id);
-        }
-
-        logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-                                                           << " and kind " << new_participant->kind() << ".");
-
-        // Add this participant to the database. If it is repeated it will cause an exception
-        try
-        {
-            participants_database_->add_participant_(
-                new_participant->id(),
-                new_participant);
-        }
-        catch (const utils::InconsistencyException& )
-        {
-            throw utils::ConfigurationException(utils::Formatter()
-                          << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
-        }
-    }
-
-    // If DDS Router has not two or more Participants configured, it should fail
-    if (participants_database_->size() < 1)
-    {
-        logError(DDSROUTER, "At least a Participant is required to initialize a DDS Router.");
-        throw utils::InitializationException(utils::Formatter()
-                      << "DDS Router requires at least 1 Participant to start.");
+        participant.second->start();
     }
 }
 

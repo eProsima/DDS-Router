@@ -13,4 +13,3 @@
 # limitations under the License.
 
 add_subdirectory(participants_database)
-add_subdirectory(participant_factory)
