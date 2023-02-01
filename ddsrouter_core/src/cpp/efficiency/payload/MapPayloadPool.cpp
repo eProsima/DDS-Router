@@ -21,7 +21,7 @@
 #include <cpp_utils/exception/InconsistencyException.hpp>
 #include <cpp_utils/Log.hpp>
 
-#include <efficiency/payload/MapPayloadPool.hpp>
+#include <ddsrouter_core/efficiency/payload/MapPayloadPool.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

@@ -28,7 +28,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <cpp_utils/Log.hpp>
 
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>

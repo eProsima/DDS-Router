@@ -155,3 +155,15 @@ must be created as an internal value and/or const to the object,
 or create some way that the configuration cannot be changed from outside without the internal object notice it.
 
 Also, configurations must support an `is_valid` method to check that it is in a coherent state.
+
+---
+
+## WorkArounds
+
+> // TODO
+
+### RPC in Core refactor
+
+Doing the refactor to separate DDS Router from Core we encountered a difficulty because `RPCBridge` depends on `rtps::CommonReader`.
+This makes impossible so far to separate Participants from the Core.
+This should be solved in future versions by implementing a generic RPC Bridge without dependencies.

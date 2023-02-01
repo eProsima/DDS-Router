@@ -20,10 +20,10 @@
 #include <test_utils.hpp>
 
 #include <ddsrouter_core/core/DDSRouter.hpp>
-#include <participant/implementations/auxiliar/DummyParticipant.hpp>
+#include <ddsrouter_core/participants/participant/auxiliar/DummyParticipant.hpp>
 #include <cpp_utils/Log.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+
 #include <cpp_utils/utils.hpp>
 
 using namespace eprosima::ddsrouter::test;

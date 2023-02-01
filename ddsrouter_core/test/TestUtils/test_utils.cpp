@@ -235,7 +235,7 @@ std::shared_ptr<core::configuration::ParticipantConfiguration> random_participan
 
         // Add cases where Participants need specific arguments
         default:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(id, kind, false);
+            return std::make_shared<core::configuration::ParticipantConfiguration>(id, false);
     }
 }
 
