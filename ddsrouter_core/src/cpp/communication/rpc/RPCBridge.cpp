@@ -124,7 +124,7 @@ void RPCBridge::create_proxy_server_nts_(
     // Safe casting as we are only getting RTPS participants
     reply_writers_[participant_id] = participant->create_writer(topic_.reply_topic());
     request_readers_[participant_id] =
-            std::static_pointer_cast<rtps::CommonReader>(participant->create_reader(topic_.request_topic()));
+            std::static_pointer_cast<participants::rtps::CommonReader>(participant->create_reader(topic_.request_topic()));
 
     create_slot_(request_readers_[participant_id]);
 }
@@ -138,7 +138,7 @@ void RPCBridge::create_proxy_client_nts_(
     request_writers_[participant_id] =
             std::static_pointer_cast<IWriter>(participant->create_writer(topic_.request_topic()));
     reply_readers_[participant_id] =
-            std::static_pointer_cast<rtps::CommonReader>(participant->create_reader(topic_.reply_topic()));
+            std::static_pointer_cast<participants::rtps::CommonReader>(participant->create_reader(topic_.reply_topic()));
 
     create_slot_(reply_readers_[participant_id]);
 
@@ -296,7 +296,7 @@ void RPCBridge::data_available_(
 }
 
 void RPCBridge::transmit_(
-        std::shared_ptr<rtps::CommonReader> reader) noexcept
+        std::shared_ptr<participants::rtps::CommonReader> reader) noexcept
 {
     // Avoid being disabled while transmitting
     std::shared_lock<std::shared_timed_mutex> lock(on_transmission_mutex_);
@@ -433,7 +433,8 @@ void RPCBridge::transmit_(
                 // Not valid means:
                 //   Case 1: (SimpleParticipant) Request already replied by another server connected to the same participant as this one.
                 //   Case 2: (WAN Participant repeater) Request already replied by another PROXY server connected to the same participant as this one.
-                if (registry_entry.first.is_valid())
+                // TODO: recheck ParticipantId non valid
+                if (!registry_entry.first.empty())
                 {
                     data->properties.write_params.set_level();
                     data->properties.write_params.get_reference().related_sample_identity(registry_entry.second);
@@ -464,7 +465,7 @@ void RPCBridge::transmit_(
 }
 
 void RPCBridge::create_slot_(
-        std::shared_ptr<rtps::CommonReader> reader) noexcept
+        std::shared_ptr<participants::rtps::CommonReader> reader) noexcept
 {
     Guid reader_guid = reader->guid();
 

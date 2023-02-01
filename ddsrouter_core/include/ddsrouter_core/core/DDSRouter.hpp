@@ -26,6 +26,8 @@
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/core/ParticipantsDatabase.hpp>
+#include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
 
 
 namespace eprosima {
@@ -55,7 +57,10 @@ public:
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSROUTER_CORE_DllAPI DDSRouter(
-            const configuration::DDSRouterConfiguration& configuration);
+            const configuration::DDSRouterConfiguration& configuration,
+            const std::shared_ptr<DiscoveryDatabase>& discovery_database,
+            const std::shared_ptr<core::PayloadPool>& payload_pool,
+            const std::shared_ptr<ParticipantsDatabase>& participants_database);
 
     /**
      * @brief Destroy the DDSRouter object

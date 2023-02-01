@@ -30,10 +30,7 @@ using namespace eprosima::ddsrouter::core::types;
 
 ParticipantsDatabase::~ParticipantsDatabase()
 {
-    if (!participants_.empty())
-    {
-        logDevError(DDSROUTER_PARTICIPANT_DATABASE, "Erasing Participant Database with still Participants in it");
-    }
+    // Let the map destroy itself
 }
 
 std::shared_ptr<IParticipant> ParticipantsDatabase::get_participant(
@@ -75,7 +72,7 @@ std::set<ParticipantId> ParticipantsDatabase::get_rtps_participants_ids() const 
     return result;
 }
 
-std::map<ParticipantId, std::shared_ptr<IParticipant>> ParticipantsDatabase::get_participants_map() const noexcept
+const std::map<ParticipantId, std::shared_ptr<IParticipant>>& ParticipantsDatabase::get_participants_map() const noexcept
 {
     std::shared_lock<std::shared_timed_mutex> lock(mutex_);
     return participants_;
@@ -91,9 +88,9 @@ size_t ParticipantsDatabase::size() const noexcept
     return participants_.size();
 }
 
-void ParticipantsDatabase::add_participant_(
-        ParticipantId id,
-        std::shared_ptr<IParticipant> participant)
+void ParticipantsDatabase::add_participant(
+        const ParticipantId& id,
+        const std::shared_ptr<IParticipant>& participant)
 {
     std::unique_lock<std::shared_timed_mutex> lock(mutex_);
 
@@ -109,37 +106,6 @@ void ParticipantsDatabase::add_participant_(
     }
 
     participants_[id] = participant;
-}
-
-std::shared_ptr<IParticipant> ParticipantsDatabase::pop_(
-        const ParticipantId& id) noexcept
-{
-    auto it = participants_.find(id);
-
-    if (it == participants_.end())
-    {
-        // No this participant stored
-        return nullptr;
-    }
-
-    std::shared_ptr<IParticipant> participant_to_erase = it->second;
-    participants_.erase(it);
-
-    logInfo(DDSROUTER_PARTICIPANT_DATABASE, "Poping Participant " << participant_to_erase->id());
-
-    return participant_to_erase;
-}
-
-std::shared_ptr<IParticipant> ParticipantsDatabase::pop_() noexcept
-{
-    if (participants_.empty())
-    {
-        return nullptr;
-    }
-    else
-    {
-        return pop_(participants_.begin()->first);
-    }
 }
 
 } /* namespace core */

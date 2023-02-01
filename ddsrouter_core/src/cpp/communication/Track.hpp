@@ -22,9 +22,9 @@
 #include <atomic>
 #include <mutex>
 
-#include <participant/IParticipant.hpp>
-#include <reader/IReader.hpp>
-#include <writer/IWriter.hpp>
+#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/reader/IReader.hpp>
+#include <ddsrouter_core/writer/IWriter.hpp>
 #include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
 
 namespace eprosima {

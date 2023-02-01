@@ -25,7 +25,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddsrouter_core/configuration/BaseConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>

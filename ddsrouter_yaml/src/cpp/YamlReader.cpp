@@ -17,23 +17,26 @@
  *
  */
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
+
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/EchoParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
+#include <ddsrouter_core/participant/IParticipant.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <cpp_utils/Log.hpp>
-#include <cpp_utils/utils.hpp>
+
+#include <ddsrouter_participants/ParticipantKind.hpp>
 
 #include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -167,32 +170,6 @@ PortType YamlReader::get<PortType>(
 {
     // Domain id required
     return PortType(get_scalar<PortType>(yml));
-}
-
-template <>
-ParticipantId YamlReader::get<ParticipantId>(
-        const Yaml& yml,
-        const YamlReaderVersion /* version */)
-{
-    // Participant name required
-    return ParticipantId(get_scalar<std::string>(yml));
-}
-
-template <>
-ParticipantKind YamlReader::get<ParticipantKind>(
-        const Yaml& yml,
-        const YamlReaderVersion version)
-{
-    // Participant kind required
-    ParticipantKind kind = participant_kind_from_name(get_scalar<std::string>(yml));
-
-    // In version lower than 3.0 wan means wan_discovery_server
-    if (version <= V_2_0 && kind == ParticipantKind::wan_initial_peers)
-    {
-        kind = ParticipantKind::wan_discovery_server;
-    }
-
-    return kind;
 }
 
 template <>
@@ -630,28 +607,35 @@ security::TlsConfiguration YamlReader::get(
 * PARTICIPANTS         *
 ************************/
 
+template <>
+participants::ParticipantKind YamlReader::get(
+        const Yaml& yml,
+        const YamlReaderVersion /* version */)
+{
+
+    // Domain id required
+    return get_enumeration_from_builder<participants::ParticipantKind>(yml, *participants::ParticipantKindBuilder::get_instance());
+}
+
 //////////////////////////////////
 // ParticipantConfiguration
 template <>
 void YamlReader::fill(
-        configuration::ParticipantConfiguration& object,
+        participants::ParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Id required
     object.id = get<types::ParticipantId>(yml, PARTICIPANT_NAME_TAG, version);
-
-    // Kind required
-    object.kind = get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
 }
 
 template <>
-configuration::ParticipantConfiguration YamlReader::get(
+participants::ParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    configuration::ParticipantConfiguration object;
-    fill<configuration::ParticipantConfiguration>(object, yml, version);
+    participants::ParticipantConfiguration object;
+    fill<participants::ParticipantConfiguration>(object, yml, version);
     return object;
 }
 
@@ -659,12 +643,12 @@ configuration::ParticipantConfiguration YamlReader::get(
 // EchoParticipantConfiguration
 template <>
 void YamlReader::fill(
-        configuration::EchoParticipantConfiguration& object,
+        participants::EchoParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Parent class fill
-    fill<configuration::ParticipantConfiguration>(object, yml, version);
+    fill<participants::ParticipantConfiguration>(object, yml, version);
 
     // data optional
     if (is_tag_present(yml, ECHO_DATA_TAG))
@@ -686,12 +670,12 @@ void YamlReader::fill(
 }
 
 template <>
-configuration::EchoParticipantConfiguration YamlReader::get(
+participants::EchoParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    configuration::EchoParticipantConfiguration object;
-    fill<configuration::EchoParticipantConfiguration>(object, yml, version);
+    participants::EchoParticipantConfiguration object;
+    fill<participants::EchoParticipantConfiguration>(object, yml, version);
     return object;
 }
 
@@ -699,12 +683,12 @@ configuration::EchoParticipantConfiguration YamlReader::get(
 // SimpleParticipantConfiguration
 template <>
 void YamlReader::fill(
-        configuration::SimpleParticipantConfiguration& object,
+        participants::SimpleParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Parent class fill
-    fill<configuration::ParticipantConfiguration>(object, yml, version);
+    fill<participants::ParticipantConfiguration>(object, yml, version);
 
     // Domain optional
     if (is_tag_present(yml, DOMAIN_ID_TAG))
@@ -714,12 +698,12 @@ void YamlReader::fill(
 }
 
 template <>
-configuration::SimpleParticipantConfiguration YamlReader::get(
+participants::SimpleParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    configuration::SimpleParticipantConfiguration object;
-    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+    participants::SimpleParticipantConfiguration object;
+    fill<participants::SimpleParticipantConfiguration>(object, yml, version);
     return object;
 }
 
@@ -727,12 +711,12 @@ configuration::SimpleParticipantConfiguration YamlReader::get(
 // DiscoveryServerParticipantConfiguration
 template <>
 void YamlReader::fill(
-        configuration::DiscoveryServerParticipantConfiguration& object,
+        participants::DiscoveryServerParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Parent class fill
-    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+    fill<participants::SimpleParticipantConfiguration>(object, yml, version);
 
     // Optional listening addresses
     if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
@@ -774,12 +758,12 @@ void YamlReader::fill(
 }
 
 template <>
-configuration::DiscoveryServerParticipantConfiguration YamlReader::get(
+participants::DiscoveryServerParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    configuration::DiscoveryServerParticipantConfiguration object;
-    fill<configuration::DiscoveryServerParticipantConfiguration>(object, yml, version);
+    participants::DiscoveryServerParticipantConfiguration object;
+    fill<participants::DiscoveryServerParticipantConfiguration>(object, yml, version);
     return object;
 }
 
@@ -787,12 +771,12 @@ configuration::DiscoveryServerParticipantConfiguration YamlReader::get(
 // InitialPeersParticipantConfiguration
 template <>
 void YamlReader::fill(
-        configuration::InitialPeersParticipantConfiguration& object,
+        participants::InitialPeersParticipantConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
     // Parent class fill
-    fill<configuration::SimpleParticipantConfiguration>(object, yml, version);
+    fill<participants::SimpleParticipantConfiguration>(object, yml, version);
 
     // Optional listening addresses
     if (YamlReader::is_tag_present(yml, LISTENING_ADDRESSES_TAG))
@@ -826,12 +810,12 @@ void YamlReader::fill(
 }
 
 template <>
-configuration::InitialPeersParticipantConfiguration YamlReader::get(
+participants::InitialPeersParticipantConfiguration YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    configuration::InitialPeersParticipantConfiguration object;
-    fill<configuration::InitialPeersParticipantConfiguration>(object, yml, version);
+    participants::InitialPeersParticipantConfiguration object;
+    fill<participants::InitialPeersParticipantConfiguration>(object, yml, version);
     return object;
 }
 
@@ -861,50 +845,6 @@ void YamlReader::fill(
 /***************************
  * DDS ROUTER CONFIGURATION *
  ****************************/
-
-template <>
-std::shared_ptr<core::configuration::ParticipantConfiguration>
-YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
-        const Yaml& yml,
-        const YamlReaderVersion version)
-{
-    // Kind required
-    types::ParticipantKind kind = YamlReader::get<types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
-
-    logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
-
-    switch (kind)
-    {
-        case types::ParticipantKind::blank:
-        case types::ParticipantKind::dummy:
-            return std::make_shared<core::configuration::ParticipantConfiguration>(
-                YamlReader::get<core::configuration::ParticipantConfiguration>(yml, version));
-
-        case types::ParticipantKind::echo:
-            return std::make_shared<core::configuration::EchoParticipantConfiguration>(
-                YamlReader::get<core::configuration::EchoParticipantConfiguration>(yml, version));
-
-        case types::ParticipantKind::simple_rtps:
-            return std::make_shared<core::configuration::SimpleParticipantConfiguration>(
-                YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, version));
-
-        case types::ParticipantKind::local_discovery_server:
-        case types::ParticipantKind::wan_discovery_server:
-            return std::make_shared<core::configuration::DiscoveryServerParticipantConfiguration>(
-                YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, version));
-
-        case types::ParticipantKind::wan_initial_peers:
-            return std::make_shared<core::configuration::InitialPeersParticipantConfiguration>(
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, version));
-
-        case types::ParticipantKind::invalid:
-        default:
-            std::string invalid_kind = YamlReader::get<std::string>(yml, PARTICIPANT_KIND_TAG, version);
-            throw eprosima::utils::ConfigurationException(
-                      utils::Formatter() << "Unkown or non valid Participant kind: " << invalid_kind << ".");
-            break;
-    }
-}
 
 void _fill_ddsrouter_configuration_v1(
         core::configuration::DDSRouterConfiguration& object,
@@ -991,11 +931,8 @@ void _fill_ddsrouter_configuration_v1(
         // Set kind from type tag
         participant_yml[PARTICIPANT_KIND_TAG] = participant_yml[PARTICIPANT_KIND_TAG_V1];
 
-        // Add new Participant with its configuration
-        object.participants_configurations.insert(
-            YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(
-                participant_yml,
-                version));
+        // Participants configurations are no longer in Router configuration
+        // Also old yaml versions will be deprecated, so lets not worry about this for now
     }
 }
 
@@ -1028,25 +965,7 @@ void _fill_ddsrouter_configuration_latest(
             YamlReader::get_set<types::DdsTopic>(yml, BUILTIN_TAG, version));
     }
 
-    /////
-    // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
-    auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
-
-    // TODO do it in a single instruction
-    // Check it is a list
-    if (!participants_configurations_yml.IsSequence())
-    {
-        throw eprosima::utils::ConfigurationException(
-                  utils::Formatter() <<
-                      "Participant configurations must be specified in an array under tag: " <<
-                      COLLECTION_PARTICIPANTS_TAG);
-    }
-
-    for (auto conf : participants_configurations_yml)
-    {
-        object.participants_configurations.insert(
-            YamlReader::get<std::shared_ptr<core::configuration::ParticipantConfiguration>>(conf, version));
-    }
+    // Participants configurations are no longer in Router configuration
 
     /////
     // Get optional specs configuration

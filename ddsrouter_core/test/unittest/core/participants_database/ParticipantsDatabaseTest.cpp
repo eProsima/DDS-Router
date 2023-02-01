@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <cpp_utils/exception/InconsistencyException.hpp>
-#include <participant/implementations/auxiliar/BlankParticipant.hpp>
+#include <ddsrouter_core/participants/participant/auxiliar/BlankParticipant.hpp>
 #include <core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 

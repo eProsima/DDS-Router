@@ -17,9 +17,11 @@
  *
  */
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/EchoParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
@@ -36,22 +38,31 @@ namespace yaml {
 
 using namespace eprosima::ddsrouter::core;
 
-core::configuration::DDSRouterConfiguration
-YamlReaderConfiguration::load_ddsrouter_configuration(
+Configuration::Configuration (const Yaml& yml)
+{
+    load_ddsrouter_configuration_(yml);
+}
+
+Configuration::Configuration (const std::string& file_path)
+{
+    load_ddsrouter_configuration_from_file_(file_path);
+}
+
+void Configuration::load_ddsrouter_configuration_(
         const Yaml& yml)
 {
     try
     {
         YamlReaderVersion version;
         // Get version if present
-        if (is_tag_present(yml, VERSION_TAG))
+        if (YamlReader::is_tag_present(yml, VERSION_TAG))
         {
-            version = get<YamlReaderVersion>(yml, VERSION_TAG, LATEST);
+            version = YamlReader::get<YamlReaderVersion>(yml, VERSION_TAG, LATEST);
         }
         else
         {
             // Get default version
-            version = default_yaml_version();
+            version = default_yaml_version_();
             logWarning(DDSROUTER_YAML,
                     "No version of yaml configuration given. Using version " << version << " by default. " <<
                     "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
@@ -60,10 +71,13 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
         // Load DDS Router Configuration
-        core::configuration::DDSRouterConfiguration router_configuration =
+        configuration =
                 yaml::YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, version);
 
-        return router_configuration;
+        /////
+        // Load Participants Configurations
+        load_participant_configurations_(yml, version);
+
     }
     catch (const std::exception& e)
     {
@@ -72,8 +86,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
     }
 }
 
-core::configuration::DDSRouterConfiguration
-YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+void Configuration::load_ddsrouter_configuration_from_file_(
         const std::string& file_path)
 {
     yaml::Yaml yml;
@@ -90,10 +103,72 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
                       "> :\n " << e.what());
     }
 
-    return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+    Configuration::load_ddsrouter_configuration_(yml);
 }
 
-YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
+void Configuration::load_participant_configurations_(
+        const Yaml& yml,
+        const YamlReaderVersion& version)
+{
+    // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
+    auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
+
+    // TODO do it in a single instruction
+    // Check it is a list
+    if (!participants_configurations_yml.IsSequence())
+    {
+        throw eprosima::utils::ConfigurationException(
+                utils::Formatter() <<
+                    "Participant configurations must be specified in an array under tag: " <<
+                    COLLECTION_PARTICIPANTS_TAG);
+    }
+
+    for (auto conf : participants_configurations_yml)
+    {
+        // Get kind
+        participants::ParticipantKind kind = YamlReader::get<participants::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
+
+        // Get Participant
+        std::shared_ptr<participants::ParticipantConfiguration> configuration;
+
+        logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
+
+        switch (kind)
+        {
+            case participants::ParticipantKind::echo:
+                configuration =
+                    std::make_shared<participants::EchoParticipantConfiguration>(
+                        YamlReader::get<participants::EchoParticipantConfiguration>(conf, version));
+                break;
+
+            case participants::ParticipantKind::simple:
+                configuration =
+                    std::make_shared<participants::SimpleParticipantConfiguration>(
+                        YamlReader::get<participants::SimpleParticipantConfiguration>(conf, version));
+                break;
+
+            case participants::ParticipantKind::discovery_server:
+                configuration =
+                    std::make_shared<participants::DiscoveryServerParticipantConfiguration>(
+                        YamlReader::get<participants::DiscoveryServerParticipantConfiguration>(conf, version));
+                break;
+
+            case participants::ParticipantKind::initial_peers:
+                configuration =
+                    std::make_shared<participants::InitialPeersParticipantConfiguration>(
+                        YamlReader::get<participants::InitialPeersParticipantConfiguration>(conf, version));
+                break;
+
+            // No default possible
+        }
+
+        participants_configurations.emplace_back(
+            kind,
+            std::move(configuration));
+    }
+}
+
+YamlReaderVersion Configuration::default_yaml_version_()
 {
     return V_1_0;
 }
