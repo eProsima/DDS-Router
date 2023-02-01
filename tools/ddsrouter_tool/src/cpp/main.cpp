@@ -17,8 +17,6 @@
  *
  */
 
-#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/core/DDSRouter.hpp>
 #include <cpp_utils/event/FileWatcherHandler.hpp>
 #include <cpp_utils/event/MultipleEventHandler.hpp>
 #include <cpp_utils/event/PeriodicEventHandler.hpp>
@@ -29,6 +27,14 @@
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
+
+#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter_core/core/DDSRouter.hpp>
+#include <ddsrouter_core/efficiency/payload/FastPayloadPool.hpp>
+#include <ddsrouter_core/participants/participant/rtps/SimpleParticipant.hpp>
+
+#include <ddsrouter_participants/ParticipantFactory.hpp>
+
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 #include <ddsrouter_yaml/YamlManager.hpp>
 
@@ -141,12 +147,43 @@ int main(
         /////
         // DDS Router Initialization
 
-        // Load DDS Router Configuration
-        core::configuration::DDSRouterConfiguration router_configuration =
-                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+        // Load Configuration from YAML
+        yaml::Configuration configuration(file_path);
+        core::configuration::DDSRouterConfiguration router_configuration = configuration.configuration;
+
+        // Create Payload Pool
+        std::shared_ptr<core::PayloadPool> payload_pool =
+            std::make_shared<core::FastPayloadPool>();
+
+        // Create Discovery Database
+        std::shared_ptr<core::DiscoveryDatabase> discovery_database =
+            std::make_shared<core::DiscoveryDatabase>();
+
+        // Create and populate Participant Database
+        std::shared_ptr<core::ParticipantsDatabase> participant_database =
+            std::make_shared<core::ParticipantsDatabase>();
+
+        // Populate Participant Database
+        for (const auto& part_conf : configuration.participants_configurations)
+        {
+            participant_database->add_participant(
+                part_conf.second->id,
+                participants::ParticipantFactory::create_participant(
+                    part_conf.first,
+                    part_conf.second,
+                    payload_pool,
+                    discovery_database
+                )
+            );
+        }
 
         // Create DDS Router
-        core::DDSRouter router(router_configuration);
+        core::DDSRouter router(
+            router_configuration,
+            discovery_database,
+            payload_pool,
+            participant_database
+        );
 
         /////
         // File Watcher Handler
@@ -163,9 +200,8 @@ int main(
 
                     try
                     {
-                        core::configuration::DDSRouterConfiguration router_configuration =
-                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
-                        router.reload_configuration(router_configuration);
+                        yaml::Configuration new_configuration(file_path);
+                        router.reload_configuration(new_configuration.configuration);
                     }
                     catch (const std::exception& e)
                     {
@@ -198,9 +234,8 @@ int main(
 
                         try
                         {
-                            core::configuration::DDSRouterConfiguration router_configuration =
-                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
-                            router.reload_configuration(router_configuration);
+                            yaml::Configuration new_configuration(file_path);
+                            router.reload_configuration(new_configuration.configuration);
                         }
                         catch (const std::exception& e)
                         {

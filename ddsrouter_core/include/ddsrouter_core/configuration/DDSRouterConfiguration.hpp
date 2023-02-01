@@ -26,7 +26,6 @@
 
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
@@ -58,10 +57,9 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
      * @todo use const & references or even eliminate this constructor
      */
     DDSROUTER_CORE_DllAPI DDSRouterConfiguration(
-            std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist,
-            std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist,
-            std::set<std::shared_ptr<types::DdsTopic>> builtin_topics,
-            std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations,
+            const std::set<std::shared_ptr<types::DdsFilterTopic>>& allowlist,
+            const std::set<std::shared_ptr<types::DdsFilterTopic>>& blocklist,
+            const std::set<std::shared_ptr<types::DdsTopic>>& builtin_topics,
             const SpecsConfiguration& advanced_options);
 
     /////////////////////////
@@ -80,17 +78,8 @@ struct DDSRouterConfiguration : public DDSRouterReloadConfiguration
     // VARIABLES
     /////////////////////////
 
-    //! Participant configurations
-    std::set<std::shared_ptr<ParticipantConfiguration>> participants_configurations = {};
-
     //! Advanced configurations
     SpecsConfiguration advanced_options;
-
-protected:
-
-    //! Auxiliar method to validate that class type of the participants are compatible with their kinds.
-    static bool check_correct_configuration_object_(
-            const std::shared_ptr<ParticipantConfiguration> configuration);
 
 };
 

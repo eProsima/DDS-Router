@@ -18,7 +18,7 @@
 #include <gtest/gtest.h>
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReader.hpp>
 #include <ddsrouter_yaml/yaml_configuration_tags.hpp>

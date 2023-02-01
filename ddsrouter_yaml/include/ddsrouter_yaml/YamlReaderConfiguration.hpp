@@ -20,6 +20,9 @@
 #define _DDSROUTERYAML_YAMLREADERCONFIGURATION_HPP_
 
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+
+#include <ddsrouter_participants/ParticipantKind.hpp>
 
 #include <ddsrouter_yaml/library/library_dll.h>
 #include <ddsrouter_yaml/YamlReader.hpp>
@@ -33,19 +36,36 @@ namespace yaml {
  *
  * TODO: Add version configuration so it could load different versions
  */
-class DDSROUTER_YAML_DllAPI YamlReaderConfiguration : protected YamlReader
+class DDSROUTER_YAML_DllAPI Configuration
 {
 public:
 
-    static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration(
-            const Yaml& yml);
+    Configuration(const Yaml& yml);
 
-    static core::configuration::DDSRouterConfiguration load_ddsrouter_configuration_from_file(
-            const std::string& file_path);
+    Configuration(const std::string& file_path);
+
+    core::configuration::DDSRouterConfiguration configuration;
+
+    using ParticipantConfigurationCollection =
+        std::vector<
+            std::pair<
+                participants::ParticipantKind, std::shared_ptr<
+                    participants::ParticipantConfiguration>>>;
+
+    ParticipantConfigurationCollection participants_configurations;
 
 protected:
 
-    static YamlReaderVersion default_yaml_version();
+    void load_ddsrouter_configuration_(
+            const Yaml& yml);
+
+    void load_ddsrouter_configuration_from_file_(
+            const std::string& file_path);
+
+    void load_participant_configurations_(
+            const Yaml& yml, const YamlReaderVersion& version);
+
+    static YamlReaderVersion default_yaml_version_();
 };
 
 } /* namespace yaml */

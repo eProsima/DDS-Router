@@ -204,6 +204,44 @@ T YamlReader::get_enumeration(
     }
 }
 
+template <typename T>
+T YamlReader::get_enumeration_from_builder(
+        const Yaml& yml,
+        const utils::EnumBuilder<T>& enum_builder)
+{
+    std::string str_value = get_scalar<std::string>(yml);
+    T enum_value;
+    bool found = enum_builder.string_to_enumeration(str_value, enum_value);
+
+    if (found)
+    {
+        return enum_value;
+    }
+    else
+    {
+        throw eprosima::utils::ConfigurationException(utils::Formatter()
+            << "Value <" << str_value << "> cannot be parsed as enum <" << TYPE_NAME(T) << ">.");
+    }
+}
+
+template <typename T>
+T YamlReader::get_enumeration_from_builder(
+        const Yaml& yml,
+        const TagType& tag,
+        const utils::EnumBuilder<T>& enum_builder)
+{
+    try
+    {
+        return get_enumeration_from_builder<T>(get_value_in_tag(yml, tag), enum_builder);
+    }
+    catch (const std::exception& e)
+    {
+        throw eprosima::utils::ConfigurationException(utils::Formatter()
+            << "Error reading enumeration from builder under tag <"
+            << tag << "> :\n " << e.what());
+    }
+}
+
 } /* namespace yaml */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -17,11 +17,17 @@
 
 #include <fastdds/rtps/common/CacheChange.h>
 
+<<<<<<< HEAD
 #include <cpp_utils/testing/LogChecker.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
 
 #include <efficiency/payload/PayloadPool.hpp>
 #include <efficiency/payload/FastPayloadPool.hpp>
+=======
+#include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
+#include <ddsrouter_core/efficiency/payload/FastPayloadPool.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
+>>>>>>> 24b88e9 (Refactor code)
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;

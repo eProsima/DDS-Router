@@ -27,8 +27,12 @@ namespace core {
 // TODO: Use initial topics to start execution and start bridges
 
 DDSRouter::DDSRouter(
-        const configuration::DDSRouterConfiguration& configuration)
-    : ddsrouter_impl_(std::make_unique<DDSRouterImpl>(configuration))
+        const configuration::DDSRouterConfiguration& configuration,
+        const std::shared_ptr<DiscoveryDatabase>& discovery_database,
+        const std::shared_ptr<core::PayloadPool>& payload_pool,
+        const std::shared_ptr<ParticipantsDatabase>& participants_database)
+    : ddsrouter_impl_(std::make_unique<DDSRouterImpl>(
+        configuration, discovery_database, payload_pool, participants_database))
 {
 }
 

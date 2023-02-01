@@ -31,12 +31,12 @@
 #include <dynamic/AllowedTopicList.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <library/library_dll.h>
-#include <participant/IParticipant.hpp>
-#include <core/ParticipantsDatabase.hpp>
-#include <core/ParticipantFactory.hpp>
+#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
+#include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -63,7 +63,10 @@ public:
      * @throw \c InitializationException in case \c IParticipants , \c IWriters or \c IReaders creation fails.
      */
     DDSRouterImpl(
-            const configuration::DDSRouterConfiguration& configuration);
+            const configuration::DDSRouterConfiguration& configuration,
+            const std::shared_ptr<DiscoveryDatabase>& discovery_database,
+            const std::shared_ptr<core::PayloadPool>& payload_pool,
+            const std::shared_ptr<ParticipantsDatabase>& participants_database);
 
     /**
      * @brief Destroy the DDSRouterImpl object
@@ -148,10 +151,7 @@ protected:
     void init_allowed_topics_();
 
     /**
-     * @brief  Create participants and add them to the participants database
-     *
-     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
-     * @throw \c InitializationException in case \c IParticipants creation fails.
+     * @brief  Enable participants
      */
     void init_participants_();
 
@@ -329,9 +329,6 @@ protected:
 
     //! List of allowed and blocked topics
     AllowedTopicList allowed_topics_;
-
-    //! Participant factory instance
-    ParticipantFactory participant_factory_;
 
     /////
     // AUXILIAR VARIABLES

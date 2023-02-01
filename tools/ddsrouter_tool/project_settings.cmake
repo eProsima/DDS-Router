@@ -29,6 +29,7 @@ set(MODULE_FIND_PACKAGES
     cpp_utils
     ddsrouter_core
     ddsrouter_yaml
+    ddsrouter_participants
 )
 
 set(MODULE_DEPENDENCIES

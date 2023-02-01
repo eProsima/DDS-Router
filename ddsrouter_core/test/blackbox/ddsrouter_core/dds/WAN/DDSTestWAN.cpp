@@ -19,8 +19,8 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/core/DDSRouter.hpp>
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
