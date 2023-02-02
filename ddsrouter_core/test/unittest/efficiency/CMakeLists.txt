@@ -27,12 +27,16 @@ set(TEST_SOURCES
 
 set(TEST_LIST
         reserve
+        reserve_negative
         release
         reserve_and_release_counter
+        reserve_and_release_counter_negative
         is_clean
         get_payload_cache_change
         get_payload_from_src_cache_change
+        get_payload_from_src_cache_change_negative
         release_payload_cache_change
+        release_payload_cache_change_negative
     )
 
 set(TEST_EXTRA_LIBRARIES
