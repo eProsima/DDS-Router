@@ -55,7 +55,7 @@ jobs:
           cd src/DDS-Router/.github/docker/vulcanexus
           docker build \
             --no-cache \
-            --build-arg docker_image_base=eprosima/ubuntu-vulcanexus:humble-core \
+            --build-arg docker_image_base=eprosima/vulcanexus:humble-core \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }} \
             -f Dockerfile .
 
