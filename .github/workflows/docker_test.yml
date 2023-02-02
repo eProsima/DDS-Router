@@ -18,9 +18,6 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-env:
-  REGISTRY: ghcr.io
-
 jobs:
   docker_test:
 
@@ -52,21 +49,13 @@ jobs:
           echo "DEFAULT_FASTDDS_BRANCH: ${{ env.DEFAULT_FASTDDS_BRANCH }}"
           echo "DEFAULT_DDSROUTER_BRANCH: ${{ env.DEFAULT_DDSROUTER_BRANCH }}"
 
-      # It enables the use of Vulcanexus container
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       # Build Vulcanexus Docker image
       - name: Build custom Vulcanexus Docker image
         run: |
           cd src/DDS-Router/.github/docker/vulcanexus
           docker build \
             --no-cache \
-            --build-arg docker_image_base=ghcr.io/eprosima/ubuntu-vulcanexus:humble-core \
+            --build-arg docker_image_base=eprosima/ubuntu-vulcanexus:humble-core \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }} \
             -f Dockerfile .
 
