@@ -36,7 +36,7 @@ colcon build --packages-select ddsrouter_docs
 In order to compile and execute the package **tests**, a specific CMake option is required: `BUILD_DOCS_TESTS`.
 
 ```bash
-colcon build --packages-select ddsrouter_docs --cmake-args -DBUILD_DOCS_TESTS
+colcon build --packages-select ddsrouter_docs --cmake-args -DBUILD_DOCS_TESTS=ON
 colcon test --packages-select ddsrouter_docs --event-handler console_direct+
 ```
 
