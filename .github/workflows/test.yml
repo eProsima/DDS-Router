@@ -78,7 +78,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: DDS-Router
 
@@ -169,7 +169,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -308,7 +308,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -412,7 +412,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -495,7 +495,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -567,7 +567,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -655,7 +655,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -706,7 +706,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
