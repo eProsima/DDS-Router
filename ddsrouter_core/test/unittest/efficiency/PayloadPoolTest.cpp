@@ -19,9 +19,12 @@
 #include <fastdds/rtps/common/CacheChange.h>
 #include <fastdds/rtps/common/SerializedPayload.h>
 
-#include <efficiency/payload/PayloadPool.hpp>
+#include <cpp_utils/testing/LogChecker.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
+
 #include <ddsrouter_core/types/dds/Data.hpp>
+
+#include <efficiency/payload/PayloadPool.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;
@@ -165,8 +168,10 @@ TEST(PayloadPoolTest, reserve)
  */
 TEST(PayloadPoolTest, reserve_negative)
 {
+
     // 0 size
     {
+
         test::MockPayloadPool pool;
         Payload payload;
 
@@ -276,6 +281,9 @@ TEST(PayloadPoolTest, reserve_and_release_counter)
  */
 TEST(PayloadPoolTest, reserve_and_release_counter_negative)
 {
+    // 1 log error expected
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 1, 1);
+
     test::MockPayloadPool pool;
     std::vector<Payload> payloads(5);
 
@@ -410,15 +418,6 @@ TEST(PayloadPoolTest, get_payload_from_src_cache_change_negative)
  */
 TEST(PayloadPoolTest, release_payload_cache_change)
 {
-    // different ownership
-    {
-        test::MockPayloadPool pool;
-        eprosima::fastrtps::rtps::CacheChange_t cc;
-        cc.payload_owner(nullptr);
-
-        EXPECT_THROW(pool.release_payload(cc), eprosima::utils::InconsistencyException);
-    }
-
     // this ownership release ok
     {
         test::MockPayloadPool pool;
@@ -441,6 +440,18 @@ TEST(PayloadPoolTest, release_payload_cache_change)
  */
 TEST(PayloadPoolTest, release_payload_cache_change_negative)
 {
+    // different ownership
+    {
+        // 1 log error expected
+        INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 1, 1);
+
+        test::MockPayloadPool pool;
+        eprosima::fastrtps::rtps::CacheChange_t cc;
+        cc.payload_owner(nullptr);
+
+        EXPECT_THROW(pool.release_payload(cc), eprosima::utils::InconsistencyException);
+    }
+
     // this ownership release fail
     {
         test::MockPayloadPool pool;
