@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,13 +49,13 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
     conf->id = types::ParticipantId("InitialPeersParticipant_Client_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
     conf->kind = types::ParticipantKind::wan_initial_peers;
     conf->connection_addresses.insert(
-            types::Address(
-                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-                11666,
-                11666,
-                ip_version,
-                transport_protocol)
-    );
+        types::Address(
+            (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+            11666,
+            11666,
+            ip_version,
+            transport_protocol)
+        );
 
     return conf;
 }
@@ -69,13 +69,13 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
     conf->id = types::ParticipantId("InitialPeersParticipant_Server");
     conf->kind = types::ParticipantKind::wan_initial_peers;
     conf->listening_addresses.insert(
-            types::Address(
-                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-                11666,
-                11666,
-                ip_version,
-                transport_protocol)
-    );
+        types::Address(
+            (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+            11666,
+            11666,
+            ip_version,
+            transport_protocol)
+        );
     conf->is_repeater = true;
 
     return conf;
@@ -124,7 +124,7 @@ configuration::DDSRouterConfiguration router_configuration(
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
     std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations =
-        { participant_configuration };
+    { participant_configuration };
 
     if (has_simple)
     {
@@ -238,9 +238,9 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
                 true,  // is server 1
                 types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::v4 // ip version
-            ),
+                ),
             0  // domain
-        ),  // Client 0
+            ), // Client 0
 
         test::router_configuration(
             test::participant_configuration(
@@ -248,9 +248,9 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
                 false,  // is server 1
                 types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::v4 // ip version
-            ),
+                ),
             1  // domain
-        ),  // Client 1
+            ), // Client 1
 
         test::router_configuration(
             test::participant_configuration(
@@ -258,11 +258,11 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
                 true,  // is server 1 [not used]
                 types::TransportProtocol::udp, // transport protocol
                 types::IpVersion::v4 // ip version
-            ),
+                ),
             66,  // domain
             false  // has simple
-        )  // Repeater
-    );
+            ) // Repeater
+        );
 }
 
 int main(
