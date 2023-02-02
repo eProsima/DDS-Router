@@ -17,18 +17,25 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
-#include <test_utils.hpp>
-
-#include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/participants/participant/auxiliar/DummyParticipant.hpp>
-#include <cpp_utils/Log.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 #include <cpp_utils/utils.hpp>
 
-using namespace eprosima::ddsrouter::test;
+#include <ddsrouter_core/core/DDSRouter.hpp>
+#include <ddsrouter_core/participants/participant/auxiliar/DummyParticipant.hpp>
+#include <ddsrouter_core/participants/participant/auxiliar/BlankParticipant.hpp>
+#include <cpp_utils/Log.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+
+#include <test_utils.hpp>
+
+using namespace eprosima::ddsrouter::participants;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
+
+namespace test
+{
+
+
 
 std::vector<PayloadUnit> random_payload(
         uint16_t seed = 1)
@@ -43,22 +50,25 @@ std::vector<PayloadUnit> random_payload(
     return payload;
 }
 
-configuration::DDSRouterConfiguration void_configuration()
+WholeConfiguration void_configuration()
 {
-    configuration::DDSRouterConfiguration configuration;
-    configuration.participants_configurations =
-    {
-        std::make_shared<configuration::ParticipantConfiguration>(
+    WholeConfiguration configuration;
+
+    configuration.participant_database->add_participant(
+        ParticipantId("ParticipantVoid1"),
+        std::make_shared<BlankParticipant>(
             ParticipantId("ParticipantVoid1"),
-            ParticipantKind::blank,
             false
-            ),
-        std::make_shared<configuration::ParticipantConfiguration>(
+        )
+    );
+
+    configuration.participant_database->add_participant(
+        ParticipantId("ParticipantVoid2"),
+        std::make_shared<BlankParticipant>(
             ParticipantId("ParticipantVoid2"),
-            ParticipantKind::blank,
             false
-            )
-    };
+        )
+    );
 
     return configuration;
 }
@@ -68,35 +78,42 @@ configuration::DDSRouterConfiguration void_configuration()
  *
  * @return configuration::DDSRouterConfiguration
  */
-configuration::DDSRouterConfiguration simple_configuration(
+WholeConfiguration simple_configuration(
         const std::string& participant_1_name = "Participant1",
         const std::string& participant_2_name = "Participant2",
         const std::string& topic_name = "topic_dummy",
         const std::string& topic_type = "type_dummy")
 {
-    configuration::DDSRouterConfiguration configuration;
+    WholeConfiguration configuration;
 
-    configuration.builtin_topics =
-    {
-        std::set<std::shared_ptr<DdsTopic>>({std::make_shared<DdsTopic>(topic_name, topic_type)}),
-    };
+    configuration.configuration.builtin_topics.insert(std::make_shared<DdsTopic>(topic_name, topic_type));
 
-    configuration.participants_configurations =
-    {
-        std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId(participant_1_name),
-            ParticipantKind::dummy,
-            false
-            ),
-        std::make_shared<configuration::ParticipantConfiguration>(
-            ParticipantId(participant_2_name),
-            ParticipantKind::dummy,
-            false
-            )
-    };
+    configuration.participant_database->add_participant(
+        ParticipantId(participant_1_name),
+        std::make_shared<DummyParticipant>(
+            ParticipantConfiguration(
+                ParticipantId(participant_1_name),
+                false),
+            configuration.payload_pool,
+            configuration.discovery_database,
+        ),
+    );
+
+    configuration.participant_database->add_participant(
+        ParticipantId(participant_2_name),
+        std::make_shared<DummyParticipant>(
+            ParticipantConfiguration(
+                ParticipantId(participant_2_name),
+                false),
+            configuration.payload_pool,
+            configuration.discovery_database,
+        ),
+    );
 
     return configuration;
 }
+
+} // namespace test
 
 /**
  * Test Whole DDSRouter initialization by initializing two EmptyParticipants
@@ -104,7 +121,13 @@ configuration::DDSRouterConfiguration simple_configuration(
 TEST(TrivialTest, trivial_void_initialization)
 {
     // Create DDSRouter entity
-    DDSRouter router(void_configuration());
+    auto configuration = void_configuration();
+    DDSRouter router(
+        ddsrouter_configuration.configuration,
+        ddsrouter_configuration.discovery_database,
+        ddsrouter_configuration.payload_pool,
+        ddsrouter_configuration.participants_database);
+
     router.start();
     router.stop();
 
@@ -117,7 +140,13 @@ TEST(TrivialTest, trivial_void_initialization)
 TEST(TrivialTest, trivial_dummy_initialization)
 {
     // Create DDSRouter entity
-    DDSRouter router(simple_configuration());
+    auto configuration = simple_configuration();
+    DDSRouter router(
+        ddsrouter_configuration.configuration,
+        ddsrouter_configuration.discovery_database,
+        ddsrouter_configuration.payload_pool,
+        ddsrouter_configuration.participants_database);
+
     router.start();
     router.stop();
 
@@ -131,11 +160,17 @@ TEST(TrivialTest, trivial_dummy_initialization)
  */
 TEST(TrivialTest, trivial_communication)
 {
-    DDSRouter router(simple_configuration());
+    auto configuration = simple_configuration();
+    DDSRouter router(
+        ddsrouter_configuration.configuration,
+        ddsrouter_configuration.discovery_database,
+        ddsrouter_configuration.payload_pool,
+        ddsrouter_configuration.participants_database);
+
     router.start();
 
-    DummyParticipant* participant_1 = DummyParticipant::get_participant(ParticipantId("Participant1"));
-    DummyParticipant* participant_2 = DummyParticipant::get_participant(ParticipantId("Participant2"));
+    DummyParticipant* participant_1 = configuration.participants_database.get(ParticipantId("Participant1")).get();
+    DummyParticipant* participant_2 = configuration.participants_database.get(ParticipantId("Participant2")).get();
     ASSERT_NE(participant_1, nullptr);
     ASSERT_NE(participant_2, nullptr);
 

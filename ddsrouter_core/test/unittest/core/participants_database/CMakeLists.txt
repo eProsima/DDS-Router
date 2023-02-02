@@ -20,10 +20,10 @@ set(TEST_NAME ParticipantsDatabaseTest)
 
 set(TEST_SOURCES
         ParticipantsDatabaseTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/participant/auxiliar/BlankParticipant.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participants/participant/auxiliar/BlankParticipant.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/core/ParticipantsDatabase.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/reader/auxiliar/BlankReader.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/writer/auxiliar/BlankWriter.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participants/reader/auxiliar/BlankReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/participants/writer/auxiliar/BlankWriter.cpp
     )
 all_header_sources("${TEST_SOURCES}")
 
@@ -33,7 +33,6 @@ set(TEST_LIST
         get_participant
         get_participants_ids
         get_participants_map
-        pop
         size
     )
 

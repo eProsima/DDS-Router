@@ -22,10 +22,9 @@
 
 #include <test_utils.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
 namespace test {
 
+using namespace eprosima;
 using namespace eprosima::ddsrouter::core::types;
 
 Guid random_guid(
@@ -176,6 +175,64 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
     return result;
 }
 
+std::shared_ptr<participants::ParticipantConfiguration> random_participant_configuration(
+        participants::ParticipantKind kind,
+        uint16_t seed /* = 0 */)
+{
+    ParticipantId id("Participant" + std::to_string(seed));
+
+    switch (kind)
+    {
+        case participants::ParticipantKind::simple:
+            return std::make_shared<participants::SimpleParticipantConfiguration>(
+                id,
+                false,
+                random_domain(seed));
+
+        case participants::ParticipantKind::discovery_server:
+
+        {
+            // TODO get random values
+            DiscoveryServerConnectionAddress connection_address = DiscoveryServerConnectionAddress(
+                GuidPrefix(),
+                std::set<Address>({Address()})
+                );
+
+            return std::make_shared<participants::DiscoveryServerParticipantConfiguration>(
+                id,
+                false,
+                random_domain(seed),
+                random_guid_prefix(seed),
+                std::set<Address>(),
+                std::set<DiscoveryServerConnectionAddress>({connection_address}),
+                security::TlsConfiguration());
+        }
+
+        case participants::ParticipantKind::initial_peers:
+
+        {
+            return std::make_shared<participants::InitialPeersParticipantConfiguration>(
+                id,
+                false,
+                random_domain(seed),
+                std::set<Address>(),
+                std::set<Address>({Address()}),
+                security::TlsConfiguration());
+        }
+
+        case participants::ParticipantKind::echo:
+        {
+            return std::make_shared<participants::EchoParticipantConfiguration>(
+                id,
+                false);
+        }
+
+        // Add cases where Participants need specific arguments
+        default:
+            return std::make_shared<participants::ParticipantConfiguration>(id, false);
+    }
+}
+
 ParticipantId random_participant_id(
         uint16_t seed /* = 0 */)
 {
@@ -190,5 +247,3 @@ ParticipantId random_participant_id(
 }
 
 } /* namespace test */
-} /* namespace ddsrouter */
-} /* namespace eprosima */

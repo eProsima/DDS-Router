@@ -21,9 +21,16 @@
 
 #include <cpp_utils/exception/InitializationException.hpp>
 
-#include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
+#include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
+#include <ddsrouter_core/core/ParticipantsDatabase.hpp>
+#include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
+#include <ddsrouter_core/efficiency/payload/FastPayloadPool.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/EchoParticipantConfiguration.hpp>
+#include <ddsrouter_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
@@ -31,10 +38,13 @@
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
+#include <ddsrouter_participants/ParticipantKind.hpp>
+#include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
+
 namespace test {
 
+using namespace eprosima::ddsrouter;
+using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 
 // TODO: most of the methods from this test_utils that generate random types are not very "random".
@@ -114,11 +124,21 @@ std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
         uint16_t size = 1,
         bool ros = false);
 
+std::shared_ptr<participants::ParticipantConfiguration> random_participant_configuration(
+        participants::ParticipantKind kind,
+        uint16_t seed = 0);
+
 ParticipantId random_participant_id(
         uint16_t seed = 0);
 
+struct WholeConfiguration
+{
+    configuration::DDSRouterConfiguration configuration;
+    std::shared_ptr<DiscoveryDatabase> discovery_database = std::make_shared<DiscoveryDatabase>();
+    std::shared_ptr<PayloadPool> payload_pool = std::make_shared<FastPayloadPool>();
+    std::shared_ptr<ParticipantsDatabase> participant_database = std::make_shared<ParticipantsDatabase>();
+};
+
 } /* namespace test */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
 
 #endif /* _DDSROUTER_TEST_TESTUTILS_TEST_UTILS_HPP_ */

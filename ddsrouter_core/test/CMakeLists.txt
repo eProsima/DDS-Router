@@ -17,4 +17,3 @@ include_directories("TestUtils")
 
 # Add subdirectory with tests
 add_subdirectory(unittest)
-add_subdirectory(blackbox)
