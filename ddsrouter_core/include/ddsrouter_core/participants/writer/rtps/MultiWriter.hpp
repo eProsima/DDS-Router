@@ -91,7 +91,7 @@ protected:
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
     virtual utils::ReturnCode write_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            IRoutingData& data) noexcept override;
 
     bool exist_partition_(
             const core::types::SpecificEndpointQoS& data_qos);

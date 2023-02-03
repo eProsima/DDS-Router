@@ -120,8 +120,9 @@ bool CommonWriter::come_from_this_participant_(
 
 // Specific enable/disable do not need to be implemented
 utils::ReturnCode CommonWriter::write_(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        IRoutingData& data) noexcept
 {
+    auto rtps_data = dynamic_cast<RtpsPayloadData&>(data);
 
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change;
@@ -129,12 +130,12 @@ utils::ReturnCode CommonWriter::write_(
     {
         new_change =
                 rtps_writer_->new_change(
-            eprosima::fastrtps::rtps::ChangeKind_t::ALIVE,
-            data->properties.instanceHandle);
+            rtps_data.kind,
+            rtps_data.properties.instanceHandle);
     }
     else
     {
-        new_change = rtps_writer_->new_change(eprosima::fastrtps::rtps::ChangeKind_t::ALIVE);
+        new_change = rtps_writer_->new_change(rtps_data.kind);
     }
 
     // If still is not able to get a change, return an error code
@@ -145,13 +146,13 @@ utils::ReturnCode CommonWriter::write_(
 
     logDebug(DDSROUTER_RTPS_COMMONWRITER,
             "CommonWriter " << *this << " sending payload " << new_change->serializedPayload << " from " <<
-            data->properties.source_guid);
+            rtps_data.properties.source_guid);
 
     // Get params to write (if set)
     eprosima::fastrtps::rtps::WriteParams write_params;
 
     // Fill cache change with specific data to send
-    auto ret = fill_to_send_data_(new_change, write_params, data);
+    auto ret = fill_to_send_data_(new_change, write_params, rtps_data);
     if (!ret)
     {
         logError(DDSROUTER_RTPS_COMMONWRITER, "Error setting change to send.");
@@ -162,7 +163,7 @@ utils::ReturnCode CommonWriter::write_(
     rtps_history_->add_change(new_change, write_params);
 
     // At this point, write params is now the output of adding change
-    fill_sent_data_(write_params, data);
+    fill_sent_data_(write_params, rtps_data);
 
     // Remove change could be done here in non reliable as it is synchronous because change has already been sent
     // and does not require to be resent under any circumstance.
@@ -182,26 +183,26 @@ utils::ReturnCode CommonWriter::write_(
 utils::ReturnCode CommonWriter::fill_to_send_data_(
         fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
         eprosima::fastrtps::rtps::WriteParams& to_send_params,
-        std::unique_ptr<core::types::DataReceived>& data) const noexcept
+        const RtpsPayloadData& data) const noexcept
 {
     if (repeater_)
     {
         // Add origin to change in case the cache change is RouterCacheChange (only in repeater mode)
         core::types::RouterCacheChange& change_ref = static_cast<core::types::RouterCacheChange&>(*to_send_change_to_fill);
-        change_ref.last_writer_guid_prefix = data->properties.source_guid.guidPrefix;
+        change_ref.last_writer_guid_prefix = data.properties.source_guid.guidPrefix;
     }
 
     // Set keys in case topic has keys
     if (topic_.keyed)
     {
-        to_send_change_to_fill->instanceHandle = data->properties.instanceHandle;
+        to_send_change_to_fill->instanceHandle = data.properties.instanceHandle;
     }
 
     // Get the Payload without copy only if it has length
-    if (data->payload.length > 0)
+    if (data.payload.length > 0)
     {
         eprosima::fastrtps::rtps::IPayloadPool* payload_owner = payload_pool_.get();
-        if (!payload_pool_->get_payload(data->payload, payload_owner, (*to_send_change_to_fill)))
+        if (!payload_pool_->get_payload(data.payload, payload_owner, (*to_send_change_to_fill)))
         {
             logDevError(DDSROUTER_RTPS_COMMONWRITER, "Error getting Payload.");
             return utils::ReturnCode::RETCODE_ERROR;
@@ -209,14 +210,14 @@ utils::ReturnCode CommonWriter::fill_to_send_data_(
     }
 
     // Set Change kind
-    to_send_change_to_fill->kind = data->properties.kind;
+    to_send_change_to_fill->kind = data.properties.kind;
 
     // Set source time stamp to be the original one
-    to_send_params.source_timestamp(data->properties.source_timestamp);
+    to_send_params.source_timestamp(data.properties.source_timestamp);
 
     // RPC support
     // If writer params has been set specifically, use them in change
-    if (data->properties.write_params.is_set())
+    if (data.properties.write_params.is_set())
     {
         to_send_params.related_sample_identity(data->properties.write_params.get_reference().related_sample_identity());
     }

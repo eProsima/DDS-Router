@@ -25,8 +25,12 @@
 #include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
 >>>>>>> 24b88e9 (Refactor code)
 #include <cpp_utils/exception/InconsistencyException.hpp>
+<<<<<<< HEAD
 
 #include <ddsrouter_core/types/dds/Data.hpp>
+=======
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
+>>>>>>> b2dc0c1 (Add implementation to data received)
 
 #include <efficiency/payload/PayloadPool.hpp>
 

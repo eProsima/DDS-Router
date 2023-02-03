@@ -100,7 +100,7 @@ public:
      * @return \c RETCODE_NOT_ENABLED if the reader is not enabled (this should not happen)
      */
     virtual utils::ReturnCode take(
-            IRoutingData*& data) noexcept = 0;
+            std::unique_ptr<types::IRoutingData>& data) noexcept = 0;
 };
 
 } /* namespace core */

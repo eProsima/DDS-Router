@@ -42,7 +42,7 @@ void BlankReader::unset_on_data_available_callback() noexcept
 }
 
 utils::ReturnCode BlankReader::take(
-        std::unique_ptr<core::types::DataReceived>&) noexcept
+        std::unique_ptr<core::types::IRoutingData>& /* data */) noexcept
 {
     return utils::ReturnCode::RETCODE_NO_DATA;
 }

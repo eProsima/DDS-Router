@@ -53,9 +53,9 @@ core::types::SpecificEndpointQoS SpecificQoSReader::specific_qos_of_writer_(
     return discovery_database_->get_endpoint(guid).specific_qos();
 }
 
-void SpecificQoSReader::fill_received_data_(
-        fastrtps::rtps::CacheChange_t* received_change,
-        std::unique_ptr<core::types::DataReceived>& data_to_fill) const noexcept
+void fill_received_data_(
+            fastrtps::rtps::CacheChange_t* received_change,
+            RtpsPayloadData& data_to_fill) const noexcept
 {
     CommonReader::fill_received_data_(received_change, data_to_fill);
 
@@ -75,6 +75,8 @@ void SpecificQoSReader::fill_received_data_(
             DDSROUTER_SpecificQoSReader,
             "Received a message from Writer " << data_to_fill->properties.source_guid << " that is not stored in DB.");
     }
+
+    return data;
 }
 
 } /* namespace rtps */

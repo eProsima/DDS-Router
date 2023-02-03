@@ -22,10 +22,9 @@
 #include <ddsrouter_core/types/endpoint/Endpoint.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
-
 #include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
-#include <ddsrouter_core/reader/IReader.hpp>
-#include <ddsrouter_core/writer/IWriter.hpp>
+#include <ddsrouter_core/interface/IReader.hpp>
+#include <ddsrouter_core/interface/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

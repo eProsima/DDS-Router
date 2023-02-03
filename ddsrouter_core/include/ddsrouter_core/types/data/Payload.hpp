@@ -31,7 +31,8 @@
 
 namespace eprosima {
 namespace ddsrouter {
-namespace participants {
+namespace core {
+namespace types {
 
 //! Durability kind enumeration
 using PartitionQosPolicy = eprosima::fastdds::dds::PartitionQosPolicy;
@@ -64,6 +65,7 @@ DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const Payload& payload);
 
-} /* namespace participants */
+} /* namespace types */
+} /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

@@ -33,7 +33,7 @@ void BlankWriter::disable() noexcept
 }
 
 utils::ReturnCode BlankWriter::write(
-        std::unique_ptr<core::types::DataReceived>&) noexcept
+        core::types::IRoutingData& /* data */) noexcept
 {
     return utils::ReturnCode::RETCODE_OK;
 }
