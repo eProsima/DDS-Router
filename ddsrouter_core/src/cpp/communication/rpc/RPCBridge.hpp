@@ -31,7 +31,7 @@
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/topic/rpc/RPCTopic.hpp>
 #include <ddsrouter_core/participants/reader/rtps/CommonReader.hpp>
-#include <ddsrouter_core/writer/IWriter.hpp>
+#include <ddsrouter_core/interface/IWriter.hpp>
 
 
 namespace eprosima {

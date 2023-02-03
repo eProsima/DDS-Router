@@ -38,7 +38,7 @@ void DummyReader::simulate_data_reception(
 }
 
 utils::ReturnCode DummyReader::take_(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        IRoutingData*& data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(dummy_mutex_);
 

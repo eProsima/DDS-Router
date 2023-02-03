@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_CORE_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 #define __SRC_DDSROUTERCORE_CORE_DDS_ROUTERPARTICIPANTFACTORY_HPP_
 
-#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/interface/IParticipant.hpp>
 #include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
 #include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>

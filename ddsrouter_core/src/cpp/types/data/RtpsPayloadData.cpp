@@ -13,37 +13,25 @@
 // limitations under the License.
 
 /**
- * @file IRoutingData.hpp
+ * @file RtpsPayloadData.cpp
  */
 
-#pragma once
-
-#include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
-namespace core {
-namespace types {
+namespace participants {
 
-/**
- * @brief TODO
- */
-class IRoutingData
+RtpsPayloadData::~RtpsPayloadData()
 {
-
-public:
-
-    /**
-     * @brief Virtual dtor.
-     *
-     * @note Default destructor. Force \c DataReceived to be polymorphic. Implemented here to avoid creating a .cpp .
-     */
-    virtual ~IRoutingData()
+    // If payload owner exists and payload has size, release it correctly in pool
+    if (payload_owner && payload.length > 0)
     {
+        payload_owner->release_payload(payload);
     }
-};
+}
 
-} /* namespace types */
-} /* namespace core */
+
+} /* namespace participants */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

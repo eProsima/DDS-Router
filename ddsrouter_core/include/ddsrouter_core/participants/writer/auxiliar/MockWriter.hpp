@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,42 +13,27 @@
 // limitations under the License.
 
 /**
- * @file DummyWriter.hpp
+ * @file MockWriter.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_DUMMYWRITER_HPP_
-#define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_DUMMYWRITER_HPP_
-
-#include <condition_variable>
-#include <mutex>
+#pragma once
 
 #include <cpp_utils/time/time_utils.hpp>
 
 #include <ddsrouter_core/participants/writer/auxiliar/BaseWriter.hpp>
-#include <ddsrouter_core/writer/IWriter.hpp>
+#include <ddsrouter_core/interface/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace participants {
 
-//! Data kind that a Dummy Writer should have sent
-
-struct DummyDataStored
+class MockWriter
 {
-    //! Payload in a format of vector of bytes
-    std::vector<core::types::PayloadUnit> payload;
-
-    //! Guid of the source entity that has transmitted the data
-    core::types::Guid source_guid;
-
-    //! Timestamp of the theoretic publication time
-    utils::Timestamp timestamp;
+    virtual ~MockWriter();
 };
 
-/**
- * Writer implementation that allows to simulate data publication
- */
-class DummyWriter : public BaseWriter
+template <typename T>
+class MockWriterSpecialization : public BaseWriter
 {
 public:
 
@@ -60,7 +45,7 @@ public:
      *
      * @return vector of data
      */
-    std::vector<DummyDataStored> get_data_that_should_have_been_sent() const noexcept;
+    std::vector<T> get_data_that_should_have_been_sent() const noexcept;
 
 
     /**
@@ -68,8 +53,7 @@ public:
      *
      * @param [in] n : wait until data number \c n has arrived and simulated to be sent
      */
-    void wait_until_n_data_sent(
-            uint16_t n) const noexcept;
+    unsigned int count_data_received() const noexcept;
 
 protected:
 
@@ -82,19 +66,13 @@ protected:
      * @param data : data to simulate publication
      * @return RETCODE_OK always
      */
-    utils::ReturnCode write_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+    virtual utils::ReturnCode write_(
+            IRoutingData& data) noexcept override = 0;
 
     //! Stores the data that should have been published
-    std::vector<DummyDataStored> data_stored_;
+    std::vector<T> data_stored_;
 
-    /**
-     * Condition variable to wait for new data available or track termination.
-     */
-    mutable std::condition_variable wait_condition_variable_;
-
-    //! Guard access to \c data_stored_
-    mutable std::mutex dummy_mutex_;
+    mutable std::mutex mutex_;
 };
 
 } /* namespace participants */

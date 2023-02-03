@@ -67,7 +67,7 @@ void BaseWriter::disable() noexcept
 }
 
 utils::ReturnCode BaseWriter::write(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        IRoutingData& data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 

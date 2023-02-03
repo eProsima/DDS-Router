@@ -31,7 +31,7 @@
 #include <ddsrouter_core/types/dds/DomainId.hpp>
 #include <ddsrouter_core/types/dds/GuidPrefix.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/interface/IParticipant.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>

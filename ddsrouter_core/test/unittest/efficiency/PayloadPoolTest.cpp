@@ -21,7 +21,7 @@
 
 #include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
-#include <ddsrouter_core/types/dds/Data.hpp>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;

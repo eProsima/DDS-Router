@@ -31,7 +31,7 @@
 #include <dynamic/AllowedTopicList.hpp>
 #include <dynamic/DiscoveryDatabase.hpp>
 #include <library/library_dll.h>
-#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/interface/IParticipant.hpp>
 #include <ddsrouter_core/core/ParticipantsDatabase.hpp>
 #include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
 #include <ddsrouter_core/configuration/DDSRouterReloadConfiguration.hpp>
