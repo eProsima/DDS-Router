@@ -69,11 +69,6 @@ void BlankParticipant::delete_reader(
 {
 }
 
-void BlankParticipant::start()
-{
-    // Do nothing
-}
-
 } /* namespace participants */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

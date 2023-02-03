@@ -74,8 +74,6 @@ DDSRouterImpl::DDSRouterImpl(
 
     // Init topic allowed
     init_allowed_topics_();
-    // Load Participants
-    init_participants_();
     // Create Bridges for builtin topics
     init_bridges_();
 
@@ -83,7 +81,6 @@ DDSRouterImpl::DDSRouterImpl(
     // The entities should not be added to the Discovery Database until the builtin topics have been created.
     // This is due to the fact that the Participants endpoints start discovering topics with different configuration
     // than the one specified in the yaml configuration file.
-    // TODO (custompart): this does not do anything, check
     discovery_database_->start();
 
 
@@ -302,14 +299,6 @@ void DDSRouterImpl::init_allowed_topics_()
         configuration_.blocklist);
 
     logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
-}
-
-void DDSRouterImpl::init_participants_()
-{
-    for (auto& participant : participants_database_->get_participants_map())
-    {
-        participant.second->start();
-    }
 }
 
 void DDSRouterImpl::init_bridges_()
