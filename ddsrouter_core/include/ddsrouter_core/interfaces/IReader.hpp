@@ -23,7 +23,7 @@
 
 #include <cpp_utils/ReturnCode.hpp>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
 #include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
 
 #include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
@@ -100,7 +100,7 @@ public:
      * @return \c RETCODE_NOT_ENABLED if the reader is not enabled (this should not happen)
      */
     virtual utils::ReturnCode take(
-            std::unique_ptr<types::DataReceived>& data) noexcept = 0;
+            IRoutingData*& data) noexcept = 0;
 };
 
 } /* namespace core */

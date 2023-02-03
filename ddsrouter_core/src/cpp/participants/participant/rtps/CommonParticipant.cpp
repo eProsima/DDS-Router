@@ -267,11 +267,6 @@ bool CommonParticipant::is_rtps_kind() const noexcept
     return true;
 }
 
-void CommonParticipant::start()
-{
-    // TODO
-}
-
 void CommonParticipant::create_participant_(
         const core::types::DomainId& domain,
         const fastrtps::rtps::RTPSParticipantAttributes& participant_attributes)

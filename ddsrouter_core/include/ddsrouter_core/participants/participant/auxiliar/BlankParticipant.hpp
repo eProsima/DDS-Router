@@ -66,8 +66,6 @@ public:
     void delete_reader(
             std::shared_ptr<core::IReader> reader) noexcept override;
 
-    virtual void start() override;
-
 protected:
 
     //! Participant Id

@@ -107,8 +107,6 @@ public:
 
     virtual bool is_rtps_kind() const noexcept override;
 
-    virtual void start() override;
-
 protected:
 
     /**
