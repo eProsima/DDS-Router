@@ -151,11 +151,6 @@ protected:
     void init_allowed_topics_();
 
     /**
-     * @brief  Enable participants
-     */
-    void init_participants_();
-
-    /**
      * @brief  Create a disabled bridge for every real topic
      */
     void init_bridges_();
