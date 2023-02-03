@@ -35,6 +35,7 @@
 
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -145,11 +146,19 @@ protected:
             const fastrtps::ReaderQos& reader_qos);
 
     /**
+     * @brief Return an allocated object
+     *
+     * @attention this method allocates memory.
+     */
+    virtual core::types::RtpsPayloadData* create_data_(
+            const fastrtps::rtps::CacheChange_t& received_change) const noexcept;
+
+    /**
      * @brief Auxiliary method used in \c take to fill the received data.
      */
     virtual void fill_received_data_(
-            fastrtps::rtps::CacheChange_t* received_change,
-            std::unique_ptr<core::types::DataReceived>& data_to_fill) const noexcept;
+            const fastrtps::rtps::CacheChange_t& received_change
+            core::types::RtpsPayloadData& data_to_fill) const noexcept;
 
     // Specific enable/disable do not need to be implemented
 
@@ -176,7 +185,7 @@ protected:
      * @return \c RETCODE_ERROR if there has been an error reading the data or the data read is corrupted
      */
     virtual utils::ReturnCode take_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            std::unique_ptr<core::types::IRoutingData>& data) noexcept override;
 
     /////
     // RTPS specific methods

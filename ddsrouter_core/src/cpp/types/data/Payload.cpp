@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /**
- * @file Data.cpp
+ * @file Payload.cpp
  *
  */
 
 #include <sstream>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
+#include <ddsrouter_core/types/data/Payload.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

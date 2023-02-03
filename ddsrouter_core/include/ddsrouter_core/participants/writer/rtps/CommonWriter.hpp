@@ -31,6 +31,7 @@
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
 #include <ddsrouter_core/participants/writer/auxiliar/BaseWriter.hpp>
 #include <ddsrouter_core/efficiency/cache_change/CacheChangePool.hpp>
+#include <ddsrouter_core/types/data/RtpsPayloadData.hpp>
 
 /////
 // Forward declarations
@@ -145,7 +146,7 @@ protected:
      * @return \c RETCODE_ERROR if error occurred
      */
     virtual utils::ReturnCode write_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            IRoutingData& data) noexcept override;
 
     /**
      * @brief Auxiliary method used in \c write to fill the cache change to send.
@@ -157,7 +158,7 @@ protected:
     virtual utils::ReturnCode fill_to_send_data_(
             fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
             eprosima::fastrtps::rtps::WriteParams& to_send_params,
-            std::unique_ptr<core::types::DataReceived>& data) const noexcept;
+            const RtpsPayloadData& data) const noexcept;
 
     /**
      * @brief Auxiliary method used after \c write to fill data value.
@@ -166,8 +167,8 @@ protected:
      * @param [out] data data to be fulfilled with params.
      */
     virtual void fill_sent_data_(
-            const eprosima::fastrtps::rtps::WriteParams& params,
-            std::unique_ptr<core::types::DataReceived>& data_to_fill) const noexcept;
+            const eprosima::fastrtps::rtps::WriteParams& sent_params,
+            RtpsPayloadData& data_to_fill) const noexcept;
 
     /////
     // RTPS specific methods

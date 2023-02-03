@@ -19,6 +19,7 @@
 #include <cpp_utils/Log.hpp>
 
 #include <ddsrouter_core/participants/writer/auxiliar/EchoWriter.hpp>
+#include <ddsrouter_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -39,14 +40,15 @@ EchoWriter::EchoWriter(
 }
 
 utils::ReturnCode EchoWriter::write(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        IRoutingData& data) noexcept
 {
+    auto rtps_data = dynamic_cast<RtpsPayloadData&>(data);
     // TODO: Add Participant receiver Id when added to DataReceived
     if (!verbose_)
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "Received data in Participant: " << data->properties.participant_receiver <<
+            "Received data in Participant: " << rtps_data.properties.participant_receiver <<
                 " in topic: " << topic_ <<
                 ".");
     }
@@ -54,11 +56,11 @@ utils::ReturnCode EchoWriter::write(
     {
         logUser(
             DDSROUTER_ECHO_DATA,
-            "In Endpoint: " << data->properties.source_guid <<
-                " from Participant: " << data->properties.participant_receiver <<
+            "In Endpoint: " << rtps_data.properties.source_guid <<
+                " from Participant: " << rtps_data.properties.participant_receiver <<
                 " in topic: " << topic_ <<
-                " payload received: " << data->payload <<
-                " with specific qos: " << data->properties.writer_qos <<
+                " payload received: " << rtps_data.payload <<
+                " with specific qos: " << rtps_data.properties.writer_qos <<
                 ".");
     }
 

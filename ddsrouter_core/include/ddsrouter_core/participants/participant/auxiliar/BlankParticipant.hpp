@@ -20,7 +20,7 @@
 #define __SRC_DDSROUTERCORE_PARTICIPANT_IMPLEMENTATIONS_AUXILIAR_BLANKPARTICIPANT_HPP_
 
 #include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/interface/IParticipant.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

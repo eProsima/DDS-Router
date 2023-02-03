@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_VOIDREADER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_VOIDREADER_HPP_
 
-#include <ddsrouter_core/reader/IReader.hpp>
+#include <ddsrouter_core/interface/IReader.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -49,7 +49,7 @@ public:
 
     //! Override take() IReader method
     utils::ReturnCode take(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            std::unique_ptr<core::types::IRoutingData>& data) noexcept override;
 };
 
 } /* namespace participants */

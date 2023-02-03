@@ -50,7 +50,7 @@ protected:
      * @return RETCODE_OK always
      */
     virtual utils::ReturnCode write(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            IRoutingData& data) noexcept override;
 
     //! Topic that this Writer refers to
     core::types::DdsTopic topic_;

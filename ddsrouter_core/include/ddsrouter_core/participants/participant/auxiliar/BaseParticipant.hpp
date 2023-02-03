@@ -23,7 +23,7 @@
 
 #include <ddsrouter_core/participants/participant/configuration/ParticipantConfiguration.hpp>
 
-#include <ddsrouter_core/participant/IParticipant.hpp>
+#include <ddsrouter_core/interface/IParticipant.hpp>
 #include <ddsrouter_core/participants/reader/auxiliar/BaseReader.hpp>
 #include <ddsrouter_core/participants/writer/auxiliar/BaseWriter.hpp>
 

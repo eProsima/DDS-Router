@@ -178,8 +178,8 @@ void Track::transmit_() noexcept
         // This will erase every previous value added in on_data_available and set 1
         data_available_status_.store(DataAvailableStatus::transmitting_data);
 
-        // Get data received
-        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
+        // Get data received (send empty data to be created(allocated) in reader)
+        std::unique_ptr<IRoutingData> data;
         utils::ReturnCode ret = reader_->take(data);
 
         if (ret == utils::ReturnCode::RETCODE_NO_DATA)
@@ -210,7 +210,7 @@ void Track::transmit_() noexcept
 
         logDebug(DDSROUTER_TRACK,
                 "Track " << reader_participant_id_ << " for topic " << topic_ <<
-                " transmitting data from remote endpoint " << data->properties.source_guid << ".");
+                " transmitting data from remote endpoint.");
 
         // Send data through writers
         for (auto& writer_it : writers_)
@@ -219,7 +219,7 @@ void Track::transmit_() noexcept
                 DDSROUTER_TRACK,
                 "Forwarding data to writer " << writer_it.first << ".");
 
-            ret = writer_it.second->write(data);
+            ret = writer_it.second->write(*data);
 
             if (!ret)
             {
@@ -230,11 +230,7 @@ void Track::transmit_() noexcept
             }
         }
 
-        // Release payload in case it has length
-        if (data->payload.length > 0)
-        {
-            payload_pool_->release_payload(data->payload);
-        }
+        // Let the data to be removed by itself
     }
 }
 

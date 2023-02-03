@@ -19,7 +19,7 @@
 #ifndef __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
 #define __SRC_DDSROUTERCORE_WRITER_IMPLEMENTATIONS_AUXILIAR_VOIDWRITER_HPP_
 
-#include <ddsrouter_core/writer/IWriter.hpp>
+#include <ddsrouter_core/interface/IWriter.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -41,7 +41,7 @@ public:
 
     //! Override write() IWriter method
     utils::ReturnCode write(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            core::types::IRoutingData& data) noexcept override;
 };
 
 } /* namespace participants */

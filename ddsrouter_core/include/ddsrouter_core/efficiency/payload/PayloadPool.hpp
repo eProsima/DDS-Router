@@ -25,7 +25,7 @@
 #include <fastdds/rtps/common/SerializedPayload.h>
 #include <fastdds/rtps/history/IPayloadPool.h>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
+#include <ddsrouter_core/types/data/Payload.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

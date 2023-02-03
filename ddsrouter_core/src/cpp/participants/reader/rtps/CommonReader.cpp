@@ -23,7 +23,8 @@
 #include <cpp_utils/Log.hpp>
 
 #include <ddsrouter_core/participants/reader/rtps/CommonReader.hpp>
-#include <ddsrouter_core/types/dds/Data.hpp>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
+#include <ddsrouter_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -146,7 +147,7 @@ uint64_t CommonReader::get_unread_count() const noexcept
 }
 
 utils::ReturnCode CommonReader::take_(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        std::unique_ptr<core::types::IRoutingData>& data) noexcept
 {
     // Check if there is data available
     if (!(get_unread_count() > 0))
@@ -174,11 +175,9 @@ utils::ReturnCode CommonReader::take_(
     }
 
     // Store the new data that has arrived in the Track data
-    fill_received_data_(received_change, data);
-
-    logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
-            "Data transmiting to track from Reader " << *this << " with payload " <<
-            data->payload << " from remote writer " << data->properties.source_guid);
+    auto data_ptr = create_data_(received_change);
+    fill_received_data_(received_change, data_ptr*);
+    data.reset(data_ptr);
 
     // Remove the change in the History and release it in the reader
     rtps_reader_->getHistory()->remove_change(received_change);
@@ -186,9 +185,15 @@ utils::ReturnCode CommonReader::take_(
     return utils::ReturnCode::RETCODE_OK;
 }
 
+RtpsPayloadData* CommonReader::create_data_(
+            const fastrtps::rtps::CacheChange_t& received_change) const noexcept
+{
+    return new RtpsPayloadData();
+}
+
 void CommonReader::fill_received_data_(
         fastrtps::rtps::CacheChange_t* received_change,
-        std::unique_ptr<core::types::DataReceived>& data_to_fill) const noexcept
+        RtpsPayloadData& data_to_fill) const noexcept
 {
     // Store the new data that has arrived in the Track data
     // Get the writer guid
@@ -207,6 +212,8 @@ void CommonReader::fill_received_data_(
             received_change->serializedPayload,
             payload_owner,
             data_to_fill->payload);
+
+        data_to_fill->payload_owner = payload_pool_->get();
     }
 
     // Set Instance Handle to data_to_fill
@@ -222,8 +229,13 @@ void CommonReader::fill_received_data_(
 
     data_to_fill->properties.origin_sequence_number = received_change->sequenceNumber;
 
-    // Note: do not fill writer specific properties in this data from this kind of Readers.
+    // Note: do not fill writer specific properties in this data_to_fill from this kind of Readers.
     // Implement specific class for filling it.
+
+    logDebug(DDSROUTER_RTPS_COMMONREADER_LISTENER,
+            "Data transmiting to track from Reader " << *this << " with payload " <<
+            data_to_fill->payload << " from remote writer " << data_to_fill->properties.source_guid);
+
 }
 
 void CommonReader::enable_() noexcept

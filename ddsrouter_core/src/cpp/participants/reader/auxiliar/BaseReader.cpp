@@ -56,7 +56,7 @@ void BaseReader::enable() noexcept
         enabled_.store(true);
 
         // Call specific enable
-        enable_();
+        enable_nts_();
     }
 }
 
@@ -70,7 +70,7 @@ void BaseReader::disable() noexcept
         enabled_.store(false);
 
         // Call specific disable
-        disable_();
+        disable_nts_();
     }
 }
 
@@ -104,13 +104,13 @@ void BaseReader::unset_on_data_available_callback() noexcept
 }
 
 utils::ReturnCode BaseReader::take(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        std::unique_ptr<IRoutingData> data) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
-        return take_(data);
+        return take_nts_(data);
     }
     else
     {
@@ -143,12 +143,12 @@ void BaseReader::on_data_available_() const noexcept
     }
 }
 
-void BaseReader::enable_() noexcept
+void BaseReader::enable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
 
-void BaseReader::disable_() noexcept
+void BaseReader::disable_nts_() noexcept
 {
     // It does nothing. Override this method so it has functionality.
 }
