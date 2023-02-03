@@ -139,7 +139,7 @@ QoSSpecificWriter* MultiWriter::create_writer_nts_(
 
 // Specific enable/disable do not need to be implemented
 utils::ReturnCode MultiWriter::write_(
-        std::unique_ptr<core::types::DataReceived>& data) noexcept
+        IRoutingData& data) noexcept
 {
     logDebug(
         DDSROUTER_MULTIWRITER,

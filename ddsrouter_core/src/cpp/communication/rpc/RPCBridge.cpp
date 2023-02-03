@@ -330,8 +330,10 @@ void RPCBridge::transmit_(
         }
 
         // Get data received
-        std::unique_ptr<DataReceived> data = std::make_unique<DataReceived>();
+        std::unique_ptr<IRoutingData> data;
         utils::ReturnCode ret = reader->take(data);
+
+        RpcPayloadData& pcr_data = dynamic_cast<RpcPayloadData&>(data);
 
         // Will never return \c RETCODE_NO_DATA, otherwise would have finished before
         if (!ret)
@@ -348,17 +350,17 @@ void RPCBridge::transmit_(
         {
             logDebug(DDSROUTER_RPCBRIDGE,
                     "RPCBridge for service " << topic_ <<
-                    " transmitting request from remote endpoint " << data->properties.source_guid << ".");
+                    " transmitting request from remote endpoint " << pcr_data->properties.source_guid << ".");
 
             SampleIdentity reply_related_sample_identity =
-                    data->properties.write_params.get_reference().sample_identity();
-            reply_related_sample_identity.sequence_number(data->properties.origin_sequence_number);
+                    pcr_data->properties.write_params.get_reference().sample_identity();
+            reply_related_sample_identity.sequence_number(pcr_data->properties.origin_sequence_number);
 
             if (reply_related_sample_identity == SampleIdentity::unknown())
             {
                 logWarning(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << topic_ <<
-                        " received ill-formed request from remote endpoint " << data->properties.source_guid <<
+                        " received ill-formed request from remote endpoint " << pcr_data->properties.source_guid <<
                         ". Ignoring...");
             }
             else
@@ -366,7 +368,7 @@ void RPCBridge::transmit_(
                 for (auto& service_registry : service_registries_)
                 {
                     // Do not send request through same participant who received it (unless repeater), or if there are no servers to process it
-                    if ((data->properties.participant_receiver == service_registry.first &&
+                    if ((pcr_data->properties.participant_receiver == service_registry.first &&
                             !participants_->get_participant(service_registry.first)->is_repeater()) ||
                             !service_registry.second->enabled())
                     {
@@ -378,9 +380,9 @@ void RPCBridge::transmit_(
 
                     // Set write params so writer set in related sample identity the correct value
                     // Set it so writer use it
-                    data->properties.write_params.set_level();
+                    pcr_data->properties.write_params.set_level();
                     // Attach the information the server needs in order to reply to the appropiate proxy client.
-                    data->properties.write_params.get_reference().related_sample_identity().writer_guid(
+                    pcr_data->properties.write_params.get_reference().related_sample_identity().writer_guid(
                         reply_readers_[service_registry.first]->guid());
 
                     ret = request_writers_[service_registry.first]->write(data);
@@ -393,11 +395,11 @@ void RPCBridge::transmit_(
                     }
 
                     eprosima::fastrtps::rtps::SequenceNumber_t sequence_number =
-                            data->sent_sequence_number;
+                            pcr_data->sent_sequence_number;
                     // Add entry to registry associated to the transmission of this request through this proxy client.
                     service_registry.second->add(
                         sequence_number,
-                        {data->properties.participant_receiver, reply_related_sample_identity});
+                        {pcr_data->properties.participant_receiver, reply_related_sample_identity});
 
                 }
             }
@@ -406,16 +408,16 @@ void RPCBridge::transmit_(
         {
             logDebug(DDSROUTER_RPCBRIDGE,
                     "RPCBridge for service " << topic_ <<
-                    " transmitting reply from remote endpoint " << data->properties.source_guid << ".");
+                    " transmitting reply from remote endpoint " << pcr_data->properties.source_guid << ".");
 
             // A Server could be answering a different client in this same DDS Router or a remote client
             // Thus, it must be filtered so only replies to this client are processed.
-            if (data->properties.write_params.get_reference().sample_identity().writer_guid() != reader->guid())
+            if (pcr_data->properties.write_params.get_reference().sample_identity().writer_guid() != reader->guid())
             {
                 logDebug(DDSROUTER_RPCBRIDGE,
                         "RPCBridge for service " << *this << " from reader " << reader->guid() <<
                         " received response meant for other client: " <<
-                        data->properties.write_params.get_reference().sample_identity().writer_guid());
+                        pcr_data->properties.write_params.get_reference().sample_identity().writer_guid());
             }
             else
             {
@@ -427,7 +429,7 @@ void RPCBridge::transmit_(
 
                     // Fetch information required for transmission; which proxy server should send it and with what parameters
                     registry_entry = service_registries_[reader->participant_id()]->get(
-                        data->properties.write_params.get_reference().sample_identity().sequence_number());
+                        pcr_data->properties.write_params.get_reference().sample_identity().sequence_number());
                 }
 
                 // Not valid means:
@@ -436,8 +438,8 @@ void RPCBridge::transmit_(
                 // TODO: recheck ParticipantId non valid
                 if (!registry_entry.first.empty())
                 {
-                    data->properties.write_params.set_level();
-                    data->properties.write_params.get_reference().related_sample_identity(registry_entry.second);
+                    pcr_data->properties.write_params.set_level();
+                    pcr_data->properties.write_params.get_reference().related_sample_identity(registry_entry.second);
 
                     ret = reply_writers_[registry_entry.first]->write(data);
 
@@ -449,7 +451,7 @@ void RPCBridge::transmit_(
                     else
                     {
                         service_registries_[reader->participant_id()]->erase(
-                            data->properties.write_params.get_reference().sample_identity().sequence_number());
+                            pcr_data->properties.write_params.get_reference().sample_identity().sequence_number());
                     }
                 }
             }
@@ -460,7 +462,7 @@ void RPCBridge::transmit_(
                 utils::Formatter() << "Data to be transmitted in RPCBridge is not in RPCTopic.");
         }
 
-        payload_pool_->release_payload(data->payload);
+        payload_pool_->release_payload(pcr_data->payload);
     }
 }
 

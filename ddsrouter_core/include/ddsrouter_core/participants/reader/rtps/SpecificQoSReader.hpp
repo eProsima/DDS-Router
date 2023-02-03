@@ -67,9 +67,9 @@ protected:
     /**
      * Specializes \c CommonReader method and set the QoS of the data received.
      */
-    virtual void fill_received_data_(
-            fastrtps::rtps::CacheChange_t* received_change,
-            std::unique_ptr<core::types::DataReceived>& data_to_fill) const noexcept override;
+    virtual IRoutingData* fill_received_data_(
+            fastrtps::rtps::CacheChange_t* received_change) const noexcept;
+
 
     //! Reference to the \c DiscoveryDatabase .
     std::shared_ptr<core::DiscoveryDatabase> discovery_database_;

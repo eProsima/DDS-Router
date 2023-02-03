@@ -22,9 +22,8 @@
 #include <cpp_utils/testing/LogChecker.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
 
-#include <ddsrouter_core/types/dds/Data.hpp>
-
-#include <efficiency/payload/PayloadPool.hpp>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
+#include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;

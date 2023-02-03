@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,38 +13,26 @@
 // limitations under the License.
 
 /**
- * @file DummyReader.hpp
+ * @file MockReader.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_
-#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_
+#pragma once
 
-#include <atomic>
-#include <mutex>
 #include <queue>
 
 #include <ddsrouter_core/participants/reader/auxiliar/BaseReader.hpp>
-
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace participants {
 
-//! Data that has been sent to a Dummy Reader in order to simulate data reception
-struct DummyDataReceived
+class MockReader
 {
-    //! Payload in a format of vector of bytes
-    std::vector<core::types::PayloadUnit> payload;
-
-    //! Guid of the source entity that has transmitted the data
-    core::types::Guid source_guid;
+    virtual ~MockReader();
 };
 
-/**
- * Reader implementation that allows to simulate data reception
- */
-class DummyReader : public BaseReader
+template <typename T>
+class MockReaderSpecialization : public BaseReader
 {
 public:
 
@@ -57,7 +45,7 @@ public:
      * @param data : The data received (by simulation)
      */
     void simulate_data_reception(
-            DummyDataReceived data) noexcept;
+            T data) noexcept;
 
 protected:
 
@@ -70,18 +58,15 @@ protected:
      * @return \c RETCODE_OK if data has been correctly taken
      * @return \c RETCODE_NO_DATA if \c data_to_send_ is empty
      */
-    utils::ReturnCode take_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+    virtual utils::ReturnCode take_(
+            std::unique_ptr<core::types::IRoutingData>& data) noexcept override = 0;
 
     //! Stores the data that must be retrieved with \c take() method
-    std::queue<DummyDataReceived> data_to_send_;
+    std::queue<T> data_to_send_;
 
-    //! Guard access to \c data_to_send_
-    mutable std::recursive_mutex dummy_mutex_;
+    mutable std::mutex mutex_;
 };
 
 } /* namespace participants */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_ */

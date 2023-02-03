@@ -80,7 +80,7 @@ public:
      * @return \c RETCODE_NOT_ENABLED if the writer is not enabled (this should not happen)
      */
     virtual utils::ReturnCode write(
-            IRoutingData* data) noexcept = 0;
+            types::IRoutingData& data) noexcept = 0;
 };
 
 } /* namespace core */

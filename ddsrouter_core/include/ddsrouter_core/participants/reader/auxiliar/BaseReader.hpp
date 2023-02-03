@@ -23,7 +23,7 @@
 #include <mutex>
 
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/reader/IReader.hpp>
+#include <ddsrouter_core/interface/IReader.hpp>
 #include <ddsrouter_core/efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
@@ -110,7 +110,7 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     utils::ReturnCode take(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept override;
+            std::unique_ptr<core::types::IRoutingData>& data) noexcept override;
 
     //! Getter of \c participant_id_ attribute
     core::types::ParticipantId participant_id() const noexcept;
@@ -134,22 +134,22 @@ protected:
      *
      * Implement this method class for a specific enable functionality.
      */
-    virtual void enable_() noexcept;
+    virtual void enable_nts_() noexcept;
 
     /**
      * @brief Do nothing
      *
      * Implement this method class for a specific disable functionality.
      */
-    virtual void disable_() noexcept;
+    virtual void disable_nts_() noexcept;
 
     /**
      * @brief Take method to implement by each Reader implementation
      *
      * Implement this method in every inherited Reader class with take functionality.
      */
-    virtual utils::ReturnCode take_(
-            std::unique_ptr<core::types::DataReceived>& data) noexcept = 0;
+    virtual utils::ReturnCode take_nts_(
+            std::unique_ptr<core::types::IRoutingData>& data) noexcept = 0;
 
     //! Participant parent ID
     core::types::ParticipantId participant_id_;
