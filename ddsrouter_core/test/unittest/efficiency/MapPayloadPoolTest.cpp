@@ -17,9 +17,11 @@
 
 #include <fastdds/rtps/common/CacheChange.h>
 
+#include <cpp_utils/testing/LogChecker.hpp>
+#include <cpp_utils/exception/InconsistencyException.hpp>
+
 #include <efficiency/payload/PayloadPool.hpp>
 #include <efficiency/payload/MapPayloadPool.hpp>
-#include <cpp_utils/exception/InconsistencyException.hpp>
 
 using namespace eprosima::ddsrouter;
 using namespace eprosima::ddsrouter::core;
@@ -248,6 +250,9 @@ TEST(MapPayloadPoolTest, get_payload_from_src_negative)
 {
     // The source says the owner is the same pool, but is not
     {
+        // 1 log error expected
+        INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 1, 1);
+
         eprosima::fastrtps::rtps::IPayloadPool* pool = new test::MockMapPayloadPool(); // Requires to be ptr to pass it to get_payload
         test::MockMapPayloadPool* pool_ = static_cast<test::MockMapPayloadPool*>(pool);
         test::MockMapPayloadPool pool_aux;
@@ -348,6 +353,9 @@ TEST(MapPayloadPoolTest, release_payload)
  */
 TEST(MapPayloadPoolTest, release_payload_negative)
 {
+    // 1 log error expected
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 1, 1);
+
     test::MockMapPayloadPool pool;
     test::MockMapPayloadPool pool_aux;
     Payload payload;

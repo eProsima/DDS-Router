@@ -83,7 +83,7 @@ You have two options:
 
     .. code-block:: bash
 
-        $ docker run -it ubuntu-fastdds-suite:<FastDDS-Version>
+        $ docker run --net=host -it ubuntu-fastdds-suite:<FastDDS-Version>
 
 Deployment on Net A
 -------------------
@@ -97,7 +97,7 @@ Running Fast DDS Subscriber
 
     .. code-block:: bash
 
-        docker run -it ubuntu-fastdds-suite:<FastDDS-Version>
+        docker run --net=host -it ubuntu-fastdds-suite:<FastDDS-Version>
 
 1.  Run the Fast DDS Subscriber executing the following commands:
 
@@ -145,7 +145,7 @@ To finish this step, run the DDS Router with the configuration file created as a
 
 .. code-block::
 
-    docker run -it -v <path/to/file>/ddsrouter_net_A.yaml:/ddsrouter_net_A.yaml ubuntu-fastdds-suite:<FastDDS-Version>
+    docker run --net=host -it -v <path/to/file>/ddsrouter_net_A.yaml:/ddsrouter_net_A.yaml ubuntu-fastdds-suite:<FastDDS-Version>
     ddsrouter -c /ddsrouter_net_A.yaml
 
 The following figure summarizes the deployment on LAN A.
@@ -164,7 +164,7 @@ Running Fast DDS Publisher
 
     .. code-block:: bash
 
-        docker run -it ubuntu-fastdds-suite:<FastDDS-Version>
+        docker run --net=host -it ubuntu-fastdds-suite:<FastDDS-Version>
 
 1.  Run the Fast DDS Publisher executing the following commands:
 
@@ -237,7 +237,7 @@ To finish, run the DDS Router Net B with the above configuration.
 
 .. code-block:: bash
 
-    docker run -it -v <path/to/file>/ddsrouter_net_B.yaml:/ddsrouter_net_B.yaml ubuntu-fastdds-suite:<FastDDS-Version>
+    docker run --net=host -it -v <path/to/file>/ddsrouter_net_B.yaml:/ddsrouter_net_B.yaml ubuntu-fastdds-suite:<FastDDS-Version>
     ddsrouter -c /ddsrouter_net_B.yaml
 
 The following figure summarizes the deployment on LAN B.
