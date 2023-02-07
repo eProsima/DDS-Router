@@ -78,7 +78,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: DDS-Router
 
@@ -166,10 +166,12 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: codecov
+    env:
+      COVERAGE_FILE: ${{ github.workspace }}/coverage.xml
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -244,13 +246,14 @@ jobs:
 
       - name: Generate coverage report
         run: |
+          echo "Generating coverage report in ${{ env.COVERAGE_FILE }}..."
           cp src/DDS-Router/codecov.yml .
           mkdir coverage-report
           mkdir build/ddsrouter
           cp --recursive build/ddsrouter_* build/ddsrouter
           gcovr \
             --root src/DDS-Router/ \
-            --output coverage-report/coverage.xml \
+            --output ${{ env.COVERAGE_FILE }} \
             --xml-pretty \
             --exclude='.*docs/.*' \
             --exclude='.*test/.*' \
@@ -261,6 +264,9 @@ jobs:
             --exclude='.*resources/.*' \
             --exclude-unreachable-branches \
             build/ddsrouter_*
+          if [[ -f "${{ env.COVERAGE_FILE }}" ]]; then
+              echo "Coverage file saved!"
+          fi
 
       - name: Upload coverage
         uses: actions/upload-artifact@v1
@@ -269,10 +275,10 @@ jobs:
           path: coverage-report/
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage-report/coverage.xml
+          files: ${{ env.COVERAGE_FILE }}
           root_dir: src/DDS-Router
           fail_ci_if_error: true
 
@@ -308,7 +314,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -412,7 +418,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -495,7 +501,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -567,7 +573,7 @@ jobs:
 
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -655,7 +661,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
@@ -706,7 +712,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: src/DDS-Router
 
