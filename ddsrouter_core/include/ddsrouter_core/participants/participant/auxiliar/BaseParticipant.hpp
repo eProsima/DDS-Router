@@ -53,9 +53,9 @@ public:
      * @param discovery_database DDS Router shared Discovery Database
      */
     BaseParticipant(
-            std::shared_ptr<ParticipantConfiguration> participant_configuration,
-            std::shared_ptr <core::PayloadPool> payload_pool,
-            std::shared_ptr<core::DiscoveryDatabase> discovery_database);
+            const std::shared_ptr<ParticipantConfiguration>& participant_configuration,
+            const std::shared_ptr <core::PayloadPool>& payload_pool,
+            const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);
 
     /**
      * @brief Destroy the Base Participant object

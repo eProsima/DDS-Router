@@ -29,6 +29,7 @@
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/SpecificEndpointQoS.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/topic/TopicInternalTypeId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -43,13 +44,18 @@ namespace types {
 struct RpcPayloadData : public RtpsPayloadData
 {
     //! Write params associated to the received cache change
-    utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params{};
+    eprosima::fastrtps::rtps::WriteParams write_params{};
 
     //! Sequence number of the received cache change
     eprosima::fastrtps::rtps::SequenceNumber_t origin_sequence_number{};
 };
 
-//! \c octet to stream serializator
+/**
+ * @brief Id to identify the internal topic type id that uses \c RpcPayloadData .
+ */
+constexpr const TopicInternalTypeId INTERNAL_TOPIC_TYPE_RPC = "type::rpc::v0";
+
+//! \c RpcPayloadData to stream serializator
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(
         std::ostream& os,
         const RpcPayloadData& octet);

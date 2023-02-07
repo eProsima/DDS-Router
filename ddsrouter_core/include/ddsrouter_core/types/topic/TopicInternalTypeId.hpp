@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,42 +13,21 @@
 // limitations under the License.
 
 /**
- * @file Topic.cpp
- *
+ * @file TopicInternalTypeId.hpp
  */
 
-#include <ddsrouter_core/types/topic/Topic.hpp>
+#pragma once
+
+#include <ddsrouter_core/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 namespace types {
 
-Topic::Topic(
-        const std::string& topic_name) noexcept
-    : topic_name(topic_name)
-{
-}
+using TopicInternalTypeId = const char*;
 
-bool Topic::is_valid(
-        utils::Formatter& error_msg) const noexcept
-{
-    if (topic_name.empty())
-    {
-        error_msg << "Topic name could not be empty. ";
-        return false;
-    }
-
-    return true;
-}
-
-std::ostream& operator <<(
-        std::ostream& os,
-        const Topic& t)
-{
-    os << "Topic{" << t.topic_name << "}";
-    return os;
-}
+constexpr const TopicInternalTypeId INTERNAL_TOPIC_TYPE_NONE = "";
 
 } /* namespace types */
 } /* namespace core */
