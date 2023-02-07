@@ -58,9 +58,6 @@ namespace ddsrouter {
 namespace participants {
 namespace rtps {
 
-using WriteParams = eprosima::fastrtps::rtps::WriteParams;
-using SequenceNumber = eprosima::fastrtps::rtps::SequenceNumber_t;
-
 /**
  * Abstract generic class for a RTPS Writer wrapper.
  *
@@ -146,7 +143,7 @@ protected:
      * @return \c RETCODE_ERROR if error occurred
      */
     virtual utils::ReturnCode write_(
-            IRoutingData& data) noexcept override;
+            core::types::IRoutingData& data) noexcept override;
 
     /**
      * @brief Auxiliary method used in \c write to fill the cache change to send.
@@ -158,7 +155,7 @@ protected:
     virtual utils::ReturnCode fill_to_send_data_(
             fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
             eprosima::fastrtps::rtps::WriteParams& to_send_params,
-            const RtpsPayloadData& data) const noexcept;
+            const core::types::RtpsPayloadData& data) const noexcept;
 
     /**
      * @brief Auxiliary method used after \c write to fill data value.
@@ -168,7 +165,7 @@ protected:
      */
     virtual void fill_sent_data_(
             const eprosima::fastrtps::rtps::WriteParams& sent_params,
-            RtpsPayloadData& data_to_fill) const noexcept;
+            core::types::RtpsPayloadData& data_to_fill) const noexcept;
 
     /////
     // RTPS specific methods

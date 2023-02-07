@@ -157,7 +157,7 @@ protected:
      * @brief Auxiliary method used in \c take to fill the received data.
      */
     virtual void fill_received_data_(
-            const fastrtps::rtps::CacheChange_t& received_change
+            const fastrtps::rtps::CacheChange_t& received_change,
             core::types::RtpsPayloadData& data_to_fill) const noexcept;
 
     // Specific enable/disable do not need to be implemented

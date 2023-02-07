@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,12 +13,16 @@
 // limitations under the License.
 
 /**
- * @file IRoutingData.hpp
+ * @file SharedData.hpp
  */
 
 #pragma once
 
+#include <cpp_utils/macros/macros.hpp>
+
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
+#include <ddsrouter_core/types/topic/TopicInternalTypeId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -26,18 +30,26 @@ namespace core {
 namespace types {
 
 /**
- * @brief TODO
+ * TODO
  */
-class IRoutingData
+template<typename T>
+struct SharedData : public IRoutingData
 {
+    std::shared_ptr<T> ref;
 
-public:
+    static TopicInternalTypeId get_topic_internal_type_id();
 
-    /**
-     * @brief Virtual dtor.
-     */
-    virtual ~IRoutingData() = default;
+    static bool is_shared_internal_type(TopicInternalTypeId internal_topic_type_id);
 };
+
+/**
+ * TODO
+ */
+constexpr const TopicInternalTypeId INTERNAL_TOPIC_TYPE_SHARED_GENERIC_PREFIX = "shared::v0::";
+
+template<typename T>
+constexpr const TopicInternalTypeId INTERNAL_TOPIC_TYPE_SHARED_GENERIC =
+    INTERNAL_TOPIC_TYPE_SHARED_GENERIC_PREFIX + TYPE_NAME(T);
 
 } /* namespace types */
 } /* namespace core */

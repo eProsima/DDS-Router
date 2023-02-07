@@ -30,9 +30,9 @@ namespace ddsrouter {
 namespace participants {
 
 BaseParticipant::BaseParticipant(
-        std::shared_ptr <ParticipantConfiguration> participant_configuration,
-        std::shared_ptr <core::PayloadPool> payload_pool,
-        std::shared_ptr <core::DiscoveryDatabase> discovery_database)
+        const std::shared_ptr <ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr <core::PayloadPool>& payload_pool,
+        const std::shared_ptr <core::DiscoveryDatabase>& discovery_database)
     : configuration_(participant_configuration)
     , payload_pool_(payload_pool)
     , discovery_database_(discovery_database)
