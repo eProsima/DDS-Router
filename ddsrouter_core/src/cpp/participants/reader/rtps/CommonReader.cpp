@@ -176,7 +176,7 @@ utils::ReturnCode CommonReader::take_(
 
     // Store the new data that has arrived in the Track data
     auto data_ptr = create_data_(received_change);
-    fill_received_data_(received_change, data_ptr*);
+    fill_received_data_(received_change, *data_ptr);
     data.reset(data_ptr);
 
     // Remove the change in the History and release it in the reader

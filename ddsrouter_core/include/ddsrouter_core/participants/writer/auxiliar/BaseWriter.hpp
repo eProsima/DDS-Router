@@ -22,9 +22,9 @@
 #include <atomic>
 #include <mutex>
 
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-
 #include <ddsrouter_core/interface/IWriter.hpp>
+#include <ddsrouter_core/types/data/IRoutingData.hpp>
+#include <ddsrouter_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -85,7 +85,7 @@ public:
      * Thread safe with mutex \c mutex_ .
      */
     virtual utils::ReturnCode write(
-            IRoutingData& data) noexcept override;
+            core::types::IRoutingData& data) noexcept override;
 
 protected:
 
@@ -109,7 +109,7 @@ protected:
      * Implement this method in every inherited Writer class with write functionality.
      */
     virtual utils::ReturnCode write_(
-            IRoutingData& data) noexcept  = 0;
+            core::types::IRoutingData& data) noexcept  = 0;
 
     //! Participant parent ID
     core::types::ParticipantId participant_id_;

@@ -25,6 +25,8 @@
 #include <cpp_utils/Log.hpp>
 #include <cpp_utils/utils.hpp>
 
+#include <ddsrouter_core/types/data/RpcPayloadData.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
