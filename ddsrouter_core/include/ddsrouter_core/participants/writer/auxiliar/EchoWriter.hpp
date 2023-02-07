@@ -50,7 +50,7 @@ protected:
      * @return RETCODE_OK always
      */
     virtual utils::ReturnCode write(
-            IRoutingData& data) noexcept override;
+            core::types::IRoutingData& data) noexcept override;
 
     //! Topic that this Writer refers to
     core::types::DdsTopic topic_;

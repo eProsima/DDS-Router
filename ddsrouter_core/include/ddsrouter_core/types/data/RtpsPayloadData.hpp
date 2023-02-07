@@ -28,6 +28,7 @@
 #include <ddsrouter_core/types/dds/Guid.hpp>
 #include <ddsrouter_core/types/dds/SpecificEndpointQoS.hpp>
 #include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddsrouter_core/types/topic/TopicInternalTypeId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -68,7 +69,10 @@ struct RtpsPayloadData : public core::types::IRoutingData
     core::types::ParticipantId participant_receiver{};
 };
 
-constexpr const char* RTPS_PAYLOAD_DATA = "rtps::payload@v0";
+/**
+ * @brief Id to identify the internal topic type id that uses \c RtpsPayloadData .
+ */
+constexpr const TopicInternalTypeId INTERNAL_TOPIC_TYPE_RTPS = "payload::rtps::v0";
 
 //! \c octet to stream serializator
 DDSROUTER_CORE_DllAPI std::ostream& operator <<(

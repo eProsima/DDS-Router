@@ -25,6 +25,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
+#include <ddsrouter_core/types/topic/TopicInternalTypeId.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -65,23 +66,17 @@ struct Topic
             utils::Formatter& error_msg) const noexcept;
 
     /////////////////////////
-    // OPERATORS
-    /////////////////////////
-
-    //! Minor operator. Compares \c topic_name .
-    DDSROUTER_CORE_DllAPI bool operator < (
-            const Topic& other) const noexcept;
-
-    //! Equal operator. Compares \c topic_name .
-    DDSROUTER_CORE_DllAPI bool operator == (
-            const Topic& other) const noexcept;
-
-    /////////////////////////
     // VARIABLES
     /////////////////////////
 
     //! Topic name
     std::string topic_name{};
+
+    /**
+     * This refers to an internal used identifier that declares which kind of data type is going to be
+     * transmitted in this topic inside the core.
+     */
+    TopicInternalTypeId internal_topic_type_discriminator{INTERNAL_TOPIC_TYPE_NONE};
 };
 
 /**
