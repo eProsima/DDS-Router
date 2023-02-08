@@ -19,8 +19,8 @@
 #ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SPECIFICQOSREADER_HPP_
 #define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_RTPS_SPECIFICQOSREADER_HPP_
 
+#include <ddsrouter_core/dynamic/DiscoveryDatabase.hpp>
 #include <ddsrouter_core/participants/reader/rtps/CommonReader.hpp>
-#include <dynamic/DiscoveryDatabase.hpp>
 
 namespace eprosima {
 namespace ddsrouter {

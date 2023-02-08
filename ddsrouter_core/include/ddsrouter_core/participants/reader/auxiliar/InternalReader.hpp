@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@
 // limitations under the License.
 
 /**
- * @file DummyReader.hpp
+ * @file InternalReader.hpp
  */
 
-#ifndef __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_
-#define __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_
+#pragma once
 
-#include <atomic>
-#include <mutex>
 #include <queue>
+#include <memory>
+
+#include <cpp_utils/types/Atomicable.hpp>
 
 #include <ddsrouter_core/participants/reader/auxiliar/BaseReader.hpp>
 
@@ -29,25 +29,17 @@ namespace eprosima {
 namespace ddsrouter {
 namespace participants {
 
-//! Data that has been sent to a Dummy Reader in order to simulate data reception
-struct DummyDataReceived
-{
-    //! Payload in a format of vector of bytes
-    std::vector<core::types::PayloadUnit> payload;
-
-    //! Guid of the source entity that has transmitted the data
-    core::types::Guid source_guid;
-};
-
 /**
- * Reader implementation that allows to simulate data reception
+ * Reader implementation that allows to introduce custom data to DDS Router.
  */
-class DummyReader : public BaseReader
+class InternalReader : public BaseReader
 {
 public:
 
     //! Use parent constructors
     using BaseReader::BaseReader;
+
+    ~InternalReader();
 
     /**
      * @brief Simulate data reception on Reader
@@ -55,7 +47,7 @@ public:
      * @param data : The data received (by simulation)
      */
     void simulate_data_reception(
-            DummyDataReceived data) noexcept;
+            std::unique_ptr<core::types::DataReceived>&& data) noexcept;
 
 protected:
 
@@ -72,14 +64,10 @@ protected:
             std::unique_ptr<core::types::DataReceived>& data) noexcept override;
 
     //! Stores the data that must be retrieved with \c take() method
-    std::queue<DummyDataReceived> data_to_send_;
-
-    //! Guard access to \c data_to_send_
-    mutable std::recursive_mutex dummy_mutex_;
+    using DataReceivedType = utils::Atomicable<std::queue<std::unique_ptr<core::types::DataReceived>>>;
+    DataReceivedType data_to_send_;
 };
 
 } /* namespace participants */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* __SRC_DDSROUTERCORE_READER_IMPLEMENTATIONS_AUXILIAR_DUMMYREADER_HPP_ */
