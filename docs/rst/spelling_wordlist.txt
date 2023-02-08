@@ -4,6 +4,7 @@ Asio
 blocklist
 Chocolatey
 CMake
+colcon
 Colcon
 cpp
 dataflow
@@ -22,6 +23,7 @@ gMock
 Gtest
 guid
 IPv
+jsonschema
 kubernetes
 localhost
 metatraffic
