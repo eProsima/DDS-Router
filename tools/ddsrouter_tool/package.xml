@@ -17,12 +17,6 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>yamlcpp</depend>
-  <depend>fastrtps</depend>
-  <depend>cpp_utils</depend>
-
-  <depend>ddsrouter_core</depend>
-  <depend>ddsrouter_participants</depend>
   <depend>ddsrouter_yaml</depend>
 
   <doc_depend>doxygen</doc_depend>

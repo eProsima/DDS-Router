@@ -27,9 +27,11 @@ set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
     cpp_utils
+    ddspipe_core
+    ddspipe_participants
+    ddspipe_yaml
     ddsrouter_core
     ddsrouter_yaml
-    ddsrouter_participants
 )
 
 set(MODULE_DEPENDENCIES

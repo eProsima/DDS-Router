@@ -25,7 +25,7 @@ namespace eprosima {
 namespace ddsrouter {
 namespace ui {
 
-//! Default DDSRouter configuration file
+//! Default DdsRouter configuration file
 constexpr const char* DEFAULT_CONFIGURATION_FILE_NAME("DDS_ROUTER_CONFIGURATION.yaml");
 
 } /* namespace ui */

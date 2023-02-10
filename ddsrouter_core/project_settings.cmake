@@ -25,7 +25,9 @@ set(MODULE_SUMMARY
 set(MODULE_FIND_PACKAGES
     fastcdr
     fastrtps
-    cpp_utils)
+    cpp_utils
+    ddspipe_core
+    ddspipe_participants)
 
 set(fastrtps_MINIMUM_VERSION "2.8")
 
