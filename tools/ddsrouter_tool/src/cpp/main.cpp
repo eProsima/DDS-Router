@@ -28,15 +28,10 @@
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
-#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/efficiency/payload/FastPayloadPool.hpp>
-#include <ddsrouter_core/participants/participant/rtps/SimpleParticipant.hpp>
-
-#include <ddsrouter_participants/ParticipantFactory.hpp>
+#include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
+#include <ddsrouter_core/core/DdsRouter.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
-#include <ddsrouter_yaml/YamlManager.hpp>
 
 #include "user_interface/constants.hpp"
 #include "user_interface/arguments_configuration.hpp"
@@ -147,48 +142,17 @@ int main(
         /////
         // DDS Router Initialization
 
-        // Load Configuration from YAML
-        yaml::Configuration configuration(file_path);
-        core::configuration::DDSRouterConfiguration router_configuration = configuration.configuration;
-
-        // Create Payload Pool
-        std::shared_ptr<core::PayloadPool> payload_pool =
-            std::make_shared<core::FastPayloadPool>();
-
-        // Create Discovery Database
-        std::shared_ptr<core::DiscoveryDatabase> discovery_database =
-            std::make_shared<core::DiscoveryDatabase>();
-
-        // Create and populate Participant Database
-        std::shared_ptr<core::ParticipantsDatabase> participant_database =
-            std::make_shared<core::ParticipantsDatabase>();
-
-        // Populate Participant Database
-        for (const auto& part_conf : configuration.participants_configurations)
-        {
-            participant_database->add_participant(
-                part_conf.second->id,
-                participants::ParticipantFactory::create_participant(
-                    part_conf.first,
-                    part_conf.second,
-                    payload_pool,
-                    discovery_database
-                )
-            );
-        }
+        // Load DDS Router Configuration
+        core::DdsRouterConfiguration router_configuration =
+                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
 
         // Create DDS Router
-        core::DDSRouter router(
-            router_configuration,
-            discovery_database,
-            payload_pool,
-            participant_database
-        );
+        core::DdsRouter router(router_configuration);
 
         /////
         // File Watcher Handler
 
-        // Callback will reload configuration and pass it to DDSRouter
+        // Callback will reload configuration and pass it to DdsRouter
         // WARNING: it is needed to pass file_path, as FileWatcher only retrieves file_name
         std::function<void(std::string)> filewatcher_callback =
                 [&router, file_path]
@@ -200,8 +164,9 @@ int main(
 
                     try
                     {
-                        yaml::Configuration new_configuration(file_path);
-                        router.reload_configuration(new_configuration.configuration);
+                        core::DdsRouterConfiguration router_configuration =
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                        router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
                     {
@@ -223,7 +188,7 @@ int main(
         // If reload time is higher than 0, create a periodic event to reload configuration
         if (reload_time > 0)
         {
-            // Callback will reload configuration and pass it to DDSRouter
+            // Callback will reload configuration and pass it to DdsRouter
             std::function<void()> periodic_callback =
                     [&router, file_path]
                         ()
@@ -234,8 +199,9 @@ int main(
 
                         try
                         {
-                            yaml::Configuration new_configuration(file_path);
-                            router.reload_configuration(new_configuration.configuration);
+                            core::DdsRouterConfiguration router_configuration =
+                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                            router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)
                         {

@@ -1,42 +1,55 @@
-# eProsima DDS Router Yaml Module
+# eProsima DDS Router Core Library
 
-This library implements the required functions to translate a DDS Router configuration written in *yaml*
-format into C++ source code.
-It is powered by `yaml-cpp` library.
+> TODO
 
-It provides methods:
+This library contain main functionality of the DDS Router.
+Include module is the public API used to configure a DDS Router and to interact with a running one:
 
-- to create every type of object from a *yaml* node,
-- to read a *yaml* file, and
-- to interact with a *yaml* object using `YAML::Node` class from `yaml-cpp`.
+* **Types**: data types used to configure a router.
+  * Address
+  * DDS info (Guid, Qos, Topic, etc.)
+
+* **Configuration**: configuration objects that contains the information needed for a DDS Router. Are divided in:
+  * *ParticipantConfiguration*: configuration for each participant inside the DDS Router.
+  * *DdsRouterConfiguration*: configuration to execute a DDS Router, with its Participants and allowed lists.
+  * *DdsRouterReloadConfiguration*: configuration to change topics in a running DDS Router.
+
+* **Core**: it only contains the proxy of DDS Router class, which implementation is inside private modules.
+  It allows to execute a DDS Router, and to interact with it while running.
 
 ---
 
 ## Example of usage
 
 ```cpp
-// LOAD DDS ROUTER CONFIGURATION FROM FILE
+// START AND STOP DDS ROUTER FROM CONFIGURATION
 
-core::configuration::DDSRouterConfiguration router_configuration =
-                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file("configuration.yaml");
+core::configuration::DdsRouterConfiguration router_configuration;
+
+// ... populate router_configuration
+
+core::DdsRouter router(router_configuration);
+router.start();
+
+// ... wait for event
+
+router.stop();
 ```
 
 ---
 
 ## Dependencies
 
-* `yaml-cpp`
+* `fastrtps`
 * `cpp_utils`
-* `ddsrouter_core`
-
 
 ---
 
 ## How to use it in your project
 
-Just import library `ddsrouter_yaml` into your CMake project.
+Just import library `ddsrouter_core` into your CMake project.
 
 ```cmake
-find_package(ddsrouter_yaml)
-target_link_libraries(${LIBRARY_TARGET_NAME} ddsrouter_yaml)
+find_package(ddsrouter_core)
+target_link_libraries(${LIBRARY_TARGET_NAME} ddsrouter_core)
 ```

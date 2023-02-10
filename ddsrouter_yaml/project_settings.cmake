@@ -20,17 +20,18 @@ set(MODULE_NAME
     ddsrouter_yaml)
 
 set(MODULE_SUMMARY
-    "C++ library to create a DDS Router configuration from a YAML.")
+    "C++ library to build and run a DDS Router.")
 
 set(MODULE_FIND_PACKAGES
-    yaml-cpp
     fastcdr
     fastrtps
     cpp_utils
-    ddsrouter_core
-    ddsrouter_participants)
+    ddspipe_core
+    ddspipe_participants
+    ddspipe_yaml
+    ddsrouter_core)
 
-set(ddsrouter_core_MINIMUM_VERSION "1.0")
+set(fastrtps_MINIMUM_VERSION "2.8")
 
 set(MODULE_DEPENDENCIES
     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
