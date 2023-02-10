@@ -164,7 +164,7 @@ const option::Descriptor usage[] = {
 
 void print_version()
 {
-    std::cout << "DDSRouter " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH <<
+    std::cout << "DdsRouter " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH <<
         std::endl;
 }
 

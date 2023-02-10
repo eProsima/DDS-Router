@@ -4,7 +4,7 @@
   <name>ddsrouter_yaml</name>
   <version>1.1.0</version>
   <description>
-     *eprosima DDS Router* Yaml Module is a C++ implementation for handling events in multithreading executions as PeriodicTimers, Signals, FileWatchers, etc.
+     *eprosima DDS Router* C++ library to communicate isolated DDS networks between each other. Use in isolated machines an WAN scenarios.
   </description>
   <maintainer email="RaulSanchezMateos@eprosima.com">Raul Sánchez-Mateos</maintainer>
   <maintainer email="javierparis@eprosima.com">Javier París</maintainer>
@@ -17,11 +17,9 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>yamlcpp</depend>
   <depend>fastrtps</depend>
-  <depend>cpp_utils</depend>
   <depend>ddsrouter_core</depend>
-  <depend>ddsrouter_participants</depend>
+  <depend>ddspipe_yaml</depend>
   <depend>cmake_utils</depend>
 
   <doc_depend>doxygen</doc_depend>
