@@ -17,6 +17,7 @@
 #include <fastrtps/types/TypesBase.h>
 
 #include <ddspipe_core/library/library_dll.h>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -29,7 +30,7 @@ using DomainIdType = eprosima::fastdds::dds::DomainId_t;
 /**
  * @brief RTPS Domain ID.
  */
-struct DomainId
+struct DomainId : public IConfiguration
 {
 
     DDSPIPE_CORE_DllAPI DomainId () noexcept = default;
@@ -37,6 +38,9 @@ struct DomainId
     DDSPIPE_CORE_DllAPI DomainId (bool discovery_server) noexcept;
 
     DDSPIPE_CORE_DllAPI operator DomainIdType() const noexcept;
+
+    DDSPIPE_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept override;
 
     //! Value of Fast DDS Domain ID
     DomainIdType domain_id = DEFAULT_DOMAIN_ID;
@@ -52,7 +56,7 @@ struct DomainId
     static constexpr const DomainIdType DEFAULT_DISCOVERY_SERVER_DOMAIN_ID = 66;
 
     //! Maximum Domain Id valid
-    static constexpr const DomainIdType MAX_DOMAIN_ID = 223;
+    static constexpr const DomainIdType MAX_DOMAIN_ID = 232;
 };
 
 //! \c DomainId serializator

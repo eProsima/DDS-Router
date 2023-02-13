@@ -97,7 +97,6 @@ protected:
      */
     BaseWriter(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool);
 
     /////////////////////////
@@ -134,7 +133,7 @@ protected:
     const core::types::ParticipantId participant_id_;
 
     //! DDS Router shared Payload Pool
-    const std::shared_ptr<core::PayloadPool> payload_pool_;
+    std::shared_ptr<core::PayloadPool> payload_pool_;
 
     //! Whether the Writer is currently enabled
     std::atomic<bool> enabled_;

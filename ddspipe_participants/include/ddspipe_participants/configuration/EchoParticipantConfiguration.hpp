@@ -23,9 +23,6 @@ namespace participants {
 struct EchoParticipantConfiguration : public ParticipantConfiguration
 {
 
-    //! Use default parent constructors
-    using ParticipantConfiguration::ParticipantConfiguration;
-
     /////////////////////////
     // CONSTRUCTORS
     /////////////////////////

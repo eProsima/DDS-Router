@@ -14,8 +14,9 @@
 
 #pragma once
 
+#include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
+
 #include <ddspipe_participants/reader/rtps/CommonReader.hpp>
-#include <dynamic/DiscoveryDatabase.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -62,8 +63,9 @@ protected:
     /**
      * Specializes \c CommonReader method and set the QoS of the data received.
      */
-    virtual IRoutingData* fill_received_data_(
-            fastrtps::rtps::CacheChange_t* received_change) const noexcept;
+    virtual void fill_received_data_(
+            const fastrtps::rtps::CacheChange_t& received_change,
+            core::types::RtpsPayloadData& data_to_fill) const noexcept override;
 
 
     //! Reference to the \c DiscoveryDatabase .

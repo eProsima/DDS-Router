@@ -44,8 +44,8 @@ public:
      */
     QoSSpecificWriter(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
-            std::shared_ptr<core::PayloadPool> payload_pool,
+            const core::types::DdsTopic& topic,
+            const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const core::types::SpecificEndpointQoS& specific_qos,
             const bool repeater = false);
@@ -55,7 +55,7 @@ protected:
     //! Specific writer QoS to override (more or less) the CommonWriter qos
     static fastrtps::WriterQos reckon_writer_qos_(
             const core::types::SpecificEndpointQoS& specific_qos,
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     //! Specific QoS of the Endpoint
     core::types::SpecificEndpointQoS specific_qos_;
