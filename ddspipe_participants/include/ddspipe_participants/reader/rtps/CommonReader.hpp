@@ -29,9 +29,9 @@
 #include <ddspipe_core/types/dds/Guid.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/data/RtpsPayloadData.hpp>
 
 #include <ddspipe_participants/reader/auxiliar/BaseReader.hpp>
-#include <ddspipe_participants/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -111,13 +111,15 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    core::types::Guid guid() const noexcept;
+    core::types::Guid guid() const noexcept override;
 
     //! Get internal RTPS reader mutex
-    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept;
+    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept override;
 
     //! Get number of unread cache changes in internal RTPS reader
-    uint64_t get_unread_count() const noexcept;
+    uint64_t get_unread_count() const noexcept override;
+
+    core::types::DdsTopic topic() const noexcept override;
 
 protected:
 
@@ -132,7 +134,7 @@ protected:
      */
     CommonReader(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
+            const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const fastrtps::rtps::HistoryAttributes& history_attributes,
@@ -156,7 +158,7 @@ protected:
      *
      * @attention this method allocates memory.
      */
-    virtual types::RtpsPayloadData* create_data_(
+    virtual core::types::RtpsPayloadData* create_data_(
             const fastrtps::rtps::CacheChange_t& received_change) const noexcept;
 
     /**
@@ -164,7 +166,7 @@ protected:
      */
     virtual void fill_received_data_(
             const fastrtps::rtps::CacheChange_t& received_change,
-            types::RtpsPayloadData& data_to_fill) const noexcept;
+            core::types::RtpsPayloadData& data_to_fill) const noexcept;
 
     // Specific enable/disable do not need to be implemented
 
@@ -240,6 +242,9 @@ protected:
 
     /////
     // INTERNAL VARIABLES
+
+    //!
+    core::types::DdsTopic topic_;
 
     //! RTPS Reader pointer
     fastrtps::rtps::RTPSReader* rtps_reader_;

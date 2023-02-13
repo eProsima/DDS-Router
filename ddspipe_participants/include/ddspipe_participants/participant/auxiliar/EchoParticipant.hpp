@@ -32,8 +32,8 @@ public:
 
     //! Using parent class constructors
     EchoParticipant(
-            std::shared_ptr<EchoParticipantConfiguration> participant_configuration,
-            std::shared_ptr<core::DiscoveryDatabase> discovery_database);
+            const std::shared_ptr<EchoParticipantConfiguration>& participant_configuration,
+            const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);
 
     //! Print discovery information from endpoint discovered
     void echo_discovery(
@@ -48,10 +48,10 @@ protected:
     // Deleters do not need to be implemented
 
     //! Reference to alias access of this object configuration without casting every time
-    std::shared_ptr<EchoParticipantConfiguration> configuration_;
+    const std::shared_ptr<EchoParticipantConfiguration> configuration_;
 
     //! DDS Router shared Discovery Database
-    std::shared_ptr<core::DiscoveryDatabase> discovery_database_;
+    const std::shared_ptr<core::DiscoveryDatabase> discovery_database_;
 };
 
 } /* namespace participants */
