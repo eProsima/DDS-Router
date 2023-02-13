@@ -56,6 +56,8 @@ public:
             const std::shared_ptr<PayloadPool>& payload_pool,
             const std::shared_ptr<utils::SlotThreadPool>& thread_pool);
 
+    ~DdsBridge();
+
     /**
      * Enable bridge in case it is not enabled
      * Does nothing if it is already enabled
@@ -80,14 +82,8 @@ protected:
      */
     std::map<types::ParticipantId, std::unique_ptr<Track>> tracks_;
 
-    //! One writer for each Participant, indexed by \c ParticipantId of the Participant the writer belongs to
-    std::map<types::ParticipantId, std::shared_ptr<IWriter>> writers_;
-
-    //! One reader for each Participant, indexed by \c ParticipantId of the Participant the reader belongs to
-    std::map<types::ParticipantId, std::shared_ptr<IReader>> readers_;
-
     //! Mutex to prevent simultaneous calls to enable and/or disable
-    std::recursive_mutex mutex_;
+    std::mutex mutex_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <fastdds/rtps/attributes/ServerAttributes.h>
 #include <fastdds/rtps/common/GuidPrefix_t.hpp>
 
 #include <ddspipe_core/library/library_dll.h>
@@ -90,10 +91,21 @@ public:
     GuidPrefix& operator = (
             const fastrtps::rtps::GuidPrefix_t& other) noexcept;
 
+    /**
+     * Whether the guid prefix is a valid one
+     *
+     * To be valid, the GuidPrefix must not be invalid / unknown
+     */
+    bool is_valid() const noexcept;
+
     //! Default DDSRouter Discovery Server Guid Prefix
     static constexpr const char* SERVER_DEFAULT_GUID_PREFIX_STR = "01.0f.00.00.00.00.00.00.00.00.ca.fe";
 
-    //! Default ROS2 Discovery Server Guid Prefix
+    /**
+     * @brief Default ROS2 Discovery Server Guid Prefix
+     *
+     * @note This coulde reuse fastdds \c DEFAULT_ROS2_SERVER_GUIDPREFIX if it was constexpr.
+     */
     static constexpr const char* ROS_DISCOVERY_SERVER_GUID_PREFIX_STR = "44.53.00.5f.45.50.52.4f.53.49.4d.41";
 };
 

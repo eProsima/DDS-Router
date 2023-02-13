@@ -1,4 +1,4 @@
-// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -10,35 +10,29 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License\.
+// limitations under the License.
 
 #pragma once
 
-#include <iostream>
-#include <string>
-
-#include <cpp_utils/types/Fuzzy.hpp>
+#include <cpp_utils/Formatter.hpp>
 
 #include <ddspipe_core/library/library_dll.h>
-#include <ddspipe_core/types/dds/TopicQoS.hpp>
-#include <ddspipe_core/types/topic/Topic.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
-namespace types {
 
 /**
- * Data struct that represents a Distributed Topic of data flow in the Router.
- *
- * @note this not represents a real DDS network topic, but an "abstract" distributed one.
+ * Configurations in DDS Pipe are data structures with public access to its internal methods.
+ * Thus, they are not forced to be correct in construction.
+ * This is an Interface class that forces every configuration to have an \c is_valid method.
  */
-struct DistributedTopic : public Topic
+struct IConfiguration
 {
-    // Extend nothing
+    DDSPIPE_CORE_DllAPI virtual bool is_valid(
+            utils::Formatter& error_msg) const noexcept = 0;
 };
 
-} /* namespace types */
 } /* namespace core */
 } /* namespace ddspipe */
 } /* namespace eprosima */

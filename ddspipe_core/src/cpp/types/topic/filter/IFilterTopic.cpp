@@ -10,33 +10,35 @@
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
-// limitations under the License\.
+// limitations under the License.
 
-#pragma once
-
-#include <iostream>
-#include <string>
-
-#include <cpp_utils/types/Fuzzy.hpp>
-
-#include <ddspipe_core/library/library_dll.h>
-#include <ddspipe_core/types/dds/TopicQoS.hpp>
-#include <ddspipe_core/types/topic/Topic.hpp>
+#include <ddspipe_core/types/topic/filter/IFilterTopic.hpp>
+#include <cpp_utils/utils.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
 namespace types {
 
-/**
- * Data struct that represents a Distributed Topic of data flow in the Router.
- *
- * @note this not represents a real DDS network topic, but an "abstract" distributed one.
- */
-struct DistributedTopic : public Topic
+bool IFilterTopic::operator < (
+        const IFilterTopic& other) const noexcept
 {
-    // Extend nothing
-};
+    return utils::generic_to_string(other) < utils::generic_to_string(*this);
+}
+
+bool IFilterTopic::operator == (
+        const IFilterTopic& other) const noexcept
+{
+    return utils::generic_to_string(other) == utils::generic_to_string(*this);
+}
+
+std::ostream& operator <<(
+        std::ostream& os,
+        const IFilterTopic& t)
+{
+    t.serialize(os);
+    return os;
+}
 
 } /* namespace types */
 } /* namespace core */

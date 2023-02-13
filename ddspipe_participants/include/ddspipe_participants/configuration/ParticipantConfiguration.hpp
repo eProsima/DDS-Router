@@ -16,14 +16,14 @@
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 
-#include <ddspipe_core/configuration/BaseConfiguration.hpp>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_participants/library/library_dll.h>
 
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
 
-struct ParticipantConfiguration : public core::BaseConfiguration
+struct ParticipantConfiguration : public core::IConfiguration
 {
 
     /////////////////////////

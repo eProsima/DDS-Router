@@ -90,7 +90,7 @@ public:
      * @return true if any endpoint has this topic, false otherwise
      */
     bool topic_exists(
-            const types::DistributedTopic& topic) const noexcept;
+            const types::DdsTopic& topic) const noexcept;
 
     //! Whether this guid is in the database
     bool endpoint_exists(

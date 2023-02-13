@@ -20,7 +20,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddspipe_core/configuration/BaseConfiguration.hpp>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 
@@ -32,7 +32,7 @@ namespace core {
  * This class joins every DdsRouter feature configuration and includes methods
  * to interact with this configuration.
  */
-struct DdsRouterReloadConfiguration : public ddspipe::core::BaseConfiguration
+struct DdsRouterReloadConfiguration : public ddspipe::core::IConfiguration
 {
 
     /////////////////////////

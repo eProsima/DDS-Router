@@ -72,7 +72,7 @@ public:
 protected:
 
     //! Topic that refers to this Bridge
-    const std::shared_ptr<ITopic> topic;
+    const std::shared_ptr<ITopic> topic_;
 
     //! Collection of Participants to manage communication
     const std::shared_ptr<ParticipantsDatabase> participants_;
