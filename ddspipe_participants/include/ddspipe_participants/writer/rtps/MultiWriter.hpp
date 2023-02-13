@@ -17,6 +17,8 @@
 #include <cpp_utils/types/Atomicable.hpp>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
+
 #include <ddspipe_participants/writer/auxiliar/BaseWriter.hpp>
 #include <ddspipe_participants/writer/rtps/QoSSpecificWriter.hpp>
 
@@ -49,7 +51,7 @@ public:
      */
     MultiWriter(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
+            const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const bool repeater = false);
@@ -88,9 +90,11 @@ protected:
     // INTERNAL VARIABLES
     /////////////////////////
 
-    using WritersMapType = utils::SharedAtomicable<std::unordered_map<core::types::SpecificEndpointQoS, QoSSpecificWriter*>>;
+    using WritersMapType = utils::SharedAtomicable<std::map<core::types::SpecificEndpointQoS, QoSSpecificWriter*>>;
     //! Map of writer indexed by Specific QoS of each.
     WritersMapType writers_map_;
+
+    core::types::DdsTopic topic_;
 
     //! Reference to RTPS Participant.
     fastrtps::rtps::RTPSParticipant* rtps_participant_;

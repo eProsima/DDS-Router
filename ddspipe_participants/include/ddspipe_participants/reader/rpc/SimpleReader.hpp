@@ -44,18 +44,18 @@ public:
      */
     SimpleReader(
             const core::types::ParticipantId& participant_id,
-            const core::types::RpcTopic& topic,
+            const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     //! Override Parent method to create an RPC data type.
-    virtual types::RtpsPayloadData* create_data_(
-            const fastrtps::rtps::CacheChange_t& received_change) const noexcept;
+    virtual core::types::RtpsPayloadData* create_data_(
+            const fastrtps::rtps::CacheChange_t& received_change) const noexcept override;
 
     //! Override Parent method to fill fields exclusive from RPC.
     virtual void fill_received_data_(
             const fastrtps::rtps::CacheChange_t& received_change,
-            types::RtpsPayloadData& data_to_fill) const noexcept;
+            core::types::RtpsPayloadData& data_to_fill) const noexcept override;
 };
 
 } /* namespace rpc */

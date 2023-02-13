@@ -23,8 +23,9 @@
 #include <fastrtps/rtps/writer/RTPSWriter.h>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+
+#include <ddspipe_participants/efficiency/cache_change/CacheChangePool.hpp>
 #include <ddspipe_participants/writer/rtps/CommonWriter.hpp>
-#include <ddspipe_core/efficiency/cache_change/CacheChangePool.hpp>
 
 namespace eprosima {
 namespace ddspipe {

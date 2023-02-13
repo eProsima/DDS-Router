@@ -39,14 +39,12 @@ struct InitialPeersParticipantConfiguration : public SimpleParticipantConfigurat
 
     DDSPIPE_PARTICIPANTS_DllAPI InitialPeersParticipantConfiguration() = default;
 
-
     /////////////////////////
     // METHODS
     /////////////////////////
 
     DDSPIPE_PARTICIPANTS_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
-
 
     /////////////////////////
     // VARIABLES
