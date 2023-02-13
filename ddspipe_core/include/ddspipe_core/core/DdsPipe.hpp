@@ -148,16 +148,9 @@ protected:
     // INTERNAL INITIALIZATION METHODS
 
     /**
-     * @brief Load allowed topics from configuration
-     *
-     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
-     */
-    void init_allowed_topics_();
-
-    /**
      * @brief  Create a disabled bridge for every real topic
      */
-    void init_bridges_();
+    void init_bridges_(const std::set<std::shared_ptr<types::DistributedTopic>>& builtin_topics);
 
     /////
     // INTERNAL AUXILIAR METHODS
@@ -173,7 +166,7 @@ protected:
      * @param [in] topic : topic discovered
      */
     void discovered_topic_(
-            const types::DistributedTopic& topic) noexcept;
+            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Method called every time a new endpoint (corresponding to a server) has been discovered/updated
@@ -188,7 +181,7 @@ protected:
      * @param [in] server_guid_prefix : GUID Prefix of discovered server
      */
     void discovered_service_(
-            const types::RpcTopic& topic,
+            const std::shared_ptr<types::RpcTopic>& topic,
             const types::ParticipantId& server_participant_id,
             const types::GuidPrefix& server_guid_prefix) noexcept;
 
@@ -202,7 +195,7 @@ protected:
      * @param [in] server_guid_prefix : GUID Prefix of discovered server
      */
     void removed_service_(
-            const types::RpcTopic& topic,
+            const std::shared_ptr<types::RpcTopic>& topic,
             const types::ParticipantId& server_participant_id,
             const types::GuidPrefix& server_guid_prefix) noexcept;
 
@@ -231,8 +224,8 @@ protected:
      *
      * @param [in] topic : new topic
      */
-    void create_new_bridge(
-            const types::DistributedTopic& topic,
+    void create_new_bridge_(
+            const std::shared_ptr<types::DistributedTopic>& topic,
             bool enabled = false) noexcept;
 
     /**
@@ -242,8 +235,8 @@ protected:
      *
      * @param [in] topic : new topic
      */
-    void create_new_service(
-            const types::RpcTopic& topic) noexcept;
+    void create_new_service_(
+            const std::shared_ptr<types::RpcTopic>& topic) noexcept;
 
     /**
      * @brief Enable a specific topic
@@ -253,7 +246,7 @@ protected:
      * @param [in] topic : Topic to be enabled
      */
     void activate_topic_(
-            const types::DistributedTopic& topic) noexcept;
+            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Disable a specific topic.
@@ -263,7 +256,7 @@ protected:
      * @param [in] topic : Topic to be disabled
      */
     void deactivate_topic_(
-            const types::DistributedTopic& topic) noexcept;
+            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Activate all Topics that are allowed by the allowed topics list
@@ -313,10 +306,10 @@ protected:
     /////////////////////////
 
     //! Map of bridges indexed by their topic
-    std::map<types::DistributedTopic, std::unique_ptr<DdsBridge>> bridges_;
+    std::map<std::shared_ptr<types::DistributedTopic>, std::unique_ptr<DdsBridge>> bridges_;
 
     //! Map of RPC bridges indexed by their topic
-    std::map<types::RpcTopic, std::unique_ptr<RPCBridge>> rpc_bridges_;
+    std::map<std::shared_ptr<types::RpcTopic>, std::unique_ptr<RPCBridge>> rpc_bridges_;
 
     /**
      * @brief List of topics discovered
@@ -324,7 +317,7 @@ protected:
      * Every topic discovered would be added to this map.
      * If the value is true, it means this topic is currently activated.
      */
-    std::map<types::DistributedTopic, bool> current_topics_;
+    std::map<std::shared_ptr<types::DistributedTopic>, bool> current_topics_;
 
     /**
      * @brief List of RPC topics discovered
@@ -332,7 +325,7 @@ protected:
      * Every RPC topic discovered would is added to this map.
      * If the value is true, it means this service is allowed.
      */
-    std::map<types::RpcTopic, bool> current_services_;
+    std::map<std::shared_ptr<types::RpcTopic>, bool> current_services_;
 
     /////
     // AUXILIAR VARIABLES

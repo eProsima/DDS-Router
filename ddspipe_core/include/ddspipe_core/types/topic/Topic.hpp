@@ -20,6 +20,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddspipe_core/library/library_dll.h>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_core/types/topic/TopicInternalTypeDiscriminator.hpp>
 #include <ddspipe_core/interface/ITopic.hpp>
 
@@ -31,7 +32,7 @@ namespace types {
 /**
  * Generic data struct that represents a Topic of data flow in the Router.
  */
-struct Topic : public ITopic
+struct Topic : public ITopic , public IConfiguration
 {
 
     /////////////////////////
@@ -45,15 +46,14 @@ struct Topic : public ITopic
     // OPERATORS
     /////////////////////////
 
-    //! Compare this with other std Topic
-    virtual bool operator==(const Topic& other) const noexcept;
-
     /**
      * @brief Specialize parent compare operator
      *
      * This is specialized so if the comparison object is a std Topic it is compared as it.
      */
     virtual bool operator==(const ITopic& other) const noexcept override;
+
+    virtual bool operator<(const ITopic& other) const noexcept override;
 
     /////////////////////////
     // METHODS
@@ -63,6 +63,16 @@ struct Topic : public ITopic
     virtual const std::string& topic_name() const noexcept override;
 
     virtual const TopicInternalTypeDiscriminator& internal_type_discriminator() const noexcept override;
+
+    virtual bool is_valid(
+        utils::Formatter& error_msg) const noexcept override;
+
+    /////////////////////////
+    // METHODS TO OVERRIDE
+    /////////////////////////
+
+    //! ITopic unique name in processs
+    virtual std::string topic_unique_name() const noexcept override;
 
     /////////////////////////
     // VARIABLES

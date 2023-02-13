@@ -20,6 +20,8 @@
 #include <string>
 #include <set>
 
+#include <cpp_utils/memory/Heritable.hpp>
+
 #include <ddspipe_core/types/topic/Topic.hpp>
 #include <ddspipe_core/types/topic/rpc/RpcTopic.hpp>
 #include <ddspipe_core/types/topic/filter/IFilterTopic.hpp>
@@ -46,8 +48,8 @@ public:
 
     //! Constructor by initialization lists
     AllowedTopicList(
-            const std::set<std::shared_ptr<types::IFilterTopic>>& allowlist,
-            const std::set<std::shared_ptr<types::IFilterTopic>>& blocklist) noexcept;
+            const std::set<utils::Heritable<types::IFilterTopic>>& allowlist,
+            const std::set<utils::Heritable<types::IFilterTopic>>& blocklist) noexcept;
 
     //! Copy constructor. It copies internal lists.
     AllowedTopicList& operator =(
@@ -72,7 +74,7 @@ public:
      * @return True if the topic is allowed, false otherwise
      */
     bool is_topic_allowed(
-            const types::DistributedTopic& topic) const noexcept;
+            const ITopic& topic) const noexcept;
 
     /**
      * Whether RpcTopic \c topic is allowed by the lists that constitute this object
@@ -111,14 +113,14 @@ protected:
      * @param [in] list: list of topics with redundancy
      * @return Set of topics without redundancy
      */
-    static std::set<std::shared_ptr<types::IFilterTopic>> get_topic_list_without_repetition_(
-            const std::set<std::shared_ptr<types::IFilterTopic>>& list) noexcept;
+    static std::set<utils::Heritable<types::IFilterTopic>> get_topic_list_without_repetition_(
+            const std::set<utils::Heritable<types::IFilterTopic>>& list) noexcept;
 
     //! List of topics that are not allowed
-    std::set<std::shared_ptr<types::IFilterTopic>> blocklist_;
+    std::set<utils::Heritable<types::IFilterTopic>> blocklist_;
 
     //! List of topics that are allowed
-    std::set<std::shared_ptr<types::IFilterTopic>> allowlist_;
+    std::set<utils::Heritable<types::IFilterTopic>> allowlist_;
 
     //! Mutex to restrict access to the class
     mutable std::recursive_mutex mutex_;

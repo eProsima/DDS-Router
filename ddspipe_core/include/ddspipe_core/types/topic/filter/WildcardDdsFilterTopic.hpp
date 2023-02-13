@@ -17,8 +17,11 @@
 #include <iostream>
 #include <string>
 
+#include <cpp_utils/types/Fuzzy.hpp>
+
 #include <ddspipe_core/library/library_dll.h>
 #include <ddspipe_core/types/topic/filter/IFilterTopic.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -70,9 +73,13 @@ struct WildcardDdsFilterTopic : public IFilterTopic
 
 protected:
 
-    //! Specialization for DDS Topics.
-    DDSPIPE_CORE_DllAPI virtual bool matches_(
-            const DistributedTopic& real_topic) const;
+    /////////////////////////
+    // INTERNAL METHODS
+    /////////////////////////
+
+    //! Specialization for type of topic. Only specialized for DdsTopic.
+    DDSPIPE_CORE_DllAPI bool matches_(
+            const DdsTopic& real_topic) const;
 };
 
 /**
