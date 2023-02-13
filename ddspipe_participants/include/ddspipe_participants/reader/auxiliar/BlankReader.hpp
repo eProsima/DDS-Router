@@ -52,13 +52,17 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    core::types::Guid guid() const noexcept;
+    core::types::Guid guid() const override;
 
     //! Get internal RTPS reader mutex
-    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept;
+    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const override;
 
     //! Get number of unread cache changes in internal RTPS reader
-    uint64_t get_unread_count() const noexcept;
+    uint64_t get_unread_count() const override;
+
+    core::types::DdsTopic topic() const override;
+
+    core::types::ParticipantId participant_id() const override;
     /////////////////////////
 };
 

@@ -24,9 +24,10 @@
 #include <fastrtps/rtps/writer/WriterListener.h>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
-#include <ddspipe_core/efficiency/cache_change/CacheChangePool.hpp>
+#include <ddspipe_core/types/data/RtpsPayloadData.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
-#include <ddspipe_participants/types/data/RtpsPayloadData.hpp>
+#include <ddspipe_participants/efficiency/cache_change/CacheChangePool.hpp>
 #include <ddspipe_participants/writer/auxiliar/BaseWriter.hpp>
 
 /////
@@ -121,7 +122,7 @@ protected:
      */
     CommonWriter(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
+            const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const bool repeater,
@@ -161,7 +162,7 @@ protected:
     virtual utils::ReturnCode fill_to_send_data_(
             fastrtps::rtps::CacheChange_t* to_send_change_to_fill,
             eprosima::fastrtps::rtps::WriteParams& to_send_params,
-            const types::RtpsPayloadData& data) const noexcept;
+            const core::types::RtpsPayloadData& data) const noexcept;
 
     /**
      * @brief Auxiliary method used after \c write to fill data value.
@@ -171,7 +172,7 @@ protected:
      */
     virtual void fill_sent_data_(
             const eprosima::fastrtps::rtps::WriteParams& sent_params,
-            types::RtpsPayloadData& data_to_fill) const noexcept;
+            core::types::RtpsPayloadData& data_to_fill) const noexcept;
 
     /////
     // RTPS specific methods
@@ -195,25 +196,25 @@ protected:
      * @brief History Attributes to create RTPS Writer History
      */
     static fastrtps::rtps::HistoryAttributes reckon_history_attributes_(
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     /**
      * @brief Writer Attributes to create RTPS Writer
      */
     static fastrtps::rtps::WriterAttributes reckon_writer_attributes_(
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     //! Topic Attributes to create RTPS Writer
     static fastrtps::TopicAttributes reckon_topic_attributes_(
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     //! QoS for RTPS Writer
     static fastrtps::WriterQos reckon_writer_qos_(
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     //! Cache Change Pool Configuration
     static utils::PoolConfiguration reckon_cache_change_pool_configuration_(
-            const core::types::DistributedTopic& topic) noexcept;
+            const core::types::DdsTopic& topic) noexcept;
 
     //! Whether a guid references this Participant
     bool come_from_this_participant_(
@@ -230,6 +231,8 @@ protected:
 
     /////
     // INTERNAL VARIABLES
+
+    core::types::DdsTopic topic_;
 
     //! RTPS CommonWriter pointer
     fastrtps::rtps::RTPSWriter* rtps_writer_;

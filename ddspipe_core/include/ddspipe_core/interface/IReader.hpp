@@ -110,17 +110,17 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    virtual core::types::Guid guid() const noexcept = 0;
+    virtual core::types::Guid guid() const = 0;
 
     //! Get internal RTPS reader mutex
-    virtual fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept = 0;
+    virtual fastrtps::RecursiveTimedMutex& get_rtps_mutex() const = 0;
 
     //! Get number of unread cache changes in internal RTPS reader
-    virtual uint64_t get_unread_count() const noexcept = 0;
+    virtual uint64_t get_unread_count() const = 0;
 
-    virtual types::DdsTopic topic() const noexcept = 0;
+    virtual types::DdsTopic topic() const = 0;
 
-    virtual types::ParticipantId participant_id() const noexcept = 0;
+    virtual types::ParticipantId participant_id() const = 0;
     /////////////////////////
 };
 

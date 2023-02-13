@@ -35,9 +35,9 @@ class InitialPeersParticipant
 public:
 
     InitialPeersParticipant(
-            core std::shared_ptr<InitialPeersParticipantConfiguration>& participant_configuration,
-            core std::shared_ptr<core::PayloadPool>& payload_pool,
-            core std::shared_ptr<core::DiscoveryDatabase>& discovery_database);
+            const std::shared_ptr<InitialPeersParticipantConfiguration>& participant_configuration,
+            const std::shared_ptr<core::PayloadPool>& payload_pool,
+            const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);
 
 protected:
 

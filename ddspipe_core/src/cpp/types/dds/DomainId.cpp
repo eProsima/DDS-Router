@@ -35,6 +35,17 @@ DomainId::operator DomainIdType() const noexcept
     return this->domain_id;
 }
 
+bool DomainId::is_valid(
+        utils::Formatter& error_msg) const noexcept
+{
+    if (domain_id > MAX_DOMAIN_ID)
+    {
+        error_msg << "Domain could not be higher than " << MAX_DOMAIN_ID << ". ";
+        return false;
+    }
+    return true;
+}
+
 std::ostream& operator <<(
         std::ostream& output,
         const DomainId& domain)

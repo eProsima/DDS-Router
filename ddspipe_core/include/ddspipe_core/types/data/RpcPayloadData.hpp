@@ -41,7 +41,7 @@ namespace types {
 struct RpcPayloadData : public RtpsPayloadData
 {
     //! Write params associated to the received cache change
-    eprosima::fastrtps::rtps::WriteParams write_params{};
+    utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params{};
 
     //! Sequence number of the received cache change
     eprosima::fastrtps::rtps::SequenceNumber_t origin_sequence_number{};

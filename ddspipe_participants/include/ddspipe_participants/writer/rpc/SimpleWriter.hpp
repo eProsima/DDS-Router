@@ -23,8 +23,9 @@
 #include <fastrtps/rtps/writer/RTPSWriter.h>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+
 #include <ddspipe_participants/writer/rtps/CommonWriter.hpp>
-#include <ddspipe_core/efficiency/cache_change/CacheChangePool.hpp>
+#include <ddspipe_participants/efficiency/cache_change/CacheChangePool.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -34,7 +35,7 @@ namespace rpc {
 /**
  * Base RTPS Writer concrete class that implements abstract CommonWriter one.
  */
-class SimpleWriter : public CommonWriter
+class SimpleWriter : public rtps::CommonWriter
 {
 public:
 
@@ -55,7 +56,7 @@ public:
      */
     SimpleWriter(
             const core::types::ParticipantId& participant_id,
-            const core::types::RPCTopic& topic,
+            const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant,
             const bool repeater = false);

@@ -31,6 +31,8 @@ namespace participants {
  *
  * In order to inherit from this class, create the protected method take_ .
  * Implement methods enabled_ and disabled_ in order to give specific functionality to these methods.
+ *
+ * @todo make topic somehow to can hold it.
  */
 class BaseReader : public core::IReader
 {
@@ -111,7 +113,7 @@ public:
     /////////////////////////
 
     //! Getter of \c participant_id_ attribute
-    core::types::ParticipantId participant_id() const noexcept;
+    core::types::ParticipantId participant_id() const noexcept override;
 
     /////////////////////////
     // RPC REQUIRED METHODS
@@ -119,13 +121,15 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    core::types::Guid guid() const noexcept;
+    core::types::Guid guid() const override = 0;
 
     //! Get internal RTPS reader mutex
-    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept;
+    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const override = 0;
 
     //! Get number of unread cache changes in internal RTPS reader
-    uint64_t get_unread_count() const noexcept;
+    uint64_t get_unread_count() const override = 0;
+
+    core::types::DdsTopic topic() const override = 0;
     /////////////////////////
 
 protected:
@@ -143,7 +147,6 @@ protected:
      */
     BaseReader(
             const core::types::ParticipantId& participant_id,
-            const core::ITopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool);
 
     /////////////////////////

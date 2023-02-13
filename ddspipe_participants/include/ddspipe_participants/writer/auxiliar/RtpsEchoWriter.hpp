@@ -17,6 +17,7 @@
 #include <atomic>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 #include <ddspipe_participants/writer/auxiliar/BlankWriter.hpp>
 
@@ -27,12 +28,12 @@ namespace participants {
 /**
  * Writer Implementation that prints in stdout every message that is required to write.
  */
-class EchoWriter : public BlankWriter
+class RtpsEchoWriter : public BlankWriter
 {
 public:
 
     //! Using parent class constructors
-    EchoWriter(
+    RtpsEchoWriter(
             const core::types::DdsTopic& topic,
             bool verbose);
 
