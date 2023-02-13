@@ -47,11 +47,14 @@ struct Endpoint
 {
 
     //! Default Endpoint that returns an invalid one
-    DDSPIPE_CORE_DllAPI Endpoint() noexcept;
+    DDSPIPE_CORE_DllAPI Endpoint() noexcept = default;
 
     /********************
     * SPECIFIC GETTERS *
     ********************/
+
+    //! Qos of the topic
+    DDSPIPE_CORE_DllAPI TopicQoS topic_qos() const noexcept;
 
     //! Whether the endpoint is a writer
     DDSPIPE_CORE_DllAPI bool is_writer() const noexcept;
@@ -67,22 +70,22 @@ struct Endpoint
             const Endpoint& other) const noexcept;
 
     //! Kind of the endpoint
-    EndpointKind kind;
+    EndpointKind kind {EndpointKind::invalid};
 
     //! Unique id of the endpoint
-    Guid guid;
+    Guid guid {};
 
     //! Topic that this endpoint belongs to
-    DistributedTopic topic;
+    DdsTopic topic {};
 
     //! Specific QoS of the entity
-    SpecificEndpointQoS specific_qos;
+    SpecificEndpointQoS specific_qos {};
 
     //! Whether the endpoint is currently active
-    bool active;
+    bool active {true};
 
     //! Id of participant who discovered this endpoint
-    ParticipantId discoverer_participant_id;
+    ParticipantId discoverer_participant_id {};
 };
 
 /**

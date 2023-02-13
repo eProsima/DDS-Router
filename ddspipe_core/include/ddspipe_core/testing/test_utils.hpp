@@ -16,29 +16,15 @@
 
 #include <cpp_utils/exception/InitializationException.hpp>
 
-#include <ddspipe_core/participants/participant/configuration/ParticipantConfiguration.hpp>
-#include <ddspipe_core/participants/participant/configuration/SimpleParticipantConfiguration.hpp>
-#include <ddspipe_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddspipe_core/participants/participant/configuration/EchoParticipantConfiguration.hpp>
-#include <ddspipe_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddspipe_core/types/dds/DomainId.hpp>
 #include <ddspipe_core/types/dds/Guid.hpp>
 #include <ddspipe_core/types/dds/GuidPrefix.hpp>
-#include <ddspipe_core/types/topic/filter/DdsFilterTopic.hpp>
-#include <ddspipe_core/types/topic/dds/DistributedTopic.hpp>
-#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
 namespace test {
-
-using namespace eprosima::ddsrouter::core::types;
-
-// TODO: most of the methods from this test_utils that generate random types are not very "random".
-// They must be refactored to generate real random values.
-
-constexpr const int TEST_NUMBER_ITERATIONS = 5;
 
 /**
  * @brief Create a \c Guid with some of its bits determined by the input
@@ -48,80 +34,18 @@ constexpr const int TEST_NUMBER_ITERATIONS = 5;
  * @todo Make truly random using \c seed as such
  *
  */
-Guid random_guid(
-        uint16_t seed = 1);
+types::Guid random_guid(
+        unsigned int seed = 1);
 
-struct TopicInput
-{
-    TopicInput(
-            std::string name,
-            std::string type,
-            bool keyed,
-            bool key_set);
+types::DomainId random_domain(
+        unsigned int seed = 0);
 
-    std::string name;
-    std::string type;
-    bool keyed;
-    bool key_set;
-};
-
-struct DdsTopicInput : public TopicInput
-{
-    DdsTopicInput(
-            std::string name,
-            std::string type,
-            bool keyed,
-            bool key_set,
-            bool reliable,
-            bool reliable_set);
-
-    bool reliable;
-    bool reliable_set;
-};
-
-struct WildcardTopicInput : public TopicInput
-{
-    WildcardTopicInput(
-            std::string name,
-            std::string type,
-            bool keyed,
-            bool key_set,
-            bool type_set);
-
-    bool type_set;
-};
-
-std::set<std::shared_ptr<DistributedTopic>> topic_set(
-        std::vector<DdsTopicInput> topics);
-
-std::set<std::shared_ptr<DdsFilterTopic>> topic_set(
-        std::vector<WildcardTopicInput> topics);
-
-DomainId random_domain(
-        uint16_t seed = 0);
-
-GuidPrefix random_guid_prefix(
-        uint16_t seed = 0,
+types::GuidPrefix random_guid_prefix(
+        unsigned int seed = 0,
         bool ros = false);
 
-Address random_address(
-        uint16_t seed = 0);
-
-std::set<DiscoveryServerConnectionAddress> random_connection_addresses(
-        uint16_t seed = 0,
-        uint16_t size = 1,
-        bool ros = false);
-
-std::shared_ptr<core::configuration::ParticipantConfiguration> random_participant_configuration(
-        ParticipantKind kind,
-        uint16_t seed = 0);
-
-ParticipantId random_participant_id(
-        uint16_t seed = 0);
-
-ParticipantKind random_participant_kind(
-        bool valid = true,
-        uint16_t seed = 0);
+types::ParticipantId random_participant_id(
+        unsigned int seed = 0);
 
 } /* namespace test */
 } /* namespace core */

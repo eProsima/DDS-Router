@@ -22,7 +22,7 @@
 #include <cpp_utils/macros/custom_enumeration.hpp>
 
 #include <ddspipe_participants/library/library_dll.h>
-#include <ddspipe_core/configuration/BaseConfiguration.hpp>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -43,7 +43,7 @@ ENUMERATION_BUILDER(
 /**
  * Configuration holding TLS parameters.
  */
-struct TlsConfiguration : public core::BaseConfiguration
+struct TlsConfiguration : public core::IConfiguration
 {
 
     /**
