@@ -38,20 +38,17 @@ public:
      */
     virtual ~ITopic() = default;
 
-    /**
-     * @brief Compare 2 ITopics
-     *
-     * @note this method should be specialized for each subclass so it can differentiate between specific fields.
-     * 2 different Topic kinds should not have same discriminator, and if possible same topic name.
-     *
-     * @param [in] other other topic to compare this with
-     * @return true if both topics are the same
-     * @return false otherwise
-     */
-    virtual bool operator==(const ITopic& other) const noexcept;
+    virtual bool operator < (
+            const ITopic& other) const noexcept = 0;
+
+    virtual bool operator == (
+            const ITopic& other) const noexcept = 0;
 
     //! ITopic name
     virtual const std::string& topic_name() const noexcept = 0;
+
+    //! ITopic unique name in processs
+    virtual std::string topic_unique_name() const noexcept = 0;
 
     /**
      * This refers to an internal used identifier that declares which kind of data type is going to be

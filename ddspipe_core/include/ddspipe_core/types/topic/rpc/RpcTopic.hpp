@@ -40,6 +40,8 @@ public:
     RpcTopic(
             const DdsTopic& topic) noexcept;
 
+    RpcTopic(const RpcTopic& topic) noexcept;
+
     //! Service name getter
     const std::string& service_name() const;
 

@@ -23,6 +23,7 @@
 #include <ddspipe_core/interface/IReader.hpp>
 #include <ddspipe_core/interface/IWriter.hpp>
 #include <ddspipe_core/types/topic/dds/DistributedTopic.hpp>
+#include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -138,6 +139,9 @@ protected:
      * disabled.
      */
     void transmit_() noexcept;
+
+    //! Topic that refers to this Bridge
+    const std::shared_ptr<ITopic> topic_;
 
     /**
      * @brief Id of the Participant of the Reader

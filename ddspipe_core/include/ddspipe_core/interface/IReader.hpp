@@ -22,6 +22,8 @@
 
 #include <ddspipe_core/interface/IRoutingData.hpp>
 #include <ddspipe_core/types/dds/Guid.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -115,6 +117,10 @@ public:
 
     //! Get number of unread cache changes in internal RTPS reader
     virtual uint64_t get_unread_count() const noexcept = 0;
+
+    virtual types::DdsTopic topic() const noexcept = 0;
+
+    virtual types::ParticipantId participant_id() const noexcept = 0;
     /////////////////////////
 };
 

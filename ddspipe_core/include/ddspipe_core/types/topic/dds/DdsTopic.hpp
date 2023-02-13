@@ -42,23 +42,13 @@ struct DdsTopic : public DistributedTopic
     DDSPIPE_CORE_DllAPI DdsTopic() = default;
 
     /////////////////////////
-    // OPERATORS
-    /////////////////////////
-
-    //! Equal operator.
-    DDSPIPE_CORE_DllAPI bool operator == (
-            const Topic& other) const noexcept;
-
-    //! Equal operator.
-    DDSPIPE_CORE_DllAPI bool operator == (
-            const DdsTopic& other) const noexcept;
-
-    /////////////////////////
     // METHODS
     /////////////////////////
 
-    //! Override parent method
-    virtual const TopicInternalTypeDiscriminator& internal_type_discriminator() const noexcept override;
+    virtual bool is_valid(
+        utils::Formatter& error_msg) const noexcept override;
+
+    virtual std::string topic_unique_name() const noexcept override;
 
     /////////////////////////
     // STATIC METHODS
@@ -67,7 +57,8 @@ struct DdsTopic : public DistributedTopic
     //! Whether a name and type can refer to a correct DDS Topic.
     DDSPIPE_CORE_DllAPI static bool is_valid_dds_topic(
             const std::string& topic_name,
-            const std::string& type_name) noexcept;
+            const std::string& type_name,
+            utils::Formatter& error_msg) noexcept;
 
     /////////////////////////
     // VARIABLES
@@ -83,6 +74,7 @@ struct DdsTopic : public DistributedTopic
      * This Topic class is a proxy, not an actual Topic Entity of DDS, so it should not have QoS.
      */
     types::TopicQoS topic_qos{};
+
 };
 
 /**

@@ -57,10 +57,10 @@ public:
      * @note Always created disabled, manual enable required. First enable creates all endpoints.
      */
     RPCBridge(
-            const types::RpcTopic& topic,
-            std::shared_ptr<ParticipantsDatabase> participants_database,
-            std::shared_ptr<PayloadPool> payload_pool,
-            std::shared_ptr<utils::SlotThreadPool> thread_pool);
+            const std::shared_ptr<types::RpcTopic>& topic,
+            const std::shared_ptr<ParticipantsDatabase>& participants_database,
+            const std::shared_ptr<PayloadPool>& payload_pool,
+            const std::shared_ptr<utils::SlotThreadPool>& thread_pool);
 
     /**
      * @brief Destructor
@@ -152,9 +152,6 @@ protected:
     //! Whether there are any servers in the database
     bool servers_available_() const noexcept;
 
-    //! RpcTopic (service) that this bridge manages communication
-    const types::RpcTopic topic_;
-
     //! Flag set to true when proxy clients and servers are created, so it can only be done once
     bool init_;
 
@@ -187,6 +184,8 @@ protected:
      * Mutex to guard while the RPCBridge is sending a message so it could not be disabled.
      */
     std::shared_timed_mutex on_transmission_mutex_;
+
+    std::shared_ptr<types::RpcTopic> rpc_topic_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

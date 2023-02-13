@@ -19,7 +19,7 @@
 
 #include <cpp_utils/Formatter.hpp>
 
-#include <ddspipe_core/configuration/BaseConfiguration.hpp>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
@@ -33,7 +33,7 @@ namespace core {
  * - Number of threads to Thread Pool
  * - Default maximum history depth
  */
-struct SpecsConfiguration : public ddspipe::core::BaseConfiguration
+struct SpecsConfiguration : public ddspipe::core::IConfiguration
 {
 
     /////////////////////////
