@@ -44,7 +44,7 @@ class AllowedTopicList
 public:
 
     //! Default constructor with empty lists
-    AllowedTopicList() = default;
+    AllowedTopicList();
 
     //! Constructor by initialization lists
     AllowedTopicList(

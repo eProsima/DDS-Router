@@ -17,6 +17,7 @@
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
 
+#include <ddspipe_core/core/DdsPipe.hpp>
 #include <ddspipe_core/dynamic/AllowedTopicList.hpp>
 #include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
 #include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
@@ -102,7 +103,24 @@ public:
 
 protected:
 
+    /**
+     * @brief Load allowed topics from configuration
+     *
+     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
+     */
+    void init_allowed_topics_();
+
+    /**
+     * @brief  Create participants and add them to the participants database
+     *
+     * @throw \c ConfigurationException in case a Participant is not well configured (e.g. No kind)
+     * @throw \c InitializationException in case \c IParticipants creation fails.
+     */
+    void init_participants_();
+
     DdsRouterConfiguration configuration_;
+
+    std::unique_ptr<ddspipe::core::DdsPipe> ddspipe_;
 
     std::shared_ptr<ddspipe::core::AllowedTopicList> allowed_topics_;
 
