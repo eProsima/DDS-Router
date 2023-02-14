@@ -17,6 +17,6 @@
 #########################
 
 add_subdirectory(address)
-add_subdirectory(ddsrouter)
 add_subdirectory(guid)
-add_subdirectory(topic)
+# TODO uncommment when ready
+# add_subdirectory(topic)

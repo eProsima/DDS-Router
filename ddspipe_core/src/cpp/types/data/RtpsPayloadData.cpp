@@ -28,6 +28,11 @@ RtpsPayloadData::~RtpsPayloadData()
     }
 }
 
+types::TopicInternalTypeDiscriminator RtpsPayloadData::internal_type_discriminator() const noexcept
+{
+    return INTERNAL_TOPIC_TYPE_RTPS;
+}
+
 } /* namespace types */
 } /* namespace core */
 } /* namespace ddspipe */

@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -42,7 +43,7 @@ TEST(YamlGetEntityAddressTest, get_address_domain)
         // Add IP
         test::add_field_to_yaml(
             yml_address,
-            test::YamlField<core::types::IpType>("localhost"),
+            test::YamlField<participants::types::IpType>("localhost"),
             ADDRESS_DNS_TAG);
 
         // Add IP version
@@ -54,11 +55,11 @@ TEST(YamlGetEntityAddressTest, get_address_domain)
         Yaml yml;
         yml["address"] = yml_address;
 
-        // Get core::types::Address from Yaml
-        core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
+        // Get participants::types::Address from Yaml
+        participants::types::Address result = YamlReader::get<participants::types::Address>(yml, "address", LATEST);
 
         // Check result
-        ASSERT_EQ(core::types::IpVersion::v4, result.ip_version());
+        ASSERT_EQ(participants::types::IpVersion::v4, result.ip_version());
         ASSERT_EQ("127.0.0.1", result.ip());
     }
 
@@ -69,17 +70,17 @@ TEST(YamlGetEntityAddressTest, get_address_domain)
         // Add IP
         test::add_field_to_yaml(
             yml_address,
-            test::YamlField<core::types::IpType>("localhost"),
+            test::YamlField<participants::types::IpType>("localhost"),
             ADDRESS_DNS_TAG);
 
         Yaml yml;
         yml["address"] = yml_address;
 
-        // Get core::types::Address from Yaml
-        core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
+        // Get participants::types::Address from Yaml
+        participants::types::Address result = YamlReader::get<participants::types::Address>(yml, "address", LATEST);
 
         // Check result
-        ASSERT_EQ(core::types::IpVersion::v4, result.ip_version());
+        ASSERT_EQ(participants::types::IpVersion::v4, result.ip_version());
         ASSERT_EQ("127.0.0.1", result.ip());
     }
 }

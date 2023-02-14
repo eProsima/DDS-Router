@@ -75,8 +75,7 @@ void BaseReader::set_on_data_available_callback(
 
     if (on_data_available_lambda_set_)
     {
-        logDevError(DDSROUTER_BASEREADER, "Changing on_data_available callback for Reader in topic " <<
-                topic_ << " in Participant " << participant_id_);
+        logDevError(DDSROUTER_BASEREADER, "Changing on_data_available callback for Reader in Participant " << participant_id_);
     }
 
     on_data_available_lambda_ = on_data_available_lambda;
@@ -89,8 +88,7 @@ void BaseReader::unset_on_data_available_callback() noexcept
 
     if (!on_data_available_lambda_set_)
     {
-        logDevError(DDSROUTER_BASEREADER, "Unsetting a non set on_data_available callback for Reader in topic " <<
-                topic_ << " in Participant " << participant_id_);
+        logDevError(DDSROUTER_BASEREADER, "Unsetting a non set on_data_available callback for Reader in Participant " << participant_id_);
     }
 
     on_data_available_lambda_ = DEFAULT_ON_DATA_AVAILABLE_CALLBACK;
@@ -108,8 +106,7 @@ utils::ReturnCode BaseReader::take(
     }
     else
     {
-        logDevError(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in topic " <<
-                topic_ << " in Participant " << participant_id_);
+        logDevError(DDSROUTER_BASEREADER, "Attempt to take data from disabled Reader in Participant " << participant_id_);
         return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
 }
@@ -127,8 +124,7 @@ void BaseReader::on_data_available_() const noexcept
     }
     else
     {
-        logDevError(DDSROUTER_BASEREADER, "Calling not set on_data_available callback for Reader in topic " <<
-                topic_ << " in Participant " << participant_id_);
+        logDevError(DDSROUTER_BASEREADER, "Calling not set on_data_available callback for Reader in Participant " << participant_id_);
     }
 }
 

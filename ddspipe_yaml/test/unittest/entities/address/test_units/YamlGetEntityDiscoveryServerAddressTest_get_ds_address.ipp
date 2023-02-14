@@ -14,14 +14,15 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
-#include <test_utils.hpp>
+#include <ddspipe_core/testing/random_values.hpp>
 
-#include <ddsrouter_core/types/address/DiscoveryServerConnectionAddress.hpp>
+#include <ddspipe_participants/types/address/DiscoveryServerConnectionAddress.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -41,14 +42,14 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         Yaml yml_ds_address;
 
         // Get random guid prefix and add it to yaml
-        core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
+        core::types::GuidPrefix guid_prefix = eprosima::ddspipe::core::testing::random_guid_prefix();
         Yaml yml_guid;
         yaml::test::guid_prefix_to_yaml(yml_guid, guid_prefix);
 
         yml_ds_address[DISCOVERY_SERVER_GUID_PREFIX_TAG] = yml_guid;
 
         // Get random address and add it to yaml
-        core::types::Address address = eprosima::ddsrouter::test::random_address();
+        participants::types::Address address = eprosima::ddspipe::participants::testing::random_address();
         Yaml yml_addresses;
         Yaml yml_address;
         yaml::test::address_to_yaml(yml_address, address);
@@ -62,8 +63,8 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         yml["ds-address"] = yml_ds_address;
 
         // Create object DiscoveryServerAddress from yaml
-        core::types::DiscoveryServerConnectionAddress result =
-                YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address", LATEST);
+        participants::types::DiscoveryServerConnectionAddress result =
+                YamlReader::get<participants::types::DiscoveryServerConnectionAddress>(yml, "ds-address", LATEST);
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());
@@ -76,7 +77,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         Yaml yml_ds_address;
 
         // Get random guid prefix and add it to yaml
-        core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
+        core::types::GuidPrefix guid_prefix = eprosima::ddspipe::core::testing::random_guid_prefix();
         Yaml yml_guid;
         yaml::test::guid_prefix_to_yaml(yml_guid, guid_prefix);
 
@@ -84,12 +85,12 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
 
         // Get random address and add it to yaml
         Yaml yml_addresses;
-        std::vector<core::types::Address> addresses;
+        std::vector<participants::types::Address> addresses;
         for (unsigned int i = 0; i < TEST_ADDRESSES_NUMBER; i++)
         {
             // Create new address and add it to already created addresses and to yaml
             Yaml yml_address;
-            core::types::Address address = eprosima::ddsrouter::test::random_address(i);
+            participants::types::Address address = eprosima::ddspipe::participants::testing::random_address(i);
 
             yaml::test::address_to_yaml(yml_address, address);
 
@@ -103,18 +104,18 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address)
         yml["ds-address"] = yml_ds_address;
 
         // Create object DiscoveryServerAddress from yaml
-        core::types::DiscoveryServerConnectionAddress result =
-                YamlReader::get<core::types::DiscoveryServerConnectionAddress>(yml, "ds-address", LATEST);
+        participants::types::DiscoveryServerConnectionAddress result =
+                YamlReader::get<participants::types::DiscoveryServerConnectionAddress>(yml, "ds-address", LATEST);
 
         // Check result
         ASSERT_EQ(guid_prefix, result.discovery_server_guid_prefix());
         ASSERT_EQ(result.addresses().size(), TEST_ADDRESSES_NUMBER);
 
         // Check every address introduced in yaml is in result
-        for (core::types::Address address : addresses)
+        for (participants::types::Address address : addresses)
         {
             // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
-            std::set<eprosima::ddsrouter::core::types::Address> addresses = result.addresses();
+            std::set<eprosima::ddspipe::participants::types::Address> addresses = result.addresses();
             ASSERT_NE(addresses.find(address), addresses.end());
         }
     }

@@ -12,8 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Include utils for this specific test
-include_directories("TestUtils")
-
 # Add subdirectory with tests
 add_subdirectory(unittest)
