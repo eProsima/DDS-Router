@@ -22,6 +22,7 @@
 #include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
 #include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
 #include <ddspipe_core/core/DdsPipe.hpp>
+#include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
 
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
