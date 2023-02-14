@@ -23,7 +23,7 @@ participants:
         port: 11666
 
   - name: wan
-    kind: wan
+    kind: wan-ds
     discovery-server-guid:
       id: 1
     connection-addresses:
