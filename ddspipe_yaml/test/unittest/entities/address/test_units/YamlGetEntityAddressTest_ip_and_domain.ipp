@@ -21,11 +21,13 @@
 
 #include <cpp_utils/testing/LogChecker.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test the behaviour when both ip and domain are given.
@@ -35,23 +37,23 @@ using namespace eprosima::ddspipe::yaml;
 TEST(YamlGetEntityAddressTest, ip_and_domain)
 {
     // Check a warning is shown
-    // eprosima::ddspipe::core::testing::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
+    // eprosima::ddspipe::core::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Warning, 1, 0);
 
     // Set address
     Yaml yml_address;
 
     // Add domain
-    yaml::test::add_field_to_yaml(
+    ddspipe::yaml::testing::add_field_to_yaml(
         yml_address,
-        yaml::test::YamlField<participants::types::IpType>("localhost"),
+        ddspipe::yaml::testing::YamlField<participants::types::IpType>("localhost"),
         ADDRESS_DNS_TAG);
 
     // Add ip
     participants::types::IpType ip_value = "1.1.1.1";
-    yaml::test::add_field_to_yaml(
+    ddspipe::yaml::testing::add_field_to_yaml(
         yml_address,
-        yaml::test::YamlField<participants::types::IpType>(ip_value),
+        ddspipe::yaml::testing::YamlField<participants::types::IpType>(ip_value),
         ADDRESS_IP_TAG);
 
     Yaml yml;

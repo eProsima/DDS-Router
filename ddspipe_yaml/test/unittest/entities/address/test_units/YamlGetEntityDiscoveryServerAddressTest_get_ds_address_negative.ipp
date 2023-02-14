@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read a discovery server connection address that fails
@@ -56,7 +58,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         participants::types::Address address = eprosima::ddspipe::participants::testing::random_address();
         Yaml yml_addresses;
         Yaml yml_address;
-        yaml::test::address_to_yaml(yml_address, address);
+        ddspipe::yaml::testing::address_to_yaml(yml_address, address);
         yml_addresses.push_back(yml_address);
         yml_ds_address[COLLECTION_ADDRESSES_TAG] = yml_addresses;
 
@@ -74,7 +76,7 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         // Get random guid prefix and add it to yaml
         core::types::GuidPrefix guid_prefix = eprosima::ddspipe::core::testing::random_guid_prefix();
         Yaml yml_guid;
-        yaml::test::guid_prefix_to_yaml(yml_guid, guid_prefix);
+        guid_prefix_to_yaml(yml_guid, guid_prefix);
         yml_ds_address[DISCOVERY_SERVER_GUID_PREFIX_TAG] = yml_guid;
 
         Yaml yml;
@@ -92,14 +94,14 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         participants::types::Address address = eprosima::ddspipe::participants::testing::random_address();
         Yaml yml_addresses;
         Yaml yml_address;
-        yaml::test::address_to_yaml(yml_address, address);
+        ddspipe::yaml::testing::address_to_yaml(yml_address, address);
         yml_addresses.push_back(yml_address);
         yml_ds_address[COLLECTION_ADDRESSES_TAG] = yml_addresses;
 
         // Guid Prefix error format (inside a sequence)
         core::types::GuidPrefix guid_prefix = eprosima::ddspipe::core::testing::random_guid_prefix();
         Yaml yml_guid;
-        yaml::test::guid_prefix_to_yaml(yml_guid, guid_prefix);
+        guid_prefix_to_yaml(yml_guid, guid_prefix);
         Yaml yml_guid_aux;
         yml_guid_aux.push_back(yml_guid);
         yml_ds_address[DISCOVERY_SERVER_GUID_PREFIX_TAG] = yml_guid_aux;
@@ -119,14 +121,14 @@ TEST(YamlGetEntityDiscoveryServerAddressTest, get_ds_address_negative)
         participants::types::Address address = eprosima::ddspipe::participants::testing::random_address();
         Yaml yml_addresses;
         Yaml yml_address;
-        yaml::test::address_to_yaml(yml_address, address);
+        ddspipe::yaml::testing::address_to_yaml(yml_address, address);
         yml_addresses["address1"] = yml_address;
         yml_ds_address[COLLECTION_ADDRESSES_TAG] = yml_addresses;
 
         // Get random guid prefix and add it to yaml
         core::types::GuidPrefix guid_prefix = eprosima::ddspipe::core::testing::random_guid_prefix();
         Yaml yml_guid;
-        yaml::test::guid_prefix_to_yaml(yml_guid, guid_prefix);
+        guid_prefix_to_yaml(yml_guid, guid_prefix);
         yml_ds_address[DISCOVERY_SERVER_GUID_PREFIX_TAG] = yml_guid;
 
         Yaml yml;

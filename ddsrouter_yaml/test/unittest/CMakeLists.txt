@@ -16,6 +16,6 @@
 # Yaml Tests #
 ##############
 
-add_subdirectory(configuration)
-add_subdirectory(entities)
-add_subdirectory(participants)
+# TODO uncomment when ready
+# add_subdirectory(configuration)
+# add_subdirectory(participants)

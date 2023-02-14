@@ -21,7 +21,7 @@
 #include <ddspipe_core/types/dds/DomainId.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -51,8 +51,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            core::DiscoveryServerParticipantConfiguration result =
+            YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -67,8 +67,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            core::DiscoveryServerParticipantConfiguration result =
+            YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -82,8 +82,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            core::DiscoveryServerParticipantConfiguration result =
+            YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -97,8 +97,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            core::DiscoveryServerParticipantConfiguration result =
+            YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

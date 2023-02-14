@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read an address checking that default values are being used
@@ -51,9 +53,9 @@ TEST(YamlGetEntityAddressTest, get_address_defaults)
         Yaml yml_address;
 
         // Add IP with ip-version ipv6
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_address,
-            test::YamlField<participants::types::IpType>("::1"),
+            YamlField<participants::types::IpType>("::1"),
             ADDRESS_IP_TAG);
 
         Yaml yml;

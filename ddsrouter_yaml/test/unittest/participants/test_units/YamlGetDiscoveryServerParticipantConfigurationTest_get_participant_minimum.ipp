@@ -21,7 +21,7 @@
 #include <ddspipe_core/types/dds/DomainId.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -55,8 +55,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                 yml["participant"] = yml_participant;
 
                 // Read Yaml
-                core::configuration::DiscoveryServerParticipantConfiguration result =
-                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(
+                core::DiscoveryServerParticipantConfiguration result =
+                        YamlReader::get<core::DiscoveryServerParticipantConfiguration>(
                     yml,
                     "participant",
                     LATEST);
@@ -71,7 +71,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                 ASSERT_EQ(result.listening_addresses.size(), 0u);
                 ASSERT_FALSE(result.tls_configuration.is_active());
                 ASSERT_EQ(
-                    core::configuration::DiscoveryServerParticipantConfiguration().domain,
+                    core::DiscoveryServerParticipantConfiguration().domain,
                     result.domain);
             }
         }

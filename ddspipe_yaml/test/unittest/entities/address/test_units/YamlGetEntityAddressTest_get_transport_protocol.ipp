@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read Transport Protocol from yaml
@@ -41,9 +43,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
     // UDP
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
+            YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
         participants::types::TransportProtocol tp =
@@ -55,9 +57,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
     // TCP
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
+            YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
         participants::types::TransportProtocol tp =
@@ -81,9 +83,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
     // Incorrect tag
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>("utcp"),
+            YamlField<std::string>("utcp"),
             ADDRESS_TRANSPORT_TAG);
 
         ASSERT_THROW(
@@ -97,9 +99,9 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
     // Incorrect format
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<uint32_t>(17),
+            YamlField<uint32_t>(17),
             ADDRESS_TRANSPORT_TAG);
 
         ASSERT_THROW(
