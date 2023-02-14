@@ -23,7 +23,11 @@
 
 #include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
+<<<<<<< HEAD
 #include <ddsrouter_core/core/DDSRouter.hpp>
+=======
+#include <ddsrouter_core/core/DdsRouter.hpp>
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
 #include <ddsrouter_core/types/address/Address.hpp>
 #include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
 #include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
@@ -104,9 +108,15 @@ std::shared_ptr<configuration::ParticipantConfiguration> participant_configurati
  * Create 1 simple participants with domains \c domain
  * Create 1 custom participant by the configuration in \c participant_configuration
  *
+<<<<<<< HEAD
  * @return configuration::DDSRouterConfiguration
  */
 configuration::DDSRouterConfiguration router_configuration(
+=======
+ * @return configuration::DdsRouterConfiguration
+ */
+configuration::DdsRouterConfiguration router_configuration(
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
         std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
         types::DomainIdType domain,
         bool has_simple = true)
@@ -137,7 +147,11 @@ configuration::DDSRouterConfiguration router_configuration(
                 ));
     }
 
+<<<<<<< HEAD
     return configuration::DDSRouterConfiguration(
+=======
+    return configuration::DdsRouterConfiguration(
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
         allowlist,
         blocklist,
         builtin_topics,
@@ -151,9 +165,15 @@ configuration::DDSRouterConfiguration router_configuration(
  * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
  */
 void test_WAN_communication(
+<<<<<<< HEAD
         configuration::DDSRouterConfiguration ddsrouter_client_configuration_1,
         configuration::DDSRouterConfiguration ddsrouter_client_configuration_2,
         configuration::DDSRouterConfiguration ddsrouter_repeater_configuration,
+=======
+        configuration::DdsRouterConfiguration ddsrouter_client_configuration_1,
+        configuration::DdsRouterConfiguration ddsrouter_client_configuration_2,
+        configuration::DdsRouterConfiguration ddsrouter_repeater_configuration,
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
@@ -173,7 +193,11 @@ void test_WAN_communication(
     // Add this string as many times as the msg size requires
     for (uint32_t i = 0; i < msg_size; i++)
     {
+<<<<<<< HEAD
         msg_str += "Testing DDSRouter Blackbox Local Communication ...";
+=======
+        msg_str += "Testing DdsRouter Blackbox Local Communication ...";
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
     }
     msg.message(msg_str);
 
@@ -185,6 +209,7 @@ void test_WAN_communication(
     TestSubscriber<HelloWorld> subscriber;
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
+<<<<<<< HEAD
     // Create DDSRouter entity whose WAN Participant is configured as server
     DDSRouter client_router_1(ddsrouter_client_configuration_1);
     client_router_1.start();
@@ -195,6 +220,18 @@ void test_WAN_communication(
 
     // Create DDSRouter entity whose WAN Participant is configured as repeater
     DDSRouter repeater(ddsrouter_repeater_configuration);
+=======
+    // Create DdsRouter entity whose WAN Participant is configured as server
+    DdsRouter client_router_1(ddsrouter_client_configuration_1);
+    client_router_1.start();
+
+    // Create DdsRouter entity whose WAN Participant is configured as client
+    DdsRouter client_router_2(ddsrouter_client_configuration_2);
+    client_router_2.start();
+
+    // Create DdsRouter entity whose WAN Participant is configured as repeater
+    DdsRouter repeater(ddsrouter_repeater_configuration);
+>>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
     repeater.start();
 
     // Start publishing
