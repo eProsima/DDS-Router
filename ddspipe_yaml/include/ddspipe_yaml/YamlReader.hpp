@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#pragma once
+
 #include <cpp_utils/types/Fuzzy.hpp>
 #include <cpp_utils/enum/EnumBuilder.hpp>
 
