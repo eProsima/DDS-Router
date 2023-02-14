@@ -20,6 +20,7 @@
 #include <ddspipe_core/dynamic/AllowedTopicList.hpp>
 #include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
 #include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
+#include <ddspipe_core/core/DdsPipe.hpp>
 
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>

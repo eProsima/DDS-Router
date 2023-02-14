@@ -14,23 +14,23 @@
 
 #pragma once
 
-#include <ddspipe_participants/types/address/Address.hpp>
-#include <ddspipe_participants/types/address/DiscoveryServerConnectionAddress.hpp>
+#include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
+
+#include <ddsrouter_core/types/ParticipantKind.hpp>
 
 namespace eprosima {
-namespace ddspipe {
-namespace participants {
+namespace ddsrouter {
+namespace core {
 namespace testing {
 
-types::Address random_address(
+std::shared_ptr<ddspipe::participants::ParticipantConfiguration> random_participant_configuration(
+        types::ParticipantKind kind,
         unsigned int seed = 0);
 
-types::DiscoveryServerConnectionAddress random_connection_address(
-        unsigned int seed = 0,
-        unsigned int size = 1,
-        bool ros = false);
+types::ParticipantKind random_participant_kind(
+        unsigned int seed = 0);
 
 } /* namespace testing */
-} /* namespace participants */
-} /* namespace ddspipe */
+} /* namespace core */
+} /* namespace ddsrouter */
 } /* namespace eprosima */
