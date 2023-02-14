@@ -121,7 +121,7 @@ bool CommonWriter::come_from_this_participant_(
 utils::ReturnCode CommonWriter::write_(
         core::IRoutingData& data) noexcept
 {
-    auto rtps_data = dynamic_cast<RtpsPayloadData&>(data);
+    auto& rtps_data = dynamic_cast<RtpsPayloadData&>(data);
 
     // Take new Change from history
     fastrtps::rtps::CacheChange_t* new_change;
@@ -216,14 +216,6 @@ utils::ReturnCode CommonWriter::fill_to_send_data_(
 
     // Set source time stamp to be the original one
     to_send_params.source_timestamp(data.source_timestamp);
-
-    // RPC support
-    // If writer params has been set specifically, use them in change
-    // TODO move to rpc
-    // if (data.write_params.is_set())
-    // {
-    //     to_send_params.related_sample_identity(data->properties.write_params.get_reference().related_sample_identity());
-    // }
 
     return utils::ReturnCode::RETCODE_OK;
 }

@@ -181,7 +181,7 @@ protected:
      * @param [in] server_guid_prefix : GUID Prefix of discovered server
      */
     void discovered_service_(
-            const std::shared_ptr<types::RpcTopic>& topic,
+            const types::RpcTopic& topic,
             const types::ParticipantId& server_participant_id,
             const types::GuidPrefix& server_guid_prefix) noexcept;
 
@@ -195,7 +195,7 @@ protected:
      * @param [in] server_guid_prefix : GUID Prefix of discovered server
      */
     void removed_service_(
-            const std::shared_ptr<types::RpcTopic>& topic,
+            const types::RpcTopic& topic,
             const types::ParticipantId& server_participant_id,
             const types::GuidPrefix& server_guid_prefix) noexcept;
 
@@ -236,7 +236,7 @@ protected:
      * @param [in] topic : new topic
      */
     void create_new_service_(
-            const std::shared_ptr<types::RpcTopic>& topic) noexcept;
+            const types::RpcTopic& topic) noexcept;
 
     /**
      * @brief Enable a specific topic
@@ -309,7 +309,7 @@ protected:
     std::map<std::shared_ptr<types::DistributedTopic>, std::unique_ptr<DdsBridge>> bridges_;
 
     //! Map of RPC bridges indexed by their topic
-    std::map<std::shared_ptr<types::RpcTopic>, std::unique_ptr<RPCBridge>> rpc_bridges_;
+    std::map<types::RpcTopic, std::unique_ptr<RPCBridge>> rpc_bridges_;
 
     /**
      * @brief List of topics discovered
@@ -325,7 +325,7 @@ protected:
      * Every RPC topic discovered would is added to this map.
      * If the value is true, it means this service is allowed.
      */
-    std::map<std::shared_ptr<types::RpcTopic>, bool> current_services_;
+    std::map<types::RpcTopic, bool> current_services_;
 
     /////
     // AUXILIAR VARIABLES
@@ -333,8 +333,12 @@ protected:
     //! Whether the DDSRouterImpl is currently communicating data or not
     std::atomic<bool> enabled_;
 
-    //! Internal mutex for concurrent calls
-    std::mutex mutex_;
+    /**
+     * @brief Internal mutex for concurrent calls
+     *
+     * @todo this should not require to be recursive.
+     */
+    std::recursive_mutex mutex_;
 };
 
 } /* namespace core */

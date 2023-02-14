@@ -56,7 +56,7 @@ struct RpcPayloadData : public RtpsPayloadData
 /**
  * @brief Id to identify the internal topic type id that uses \c RpcPayloadData .
  */
-constexpr TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RPC = "type::rpc::v0";
+const TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RPC = "type::rpc::v0";
 
 } /* namespace types */
 } /* namespace core */

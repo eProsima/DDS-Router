@@ -91,10 +91,6 @@ bool DiscoveryDatabase::topic_exists(
         {
             return true;
         }
-        else
-        {
-            logError(DEBUG, "Topics not equal " << topic << " != " << entity.second.topic);
-        }
     }
     return false;
 }

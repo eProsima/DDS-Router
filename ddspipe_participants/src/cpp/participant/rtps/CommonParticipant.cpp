@@ -146,6 +146,9 @@ core::types::Endpoint CommonParticipant::create_common_endpoint_from_info_(
         endpoint.specific_qos.partitions = info.info.m_qos.m_partition;
     }
 
+    // Set participant that discovered
+    endpoint.discoverer_participant_id = configuration_->id;
+
     // NOTE: ownership is only for Writer
     return endpoint;
 }
@@ -306,12 +309,15 @@ std::shared_ptr<core::IWriter> CommonParticipant::create_writer(
     const core::types::DdsTopic* dds_topic_ptr = dynamic_cast<const core::types::DdsTopic*>(&topic);
     if (!dds_topic_ptr)
     {
+        logDebug(DDSROUTER_RTPS_PARTICIPANT, "Not creating Writer for topic " << topic.topic_name());
         return std::make_shared<BlankWriter>();
     }
     const core::types::DdsTopic& dds_topic = *dds_topic_ptr;
 
     if (topic.internal_type_discriminator() == core::types::INTERNAL_TOPIC_TYPE_RPC)
     {
+        logDebug(DDSROUTER_RTPS_PARTICIPANT,
+            "Creating RPC Writer for topic " << topic.topic_name());
         auto writer = std::make_shared<rpc::SimpleWriter>(
                 this->id(),
                 dds_topic,
@@ -361,12 +367,16 @@ std::shared_ptr<core::IReader> CommonParticipant::create_reader(
     const core::types::DdsTopic* dds_topic_ptr = dynamic_cast<const core::types::DdsTopic*>(&topic);
     if (!dds_topic_ptr)
     {
+        logDebug(DDSROUTER_RTPS_PARTICIPANT, "Not creating Reader for topic " << topic.topic_name());
         return std::make_shared<BlankReader>();
     }
     const core::types::DdsTopic& dds_topic = *dds_topic_ptr;
 
     if (topic.internal_type_discriminator() == core::types::INTERNAL_TOPIC_TYPE_RPC)
     {
+        logDebug(DDSROUTER_RTPS_PARTICIPANT,
+            "Creating RPC Reader for topic " << topic.topic_name());
+
         auto reader = std::make_shared<rpc::SimpleReader>(
             this->id(),
             dds_topic,

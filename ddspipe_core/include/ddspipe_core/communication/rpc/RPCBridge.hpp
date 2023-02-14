@@ -57,7 +57,7 @@ public:
      * @note Always created disabled, manual enable required. First enable creates all endpoints.
      */
     RPCBridge(
-            const std::shared_ptr<types::RpcTopic>& topic,
+            const types::RpcTopic& topic,
             const std::shared_ptr<ParticipantsDatabase>& participants_database,
             const std::shared_ptr<PayloadPool>& payload_pool,
             const std::shared_ptr<utils::SlotThreadPool>& thread_pool);
@@ -185,7 +185,7 @@ protected:
      */
     std::shared_timed_mutex on_transmission_mutex_;
 
-    std::shared_ptr<types::RpcTopic> rpc_topic_;
+    types::RpcTopic rpc_topic_;
 
     // Allow operator << to use private variables
     friend std::ostream& operator <<(

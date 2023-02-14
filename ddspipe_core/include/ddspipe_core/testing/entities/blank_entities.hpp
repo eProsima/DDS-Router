@@ -96,7 +96,7 @@ struct BlankRoutingData : public IRoutingData
     types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 };
 
-constexpr types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_TEST = "test_type::blank::v0";
+const types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_TEST = "test_type::blank::v0";
 
 } /* namespace testing */
 } /* namespace core */

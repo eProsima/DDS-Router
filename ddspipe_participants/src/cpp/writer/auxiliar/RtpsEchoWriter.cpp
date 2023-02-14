@@ -39,7 +39,8 @@ RtpsEchoWriter::RtpsEchoWriter(
 utils::ReturnCode RtpsEchoWriter::write(
         core::IRoutingData& data) noexcept
 {
-    auto rtps_data = dynamic_cast<core::types::RtpsPayloadData&>(data);
+    auto& rtps_data = dynamic_cast<core::types::RtpsPayloadData&>(data);
+
     // TODO: Add Participant receiver Id when added to DataReceived
     if (!verbose_)
     {

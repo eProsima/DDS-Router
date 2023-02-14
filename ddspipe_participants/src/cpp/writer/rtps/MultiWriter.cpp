@@ -141,7 +141,7 @@ QoSSpecificWriter* MultiWriter::create_writer_nts_(
 utils::ReturnCode MultiWriter::write_(
         core::IRoutingData& data) noexcept
 {
-    auto rtps_data = dynamic_cast<core::types::RtpsPayloadData&>(data);
+    auto& rtps_data = dynamic_cast<core::types::RtpsPayloadData&>(data);
 
     logDebug(
         DDSROUTER_MULTIWRITER,
