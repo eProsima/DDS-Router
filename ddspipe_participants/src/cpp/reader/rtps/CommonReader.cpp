@@ -144,6 +144,11 @@ uint64_t CommonReader::get_unread_count() const noexcept
     return rtps_reader_->get_unread_count();
 }
 
+core::types::DdsTopic CommonReader::topic() const noexcept
+{
+    return topic_;
+}
+
 utils::ReturnCode CommonReader::take_nts_(
         std::unique_ptr<core::IRoutingData>& data) noexcept
 {

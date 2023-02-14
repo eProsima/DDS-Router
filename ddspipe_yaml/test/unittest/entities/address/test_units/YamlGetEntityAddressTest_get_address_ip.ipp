@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -35,20 +36,20 @@ TEST(YamlGetEntityAddressTest, get_address_ip)
 {
     // ipv4
     {
-        std::vector<core::types::IpType> ips = {
+        std::vector<participants::types::IpType> ips = {
             "1.1.1.1",
             "127.0.0.1",
             "8.8.8.8",
         };
 
-        for (core::types::IpType ip : ips)
+        for (participants::types::IpType ip : ips)
         {
             Yaml yml_address;
 
             // Add IP
             test::add_field_to_yaml(
                 yml_address,
-                test::YamlField<core::types::IpType>(ip),
+                test::YamlField<participants::types::IpType>(ip),
                 ADDRESS_IP_TAG);
 
             // Add IP version
@@ -60,31 +61,31 @@ TEST(YamlGetEntityAddressTest, get_address_ip)
             Yaml yml;
             yml["address"] = yml_address;
 
-            // Get core::types::Address from Yaml
-            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
+            // Get participants::types::Address from Yaml
+            participants::types::Address result = YamlReader::get<participants::types::Address>(yml, "address", LATEST);
 
             // Check result
-            ASSERT_EQ(core::types::IpVersion::v4, result.ip_version());
+            ASSERT_EQ(participants::types::IpVersion::v4, result.ip_version());
             ASSERT_EQ(ip, result.ip());
         }
     }
 
     // ipv6
     {
-        std::vector<core::types::IpType> ips = {
+        std::vector<participants::types::IpType> ips = {
             "::1",
             "12:34::89",
             "2001:0DB8:0000:0000:0000:0000:1428:57ab",
         };
 
-        for (core::types::IpType ip : ips)
+        for (participants::types::IpType ip : ips)
         {
             Yaml yml_address;
 
             // Add IP
             test::add_field_to_yaml(
                 yml_address,
-                test::YamlField<core::types::IpType>(ip),
+                test::YamlField<participants::types::IpType>(ip),
                 ADDRESS_IP_TAG);
 
             // Add IP version
@@ -96,11 +97,11 @@ TEST(YamlGetEntityAddressTest, get_address_ip)
             Yaml yml;
             yml["address"] = yml_address;
 
-            // Get core::types::Address from Yaml
-            core::types::Address result = YamlReader::get<core::types::Address>(yml, "address", LATEST);
+            // Get participants::types::Address from Yaml
+            participants::types::Address result = YamlReader::get<participants::types::Address>(yml, "address", LATEST);
 
             // Check result
-            ASSERT_EQ(core::types::IpVersion::v6, result.ip_version());
+            ASSERT_EQ(participants::types::IpVersion::v6, result.ip_version());
             ASSERT_EQ(ip, result.ip());
         }
     }

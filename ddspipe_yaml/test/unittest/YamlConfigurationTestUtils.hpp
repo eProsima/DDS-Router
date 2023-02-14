@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file YamlConfigurationTestUtils.hpp
- */
-
-#ifndef _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
-#define _DDSROUTER_TEST_UNITTEST_YAML_YAMLCONFIGURATIONTESTUTILS_HPP_
+#pragma once
 
 #include <sstream>
 
-#include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+#include <ddspipe_core/types/dds/GuidPrefix.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/testing/random_values.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/DiscoveryServerConnectionAddress.hpp>
+#include <ddspipe_participants/testing/random_values.hpp>
+
 #include <ddspipe_yaml/Yaml.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
@@ -90,26 +89,26 @@ void discovery_server_guid_prefix_to_yaml(
 
 void address_to_yaml(
         Yaml& yml,
-        const core::types::Address& address)
+        const participants::types::Address& address)
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<core::types::IpType>(address.ip()),
+        test::YamlField<participants::types::IpType>(address.ip()),
         ADDRESS_IP_TAG);
 
     test::add_field_to_yaml(
         yml,
-        test::YamlField<core::types::PortType>(address.port()),
+        test::YamlField<participants::types::PortType>(address.port()),
         ADDRESS_PORT_TAG);
 
-    if (address.transport_protocol() == core::types::TransportProtocol::udp)
+    if (address.transport_protocol() == participants::types::TransportProtocol::udp)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
     }
-    else if (address.transport_protocol() == core::types::TransportProtocol::tcp)
+    else if (address.transport_protocol() == participants::types::TransportProtocol::tcp)
     {
         test::add_field_to_yaml(
             yml,
@@ -117,14 +116,14 @@ void address_to_yaml(
             ADDRESS_TRANSPORT_TAG);
     }
 
-    if (address.ip_version() == core::types::IpVersion::v4)
+    if (address.ip_version() == participants::types::IpVersion::v4)
     {
         test::add_field_to_yaml(
             yml,
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
-    else if (address.ip_version() == core::types::IpVersion::v6)
+    else if (address.ip_version() == participants::types::IpVersion::v6)
     {
         test::add_field_to_yaml(
             yml,
@@ -139,19 +138,8 @@ void participantid_to_yaml(
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(id.id_name()),
+        test::YamlField<std::string>(id),
         PARTICIPANT_NAME_TAG);
-}
-
-void participantkind_to_yaml(
-        Yaml& yml,
-        const core::types::ParticipantKind& kind)
-{
-    test::add_field_to_yaml(
-        yml,
-        test::YamlField<std::string>(core::types::PARTICIPANT_KIND_ALIASES[static_cast<core::types::ParticipantKindType>(
-            kind)][0]),
-        PARTICIPANT_KIND_TAG);
 }
 
 void domain_to_yaml(
@@ -160,7 +148,7 @@ void domain_to_yaml(
 {
     test::add_field_to_yaml(
         yml,
-        test::YamlField<core::types::DomainIdType>(domain.domain_id()),
+        test::YamlField<core::types::DomainIdType>(domain.domain_id),
         DOMAIN_ID_TAG);
 }
 
@@ -173,6 +161,43 @@ void repeater_to_yaml(
         test::YamlField<bool>(repeater),
         IS_REPEATER_TAG);
 }
+
+// // Create a yaml QoS object only with reliability
+// void qos_to_yaml(
+//         Yaml& yml,
+//         const TopicQoS& qos)
+// {
+//     // TODO: extend this for all qos
+//     test::add_field_to_yaml(yml, test::YamlField<bool>(qos.is_reliable()), QOS_RELIABLE_TAG);
+// }
+
+// // Create a yaml Topic object with name, type and key tags
+// void filter_topic_to_yaml(
+//         Yaml& yml,
+//         const WildcardDdsFilterTopic& topic)
+// {
+//     if (topic.topic_name.is_set())
+//     {
+//         test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.topic_name), TOPIC_NAME_TAG);
+//     }
+
+//     if (topic.type_name.is_set())
+//     {
+//         test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
+//     }
+// }
+
+// // Create a yaml DdsTopic object with name, type, key and reliable tags
+// void real_topic_to_yaml(
+//         Yaml& yml,
+//         const DdsTopic& topic,
+//         const test::YamlField<std::string>& type,
+//         const test::YamlField<Yaml>& qos)
+// {
+//     test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.m_topic_name), TOPIC_NAME_TAG);
+//     test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
+//     test::add_field_to_yaml(yml, test::YamlField<Yaml>(topic.topic_qos), TOPIC_QOS_TAG);
+// }
 
 } /* namespace test */
 } /* namespace yaml */

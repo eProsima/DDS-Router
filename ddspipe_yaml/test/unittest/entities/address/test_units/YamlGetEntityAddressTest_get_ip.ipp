@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -37,21 +38,21 @@ TEST(YamlGetEntityAddressTest, get_ip)
 {
     // string values
     {
-        std::vector<core::types::IpType> ips = {
+        std::vector<participants::types::IpType> ips = {
             "1.1.1.1",
             "::1",
             "127.0.0.1",
         };
 
-        for (core::types::IpType ip : ips)
+        for (participants::types::IpType ip : ips)
         {
             Yaml yml;
             test::add_field_to_yaml(
                 yml,
-                test::YamlField<core::types::IpType>(ip),
+                test::YamlField<participants::types::IpType>(ip),
                 ADDRESS_IP_TAG);
 
-            ASSERT_EQ(ip, YamlReader::get<core::types::IpType>(yml, ADDRESS_IP_TAG, LATEST));
+            ASSERT_EQ(ip, YamlReader::get<participants::types::IpType>(yml, ADDRESS_IP_TAG, LATEST));
         }
     }
 
@@ -59,7 +60,7 @@ TEST(YamlGetEntityAddressTest, get_ip)
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
+        ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 eprosima::utils::ConfigurationException);
     }
 }

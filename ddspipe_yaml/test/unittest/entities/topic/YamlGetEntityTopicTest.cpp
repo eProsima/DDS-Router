@@ -15,15 +15,16 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
-#include <ddsrouter_core/types/dds/TopicQoS.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
+#include <ddspipe_core/types/dds/TopicQoS.hpp>
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -46,12 +47,10 @@ void topic_to_yaml(
         Yaml& yml,
         const test::YamlField<std::string>& name,
         const test::YamlField<std::string>& type,
-        const test::YamlField<bool>& keyed,
         const test::YamlField<Yaml>& qos)
 {
     test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
     test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
-    test::add_field_to_yaml(yml, keyed, TOPIC_KIND_TAG);
     test::add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
 }
 
@@ -60,12 +59,10 @@ void real_topic_to_yaml(
         Yaml& yml,
         const test::YamlField<std::string>& name,
         const test::YamlField<std::string>& type,
-        const test::YamlField<bool>& keyed,
         const test::YamlField<Yaml>& qos)
 {
     test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
     test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
-    test::add_field_to_yaml(yml, keyed, TOPIC_KIND_TAG);
     test::add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
 }
 
@@ -74,17 +71,15 @@ void compare_topic(
         core::types::DdsTopic topic,
         std::string name,
         std::string type,
-        bool keyed,
         bool has_reliability_set = false,
         bool reliable = false)
 {
-    ASSERT_EQ(topic.topic_name, name);
+    ASSERT_EQ(topic.m_topic_name, name);
     ASSERT_EQ(topic.type_name, type);
-    ASSERT_EQ(topic.keyed, keyed);
 
     if (has_reliability_set)
     {
-        eprosima::ddsrouter::core::types::ReliabilityKind expected_reliability_qos;
+        eprosima::ddspipe::core::types::ReliabilityKind expected_reliability_qos;
         if (reliable)
         {
             expected_reliability_qos = core::types::ReliabilityKind::RELIABLE;
@@ -94,7 +89,7 @@ void compare_topic(
             expected_reliability_qos = core::types::ReliabilityKind::BEST_EFFORT;
         }
 
-        ASSERT_EQ(topic.topic_qos.get_reference().reliability_qos, expected_reliability_qos);
+        ASSERT_EQ(topic.topic_qos.reliability_qos, expected_reliability_qos);
     }
 }
 
@@ -103,22 +98,14 @@ void compare_wildcard_topic(
         core::types::WildcardDdsFilterTopic topic,
         std::string name,
         bool type_set,
-        std::string type,
-        bool key_set,
-        bool keyed)
+        std::string type)
 {
     ASSERT_EQ(topic.topic_name, name);
 
     if (type_set)
     {
         ASSERT_TRUE(topic.type_name.is_set());
-        ASSERT_EQ(topic.type_name.get_reference(), type);
-    }
-
-    if (key_set)
-    {
-        ASSERT_TRUE(topic.keyed.is_set());
-        ASSERT_EQ(topic.keyed.get_reference(), keyed);
+        ASSERT_EQ(topic.type_name, type);
     }
 }
 
@@ -132,8 +119,6 @@ void compare_wildcard_topic(
  *
  * POSITIVE CASES:
  * - Topic Std
- * - Topic with key
- * - Topic with no key
  *
  * NEGATIVE CASES:
  * - Empty
@@ -153,42 +138,6 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
             test::YamlField<std::string>(name),
             test::YamlField<std::string>(type),
             test::YamlField<bool>(),
-            test::YamlField<Yaml>());
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::DdsTopic topic = YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST);
-
-        test::compare_topic(topic, name, type, false); // By default no keyed
-    }
-
-    // Topic with key
-    {
-        Yaml yml_topic;
-        test::topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(true),
-            test::YamlField<Yaml>());
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::DdsTopic topic = YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST);
-
-        test::compare_topic(topic, name, type, true);
-    }
-
-    // Topic with no key
-    {
-        Yaml yml_topic;
-        test::real_topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(false),
             test::YamlField<Yaml>());
 
         Yaml yml;
@@ -219,7 +168,7 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
 
         core::types::DdsTopic topic = YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST);
 
-        test::compare_topic(topic, name, type, false, true, true); // By default no keyed
+        test::compare_topic(topic, name, type, true, true);
     }
 
     // Empty
@@ -273,9 +222,6 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
  * POSITIVE CASES:
  * - Topic Std
  * - Topic without type
- * - Topic with key
- * - Topic with no key
- * - Topic with key without type
  */
 TEST(YamlGetEntityTopicTest, get_wildcard_topic)
 {
@@ -298,7 +244,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
                         LATEST);
 
-        test::compare_wildcard_topic(topic, name, true, type, false, false); // By default no keyed
+        test::compare_wildcard_topic(topic, name, true, type, false);
     }
 
     // Topic without type
@@ -317,64 +263,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
                         LATEST);
 
-        test::compare_wildcard_topic(topic, name, false, "*", false, false); // By default no keyed
-    }
-
-    // Topic with key
-    {
-        Yaml yml_topic;
-        test::topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(true),
-            test::YamlField<Yaml>());
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
-                        LATEST);
-
-        test::compare_wildcard_topic(topic, name, true, type, true, true);
-    }
-
-    // Topic with no key
-    {
-        Yaml yml_topic;
-        test::topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(false),
-            test::YamlField<Yaml>());
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
-                        LATEST);
-
-        test::compare_wildcard_topic(topic, name, true, type, true, false);
-    }
-
-    // Topic with key without type
-    {
-        Yaml yml_topic;
-        test::topic_to_yaml(
-            yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(),
-            test::YamlField<bool>(true),
-            test::YamlField<Yaml>());
-
-        Yaml yml;
-        yml["topic"] = yml_topic;
-
-        core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
-                        LATEST);
-
-        test::compare_wildcard_topic(topic, name, false, "*", true, true);
+        test::compare_wildcard_topic(topic, name, false, "*", false);
     }
 }
 
