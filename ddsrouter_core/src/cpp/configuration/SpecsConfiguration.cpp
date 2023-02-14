@@ -12,36 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+/**
+ * @file SpecsConfiguration.cpp
+ *
+ */
 
-#include <cpp_utils/macros/custom_enumeration.hpp>
-#include <cpp_utils/enum/EnumBuilder.hpp>
+#include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/Log.hpp>
+
+#include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
-namespace types {
 
-ENUMERATION_BUILDER(
-    ParticipantKind,
-    simple,
-    initial_peers,
-    discovery_server,
-    echo
-);
-
-eProsima_ENUMERATION_BUILDER(
-    ParticipantKindBuilder,
-    ParticipantKind,
+bool SpecsConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
+{
+    if (number_of_threads < 1)
     {
-        { ParticipantKind::simple COMMA { "local" COMMA "simple" } } COMMA
-        { ParticipantKind::initial_peers COMMA {"wan" COMMA "router" COMMA "initial-peers"} } COMMA
-        { ParticipantKind::discovery_server COMMA {"discovery-server" COMMA "ds" COMMA "local-ds" COMMA "local-discovery-server" COMMA "wan-ds" COMMA "wan-discovery-server"} } COMMA
-        { ParticipantKind::echo COMMA {"echo"} }
+        error_msg << "Number of Threads must be at least 1.";
+        return false;
     }
-);
 
-} /* namespace types */
+    if (max_history_depth == 0)
+    {
+        logWarning(DDSROUTER_SPECS, "Using non limited histories could lead to memory exhaustion in long executions.");
+    }
+
+    return true;
+}
+
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
