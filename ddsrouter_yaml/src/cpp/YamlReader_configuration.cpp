@@ -151,7 +151,8 @@ void YamlReader::fill(
 
     for (auto conf : participants_configurations_yml)
     {
-        ddsrouter::core::types::ParticipantKind kind = YamlReader::get<ddsrouter::core::types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+        ddsrouter::core::types::ParticipantKind kind =
+            YamlReader::get<ddsrouter::core::types::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
         object.participants_configurations.insert(
             {
                 kind,
