@@ -18,6 +18,7 @@
 #include <set>
 
 #include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/memory/Heritable.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>

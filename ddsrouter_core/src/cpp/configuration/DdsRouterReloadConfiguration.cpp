@@ -12,36 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
+/**
+ * @file DdsRouterReloadConfiguration.cpp
+ *
+ */
 
-#include <cpp_utils/macros/custom_enumeration.hpp>
-#include <cpp_utils/enum/EnumBuilder.hpp>
+#include <memory>
+
+#include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/memory/Heritable.hpp>
+#include <cpp_utils/Log.hpp>
+
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+
+#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
-namespace types {
 
-ENUMERATION_BUILDER(
-    ParticipantKind,
-    simple,
-    initial_peers,
-    discovery_server,
-    echo
-);
+bool DdsRouterReloadConfiguration::is_valid(
+        utils::Formatter& error_msg) const noexcept
+{
+    // utils::Heritable objects cannot initialize its internal pointer to nullptr.
+    // Therfore, the previous comparison that checked that the topic (shared_ptr) is not nullptr does not apply anymore.
+    return true;
+}
 
-eProsima_ENUMERATION_BUILDER(
-    ParticipantKindBuilder,
-    ParticipantKind,
-    {
-        { ParticipantKind::simple COMMA { "local" COMMA "simple" } } COMMA
-        { ParticipantKind::initial_peers COMMA {"wan" COMMA "router" COMMA "initial-peers"} } COMMA
-        { ParticipantKind::discovery_server COMMA {"discovery-server" COMMA "ds" COMMA "local-ds" COMMA "local-discovery-server" COMMA "wan-ds" COMMA "wan-discovery-server"} } COMMA
-        { ParticipantKind::echo COMMA {"echo"} }
-    }
-);
-
-} /* namespace types */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
