@@ -21,11 +21,17 @@
 #include <vector>
 
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
+#include <ddspipe_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
 namespace types {
+
+DdsTopic::DdsTopic()
+{
+    m_internal_type_discriminator = INTERNAL_TOPIC_TYPE_RTPS;
+}
 
 std::ostream& operator <<(
         std::ostream& os,
@@ -64,6 +70,11 @@ bool DdsTopic::is_valid_dds_topic(
         const std::string& type_name,
         utils::Formatter& error_msg) noexcept
 {
+    if (topic_name.empty())
+    {
+        error_msg << "Topic name could not be empty. ";
+        return false;
+    }
 
     if (type_name.empty())
     {

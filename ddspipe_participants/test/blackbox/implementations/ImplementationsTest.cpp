@@ -47,9 +47,9 @@ constexpr const unsigned int DEFAULT_MAX_HISTORY_DEPTH = 100;
 } /* namespace ddspipe */
 } /* namespace eprosima */
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 /**
  * Test that creates a DDSRouter with a Pair of Participants of same kind.

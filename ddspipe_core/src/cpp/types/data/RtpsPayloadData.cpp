@@ -12,24 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#pragma once
-
-#include <ddspipe_core/library/library_dll.h>
+#include <ddspipe_core/types/data/RtpsPayloadData.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
 namespace types {
 
-/**
- * @brief Reference the type that is used internally in the DDS Pipe to hold the data transmitted.
- *
- * @warning as this is a const char* it is strongly suggested to only use constexpr or static values.
- */
-using TopicInternalTypeDiscriminator = const char*;
-
-constexpr TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_NONE = "";
+RtpsPayloadData::~RtpsPayloadData()
+{
+    // If payload owner exists and payload has size, release it correctly in pool
+    if (payload_owner && payload.length > 0)
+    {
+        payload_owner->release_payload(payload);
+    }
+}
 
 } /* namespace types */
 } /* namespace core */

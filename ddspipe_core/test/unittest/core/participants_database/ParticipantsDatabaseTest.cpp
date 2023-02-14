@@ -22,63 +22,43 @@
 #include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
 
-namespace eprosima {
-namespace ddspipe {
-namespace core {
 namespace test {
 
-/**
- * This class is used to expose protected methods of the parent class
- * so they can be tested.
- */
-class ParticipantsDatabase : public eprosima::ddsrouter::core::ParticipantsDatabase
+struct MockParticipant : public IParticipant
 {
-public:
-
-    ParticipantsDatabase()
+    types::ParticipantId id() const noexcept
     {
+        return types::ParticipantId("test_participant");
     }
 
-    ParticipantsDatabase(
-            std::map<ParticipantId, std::shared_ptr<IParticipant>> participants)
-        : ParticipantsDatabase()
+    bool is_rtps_kind() const noexcept
     {
-        participants_ = participants;
+        return false;
     }
 
-    std::shared_ptr<IParticipant> pop(
-            const ParticipantId& id) noexcept
+    bool is_repeater() const noexcept
     {
-        return pop_(id);
+        return false;
     }
 
-    std::shared_ptr<IParticipant> pop() noexcept
+    std::shared_ptr<IWriter> create_writer(
+            const ITopic& topic)
     {
-        return pop_();
+        // NOTICE: be careful with this as this has a nullptr
+        return std::shared_ptr<IWriter>();
     }
 
-    void add_participant(
-            ParticipantId id,
-            std::shared_ptr<IParticipant> participant,
-            std::size_t expected_size)
+    std::shared_ptr<IReader> create_reader(
+            const ITopic& topic)
     {
-        add_participant_(id, participant);
-        // Verify correct insertion
-        auto it = participants_.find(id);
-        ASSERT_EQ(it->second, participant);
-        ASSERT_EQ(participants_.size(), expected_size);
+        // NOTICE: be careful with this as this has a nullptr
+        return std::shared_ptr<IReader>();
     }
-
-};
+}
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddspipe */
-} /* namespace eprosima */
 
 /*********************
 * PROTECTED METHODS **

@@ -15,15 +15,14 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddspipe_core/types/topic/dds/DistributedTopic.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core::types;
 
 using pair_topic_type = std::pair<std::string, std::string>;
 
 /**
- * Test DistributedTopic is_valid_dds_topic method for positive cases
+ * Test DdsTopic is_valid_dds_topic method for positive cases
  */
 TEST(DdsTopicTest, is_valid_dds_topic)
 {
@@ -37,14 +36,16 @@ TEST(DdsTopicTest, is_valid_dds_topic)
         {"HelloWorldTopic", "HelloWorld"},
     };
 
+    eprosima::utils::Formatter __f;
+
     for (pair_topic_type topic : topics)
     {
-        ASSERT_TRUE(DistributedTopic::is_valid_dds_topic(topic.first, topic.second));
+        ASSERT_TRUE(DdsTopic::is_valid_dds_topic(topic.first, topic.second, __f));
     }
 }
 
 /**
- * Test DistributedTopic is_valid_dds_topic method for negative cases
+ * Test DdsTopic is_valid_dds_topic method for negative cases
  */
 TEST(DdsTopicTest, is_valid_dds_topic_negative)
 {
@@ -75,9 +76,12 @@ TEST(DdsTopicTest, is_valid_dds_topic_negative)
         // TODO add regex cases
     };
 
+    eprosima::utils::Formatter __f;
+
     for (pair_topic_type topic : topics)
     {
-        ASSERT_FALSE(DistributedTopic::is_valid_dds_topic(topic.first, topic.second));
+        ASSERT_FALSE(DdsTopic::is_valid_dds_topic(topic.first, topic.second, __f))
+            << topic.first << " " << topic.second;
     }
 }
 

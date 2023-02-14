@@ -17,28 +17,15 @@
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 using pair_topic_type = std::pair<std::string, std::string>;
-
-// TODO: extend contains tests for regex topics
-
-/**
- * Test WildcardDdsFilterTopic construct only with topic name
- */
-TEST(WildcardTopicTest, topic_name_constructor)
-{
-    WildcardDdsFilterTopic topic1("topic1");
-    WildcardDdsFilterTopic topic2;
-
-    ASSERT_EQ(topic1, topic2);
-}
 
 /**
  * Test WildcardDdsFilterTopic contains method for positive cases
  */
-TEST(WildcardTopicTest, contains_wildcard)
+TEST(WildcardDdsFilterTopic, contains_wildcard)
 {
     std::vector<                            // Test cases
         std::pair<
@@ -84,7 +71,7 @@ TEST(WildcardTopicTest, contains_wildcard)
 /**
  * Test WildcardDdsFilterTopic matches method for positive cases
  */
-TEST(WildcardTopicTest, matches)
+TEST(WildcardDdsFilterTopic, matches)
 {
     std::vector<                            // Test cases
         std::pair<
@@ -115,10 +102,12 @@ TEST(WildcardTopicTest, matches)
         wt.topic_name = test_case.first.first;
         wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a DistributedTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            DistributedTopic real_topic(real_topic_names.first, real_topic_names.second);
+            DdsTopic real_topic;
+            real_topic.m_topic_name = real_topic_names.first;
+            real_topic.type_name = real_topic_names.second;
 
             ASSERT_TRUE(wt.matches(real_topic)) << "wildcard: " << wt << " ; real: " << real_topic;
         }
@@ -128,7 +117,7 @@ TEST(WildcardTopicTest, matches)
 /**
  * Test WildcardDdsFilterTopic contains method for negative cases
  */
-TEST(WildcardTopicTest, non_contains_wildcard)
+TEST(WildcardDdsFilterTopic, non_contains_wildcard)
 {
     std::vector<                            // Test cases
         std::pair<
@@ -159,7 +148,7 @@ TEST(WildcardTopicTest, non_contains_wildcard)
         wt.topic_name = test_case.first.first;
         wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a DistributedTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
             WildcardDdsFilterTopic contained_topic;
@@ -174,7 +163,7 @@ TEST(WildcardTopicTest, non_contains_wildcard)
 /**
  * Test WildcardDdsFilterTopic matches method for negative cases
  */
-TEST(WildcardTopicTest, non_matches)
+TEST(WildcardDdsFilterTopic, non_matches)
 {
     std::vector<                            // Test cases
         std::pair<
@@ -205,10 +194,12 @@ TEST(WildcardTopicTest, non_matches)
         wt.topic_name = test_case.first.first;
         wt.type_name = test_case.first.second;
 
-        // For every topic to test, create a DistributedTopic and test
+        // For every topic to test, create a DdsTopic and test
         for (auto real_topic_names : test_case.second)
         {
-            DistributedTopic real_topic(real_topic_names.first, real_topic_names.second);
+            DdsTopic real_topic;
+            real_topic.m_topic_name = real_topic_names.first;
+            real_topic.type_name = real_topic_names.second;
 
             ASSERT_FALSE(wt.matches(real_topic));
         }

@@ -26,9 +26,9 @@
 
 #include <cpp_utils/utils.hpp>
 
-using namespace eprosima::ddsrouter::test;
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::test;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 std::vector<PayloadUnit> random_payload(
         uint16_t seed = 1)

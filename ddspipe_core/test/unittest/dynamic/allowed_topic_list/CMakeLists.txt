@@ -19,8 +19,8 @@ set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/dynamic/AllowedTopicList.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/rpc/RpcTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DistributedTopic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/DdsFilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/IFilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/WildcardDdsFilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )

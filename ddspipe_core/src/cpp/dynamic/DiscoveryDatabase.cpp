@@ -91,6 +91,10 @@ bool DiscoveryDatabase::topic_exists(
         {
             return true;
         }
+        else
+        {
+            logError(DEBUG, "Topics not equal " << topic << " != " << entity.second.topic);
+        }
     }
     return false;
 }
@@ -210,19 +214,19 @@ utils::ReturnCode DiscoveryDatabase::erase_endpoint_(
 }
 
 void DiscoveryDatabase::add_endpoint(
-        const Endpoint& new_endpoint) noexcept
+        const Endpoint& new_endpoint)
 {
     push_item_to_queue_(std::make_tuple(DatabaseOperation::add, new_endpoint));
 }
 
 void DiscoveryDatabase::update_endpoint(
-        const Endpoint& endpoint_to_update) noexcept
+        const Endpoint& endpoint_to_update)
 {
     push_item_to_queue_(std::make_tuple(DatabaseOperation::update, endpoint_to_update));
 }
 
 void DiscoveryDatabase::erase_endpoint(
-        const Endpoint& endpoint_to_erase) noexcept
+        const Endpoint& endpoint_to_erase)
 {
     push_item_to_queue_(std::make_tuple(DatabaseOperation::erase, endpoint_to_erase));
 }

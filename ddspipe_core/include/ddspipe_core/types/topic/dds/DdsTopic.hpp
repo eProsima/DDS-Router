@@ -39,7 +39,7 @@ struct DdsTopic : public DistributedTopic
     /////////////////////////
 
     //! Default constructor
-    DDSPIPE_CORE_DllAPI DdsTopic() = default;
+    DDSPIPE_CORE_DllAPI DdsTopic();
 
     /////////////////////////
     // METHODS
@@ -74,7 +74,6 @@ struct DdsTopic : public DistributedTopic
      * This Topic class is a proxy, not an actual Topic Entity of DDS, so it should not have QoS.
      */
     types::TopicQoS topic_qos{};
-
 };
 
 /**
