@@ -40,12 +40,16 @@ namespace types {
 struct RtpsPayloadData : public core::IRoutingData
 {
 
+    RtpsPayloadData() = default;
+
     /**
      * @brief Destroy the Rtps Payload Data object
      *
      * Free the memory for the payload in the corresponding payload pool (if defined).
      */
     virtual ~RtpsPayloadData();
+
+    RtpsPayloadData(const RtpsPayloadData& ) = delete;
 
     virtual types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 
@@ -81,7 +85,7 @@ struct RtpsPayloadData : public core::IRoutingData
 /**
  * @brief Id to identify the internal topic type id that uses \c RtpsPayloadData .
  */
-constexpr core::types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RTPS = "payload::rtps::v0";
+const core::types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RTPS = "payload::rtps::v0";
 
 } /* namespace types */
 } /* namespace core */

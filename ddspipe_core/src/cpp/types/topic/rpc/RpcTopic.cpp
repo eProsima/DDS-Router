@@ -19,8 +19,10 @@
 
 #include <regex>
 
-#include <ddspipe_core/types/topic/rpc/RpcTopic.hpp>
 #include <cpp_utils/utils.hpp>
+
+#include <ddspipe_core/types/topic/rpc/RpcTopic.hpp>
+#include <ddspipe_core/types/data/RpcPayloadData.hpp>
 
 namespace eprosima {
 namespace ddspipe {
@@ -79,6 +81,9 @@ RpcTopic::RpcTopic(
         utils::tsnh(
             utils::Formatter() << "Attempting to create RpcTopic from invalid topic.");
     }
+
+    reply_topic_.m_internal_type_discriminator = INTERNAL_TOPIC_TYPE_RPC;
+    request_topic_.m_internal_type_discriminator = INTERNAL_TOPIC_TYPE_RPC;
 
     // Set both topic qos as the one found
     request_topic_.topic_qos = topic.topic_qos;
