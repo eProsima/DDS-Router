@@ -19,8 +19,9 @@
 set(TEST_NAME YamlReaderScalarTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
         YamlReaderScalarTest.cpp
     )
 
@@ -37,8 +38,8 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
-
-        ddsrouter_core
+        ddspipe_core
+        ddspipe_participants
     )
 
 add_unittest_executable(

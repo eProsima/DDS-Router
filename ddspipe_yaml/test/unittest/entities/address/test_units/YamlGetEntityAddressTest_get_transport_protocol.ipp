@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -45,10 +46,10 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        core::types::TransportProtocol tp =
-                YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
+        participants::types::TransportProtocol tp =
+                YamlReader::get<participants::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
-        ASSERT_EQ(tp, core::types::TransportProtocol::udp);
+        ASSERT_EQ(tp, participants::types::TransportProtocol::udp);
     }
 
     // TCP
@@ -59,10 +60,10 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
             ADDRESS_TRANSPORT_TAG);
 
-        core::types::TransportProtocol tp =
-                YamlReader::get<core::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
+        participants::types::TransportProtocol tp =
+                YamlReader::get<participants::types::TransportProtocol>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
-        ASSERT_EQ(tp, core::types::TransportProtocol::tcp);
+        ASSERT_EQ(tp, participants::types::TransportProtocol::tcp);
     }
 
     // Empty
@@ -70,7 +71,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
         Yaml yml;
 
         ASSERT_THROW(
-            YamlReader::get<core::types::TransportProtocol>(
+            YamlReader::get<participants::types::TransportProtocol>(
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),
@@ -86,7 +87,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             ADDRESS_TRANSPORT_TAG);
 
         ASSERT_THROW(
-            YamlReader::get<core::types::TransportProtocol>(
+            YamlReader::get<participants::types::TransportProtocol>(
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),
@@ -102,7 +103,7 @@ TEST(YamlGetEntityAddressTest, get_transport_protocol)
             ADDRESS_TRANSPORT_TAG);
 
         ASSERT_THROW(
-            YamlReader::get<core::types::TransportProtocol>(
+            YamlReader::get<participants::types::TransportProtocol>(
                 yml,
                 ADDRESS_TRANSPORT_TAG,
                 LATEST),

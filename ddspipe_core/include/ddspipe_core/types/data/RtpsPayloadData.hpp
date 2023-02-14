@@ -47,6 +47,8 @@ struct RtpsPayloadData : public core::IRoutingData
      */
     virtual ~RtpsPayloadData();
 
+    virtual types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
+
     //! Payload of the data received. The data in this payload must belong to the PayloadPool.
     core::types::Payload payload{};
 

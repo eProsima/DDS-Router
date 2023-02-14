@@ -17,9 +17,9 @@
 
 #include <cpp_utils/exception/ConfigurationException.hpp>
 
-#include "YamlReaderTest_common.hpp"
+#include <ddspipe_yaml/YamlReader.hpp>
 
-using namespace eprosima::ddspipe;
+using namespace eprosima;
 using namespace eprosima::ddspipe::yaml;
 
 /**
@@ -35,19 +35,19 @@ TEST(YamlReaderScalarTest, get_scalar_bool)
     // true
     {
         Yaml yml(true);
-        ASSERT_TRUE(test::MockYamlReader::get_scalar<bool>(yml));
+        ASSERT_TRUE(YamlReader::get_scalar<bool>(yml));
     }
 
     // false
     {
         Yaml yml(false);
-        ASSERT_FALSE(test::MockYamlReader::get_scalar<bool>(yml));
+        ASSERT_FALSE(YamlReader::get_scalar<bool>(yml));
     }
 
     // fail with int
     {
         Yaml yml(0);
-        ASSERT_THROW(test::MockYamlReader::get_scalar<bool>(yml), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<bool>(yml), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -69,8 +69,8 @@ TEST(YamlReaderScalarTest, get_scalar_int)
     {
         for (int i = 1; i < 0x1000; i *= 2)
         {
-            ASSERT_EQ(test::MockYamlReader::get_scalar<int>(Yaml(i)), i) << i;
-            ASSERT_EQ(test::MockYamlReader::get_scalar<int>(Yaml(-i)), -i) << -i;
+            ASSERT_EQ(YamlReader::get_scalar<int>(Yaml(i)), i) << i;
+            ASSERT_EQ(YamlReader::get_scalar<int>(Yaml(-i)), -i) << -i;
         }
     }
 
@@ -78,7 +78,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
     {
         for (unsigned int i = 1; i < 0x1000; i *= 2)
         {
-            ASSERT_EQ(test::MockYamlReader::get_scalar<unsigned int>(Yaml(i)), i) << i;
+            ASSERT_EQ(YamlReader::get_scalar<unsigned int>(Yaml(i)), i) << i;
         }
     }
 
@@ -86,7 +86,7 @@ TEST(YamlReaderScalarTest, get_scalar_int)
     {
         for (uint16_t i = 1; i < 0x1000; i *= 2)
         {
-            ASSERT_EQ(test::MockYamlReader::get_scalar<uint16_t>(Yaml(i)), i) << i;
+            ASSERT_EQ(YamlReader::get_scalar<uint16_t>(Yaml(i)), i) << i;
         }
     }
 
@@ -94,14 +94,14 @@ TEST(YamlReaderScalarTest, get_scalar_int)
     {
         for (int64_t i = 1; i < 0x1000; i *= 2)
         {
-            ASSERT_EQ(test::MockYamlReader::get_scalar<int64_t>(Yaml(i)), i) << i;
-            ASSERT_EQ(test::MockYamlReader::get_scalar<int64_t>(Yaml(-i)), -i) << -i;
+            ASSERT_EQ(YamlReader::get_scalar<int64_t>(Yaml(i)), i) << i;
+            ASSERT_EQ(YamlReader::get_scalar<int64_t>(Yaml(-i)), -i) << -i;
         }
     }
 
     // fail with bool
     {
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(Yaml(false)), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<int>(Yaml(false)), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -120,12 +120,12 @@ TEST(YamlReaderScalarTest, get_scalar_string)
 {
     // empty string
     {
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml("")), "");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml("")), "");
     }
 
     // short string
     {
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml("short_text")), "short_text");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml("short_text")), "short_text");
     }
 
     // long string
@@ -137,22 +137,22 @@ TEST(YamlReaderScalarTest, get_scalar_string)
                 "each part, and newlines must be literal as "
                 "usual.";
 
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml(st)), st);
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml(st)), st);
     }
 
     // numeric string
     {
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml("1234567890")), "1234567890");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml("1234567890")), "1234567890");
     }
 
     // numeric
     {
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml(111)), "111");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml(111)), "111");
     }
 
     // bool
     {
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(Yaml(false)), "false");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(Yaml(false)), "false");
     }
 }
 
@@ -173,28 +173,28 @@ TEST(YamlReaderScalarTest, get_scalar_from_tag)
     {
         Yaml yml;
         yml[tag] = true;
-        ASSERT_TRUE(test::MockYamlReader::get_scalar<bool>(yml, tag));
+        ASSERT_TRUE(YamlReader::get_scalar<bool>(yml, tag));
     }
 
     // int
     {
         Yaml yml;
         yml[tag] = 12345;
-        ASSERT_EQ(test::MockYamlReader::get_scalar<int>(yml, tag), 12345);
+        ASSERT_EQ(YamlReader::get_scalar<int>(yml, tag), 12345);
     }
 
     // string
     {
         Yaml yml;
         yml[tag] = "this is a text";
-        ASSERT_EQ(test::MockYamlReader::get_scalar<std::string>(yml, tag), "this is a text");
+        ASSERT_EQ(YamlReader::get_scalar<std::string>(yml, tag), "this is a text");
     }
 
     // no tag
     {
         Yaml yml;
         yml["other_tag"] = 3;
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml, tag), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<int>(yml, tag), eprosima::utils::ConfigurationException);
     }
 }
 
@@ -212,7 +212,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
     {
         Yaml yml;
         ASSERT_TRUE(yml.IsNull());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 
     // sequence
@@ -221,7 +221,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
         yml.push_back(3);
         yml.push_back(4);
         ASSERT_TRUE(yml.IsSequence());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 
     // map
@@ -230,7 +230,7 @@ TEST(YamlReaderScalarTest, get_scalar_negative_cases)
         yml["1"] = 3;
         yml["2"] = 4;
         ASSERT_TRUE(yml.IsMap());
-        ASSERT_THROW(test::MockYamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
+        ASSERT_THROW(YamlReader::get_scalar<int>(yml), eprosima::utils::ConfigurationException);
     }
 }
 

@@ -20,10 +20,11 @@ set(TEST_NAME YamlGetEntityTopicTest)
 
 set(TEST_SOURCES
         YamlGetEntityTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
+
     )
 
 set(TEST_LIST
@@ -37,8 +38,8 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
-
-        ddsrouter_core
+        ddspipe_core
+        ddspipe_participants
     )
 
 add_unittest_executable(
