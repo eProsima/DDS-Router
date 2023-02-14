@@ -21,7 +21,7 @@ set(TEST_NAME PayloadPoolTest)
 set(TEST_SOURCES
         PayloadPoolTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/data/Payload.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Payload.cpp
     )
 
 set(TEST_LIST
@@ -57,7 +57,7 @@ set(TEST_SOURCES
         MapPayloadPoolTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/MapPayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/data/Payload.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Payload.cpp
     )
 
 set(TEST_LIST
@@ -92,7 +92,7 @@ set(TEST_SOURCES
         FastPayloadPoolTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/PayloadPool.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/efficiency/payload/FastPayloadPool.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/data/Payload.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Payload.cpp
     )
 
 set(TEST_LIST

@@ -21,9 +21,9 @@
 #include <ddspipe_core/efficiency/payload/FastPayloadPool.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 const constexpr unsigned int TEST_NUMBER = 5;
 const constexpr size_t DEFAULT_SIZE = sizeof(PayloadUnit);

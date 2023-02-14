@@ -45,7 +45,7 @@ public:
             const ITopic& other) const noexcept = 0;
 
     //! ITopic name
-    virtual const std::string& topic_name() const noexcept = 0;
+    virtual std::string topic_name() const noexcept = 0;
 
     //! ITopic unique name in processs
     virtual std::string topic_unique_name() const noexcept = 0;
@@ -54,7 +54,7 @@ public:
      * This refers to an internal used identifier that declares which kind of data type is going to be
      * transmitted in this Itopic inside the core.
      */
-    virtual const types::TopicInternalTypeDiscriminator& internal_type_discriminator() const noexcept = 0;
+    virtual types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept = 0;
 };
 
 } /* namespace core */

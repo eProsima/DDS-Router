@@ -23,9 +23,8 @@
 #include <cpp_utils/exception/InconsistencyException.hpp>
 #include <ddspipe_core/interface/IRoutingData.hpp>
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 // Using for gmock
 using ::testing::_;
@@ -41,7 +40,7 @@ namespace rtps {
  * This definition is needed due to googletest-distribution (1.11.0) requires to every class used inside ASSERT macro
  * to have the operator << defined in SAME namespace than the class.
  * In our case, Payload is defined as eprosima::fastrtps::rtps::SerializedPayload_t but redefined as
- * eprosima::ddsrouter::core::types::Payload and the operator << is defined in eprosima::ddsrouter::core::types
+ * eprosima::ddspipe::core::types::Payload and the operator << is defined in eprosima::ddspipe::core::types
  * Thus, gtest could not find this definition (arising a very messy and cryptic compilation error).
  * This definition corrects that problem.
  *
@@ -86,7 +85,7 @@ public:
     MOCK_METHOD(
         bool,
         get_payload,
-        (uint32_t size, eprosima::ddsrouter::core::types::Payload& target_payload),
+        (uint32_t size, eprosima::ddspipe::core::types::Payload& target_payload),
         (override));
 
     MOCK_METHOD(
@@ -95,14 +94,14 @@ public:
         (
             const Payload& src_payload,
             eprosima::fastrtps::rtps::IPayloadPool*&data_owner,
-            eprosima::ddsrouter::core::types::Payload& target_payload
+            eprosima::ddspipe::core::types::Payload& target_payload
         ),
         (override));
 
     MOCK_METHOD(
         bool,
         release_payload,
-        (eprosima::ddsrouter::core::types::Payload& target_payload),
+        (eprosima::ddspipe::core::types::Payload& target_payload),
         (override));
 };
 

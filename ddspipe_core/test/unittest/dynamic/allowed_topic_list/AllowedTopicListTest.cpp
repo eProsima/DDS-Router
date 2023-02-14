@@ -15,13 +15,17 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <dynamic/AllowedTopicList.hpp>
+#include <ddspipe_core/dynamic/AllowedTopicList.hpp>
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 using pair_topic_type = std::pair<std::string, std::string>;
+
+namespace test
+{
 
 /******************
 * FILTER METHODS *
@@ -33,13 +37,13 @@ using pair_topic_type = std::pair<std::string, std::string>;
  * TODO: Add regex when implemented
  */
 void add_topic_to_list(
-        std::set<std::shared_ptr<DdsFilterTopic>>& list,
+        std::set<utils::Heritable<IFilterTopic>>& list,
         pair_topic_type topic_name,
         bool wildcard = true)
 {
     if (wildcard)
     {
-        auto new_topic = std::make_shared<WildcardDdsFilterTopic>();
+        auto new_topic = utils::Heritable<WildcardDdsFilterTopic>::make_heritable();
         new_topic->topic_name = topic_name.first;
         new_topic->type_name = topic_name.second;
 
@@ -53,7 +57,7 @@ void add_topic_to_list(
  * TODO: Add regex when implemented
  */
 void add_topics_to_list(
-        std::set<std::shared_ptr<DdsFilterTopic>>& list,
+        std::set<utils::Heritable<IFilterTopic>>& list,
         std::vector<pair_topic_type> topic_names,
         bool wildcard = true)
 {
@@ -61,7 +65,7 @@ void add_topics_to_list(
     {
         for (pair_topic_type topic_name : topic_names)
         {
-            auto new_topic = std::make_shared<WildcardDdsFilterTopic>();
+            auto new_topic = utils::Heritable<WildcardDdsFilterTopic>::make_heritable();
             new_topic->topic_name = topic_name.first;
             new_topic->type_name = topic_name.second;
 
@@ -82,8 +86,8 @@ void generic_test(
         const std::vector<pair_topic_type>& real_topics_negative)
 {
     // Create AllowedTopicList object
-    std::set<std::shared_ptr<DdsFilterTopic>> allowlist;
-    std::set<std::shared_ptr<DdsFilterTopic>> blocklist;
+    std::set<utils::Heritable<IFilterTopic>> allowlist;
+    std::set<utils::Heritable<IFilterTopic>> blocklist;
 
     add_topics_to_list(allowlist, allowlist_topics);
     add_topics_to_list(blocklist, blocklist_topics);
@@ -93,17 +97,23 @@ void generic_test(
     // Test positive cases
     for (pair_topic_type topic_name : real_topics_positive)
     {
-        DistributedTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic;
+        topic.m_topic_name = topic_name.first;
+        topic.type_name = topic_name.second;
         ASSERT_TRUE(atl.is_topic_allowed(topic));
     }
 
     // Test negative cases
     for (pair_topic_type topic_name : real_topics_negative)
     {
-        DistributedTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic;
+        topic.m_topic_name = topic_name.first;
+        topic.type_name = topic_name.second;
         ASSERT_FALSE(atl.is_topic_allowed(topic));
     }
 }
+
+} // test
 
 /**
  * Test \c AllowedTopicList \c is_topic_allowed method
@@ -124,7 +134,9 @@ TEST(AllowedTopicListTest, is_topic_allowed__default_constructor)
 
     for (pair_topic_type topic_name : real_topics)
     {
-        DistributedTopic topic(topic_name.first, topic_name.second);
+        DdsTopic topic;
+        topic.m_topic_name = topic_name.first;
+        topic.type_name = topic_name.second;
 
         ASSERT_TRUE(atl.is_topic_allowed(topic));
     }
@@ -149,7 +161,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__empty_list)
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -183,7 +195,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_blocklist)
         {"HelloWorldTopic", "HelloWorld"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -222,7 +234,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_blocklist)
         {"rt/chatter/pub", "std::type"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -258,7 +270,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist)
         {"rt/chatter", "std::std_msgs::string"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -300,7 +312,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist)
         {"rt/chatter", "std_type"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -343,7 +355,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist)
         {"rt/pub", "std"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -392,7 +404,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist)
         {"rt/chatter/pub", "std"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -436,7 +448,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__simple_allowlist_and_blocklist_enta
         {"rt/pub", "std"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,
@@ -486,7 +498,7 @@ TEST(AllowedTopicListTest, is_topic_allowed__complex_allowlist_and_blocklist_ent
         {"chatter", "std::std_msgs::int"},
     };
 
-    generic_test(
+    test::generic_test(
         allowlist_topics,
         blocklist_topics,
         real_topics_positive,

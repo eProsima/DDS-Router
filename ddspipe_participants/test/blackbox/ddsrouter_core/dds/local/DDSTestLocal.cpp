@@ -202,8 +202,8 @@ void test_local_communication(
 } /* namespace ddspipe */
 } /* namespace eprosima */
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,

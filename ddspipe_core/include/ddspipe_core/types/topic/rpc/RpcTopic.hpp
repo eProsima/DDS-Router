@@ -40,7 +40,7 @@ public:
     RpcTopic(
             const DdsTopic& topic) noexcept;
 
-    RpcTopic(const RpcTopic& topic) noexcept;
+    RpcTopic(const RpcTopic& other) noexcept;
 
     //! Service name getter
     const std::string& service_name() const;

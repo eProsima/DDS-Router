@@ -23,8 +23,8 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test load a whole DDS Router Configuration from yaml node.

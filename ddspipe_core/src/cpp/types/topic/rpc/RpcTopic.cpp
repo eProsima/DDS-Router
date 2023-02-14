@@ -85,6 +85,14 @@ RpcTopic::RpcTopic(
     reply_topic_.topic_qos = topic.topic_qos;
 }
 
+RpcTopic::RpcTopic(const RpcTopic& other) noexcept
+    : service_name_(other.service_name_)
+    , request_topic_(other.request_topic_)
+    , reply_topic_(other.reply_topic_)
+{
+
+}
+
 const std::string& RpcTopic::service_name() const
 {
     return service_name_;

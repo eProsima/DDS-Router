@@ -150,8 +150,8 @@ utils::ReturnCode DdsPipe::reload_allowed_topics(
     }
     else
     {
-        return utils::ReturnCode::RETCODE_NOT_ENABLED;
         allowed_topics_ = allowed_topics;
+        return utils::ReturnCode::RETCODE_NOT_ENABLED;
     }
 }
 

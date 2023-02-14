@@ -25,8 +25,8 @@
 
 constexpr const uint32_t TEST_ITERATION_MAX = 5;
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test get Participant Configuration from yaml

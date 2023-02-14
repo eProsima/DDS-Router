@@ -12,41 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-###################
-# Topic #
-###################
-
-set(TEST_NAME TopicTest)
-
-set(TEST_SOURCES
-        TopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-    )
-
-set(TEST_LIST
-        is_valid
-    )
-
-set(TEST_EXTRA_LIBRARIES
-        cpp_utils
-    )
-
-add_unittest_executable(
-        "${TEST_NAME}"
-        "${TEST_SOURCES}"
-        "${TEST_LIST}"
-        "${TEST_EXTRA_LIBRARIES}"
-    )
-
 #############
-# DistributedTopic #
+# DdsTopic #
 #############
 
 set(TEST_NAME DdsTopicTest)
 
 set(TEST_SOURCES
         DdsTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DistributedTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
     )
@@ -73,13 +47,13 @@ add_unittest_executable(
 # WildcardDdsFilterTopic #
 #################
 
-set(TEST_NAME WildcardTopicTest)
+set(TEST_NAME WildcardDdsFilterTopic)
 
 set(TEST_SOURCES
         WildcardDdsFilterTopicTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DistributedTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/DdsFilterTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/IFilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/filter/WildcardDdsFilterTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
     )

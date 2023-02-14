@@ -20,8 +20,8 @@
 
 #include <ddspipe_core/types/dds/Guid.hpp>
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 /**
  * Test \c Guid \c is_valid method

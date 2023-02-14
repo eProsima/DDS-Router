@@ -105,7 +105,7 @@ public:
      * @param [in] new_endpoint: new endpoint to store
      */
     void add_endpoint(
-            const types::Endpoint& new_endpoint) noexcept;
+            const types::Endpoint& new_endpoint);
 
     /**
      * @brief Add update operation to the database
@@ -116,7 +116,7 @@ public:
      * @param [in] endpoint_to_update: endpoint to update
      */
     void update_endpoint(
-            const types::Endpoint& endpoint_to_update) noexcept;
+            const types::Endpoint& endpoint_to_update);
 
     /**
      * @brief Add erase operation to the database
@@ -127,7 +127,7 @@ public:
      * @param [in] endpoint_to_erase endpoint that will be erased
      */
     void erase_endpoint(
-            const types::Endpoint& endpoint_to_erase) noexcept;
+            const types::Endpoint& endpoint_to_erase);
 
     /**
      * @brief Get the endpoint object with this guid
