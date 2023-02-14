@@ -22,8 +22,8 @@
 
 #include "../YamlConfigurationTestUtils.hpp"
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test load a whole DDS Router Configuration from yaml node for v1.0 of yaml.

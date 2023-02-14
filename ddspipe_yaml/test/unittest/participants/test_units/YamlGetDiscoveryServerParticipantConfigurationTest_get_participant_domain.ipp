@@ -23,8 +23,8 @@
 
 #include "../../YamlConfigurationTestUtils.hpp"
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test get Participant Configuration from yaml specifing domain

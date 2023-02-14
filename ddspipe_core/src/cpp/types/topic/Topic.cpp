@@ -43,12 +43,12 @@ bool Topic::operator<(const ITopic& other) const noexcept
 // METHODS
 /////////////////////////
 
-const std::string& Topic::topic_name() const noexcept
+std::string Topic::topic_name() const noexcept
 {
     return m_topic_name;
 }
 
-const TopicInternalTypeDiscriminator& Topic::internal_type_discriminator() const noexcept
+TopicInternalTypeDiscriminator Topic::internal_type_discriminator() const noexcept
 {
     return m_internal_type_discriminator;
 }

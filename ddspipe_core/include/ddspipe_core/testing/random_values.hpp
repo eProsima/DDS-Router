@@ -17,25 +17,19 @@
 #include <cpp_utils/exception/InitializationException.hpp>
 
 #include <ddspipe_core/types/dds/DomainId.hpp>
+#include <ddspipe_core/types/dds/Endpoint.hpp>
 #include <ddspipe_core/types/dds/Guid.hpp>
 #include <ddspipe_core/types/dds/GuidPrefix.hpp>
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 namespace eprosima {
 namespace ddspipe {
 namespace core {
-namespace test {
+namespace testing {
 
-/**
- * @brief Create a \c Guid with some of its bits determined by the input
- *
- * @param [in] seed : differentiating value for guid creation
- * @return generated Guid
- * @todo Make truly random using \c seed as such
- *
- */
 types::Guid random_guid(
-        unsigned int seed = 1);
+        unsigned int seed = 0);
 
 types::DomainId random_domain(
         unsigned int seed = 0);
@@ -47,7 +41,19 @@ types::GuidPrefix random_guid_prefix(
 types::ParticipantId random_participant_id(
         unsigned int seed = 0);
 
-} /* namespace test */
+types::DdsTopic random_dds_topic(
+        unsigned int seed = 0);
+
+types::EndpointKind random_endpoint_kind(
+        unsigned int seed = 0);
+
+types::Endpoint random_endpoint(
+        unsigned int seed = 0);
+
+types::TopicQoS random_topic_qos(
+        unsigned int seed = 0);
+
+} /* namespace testing */
 } /* namespace core */
 } /* namespace ddspipe */
 } /* namespace eprosima */

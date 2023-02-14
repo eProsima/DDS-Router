@@ -31,6 +31,8 @@ namespace types {
 struct DDSPIPE_CORE_DllAPI IFilterTopic
 {
 
+    virtual ~IFilterTopic() = default;
+
     /////////////////////////
     // OPERATORS
     /////////////////////////

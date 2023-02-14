@@ -19,7 +19,7 @@
 
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima::ddspipe::yaml;
 
 TEST(YamlTagsTest, yaml_tags)
 {

@@ -26,7 +26,7 @@ namespace eprosima {
 namespace ddspipe {
 namespace test {
 
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core::types;
 
 Guid random_guid(
         uint16_t seed /* = 1 */)
