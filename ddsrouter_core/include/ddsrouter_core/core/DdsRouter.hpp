@@ -63,7 +63,7 @@ public:
      * Destroy all Bridges
      * Destroy all Participants
      */
-    DDSROUTER_CORE_DllAPI virtual ~DdsRouter();
+    DDSROUTER_CORE_DllAPI virtual ~DdsRouter() = default;
 
     // EVENTS
     /**
