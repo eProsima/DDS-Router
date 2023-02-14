@@ -19,10 +19,7 @@
 set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
-
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
         YamlGetCommonParticipantConfigurationTest.cpp
     )
 
@@ -36,6 +33,9 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
         ddsrouter_core
     )
 
@@ -52,10 +52,7 @@ add_unittest_executable(
 set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
-
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
         YamlGetSimpleParticipantConfigurationTest.cpp
     )
 
@@ -69,7 +66,9 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
-
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
         ddsrouter_core
     )
 
@@ -86,10 +85,7 @@ add_unittest_executable(
 set(TEST_NAME YamlGetDiscoveryServerParticipantConfigurationTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
-
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
         YamlGetDiscoveryServerParticipantConfigurationTest.cpp
     )
 
@@ -112,6 +108,9 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
         ddsrouter_core
     )
 
@@ -128,10 +127,7 @@ add_unittest_executable(
 set(TEST_NAME YamlGetInitialPeersParticipantConfigurationTest)
 
 set(TEST_SOURCES
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_generic.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_participants.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_types.cpp
-
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
         YamlGetInitialPeersParticipantConfigurationTest.cpp
     )
 
@@ -145,6 +141,9 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
         ddsrouter_core
     )
 

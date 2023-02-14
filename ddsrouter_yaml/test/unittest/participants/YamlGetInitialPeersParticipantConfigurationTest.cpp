@@ -16,13 +16,13 @@
 #include <gtest/gtest.h>
 #include <ddspipe_core/testing/random_values.hpp>
 
-#include <ddspipe_core/participants/participant/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/types/dds/DomainId.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 
-#include "../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -52,8 +52,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
             yml["participant"] = yml_participant;
 
             // Read Yaml
-            core::configuration::InitialPeersParticipantConfiguration result =
-                    YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(
+            core::InitialPeersParticipantConfiguration result =
+                    YamlReader::get<core::InitialPeersParticipantConfiguration>(
                 yml,
                 "participant",
                 LATEST);
@@ -67,7 +67,7 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
             ASSERT_EQ(result.listening_addresses.size(), 0u);
             ASSERT_FALSE(result.tls_configuration.is_active());
             ASSERT_EQ(
-                core::configuration::InitialPeersParticipantConfiguration().domain,
+                core::InitialPeersParticipantConfiguration().domain,
                 result.domain);
         }
     }
@@ -101,8 +101,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
+        core::InitialPeersParticipantConfiguration result =
+                YamlReader::get<core::InitialPeersParticipantConfiguration>(yml, "participant",
                         LATEST);
 
         // Check result
@@ -124,8 +124,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
+        core::InitialPeersParticipantConfiguration result =
+                YamlReader::get<core::InitialPeersParticipantConfiguration>(yml, "participant",
                         LATEST);
 
         // Check result
@@ -147,8 +147,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
+        core::InitialPeersParticipantConfiguration result =
+                YamlReader::get<core::InitialPeersParticipantConfiguration>(yml, "participant",
                         LATEST);
 
         // Check result
@@ -171,8 +171,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
 
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
-            core::configuration::InitialPeersParticipantConfiguration result =
-            YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant", LATEST),
+            core::InitialPeersParticipantConfiguration result =
+            YamlReader::get<core::InitialPeersParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

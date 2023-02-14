@@ -21,7 +21,7 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -149,7 +149,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inact
     // No TLS tag insertion
 
     // Get configuration object from yaml
-    auto ds_participant_cfg = YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml,
+    auto ds_participant_cfg = YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml,
                     "participant",
                     LATEST);
 

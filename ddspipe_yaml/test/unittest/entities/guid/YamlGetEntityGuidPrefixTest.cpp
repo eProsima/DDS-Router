@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read core::types::GuidPrefix from yaml with explicit guid
@@ -44,9 +46,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
         std::string st = "01.0f.00.00.00.00.00.00.00.00.ff.ff";
 
         Yaml yml_gp;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<std::string>(st),
+            YamlField<std::string>(st),
             DISCOVERY_SERVER_GUID_TAG);
 
         Yaml yml;
@@ -62,15 +64,15 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
         std::string st = "01.0f.00.00.00.00.00.00.00.00.ff.ff";
 
         Yaml yml_gp;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<std::string>(st),
+            YamlField<std::string>(st),
             DISCOVERY_SERVER_GUID_TAG);
 
         // This field must be skipped
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<uint32_t>(0),
+            YamlField<uint32_t>(0),
             DISCOVERY_SERVER_ID_TAG);
 
         Yaml yml;
@@ -96,9 +98,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
     // incorrect format (not string)
     // {
     //     Yaml yml_gp;
-    //     test::add_field_to_yaml(
+    //     add_field_to_yaml(
     //         yml_gp,
-    //         test::YamlField<bool>(false),
+    //         YamlField<bool>(false),
     //         DISCOVERY_SERVER_GUID_TAG);
 
     //     Yaml yml;
@@ -115,9 +117,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_explicitly)
     //     std::string st = "ffff";
 
     //     Yaml yml_gp;
-    //     test::add_field_to_yaml(
+    //     add_field_to_yaml(
     //         yml_gp,
-    //         test::YamlField<std::string>(st),
+    //         YamlField<std::string>(st),
     //         DISCOVERY_SERVER_GUID_TAG);
 
     //     Yaml yml;
@@ -148,9 +150,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
         for (uint32_t id : ids)
         {
             Yaml yml_gp;
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml_gp,
-                test::YamlField<uint32_t>(id),
+                YamlField<uint32_t>(id),
                 DISCOVERY_SERVER_ID_TAG);
 
             Yaml yml;
@@ -166,9 +168,9 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id)
     {
         Yaml yml_gp;
 
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
+            YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
             DISCOVERY_SERVER_ID_TAG);
 
         Yaml yml;
@@ -199,14 +201,14 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
         {
             Yaml yml_gp;
 
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml_gp,
-                test::YamlField<uint32_t>(id),
+                YamlField<uint32_t>(id),
                 DISCOVERY_SERVER_ID_TAG);
 
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml_gp,
-                test::YamlField<bool>(true),
+                YamlField<bool>(true),
                 DISCOVERY_SERVER_ID_ROS_TAG);
 
             Yaml yml;
@@ -226,14 +228,14 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
         {
             Yaml yml_gp;
 
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml_gp,
-                test::YamlField<uint32_t>(id),
+                YamlField<uint32_t>(id),
                 DISCOVERY_SERVER_ID_TAG);
 
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml_gp,
-                test::YamlField<bool>(false),
+                YamlField<bool>(false),
                 DISCOVERY_SERVER_ID_ROS_TAG);
 
             Yaml yml;
@@ -249,14 +251,14 @@ TEST(YamlGetEntityGuidPrefixTest, get_guidprefix_id_ros)
     {
         Yaml yml_gp;
 
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<uint32_t>(0),
+            YamlField<uint32_t>(0),
             DISCOVERY_SERVER_ID_TAG);
 
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_gp,
-            test::YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
+            YamlField<std::string>("01.0f.00.00.00.00.00.00.00.00.ff.ff"),
             DISCOVERY_SERVER_ID_ROS_TAG);
 
         Yaml yml;

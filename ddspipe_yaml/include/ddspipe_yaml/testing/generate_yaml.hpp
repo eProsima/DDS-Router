@@ -31,7 +31,7 @@
 namespace eprosima {
 namespace ddspipe {
 namespace yaml {
-namespace test {
+namespace testing {
 
 template <typename T>
 struct YamlField
@@ -42,9 +42,10 @@ struct YamlField
     }
 
     YamlField(
-            T arg_value)
+            const T& arg_value,
+            bool arg_present = true)
         : value(arg_value)
-        , present(true)
+        , present(arg_present)
     {
     }
 
@@ -71,9 +72,9 @@ void guid_prefix_to_yaml(
     std::stringstream ss;
     ss << guid_prefix;
 
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(ss.str()),
+        YamlField<std::string>(ss.str()),
         DISCOVERY_SERVER_GUID_TAG);
 }
 
@@ -91,43 +92,43 @@ void address_to_yaml(
         Yaml& yml,
         const participants::types::Address& address)
 {
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<participants::types::IpType>(address.ip()),
+        YamlField<participants::types::IpType>(address.ip()),
         ADDRESS_IP_TAG);
 
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<participants::types::PortType>(address.port()),
+        YamlField<participants::types::PortType>(address.port()),
         ADDRESS_PORT_TAG);
 
     if (address.transport_protocol() == participants::types::TransportProtocol::udp)
     {
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
+            YamlField<std::string>(ADDRESS_TRANSPORT_UDP_TAG),
             ADDRESS_TRANSPORT_TAG);
     }
     else if (address.transport_protocol() == participants::types::TransportProtocol::tcp)
     {
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
+            YamlField<std::string>(ADDRESS_TRANSPORT_TCP_TAG),
             ADDRESS_TRANSPORT_TAG);
     }
 
     if (address.ip_version() == participants::types::IpVersion::v4)
     {
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
+            YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
     else if (address.ip_version() == participants::types::IpVersion::v6)
     {
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
+            YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
             ADDRESS_IP_VERSION_TAG);
     }
 }
@@ -136,9 +137,9 @@ void participantid_to_yaml(
         Yaml& yml,
         const core::types::ParticipantId& id)
 {
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<std::string>(id),
+        YamlField<std::string>(id),
         PARTICIPANT_NAME_TAG);
 }
 
@@ -146,9 +147,9 @@ void domain_to_yaml(
         Yaml& yml,
         const core::types::DomainId& domain)
 {
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<core::types::DomainIdType>(domain.domain_id),
+        YamlField<core::types::DomainIdType>(domain.domain_id),
         DOMAIN_ID_TAG);
 }
 
@@ -156,9 +157,9 @@ void repeater_to_yaml(
         Yaml& yml,
         const bool& repeater)
 {
-    test::add_field_to_yaml(
+    add_field_to_yaml(
         yml,
-        test::YamlField<bool>(repeater),
+        YamlField<bool>(repeater),
         IS_REPEATER_TAG);
 }
 
@@ -168,7 +169,7 @@ void repeater_to_yaml(
 //         const TopicQoS& qos)
 // {
 //     // TODO: extend this for all qos
-//     test::add_field_to_yaml(yml, test::YamlField<bool>(qos.is_reliable()), QOS_RELIABLE_TAG);
+//     add_field_to_yaml(yml, YamlField<bool>(qos.is_reliable()), QOS_RELIABLE_TAG);
 // }
 
 // // Create a yaml Topic object with name, type and key tags
@@ -178,12 +179,12 @@ void repeater_to_yaml(
 // {
 //     if (topic.topic_name.is_set())
 //     {
-//         test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.topic_name), TOPIC_NAME_TAG);
+//         add_field_to_yaml(yml, YamlField<std::string>(topic.topic_name), TOPIC_NAME_TAG);
 //     }
 
 //     if (topic.type_name.is_set())
 //     {
-//         test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
+//         add_field_to_yaml(yml, YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
 //     }
 // }
 
@@ -191,15 +192,15 @@ void repeater_to_yaml(
 // void real_topic_to_yaml(
 //         Yaml& yml,
 //         const DdsTopic& topic,
-//         const test::YamlField<std::string>& type,
-//         const test::YamlField<Yaml>& qos)
+//         const YamlField<std::string>& type,
+//         const YamlField<Yaml>& qos)
 // {
-//     test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.m_topic_name), TOPIC_NAME_TAG);
-//     test::add_field_to_yaml(yml, test::YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
-//     test::add_field_to_yaml(yml, test::YamlField<Yaml>(topic.topic_qos), TOPIC_QOS_TAG);
+//     add_field_to_yaml(yml, YamlField<std::string>(topic.m_topic_name), TOPIC_NAME_TAG);
+//     add_field_to_yaml(yml, YamlField<std::string>(topic.type_name), TOPIC_TYPE_NAME_TAG);
+//     add_field_to_yaml(yml, YamlField<Yaml>(topic.topic_qos), TOPIC_QOS_TAG);
 // }
 
-} /* namespace test */
+} /* namespace testing */
 } /* namespace yaml */
 } /* namespace ddspipe */
 } /* namespace eprosima */

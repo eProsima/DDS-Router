@@ -21,7 +21,7 @@
 #include <ddspipe_core/types/dds/DomainId.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 
-#include "../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 constexpr const uint32_t TEST_ITERATION_MAX = 5;
 
@@ -56,8 +56,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
                 yml["participant"] = yml_participant;
 
                 // Read Yaml
-                core::configuration::SimpleParticipantConfiguration result =
-                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant",
+                core::SimpleParticipantConfiguration result =
+                        YamlReader::get<core::SimpleParticipantConfiguration>(yml, "participant",
                                 LATEST);
 
                 // Check result
@@ -92,8 +92,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            core::SimpleParticipantConfiguration result =
+            YamlReader::get<core::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -108,8 +108,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            core::SimpleParticipantConfiguration result =
+            YamlReader::get<core::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -123,8 +123,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            core::SimpleParticipantConfiguration result =
+            YamlReader::get<core::SimpleParticipantConfiguration>(yml, "participant", LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

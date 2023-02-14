@@ -22,11 +22,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 namespace eprosima {
 namespace ddspipe {
@@ -36,34 +38,34 @@ namespace test {
 // Create a yaml QoS object only with reliability
 void qos_to_yaml(
         Yaml& yml,
-        const test::YamlField<bool>& reliable)
+        const YamlField<bool>& reliable)
 {
     // TODO: extend this for all qos
-    test::add_field_to_yaml(yml, reliable, QOS_RELIABLE_TAG);
+    add_field_to_yaml(yml, reliable, QOS_RELIABLE_TAG);
 }
 
 // Create a yaml Topic object with name, type and key tags
 void topic_to_yaml(
         Yaml& yml,
-        const test::YamlField<std::string>& name,
-        const test::YamlField<std::string>& type,
-        const test::YamlField<Yaml>& qos)
+        const YamlField<std::string>& name,
+        const YamlField<std::string>& type,
+        const YamlField<Yaml>& qos)
 {
-    test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
-    test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
-    test::add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
+    add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
+    add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
+    add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
 }
 
 // Create a yaml DdsTopic object with name, type, key and reliable tags
 void real_topic_to_yaml(
         Yaml& yml,
-        const test::YamlField<std::string>& name,
-        const test::YamlField<std::string>& type,
-        const test::YamlField<Yaml>& qos)
+        const YamlField<std::string>& name,
+        const YamlField<std::string>& type,
+        const YamlField<Yaml>& qos)
 {
-    test::add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
-    test::add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
-    test::add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
+    add_field_to_yaml(yml, name, TOPIC_NAME_TAG);
+    add_field_to_yaml(yml, type, TOPIC_TYPE_NAME_TAG);
+    add_field_to_yaml(yml, qos, TOPIC_QOS_TAG);
 }
 
 // Check the values of a real topic are the expected ones
@@ -133,19 +135,19 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
     // Topic Std
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(name),
+            YamlField<std::string>(type),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
 
         core::types::DdsTopic topic = YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST);
 
-        test::compare_topic(topic, name, type, false);
+        compare_topic(topic, name, type, false);
     }
 
     // Checks that a topic yaml object has been parsed correctly with the topic reliable tag set to true.
@@ -153,22 +155,22 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
     // that no data is lost in the information relay.
     {
         Yaml yml_qos;
-        test::qos_to_yaml(yml_qos, test::YamlField<bool>(true));
+        qos_to_yaml(yml_qos, YamlField<bool>(true));
 
         Yaml yml_topic;
-        test::real_topic_to_yaml(
+        real_topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(false),
-            test::YamlField<Yaml>(yml_qos));
+            YamlField<std::string>(name),
+            YamlField<std::string>(type),
+            YamlField<bool>(false),
+            YamlField<Yaml>(yml_qos));
 
         Yaml yml;
         yml["topic"] = yml_topic;
 
         core::types::DdsTopic topic = YamlReader::get<core::types::DdsTopic>(yml, "topic", LATEST);
 
-        test::compare_topic(topic, name, type, true, true);
+        compare_topic(topic, name, type, true, true);
     }
 
     // Empty
@@ -184,12 +186,12 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
     // Topic without name
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(),
+            YamlField<std::string>(type),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
@@ -201,12 +203,12 @@ TEST(YamlGetEntityTopicTest, get_real_topic)
     // Topic without type
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(name),
+            YamlField<std::string>(),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
@@ -231,12 +233,12 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
     // Topic Std
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(name),
+            YamlField<std::string>(type),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
@@ -244,18 +246,18 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
                         LATEST);
 
-        test::compare_wildcard_topic(topic, name, true, type, false);
+        compare_wildcard_topic(topic, name, true, type, false);
     }
 
     // Topic without type
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(name),
-            test::YamlField<std::string>(),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(name),
+            YamlField<std::string>(),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
@@ -263,7 +265,7 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic)
         core::types::WildcardDdsFilterTopic topic = YamlReader::get<core::types::WildcardDdsFilterTopic>(yml, "topic",
                         LATEST);
 
-        test::compare_wildcard_topic(topic, name, false, "*", false);
+        compare_wildcard_topic(topic, name, false, "*", false);
     }
 }
 
@@ -292,12 +294,12 @@ TEST(YamlGetEntityTopicTest, get_wildcard_topic_negative)
     // Topic without type
     {
         Yaml yml_topic;
-        test::topic_to_yaml(
+        topic_to_yaml(
             yml_topic,
-            test::YamlField<std::string>(),
-            test::YamlField<std::string>(type),
-            test::YamlField<bool>(),
-            test::YamlField<Yaml>());
+            YamlField<std::string>(),
+            YamlField<std::string>(type),
+            YamlField<bool>(),
+            YamlField<Yaml>());
 
         Yaml yml;
         yml["topic"] = yml_topic;
