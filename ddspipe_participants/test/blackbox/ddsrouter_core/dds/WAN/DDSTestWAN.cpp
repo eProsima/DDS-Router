@@ -451,8 +451,8 @@ void test_WAN_communication_all(
 } /* namespace ddspipe */
 } /* namespace eprosima */
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core;
+using namespace eprosima::ddspipe::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,

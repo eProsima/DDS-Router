@@ -36,7 +36,7 @@ namespace eprosima {
 namespace ddspipe {
 namespace test {
 
-using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddspipe::core::types;
 
 // TODO: most of the methods from this test_utils that generate random types are not very "random".
 // They must be refactored to generate real random values.

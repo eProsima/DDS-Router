@@ -40,6 +40,12 @@ bool Endpoint::is_server_endpoint() const noexcept
     return (is_reader() && RpcTopic::is_request_topic(topic)) || (is_writer() && RpcTopic::is_reply_topic(topic));
 }
 
+bool Endpoint::operator ==(
+        const Endpoint& other) const noexcept
+{
+    return guid == other.guid;
+}
+
 std::ostream& operator <<(
         std::ostream& os,
         const Endpoint& endpoint)

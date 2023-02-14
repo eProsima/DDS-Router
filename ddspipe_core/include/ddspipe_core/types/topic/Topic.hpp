@@ -60,9 +60,9 @@ struct Topic : public ITopic , public IConfiguration
     /////////////////////////
 
     //! ITopic name
-    virtual const std::string& topic_name() const noexcept override;
+    virtual std::string topic_name() const noexcept override;
 
-    virtual const TopicInternalTypeDiscriminator& internal_type_discriminator() const noexcept override;
+    virtual TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 
     virtual bool is_valid(
         utils::Formatter& error_msg) const noexcept override;

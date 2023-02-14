@@ -79,7 +79,7 @@ struct RtpsPayloadData : public core::IRoutingData
 /**
  * @brief Id to identify the internal topic type id that uses \c RtpsPayloadData .
  */
-const core::types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RTPS = "payload::rtps::v0";
+constexpr core::types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_RTPS = "payload::rtps::v0";
 
 } /* namespace types */
 } /* namespace core */

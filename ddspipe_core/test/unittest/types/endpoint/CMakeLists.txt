@@ -49,27 +49,22 @@ set(TEST_NAME EndpointTest)
 
 set(TEST_SOURCES
         EndpointTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/endpoint/Endpoint.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/testing/random_values.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/DomainId.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Endpoint.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Guid.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/GuidPrefix.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/rpc/RpcTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/Payload.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/TopicQoS.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/dds/SpecificEndpointQoS.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/data/Payload.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DistributedTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/rpc/RpcTopic.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/dds/DdsTopic.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/types/topic/Topic.cpp
     )
 
 set(TEST_LIST
-        constructor
-        kind_getter
-        guid_getter
-        qos_getter
-        topic_getter
-        active_getter
-        active_setter
-        is_writer
-        is_reader
+        topic_qos
+        is_reader_writer
     )
 
 set(TEST_EXTRA_LIBRARIES
