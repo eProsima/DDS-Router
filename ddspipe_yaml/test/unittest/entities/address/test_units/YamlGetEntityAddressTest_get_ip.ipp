@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read IP from yaml
@@ -47,9 +49,9 @@ TEST(YamlGetEntityAddressTest, get_ip)
         for (participants::types::IpType ip : ips)
         {
             Yaml yml;
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml,
-                test::YamlField<participants::types::IpType>(ip),
+                YamlField<participants::types::IpType>(ip),
                 ADDRESS_IP_TAG);
 
             ASSERT_EQ(ip, YamlReader::get<participants::types::IpType>(yml, ADDRESS_IP_TAG, LATEST));

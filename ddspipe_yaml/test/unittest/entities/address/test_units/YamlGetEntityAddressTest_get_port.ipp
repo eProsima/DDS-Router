@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read port from yaml
@@ -43,9 +45,9 @@ TEST(YamlGetEntityAddressTest, get_port)
         for (participants::types::PortType port : ports)
         {
             Yaml yml;
-            test::add_field_to_yaml(
+            add_field_to_yaml(
                 yml,
-                test::YamlField<participants::types::PortType>(port),
+                YamlField<participants::types::PortType>(port),
                 ADDRESS_PORT_TAG);
 
             ASSERT_EQ(port, YamlReader::get<participants::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST));
@@ -64,9 +66,9 @@ TEST(YamlGetEntityAddressTest, get_port)
     // Incorrect format (string)
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>("P11000"),
+            YamlField<std::string>("P11000"),
             ADDRESS_PORT_TAG);
 
         ASSERT_THROW(

@@ -52,9 +52,9 @@ struct DdsRouterReloadConfiguration : public ddspipe::core::IConfiguration
     // VARIABLES
     /////////////////////////
 
-    std::set<std::shared_ptr<ddspipe::core::types::WildcardDdsFilterTopic>> allowlist {};
+    std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>> allowlist {};
 
-    std::set<std::shared_ptr<ddspipe::core::types::WildcardDdsFilterTopic>> blocklist {};
+    std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>> blocklist {};
 
 };
 

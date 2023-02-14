@@ -34,10 +34,10 @@ class DDSROUTER_YAML_DllAPI YamlReaderConfiguration
 {
 public:
 
-    static core::DdsRouterConfiguration load_ddsrouter_configuration(
+    static ddsrouter::core::DdsRouterConfiguration load_ddsrouter_configuration(
             const Yaml& yml);
 
-    static core::DdsRouterConfiguration load_ddsrouter_configuration_from_file(
+    static ddsrouter::core::DdsRouterConfiguration load_ddsrouter_configuration_from_file(
             const std::string& file_path);
 
 protected:

@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read an address with domain name
@@ -41,15 +43,15 @@ TEST(YamlGetEntityAddressTest, get_address_domain)
         Yaml yml_address;
 
         // Add IP
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_address,
-            test::YamlField<participants::types::IpType>("localhost"),
+            YamlField<participants::types::IpType>("localhost"),
             ADDRESS_DNS_TAG);
 
         // Add IP version
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_address,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
+            YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
 
         Yaml yml;
@@ -68,9 +70,9 @@ TEST(YamlGetEntityAddressTest, get_address_domain)
         Yaml yml_address;
 
         // Add IP
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml_address,
-            test::YamlField<participants::types::IpType>("localhost"),
+            YamlField<participants::types::IpType>("localhost"),
             ADDRESS_DNS_TAG);
 
         Yaml yml;

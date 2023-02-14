@@ -19,11 +19,13 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
-#include "../../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
+using namespace eprosima::ddspipe::core::testing;
+using namespace eprosima::ddspipe::yaml::testing;
 
 /**
  * Test read Transport Protocol from yaml
@@ -42,9 +44,9 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     // v4
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
+            YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
 
         participants::types::IpVersion iv = YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
@@ -55,9 +57,9 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     // v6
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
+            YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
             ADDRESS_IP_VERSION_TAG);
 
         participants::types::IpVersion iv = YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
@@ -76,9 +78,9 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     // Incorrect value name
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<std::string>("v7"),
+            YamlField<std::string>("v7"),
             ADDRESS_IP_VERSION_TAG);
 
         ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
@@ -88,9 +90,9 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
     // Incorrect format
     {
         Yaml yml;
-        test::add_field_to_yaml(
+        add_field_to_yaml(
             yml,
-            test::YamlField<uint32_t>(17),
+            YamlField<uint32_t>(17),
             ADDRESS_IP_VERSION_TAG);
 
         ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),

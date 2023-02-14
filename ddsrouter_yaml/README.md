@@ -24,7 +24,7 @@ Include module is the public API used to configure a DDS Router and to interact 
 ```cpp
 // START AND STOP DDS ROUTER FROM CONFIGURATION
 
-core::configuration::DdsRouterConfiguration router_configuration;
+core::DdsRouterConfiguration router_configuration;
 
 // ... populate router_configuration
 
