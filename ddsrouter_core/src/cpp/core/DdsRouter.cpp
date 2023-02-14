@@ -27,6 +27,7 @@
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
+#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
 namespace eprosima {
@@ -120,6 +121,45 @@ void DdsRouter::init_participants_()
                           << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
         }
     }
+}
+
+utils::ReturnCode DdsRouter::reload_configuration(
+        const DdsRouterReloadConfiguration& new_configuration)
+{
+    // Check that the configuration is correct
+    utils::Formatter error_msg;
+    if (!new_configuration.is_valid(error_msg))
+    {
+        throw utils::ConfigurationException(
+                  utils::Formatter() <<
+                      "Configuration for Reload DDS Router is invalid: " << error_msg);
+    }
+
+    return ddspipe_->reload_allowed_topics(std::make_shared<ddspipe::core::AllowedTopicList>(
+        configuration_.allowlist,
+        configuration_.blocklist));
+}
+
+utils::ReturnCode DdsRouter::start() noexcept
+{
+    utils::ReturnCode ret = ddspipe_->start();
+    if (ret == utils::ReturnCode::RETCODE_OK)
+    {
+        logInfo(DDSROUTER, "Starting DDS Router.");
+    }
+
+    return ret;
+}
+
+utils::ReturnCode DdsRouter::stop() noexcept
+{
+    utils::ReturnCode ret = ddspipe_->stop();
+    if (ret == utils::ReturnCode::RETCODE_OK)
+    {
+        logInfo(DDSROUTER, "Stopping DDS Router.");
+    }
+
+    return ret;
 }
 
 } /* namespace core */
