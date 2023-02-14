@@ -92,7 +92,7 @@ DdsPipe::~DdsPipe()
 utils::ReturnCode DdsPipe::reload_allowed_topics(
         const std::shared_ptr<AllowedTopicList>& allowed_topics)
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
@@ -134,7 +134,7 @@ utils::ReturnCode DdsPipe::reload_allowed_topics(
         // Check every service discovered and activate/deactivate it if needed.
         for (auto& service_it : current_services_)
         {
-            if (allowed_topics_->is_service_allowed(*service_it.first))
+            if (allowed_topics_->is_service_allowed(service_it.first))
             {
                 service_it.second = true;
                 rpc_bridges_[service_it.first]->enable();
@@ -187,7 +187,7 @@ utils::ReturnCode DdsPipe::stop() noexcept
 
 utils::ReturnCode DdsPipe::start_() noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (!enabled_.load())
     {
@@ -221,7 +221,7 @@ utils::ReturnCode DdsPipe::start_() noexcept
 
 utils::ReturnCode DdsPipe::stop_() noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     if (enabled_.load())
     {
@@ -253,7 +253,7 @@ void DdsPipe::init_bridges_(const std::set<std::shared_ptr<types::DistributedTop
 void DdsPipe::discovered_topic_(
         const std::shared_ptr<types::DistributedTopic>& topic) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Discovered topic: " << topic << ".");
 
@@ -276,11 +276,11 @@ void DdsPipe::discovered_topic_(
 }
 
 void DdsPipe::discovered_service_(
-        const std::shared_ptr<types::RpcTopic>& topic,
+        const types::RpcTopic& topic,
         const ParticipantId& server_participant_id,
         const GuidPrefix& server_guid_prefix) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Discovered service: " << topic << ".");
 
@@ -291,7 +291,7 @@ void DdsPipe::discovered_service_(
         // Create RPCBridge even if topic not allowed, as we need to store server in database
         create_new_service_(topic);
 
-        if (allowed_topics_->is_service_allowed(*topic))
+        if (allowed_topics_->is_service_allowed(topic))
         {
             current_services_[topic] = true;
         }
@@ -309,11 +309,11 @@ void DdsPipe::discovered_service_(
 }
 
 void DdsPipe::removed_service_(
-        const std::shared_ptr<types::RpcTopic>& topic,
+        const types::RpcTopic& topic,
         const ParticipantId& server_participant_id,
         const GuidPrefix& server_guid_prefix) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Removed service: " << topic << ".");
 
@@ -341,7 +341,7 @@ void DdsPipe::discovered_endpoint_(
         else if (endpoint.is_server_endpoint())
         {
             // Service server discovered
-            discovered_service_(std::make_shared<types::RpcTopic>(endpoint.topic), endpoint.discoverer_participant_id, endpoint.guid.guid_prefix());
+            discovered_service_(types::RpcTopic(endpoint.topic), endpoint.discoverer_participant_id, endpoint.guid.guid_prefix());
         }
     }
 }
@@ -357,7 +357,7 @@ void DdsPipe::removed_endpoint_(
         if (endpoint.is_server_endpoint())
         {
             // Service server removed/dropped
-            removed_service_(std::make_shared<types::RpcTopic>(topic), endpoint.discoverer_participant_id, endpoint.guid.guid_prefix());
+            removed_service_(types::RpcTopic(topic), endpoint.discoverer_participant_id, endpoint.guid.guid_prefix());
         }
     }
 }
@@ -366,7 +366,7 @@ void DdsPipe::create_new_bridge_(
         const std::shared_ptr<types::DistributedTopic>& topic,
         bool enabled /*= false*/) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Creating Bridge for topic: " << topic << ".");
 
@@ -388,9 +388,9 @@ void DdsPipe::create_new_bridge_(
 }
 
 void DdsPipe::create_new_service_(
-        const std::shared_ptr<types::RpcTopic>& topic) noexcept
+        const types::RpcTopic& topic) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Creating Service: " << topic << ".");
 
@@ -401,7 +401,7 @@ void DdsPipe::create_new_service_(
 void DdsPipe::activate_topic_(
         const std::shared_ptr<types::DistributedTopic>& topic) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Activating topic: " << topic << ".");
 
@@ -426,7 +426,7 @@ void DdsPipe::activate_topic_(
 void DdsPipe::deactivate_topic_(
         const std::shared_ptr<types::DistributedTopic>& topic) noexcept
 {
-    std::lock_guard<std::mutex> lock(mutex_);
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
 
     logInfo(DDSROUTER, "Deactivating topic: " << topic << ".");
 

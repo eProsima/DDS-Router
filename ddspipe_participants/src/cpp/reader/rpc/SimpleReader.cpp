@@ -39,6 +39,7 @@ SimpleReader::SimpleReader(
         reckon_topic_attributes_(topic),
         reckon_reader_qos_(topic))
 {
+    logInfo(DDSROUTER_RPC_READER, "Creating RPC Reader for topic " << topic_);
 }
 
 //! Override Parent method to create an RPC data type.
@@ -58,7 +59,7 @@ void SimpleReader::fill_received_data_(
     // Get internal RpcPayload
     core::types::RpcPayloadData& rpc_data = dynamic_cast<core::types::RpcPayloadData&>(data_to_fill);
     // Set write params and origin sequence number
-    rpc_data.write_params = received_change.write_params;
+    rpc_data.write_params.set_value(received_change.write_params);
     rpc_data.origin_sequence_number = received_change.sequenceNumber;
 }
 

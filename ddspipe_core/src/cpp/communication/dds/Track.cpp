@@ -86,7 +86,7 @@ void Track::enable() noexcept
 
     if (!enabled_)
     {
-        logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+        logInfo(DDSROUTER_TRACK, "Enabling Track " << reader_participant_id_ << " for topic " << topic_->topic_name() << ".");
         enabled_ = true;
 
         // Enable writers before reader, to avoid starting a transmission (not protected with \c track_mutex_) which may
@@ -110,7 +110,7 @@ void Track::disable() noexcept
 
     if (enabled_)
     {
-        logInfo(DDSROUTER_TRACK, "Disabling Track " << reader_participant_id_ << " for topic " << topic_ << ".");
+        logInfo(DDSROUTER_TRACK, "Disabling Track " << reader_participant_id_ << " for topic " << topic_->topic_name() << ".");
 
         // Do disable before stop in the mutex so the Track is forced to stop in next iteration
         enabled_ = false;
@@ -197,13 +197,13 @@ void Track::transmit_() noexcept
         else if (!ret)
         {
             // Error reading data
-            logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_ << ". Error code " << ret
+            logWarning(DDSROUTER_TRACK, "Error taking data in Track " << topic_->topic_name() << ". Error code " << ret
                                                                       << ". Skipping data and continue.");
             continue;
         }
 
         logDebug(DDSROUTER_TRACK,
-                "Track " << reader_participant_id_ << " for topic " << topic_ <<
+                "Track " << reader_participant_id_ << " for topic " << topic_->topic_name() <<
                 " transmitting data from remote endpoint.");
 
         // Send data through writers
@@ -217,7 +217,7 @@ void Track::transmit_() noexcept
 
             if (!ret)
             {
-                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_ << ". Error code "
+                logWarning(DDSROUTER_TRACK, "Error writting data in Track " << topic_->topic_name() << ". Error code "
                                                                             << ret <<
                         ". Skipping data for this writer and continue.");
                 continue;
@@ -232,7 +232,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const Track& track)
 {
-    os << "Track{" << track.topic_ << ";" << track.reader_participant_id_ << "}";
+    os << "Track{" << track.topic_->topic_name() << ";" << track.reader_participant_id_ << "}";
     return os;
 }
 

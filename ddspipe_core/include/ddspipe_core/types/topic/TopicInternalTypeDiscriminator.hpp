@@ -27,9 +27,9 @@ namespace types {
  *
  * @warning as this is a const char* it is strongly suggested to only use constexpr or static values.
  */
-using TopicInternalTypeDiscriminator = const char*;
+using TopicInternalTypeDiscriminator = std::string;
 
-constexpr TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_NONE = "";
+const TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_NONE = "";
 
 } /* namespace types */
 } /* namespace core */

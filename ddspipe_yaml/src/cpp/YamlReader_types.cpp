@@ -102,7 +102,9 @@ DomainId YamlReader::get<DomainId>(
         const YamlReaderVersion /* version */)
 {
     // Domain id required
-    return DomainId(get_scalar<DomainIdType>(yml));
+    DomainId domain;
+    domain.domain_id = get_scalar<DomainIdType>(yml);
+    return domain;
 }
 
 template <>

@@ -94,7 +94,7 @@ void DdsBridge::enable() noexcept
 
     if (!enabled_)
     {
-        logInfo(DDSROUTER_DDSBRIDGE, "Enabling DdsBridge for topic " << topic_ << ".");
+        logInfo(DDSROUTER_DDSBRIDGE, "Enabling DdsBridge for topic " << topic_->topic_name() << ".");
 
         // ATTENTION: reference needed or it would copy Track
         for (auto& track_it : tracks_)
@@ -112,7 +112,7 @@ void DdsBridge::disable() noexcept
 
     if (enabled_)
     {
-        logInfo(DDSROUTER_DDSBRIDGE, "Disabling DdsBridge for topic " << topic_ << ".");
+        logInfo(DDSROUTER_DDSBRIDGE, "Disabling DdsBridge for topic " << topic_->topic_name() << ".");
 
         // ATTENTION: reference needed or it would copy Track
         for (auto& track_it : tracks_)
@@ -128,7 +128,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const DdsBridge& bridge)
 {
-    os << "DdsBridge{" << bridge.topic_ << "}";
+    os << "DdsBridge{" << bridge.topic_->topic_name() << "}";
     return os;
 }
 
