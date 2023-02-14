@@ -29,7 +29,7 @@ Address random_address(
     return Address("127.0.0.1", seed, seed, TransportProtocol::udp);
 }
 
-DiscoveryServerConnectionAddress random_connection_addresses(
+DiscoveryServerConnectionAddress random_connection_address(
         unsigned int seed /* = 0 */,
         unsigned int size /* = 1 */,
         bool ros /* = false */)
