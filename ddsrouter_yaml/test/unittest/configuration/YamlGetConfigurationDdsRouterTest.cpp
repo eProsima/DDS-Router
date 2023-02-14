@@ -17,21 +17,19 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddspipe_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddspipe_core/participants/participant/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
+#include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
 
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 using namespace eprosima;
-using namespace eprosima::ddspipe;
-using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test load a whole DDS Router Configuration from yaml node.
  * Only set two echo participants.
  */
-TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
 {
     const char* yml_str =
             R"(
@@ -46,27 +44,27 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
     Yaml yml = YAML::Load(yml_str);
 
     // Load configuration
-    core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, LATEST);
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, ddspipe::yaml::YamlReaderVersion::LATEST);
 
     // Check is valid
-    eprosima::utils::Formatter error_msg;
+    utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::DdsTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>>());
 
     // Check Participant configurations
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
+    std::set<std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, ddsrouter::core::types::ParticipantKind::echo);
     }
 }
 
@@ -74,7 +72,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial)
  * Test load a whole DDS Router Configuration from yaml node.
  * Add 3 different Participants of kind Simple and one builtin topic.
  */
-TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
 {
     const char* yml_str =
             R"(
@@ -97,35 +95,35 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
     Yaml yml = YAML::Load(yml_str);
 
     // Load configuration
-    core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_2_0);
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, ddspipe::yaml::YamlReaderVersion::V_2_0);
 
     // Check is valid
-    eprosima::utils::Formatter error_msg;
+    utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
+    std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1u);
-    std::shared_ptr<core::types::DdsTopic> topic_result = (*builtin_result.begin());
+    std::shared_ptr<ddspipe::core::types::DdsTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name, "rt/chatter");
     ASSERT_EQ(topic_result->type_name, "std_msgs::msg::dds_::String_");
     ASSERT_EQ(topic_result->keyed, false);
     ASSERT_EQ(topic_result->topic_qos.get_reference().is_reliable(), false);
 
     // Check Participant configurations
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
+    std::set<std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 3u);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind, core::types::ParticipantKind::simple_rtps);
+        ASSERT_EQ(participant->kind, ddsrouter::core::types::ParticipantKind::simple_rtps);
     }
 }
 
@@ -133,7 +131,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_ros_case)
  * Test load a whole DDS Router Configuration from yaml node.
  * Only set two echo participants.
  */
-TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial_v1)
 {
     const char* yml_str =
             R"(
@@ -147,27 +145,27 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
     Yaml yml = YAML::Load(yml_str);
 
     // Load configuration
-    core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, ddspipe::yaml::YamlReaderVersion::V_1_0);
 
     // Check is valid
-    eprosima::utils::Formatter error_msg;
+    utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::DdsTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>>());
 
     // Check Participant configurations
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
+    std::set<std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, ddsrouter::core::types::ParticipantKind::echo);
     }
 }
 
@@ -175,7 +173,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_trivial_v1)
  * Test load a whole DDS Router Configuration from yaml node.
  * Only set two echo participants.
  */
-TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_builtin_v1)
 {
     const char* yml_str =
             R"(
@@ -194,37 +192,37 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
     Yaml yml = YAML::Load(yml_str);
 
     // Load configuration
-    core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, ddspipe::yaml::YamlReaderVersion::V_1_0);
 
     // Check is valid
-    eprosima::utils::Formatter error_msg;
+    utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check block Topics are empty
-    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
 
     // Check allowlist has 2 topics
-    std::set<std::shared_ptr<core::types::DdsFilterTopic>> allowlist_result = configuration_result.allowlist;
+    std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>> allowlist_result = configuration_result.allowlist;
     ASSERT_EQ(allowlist_result.size(), 2u);
 
     // Check Builtin Topics has one correct topic
-    std::set<std::shared_ptr<core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
+    std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>> builtin_result = configuration_result.builtin_topics;
     ASSERT_EQ(builtin_result.size(), 1u);
-    std::shared_ptr<core::types::DdsTopic> topic_result = (*builtin_result.begin());
+    std::shared_ptr<ddspipe::core::types::DdsTopic> topic_result = (*builtin_result.begin());
     ASSERT_EQ(topic_result->topic_name, "topic1");
     ASSERT_EQ(topic_result->type_name, "type1");
     ASSERT_EQ(topic_result->keyed, false);
 
     // Check Participant configurations
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
+    std::set<std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
-        ASSERT_EQ(participant->kind, core::types::ParticipantKind::echo);
+        ASSERT_EQ(participant->kind, ddsrouter::core::types::ParticipantKind::echo);
     }
 }
 
@@ -232,7 +230,7 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_builtin_v1)
  * Test load a whole DDS Router Configuration from yaml node.
  * Only set two echo participants.
  */
-TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_server_v1)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_discovery_server_v1)
 {
     const char* yml_str =
             R"(
@@ -253,55 +251,55 @@ TEST(YamlGetConfigurationDDSRouterTest, get_ddsrouter_configuration_discovery_se
     Yaml yml = YAML::Load(yml_str);
 
     // Load configuration
-    core::configuration::DDSRouterConfiguration configuration_result =
-            YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, V_1_0);
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, ddspipe::yaml::YamlReaderVersion::V_1_0);
 
     // Check is valid
-    eprosima::utils::Formatter error_msg;
+    utils::Formatter error_msg;
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<core::types::DdsFilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<core::types::DdsTopic>>());
+    ASSERT_EQ(configuration_result.allowlist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.blocklist, std::set<std::shared_ptr<ddspipe::core::types::DdsFilterTopic>>());
+    ASSERT_EQ(configuration_result.builtin_topics, std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>>());
 
     // Check Participant configurations
-    std::set<std::shared_ptr<core::configuration::ParticipantConfiguration>>
+    std::set<std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
     participant_configurations = configuration_result.participants_configurations;
 
     ASSERT_EQ(participant_configurations.size(), 2u);
 
-    for (std::shared_ptr<core::configuration::ParticipantConfiguration> participant : participant_configurations)
+    for (std::shared_ptr<ddspipe::participants::ParticipantConfiguration> participant : participant_configurations)
     {
         // If it is not the discovery server participant, continue
-        if (!(participant->kind == core::types::ParticipantKind::local_discovery_server))
+        if (!(participant->id() == "participant1"))
         {
             continue;
         }
         else
         {
             // Check the DS partipant is correct
-            std::shared_ptr<core::configuration::DiscoveryServerParticipantConfiguration> ds_participant =
-                    std::dynamic_pointer_cast<core::configuration::DiscoveryServerParticipantConfiguration>(participant);
+            std::shared_ptr<ddspipe::participants::DiscoveryServerParticipantConfiguration> ds_participant =
+                    std::dynamic_pointer_cast<ddspipe::participants::DiscoveryServerParticipantConfiguration>(participant);
 
             // Check Name
-            ASSERT_EQ(ds_participant->id, core::types::ParticipantId("participant2"));
+            ASSERT_EQ(ds_participant->id, ddspipe::core::types::ParticipantId("participant2"));
 
             // Check GuidPrefix
             ASSERT_EQ(
                 ds_participant->discovery_server_guid_prefix,
-                core::types::GuidPrefix(true, 3u));
+                ddspipe::core::types::GuidPrefix(true, 3u));
 
             // Check Connection addresses
             ASSERT_EQ(
                 ds_participant->connection_addresses.size(),
                 1u);
-            participants::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses.begin();
+            ddspipe::participants::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses.begin();
             ASSERT_EQ(
                 address,
-                (participants::types::DiscoveryServerConnectionAddress(
-                    core::types::GuidPrefix("01.0f.00.00.00.00.00.00.00.00.00.00"),
-                    {participants::types::Address("127.0.0.1", 3333, 3333, participants::types::Address::default_transport_protocol())}
+                (ddspipe::participants::types::DiscoveryServerConnectionAddress(
+                    ddspipe::core::types::GuidPrefix("01.0f.00.00.00.00.00.00.00.00.00.00"),
+                    {ddspipe::participants::types::Address("127.0.0.1", 3333, 3333, ddspipe::participants::types::Address::default_transport_protocol())}
                     ))
                 );
         }
