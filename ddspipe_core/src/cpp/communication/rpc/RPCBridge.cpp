@@ -34,7 +34,7 @@ namespace core {
 using namespace eprosima::ddspipe::core::types;
 
 RPCBridge::RPCBridge(
-        const std::shared_ptr<RpcTopic>& topic,
+        const RpcTopic& topic,
         const std::shared_ptr<ParticipantsDatabase>& participants_database,
         const std::shared_ptr<PayloadPool>& payload_pool,
         const std::shared_ptr<utils::SlotThreadPool>& thread_pool)
@@ -77,9 +77,9 @@ void RPCBridge::init_nts_()
 
     // TODO: This should not be done
     // Wait for the new entities created to match before sending data from one side to the other
+    init_ = true;
     utils::sleep_for(500);
 
-    init_ = true;
 }
 
 void RPCBridge::create_proxy_server_nts_(
@@ -87,8 +87,8 @@ void RPCBridge::create_proxy_server_nts_(
 {
     std::shared_ptr<IParticipant> participant = participants_->get_participant(participant_id);
 
-    reply_writers_[participant_id] = participant->create_writer(rpc_topic_->reply_topic());
-    request_readers_[participant_id] = participant->create_reader(rpc_topic_->request_topic());
+    reply_writers_[participant_id] = participant->create_writer(rpc_topic_.reply_topic());
+    request_readers_[participant_id] = participant->create_reader(rpc_topic_.request_topic());
 
     create_slot_(request_readers_[participant_id]);
 }
@@ -99,13 +99,13 @@ void RPCBridge::create_proxy_client_nts_(
     std::shared_ptr<IParticipant> participant = participants_->get_participant(participant_id);
 
     // Safe casting as we are only getting RTPS participants
-    request_writers_[participant_id] = participant->create_writer(rpc_topic_->request_topic());
-    reply_readers_[participant_id] = participant->create_reader(rpc_topic_->reply_topic());
+    request_writers_[participant_id] = participant->create_writer(rpc_topic_.request_topic());
+    reply_readers_[participant_id] = participant->create_reader(rpc_topic_.reply_topic());
 
     create_slot_(reply_readers_[participant_id]);
 
     // Create service registry associated to this proxy client
-    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(*rpc_topic_, participant_id);
+    service_registries_[participant_id] = std::make_shared<ServiceRegistry>(rpc_topic_, participant_id);
 }
 
 void RPCBridge::enable() noexcept
@@ -204,6 +204,9 @@ void RPCBridge::discovered_service(
     {
         service_registries_[server_participant_id]->enable();
     }
+    else
+    {
+    }
 }
 
 void RPCBridge::removed_service(
@@ -297,6 +300,7 @@ void RPCBridge::transmit_(
 
         RpcPayloadData& pcr_data = dynamic_cast<RpcPayloadData&>(*data);
 
+
         // Will never return \c RETCODE_NO_DATA, otherwise would have finished before
         if (!ret)
         {
@@ -344,6 +348,7 @@ void RPCBridge::transmit_(
                     pcr_data.write_params.set_level();
                     pcr_data.write_params.get_reference().related_sample_identity().writer_guid(
                         reply_readers_[service_registry.first]->guid());
+
 
                     ret = request_writers_[service_registry.first]->write(*data);
 
@@ -452,7 +457,7 @@ std::ostream& operator <<(
         std::ostream& os,
         const RPCBridge& bridge)
 {
-    os << "RPCBridge{" << bridge.rpc_topic_ << "}";
+    os << "RPCBridge{" << bridge.rpc_topic_.service_name() << "}";
     return os;
 }
 

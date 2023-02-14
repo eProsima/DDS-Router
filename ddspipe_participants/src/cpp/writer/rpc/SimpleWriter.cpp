@@ -47,6 +47,7 @@ SimpleWriter::SimpleWriter(
         reckon_writer_qos_(topic),
         reckon_cache_change_pool_configuration_(topic))
 {
+    logInfo(DDSROUTER_RPC_WRITER, "Creating RPC Writer for topic " << topic_);
 }
 
 utils::ReturnCode SimpleWriter::fill_to_send_data_(
@@ -72,6 +73,10 @@ void SimpleWriter::fill_sent_data_(
         const eprosima::fastrtps::rtps::WriteParams& sent_params,
         core::types::RtpsPayloadData& data_to_fill) const noexcept
 {
+    CommonWriter::fill_sent_data_(
+        sent_params,
+        data_to_fill);
+
     core::types::RpcPayloadData& rpc_data = dynamic_cast<core::types::RpcPayloadData&>(data_to_fill);
     rpc_data.sent_sequence_number = sent_params.sample_identity().sequence_number();
 }

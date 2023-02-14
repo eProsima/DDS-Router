@@ -86,11 +86,7 @@ void DdsRouter::init_participants_()
     for (std::pair<types::ParticipantKind, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> participant_config :
             configuration_.participants_configurations)
     {
-        std::shared_ptr<ddspipe::core::IParticipant> new_participant;
-
-        // Create participant
-        // This should not be in try catch case as if it fails the whole init must fail
-        new_participant =
+        std::shared_ptr<ddspipe::core::IParticipant> new_participant =
                 participant_factory_.create_participant(
             participant_config.first,
             participant_config.second,

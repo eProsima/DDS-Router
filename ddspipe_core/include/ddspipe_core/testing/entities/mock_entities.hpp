@@ -82,7 +82,7 @@ struct MockRoutingData : public BlankRoutingData
     types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 };
 
-constexpr types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_TEST = "testing_type::mock::v0";
+const    types::TopicInternalTypeDiscriminator INTERNAL_TOPIC_TYPE_TEST = "testing_type::mock::v0";
 
 } /* namespace testing */
 } /* namespace core */
