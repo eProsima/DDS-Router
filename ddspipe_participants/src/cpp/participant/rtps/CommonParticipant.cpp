@@ -82,7 +82,7 @@ void CommonParticipant::onParticipantDiscovery(
         if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::DISCOVERED_PARTICIPANT)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Participant " << info.info.m_guid << ".");
+                    "Found in Participant " << configuration_->id << " new Participant " << info.info.m_guid << ".");
         }
         else if (info.status == fastrtps::rtps::ParticipantDiscoveryInfo::CHANGED_QOS_PARTICIPANT)
         {
@@ -193,7 +193,7 @@ void CommonParticipant::onReaderDiscovery(
         if (info.status == fastrtps::rtps::ReaderDiscoveryInfo::DISCOVERED_READER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Reader " << info.info.guid() << ".");
+                    "Found in Participant " << configuration_->id << " new Reader " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_reader);
         }
@@ -231,7 +231,7 @@ void CommonParticipant::onWriterDiscovery(
         if (info.status == fastrtps::rtps::WriterDiscoveryInfo::DISCOVERED_WRITER)
         {
             logInfo(DDSROUTER_DISCOVERY,
-                    "Found in Participant " << this->id_nts_() << " new Writer " << info.info.guid() << ".");
+                    "Found in Participant " << configuration_->id << " new Writer " << info.info.guid() << ".");
 
             this->discovery_database_->add_endpoint(info_writer);
         }
@@ -256,6 +256,16 @@ void CommonParticipant::onWriterDiscovery(
             this->discovery_database_->update_endpoint(info_writer);
         }
     }
+}
+
+bool CommonParticipant::is_repeater() const noexcept
+{
+    return configuration_->is_repeater;
+}
+
+core::types::ParticipantId CommonParticipant::id() const noexcept
+{
+    return configuration_->id;
 }
 
 bool CommonParticipant::is_rtps_kind() const noexcept

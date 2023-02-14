@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -38,16 +39,16 @@ TEST(YamlGetEntityAddressTest, get_port)
 {
     // numeric values
     {
-        std::vector<core::types::PortType> ports = {1, 11, 111, 11666, 11777, 65535};
-        for (core::types::PortType port : ports)
+        std::vector<participants::types::PortType> ports = {1, 11, 111, 11666, 11777, 65535};
+        for (participants::types::PortType port : ports)
         {
             Yaml yml;
             test::add_field_to_yaml(
                 yml,
-                test::YamlField<core::types::PortType>(port),
+                test::YamlField<participants::types::PortType>(port),
                 ADDRESS_PORT_TAG);
 
-            ASSERT_EQ(port, YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST));
+            ASSERT_EQ(port, YamlReader::get<participants::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST));
         }
     }
 
@@ -56,7 +57,7 @@ TEST(YamlGetEntityAddressTest, get_port)
         Yaml yml;
 
         ASSERT_THROW(
-            YamlReader::get<core::types::IpVersion>(yml, ADDRESS_PORT_TAG, LATEST),
+            YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_PORT_TAG, LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -69,7 +70,7 @@ TEST(YamlGetEntityAddressTest, get_port)
             ADDRESS_PORT_TAG);
 
         ASSERT_THROW(
-            YamlReader::get<core::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST),
+            YamlReader::get<participants::types::PortType>(yml, ADDRESS_PORT_TAG, LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

@@ -60,7 +60,7 @@ void SpecificQoSReader::fill_received_data_(
         data_to_fill.writer_qos = specific_qos_of_writer_(data_to_fill.source_guid);
         logDebug(
             DDSROUTER_SpecificQoSReader,
-            "Set QoS " << data_to_fill.<< " for data from " << data_to_fill.source_guid << ".");
+            "Set QoS " << data_to_fill.writer_qos << " for data from " << data_to_fill.source_guid << ".");
     }
     catch (const utils::InconsistencyException& e)
     {

@@ -15,7 +15,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
@@ -23,6 +23,7 @@
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -34,7 +35,7 @@ using namespace eprosima::ddspipe::yaml;
 TEST(YamlGetEntityAddressTest, ip_and_domain)
 {
     // Check a warning is shown
-    // eprosima::ddsrouter::test::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
+    // eprosima::ddspipe::core::testing::TestLogHandler log_handler(utils::Log::Kind::Warning, 1);
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Warning, 1, 0);
 
     // Set address
@@ -43,20 +44,20 @@ TEST(YamlGetEntityAddressTest, ip_and_domain)
     // Add domain
     yaml::test::add_field_to_yaml(
         yml_address,
-        yaml::test::YamlField<core::types::IpType>("localhost"),
+        yaml::test::YamlField<participants::types::IpType>("localhost"),
         ADDRESS_DNS_TAG);
 
     // Add ip
-    core::types::IpType ip_value = "1.1.1.1";
+    participants::types::IpType ip_value = "1.1.1.1";
     yaml::test::add_field_to_yaml(
         yml_address,
-        yaml::test::YamlField<core::types::IpType>(ip_value),
+        yaml::test::YamlField<participants::types::IpType>(ip_value),
         ADDRESS_IP_TAG);
 
     Yaml yml;
     yml[ADDRESS_TRANSPORT_TAG] = yml_address;
 
-    core::types::Address address = YamlReader::get<core::types::Address>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
+    participants::types::Address address = YamlReader::get<participants::types::Address>(yml, ADDRESS_TRANSPORT_TAG, LATEST);
 
     ASSERT_EQ(address.ip(), ip_value);
 }

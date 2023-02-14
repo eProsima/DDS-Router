@@ -145,8 +145,8 @@ utils::ReturnCode MultiWriter::write_(
 
     logDebug(
         DDSROUTER_MULTIWRITER,
-        "Writing in Partitions Writer " << *this << " a data with qos " << data->properties << " from " <<
-            data->properties.source_guid);
+        "Writing in Partitions Writer " << *this << " a data with qos " << rtps_data.writer_qos << " from " <<
+            rtps_data.source_guid);
 
     // Take Writer
     auto this_qos_writer = get_writer_or_create_(rtps_data.writer_qos);

@@ -15,12 +15,13 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/types/address/Address.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 
 #include "../../../YamlConfigurationTestUtils.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddspipe;
 using namespace eprosima::ddspipe::yaml;
 
@@ -46,9 +47,9 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V4_TAG),
             ADDRESS_IP_VERSION_TAG);
 
-        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
+        participants::types::IpVersion iv = YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
-        ASSERT_EQ(iv, core::types::IpVersion::v4);
+        ASSERT_EQ(iv, participants::types::IpVersion::v4);
     }
 
     // v6
@@ -59,16 +60,16 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>(ADDRESS_IP_VERSION_V6_TAG),
             ADDRESS_IP_VERSION_TAG);
 
-        core::types::IpVersion iv = YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
+        participants::types::IpVersion iv = YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST);
 
-        ASSERT_EQ(iv, core::types::IpVersion::v6);
+        ASSERT_EQ(iv, participants::types::IpVersion::v6);
     }
 
     // Empty
     {
         Yaml yml;
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
+        ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 eprosima::utils::ConfigurationException);
     }
 
@@ -80,7 +81,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<std::string>("v7"),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
+        ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 eprosima::utils::ConfigurationException);
     }
 
@@ -92,7 +93,7 @@ TEST(YamlGetEntityAddressTest, get_ip_version)
             test::YamlField<uint32_t>(17),
             ADDRESS_IP_VERSION_TAG);
 
-        ASSERT_THROW(YamlReader::get<core::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
+        ASSERT_THROW(YamlReader::get<participants::types::IpVersion>(yml, ADDRESS_IP_VERSION_TAG, LATEST),
                 eprosima::utils::ConfigurationException);
     }
 }
