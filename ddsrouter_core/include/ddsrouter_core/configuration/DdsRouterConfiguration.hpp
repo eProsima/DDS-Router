@@ -80,7 +80,7 @@ protected:
 
     //! Auxiliar method to validate that class type of the participants are compatible with their kinds.
     static bool check_correct_configuration_object_(
-            const std::shared_ptr<ddspipe::participants::ParticipantConfiguration> configuration);
+            const std::pair<types::ParticipantKind, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> configuration);
 
 };
 

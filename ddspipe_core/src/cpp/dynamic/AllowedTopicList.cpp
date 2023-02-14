@@ -27,6 +27,10 @@ namespace eprosima {
 namespace ddspipe {
 namespace core {
 
+AllowedTopicList::AllowedTopicList()
+{
+}
+
 // TODO: Add logs
 AllowedTopicList::AllowedTopicList(
         const std::set<utils::Heritable<types::IFilterTopic>>& allowlist,

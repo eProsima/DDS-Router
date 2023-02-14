@@ -18,6 +18,7 @@
 #include <set>
 
 #include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/memory/Heritable.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
@@ -52,9 +53,9 @@ struct DdsRouterReloadConfiguration : public ddspipe::core::IConfiguration
     // VARIABLES
     /////////////////////////
 
-    std::set<std::shared_ptr<ddspipe::core::types::WildcardDdsFilterTopic>> allowlist {};
+    std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>> allowlist {};
 
-    std::set<std::shared_ptr<ddspipe::core::types::WildcardDdsFilterTopic>> blocklist {};
+    std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>> blocklist {};
 
 };
 
