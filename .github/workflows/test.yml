@@ -131,7 +131,7 @@ jobs:
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddspipe_participants
-          subpackage_dir: tools/ddspipe_participants
+          subpackage_dir: ddspipe_participants
 
       - name: Install ddspipe_yaml
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows

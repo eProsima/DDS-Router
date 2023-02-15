@@ -24,11 +24,12 @@ namespace core {
 using namespace eprosima::ddspipe::core::types;
 
 DdsBridge::DdsBridge(
-        const std::shared_ptr<DistributedTopic>& topic,
+        const utils::Heritable<DistributedTopic>& topic,
         const std::shared_ptr<ParticipantsDatabase>& participants_database,
         const std::shared_ptr<PayloadPool>& payload_pool,
         const std::shared_ptr<utils::SlotThreadPool>& thread_pool)
-    : Bridge(topic, participants_database, payload_pool, thread_pool)
+    : Bridge(participants_database, payload_pool, thread_pool)
+    , topic_(topic)
 {
     logDebug(DDSROUTER_DDSBRIDGE, "Creating DdsBridge " << *this << ".");
 

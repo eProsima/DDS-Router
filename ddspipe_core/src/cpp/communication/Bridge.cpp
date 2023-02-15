@@ -22,12 +22,10 @@ namespace ddspipe {
 namespace core {
 
 Bridge::Bridge(
-        const std::shared_ptr<ITopic>& topic,
         const std::shared_ptr<ParticipantsDatabase>& participants_database,
         const std::shared_ptr<PayloadPool>& payload_pool,
         const std::shared_ptr<utils::SlotThreadPool>& thread_pool)
-    : topic_(topic)
-    , participants_(participants_database)
+    : participants_(participants_database)
     , payload_pool_(payload_pool)
     , thread_pool_(thread_pool)
     , enabled_(false)

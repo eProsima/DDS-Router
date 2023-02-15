@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <cpp_utils/memory/Heritable.hpp>
 
 #include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
 #include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
@@ -46,7 +47,6 @@ public:
      *
      */
     Bridge(
-            const std::shared_ptr<ITopic>& topic,
             const std::shared_ptr<ParticipantsDatabase>& participants_database,
             const std::shared_ptr<PayloadPool>& payload_pool,
             const std::shared_ptr<utils::SlotThreadPool>& thread_pool);
@@ -70,9 +70,6 @@ public:
     virtual void disable() noexcept = 0;
 
 protected:
-
-    //! Topic that refers to this Bridge
-    const std::shared_ptr<ITopic> topic_;
 
     //! Collection of Participants to manage communication
     const std::shared_ptr<ParticipantsDatabase> participants_;
