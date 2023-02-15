@@ -38,7 +38,7 @@ RPCBridge::RPCBridge(
         const std::shared_ptr<ParticipantsDatabase>& participants_database,
         const std::shared_ptr<PayloadPool>& payload_pool,
         const std::shared_ptr<utils::SlotThreadPool>& thread_pool)
-    : Bridge(std::shared_ptr<ITopic>(), participants_database, payload_pool, thread_pool)
+    : Bridge(participants_database, payload_pool, thread_pool)
     , init_(false)
     , rpc_topic_(topic)
 {
@@ -78,8 +78,7 @@ void RPCBridge::init_nts_()
     // TODO: This should not be done
     // Wait for the new entities created to match before sending data from one side to the other
     init_ = true;
-    utils::sleep_for(500);
-
+    // utils::sleep_for(500);
 }
 
 void RPCBridge::create_proxy_server_nts_(

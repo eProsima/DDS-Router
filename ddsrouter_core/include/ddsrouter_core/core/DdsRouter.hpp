@@ -121,10 +121,6 @@ protected:
 
     DdsRouterConfiguration configuration_;
 
-    std::unique_ptr<ddspipe::core::DdsPipe> ddspipe_;
-
-    std::shared_ptr<ddspipe::core::AllowedTopicList> allowed_topics_;
-
     std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database_;
 
     std::shared_ptr<ddspipe::core::PayloadPool> payload_pool_;
@@ -132,6 +128,10 @@ protected:
     std::shared_ptr<ddspipe::core::ParticipantsDatabase> participants_database_;
 
     std::shared_ptr<utils::SlotThreadPool> thread_pool_;
+
+    std::shared_ptr<ddspipe::core::AllowedTopicList> allowed_topics_;
+
+    std::unique_ptr<ddspipe::core::DdsPipe> ddspipe_;
 
     ParticipantFactory participant_factory_;
 };
