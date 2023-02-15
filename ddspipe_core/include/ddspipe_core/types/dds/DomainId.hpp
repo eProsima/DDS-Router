@@ -33,7 +33,7 @@ using DomainIdType = eprosima::fastdds::dds::DomainId_t;
 struct DomainId : public IConfiguration
 {
 
-    DDSPIPE_CORE_DllAPI DomainId () noexcept = default;
+    DDSPIPE_CORE_DllAPI DomainId () = default;
 
     DDSPIPE_CORE_DllAPI DomainId (bool discovery_server) noexcept;
 
