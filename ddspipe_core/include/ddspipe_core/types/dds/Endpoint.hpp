@@ -47,7 +47,7 @@ struct Endpoint
 {
 
     //! Default Endpoint that returns an invalid one
-    DDSPIPE_CORE_DllAPI Endpoint() noexcept = default;
+    DDSPIPE_CORE_DllAPI Endpoint() = default;
 
     /********************
     * SPECIFIC GETTERS *
