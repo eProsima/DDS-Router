@@ -119,6 +119,27 @@ jobs:
           name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
+      - name: Install ddspipe_core
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddspipe_core
+          subpackage_dir: ddspipe_core
+
+      - name: Install ddspipe_participants
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddspipe_participants
+          subpackage_dir: tools/ddspipe_participants
+
+      - name: Install ddspipe_yaml
+        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+        with:
+          cmake_build_type: ${{ matrix.cmake-config }}
+          subpackage: ddspipe_yaml
+          subpackage_dir: ddspipe_yaml
+
       - name: Install ddsrouter_core
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
@@ -139,6 +160,27 @@ jobs:
           cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddsrouter_tool
           subpackage_dir: tools/ddsrouter_tool
+
+      - name: Run tests ddspipe_core
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddspipe_core
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      - name: Run tests ddspipe_participants
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddspipe_participants
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
+
+      - name: Run tests ddspipe_yaml
+        uses: ./DDS-Router/.github/actions/run-test-windows
+        with:
+          package_name: ddspipe_yaml
+          cmake_build_type: ${{ matrix.cmake-config }}
+        if: always()
 
       - name: Run tests ddsrouter_core
         uses: ./DDS-Router/.github/actions/run-test-windows
@@ -373,6 +415,18 @@ jobs:
             --event-handlers=console_direct+ \
             --cmake-args -DBUILD_TESTS=ON
 
+      - name: Run tests ddspipe
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddspipe \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
+              --timeout 60
+        if: always()
+
       - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
@@ -476,6 +530,18 @@ jobs:
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
 
+      - name: Run tests ddspipe
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddspipe \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-regex xfail \
+              --timeout 60
+        if: always()
+
       - name: Run tests ddsrouter_core
         run: |
           source install/setup.bash && \
@@ -560,12 +626,27 @@ jobs:
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/asan_colcon.meta
 
+      - name: Run tests ddspipe_core
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddspipe_core
+
+      - name: Run tests ddspipe_participants
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddspipe_participants
+
+      - name: Run tests ddspipe_yaml
+        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
+        with:
+          package_name: ddspipe_yaml
+
       - name: Run tests ddsrouter_core
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_core
 
-      - name: Run tests ddsrouter_yaml
+      - name: Run tests ddsrouter_yamlx
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
           package_name: ddsrouter_yaml
@@ -629,6 +710,18 @@ jobs:
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/tsan_colcon.meta
+
+      - name: Run tests ddspipe
+        run: |
+          source install/setup.bash && \
+          colcon test \
+            --packages-select-regex ddspipe \
+            --event-handlers=console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude "xfail|xtsan" \
+              --timeout 60
+        if: always()
 
       - name: Run tests ddsrouter_core
         run: |
