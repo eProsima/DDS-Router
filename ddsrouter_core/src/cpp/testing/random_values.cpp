@@ -67,7 +67,7 @@ std::shared_ptr<ParticipantConfiguration> random_participant_configuration(
         case ParticipantKind::initial_peers:
 
         {
-            auto c = std::make_shared<DiscoveryServerParticipantConfiguration>();
+            auto c = std::make_shared<InitialPeersParticipantConfiguration>();
             c->id = id;
             c->domain = random_domain(seed);
             c->listening_addresses = {random_address(seed)};
@@ -76,7 +76,7 @@ std::shared_ptr<ParticipantConfiguration> random_participant_configuration(
 
         case ParticipantKind::echo:
         {
-            auto c = std::make_shared<SimpleParticipantConfiguration>();
+            auto c = std::make_shared<EchoParticipantConfiguration>();
             c->id = id;
             return c;
         }

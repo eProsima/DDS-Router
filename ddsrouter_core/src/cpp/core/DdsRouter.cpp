@@ -36,10 +36,10 @@ namespace core {
 
 DdsRouter::DdsRouter(
         const DdsRouterConfiguration& configuration)
-    : discovery_database_(new ddspipe::core::DiscoveryDatabase())
+    : configuration_(configuration)
+    , discovery_database_(new ddspipe::core::DiscoveryDatabase())
     , payload_pool_(new ddspipe::core::FastPayloadPool())
     , participants_database_(new ddspipe::core::ParticipantsDatabase())
-    , configuration_(configuration)
     , thread_pool_(std::make_shared<utils::SlotThreadPool>(configuration_.advanced_options.number_of_threads))
 {
     logDebug(DDSROUTER, "Creating DDS Router.");
@@ -131,9 +131,11 @@ utils::ReturnCode DdsRouter::reload_configuration(
                       "Configuration for Reload DDS Router is invalid: " << error_msg);
     }
 
-    return ddspipe_->reload_allowed_topics(std::make_shared<ddspipe::core::AllowedTopicList>(
-        configuration_.allowlist,
-        configuration_.blocklist));
+    allowed_topics_ = std::make_shared<ddspipe::core::AllowedTopicList>(
+        new_configuration.allowlist,
+        new_configuration.blocklist);
+
+    return ddspipe_->reload_allowed_topics(allowed_topics_);
 }
 
 utils::ReturnCode DdsRouter::start() noexcept

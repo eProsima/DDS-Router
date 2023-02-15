@@ -33,7 +33,7 @@ using namespace eprosima::ddspipe::core::types;
 const unsigned int Track::MAX_MESSAGES_TRANSMIT_LOOP_ = 100;
 
 Track::Track(
-        const std::shared_ptr<types::DistributedTopic>& topic,
+        const utils::Heritable<types::DistributedTopic>& topic,
         const types::ParticipantId& reader_participant_id,
         const std::shared_ptr<IReader>& reader,
         std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
