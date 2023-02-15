@@ -36,7 +36,7 @@ DdsPipe::DdsPipe(
         const std::shared_ptr<PayloadPool>& payload_pool,
         const std::shared_ptr<ParticipantsDatabase>& participants_database,
         const std::shared_ptr<utils::SlotThreadPool>& thread_pool,
-        const std::set<std::shared_ptr<types::DistributedTopic>>& builtin_topics /* = {} */)
+        const std::set<utils::Heritable<types::DistributedTopic>>& builtin_topics /* = {} */)
     : allowed_topics_(allowed_topics)
     , discovery_database_(discovery_database)
     , payload_pool_(payload_pool)
@@ -242,7 +242,7 @@ utils::ReturnCode DdsPipe::stop_() noexcept
     }
 }
 
-void DdsPipe::init_bridges_(const std::set<std::shared_ptr<types::DistributedTopic>>& builtin_topics)
+void DdsPipe::init_bridges_(const std::set<utils::Heritable<types::DistributedTopic>>& builtin_topics)
 {
     for (const auto& topic : builtin_topics)
     {
@@ -251,7 +251,7 @@ void DdsPipe::init_bridges_(const std::set<std::shared_ptr<types::DistributedTop
 }
 
 void DdsPipe::discovered_topic_(
-        const std::shared_ptr<types::DistributedTopic>& topic) noexcept
+        const utils::Heritable<types::DistributedTopic>& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -336,7 +336,7 @@ void DdsPipe::discovered_endpoint_(
     {
         if (!RpcTopic::is_service_topic(endpoint.topic))
         {
-            discovered_topic_(std::make_shared<DdsTopic>(endpoint.topic));
+            discovered_topic_(utils::Heritable<DdsTopic>::make_heritable(endpoint.topic));
         }
         else if (endpoint.is_server_endpoint())
         {
@@ -363,7 +363,7 @@ void DdsPipe::removed_endpoint_(
 }
 
 void DdsPipe::create_new_bridge_(
-        const std::shared_ptr<types::DistributedTopic>& topic,
+        const utils::Heritable<types::DistributedTopic>& topic,
         bool enabled /*= false*/) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
@@ -399,7 +399,7 @@ void DdsPipe::create_new_service_(
 }
 
 void DdsPipe::activate_topic_(
-        const std::shared_ptr<types::DistributedTopic>& topic) noexcept
+        const utils::Heritable<types::DistributedTopic>& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
@@ -424,7 +424,7 @@ void DdsPipe::activate_topic_(
 }
 
 void DdsPipe::deactivate_topic_(
-        const std::shared_ptr<types::DistributedTopic>& topic) noexcept
+        const utils::Heritable<types::DistributedTopic>& topic) noexcept
 {
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 

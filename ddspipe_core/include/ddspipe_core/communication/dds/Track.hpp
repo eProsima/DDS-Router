@@ -18,6 +18,7 @@
 #include <mutex>
 
 #include <cpp_utils/thread_pool/pool/SlotThreadPool.hpp>
+#include <cpp_utils/memory/Heritable.hpp>
 
 #include <ddspipe_core/interface/IParticipant.hpp>
 #include <ddspipe_core/interface/IReader.hpp>
@@ -47,7 +48,7 @@ public:
      * @param writers:  Map of Writers that will send the data received by \c source indexed by Participant id
      */
     Track(
-            const std::shared_ptr<types::DistributedTopic>& topic,
+            const utils::Heritable<types::DistributedTopic>& topic,
             const types::ParticipantId& reader_participant_id,
             const std::shared_ptr<IReader>& reader,
             std::map<types::ParticipantId, std::shared_ptr<IWriter>>&& writers,
@@ -141,7 +142,7 @@ protected:
     void transmit_() noexcept;
 
     //! Topic that refers to this Bridge
-    const std::shared_ptr<ITopic> topic_;
+    const utils::Heritable<ITopic> topic_;
 
     /**
      * @brief Id of the Participant of the Reader

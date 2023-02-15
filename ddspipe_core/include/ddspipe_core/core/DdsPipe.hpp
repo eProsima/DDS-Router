@@ -63,7 +63,7 @@ public:
             const std::shared_ptr<PayloadPool>& payload_pool,
             const std::shared_ptr<ParticipantsDatabase>& participants_database,
             const std::shared_ptr<utils::SlotThreadPool>& thread_pool,
-            const std::set<std::shared_ptr<types::DistributedTopic>>& builtin_topics = {});
+            const std::set<utils::Heritable<types::DistributedTopic>>& builtin_topics = {});
 
     /**
      * @brief Destroy the DdsPipe object
@@ -150,7 +150,7 @@ protected:
     /**
      * @brief  Create a disabled bridge for every real topic
      */
-    void init_bridges_(const std::set<std::shared_ptr<types::DistributedTopic>>& builtin_topics);
+    void init_bridges_(const std::set<utils::Heritable<types::DistributedTopic>>& builtin_topics);
 
     /////
     // INTERNAL AUXILIAR METHODS
@@ -166,7 +166,7 @@ protected:
      * @param [in] topic : topic discovered
      */
     void discovered_topic_(
-            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
+            const utils::Heritable<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Method called every time a new endpoint (corresponding to a server) has been discovered/updated
@@ -225,7 +225,7 @@ protected:
      * @param [in] topic : new topic
      */
     void create_new_bridge_(
-            const std::shared_ptr<types::DistributedTopic>& topic,
+            const utils::Heritable<types::DistributedTopic>& topic,
             bool enabled = false) noexcept;
 
     /**
@@ -246,7 +246,7 @@ protected:
      * @param [in] topic : Topic to be enabled
      */
     void activate_topic_(
-            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
+            const utils::Heritable<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Disable a specific topic.
@@ -256,7 +256,7 @@ protected:
      * @param [in] topic : Topic to be disabled
      */
     void deactivate_topic_(
-            const std::shared_ptr<types::DistributedTopic>& topic) noexcept;
+            const utils::Heritable<types::DistributedTopic>& topic) noexcept;
 
     /**
      * @brief Activate all Topics that are allowed by the allowed topics list
@@ -306,7 +306,7 @@ protected:
     /////////////////////////
 
     //! Map of bridges indexed by their topic
-    std::map<std::shared_ptr<types::DistributedTopic>, std::unique_ptr<DdsBridge>> bridges_;
+    std::map<utils::Heritable<types::DistributedTopic>, std::unique_ptr<DdsBridge>> bridges_;
 
     //! Map of RPC bridges indexed by their topic
     std::map<types::RpcTopic, std::unique_ptr<RPCBridge>> rpc_bridges_;
@@ -317,7 +317,7 @@ protected:
      * Every topic discovered would be added to this map.
      * If the value is true, it means this topic is currently activated.
      */
-    std::map<std::shared_ptr<types::DistributedTopic>, bool> current_topics_;
+    std::map<utils::Heritable<types::DistributedTopic>, bool> current_topics_;
 
     /**
      * @brief List of RPC topics discovered

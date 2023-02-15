@@ -51,7 +51,7 @@ public:
      * @throw InitializationException in case \c IWriters or \c IReaders creation fails.
      */
     DdsBridge(
-            const std::shared_ptr<types::DistributedTopic>& topic,
+            const utils::Heritable<types::DistributedTopic>& topic,
             const std::shared_ptr<ParticipantsDatabase>& participants_database,
             const std::shared_ptr<PayloadPool>& payload_pool,
             const std::shared_ptr<utils::SlotThreadPool>& thread_pool);
@@ -75,6 +75,8 @@ public:
     void disable() noexcept override;
 
 protected:
+
+    utils::Heritable<types::DistributedTopic> topic_;
 
     /**
      * Inside \c Tracks
