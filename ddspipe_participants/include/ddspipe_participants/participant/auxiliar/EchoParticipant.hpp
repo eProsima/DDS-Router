@@ -31,16 +31,16 @@ class EchoParticipant : public BlankParticipant
 public:
 
     //! Using parent class constructors
-    EchoParticipant(
+    DDSPIPE_PARTICIPANTS_DllAPI EchoParticipant(
             const std::shared_ptr<EchoParticipantConfiguration>& participant_configuration,
             const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);
 
     //! Print discovery information from endpoint discovered
-    void echo_discovery(
+    DDSPIPE_PARTICIPANTS_DllAPI void echo_discovery(
             core::types::Endpoint endpoint_discovered) const noexcept;
 
     //! Override create_writer() IParticipant method
-    std::shared_ptr<core::IWriter> create_writer(
+    DDSPIPE_PARTICIPANTS_DllAPI std::shared_ptr<core::IWriter> create_writer(
             const core::ITopic& topic) override;
 
 protected:

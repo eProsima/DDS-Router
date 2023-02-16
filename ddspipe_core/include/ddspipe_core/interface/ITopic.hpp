@@ -29,7 +29,7 @@ namespace core {
 /**
  * Generic data struct that represents an ITopic of data flow in the Router.
  */
-class ITopic
+DDSPIPE_CORE_DllAPI class ITopic
 {
 public:
 

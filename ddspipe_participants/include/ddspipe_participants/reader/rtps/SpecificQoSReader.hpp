@@ -16,6 +16,7 @@
 
 #include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/reader/rtps/CommonReader.hpp>
 
 namespace eprosima {
@@ -45,7 +46,7 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    SpecificQoSReader(
+    DDSPIPE_PARTICIPANTS_DllAPI SpecificQoSReader(
             const core::types::ParticipantId& participant_id,
             const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,

@@ -45,10 +45,10 @@ struct DdsTopic : public DistributedTopic
     // METHODS
     /////////////////////////
 
-    virtual bool is_valid(
+    DDSPIPE_CORE_DllAPI virtual bool is_valid(
         utils::Formatter& error_msg) const noexcept override;
 
-    virtual std::string topic_unique_name() const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual std::string topic_unique_name() const noexcept override;
 
     /////////////////////////
     // STATIC METHODS

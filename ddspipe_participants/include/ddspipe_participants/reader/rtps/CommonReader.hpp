@@ -31,6 +31,7 @@
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/types/data/RtpsPayloadData.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/reader/auxiliar/BaseReader.hpp>
 
 namespace eprosima {
@@ -60,7 +61,7 @@ public:
      *
      * Delete the RTPS CommonReader and CommonReader History in case they are set.
      */
-    virtual ~CommonReader();
+    DDSPIPE_PARTICIPANTS_DllAPI virtual ~CommonReader();
 
     /**
      * @brief Create the internal RTPS Reader.
@@ -74,7 +75,7 @@ public:
      * @warning this method is not thread safe.
      * @pre this method can only be called once.
      */
-    void init();
+    DDSPIPE_PARTICIPANTS_DllAPI void init();
 
     /////////////////////////
     // RTPS LISTENER METHODS
@@ -89,7 +90,7 @@ public:
      *
      * @param [in] change new change received
      */
-    void onNewCacheChangeAdded(
+    DDSPIPE_PARTICIPANTS_DllAPI void onNewCacheChangeAdded(
             fastrtps::rtps::RTPSReader*,
             const fastrtps::rtps::CacheChange_t* const change) noexcept override;
 
@@ -101,7 +102,7 @@ public:
      *
      * @param [in] info information about the matched Writer
      */
-    void onReaderMatched(
+    DDSPIPE_PARTICIPANTS_DllAPI void onReaderMatched(
             fastrtps::rtps::RTPSReader*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
@@ -111,15 +112,15 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    core::types::Guid guid() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::Guid guid() const noexcept override;
 
     //! Get internal RTPS reader mutex
-    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI fastrtps::RecursiveTimedMutex& get_rtps_mutex() const noexcept override;
 
     //! Get number of unread cache changes in internal RTPS reader
-    uint64_t get_unread_count() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI uint64_t get_unread_count() const noexcept override;
 
-    core::types::DdsTopic topic() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::DdsTopic topic() const noexcept override;
 
 protected:
 

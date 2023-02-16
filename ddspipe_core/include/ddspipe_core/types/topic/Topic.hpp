@@ -51,20 +51,20 @@ struct Topic : public ITopic , public IConfiguration
      *
      * This is specialized so if the comparison object is a std Topic it is compared as it.
      */
-    virtual bool operator==(const ITopic& other) const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual bool operator==(const ITopic& other) const noexcept override;
 
-    virtual bool operator<(const ITopic& other) const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual bool operator<(const ITopic& other) const noexcept override;
 
     /////////////////////////
     // METHODS
     /////////////////////////
 
     //! ITopic name
-    virtual std::string topic_name() const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual std::string topic_name() const noexcept override;
 
-    virtual TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 
-    virtual bool is_valid(
+    DDSPIPE_CORE_DllAPI virtual bool is_valid(
         utils::Formatter& error_msg) const noexcept override;
 
     /////////////////////////
@@ -72,7 +72,7 @@ struct Topic : public ITopic , public IConfiguration
     /////////////////////////
 
     //! ITopic unique name in processs
-    virtual std::string topic_unique_name() const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual std::string topic_unique_name() const noexcept override;
 
     /////////////////////////
     // VARIABLES

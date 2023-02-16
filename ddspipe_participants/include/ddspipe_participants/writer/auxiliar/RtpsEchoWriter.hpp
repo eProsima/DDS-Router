@@ -19,6 +19,7 @@
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/writer/auxiliar/BlankWriter.hpp>
 
 namespace eprosima {
@@ -33,7 +34,7 @@ class RtpsEchoWriter : public BlankWriter
 public:
 
     //! Using parent class constructors
-    RtpsEchoWriter(
+    DDSPIPE_PARTICIPANTS_DllAPI RtpsEchoWriter(
             const core::types::DdsTopic& topic,
             bool verbose);
 

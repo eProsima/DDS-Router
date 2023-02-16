@@ -16,6 +16,7 @@
 
 #include <ddspipe_core/types/topic/rpc/RpcTopic.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/reader/rtps/CommonReader.hpp>
 
 namespace eprosima {
@@ -42,18 +43,18 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    SimpleReader(
+    DDSPIPE_PARTICIPANTS_DllAPI SimpleReader(
             const core::types::ParticipantId& participant_id,
             const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             fastrtps::rtps::RTPSParticipant* rtps_participant);
 
     //! Override Parent method to create an RPC data type.
-    virtual core::types::RtpsPayloadData* create_data_(
+    DDSPIPE_PARTICIPANTS_DllAPI virtual core::types::RtpsPayloadData* create_data_(
             const fastrtps::rtps::CacheChange_t& received_change) const noexcept override;
 
     //! Override Parent method to fill fields exclusive from RPC.
-    virtual void fill_received_data_(
+    DDSPIPE_PARTICIPANTS_DllAPI virtual void fill_received_data_(
             const fastrtps::rtps::CacheChange_t& received_change,
             core::types::RtpsPayloadData& data_to_fill) const noexcept override;
 };

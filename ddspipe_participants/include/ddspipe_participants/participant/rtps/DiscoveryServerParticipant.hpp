@@ -33,7 +33,7 @@ class DiscoveryServerParticipant
 {
 public:
 
-    DiscoveryServerParticipant(
+    DDSPIPE_PARTICIPANTS_DllAPI DiscoveryServerParticipant(
             const std::shared_ptr<DiscoveryServerParticipantConfiguration>& participant_configuration,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);

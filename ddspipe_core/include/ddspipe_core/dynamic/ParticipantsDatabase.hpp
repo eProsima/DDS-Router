@@ -34,14 +34,14 @@ class ParticipantsDatabase
 {
 public:
 
-    ParticipantsDatabase() = default;
+    DDSPIPE_CORE_DllAPI ParticipantsDatabase() = default;
 
     /**
      * Destructor
      *
      * @warning it should not be called if it is not empty
      */
-    virtual ~ParticipantsDatabase();
+    DDSPIPE_CORE_DllAPI virtual ~ParticipantsDatabase();
 
     /**
      * @brief Get the participant pointer
@@ -49,7 +49,7 @@ public:
      * @param id: id of the participant
      * @return pointer to the participant
      */
-    std::shared_ptr<IParticipant> get_participant(
+    DDSPIPE_CORE_DllAPI std::shared_ptr<IParticipant> get_participant(
             const types::ParticipantId& id) const noexcept;
 
     /**
@@ -57,27 +57,27 @@ public:
      *
      * @return set of ids
      */
-    std::set<types::ParticipantId> get_participants_ids() const noexcept;
+    DDSPIPE_CORE_DllAPI std::set<types::ParticipantId> get_participants_ids() const noexcept;
 
     /**
      * @brief Get all the ids of the RPTS participants stored
      *
      * @return set of ids
      */
-    std::set<types::ParticipantId> get_rtps_participants_ids() const noexcept;
+    DDSPIPE_CORE_DllAPI std::set<types::ParticipantId> get_rtps_participants_ids() const noexcept;
 
     /**
      * @brief Get all the participants stored
      *
      * @return map of pointers to participants indexed by ids
      */
-    const std::map<types::ParticipantId, std::shared_ptr<IParticipant>>& get_participants_map() const noexcept;
+    DDSPIPE_CORE_DllAPI const std::map<types::ParticipantId, std::shared_ptr<IParticipant>>& get_participants_map() const noexcept;
 
     //! Whether the database is empty
-    bool empty() const noexcept;
+    DDSPIPE_CORE_DllAPI bool empty() const noexcept;
 
     //! Number of Participants in the Database
-    size_t size() const noexcept;
+    DDSPIPE_CORE_DllAPI size_t size() const noexcept;
 
     /**
      * @brief Add a new participant
@@ -87,7 +87,7 @@ public:
      *
      * @throw \c IncosistentException if participant already exist (duplicated ids)
      */
-    void add_participant(
+    DDSPIPE_CORE_DllAPI void add_participant(
             const types::ParticipantId& id,
             const std::shared_ptr<IParticipant>& participant);
 

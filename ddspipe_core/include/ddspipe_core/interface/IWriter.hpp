@@ -32,7 +32,7 @@ namespace core {
  *
  * Writers will start being disabled.
  */
-class IWriter
+DDSPIPE_CORE_DllAPI class IWriter
 {
 public:
 
