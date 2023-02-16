@@ -41,7 +41,7 @@ public:
      * @throw \c InitializationException in case any internal error has ocurred while creating RTPSParticipant
      * @throw \c IConfigurationException in case configuration was incorrectly set
      */
-    SimpleParticipant(
+    DDSPIPE_PARTICIPANTS_DllAPI SimpleParticipant(
             const std::shared_ptr<SimpleParticipantConfiguration>& participant_configuration,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
             const std::shared_ptr<core::DiscoveryDatabase>& discovery_database);

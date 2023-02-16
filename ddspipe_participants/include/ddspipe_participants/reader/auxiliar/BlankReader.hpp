@@ -16,6 +16,8 @@
 
 #include <ddspipe_core/interface/IReader.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
@@ -25,7 +27,7 @@ namespace participants {
  * It does not receive anything.
  * It does not have messages to take.
  */
-class BlankReader : public core::IReader
+DDSPIPE_PARTICIPANTS_DllAPI class BlankReader : public core::IReader
 {
 public:
 

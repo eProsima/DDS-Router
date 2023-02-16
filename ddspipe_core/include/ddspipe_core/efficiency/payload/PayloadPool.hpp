@@ -43,10 +43,10 @@ class PayloadPool : public eprosima::fastrtps::rtps::IPayloadPool
 public:
 
     //! Construct an empty PayloadPool
-    PayloadPool();
+    DDSPIPE_CORE_DllAPI PayloadPool();
 
     //! Delete PayloadPool and erase every Payload still without release
-    virtual ~PayloadPool();
+    DDSPIPE_CORE_DllAPI virtual ~PayloadPool();
 
     /////
     // FAST DDS PART
@@ -70,7 +70,7 @@ public:
      *
      * @pre Fields @c cache_change must not have the serialized payload initialized.
      */
-    bool get_payload(
+    DDSPIPE_CORE_DllAPI virtual bool get_payload(
             uint32_t size,
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
@@ -98,7 +98,7 @@ public:
      *
      * @pre Fields @c cache_change must not have the serialized payload initialized.
      */
-    bool get_payload(
+    DDSPIPE_CORE_DllAPI virtual bool get_payload(
             eprosima::fastrtps::rtps::SerializedPayload_t& data,
             IPayloadPool*& data_owner,
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
@@ -118,7 +118,7 @@ public:
      *
      * @throw IncosistencyException if cache change owner is other than this
      */
-    bool release_payload(
+    DDSPIPE_CORE_DllAPI virtual bool release_payload(
             eprosima::fastrtps::rtps::CacheChange_t& cache_change) override; // TODO add noexcept once is implemented
 
     /////
@@ -141,7 +141,7 @@ public:
      *
      * @pre Fields @c payload must not have been initialized.
      */
-    virtual bool get_payload(
+    DDSPIPE_CORE_DllAPI virtual bool get_payload(
             uint32_t size,
             types::Payload& payload) = 0;
 
@@ -165,7 +165,7 @@ public:
      *
      * @pre Fields @c target_payload must not have been initialized.
      */
-    virtual bool get_payload(
+    DDSPIPE_CORE_DllAPI virtual bool get_payload(
             const types::Payload& src_payload,
             IPayloadPool*& data_owner,
             types::Payload& target_payload) = 0;
@@ -186,11 +186,11 @@ public:
      *
      * @pre @c payload must have been initialized from this pool.
      */
-    virtual bool release_payload(
+    DDSPIPE_CORE_DllAPI virtual bool release_payload(
             types::Payload& payload) = 0;
 
     //! Wether every payload get has been released.
-    virtual bool is_clean() const noexcept;
+    DDSPIPE_CORE_DllAPI virtual bool is_clean() const noexcept;
 
 protected:
 
@@ -205,7 +205,7 @@ protected:
      * @return true if everything ok
      * @return false if something went wrong
      */
-    virtual bool reserve_(
+    DDSPIPE_CORE_DllAPI virtual bool reserve_(
             uint32_t size,
             types::Payload& payload);
 
@@ -221,14 +221,14 @@ protected:
      *
      * @throw \c IncosistencyException if more releases than reserves has been done
      */
-    virtual bool release_(
+    DDSPIPE_CORE_DllAPI virtual bool release_(
             types::Payload& payload);
 
     //! Increase \c reserve_count_
-    void add_reserved_payload_();
+    DDSPIPE_CORE_DllAPI void add_reserved_payload_();
 
     //! Increase \c release_count_ . Show a warning if there are more releases than reserves.
-    void add_release_payload_();
+    DDSPIPE_CORE_DllAPI void add_release_payload_();
 
     //! Count the number of reserved data from this pool
     std::atomic<uint64_t> reserve_count_;

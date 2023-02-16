@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/types/address/Address.hpp>
 #include <ddspipe_participants/types/address/DiscoveryServerConnectionAddress.hpp>
 
@@ -22,10 +23,10 @@ namespace ddspipe {
 namespace participants {
 namespace testing {
 
-types::Address random_address(
+DDSPIPE_PARTICIPANTS_DllAPI types::Address random_address(
         unsigned int seed = 0);
 
-types::DiscoveryServerConnectionAddress random_connection_address(
+DDSPIPE_PARTICIPANTS_DllAPI types::DiscoveryServerConnectionAddress random_connection_address(
         unsigned int seed = 0,
         unsigned int size = 1,
         bool ros = false);

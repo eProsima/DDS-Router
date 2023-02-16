@@ -19,6 +19,7 @@
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/writer/auxiliar/BaseWriter.hpp>
 #include <ddspipe_participants/writer/rtps/QoSSpecificWriter.hpp>
 
@@ -49,7 +50,7 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    MultiWriter(
+    DDSPIPE_PARTICIPANTS_DllAPI MultiWriter(
             const core::types::ParticipantId& participant_id,
             const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,
@@ -64,7 +65,7 @@ public:
      *
      * @todo Remove every change and release it in PayloadPool
      */
-    virtual ~MultiWriter();
+    DDSPIPE_PARTICIPANTS_DllAPI virtual ~MultiWriter();
 
 protected:
 
