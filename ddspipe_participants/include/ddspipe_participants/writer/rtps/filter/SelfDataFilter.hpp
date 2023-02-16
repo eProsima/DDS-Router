@@ -16,6 +16,8 @@
 
 #include <fastdds/rtps/interfaces/IReaderDataFilter.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 /////
 // Forward declarations
 namespace eprosima {
@@ -37,7 +39,7 @@ namespace rtps {
 /**
  * This filter allows to not send messages from this Writer to the Readers in the same Participant.
  */
-class SelfDataFilter : public fastdds::rtps::IReaderDataFilter
+DDSPIPE_PARTICIPANTS_DllAPI class SelfDataFilter : public fastdds::rtps::IReaderDataFilter
 {
 public:
 

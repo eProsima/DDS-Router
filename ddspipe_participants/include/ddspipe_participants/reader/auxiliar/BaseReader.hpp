@@ -22,6 +22,8 @@
 #include <ddspipe_core/interface/ITopic.hpp>
 #include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
@@ -60,7 +62,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    void enable() noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI void enable() noexcept override;
 
     /**
      * @brief Set this Reader as disabled
@@ -72,7 +74,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    void disable() noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI void disable() noexcept override;
 
     /**
      * @brief Set the on_data_available callback
@@ -83,7 +85,7 @@ public:
      *
      * @param [in] on_data_available_lambda new callback to notify data received
      */
-    void set_on_data_available_callback(
+    DDSPIPE_PARTICIPANTS_DllAPI void set_on_data_available_callback(
             std::function<void()> on_data_available_lambda) noexcept override;
 
     /**
@@ -95,7 +97,7 @@ public:
      *
      * @param [in] on_data_available_lambda new callback to notify data received
      */
-    void unset_on_data_available_callback() noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI void unset_on_data_available_callback() noexcept override;
 
     /**
      * @brief Override take() IReader method
@@ -105,7 +107,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    utils::ReturnCode take(
+    DDSPIPE_PARTICIPANTS_DllAPI utils::ReturnCode take(
             std::unique_ptr<core::IRoutingData>& data) noexcept override;
 
     /////////////////////////
@@ -113,7 +115,7 @@ public:
     /////////////////////////
 
     //! Getter of \c participant_id_ attribute
-    core::types::ParticipantId participant_id() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::ParticipantId participant_id() const noexcept override;
 
     /////////////////////////
     // RPC REQUIRED METHODS
@@ -121,15 +123,15 @@ public:
     // TODO remove these methods once the double reference is solved
 
     //! Get GUID of internal RTPS reader
-    core::types::Guid guid() const override = 0;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::Guid guid() const override = 0;
 
     //! Get internal RTPS reader mutex
-    fastrtps::RecursiveTimedMutex& get_rtps_mutex() const override = 0;
+    DDSPIPE_PARTICIPANTS_DllAPI fastrtps::RecursiveTimedMutex& get_rtps_mutex() const override = 0;
 
     //! Get number of unread cache changes in internal RTPS reader
-    uint64_t get_unread_count() const override = 0;
+    DDSPIPE_PARTICIPANTS_DllAPI uint64_t get_unread_count() const override = 0;
 
-    core::types::DdsTopic topic() const override = 0;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::DdsTopic topic() const override = 0;
     /////////////////////////
 
 protected:

@@ -33,7 +33,7 @@ namespace types {
  *
  * @note this not represents a real DDS network topic, but an "abstract" distributed one.
  */
-struct DistributedTopic : public Topic
+struct DDSPIPE_CORE_DllAPI DistributedTopic : public Topic
 {
     // Extend nothing
 };

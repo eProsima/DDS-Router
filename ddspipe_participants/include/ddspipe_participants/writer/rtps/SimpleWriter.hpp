@@ -24,6 +24,7 @@
 
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/efficiency/cache_change/CacheChangePool.hpp>
 #include <ddspipe_participants/writer/rtps/CommonWriter.hpp>
 
@@ -54,7 +55,7 @@ public:
      *
      * @throw \c InitializationException in case any creation has failed
      */
-    SimpleWriter(
+    DDSPIPE_PARTICIPANTS_DllAPI SimpleWriter(
             const core::types::ParticipantId& participant_id,
             const core::types::DdsTopic& topic,
             const std::shared_ptr<core::PayloadPool>& payload_pool,

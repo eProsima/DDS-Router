@@ -27,9 +27,9 @@ namespace core {
  * Thus, they are not forced to be correct in construction.
  * This is an Interface class that forces every configuration to have an \c is_valid method.
  */
-struct IConfiguration
+DDSPIPE_CORE_DllAPI struct IConfiguration
 {
-    DDSPIPE_CORE_DllAPI virtual bool is_valid(
+    virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept = 0;
 };
 

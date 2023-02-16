@@ -25,7 +25,7 @@ namespace core {
 /**
  * @brief TODO
  */
-class IRoutingData
+DDSPIPE_CORE_DllAPI class IRoutingData
 {
 
 public:

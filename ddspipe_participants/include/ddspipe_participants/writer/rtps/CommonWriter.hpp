@@ -27,6 +27,7 @@
 #include <ddspipe_core/types/data/RtpsPayloadData.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/efficiency/cache_change/CacheChangePool.hpp>
 #include <ddspipe_participants/writer/auxiliar/BaseWriter.hpp>
 
@@ -77,7 +78,7 @@ public:
      *
      * Delete the RTPS Writer and Writer History in case they are set.
      */
-    virtual ~CommonWriter();
+    DDSPIPE_PARTICIPANTS_DllAPI virtual ~CommonWriter();
 
     /**
      * @brief Create the internal RTPS Writer.
@@ -91,7 +92,7 @@ public:
      * @warning this method is not thread safe.
      * @pre this method can only be called once.
      */
-    void init();
+    DDSPIPE_PARTICIPANTS_DllAPI void init();
 
     /////////////////////////
     // RTPS LISTENER METHODS
@@ -105,7 +106,7 @@ public:
      *
      * @param [in] info information about the matched Reader
      */
-    void onWriterMatched(
+    DDSPIPE_PARTICIPANTS_DllAPI void onWriterMatched(
             fastrtps::rtps::RTPSWriter*,
             fastrtps::rtps::MatchingInfo& info) noexcept override;
 
