@@ -28,29 +28,29 @@ namespace ddspipe {
 namespace core {
 namespace testing {
 
-types::Guid random_guid(
+DDSPIPE_CORE_DllAPI types::Guid random_guid(
         unsigned int seed = 0);
 
-types::DomainId random_domain(
+DDSPIPE_CORE_DllAPI types::DomainId random_domain(
         unsigned int seed = 0);
 
-types::GuidPrefix random_guid_prefix(
+DDSPIPE_CORE_DllAPI types::GuidPrefix random_guid_prefix(
         unsigned int seed = 0,
         bool ros = false);
 
-types::ParticipantId random_participant_id(
+DDSPIPE_CORE_DllAPI types::ParticipantId random_participant_id(
         unsigned int seed = 0);
 
-types::DdsTopic random_dds_topic(
+DDSPIPE_CORE_DllAPI types::DdsTopic random_dds_topic(
         unsigned int seed = 0);
 
-types::EndpointKind random_endpoint_kind(
+DDSPIPE_CORE_DllAPI types::EndpointKind random_endpoint_kind(
         unsigned int seed = 0);
 
-types::Endpoint random_endpoint(
+DDSPIPE_CORE_DllAPI types::Endpoint random_endpoint(
         unsigned int seed = 0);
 
-types::TopicQoS random_topic_qos(
+DDSPIPE_CORE_DllAPI types::TopicQoS random_topic_qos(
         unsigned int seed = 0);
 
 } /* namespace testing */

@@ -31,36 +31,36 @@ class RpcTopic
 public:
 
     //! Constructor by service name, request topic and reply topic
-    RpcTopic(
+    DDSPIPE_CORE_DllAPI RpcTopic(
             const std::string& service_name,
             const DdsTopic& topic_request,
             const DdsTopic& topic_reply) noexcept;
 
     //! Constructor by request/reply topic only (infers service name and the other request/reply topic)
-    RpcTopic(
+    DDSPIPE_CORE_DllAPI RpcTopic(
             const DdsTopic& topic) noexcept;
 
-    RpcTopic(const RpcTopic& other) noexcept;
+    DDSPIPE_CORE_DllAPI RpcTopic(const RpcTopic& other) noexcept;
 
     //! Service name getter
-    const std::string& service_name() const;
+    DDSPIPE_CORE_DllAPI const std::string& service_name() const;
 
     //! Request topic getter
-    const DdsTopic& request_topic() const;
+    DDSPIPE_CORE_DllAPI const DdsTopic& request_topic() const;
 
     //! Reply topic getter
-    const DdsTopic& reply_topic() const;
+    DDSPIPE_CORE_DllAPI const DdsTopic& reply_topic() const;
 
     //! Whether a topic is a request topic
-    static bool is_request_topic(
+    DDSPIPE_CORE_DllAPI static bool is_request_topic(
             const DdsTopic& topic);
 
     //! Whether a topic is a reply topic
-    static bool is_reply_topic(
+    DDSPIPE_CORE_DllAPI static bool is_reply_topic(
             const DdsTopic& topic);
 
     //! Whether a topic is a service topic (request or reply topic)
-    static bool is_service_topic(
+    DDSPIPE_CORE_DllAPI static bool is_service_topic(
             const DdsTopic& topic);
 
     /**

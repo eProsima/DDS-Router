@@ -16,6 +16,8 @@
 
 #include <ddspipe_core/interface/IWriter.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
@@ -24,7 +26,7 @@ namespace participants {
  * Writer that has an empty implementation.
  * It does not send anything.
  */
-class BlankWriter : public core::IWriter
+DDSPIPE_PARTICIPANTS_DllAPI class BlankWriter : public core::IWriter
 {
 public:
 

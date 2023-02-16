@@ -41,7 +41,7 @@ namespace types {
 struct RpcPayloadData : public RtpsPayloadData
 {
 
-    virtual types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
+    DDSPIPE_CORE_DllAPI virtual types::TopicInternalTypeDiscriminator internal_type_discriminator() const noexcept override;
 
     //! Write params associated to the received cache change
     utils::Fuzzy<eprosima::fastrtps::rtps::WriteParams> write_params{};

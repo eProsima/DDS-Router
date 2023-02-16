@@ -40,7 +40,7 @@ namespace core {
  *
  * Readers will start being disabled.
  */
-class IReader
+DDSPIPE_CORE_DllAPI class IReader
 {
 public:
 

@@ -33,7 +33,7 @@ namespace core {
  *
  * @note In order to implement new Participants, create a subclass of this Interface and implement every method.
  */
-class IParticipant
+DDSPIPE_CORE_DllAPI class IParticipant
 {
 public:
 

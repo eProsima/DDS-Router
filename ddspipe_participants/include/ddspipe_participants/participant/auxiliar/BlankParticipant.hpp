@@ -16,6 +16,8 @@
 
 #include <ddspipe_core/interface/IParticipant.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
@@ -32,24 +34,24 @@ class BlankParticipant : public core::IParticipant
 public:
 
     //! Constructor with Id of this participant
-    BlankParticipant(
+    DDSPIPE_PARTICIPANTS_DllAPI BlankParticipant(
             const core::types::ParticipantId& id_);
 
     //! Override id() IParticipant method
-    core::types::ParticipantId id() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI core::types::ParticipantId id() const noexcept override;
 
     //! Override is_repeater() IParticipant method
-    bool is_repeater() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI bool is_repeater() const noexcept override;
 
     //! Override is_rtps_kind() IParticipant method
-    bool is_rtps_kind() const noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI bool is_rtps_kind() const noexcept override;
 
     //! Override create_writer() IParticipant method
-    std::shared_ptr<core::IWriter> create_writer(
+    DDSPIPE_PARTICIPANTS_DllAPI std::shared_ptr<core::IWriter> create_writer(
             const core::ITopic& topic) override;
 
     //! Override create_reader() IParticipant method
-    std::shared_ptr<core::IReader> create_reader(
+    DDSPIPE_PARTICIPANTS_DllAPI std::shared_ptr<core::IReader> create_reader(
             const core::ITopic& topic) override;
 
 protected:

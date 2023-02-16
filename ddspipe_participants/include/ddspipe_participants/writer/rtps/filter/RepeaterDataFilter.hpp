@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <ddspipe_participants/library/library_dll.h>
 #include <ddspipe_participants/writer/rtps/filter/SelfDataFilter.hpp>
 
 namespace eprosima {
@@ -29,7 +30,7 @@ namespace rtps {
  *
  * This uses the RouterCacheChange extra information.
  */
-class RepeaterDataFilter : public SelfDataFilter
+DDSPIPE_PARTICIPANTS_DllAPI class RepeaterDataFilter : public SelfDataFilter
 {
 public:
 

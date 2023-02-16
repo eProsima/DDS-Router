@@ -23,6 +23,8 @@
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
 
+#include <ddspipe_participants/library/library_dll.h>
+
 namespace eprosima {
 namespace ddspipe {
 namespace participants {
@@ -57,7 +59,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    void enable() noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI void enable() noexcept override;
 
     /**
      * @brief Set this Writer as disabled
@@ -69,7 +71,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    void disable() noexcept override;
+    DDSPIPE_PARTICIPANTS_DllAPI void disable() noexcept override;
 
     /**
      * @brief Override write() IWriter method
@@ -79,7 +81,7 @@ public:
      *
      * Thread safe with mutex \c mutex_ .
      */
-    virtual utils::ReturnCode write(
+    DDSPIPE_PARTICIPANTS_DllAPI virtual utils::ReturnCode write(
             core::IRoutingData& data) noexcept override;
 
 protected:
