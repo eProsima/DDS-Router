@@ -52,6 +52,11 @@ name: test
 
 on:
   workflow_dispatch:
+      inputs:
+      ddspipe_branch:
+        description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
+        required: true
+        default: 'main'
   pull_request:
   push:
     branches:
@@ -81,6 +86,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: DDS-Router
+
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
 
       - name: Install OpenSSL
         uses: ./DDS-Router/.github/actions/install-openssl-windows
@@ -124,21 +136,21 @@ jobs:
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddspipe_core
-          subpackage_dir: ddspipe_core
+          subpackage_dir: ../DDS-Pipe/ddspipe_core
 
       - name: Install ddspipe_participants
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddspipe_participants
-          subpackage_dir: ddspipe_participants
+          subpackage_dir: ../DDS-Pipe/ddspipe_participants
 
       - name: Install ddspipe_yaml
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
         with:
           cmake_build_type: ${{ matrix.cmake-config }}
           subpackage: ddspipe_yaml
-          subpackage_dir: ddspipe_yaml
+          subpackage_dir: ../DDS-Pipe/ddspipe_yaml
 
       - name: Install ddsrouter_core
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
@@ -216,6 +228,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: src/DDS-Router
+
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -376,6 +395,13 @@ jobs:
         with:
           path: src/DDS-Router
 
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
+
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
@@ -414,18 +440,6 @@ jobs:
           colcon build \
             --event-handlers=console_direct+ \
             --cmake-args -DBUILD_TESTS=ON
-
-      - name: Run tests ddspipe
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddspipe \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
 
       - name: Run tests ddsrouter_core
         run: |
@@ -492,6 +506,13 @@ jobs:
         with:
           path: src/DDS-Router
 
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
+
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
@@ -529,18 +550,6 @@ jobs:
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/test_colcon.meta \
             --mixin coverage-gcc asan-gcc
-
-      - name: Run tests ddspipe
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddspipe \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-regex xfail \
-              --timeout 60
-        if: always()
 
       - name: Run tests ddsrouter_core
         run: |
@@ -587,6 +596,13 @@ jobs:
         with:
           path: src/DDS-Router
 
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
+
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
@@ -626,21 +642,6 @@ jobs:
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/asan_colcon.meta
 
-      - name: Run tests ddspipe_core
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddspipe_core
-
-      - name: Run tests ddspipe_participants
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddspipe_participants
-
-      - name: Run tests ddspipe_yaml
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddspipe_yaml
-
       - name: Run tests ddsrouter_core
         uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
         with:
@@ -673,6 +674,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: src/DDS-Router
+
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -710,18 +718,6 @@ jobs:
           colcon build \
             --event-handlers=console_direct+ \
             --metas src/DDS-Router/.github/workflows/tsan_colcon.meta
-
-      - name: Run tests ddspipe
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddspipe \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude "xfail|xtsan" \
-              --timeout 60
-        if: always()
 
       - name: Run tests ddsrouter_core
         run: |
@@ -773,6 +769,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: src/DDS-Router
+
+      - name: Sync eProsima/DDS-Pip repository
+        uses: actions/checkout@v3
+        with:
+          repository: eProsima/DDS-Pipe
+          path: DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
