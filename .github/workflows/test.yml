@@ -87,12 +87,12 @@ jobs:
         with:
           path: DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
           path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install OpenSSL
         uses: ./DDS-Router/.github/actions/install-openssl-windows
@@ -130,27 +130,6 @@ jobs:
           path: ${{ github.workspace }}\..\fastdds\install
           name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
-
-      - name: Install ddspipe_core
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddspipe_core
-          subpackage_dir: ../DDS-Pipe/ddspipe_core
-
-      - name: Install ddspipe_participants
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddspipe_participants
-          subpackage_dir: ../DDS-Pipe/ddspipe_participants
-
-      - name: Install ddspipe_yaml
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
-        with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddspipe_yaml
-          subpackage_dir: ../DDS-Pipe/ddspipe_yaml
 
       - name: Install ddsrouter_core
         uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
@@ -229,12 +208,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -395,12 +374,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -506,12 +485,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -596,12 +575,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -675,12 +654,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
@@ -770,12 +749,12 @@ jobs:
         with:
           path: src/DDS-Router
 
-      - name: Sync eProsima/DDS-Pip repository
+      - name: Sync eProsima/DDS-Pipe repository
         uses: actions/checkout@v3
         with:
           repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch }}
+          path: src/DDS-Pipe
+          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
       - name: Install apt packages
         uses: ./src/DDS-Router/.github/actions/install-apt-packages
