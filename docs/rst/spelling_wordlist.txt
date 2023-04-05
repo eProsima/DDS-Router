@@ -1,6 +1,7 @@
 allowlist
 allowlisting
 Asio
+blackbox
 blocklist
 Chocolatey
 CMake
