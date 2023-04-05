@@ -13,7 +13,6 @@ Version v1.2.0
 This release includes the following **CI improvements**:
 
 * Add blackbox tests for repeater in WAN case.
-* Add unittest tests for ``PayloadPool`` class.
 * Upgrade deprecated actions.
 
 #################
