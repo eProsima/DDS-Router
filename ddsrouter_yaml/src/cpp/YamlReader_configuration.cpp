@@ -79,6 +79,8 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
                 YamlReader::get<participants::EchoParticipantConfiguration>(yml, version));
 
         case ddsrouter::core::types::ParticipantKind::simple:
+        case ddsrouter::core::types::ParticipantKind::dyn_types_subscription:
+        case ddsrouter::core::types::ParticipantKind::dyn_types_publication:
             return std::make_shared<participants::SimpleParticipantConfiguration>(
                 YamlReader::get<participants::SimpleParticipantConfiguration>(yml, version));
 
