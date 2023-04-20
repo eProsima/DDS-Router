@@ -28,8 +28,9 @@ ENUMERATION_BUILDER(
     initial_peers,
     discovery_server,
     echo,
-    xml
-    );
+    xml,
+    dyn_types_subscription,
+    dyn_types_publication);
 
 eProsima_ENUMERATION_BUILDER(
     ParticipantKindBuilder,
@@ -39,7 +40,9 @@ eProsima_ENUMERATION_BUILDER(
                     { ParticipantKind::initial_peers COMMA {"wan" COMMA "router" COMMA "initial-peers"} } COMMA
                     { ParticipantKind::discovery_server COMMA {"discovery-server" COMMA "ds" COMMA "local-ds" COMMA "local-discovery-server" COMMA "wan-ds" COMMA "wan-discovery-server"} } COMMA
                     { ParticipantKind::echo COMMA {"echo"} } COMMA
-                    { ParticipantKind::xml COMMA {"xml" COMMA "XML"} }
+                    { ParticipantKind::xml COMMA {"xml" COMMA "XML"} } COMMA
+                    { ParticipantKind::dyn_types_subscription COMMA {"dt-sub" COMMA "dynamic-types-subscriber" COMMA "dynamic-types-sub"} } COMMA
+                    { ParticipantKind::dyn_types_publication COMMA {"dt-pub" COMMA "dynamic-types-publisher" COMMA "dynamic-types-pub"} }
                 }
     );
 

@@ -35,6 +35,8 @@
 #include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
 #include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
 #include <ddspipe_participants/participant/dds/XmlParticipant.hpp>
+#include <ddspipe_participants/participant/dynamic_types/DynTypesPublicationParticipant.hpp>
+#include <ddspipe_participants/participant/dynamic_types/DynTypesSubscriptionParticipant.hpp>
 
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
@@ -79,6 +81,70 @@ generic_create_participant_with_init(
     return part;
 }
 
+template <typename ConfigurationType>
+std::shared_ptr<ConfigurationType> convert_configuration_(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration)
+{
+    std::shared_ptr<ConfigurationType> conf_ =
+            std::dynamic_pointer_cast<ConfigurationType>(
+        participant_configuration);
+    if (!conf_)
+    {
+        throw utils::ConfigurationException(
+                    utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
+                        " is not for Participant Kind: " << kind);
+    }
+    return conf_;
+}
+
+template <typename ConfigurationType, typename ParticipantType>
+std::shared_ptr<ParticipantType> create_participant_no_init_(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr<ddspipe::core::DiscoveryDatabase>& discovery_database)
+{
+    return std::make_shared<ParticipantType> (
+        convert_configuration_<ConfigurationType>(kind, participant_configuration),
+        discovery_database);
+}
+
+template <typename ConfigurationType, typename ParticipantType>
+std::shared_ptr<ParticipantType> create_participant_no_init_(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr<ddspipe::core::PayloadPool>& payload_pool,
+        const std::shared_ptr<ddspipe::core::DiscoveryDatabase>& discovery_database)
+{
+    return std::make_shared<ParticipantType> (
+        convert_configuration_<ConfigurationType>(kind, participant_configuration),
+        payload_pool,
+        discovery_database);
+}
+
+template <typename ConfigurationType, typename ParticipantType>
+std::shared_ptr<ddspipe::core::IParticipant> create_participant_(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr<ddspipe::core::DiscoveryDatabase>& discovery_database)
+{
+    auto participant = create_participant_no_init_<ConfigurationType, ParticipantType>(kind, participant_configuration, discovery_database);
+    participant->init();
+    return participant;
+}
+
+template <typename ConfigurationType, typename ParticipantType>
+std::shared_ptr<ddspipe::core::IParticipant> create_participant_(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr<ddspipe::core::PayloadPool>& payload_pool,
+        const std::shared_ptr<ddspipe::core::DiscoveryDatabase>& discovery_database)
+{
+    auto participant = create_participant_no_init_<ConfigurationType, ParticipantType>(kind, participant_configuration, payload_pool, discovery_database);
+    participant->init();
+    return participant;
+}
+
 std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_participant(
         const types::ParticipantKind& kind,
         const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
@@ -89,58 +155,79 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
     switch (kind)
     {
         case types::ParticipantKind::echo:
-            return generic_create_participant<
+            // Echo Participant
+        {
+            return create_participant_no_init_<
                 ddspipe::participants::EchoParticipantConfiguration,
-                ddspipe::participants::EchoParticipant>
-                   (
-                kind,
-                participant_configuration,
-                discovery_database
-                   );
+                ddspipe::participants::EchoParticipant>(
+                    kind,
+                    participant_configuration,
+                    discovery_database
+                );
+        }
 
         case types::ParticipantKind::simple:
-            return generic_create_participant_with_init<
+            // Simple RTPS Participant
+        {
+            return create_participant_<
                 ddspipe::participants::SimpleParticipantConfiguration,
-                ddspipe::participants::rtps::SimpleParticipant>
-                   (
-                kind,
-                participant_configuration,
-                payload_pool,
-                discovery_database
-                   );
+                ddspipe::participants::rtps::SimpleParticipant>(
+                    kind,
+                    participant_configuration,
+                    payload_pool,
+                    discovery_database
+                );
+        }
 
         case types::ParticipantKind::discovery_server:
-            return generic_create_participant_with_init<
+            // Discovery Server RTPS Participant
+        {
+            return create_participant_<
                 ddspipe::participants::DiscoveryServerParticipantConfiguration,
-                ddspipe::participants::rtps::DiscoveryServerParticipant>
-                   (
-                kind,
-                participant_configuration,
-                payload_pool,
-                discovery_database
-                   );
+                ddspipe::participants::rtps::DiscoveryServerParticipant>(
+                    kind,
+                    participant_configuration,
+                    payload_pool,
+                    discovery_database
+                );
+        }
 
         case types::ParticipantKind::initial_peers:
-            return generic_create_participant_with_init<
+            // Initial Peers RTPS Participant
+        {
+            return create_participant_<
                 ddspipe::participants::InitialPeersParticipantConfiguration,
-                ddspipe::participants::rtps::InitialPeersParticipant>
-                   (
-                kind,
-                participant_configuration,
-                payload_pool,
-                discovery_database
-                   );
+                ddspipe::participants::rtps::InitialPeersParticipant>(
+                    kind,
+                    participant_configuration,
+                    payload_pool,
+                    discovery_database
+                );
+        }
 
-        case types::ParticipantKind::xml:
-            return generic_create_participant_with_init<
-                ddspipe::participants::XmlParticipantConfiguration,
-                ddspipe::participants::dds::XmlParticipant>
-                   (
-                kind,
-                participant_configuration,
-                payload_pool,
-                discovery_database
-                   );
+        case types::ParticipantKind::dyn_types_publication:
+            // Dynamic Types Publication Participant
+        {
+            return create_participant_<
+                ddspipe::participants::SimpleParticipantConfiguration,
+                ddspipe::participants::DynTypesPublicationParticipant>(
+                    kind,
+                    participant_configuration,
+                    discovery_database
+                );
+        }
+
+        case types::ParticipantKind::dyn_types_subscription:
+            // Dynamic Types Subscription Participant
+        {
+            return create_participant_<
+                ddspipe::participants::SimpleParticipantConfiguration,
+                ddspipe::participants::DynTypesSubscriptionParticipant>(
+                    kind,
+                    participant_configuration,
+                    discovery_database
+                );
+        }
 
         default:
             // This should not happen as every kind must be in the switch
