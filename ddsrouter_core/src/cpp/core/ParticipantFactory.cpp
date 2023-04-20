@@ -35,6 +35,8 @@
 #include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
 #include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
 #include <ddspipe_participants/participant/dds/XmlParticipant.hpp>
+#include <ddspipe_participants/participant/dynamic_types/DynTypesPublicationParticipant.hpp>
+#include <ddspipe_participants/participant/dynamic_types/DynTypesSubscriptionParticipant.hpp>
 
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
@@ -139,6 +141,26 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
                 kind,
                 participant_configuration,
                 payload_pool,
+                discovery_database
+                   );
+
+        case types::ParticipantKind::dyn_types_publication:
+            return generic_create_participant_with_init<
+                ddspipe::participants::SimpleParticipantConfiguration,
+                ddspipe::participants::DynTypesPublicationParticipant>
+                   (
+                kind,
+                participant_configuration,
+                discovery_database
+                   );
+
+        case types::ParticipantKind::dyn_types_subscription:
+            return generic_create_participant_with_init<
+                ddspipe::participants::SimpleParticipantConfiguration,
+                ddspipe::participants::DynTypesSubscriptionParticipant>
+                   (
+                kind,
+                participant_configuration,
                 discovery_database
                    );
 
