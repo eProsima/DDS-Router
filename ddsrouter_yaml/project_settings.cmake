@@ -23,6 +23,7 @@ set(MODULE_SUMMARY
     "C++ library to build and run a DDS Router.")
 
 set(MODULE_FIND_PACKAGES
+    yaml-cpp
     fastcdr
     fastrtps
     cpp_utils

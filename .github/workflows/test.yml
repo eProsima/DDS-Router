@@ -1,875 +1,294 @@
-# Main CI for DDS Router repository
-# This is executed with every PullRequest (new or update), any merge in main and every night
+# Main CI
+# This is executed:
+#  - every PullRequest (new or update)
+#  - every merge in main
+#  - every night (05:00)
 #
-# These jobs that require to install fastrtps library uses the artifact generated for the nightly job
-# so they do not have to compile the whole fastrtps project. This saves huge amount of time.
+# These jobs that require to install eprosima libraries uses the artifact generated for eprosima-CI nightly
+# so they do not have to compile the whole project. This saves huge amount of time.
 #
 # JOBS:
 #
-#   - windows-build-test
-#     - [ windows-2019 | windows-2022 ]
+#   - multiplatform-tests
+#     - [ ubuntu-22.04 | ubuntu-20.04 | windows-2019 | windows-2022 ]
 #     - [ Debug | Release ]
-#     - compile up-to ddsrouter_tool ; run tests
+#     - execute tests in different versions of ubuntu with different build types
 #
-#   - ubuntu-main-test
-#     - ubuntu-20.04
-#     - Debug
-#     - compile all ; run tests ; calculate coverage
+#   - asan
+#     - ubuntu-22.04
+#     - execute tests with ASAN flag
 #
-#   - ubuntu-release-test
-#     - [ ubuntu-20.04 | ubuntu-22.04 ]
-#     - Release
-#     - compile all ; run tests
+#   - tsan
+#     - ubuntu-22.04
+#     - execute tests with TSAN flag
 #
-#   - ubuntu-build-test-flaky
-#     - ubuntu-20.04
-#     - Debug
-#     - compile all ; run flaky tests
+#   - clang
+#     - ubuntu-22.04
+#     - execute clang-tidy check
 #
-#   - asan-test
-#     - [ ubuntu-20.04 ]
-#     - Debug
-#     - compile all ; run tests
+#   - coverage
+#     - ubuntu-22.04
+#     - execute test with coverage flag and upload results
 #
-#   - tsan-test
-#     - ubuntu-20.04
-#     - Debug
-#     - build code ; run tests
+#   - flaky
+#     - ubuntu-22.04
+#     - execute flaky tests
 #
-#   - clang-tidy
-#     - ubuntu-20.04
-#     - Release
-#     - compile all ; test clang-tidy
+#   - docs
+#     - ubuntu-22.04
+#     - execute docs compile and tests
 #
 #   - uncrustify
-#     - ubuntu-20.04
+#     - ubuntu-22.04
 #     - test uncrustify
 #
-# The main job is ubuntu-main-test which compiles all packages (including documentation), run every test and calculates coverage.
-# This main job uses ubuntu 20.04 LTS (focal fossa).
+#   - python-linter
+#     - ubuntu-22.04
+#     - test python linter
+#
+# TODO: when merge CI in eprosima-CI repository, the jparisu fork must change for eProsima in actions.
+#
+# TODO: Add Windows CI
+#
 
 name: test
 
 on:
+
   workflow_dispatch:
-      inputs:
-      ddspipe_branch:
-        description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
+    inputs:
+
+      dependencies_artifact_postfix:
+        description: 'Postfix name to add to artifact name to download dependencies. This is use to download a specific artifact version from eProsima-CI.'
         required: true
-        default: 'main'
+        default: '_nightly'
+
   pull_request:
   push:
     branches:
       - main
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 5 * * *'
+
+env:
+  code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
+  docs_packages_names: 'ddsrouter_docs'
+  default_dependencies_artifact_postfix: '_nightly'
 
 jobs:
 
-  windows-build-test:
-    runs-on: ${{ matrix.windows-version }}
+
+#####################################################################
+# TEST
+
+  multiplatform-tests:
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        cmake-config:
-          - 'Release'
-          - 'Debug'
-        windows-version:
-          - 'windows-2019'
-          - 'windows-2022'
-    env:
-      CXXFLAGS: /MP
-      OPENSSL64_ROOT: "C:/Program Files/OpenSSL-Win64"
+        cmake_build_type:
+          - Release
+          - Debug
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
+          - windows-2019
+          - windows-2022
 
     steps:
-      - name: Sync eProsima/DDS-Router repository
+
+      - name: Sync repository
         uses: actions/checkout@v3
         with:
-          path: DDS-Router
+          path: ${{ github.workspace }}/src
 
-      - name: Sync eProsima/DDS-Pipe repository
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ${{ matrix.os }}
+          cmake_build_type: ${{ matrix.cmake_build_type }}
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/colcon_build_test@main
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
+          workspace_dependencies: ${{ github.workspace }}/install
+          ctest_args: --label-exclude "xfail"
+          colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+
+
+#####################################################################
+# ASAN
+
+  asan:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
         uses: actions/checkout@v3
         with:
-          repository: eProsima/DDS-Pipe
-          path: DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
+          path: ${{ github.workspace }}/src
 
-      - name: Install OpenSSL
-        uses: ./DDS-Router/.github/actions/install-openssl-windows
-
-      - name: Install GTest
-        uses: ./DDS-Router/.github/actions/install-gtest-windows
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install yaml-cpp
-        uses: ./DDS-Router/.github/actions/install-yamlcpp-windows
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/asan_build_test@main
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: ${{ github.workspace }}/install
 
-      - name: Get build eProsima dependencies Job Id
-        shell: pwsh
-        run: |
-          $secret = ConvertTo-SecureString -String "${{ secrets.GITHUB_TOKEN }}" -AsPlainText
-          $RUNS_URI = '${{ github.api_url }}/repos/${{ github.repository }}/actions/workflows/build_fastdds.yml/runs'
 
-          # Check available queries according with github policy
-          "::group::Rate Limits with github action token"
-          ((Invoke-WebRequest -Authentication OAuth -Token $secret `
-            -Uri https://api.github.com/users/octocat).Headers.GetEnumerator() |
-            ? Key -like "X-RateLimit*") | Out-Host
-          "::endgroup::"
+#####################################################################
+# TSAN
 
-          ((Invoke-WebRequest -Authentication OAuth -Token $secret -Uri $RUNS_URI).Content | ConvertFrom-Json).workflow_runs | ? status -eq 'completed' |
-           select -first 1 id | % { "fastdds_job_id=" + $_.id } | Out-File $env:GITHUB_ENV -Append
+  tsan:
+    runs-on: ubuntu-22.04
+    steps:
 
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
+      - name: Sync repository
+        uses: actions/checkout@v3
         with:
-          workflow: build_fastdds.yml
-          path: ${{ github.workspace }}\..\fastdds\install
-          name: ${{ matrix.windows-version }}_${{ matrix.cmake-config }}_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
+          path: ${{ github.workspace }}/src
 
-      - name: Install ddsrouter_core
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_core
-          subpackage_dir: ddsrouter_core
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/tsan_build_test@main
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_yaml
-          subpackage_dir: ddsrouter_yaml
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: ${{ github.workspace }}/install
 
-      - name: Install ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/install-router-subpackage-windows
+
+#####################################################################
+# CLANG
+
+  clang:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
+        uses: actions/checkout@v3
         with:
-          cmake_build_type: ${{ matrix.cmake-config }}
-          subpackage: ddsrouter_tool
-          subpackage_dir: tools/ddsrouter_tool
+          path: ${{ github.workspace }}/src
 
-      - name: Run tests ddspipe_core
-        uses: ./DDS-Router/.github/actions/run-test-windows
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
         with:
-          package_name: ddspipe_core
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run tests ddspipe_participants
-        uses: ./DDS-Router/.github/actions/run-test-windows
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/clang_build_test@main
         with:
-          package_name: ddspipe_participants
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddspipe_yaml
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddspipe_yaml
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_core
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_core
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_yaml
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./DDS-Router/.github/actions/run-test-windows
-        with:
-          package_name: ddsrouter_tool
-          cmake_build_type: ${{ matrix.cmake-config }}
-        if: always()
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: ${{ github.workspace }}/install
 
 
-  ubuntu-main-test:
-    runs-on: ubuntu-20.04
+#####################################################################
+# COVERAGE
+
+  coverage:
+    runs-on: ubuntu-22.04
     environment:
       name: codecov
-    env:
-      COVERAGE_FILE: ${{ github.workspace }}/coverage.xml
-
     steps:
-      - name: Sync eProsima/DDS-Router repository
+
+      - name: Sync repository
         uses: actions/checkout@v3
         with:
-          path: src/DDS-Router
+          path: ${{ github.workspace }}/src
 
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
         with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
-            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
-            head -n 1)
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/ubuntu/coverage_build_test_upload@main
         with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Update colcon mixin
-        run: |
-          colcon mixin add default \
-            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-        continue-on-error: true
-
-      - name: Build workspace
-        run: |
-          cat src/DDS-Router/.github/workflows/test_colcon.meta
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --metas src/DDS-Router/.github/workflows/test_colcon.meta \
-            --mixin coverage-gcc asan-gcc
-
-      - name: Run tests ddsrouter_core
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_core
-
-      - name: Run tests ddsrouter_yaml
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_yaml
-        if: always()
-
-      - name: Run tests ddsrouter_yaml_validator
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_yaml_validator
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_tool
-        if: always()
-
-      - name: Run tests ddsrouter_docs
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_docs
-        if: always()
-
-      - name: Generate coverage report
-        run: |
-          echo "Generating coverage report in ${{ env.COVERAGE_FILE }}..."
-          cp src/DDS-Router/codecov.yml .
-          mkdir coverage-report
-          mkdir build/ddsrouter
-          cp --recursive build/ddsrouter_* build/ddsrouter
-          gcovr \
-            --root src/DDS-Router/ \
-            --output ${{ env.COVERAGE_FILE }} \
-            --xml-pretty \
-            --exclude='.*docs/.*' \
-            --exclude='.*test/.*' \
-            --exclude='.*github/.*' \
-            --exclude='.*common/.*' \
-            --exclude='.*dev/.*' \
-            --exclude='.*thirdparty/.*' \
-            --exclude='.*resources/.*' \
-            --exclude-unreachable-branches \
-            build/ddsrouter_*
-          if [[ -f "${{ env.COVERAGE_FILE }}" ]]; then
-              echo "Coverage file saved!"
-          fi
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage-report/
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ${{ env.COVERAGE_FILE }}
-          root_dir: src/DDS-Router
-          fail_ci_if_error: true
-
-      - name: Upload documentation
-        uses: actions/upload-artifact@v3
-        with:
-          name: Documentation HTML
-          path: install/ddsrouter_docs/docs/ddsrouter_docs/sphinx/html/
-
-      - name: Check documentation spelling errors
-        run: |
-          SPELLING_ERRORS_DIR=./build/ddsrouter_docs/test/spelling
-          SPELLING_ERRORS_FILE=${SPELLING_ERRORS_DIR}/spelling_errors.txt
-          echo "spelling_errors_file=${SPELLING_ERRORS_FILE}" >> $GITHUB_ENV
-          if [ -d "${SPELLING_ERRORS_DIR}" ]; then
-            find ${SPELLING_ERRORS_DIR} \
-              -type f \
-              -name '*.spelling' \
-              -exec cat {} + > ${SPELLING_ERRORS_FILE}
-          else
-            echo "No spelling errors found."
-          fi
-        if: always()
-
-      - name: Upload documentation spelling errors
-        uses: actions/upload-artifact@v3
-        with:
-          name: spelling_errors
-          path: ${{ env.spelling_errors_file }}
-          if-no-files-found: ignore
-        if: always()
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: colcon-logs-ubuntu
-          path: log/
-        if: always()
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: ${{ github.workspace }}/install
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
+          codecov_fix_file_path: ${{ github.workspace }}/src/codecov.yml
 
 
-  ubuntu-release-test:
-    runs-on: ${{ matrix.ubuntu-version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        ubuntu-version:
-          - 'ubuntu-20.04'
-          - 'ubuntu-22.04'
+#####################################################################
+# FLAKY
 
+  flaky:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Sync eProsima/DDS-Router repository
+
+      - name: Sync repository
         uses: actions/checkout@v3
         with:
-          path: src/DDS-Router
+          path: ${{ github.workspace }}/src
 
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
         with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
-            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
-            head -n 1)
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
+      - name: Compile and run tests
+        uses: jparisu/eProsima-CI/multiplatform/colcon_build_test_flaky@main
         with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ${{ matrix.ubuntu-version }}_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Update colcon mixin
-        run: |
-          colcon mixin add default \
-            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-        continue-on-error: true
-
-      # By default it is built in release mode
-      - name: Build workspace
-        run: |
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --cmake-args -DBUILD_TESTS=ON
-
-      - name: Run tests ddsrouter_core
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_core \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_yaml \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddsrouter_tool \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_docs
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddsrouter_docs \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 60
-        if: always()
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: colcon-logs-ubuntu
-          path: log/
-        if: always()
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: ${{ github.workspace }}/install
 
 
-  ubuntu-build-test-flaky:
-    runs-on: ubuntu-20.04
+#####################################################################
+# DOCUMENTATION TEST
 
+  docs:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v3
+      - name: Build and test documentation
+        uses: jparisu/eProsima-CI/ubuntu/sphinx_docs@main
         with:
-          path: src/DDS-Router
+          docs_subpackage_name: ${{ env.docs_packages_names }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
-        with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
 
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Update colcon mixin
-        run: |
-          colcon mixin add default \
-            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-        continue-on-error: true
-
-      - name: Build workspace
-        run: |
-          cat src/DDS-Router/.github/workflows/test_colcon.meta
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --metas src/DDS-Router/.github/workflows/test_colcon.meta \
-            --mixin coverage-gcc asan-gcc
-
-      - name: Run tests ddsrouter_core
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_core \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-regex xfail \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_yaml \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-regex xfail \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select-regex ddsrouter_tool \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-regex xfail \
-              --timeout 60
-        if: always()
-
-  asan-test:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v3
-        with:
-          path: src/DDS-Router
-
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
-        with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
-
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
-            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
-            head -n 1)
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Update colcon mixin
-        run: |
-          colcon mixin add default \
-            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-        continue-on-error: true
-
-      - name: Build workspace
-        run: |
-          cat src/DDS-Router/.github/workflows/asan_colcon.meta
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --metas src/DDS-Router/.github/workflows/asan_colcon.meta
-
-      - name: Run tests ddsrouter_core
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_core
-
-      - name: Run tests ddsrouter_yamlx
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_yaml
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        uses: ./src/DDS-Router/.github/actions/run-test-ubuntu
-        with:
-          package_name: ddsrouter_tool
-        if: always()
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: asan-logs
-          path: log/
-        if: always()
-
-  tsan-test:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v3
-        with:
-          path: src/DDS-Router
-
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
-        with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
-
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | \
-            jq '.workflow_runs[] | select(.status == "completed") | .id' | \
-            head -n 1)
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Update colcon mixin
-        run: |
-          colcon mixin add default \
-            https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-        continue-on-error: true
-
-      - name: Build workspace
-        run: |
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --metas src/DDS-Router/.github/workflows/tsan_colcon.meta
-
-      - name: Run tests ddsrouter_core
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_core \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude "xfail|xtsan" \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_yaml
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_yaml \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude "xfail|xtsan" \
-              --timeout 60
-        if: always()
-
-      - name: Run tests ddsrouter_tool
-        run: |
-          source install/setup.bash && \
-          colcon test \
-            --packages-select ddsrouter_tool \
-            --event-handlers=console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude "xfail|xtsan" \
-              --timeout 60
-        if: always()
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: tsan-logs
-          path: log/
-        if: always()
-
-  clang-tidy:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v3
-        with:
-          path: src/DDS-Router
-
-      - name: Sync eProsima/DDS-Pipe repository
-        uses: actions/checkout@v3
-        with:
-          repository: eProsima/DDS-Pipe
-          path: src/DDS-Pipe
-          ref: ${{ github.event.inputs.ddspipe_branch || main }}
-
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
-
-      - name: Install GTest
-        uses: ./src/DDS-Router/.github/actions/install-gtest-linux
-
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
-
-      - name: Get build eProsima dependencies Job Id
-        run: |
-          export JOB_ID=$(curl -sL $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/build_fastdds.yml/runs | jq -r '.workflow_runs[0].id?')
-          echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
-
-      - name: Download eProsima dependencies
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build_fastdds.yml
-          path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
-          run_id: ${{ env.fastdds_job_id }}
-
-      - name: Build workspace
-        run: |
-          cat src/DDS-Router/.github/workflows/clang_colcon.meta
-          source /home/runner/work/fastdds/install/setup.bash
-          colcon build \
-            --event-handlers=console_direct+ \
-            --metas src/DDS-Router/.github/workflows/clang_colcon.meta
-
-      - name: Run clang-tidy
-        run: |
-          mkdir build/ddsrouter
-          cp --recursive build/ddsrouter_* build/ddsrouter
-          cd build/ddsrouter
-          run-clang-tidy -header-filter='.*' -checks='clang-analyzer-cplusplus' -quiet 2> ${{ github.workspace }}/clang_results.yml
-
-      - name: Upload clang results
-        uses: actions/upload-artifact@v3
-        with:
-          name: clang_results
-          path: ${{ github.workspace }}/clang_results.yml
+#####################################################################
+# UNCRUSTIFY
 
   uncrustify:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - name: Sync eProsima/DDS-Router repository
-        uses: actions/checkout@v3
-        with:
-          path: src/DDS-Router
 
-      - name: Fetch all branches and tags
-        run: |
-          cd src/DDS-Router
-          git fetch --prune --unshallow
+      - name: Uncrustify
+        uses: jparisu/eProsima-CI/ubuntu-22.04/uncrustify@main
 
-      - name: Install apt packages
-        uses: ./src/DDS-Router/.github/actions/install-apt-packages
 
-      - name: Install Python packages
-        uses: ./src/DDS-Router/.github/actions/install-python-packages
+#####################################################################
+# PYTHON LINTER
 
-      - name: Install uncrustify
-        run: |
-          git clone https://github.com/uncrustify/uncrustify.git \
-            --branch uncrustify-0.71.0 \
-            --single-branch uncrustify
-          mkdir -p uncrustify/build
-          cd uncrustify/build
-          cmake ..
-          sudo cmake --build . --target install
-          cd ../..
-          sudo rm -rf uncrustify
+  python-linter:
+    runs-on: ubuntu-22.04
+    steps:
 
-      # (TODO) Change to main branch when PR is merged
-      - name: Clone ament_lint
-        run: |
-          git clone --branch feature/fix-language-set https://github.com/jparisu/ament_lint.git src/ament_lint
-
-      - name: Build ament_uncrustify
-        run: colcon build --packages-up-to ament_uncrustify
-
-      - name: Fetch uncrustify config file
-        run: |
-          curl \
-            -l https://raw.githubusercontent.com/eProsima/cpp-style/master/uncrustify.cfg \
-            -o uncrustify.cfg
-
-      - name: Get difference
-        run: |
-          cd src/DDS-Router
-          echo "MODIFIED_FILES=$(git diff --name-only origin/${GITHUB_BASE_REF} origin/${GITHUB_HEAD_REF} | grep -e '\.h' -e '\.hpp' -e '\.cpp' -e '\.ipp' | tr '\n' ' ')" >> $GITHUB_ENV
-
-      - name: Check difference
-        run: |
-          cd src/DDS-Router
-          if [[ -z "${MODIFIED_FILES}" ]]
-          then
-            touch empty.hpp
-            echo "MODIFIED_FILES=empty.hpp" >> $GITHUB_ENV
-          fi
-
-      - name: Check style
-        run: |
-          source install/local_setup.bash
-          cd src/DDS-Router
-          ament_uncrustify \
-            -c ../../uncrustify.cfg \
-            --language CPP \
-            --xunit-file ../../uncrustify_results.xml \
-            ${MODIFIED_FILES}
-
-      - name: Upload uncrustify results
-        uses: actions/upload-artifact@v3
-        with:
-          name: uncrustify_results
-          path: uncrustify_results.xml
+      - name: Python Linter
+        uses: jparisu/eProsima-CI/ubuntu/python_linter@main

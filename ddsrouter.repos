@@ -15,6 +15,10 @@ repositories:
         type: git
         url: https://github.com/eProsima/dev-utils.git
         version: main
+    ddspipe:
+        type: git
+        url: https://github.com/eProsima/DDS-Pipe.git
+        version: main
     ddsrouter:
         type: git
         url: https://github.com/eProsima/DDS-Router.git
