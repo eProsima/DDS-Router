@@ -61,7 +61,7 @@ on:
       dependencies_artifact_postfix:
         description: 'Postfix name to add to artifact name to download dependencies. This is use to download a specific artifact version from eProsima-CI.'
         required: true
-        default: '_nightly'
+        default: '_manual'
 
   pull_request:
   push:
@@ -73,7 +73,7 @@ on:
 env:
   code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
   docs_packages_names: 'ddsrouter_docs'
-  default_dependencies_artifact_postfix: '_nightly'
+  default_dependencies_artifact_postfix: '_manual'
 
 jobs:
 
