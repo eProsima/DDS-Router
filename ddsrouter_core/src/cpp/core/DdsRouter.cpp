@@ -62,12 +62,23 @@ DdsRouter::DdsRouter(
     // Load Participants
     init_participants_();
 
+    // Convert builtin topics
+    std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>> builtin_topics;
+    for (const auto& topic : configuration_.builtin_topics)
+    {
+        builtin_topics.insert(
+            utils::Heritable<ddspipe::core::types::DdsTopic>::make_heritable(*topic)
+        );
+        logDebug(DDSROUTER, "Adding builtin topic " << *topic);
+    }
+
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
         allowed_topics_,
         discovery_database_,
         payload_pool_,
         participants_database_,
-        thread_pool_));
+        thread_pool_,
+        builtin_topics));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
