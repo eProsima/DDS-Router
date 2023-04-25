@@ -585,7 +585,7 @@ jobs:
         if: always()
 
   tsan-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Sync eProsima/DDS-Router repository
@@ -608,12 +608,13 @@ jobs:
             jq '.workflow_runs[] | select(.status == "completed") | .id' | \
             head -n 1)
           echo "fastdds_job_id=${JOB_ID}" >> $GITHUB_ENV
+
       - name: Download eProsima dependencies
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build_fastdds.yml
           path: /home/runner/work/fastdds/install
-          name: ubuntu-20.04_fastdds_install
+          name: ubuntu-22.04_fastdds_install
           run_id: ${{ env.fastdds_job_id }}
 
       - name: Update colcon mixin
