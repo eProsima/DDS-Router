@@ -39,3 +39,5 @@ add_blackbox_executable(
         "${TEST_LIST}"
         "${TEST_NEEDED_SOURCES}"
     )
+
+# add_test_label_from_file(${CMAKE_CURRENT_SOURCE_DIR}/../../TEST_XTSAN.list "xtsan")
