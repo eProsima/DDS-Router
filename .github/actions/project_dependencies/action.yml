@@ -34,7 +34,7 @@ runs:
   steps:
 
     - name: Install Fast DDS dependencies
-      uses: jparisu/eProsima-CI/multiplatform/install_fast_dependencies@main
+      uses: jparisu/eProsima-CI/multiplatform/install_fastdds_dependencies@main
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
