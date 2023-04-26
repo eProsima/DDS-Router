@@ -13,5 +13,5 @@
 # limitations under the License.
 
 # TODO uncomment when ready
-# add_subdirectory(ddsrouter_core)
+add_subdirectory(ddsrouter_core)
 add_subdirectory(implementations)

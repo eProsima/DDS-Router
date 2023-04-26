@@ -19,17 +19,18 @@
 #include <gtest/gtest.h>
 
 #include <cpp_utils/testing/LogChecker.hpp>
+#include <cpp_utils/Log.hpp>
+
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
-#include <cpp_utils/Log.hpp>
 
 #include <test_participants.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
-namespace core {
+using namespace eprosima;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddsrouter::core;
+
 namespace test {
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
@@ -44,46 +45,34 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  * and any possible type (such as HelloWorld and HelloWorldKeyed) both with and without key.
  * Create 2 simple participants with domains 0 and 1
  *
- * @return configuration::DdsRouterConfiguration
+ * @return DdsRouterConfiguration
  */
-configuration::DdsRouterConfiguration dds_test_simple_configuration()
+DdsRouterConfiguration dds_test_simple_configuration()
 {
+    DdsRouterConfiguration conf;
+
     // Always filter the test topics by topic name
-    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // only this topic
-    allowlist.insert(std::make_shared<types::WildcardDdsFilterTopic>(TOPIC_NAME));
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
-
-    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
+    core::types::WildcardDdsFilterTopic topic;
+    topic.topic_name.set_value(TOPIC_NAME);
+    conf.allowlist.insert(
+        utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // Two simple participants
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-                    {
-                        std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_0"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                            false,
-                            types::DomainId(0u)
-                            ),
-                        std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_1"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                            false,
-                            types::DomainId(1u)
-                            )
-                    }
-        );
+    {
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("participant_0");
+        part->domain.domain_id = 0u;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
+    }
 
-    // TODO: this could be removed to use default number of threads
-    auto specs = configuration::SpecsConfiguration();
-    specs.number_of_threads = 2;
+    {
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("participant_1");
+        part->domain.domain_id = 1u;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
+    }
 
-    return configuration::DdsRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations,
-        specs);
+    return conf;
 }
 
 /**
@@ -94,7 +83,7 @@ configuration::DdsRouterConfiguration dds_test_simple_configuration()
  * to Late Joiners.
  */
 void test_local_communication_key_dispose(
-        configuration::DdsRouterConfiguration ddsrouter_configuration,
+        DdsRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
@@ -175,9 +164,6 @@ void test_local_communication_key_dispose(
 }
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
 
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;

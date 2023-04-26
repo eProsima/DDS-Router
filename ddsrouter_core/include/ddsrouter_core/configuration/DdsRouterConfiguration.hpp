@@ -63,7 +63,7 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
     /////////////////////////
 
     //! Builtin topics to create at the beggining of the execution
-    std::set<std::shared_ptr<ddspipe::core::types::DdsTopic>> builtin_topics {};
+    std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>> builtin_topics {};
 
     //! Participant configurations
     std::set<

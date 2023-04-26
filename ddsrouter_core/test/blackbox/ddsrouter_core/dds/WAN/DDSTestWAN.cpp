@@ -19,18 +19,21 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+
+#include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
+#include <ddspipe_participants/types/security/tls/TlsConfiguration.hpp>
+
 #include <ddsrouter_core/core/DdsRouter.hpp>
-#include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <test_participants.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
-namespace core {
+using namespace eprosima;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddsrouter::core;
+
 namespace test {
 
 enum class WanParticipantKind
@@ -62,14 +65,14 @@ constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
-types::security::TlsConfiguration tls_configuration(
+participants::types::TlsConfiguration tls_configuration(
         WanKind wan_kind)
 {
     // TODO: test that using server with only Server required files works
     // It fails when connecting to other server
     if (is_server(wan_kind))
     {
-        types::security::TlsConfiguration tls;
+        participants::types::TlsConfiguration tls;
         tls.certificate_authority_file = "../../resources/tls/ca.crt";
         tls.private_key_file = "../../resources/tls/ddsrouter.key";
         tls.certificate_chain_file = "../../resources/tls/ddsrouter.crt";
@@ -78,30 +81,32 @@ types::security::TlsConfiguration tls_configuration(
     }
     else
     {
-        types::security::TlsConfiguration tls;
+        participants::types::TlsConfiguration tls;
         tls.certificate_authority_file = "../../resources/tls/ca.crt";
         return tls;
     }
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> discovery_server_participant_configuration(
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+discovery_server_participant_configuration(
         bool this_server_id_is_1,
         WanKind wan_kind,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version,
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version,
         bool tls = false)
 {
-    std::set<types::Address> listening_addresses;
-    std::set<types::DiscoveryServerConnectionAddress> connection_addresses;
+    participants::DiscoveryServerParticipantConfiguration conf;
 
     if (is_client(wan_kind))
     {
-        connection_addresses.insert(
-            types::DiscoveryServerConnectionAddress(
-                types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
+        conf.connection_addresses.insert(
+            participants::types::DiscoveryServerConnectionAddress(
+                core::types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
                         {
-                            types::Address(
-                                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                            participants::types::Address(
+                                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                                 11666 + (this_server_id_is_1 ? 0u : 1u),
                                 11666 + (this_server_id_is_1 ? 0u : 1u),
                                 ip_version,
@@ -113,71 +118,60 @@ std::shared_ptr<configuration::ParticipantConfiguration> discovery_server_partic
 
     if (is_server(wan_kind))
     {
-        listening_addresses.insert(
-            types::Address(
-                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+        conf.listening_addresses.insert(
+            participants::types::Address(
+                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
                 transport_protocol)
             );
     }
+
+    conf.id = core::types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
+
+    conf.discovery_server_guid_prefix = core::types::GuidPrefix((this_server_id_is_1 ? 1u : 0u));
 
     if (tls)
     {
-        return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_discovery_server,
-            false,
-            types::DomainId(0u),
-            types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
-            listening_addresses,
-            connection_addresses,
-            tls_configuration(wan_kind));
+        conf.tls_configuration = tls_configuration(wan_kind);
+    }
 
-    }
-    else
-    {
-        return std::make_shared<configuration::DiscoveryServerParticipantConfiguration>(
-            types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_discovery_server,
-            false,
-            types::DomainId(0u),
-            types::GuidPrefix((this_server_id_is_1 ? 1u : 0u)),
-            listening_addresses,
-            connection_addresses,
-            types::security::TlsConfiguration());
-    }
+    return {
+        types::ParticipantKind::discovery_server,
+        std::make_shared<participants::DiscoveryServerParticipantConfiguration>(conf)
+    };
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participant_configuration(
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+initial_peers_participant_configuration(
         bool this_server_id_is_1,
         WanKind wan_kind,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version,
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version,
         bool tls = false)
 {
-    std::set<types::Address> listening_addresses;
-    std::set<types::Address> connection_addresses;
-    types::DomainId domain(60u);
+    participants::InitialPeersParticipantConfiguration conf;
 
     if (is_client(wan_kind))
     {
-        connection_addresses.insert(
-            types::Address(
-                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+        conf.connection_addresses.insert(
+            participants::types::Address(
+                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 0u : 1u),
                 11666 + (this_server_id_is_1 ? 0u : 1u),
                 ip_version,
                 transport_protocol)
-            );
+        );
     }
 
     if (is_server(wan_kind))
     {
-        listening_addresses.insert(
-            types::Address(
-                (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+        conf.listening_addresses.insert(
+            participants::types::Address(
+                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 11666 + (this_server_id_is_1 ? 1u : 0u),
                 ip_version,
@@ -185,37 +179,28 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
             );
     }
 
+    conf.id = core::types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
+
     if (tls)
     {
-        return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
-            types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_initial_peers,
-            false,
-            domain,
-            listening_addresses,
-            connection_addresses,
-            tls_configuration(wan_kind));
+        conf.tls_configuration = tls_configuration(wan_kind);
+    }
 
-    }
-    else
-    {
-        return std::make_shared<configuration::InitialPeersParticipantConfiguration>(
-            types::ParticipantId("InitialPeersParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0))),
-            types::ParticipantKind::wan_initial_peers,
-            false,
-            domain,
-            listening_addresses,
-            connection_addresses,
-            types::security::TlsConfiguration());
-    }
+    return {
+        types::ParticipantKind::initial_peers,
+        std::make_shared<participants::InitialPeersParticipantConfiguration>(conf)
+    };
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configuration(
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+wan_participant_configuration(
         WanParticipantKind wan_participant_kind,
         bool this_server_id_is_1,
         WanKind wan_kind,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version,
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version,
         bool tls = false)
 {
     if (wan_participant_kind == WanParticipantKind::discovery_server)
@@ -237,45 +222,33 @@ std::shared_ptr<configuration::ParticipantConfiguration> wan_participant_configu
  * Create 1 simple participants with domains \c domain
  * Create 1 custom participant by the configuration in \c participant_configuration
  *
- * @return configuration::DdsRouterConfiguration
+ * @return DdsRouterConfiguration
  */
-configuration::DdsRouterConfiguration router_configuration(
-        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
-        types::DomainIdType domain)
+DdsRouterConfiguration router_configuration(
+        std::pair<
+            types::ParticipantKind,
+            std::shared_ptr<participants::ParticipantConfiguration>>
+                participant_configuration,
+        core::types::DomainIdType domain)
 {
+    DdsRouterConfiguration conf;
+
     // One topic
-    auto new_topic = std::make_shared<types::WildcardDdsFilterTopic>();
-    new_topic->topic_name = TOPIC_NAME;
-    new_topic->type_name = std::string("HelloWorld");
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist({new_topic});
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
-
-    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
+    core::types::WildcardDdsFilterTopic topic;
+    topic.topic_name.set_value(TOPIC_NAME);
+    conf.allowlist.insert(
+        utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-                    {
-                        // custom
-                        participant_configuration,
+    conf.participants_configurations.insert(participant_configuration);
+    {
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("simple_participant_" + std::to_string(domain));
+        part->domain.domain_id = domain;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
+    }
 
-                        // simple
-                        std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("simple_participant_" + std::to_string(domain)),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                            false,
-                            types::DomainId(domain)
-                            ),
-                    }
-        );
-
-    return configuration::DdsRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations,
-        configuration::SpecsConfiguration());
+    return conf;
 }
 
 /**
@@ -284,8 +257,8 @@ configuration::DdsRouterConfiguration router_configuration(
  * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
  */
 void test_WAN_communication(
-        configuration::DdsRouterConfiguration ddsrouter_server_configuration,
-        configuration::DdsRouterConfiguration ddsrouter_client_configuration,
+        DdsRouterConfiguration ddsrouter_server_configuration,
+        DdsRouterConfiguration ddsrouter_client_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
@@ -353,8 +326,8 @@ void test_WAN_communication(
  */
 void test_WAN_communication_all(
         WanParticipantKind wan_participant_kind,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version,
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version,
         bool basic_only = false,
         bool tls = false)
 {
@@ -447,12 +420,6 @@ void test_WAN_communication_all(
 }
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
@@ -463,8 +430,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::udp,
-        types::IpVersion::v4);
+        participants::types::TransportProtocol::udp,
+        participants::types::IpVersion::v4);
 }
 
 /**
@@ -476,8 +443,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_UDPv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::udp,
-        types::IpVersion::v4);
+        participants::types::TransportProtocol::udp,
+        participants::types::IpVersion::v4);
 }
 
 /**
@@ -489,8 +456,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::udp,
-        types::IpVersion::v6);
+        participants::types::TransportProtocol::udp,
+        participants::types::IpVersion::v6);
 }
 
 /**
@@ -502,8 +469,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_UDPv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::udp,
-        types::IpVersion::v6);
+        participants::types::TransportProtocol::udp,
+        participants::types::IpVersion::v6);
 }
 
 /**
@@ -515,8 +482,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v4);
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v4);
 }
 
 /**
@@ -528,8 +495,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TCPv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v4);
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v4);
 }
 
 /**
@@ -541,8 +508,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v6,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v6,
         true);
 }
 
@@ -555,8 +522,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TCPv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v6,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v6,
         true);
 }
 
@@ -569,8 +536,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v4,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v4,
         false,
         true);
 }
@@ -584,8 +551,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TLSv4)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v4,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v4,
         false,
         true);
 }
@@ -599,8 +566,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_TLSv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::discovery_server,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v6,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v6,
         true,
         true);
 }
@@ -614,8 +581,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_TLSv6)
 {
     test::test_WAN_communication_all(
         test::WanParticipantKind::initial_peers,
-        types::TransportProtocol::tcp,
-        types::IpVersion::v6,
+        participants::types::TransportProtocol::tcp,
+        participants::types::IpVersion::v6,
         true,
         true);
 }
@@ -637,8 +604,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_high_throughput)
             test::discovery_server_participant_configuration(
                 true, // is server 1
                 test::WanKind::server,
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             0 // domain
             ),
@@ -647,8 +614,8 @@ TEST(DDSTestWAN, end_to_end_discovery_server_WAN_communication_high_throughput)
             test::discovery_server_participant_configuration(
                 false, // is server 1
                 test::WanKind::client,
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             1 // domain
             ),
@@ -675,8 +642,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_high_throughput)
             test::initial_peers_participant_configuration(
                 true, // is server 1
                 test::WanKind::server,
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             0 // domain
             ),
@@ -685,8 +652,8 @@ TEST(DDSTestWAN, end_to_end_initial_peers_WAN_communication_high_throughput)
             test::initial_peers_participant_configuration(
                 false, // is server 1
                 test::WanKind::client,
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             1 // domain
             ),

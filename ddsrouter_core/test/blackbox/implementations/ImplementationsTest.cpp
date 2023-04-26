@@ -35,6 +35,7 @@ constexpr const unsigned int DEFAULT_MAX_HISTORY_DEPTH = 100;
 
 } /* namespace test */
 
+using namespace eprosima;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
 using namespace eprosima::ddsrouter::core::testing;
@@ -120,10 +121,11 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
         );
 
         // Add topic
-        std::shared_ptr<eprosima::ddspipe::core::types::DdsTopic> topic = std::make_shared<eprosima::ddspipe::core::types::DdsTopic>();
-        topic->m_topic_name = "rt/chatter";
-        topic->type_name = "std_msgs::msg::dds_::String_";
-        configuration.builtin_topics.insert(topic);
+        eprosima::ddspipe::core::types::DdsTopic topic;
+        topic.m_topic_name = "rt/chatter";
+        topic.type_name = "std_msgs::msg::dds_::String_";
+        configuration.builtin_topics.insert(
+            utils::Heritable<eprosima::ddspipe::core::types::DdsTopic>::make_heritable(topic));
 
         // Create DdsRouter entity
         DdsRouter router(configuration);

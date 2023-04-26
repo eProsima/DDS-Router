@@ -13,5 +13,5 @@
 # limitations under the License.
 
 add_subdirectory(local)
-# add_subdirectory(repeater)
-# add_subdirectory(WAN)
+add_subdirectory(repeater)
+add_subdirectory(WAN)

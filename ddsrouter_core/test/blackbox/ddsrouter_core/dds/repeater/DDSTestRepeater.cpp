@@ -19,58 +19,63 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
-#include <cpp_utils/time/time_utils.hpp>
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_participants/types/address/Address.hpp>
+#include <ddspipe_participants/types/security/tls/TlsConfiguration.hpp>
+
 #include <ddsrouter_core/core/DdsRouter.hpp>
-#include <ddsrouter_core/types/address/Address.hpp>
-#include <ddsrouter_core/types/security/tls/TlsConfiguration.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <test_participants.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
-namespace core {
+using namespace eprosima;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddsrouter::core;
+
 namespace test {
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
 constexpr const uint32_t DEFAULT_MILLISECONDS_PUBLISH_LOOP = 100;
 constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
 
-std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participant_configuration_client(
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+initial_peers_participant_configuration_client(
         bool this_server_id_is_1,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version)
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version)
 {
-    auto conf = std::make_shared<configuration::InitialPeersParticipantConfiguration>();
+    auto conf = std::make_shared<participants::InitialPeersParticipantConfiguration>();
 
-    conf->id = types::ParticipantId("InitialPeersParticipant_Client_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
-    conf->kind = types::ParticipantKind::wan_initial_peers;
+    conf->id = core::types::ParticipantId("InitialPeersParticipant_Client_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
     conf->connection_addresses.insert(
-        types::Address(
-            (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+        participants::types::Address(
+            (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
             11666,
             11666,
             ip_version,
             transport_protocol)
         );
 
-    return conf;
+    return {types::ParticipantKind::initial_peers, conf};
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participant_configuration_server(
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version)
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+initial_peers_participant_configuration_server(
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version)
 {
-    auto conf = std::make_shared<configuration::InitialPeersParticipantConfiguration>();
+    auto conf = std::make_shared<participants::InitialPeersParticipantConfiguration>();
 
-    conf->id = types::ParticipantId("InitialPeersParticipant_Server");
-    conf->kind = types::ParticipantKind::wan_initial_peers;
+    conf->id = core::types::ParticipantId("InitialPeersParticipant_Server");
     conf->listening_addresses.insert(
-        types::Address(
-            (ip_version == types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+        participants::types::Address(
+            (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
             11666,
             11666,
             ip_version,
@@ -78,14 +83,17 @@ std::shared_ptr<configuration::ParticipantConfiguration> initial_peers_participa
         );
     conf->is_repeater = true;
 
-    return conf;
+    return {types::ParticipantKind::initial_peers, conf};
 }
 
-std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration(
+std::pair<
+    types::ParticipantKind,
+    std::shared_ptr<participants::ParticipantConfiguration>>
+participant_configuration(
         bool server,
         bool this_server_id_is_1,
-        types::TransportProtocol transport_protocol,
-        types::IpVersion ip_version)
+        participants::types::TransportProtocol transport_protocol,
+        participants::types::IpVersion ip_version)
 {
     if (server)
     {
@@ -104,55 +112,35 @@ std::shared_ptr<configuration::ParticipantConfiguration> participant_configurati
  * Create 1 simple participants with domains \c domain
  * Create 1 custom participant by the configuration in \c participant_configuration
  *
-<<<<<<< HEAD
- * @return configuration::DDSRouterConfiguration
+ * @return DdsRouterConfiguration
  */
-configuration::DDSRouterConfiguration router_configuration(
-=======
- * @return configuration::DdsRouterConfiguration
- */
-configuration::DdsRouterConfiguration router_configuration(
->>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
-        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
-        types::DomainIdType domain,
+DdsRouterConfiguration router_configuration(
+        std::pair<
+            types::ParticipantKind,
+            std::shared_ptr<participants::ParticipantConfiguration>>
+                participant_configuration,
+        core::types::DomainIdType domain,
         bool has_simple = true)
 {
+    DdsRouterConfiguration conf;
+
     // One topic
-    auto new_topic = std::make_shared<types::WildcardDdsFilterTopic>();
-    new_topic->topic_name = TOPIC_NAME;
-    new_topic->type_name = std::string("HelloWorld");
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist({new_topic});
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
-
-    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
+    core::types::WildcardDdsFilterTopic topic;
+    topic.topic_name.set_value(TOPIC_NAME);
+    conf.allowlist.insert(
+        utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations =
-    { participant_configuration };
-
+    conf.participants_configurations.insert(participant_configuration);
     if (has_simple)
     {
-        participants_configurations.insert(
-            std::make_shared<configuration::SimpleParticipantConfiguration>(
-                types::ParticipantId("simple_participant_" + std::to_string(domain)),
-                types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                false,
-                types::DomainId(domain)
-                ));
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("simple_participant_" + std::to_string(domain));
+        part->domain.domain_id = domain;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
     }
 
-<<<<<<< HEAD
-    return configuration::DDSRouterConfiguration(
-=======
-    return configuration::DdsRouterConfiguration(
->>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations,
-        configuration::SpecsConfiguration());
+    return conf;
 }
 
 /**
@@ -161,15 +149,9 @@ configuration::DdsRouterConfiguration router_configuration(
  * instances communicate with the DDS Participants through Simple Participants deployed at those domains.
  */
 void test_WAN_communication(
-<<<<<<< HEAD
-        configuration::DDSRouterConfiguration ddsrouter_client_configuration_1,
-        configuration::DDSRouterConfiguration ddsrouter_client_configuration_2,
-        configuration::DDSRouterConfiguration ddsrouter_repeater_configuration,
-=======
-        configuration::DdsRouterConfiguration ddsrouter_client_configuration_1,
-        configuration::DdsRouterConfiguration ddsrouter_client_configuration_2,
-        configuration::DdsRouterConfiguration ddsrouter_repeater_configuration,
->>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
+        DdsRouterConfiguration ddsrouter_client_configuration_1,
+        DdsRouterConfiguration ddsrouter_client_configuration_2,
+        DdsRouterConfiguration ddsrouter_repeater_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
@@ -189,11 +171,7 @@ void test_WAN_communication(
     // Add this string as many times as the msg size requires
     for (uint32_t i = 0; i < msg_size; i++)
     {
-<<<<<<< HEAD
-        msg_str += "Testing DDSRouter Blackbox Local Communication ...";
-=======
         msg_str += "Testing DdsRouter Blackbox Local Communication ...";
->>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
     }
     msg.message(msg_str);
 
@@ -205,18 +183,6 @@ void test_WAN_communication(
     TestSubscriber<HelloWorld> subscriber;
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
-<<<<<<< HEAD
-    // Create DDSRouter entity whose WAN Participant is configured as server
-    DDSRouter client_router_1(ddsrouter_client_configuration_1);
-    client_router_1.start();
-
-    // Create DDSRouter entity whose WAN Participant is configured as client
-    DDSRouter client_router_2(ddsrouter_client_configuration_2);
-    client_router_2.start();
-
-    // Create DDSRouter entity whose WAN Participant is configured as repeater
-    DDSRouter repeater(ddsrouter_repeater_configuration);
-=======
     // Create DdsRouter entity whose WAN Participant is configured as server
     DdsRouter client_router_1(ddsrouter_client_configuration_1);
     client_router_1.start();
@@ -227,7 +193,6 @@ void test_WAN_communication(
 
     // Create DdsRouter entity whose WAN Participant is configured as repeater
     DdsRouter repeater(ddsrouter_repeater_configuration);
->>>>>>> 89b5958 (Implement tests (some)for ddsrouter_core)
     repeater.start();
 
     // Start publishing
@@ -249,12 +214,6 @@ void test_WAN_communication(
 }
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,
@@ -269,8 +228,8 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
             test::participant_configuration(
                 false,  // server
                 true,  // is server 1
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             0  // domain
             ), // Client 0
@@ -279,8 +238,8 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
             test::participant_configuration(
                 false,  // server
                 false,  // is server 1
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             1  // domain
             ), // Client 1
@@ -289,8 +248,8 @@ TEST(DDSTestRepeater, repeater_initial_peers_communication_UDPv4)
             test::participant_configuration(
                 true,  // server
                 true,  // is server 1 [not used]
-                types::TransportProtocol::udp, // transport protocol
-                types::IpVersion::v4 // ip version
+                participants::types::TransportProtocol::udp, // transport protocol
+                participants::types::IpVersion::v4 // ip version
                 ),
             66,  // domain
             false  // has simple

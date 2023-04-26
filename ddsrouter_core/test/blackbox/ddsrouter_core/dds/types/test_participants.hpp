@@ -23,7 +23,8 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <cpp_utils/Log.hpp>
 
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
 #include <fastdds/dds/domain/DomainParticipant.hpp>
@@ -49,9 +50,6 @@
 #include "HelloWorld/HelloWorldPubSubTypes.h"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
 
-namespace eprosima {
-namespace ddsrouter {
-namespace core {
 namespace test {
 
 constexpr const char* TOPIC_NAME = "DDS-Router-Test";
@@ -490,8 +488,3 @@ private:
 };
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-#endif /* _TEST_BLACKBOX_DDSROUTERCORE_DDS_TYPES_TEST_PARTICIPANTS_HPP_ */

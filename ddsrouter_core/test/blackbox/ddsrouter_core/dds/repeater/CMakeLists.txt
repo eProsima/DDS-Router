@@ -30,7 +30,6 @@ set(TEST_LIST
         repeater_initial_peers_communication_UDPv4
     )
 
-
 set(TEST_NEEDED_SOURCES
     )
 

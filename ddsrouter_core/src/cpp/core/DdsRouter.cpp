@@ -67,7 +67,8 @@ DdsRouter::DdsRouter(
         discovery_database_,
         payload_pool_,
         participants_database_,
-        thread_pool_));
+        thread_pool_,
+        configuration_.builtin_topics));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
