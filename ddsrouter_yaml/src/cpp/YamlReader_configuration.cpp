@@ -131,8 +131,7 @@ void YamlReader::fill(
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics = utils::convert_set_to_shared<core::types::DdsTopic, core::types::DdsTopic>(
-            YamlReader::get_set<core::types::DdsTopic>(yml, BUILTIN_TAG, version));
+        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml, BUILTIN_TAG, version);
     }
 
     /////
