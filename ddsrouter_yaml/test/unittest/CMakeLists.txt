@@ -16,6 +16,6 @@
 # Yaml Tests #
 ##############
 
-# TODO uncomment when ready
+# TODO uncomment when new API applied
 # add_subdirectory(configuration)
 # add_subdirectory(participants)

@@ -249,7 +249,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/v0colcon_build_test_flaky@main
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test_flaky@v0
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
