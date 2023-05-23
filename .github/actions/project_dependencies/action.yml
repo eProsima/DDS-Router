@@ -34,21 +34,22 @@ runs:
   steps:
 
     - name: Install Fast DDS dependencies
-      uses: jparisu/eProsima-CI/multiplatform/install_fastdds_dependencies@main
+      uses: eProsima/eProsima-CI/multiplatform/install_fastdds_dependencies@v0
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
     - name: Install yaml cpp dependency
-      uses: jparisu/eProsima-CI/multiplatform/install_yamlcpp@main
+      uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
     # In DDS Pipe artifact there are included Fast DDS and dev-utils
     - name: Download dependencies artifact
-      uses: jparisu/eProsima-CI/multiplatform/download_dependency@main
+      uses: eProsima/eProsima-CI/multiplatform/download_dependency@v0
       with:
         artifact_name: built_ddspipe_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
         workflow_source: build_ddspipe.yml
-        workflow_source_repository: jparisu/eProsima-CI
+        workflow_source_repository: eProsima/eProsima-CI
         target_workspace: ${{ inputs.target_workspace }}
         secret_token: ${{ inputs.secret_token }}
+        workflow_conclusion: completed
