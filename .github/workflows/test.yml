@@ -1,4 +1,4 @@
-# Main CI
+ # Main CI
 # This is executed:
 #  - every PullRequest (new or update)
 #  - every merge in main
@@ -276,7 +276,7 @@ jobs:
     steps:
 
       - name: Uncrustify
-        uses: eProsima/eProsima-CI/ubuntu-22.04/uncrustify@v0
+        uses: eProsima/eProsima-CI/ubuntu/uncrustify@v0
 
 
 #####################################################################
