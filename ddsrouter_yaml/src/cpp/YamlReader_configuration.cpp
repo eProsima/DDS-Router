@@ -93,6 +93,10 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
             return std::make_shared<participants::InitialPeersParticipantConfiguration>(
                 YamlReader::get<participants::InitialPeersParticipantConfiguration>(yml, version));
 
+        case ddsrouter::core::types::ParticipantKind::x:
+            return std::make_shared<participants::InitialPeersParticipantConfiguration>(
+                YamlReader::get<participants::InitialPeersParticipantConfiguration>(yml, version));
+
         default:
             // Non recheable code
             throw eprosima::utils::ConfigurationException(
