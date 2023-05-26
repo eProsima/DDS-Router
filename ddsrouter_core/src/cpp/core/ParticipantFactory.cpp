@@ -29,10 +29,12 @@
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
 #include <ddspipe_participants/participant/auxiliar/EchoParticipant.hpp>
 #include <ddspipe_participants/participant/rtps/DiscoveryServerParticipant.hpp>
 #include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
 #include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
+#include <ddspipe_participants/participant/dds/XmlParticipant.hpp>
 
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
@@ -40,6 +42,42 @@
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
+
+template <typename ConfigurationT, typename ParticipantT, typename ... Args>
+std::shared_ptr<ddspipe::core::IParticipant>
+generic_create_participant(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        Args... args)
+{
+    std::shared_ptr<ConfigurationT> conf_ =
+            std::dynamic_pointer_cast<ConfigurationT>(
+        participant_configuration);
+
+    if (!conf_)
+    {
+        throw utils::ConfigurationException(
+                    utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
+                        " is not for Participant Kind: " << kind);
+    }
+
+    return std::make_shared<ParticipantT> (
+        conf_,
+        args...);
+}
+
+template <typename ConfigurationT, typename ParticipantT, typename ... Args>
+std::shared_ptr<ddspipe::core::IParticipant>
+generic_create_participant_with_init(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        Args... args)
+{
+    auto part = generic_create_participant<ConfigurationT, ParticipantT>(kind, participant_configuration, args...);
+    auto specific_part = static_cast<ParticipantT*>(part.get());
+    specific_part->init();
+    return part;
+}
 
 std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_participant(
         const types::ParticipantKind& kind,
@@ -51,96 +89,58 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
     switch (kind)
     {
         case types::ParticipantKind::echo:
-            // Echo Participant
-        {
-            std::shared_ptr<ddspipe::participants::EchoParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<ddspipe::participants::EchoParticipantConfiguration>(
-                participant_configuration);
-            if (!conf_)
-            {
-                throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
-                              " is not for Participant Kind: " << kind);
-            }
-
-            return std::make_shared<ddspipe::participants::EchoParticipant> (
-                conf_,
-                discovery_database);
-        }
+            return generic_create_participant<
+                ddspipe::participants::EchoParticipantConfiguration,
+                ddspipe::participants::EchoParticipant>
+            (
+                kind,
+                participant_configuration,
+                discovery_database
+            );
 
         case types::ParticipantKind::simple:
-            // Simple RTPS Participant
-        {
-            std::shared_ptr<ddspipe::participants::SimpleParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<ddspipe::participants::SimpleParticipantConfiguration>(
-                participant_configuration);
-            if (!conf_)
-            {
-                throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
-                              " is not for Participant Kind: " << kind);
-            }
-
-            auto participant = std::make_shared<ddspipe::participants::rtps::SimpleParticipant> (
-                conf_,
+            return generic_create_participant_with_init<
+                ddspipe::participants::SimpleParticipantConfiguration,
+                ddspipe::participants::rtps::SimpleParticipant>
+            (
+                kind,
+                participant_configuration,
                 payload_pool,
-                discovery_database);
-
-            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
-            participant->init();
-
-            return participant;
-        }
+                discovery_database
+            );
 
         case types::ParticipantKind::discovery_server:
-            // Discovery Server RTPS Participant
-        {
-            std::shared_ptr<ddspipe::participants::DiscoveryServerParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<ddspipe::participants::DiscoveryServerParticipantConfiguration>(
-                participant_configuration);
-            // TMP: Until Transparency TopicQoS module is available
-            if (!conf_)
-            {
-                throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
-                              kind);
-            }
-
-            auto participant =  std::make_shared<ddspipe::participants::rtps::DiscoveryServerParticipant> (
-                conf_,
+            return generic_create_participant_with_init<
+                ddspipe::participants::DiscoveryServerParticipantConfiguration,
+                ddspipe::participants::rtps::DiscoveryServerParticipant>
+            (
+                kind,
+                participant_configuration,
                 payload_pool,
-                discovery_database);
-
-            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
-            participant->init();
-
-            return participant;
-        }
+                discovery_database
+            );
 
         case types::ParticipantKind::initial_peers:
-            // Initial Peers RTPS Participant
-        {
-            std::shared_ptr<ddspipe::participants::InitialPeersParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<ddspipe::participants::InitialPeersParticipantConfiguration>(
-                participant_configuration);
-            // TMP: Until Transparency TopicQoS module is available
-            if (!conf_)
-            {
-                throw utils::ConfigurationException(
-                          utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
-                              kind);
-            }
-
-            auto participant =  std::make_shared<ddspipe::participants::rtps::InitialPeersParticipant> (
-                conf_,
+            return generic_create_participant_with_init<
+                ddspipe::participants::InitialPeersParticipantConfiguration,
+                ddspipe::participants::rtps::InitialPeersParticipant>
+            (
+                kind,
+                participant_configuration,
                 payload_pool,
-                discovery_database);
+                discovery_database
+            );
 
-            // Initialize Participant (this is needed as Participant is not RAII because of Listener)
-            participant->init();
-
-            return participant;
-        }
+        case types::ParticipantKind::xml:
+            return generic_create_participant_with_init<
+                ddspipe::participants::XmlParticipantConfiguration,
+                ddspipe::participants::dds::XmlParticipant>
+            (
+                kind,
+                participant_configuration,
+                payload_pool,
+                discovery_database
+            );
 
         default:
             // This should not happen as every kind must be in the switch

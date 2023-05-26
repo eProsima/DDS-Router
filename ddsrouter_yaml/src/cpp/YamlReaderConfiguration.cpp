@@ -92,7 +92,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
 
 ddspipe::yaml::YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
 {
-    return ddspipe::yaml::V_3_0;
+    return ddspipe::yaml::V_3_1;
 }
 
 } // namespace yaml

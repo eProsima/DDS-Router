@@ -22,6 +22,7 @@
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
 
 #include <ddsrouter_core/testing/random_values.hpp>
 #include <ddsrouter_core/types/ParticipantKind.hpp>
@@ -77,6 +78,13 @@ std::shared_ptr<ParticipantConfiguration> random_participant_configuration(
         case ParticipantKind::echo:
         {
             auto c = std::make_shared<EchoParticipantConfiguration>();
+            c->id = id;
+            return c;
+        }
+
+        case ParticipantKind::xml:
+        {
+            auto c = std::make_shared<XmlParticipantConfiguration>();
             c->id = id;
             return c;
         }
