@@ -21,6 +21,7 @@ set(TEST_NAME YamlReaderConfigurationTest)
 set(TEST_SOURCES
         YamlReaderConfigurationTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
     )
 
 set(TEST_LIST
@@ -58,6 +59,7 @@ set(TEST_NAME YamlGetConfigurationDdsRouterTest)
 set(TEST_SOURCES
         YamlGetConfigurationDdsRouterTest.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
     )
 
 set(TEST_LIST

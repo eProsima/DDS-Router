@@ -20,6 +20,7 @@ set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetCommonParticipantConfigurationTest.cpp
     )
 
@@ -53,6 +54,7 @@ set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetSimpleParticipantConfigurationTest.cpp
     )
 
@@ -86,6 +88,7 @@ set(TEST_NAME YamlGetDiscoveryServerParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetDiscoveryServerParticipantConfigurationTest.cpp
     )
 
@@ -128,6 +131,7 @@ set(TEST_NAME YamlGetInitialPeersParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetInitialPeersParticipantConfigurationTest.cpp
     )
 
