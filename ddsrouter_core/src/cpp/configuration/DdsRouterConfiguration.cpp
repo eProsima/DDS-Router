@@ -96,6 +96,12 @@ bool DdsRouterConfiguration::is_valid(
         return false;
     }
 
+    // If the number of ids are not equal the number of configurations, is because they are repeated
+    if (!xml_configuration.is_valid(error_msg))
+    {
+        return false;
+    }
+
     return true;
 }
 

@@ -17,6 +17,7 @@
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
 
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 #include <ddspipe_yaml/Yaml.hpp>
@@ -93,9 +94,9 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
             return std::make_shared<participants::InitialPeersParticipantConfiguration>(
                 YamlReader::get<participants::InitialPeersParticipantConfiguration>(yml, version));
 
-        case ddsrouter::core::types::ParticipantKind::x:
-            return std::make_shared<participants::InitialPeersParticipantConfiguration>(
-                YamlReader::get<participants::InitialPeersParticipantConfiguration>(yml, version));
+        case ddsrouter::core::types::ParticipantKind::xml:
+            return std::make_shared<participants::XmlParticipantConfiguration>(
+                YamlReader::get<participants::XmlParticipantConfiguration>(yml, version));
 
         default:
             // Non recheable code
@@ -176,6 +177,16 @@ void YamlReader::fill(
         YamlReader::fill<ddsrouter::core::SpecsConfiguration>(
             object.advanced_options,
             YamlReader::get_value_in_tag(yml, SPECS_TAG),
+            version);
+    }
+
+    /////
+    // Get optional xml configuration
+    if (YamlReader::is_tag_present(yml, XML_TAG))
+    {
+        YamlReader::fill<ddspipe::participants::XmlHandlerConfiguration>(
+            object.xml_configuration,
+            YamlReader::get_value_in_tag(yml, XML_TAG),
             version);
     }
 }

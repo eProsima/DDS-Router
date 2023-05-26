@@ -20,6 +20,7 @@
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
+#include <ddspipe_participants/xml/XmlHandlerConfiguration.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
 #include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
@@ -75,6 +76,8 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
 
     //! Advanced configurations
     SpecsConfiguration advanced_options {};
+
+    ddspipe::participants::XmlHandlerConfiguration xml_configuration {};
 
 protected:
 
