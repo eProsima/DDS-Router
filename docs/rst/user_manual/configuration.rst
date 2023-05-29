@@ -353,11 +353,72 @@ Domain Id
 ---------
 
 Tag ``domain`` configures the :term:`Domain Id` of a specific Participant.
-Be aware that some Participants (e.g. Discovery Servers) does not need a Domain Id configuration.
+Be aware that some Participants (e.g. Discovery Servers) do not need a Domain Id configuration.
 
 .. code-block:: yaml
 
     domain: 101
+
+
+.. _user_manual_configuration_ignore_participant_flags:
+
+Ignore Participant Flags
+------------------------
+
+A set of discovery traffic filters can be defined for :ref:`Simple Participants <user_manual_participants_simple>` in order to add an extra level of isolation.
+This configuration option can be set through the ``ignore-participant-flags`` tag:
+
+.. code-block:: yaml
+
+    ignore-participant-flags: no_filter                          # No filter (default)
+    # or
+    ignore-participant-flags: filter_different_host              # Discovery traffic from another host is discarded
+    # or
+    ignore-participant-flags: filter_different_process           # Discovery traffic from another process on same host is discarded
+    # or
+    ignore-participant-flags: filter_same_process                # Discovery traffic from own process is discarded
+    # or
+    ignore-participant-flags: filter_different_and_same_process  # Discovery traffic from own host is discarded
+
+See `Ignore Participant Flags <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/general_disc_settings.html?highlight=ignore%20flags#ignore-participant-flags>`_ for more information.
+
+
+.. _user_manual_configuration_custom_transport_descriptors:
+
+Custom Transport Descriptors
+----------------------------
+
+By default, :ref:`Simple Participants <user_manual_participants_simple>` are created with enabled `UDP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/udp/udp.html>`_ and `Shared Memory <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/shared_memory/shared_memory.html>`_ transport descriptors.
+The use of one or the other for communication will depend on the specific scenario, and whenever both are viable candidates, the most efficient one (Shared Memory Transport) is automatically selected.
+However, a user may desire to force the use of one of the two, which can be accomplished via the ``transport`` configuration tag in :ref:`Simple Participants <user_manual_participants_simple>`.
+
+.. code-block:: yaml
+
+    transport: builtin    # UDP & SHM (default)
+    # or
+    transport: udp        # UDP only
+    # or
+    transport: shm        # SHM only
+
+.. warning::
+
+    Participants configured with ``transport: shm`` will only communicate with applications using Shared Memory Transport exclusively (with disabled UDP transport).
+
+
+.. _user_manual_configuration_interface_whitelist:
+
+Interface Whitelist
+-------------------
+
+Optional tag ``whitelist-interfaces`` allows to limit the network interfaces used by UDP and TCP transport.
+This may be useful to only allow communication within the host (note: same can be done with :ref:`user_manual_configuration_ignore_participant_flags`), or in the WAN scenario one may choose to only communicate through the Ethernet or WiFi interface (when both available).
+Example:
+
+.. code-block:: yaml
+
+    whitelist-interfaces: "127.0.0.1"    # Localhost only
+
+See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/whitelist.html>`_ for more information.
 
 
 .. _user_manual_configuration_repeater:
