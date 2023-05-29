@@ -79,7 +79,7 @@ void DdsRouter::init_allowed_topics_()
         configuration_.allowlist,
         configuration_.blocklist);
 
-    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << allowed_topics_);
+    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << *allowed_topics_);
 }
 
 void DdsRouter::init_participants_()
