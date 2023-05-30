@@ -416,7 +416,8 @@ Example:
 
 .. code-block:: yaml
 
-    whitelist-interfaces: "127.0.0.1"    # Localhost only
+    whitelist-interfaces:
+      - "127.0.0.1"    # Localhost only
 
 See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/whitelist.html>`_ for more information.
 
