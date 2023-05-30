@@ -179,7 +179,7 @@ vcs import src < ddsrouter.repos
 2. Build the packages:
 
 ```bash
-colcon build
+colcon build --packages-select-regex ddsrouter
 ```
 
 This repository holds several colcon packages.

@@ -317,6 +317,32 @@ Local installation
             cmake ~/DDS-Router/src/dev-utils/cpp_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
+    * `DDS Pipe <https://github.com/eProsima/DDS-Pipe>`_
+
+        .. code-block:: bash
+
+            # ddspipe_core
+            cd ~/DDS-Router
+            mkdir build/ddspipe_core
+            cd build/ddspipe_core
+            cmake ~/DDS-Router/src/ddspipe/ddspipe_core -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake --build . --target install
+
+            # ddspipe_participants
+            cd ~/DDS-Router
+            mkdir build/ddspipe_participants
+            cd build/ddspipe_participants
+            cmake ~/DDS-Router/src/ddspipe/ddspipe_participants -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake --build . --target install
+
+            # ddspipe_yaml
+            cd ~/DDS-Router
+            mkdir build/ddspipe_yaml
+            cd build/ddspipe_yaml
+            cmake ~/DDS-Router/src/ddspipe/ddspipe_yaml -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake --build . --target install
+
+
 #.  Once all dependencies are installed, install |ddsrouter|:
 
     .. code-block:: bash
