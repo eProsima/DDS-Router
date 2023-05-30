@@ -18,6 +18,14 @@ Glossary
         Usually, the machines under the router network cannot be accessed from the outside unless a Port is forwarded
         in the router configuration, or if such host has previously started a TCP communication with the message source.
 
+    QoS
+        **Quality of Service**:
+        Collection of attributes and configurations that manage the behavior of an individual DDS entity.
+
+    QoS Profile
+        Specific QoS that is related with a name, called *profile*.
+        This is used to create several entities with the same QoS, or to specify which already established QoS an entity should use.
+
     TCP
         **Transmission Control Protocol**
 

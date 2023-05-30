@@ -1,0 +1,87 @@
+######################
+# XML EXAMPLE        #
+######################
+
+##################################
+# CONFIGURATION VERSION
+version: v3.0                                                     # 0
+
+##################################
+# CONFIGURATION VERSION
+xml:                                                              # 1
+  files:
+    - "./xml_configuration.xml"                                   # 2
+  raw: |                                                          # 3
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+        <participant profile_name="custom_participant_configuration">
+            <domainId>1</domainId>
+            <rtps></rtps>
+        </participant>
+    </profiles>
+
+##################################
+# ALLOWED TOPICS
+# Allowing FastDDS and ROS2 HelloWorld demo examples topics
+
+allowlist:
+  - name: HelloWorldTopic                                         # 4
+    type: HelloWorld                                              # 4
+  - name: rt/chatter                                              # 5
+    type: std_msgs::msg::dds_::String_
+
+##################################
+# PARTICIPANTS
+participants:
+
+##################################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in allowlist in domain 0 and listen every message published there
+
+  - name: SimpleParticipant                                       # 6
+    kind: local                                                   # 7
+    domain: 0                                                     # 8
+
+##################################
+# WAN SERVER
+# This participant will subscribe to topics in allowlist and connect to clients through Initial Peers.
+
+  - name: XMLParticipant                                          # 9
+    kind: xml                                                     # 10
+    profile: custom_participant_configuration                     # 11
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
+# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
+# to DDS Domain 1.
+# The communication is in both directions.
+
+# 0: Use YAML configuration version v3.0
+
+# 1: Configure how to load XML configurations.
+
+# 2: Load profiles from every xml file in list.
+
+# 3: Read the next string as XML and load profiles from it.
+
+# 4: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+
+# 5: Insert new topics in order to route them.
+
+# 6: New Participant with name <SimpleParticipant>.
+
+# 7: Kind of SimpleParticipant: <local>.
+# LAN UDP communication with default simple multicast discovery.
+
+# 8: SimpleParticipant will use DDS Domain ID <0>.
+
+# 9: New Participant with name <XMLParticipant>.
+
+# 10: Kind of XMLParticipant: <xml>.
+# XML configuration
+
+# 11: Profile QoS to create Participant is custom_participant_configuration
+# This participant will be configured following such profile QoS.
+# In this case, the profile only configures the domain to be 1

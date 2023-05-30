@@ -19,3 +19,7 @@ Next release will include the following **Configuration features**:
 * Support :ref:`Interface Whitelisting <user_manual_configuration_interface_whitelist>`.
 * Support :ref:`Custom Transport Descriptors <user_manual_configuration_custom_transport_descriptors>` (UDP or Shared Memory only) for Simple Participants.
 * Support :ref:`Ignore Participant Flags <user_manual_configuration_ignore_participant_flags>` for Simple Participants.
+
+Next release will include the following **features**:
+
+* XML Participant
