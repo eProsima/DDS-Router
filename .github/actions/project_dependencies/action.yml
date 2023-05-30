@@ -1,5 +1,5 @@
-name: fastddsspy_dependencies_ubuntu
-description: Common first step for all Fast DDS Spy jobs. Checkout repository, download dependencies and install required packages.
+name: ddsrouter_dependencies_ubuntu
+description: Common first step for all jobs. Checkout repository, download dependencies and install required packages.
 
 inputs:
 

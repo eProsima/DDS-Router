@@ -165,9 +165,6 @@ void test_local_communication_key_dispose(
 
 } /* namespace test */
 
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
-
 /**
  * Test that dispose values from the publisher are correctly received by the subscriber from the router.
  */
