@@ -35,6 +35,9 @@ set(TESTS
     transparency/durability
     transparency/ownership
 
+    security/backdoor
+    security/security_domain
+    security/security_wan
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

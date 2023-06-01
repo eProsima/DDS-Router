@@ -1,0 +1,73 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with ownership
+#
+# Test architecture:
+#   Publishers are created with different ownerships so only one should be the one that Readers read.
+#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
+#   Readers must read without duplicities even when there are multiple writers. However it is possible
+#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
+#    message received could be duplicated.
+#
+#   Domain 0       <->  Router  <->      Secure Domain 0
+# publisher_0            --->             subscriber_0
+# subscriber_1           <---             publisher_1
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 10
+
+  # DOMAIN 0
+  publisher_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 --domain 0
+
+  subscriber_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 9 --args "--samples 20 --domain 1 --topic topic0"
+
+  # DOMAIN SECURE
+  publisher_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 --xml-profile local_conf
+
+  subscriber_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 9 --args "--samples 20 --topic topic0 --xml-profile local_conf"
+
+networks:
+  std_net:
+  default:
+    driver: none
