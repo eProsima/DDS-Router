@@ -24,7 +24,6 @@
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 
 #include <ddsrouter_yaml/testing/generate_yaml.hpp>
-#include <ddsrouter_yaml/testing/utils.hpp>
 
 constexpr const uint32_t TEST_ITERATION_MAX = 5;
 

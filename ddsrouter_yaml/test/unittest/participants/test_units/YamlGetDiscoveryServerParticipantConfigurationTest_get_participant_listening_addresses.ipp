@@ -23,7 +23,8 @@
 #include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 #include <ddsrouter_yaml/testing/generate_yaml.hpp>
-#include <ddsrouter_yaml/testing/utils.hpp>
+
+#include <test_utils.hpp>
 
 /**
  * Test get Participant Configuration from yaml with listening address

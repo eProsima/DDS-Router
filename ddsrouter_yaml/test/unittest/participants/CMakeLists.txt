@@ -13,6 +13,12 @@
 # limitations under the License.
 
 #################################################
+# Include requiered header files
+#################################################
+
+include_directories(${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
+#################################################
 # Yaml GetConfigurations CommonParticipant Test #
 #################################################
 
@@ -122,6 +128,8 @@ add_unittest_executable(
     "${TEST_SOURCES}"
     "${TEST_LIST}"
     "${TEST_EXTRA_LIBRARIES}")
+
+include_directories(${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
 
 ##########################################################
 # Yaml GetConfigurations InitialPeersParticipant Test #

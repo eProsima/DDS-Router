@@ -28,7 +28,8 @@
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 
 #include <ddsrouter_yaml/testing/generate_yaml.hpp>
-#include <ddsrouter_yaml/testing/utils.hpp>
+
+#include <test_utils.hpp>
 
 using namespace eprosima;
 

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
+#include <cpp_utils/testing/gtest_aux.hpp>
+
 #include <ddspipe_core/testing/random_values.hpp>
 
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
@@ -25,7 +27,8 @@
 #include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 #include <ddsrouter_yaml/testing/generate_yaml.hpp>
-#include <ddsrouter_yaml/testing/utils.hpp>
+
+#include <test_utils.hpp>
 
 using namespace eprosima;
 

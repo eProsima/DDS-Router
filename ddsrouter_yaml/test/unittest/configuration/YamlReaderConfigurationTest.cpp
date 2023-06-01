@@ -115,7 +115,6 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
  *
  * CASES:
  * - trivial configuration of v3.0
- * - trivial configuration of v2.0 fails
  */
 TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
 {
@@ -140,25 +139,6 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
         utils::Formatter error_msg;
         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
-
-    // trivial configuration of v2.0 fails
-    {
-        const char* yml_configuration =
-                R"(
-            participants:
-              - name: "P1"
-                kind: "echo"
-              - name: "P2"
-                kind: echo"
-            )";
-
-        Yaml yml = YAML::Load(yml_configuration);
-
-        // Load configuration and check is not valid
-        ASSERT_THROW(
-            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            utils::ConfigurationException);
-    }
 }
 
 /**
@@ -166,6 +146,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
  *
  * CASES:
  * - not existing version
+ * - get wrongly defined yaml with default version (v3.0)
  */
 TEST(YamlReaderConfigurationTest, version_negative_cases)
 {
@@ -179,12 +160,29 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
               - name: "P1"
                 kind: "echo"
               - name: "P2"
-                kind: void"
+                kind: "echo"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
+        ASSERT_THROW(
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
+    }
+    // trivial configuration of v3.0 is not correct
+    {
+        const char* yml_configuration =
+                R"(
+              - name: "P1"
+                kind: "echo"
+              - name: "P2"
+                kind: "echo"
+            )";
+
+        Yaml yml = YAML::Load(yml_configuration);
+
+        // Load configuration and check is not valid
         ASSERT_THROW(
             ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
             utils::ConfigurationException);
