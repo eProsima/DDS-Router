@@ -25,7 +25,7 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        get_ddsrouter_configuration_v1
+        ddsrouter_configuration_v1_not_supported
         get_ddsrouter_configuration_v2
         get_ddsrouter_configuration_no_version
         version_negative_cases
@@ -65,10 +65,6 @@ set(TEST_SOURCES
 set(TEST_LIST
         get_ddsrouter_configuration_trivial
         get_ddsrouter_configuration_ros_case
-
-        get_ddsrouter_configuration_trivial_v1
-        get_ddsrouter_configuration_builtin_v1
-        get_ddsrouter_configuration_discovery_server_v1
     )
 
 set(TEST_EXTRA_LIBRARIES

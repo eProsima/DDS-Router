@@ -13,12 +13,6 @@
 # limitations under the License.
 
 #################################################
-# Include requiered header files
-#################################################
-
-include_directories(${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
-
-#################################################
 # Yaml GetConfigurations CommonParticipant Test #
 #################################################
 
@@ -80,11 +74,18 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
 
 ##########################################################
 # Yaml GetConfigurations DiscoveryServerParticipant Test #
@@ -123,13 +124,18 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
-
-include_directories(${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
 
 ##########################################################
 # Yaml GetConfigurations InitialPeersParticipant Test #
@@ -159,8 +165,15 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")

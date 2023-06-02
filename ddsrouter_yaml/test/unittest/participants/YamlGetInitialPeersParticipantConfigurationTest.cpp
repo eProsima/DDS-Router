@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gtest/gtest.h>
-
 #include <cpp_utils/testing/gtest_aux.hpp>
+#include <gtest/gtest.h>
 
 #include <ddspipe_core/testing/random_values.hpp>
 

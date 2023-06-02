@@ -170,7 +170,7 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
             ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
             utils::ConfigurationException);
     }
-    // trivial configuration of v3.0 is not correct
+    // trivial configuration of default version is not correct
     {
         const char* yml_configuration =
                 R"(

@@ -14,13 +14,12 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
 #include <ddspipe_core/testing/random_values.hpp>
-
-
 #include <ddspipe_core/types/participant/ParticipantId.hpp>
 #include <ddspipe_core/types/dds/DomainId.hpp>
-#include <ddspipe_yaml/YamlReader.hpp>
 
+#include <ddspipe_yaml/YamlReader.hpp>
 #include <ddspipe_yaml/testing/generate_yaml.hpp>
 
 #include <ddsrouter_yaml/testing/generate_yaml.hpp>
