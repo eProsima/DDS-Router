@@ -2,7 +2,7 @@ version: v3.0
 
 xml:
   files:
-    - configurations/secure_participant_configuration.xml
+    - /configurations/secure_configuration.xml
 
 participants:
 
@@ -12,4 +12,4 @@ participants:
 
   - name: SecureXml
     kind: xml
-    profile: test_xml_secure_participant
+    profile: secure_router

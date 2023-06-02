@@ -1,0 +1,6 @@
+V	330529140108Z		0FD585F49495469051C5D728DD620638AA01E8D9	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestLocal/emailAddress=routertest@eprosima.com
+V	330529140108Z		0FD585F49495469051C5D728DD620638AA01E8DA	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestRouter/emailAddress=routertest@eprosima.com
+V	330529140242Z		0FD585F49495469051C5D728DD620638AA01E8DB	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestLocal/emailAddress=routertest@eprosima.com
+V	330529140242Z		0FD585F49495469051C5D728DD620638AA01E8DC	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestRouter/emailAddress=routertest@eprosima.com
+V	330530091900Z		104F0A18473AF7D9058353D23AC2578ECE717453	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestLocal/emailAddress=routertest@eprosima.com
+V	330530091900Z		104F0A18473AF7D9058353D23AC2578ECE717454	unknown	/C=ES/ST=MA/O=eProsima/CN=BackdoorTestRouter/emailAddress=routertest@eprosima.com

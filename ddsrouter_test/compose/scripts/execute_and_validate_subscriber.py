@@ -120,6 +120,18 @@ def _subscriber_parse_output(stdout, stderr):
     return filtered_data, stderr
 
 
+def _subscriber_get_retcode_validate(
+        samples):
+    if samples == 0:
+        def accept_timeout(retcode):
+            return (
+                retcode == validation.ReturnCode.SUCCESS
+                or retcode == validation.ReturnCode.TIMEOUT)
+        return accept_timeout
+    else:
+        return validation.validate_retcode_default
+
+
 def _subscriber_validate(
         stdout_parsed,
         stderr_parsed,
@@ -218,14 +230,16 @@ if __name__ == '__main__':
             stderr_parsed=stderr_parsed,
             samples=args.samples,
             duplicates_allow=args.allow_duplicates,
-            transient=args.transient)))
+            transient=args.transient,
+            )))
 
     ret_code = validation.run_and_validate(
         command=command,
         timeout=args.timeout,
         delay=args.delay,
         parse_output_function=_subscriber_parse_output,
-        validate_output_function=validate_func)
+        validate_output_function=validate_func,
+        parse_retcode_function=_subscriber_get_retcode_validate(args.samples))
 
     log.logger.info(f'Subscriber validator exited with code {ret_code}')
 

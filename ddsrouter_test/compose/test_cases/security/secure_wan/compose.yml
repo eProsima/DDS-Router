@@ -1,0 +1,264 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with ownership
+#
+# Test architecture:
+#   Publishers are created with different ownerships so only one should be the one that Readers read.
+#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
+#   Readers must read without duplicities even when there are multiple writers. However it is possible
+#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
+#    message received could be duplicated.
+#
+# Secure Domain 0   <->  Secure Router  <->  Secure Domain 0
+#  publisher_0            --->                subscriber_0
+#
+#
+#
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+      - ./configurations:/configurations
+      - ./certs:/certs
+    command: ddsrouter -c /config.yaml --timeout 6
+
+  # DOMAIN 0
+  publisher_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --domain 0 --topic topic_0
+
+  publisher_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_2
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --domain 0 --topic topic_2
+
+  publisher_4:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_4
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --domain 0 --topic topic_4
+
+  publisher_5:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_5
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --domain 0 --topic topic_5
+
+  subscriber_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --domain 0 --topic topic_1"
+
+  subscriber_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --domain 0 --topic topic_2"
+
+  subscriber_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--domain 0 --topic topic_3"
+
+  subscriber_4:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_4
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 20 --timeout 6 --args "--samples 20 --domain 0 --topic topic_4"
+
+  subscriber_5:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_5
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --domain 0 --topic topic_5"
+
+##################################################
+# DOMAIN SECURE
+
+  publisher_sec_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_1
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_1  --domain 0
+
+  publisher_sec_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_3
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_3  --domain 0
+
+  publisher_sec_4:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_4
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_4  --domain 0
+
+  publisher_sec_5:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_5
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_5  --domain 0
+
+  subscriber_sec_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_0 --profile secure_local --domain 0"
+
+  subscriber_sec_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_2
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--samples 20 --topic topic_2 --profile secure_local --domain 0"
+
+  subscriber_sec_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_3
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_3 --profile secure_local --domain 0"
+
+  subscriber_sec_4:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_4
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_4 --profile secure_local --domain 0"
+
+  subscriber_sec_5:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_5
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 20 --timeout 6 --args "--samples 20 --topic topic_5 --profile secure_local --domain 0"
+
+
+  # TODO change --profile for --xml-profile when fixed
+
+networks:
+  std_net:
+  default:
+    driver: none
