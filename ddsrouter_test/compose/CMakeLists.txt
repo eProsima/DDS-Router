@@ -38,8 +38,7 @@ set(TESTS
     security/backdoor
     security/backdoor_dds
     security/secure_trespassing
-    # security/security_domain
-    # security/security_wan
+    security/secure_wan
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

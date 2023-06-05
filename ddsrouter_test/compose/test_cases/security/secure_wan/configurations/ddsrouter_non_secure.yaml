@@ -6,10 +6,9 @@ xml:
 
 participants:
 
-  - name: Simple
-    kind: simple
-    domain: 0
+  - name: Local
+    kind: local
 
-  - name: SecureXml
+  - name: WanNonSecureParticipant
     kind: xml
-    profile: secure_router
+    profile: non_secure_wan_client

@@ -1,0 +1,100 @@
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----BD03B7AD83A9C8347CD55D7CE5339057"
+
+This is an S/MIME signed message
+
+------BD03B7AD83A9C8347CD55D7CE5339057
+Content-Type: text/plain
+
+<?xml version="1.0" encoding="utf-8"?>
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.omg.org/spec/DDS-Security/20170801/omg_shared_ca_permissions.xsd">
+    <permissions>
+
+        <grant name="ServerPermissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=WanTestServer,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <publish>
+                    <topics>
+                        <topic>*</topic>
+                    </topics>
+                </publish>
+                <subscribe>
+                    <topics>
+                        <topic>*</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="ClientPermissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=WanTestClient,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <publish>
+                    <topics>
+                        <topic>*</topic>
+                    </topics>
+                </publish>
+                <subscribe>
+                    <topics>
+                        <topic>*</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+    </permissions>
+</dds>
+
+------BD03B7AD83A9C8347CD55D7CE5339057
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+MIIETAYJKoZIhvcNAQcCoIIEPTCCBDkCAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggIXMIICEzCCAbkCFHzDyve1htYc+0Jc3K/f56foohiCMAoGCCqG
+SM49BAMCMIGLMQswCQYDVQQGEwJFUzELMAkGA1UECAwCTUExFDASBgNVBAcMC1Ry
+ZXMgQ2FudG9zMREwDwYDVQQKDAhlUHJvc2ltYTEeMBwGA1UEAwwVZVByb3NpbWEg
+TWFpbiBUZXN0IENBMSYwJAYJKoZIhvcNAQkBFhdyb3V0ZXJ0ZXN0QGVwcm9zaW1h
+LmNvbTAeFw0yMzA2MDUwNjUxMDNaFw0zMzA2MDIwNjUxMDNaMIGLMQswCQYDVQQG
+EwJFUzELMAkGA1UECAwCTUExFDASBgNVBAcMC1RyZXMgQ2FudG9zMREwDwYDVQQK
+DAhlUHJvc2ltYTEeMBwGA1UEAwwVZVByb3NpbWEgTWFpbiBUZXN0IENBMSYwJAYJ
+KoZIhvcNAQkBFhdyb3V0ZXJ0ZXN0QGVwcm9zaW1hLmNvbTBZMBMGByqGSM49AgEG
+CCqGSM49AwEHA0IABJmgRuOT0zNMCK1pcgfCV0h+G2dO/lCSsp39KXC4ls/zz7KX
+g/vF7HVKhhp58eOnNwSH3OWzGsIumA5ZU5/GFRIwCgYIKoZIzj0EAwIDSAAwRQIg
+DMZRQUQ7pW5Ymo7FSwu3yaRMt9F0szD8sOCQ6yFkEncCIQDrLUAYmSO9tQ4bsQUh
+u7rXZZ1lfLKHijwQq3VIoBMNlDGCAfkwggH1AgEBMIGkMIGLMQswCQYDVQQGEwJF
+UzELMAkGA1UECAwCTUExFDASBgNVBAcMC1RyZXMgQ2FudG9zMREwDwYDVQQKDAhl
+UHJvc2ltYTEeMBwGA1UEAwwVZVByb3NpbWEgTWFpbiBUZXN0IENBMSYwJAYJKoZI
+hvcNAQkBFhdyb3V0ZXJ0ZXN0QGVwcm9zaW1hLmNvbQIUfMPK97WG1hz7Qlzcr9/n
+p+iiGIIwDQYJYIZIAWUDBAIBBQCggeQwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEH
+ATAcBgkqhkiG9w0BCQUxDxcNMjMwNjA1MDY1MTA0WjAvBgkqhkiG9w0BCQQxIgQg
+PQn8GDlAUZxcJva92lQmdwP5SAXhMOTDMVsj4RWBWHoweQYJKoZIhvcNAQkPMWww
+ajALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG
+9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYI
+KoZIhvcNAwICASgwCgYIKoZIzj0EAwIERzBFAiEAn8kE2p5WVjOexhJjlfEfhTOw
+PuJi1neC+BpnuWVHFXUCIEwDlxBunBnlMopMJbXQ8c8Jt8uNmfeKCMNHemHWCPiq
+
+------BD03B7AD83A9C8347CD55D7CE5339057--
+

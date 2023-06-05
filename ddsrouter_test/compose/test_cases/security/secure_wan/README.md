@@ -2,6 +2,7 @@
 
 This DDS-Router test belongs to the docker tests that are executed using a docker-compose application that rises several DDS Participants and DDS Routers.
 This test case check the connection between a secured and a non secured DDS Domain.
+> TODO
 
 ## Test scenario
 
