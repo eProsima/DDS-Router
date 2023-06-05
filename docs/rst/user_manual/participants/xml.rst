@@ -80,8 +80,9 @@ Notice that not setting such QoS will not affect the correct functionality of th
 Configuration Example
 =====================
 
-Configure a XML Participant that uses a profile called `custom_participant_configuration` loaded previously from an XML configuration.
-How to load such XML profiles is explained in `following documentation <user_manual_configuration_load_xml>`.
+Configure a XML Participant that gets all of its QoS from XML profile named ``custom_participant_configuration``.
+This XML profile must be previously loaded.
+Use |fastdds| or |ddsrouter| support to load XML configuration files as explained in :ref:`this section <user_manual_configuration_load_xml>`.
 
 .. code-block:: yaml
 

@@ -21,16 +21,6 @@ xml:                                                              # 1
     </profiles>
 
 ##################################
-# ALLOWED TOPICS
-# Allowing FastDDS and ROS2 HelloWorld demo examples topics
-
-allowlist:
-  - name: HelloWorldTopic                                         # 4
-    type: HelloWorld                                              # 4
-  - name: rt/chatter                                              # 5
-    type: std_msgs::msg::dds_::String_
-
-##################################
 # PARTICIPANTS
 participants:
 
