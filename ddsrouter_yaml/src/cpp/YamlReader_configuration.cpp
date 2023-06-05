@@ -58,7 +58,8 @@ ddsrouter::core::types::ParticipantKind YamlReader::get(
         const YamlReaderVersion /* version */)
 {
     // Domain id required
-    return get_enumeration_from_builder<ddsrouter::core::types::ParticipantKind>(yml, *ddsrouter::core::types::ParticipantKindBuilder::get_instance());
+    return get_enumeration_from_builder<ddsrouter::core::types::ParticipantKind>(yml,
+                   *ddsrouter::core::types::ParticipantKindBuilder::get_instance());
 }
 
 template <>
@@ -68,7 +69,9 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
         const YamlReaderVersion version)
 {
     // Kind required
-    ddsrouter::core::types::ParticipantKind kind = YamlReader::get<ddsrouter::core::types::ParticipantKind>(yml, PARTICIPANT_KIND_TAG, version);
+    ddsrouter::core::types::ParticipantKind kind = YamlReader::get<ddsrouter::core::types::ParticipantKind>(yml,
+                    PARTICIPANT_KIND_TAG,
+                    version);
 
     logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
 
@@ -131,7 +134,9 @@ void YamlReader::fill(
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml, BUILTIN_TAG, version);
+        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
+                        BUILTIN_TAG,
+                        version);
     }
 
     /////
@@ -151,13 +156,13 @@ void YamlReader::fill(
     for (auto conf : participants_configurations_yml)
     {
         ddsrouter::core::types::ParticipantKind kind =
-            YamlReader::get<ddsrouter::core::types::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
+                YamlReader::get<ddsrouter::core::types::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
         object.participants_configurations.insert(
-            {
-                kind,
-                YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(conf, version)
-            }
-        );
+                    {
+                        kind,
+                        YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(conf, version)
+                    }
+            );
     }
 
     /////
@@ -181,6 +186,6 @@ ddsrouter::core::DdsRouterConfiguration YamlReader::get<ddsrouter::core::DdsRout
     return object;
 }
 
-}
-}
-}
+} // namespace yaml
+} // namespace ddspipe
+} // namespace eprosima

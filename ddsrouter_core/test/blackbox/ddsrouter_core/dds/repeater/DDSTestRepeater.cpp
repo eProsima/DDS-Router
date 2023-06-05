@@ -50,7 +50,9 @@ initial_peers_participant_configuration_client(
 {
     auto conf = std::make_shared<participants::InitialPeersParticipantConfiguration>();
 
-    conf->id = core::types::ParticipantId("InitialPeersParticipant_Client_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
+    conf->id =
+            core::types::ParticipantId("InitialPeersParticipant_Client_" +
+                    std::to_string((this_server_id_is_1 ? 1 : 0)));
     conf->connection_addresses.insert(
         participants::types::Address(
             (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
@@ -118,7 +120,7 @@ DdsRouterConfiguration router_configuration(
         std::pair<
             types::ParticipantKind,
             std::shared_ptr<participants::ParticipantConfiguration>>
-                participant_configuration,
+        participant_configuration,
         core::types::DomainIdType domain,
         bool has_simple = true)
 {

@@ -63,12 +63,12 @@ DdsRouter::DdsRouter(
     init_participants_();
 
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
-        allowed_topics_,
-        discovery_database_,
-        payload_pool_,
-        participants_database_,
-        thread_pool_,
-        configuration_.builtin_topics));
+                        allowed_topics_,
+                        discovery_database_,
+                        payload_pool_,
+                        participants_database_,
+                        thread_pool_,
+                        configuration_.builtin_topics));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
@@ -84,7 +84,8 @@ void DdsRouter::init_allowed_topics_()
 
 void DdsRouter::init_participants_()
 {
-    for (std::pair<types::ParticipantKind, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> participant_config :
+    for (std::pair<types::ParticipantKind,
+            std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> participant_config :
             configuration_.participants_configurations)
     {
         std::shared_ptr<ddspipe::core::IParticipant> new_participant =

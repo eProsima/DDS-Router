@@ -104,14 +104,14 @@ discovery_server_participant_configuration(
         conf.connection_addresses.insert(
             participants::types::DiscoveryServerConnectionAddress(
                 core::types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
-                        {
-                            participants::types::Address(
-                                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-                                11666 + (this_server_id_is_1 ? 0u : 1u),
-                                11666 + (this_server_id_is_1 ? 0u : 1u),
-                                ip_version,
-                                transport_protocol)
-                        }
+            {
+                participants::types::Address(
+                    (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                    11666 + (this_server_id_is_1 ? 0u : 1u),
+                    11666 + (this_server_id_is_1 ? 0u : 1u),
+                    ip_version,
+                    transport_protocol)
+            }
                 )
             );
     }
@@ -164,7 +164,7 @@ initial_peers_participant_configuration(
                 11666 + (this_server_id_is_1 ? 0u : 1u),
                 ip_version,
                 transport_protocol)
-        );
+            );
     }
 
     if (is_server(wan_kind))
@@ -228,7 +228,7 @@ DdsRouterConfiguration router_configuration(
         std::pair<
             types::ParticipantKind,
             std::shared_ptr<participants::ParticipantConfiguration>>
-                participant_configuration,
+        participant_configuration,
         core::types::DomainIdType domain)
 {
     DdsRouterConfiguration conf;

@@ -79,7 +79,9 @@ bool DdsRouterConfiguration::is_valid(
         // Check that the configuration is of type required
         if (!check_correct_configuration_object_(configuration))
         {
-            error_msg << "Participant " << configuration.second->id << " is not of correct Configuration class " << configuration.first << ".";
+            error_msg
+                << "Participant " << configuration.second->id
+                << " is not of correct Configuration class " << configuration.first << ".";
             return false;
         }
 

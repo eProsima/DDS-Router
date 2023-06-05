@@ -28,18 +28,18 @@ ENUMERATION_BUILDER(
     initial_peers,
     discovery_server,
     echo
-);
+    );
 
 eProsima_ENUMERATION_BUILDER(
     ParticipantKindBuilder,
     ParticipantKind,
-    {
-        { ParticipantKind::simple COMMA { "local" COMMA "simple" } } COMMA
-        { ParticipantKind::initial_peers COMMA {"wan" COMMA "router" COMMA "initial-peers"} } COMMA
-        { ParticipantKind::discovery_server COMMA {"discovery-server" COMMA "ds" COMMA "local-ds" COMMA "local-discovery-server" COMMA "wan-ds" COMMA "wan-discovery-server"} } COMMA
-        { ParticipantKind::echo COMMA {"echo"} }
-    }
-);
+                {
+                    { ParticipantKind::simple COMMA { "local" COMMA "simple" } } COMMA
+                    { ParticipantKind::initial_peers COMMA {"wan" COMMA "router" COMMA "initial-peers"} } COMMA
+                    { ParticipantKind::discovery_server COMMA {"discovery-server" COMMA "ds" COMMA "local-ds" COMMA "local-discovery-server" COMMA "wan-ds" COMMA "wan-discovery-server"} } COMMA
+                    { ParticipantKind::echo COMMA {"echo"} }
+                }
+    );
 
 } /* namespace types */
 } /* namespace core */

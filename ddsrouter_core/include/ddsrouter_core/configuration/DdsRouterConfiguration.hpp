@@ -71,7 +71,7 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
             types::ParticipantKind,
             std::shared_ptr<
                 ddspipe::participants::ParticipantConfiguration>>>
-                    participants_configurations {};
+    participants_configurations {};
 
     //! Advanced configurations
     SpecsConfiguration advanced_options {};
@@ -80,7 +80,8 @@ protected:
 
     //! Auxiliar method to validate that class type of the participants are compatible with their kinds.
     static bool check_correct_configuration_object_(
-            const std::pair<types::ParticipantKind, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> configuration);
+            const std::pair<types::ParticipantKind,
+            std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> configuration);
 
 };
 

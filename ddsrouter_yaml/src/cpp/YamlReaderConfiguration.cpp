@@ -35,7 +35,8 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         // Get version if present
         if (ddspipe::yaml::YamlReader::is_tag_present(yml, ddspipe::yaml::VERSION_TAG))
         {
-            version = ddspipe::yaml::YamlReader::get<ddspipe::yaml::YamlReaderVersion>(yml, ddspipe::yaml::VERSION_TAG, ddspipe::yaml::LATEST);
+            version = ddspipe::yaml::YamlReader::get<ddspipe::yaml::YamlReaderVersion>(yml, ddspipe::yaml::VERSION_TAG,
+                            ddspipe::yaml::LATEST);
         }
         else
         {
@@ -87,6 +88,6 @@ ddspipe::yaml::YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
     return ddspipe::yaml::V_3_0;
 }
 
-}
-}
-}
+} // namespace yaml
+} // namespace ddsrouter
+} // namespace eprosima

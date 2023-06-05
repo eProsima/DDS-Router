@@ -280,7 +280,8 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_discovery_se
         {
             // Check the DS partipant is correct
             std::shared_ptr<ddspipe::participants::DiscoveryServerParticipantConfiguration> ds_participant =
-                    std::dynamic_pointer_cast<ddspipe::participants::DiscoveryServerParticipantConfiguration>(participant);
+                    std::dynamic_pointer_cast<ddspipe::participants::DiscoveryServerParticipantConfiguration>(
+                participant);
 
             // Check Name
             ASSERT_EQ(ds_participant->id, ddspipe::core::types::ParticipantId("participant2"));
@@ -294,12 +295,14 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_discovery_se
             ASSERT_EQ(
                 ds_participant->connection_addresses.size(),
                 1u);
-            ddspipe::participants::types::DiscoveryServerConnectionAddress address = *ds_participant->connection_addresses.begin();
+            ddspipe::participants::types::DiscoveryServerConnectionAddress address =
+                    *ds_participant->connection_addresses.begin();
             ASSERT_EQ(
                 address,
                 (ddspipe::participants::types::DiscoveryServerConnectionAddress(
                     ddspipe::core::types::GuidPrefix("01.0f.00.00.00.00.00.00.00.00.00.00"),
-                    {ddspipe::participants::types::Address("127.0.0.1", 3333, 3333, ddspipe::participants::types::Address::default_transport_protocol())}
+                    {ddspipe::participants::types::Address("127.0.0.1", 3333, 3333,
+                     ddspipe::participants::types::Address::default_transport_protocol())}
                     ))
                 );
         }

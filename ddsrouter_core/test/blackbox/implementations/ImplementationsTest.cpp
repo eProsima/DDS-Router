@@ -61,17 +61,17 @@ TEST(ImplementationsTest, pair_implementation)
         // Generate configuration
         DdsRouterConfiguration configuration;
         configuration.participants_configurations.insert(
-            {
-                kind,
-                random_participant_configuration(kind, 0)
-            }
-        );
+        {
+            kind,
+            random_participant_configuration(kind, 0)
+        }
+            );
         configuration.participants_configurations.insert(
-            {
-                kind,
-                random_participant_configuration(kind, 1)
-            }
-        );
+        {
+            kind,
+            random_participant_configuration(kind, 1)
+        }
+            );
 
         // Create DdsRouter entity
         DdsRouter router(configuration);
@@ -108,17 +108,17 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
         // Generate configuration
         DdsRouterConfiguration configuration;
         configuration.participants_configurations.insert(
-            {
-                kind,
-                random_participant_configuration(kind, 0)
-            }
-        );
+        {
+            kind,
+            random_participant_configuration(kind, 0)
+        }
+            );
         configuration.participants_configurations.insert(
-            {
-                kind,
-                random_participant_configuration(kind, 1)
-            }
-        );
+        {
+            kind,
+            random_participant_configuration(kind, 1)
+        }
+            );
 
         // Add topic
         eprosima::ddspipe::core::types::DdsTopic topic;
@@ -165,11 +165,11 @@ TEST(ImplementationsTest, all_implementations)
         {
             // Add participant
             configuration.participants_configurations.insert(
-                {
-                    kind,
-                    random_participant_configuration(kind, participant_number++)
-                }
-            );
+            {
+                kind,
+                random_participant_configuration(kind, participant_number++)
+            }
+                );
         }
 
         // Create DdsRouter entity
@@ -195,17 +195,17 @@ TEST(ImplementationsTest, duplicated_ids_negative)
 {
     DdsRouterConfiguration configuration;
     configuration.participants_configurations.insert(
-        {
-            ParticipantKind::simple,
-            random_participant_configuration(ParticipantKind::simple, 0)
-        }
-    );
+    {
+        ParticipantKind::simple,
+        random_participant_configuration(ParticipantKind::simple, 0)
+    }
+        );
     configuration.participants_configurations.insert(
-        {
-            ParticipantKind::simple,
-            random_participant_configuration(ParticipantKind::simple, 0)
-        }
-    );
+    {
+        ParticipantKind::simple,
+        random_participant_configuration(ParticipantKind::simple, 0)
+    }
+        );
 
     // Create DdsRouter entity
     ASSERT_THROW(DdsRouter router(configuration), eprosima::utils::ConfigurationException);
