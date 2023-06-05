@@ -2,12 +2,13 @@ version: v3.0
 
 xml:
   files:
-    - /configurations/secure_configuration.xml
+    - /configurations/configuration_router2.xml
 
 participants:
 
   - name: Local
     kind: local
+    domain: 2
 
   - name: WanNonSecureParticipant
     kind: xml

@@ -2,7 +2,7 @@ version: v3.0
 
 xml:
   files:
-    - /configurations/configuration_lan0.xml
+    - /configurations/configuration_router0.xml
 
 participants:
 

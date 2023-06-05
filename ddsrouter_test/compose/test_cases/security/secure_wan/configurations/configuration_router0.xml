@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
 
-    <participant profile_name="secure_local_1">
+    <transport_descriptors>
+        <transport_descriptor>
+            <transport_id>custom_transport</transport_id>
+            <type>UDPv4</type>
+            <!-- <output_port>11810</output_port> -->
+        </transport_descriptor>
+    </transport_descriptors>
+
+    <participant profile_name="secure_router_local_0">
         <rtps>
             <propertiesPolicy>
                 <properties>
@@ -18,11 +26,11 @@
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_certificate</name>
-                        <value>file:///certs/local1cert.pem</value>
+                        <value>file:///certs/routerlocal0cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.private_key</name>
-                        <value>file:///certs/local1key.pem</value>
+                        <value>file:///certs/routerlocal0key.pem</value>
                     </property>
 
                     <!-- Activate DDS:Access:Permissions plugin -->
@@ -41,7 +49,7 @@
                     </property>
                     <property>
                         <name>dds.sec.access.builtin.Access-Permissions.permissions</name>
-                        <value>file:///certs/permissions_lan1.smime</value>
+                        <value>file:///certs/permissions_lan0.smime</value>
                     </property>
 
                     <!-- Activate DDS:Crypto:AES-GCM-GMAC plugin -->
@@ -55,7 +63,7 @@
         </rtps>
     </participant>
 
-    <participant profile_name="secure_router_local_1">
+    <participant profile_name="secure_wan_server">
         <rtps>
             <propertiesPolicy>
                 <properties>
@@ -72,65 +80,11 @@
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_certificate</name>
-                        <value>file:///certs/routerlocal1cert.pem</value>
+                        <value>file:///certs/servercert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.private_key</name>
-                        <value>file:///certs/routerlocal1key.pem</value>
-                    </property>
-
-                    <!-- Activate DDS:Access:Permissions plugin -->
-                    <property>
-                        <name>dds.sec.access.plugin</name>
-                        <value>builtin.Access-Permissions</value>
-                    </property>
-                    <!-- Configure DDS:Access:Permissions plugin -->
-                    <property>
-                        <name>dds.sec.access.builtin.Access-Permissions.permissions_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
-                    </property>
-                    <property>
-                        <name>dds.sec.access.builtin.Access-Permissions.governance</name>
-                        <value>file:///certs/governance.smime</value>
-                    </property>
-                    <property>
-                        <name>dds.sec.access.builtin.Access-Permissions.permissions</name>
-                        <value>file:///certs/permissions_lan1.smime</value>
-                    </property>
-
-                    <!-- Activate DDS:Crypto:AES-GCM-GMAC plugin -->
-                    <property>
-                        <name>dds.sec.crypto.plugin</name>
-                        <value>builtin.AES-GCM-GMAC</value>
-                    </property>
-
-                </properties>
-            </propertiesPolicy>
-        </rtps>
-    </participant>
-
-    <participant profile_name="secure_wan_client">
-        <rtps>
-            <propertiesPolicy>
-                <properties>
-
-                    <!-- Activate DDS:Auth:PKI-DH plugin -->
-                    <property>
-                        <name>dds.sec.auth.plugin</name>
-                        <value>builtin.PKI-DH</value>
-                    </property>
-                    <!-- Configure DDS:Auth:PKI-DH plugin -->
-                    <property>
-                        <name>dds.sec.auth.builtin.PKI-DH.identity_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
-                    </property>
-                    <property>
-                        <name>dds.sec.auth.builtin.PKI-DH.identity_certificate</name>
-                        <value>file:///certs/routercert.pem</value>
-                    </property>
-                    <property>
-                        <name>dds.sec.auth.builtin.PKI-DH.private_key</name>
-                        <value>file:///certs/routerkey.pem</value>
+                        <value>file:///certs/serverkey.pem</value>
                     </property>
 
                     <!-- Activate DDS:Access:Permissions plugin -->
@@ -160,11 +114,23 @@
 
                 </properties>
             </propertiesPolicy>
-        </rtps>
-    </participant>
 
-    <participant profile_name="non_secure_wan_client">
-        <rtps>
+            <!-- WAN SERVER CONFIGURATION -->
+            <useBuiltinTransports>false</useBuiltinTransports>
+            <userTransports>
+                <transport_id>custom_transport</transport_id>
+            </userTransports>
+            <builtin>
+                <metatrafficUnicastLocatorList>
+                    <locator>
+                        <udpv4>
+                            <address>ddsrouter_server_secure_0</address>
+                            <port>11810</port>
+                        </udpv4>
+                    </locator>
+                </metatrafficUnicastLocatorList>
+            </builtin>
+
         </rtps>
     </participant>
 
