@@ -20,6 +20,7 @@ set(TEST_NAME YamlGetCommonParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetCommonParticipantConfigurationTest.cpp
     )
 
@@ -53,6 +54,7 @@ set(TEST_NAME YamlGetSimpleParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetSimpleParticipantConfigurationTest.cpp
     )
 
@@ -72,11 +74,18 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
 
 ##########################################################
 # Yaml GetConfigurations DiscoveryServerParticipant Test #
@@ -86,6 +95,7 @@ set(TEST_NAME YamlGetDiscoveryServerParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetDiscoveryServerParticipantConfigurationTest.cpp
     )
 
@@ -114,11 +124,18 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
 
 ##########################################################
 # Yaml GetConfigurations InitialPeersParticipant Test #
@@ -128,6 +145,7 @@ set(TEST_NAME YamlGetInitialPeersParticipantConfigurationTest)
 
 set(TEST_SOURCES
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
         YamlGetInitialPeersParticipantConfigurationTest.cpp
     )
 
@@ -147,8 +165,15 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+set(TEST_NEEDED_SOURCES "")
+
+set(TEST_EXTRA_HEADERS
+        ${PROJECT_SOURCE_DIR}/test/unittest/TestUtils)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")

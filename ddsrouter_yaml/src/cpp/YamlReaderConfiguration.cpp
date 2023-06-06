@@ -36,7 +36,14 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         if (ddspipe::yaml::YamlReader::is_tag_present(yml, ddspipe::yaml::VERSION_TAG))
         {
             version = ddspipe::yaml::YamlReader::get<ddspipe::yaml::YamlReaderVersion>(yml, ddspipe::yaml::VERSION_TAG,
-                            ddspipe::yaml::LATEST);
+                            ddspipe::yaml::YamlReaderVersion::LATEST);
+
+            if (version == ddspipe::yaml::YamlReaderVersion::V_1_0)
+            {
+                throw eprosima::utils::ConfigurationException(
+                          utils::Formatter() <<
+                              "Yaml configuration v1.0 not supported. Please update to latest available version.");
+            }
         }
         else
         {

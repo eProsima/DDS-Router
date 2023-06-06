@@ -32,15 +32,11 @@ with future releases.
         - String in ``version`` tag
         - |ddsrouter| activation release
 
-    *   - version 1.0
-        - ``v1.0``
-        - *v0.1.0*
-
     *   - version 2.0
         - ``v2.0``
         - *v0.2.0*
 
-    *   - version 3.0
+    *   - version 3.0 (default)
         - ``v3.0``
         - *v0.3.0*
 
@@ -49,12 +45,17 @@ This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when tag ``version`` is not set is *v1.0*.
+    The current default version when tag ``version`` is not set is *v3.0*.
 
 .. warning::
 
     **Deprecation Warning**.
     In future releases tag ``version`` will be mandatory.
+
+.. warning::
+
+    **Deprecation warning**.
+    Update to `v3.0` version as `v1.0` is no longer supported.
 
 
 .. _thread_configuration:

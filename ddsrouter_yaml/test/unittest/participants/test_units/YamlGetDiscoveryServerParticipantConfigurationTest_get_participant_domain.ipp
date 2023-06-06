@@ -23,9 +23,11 @@
 
 #include <ddspipe_yaml/testing/generate_yaml.hpp>
 
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
+#include <test_utils.hpp>
+
 using namespace eprosima;
-using namespace eprosima::ddspipe;
-using namespace eprosima::ddspipe::yaml;
 
 /**
  * Test get Participant Configuration from yaml specifing domain
@@ -38,9 +40,9 @@ using namespace eprosima::ddspipe::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
-    core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::discovery_server;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
+    ddspipe::core::types::GuidPrefix guid_prefix = ddspipe::core::testing::random_guid_prefix();
 
     // specify domain
     {
@@ -48,20 +50,21 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add domain
-        core::types::DomainId domain = eprosima::ddsrouter::test::random_domain();
-        yaml::test::domain_to_yaml(yml_participant, domain);
+        ddspipe::core::types::DomainId domain = ddspipe::core::testing::random_domain();
+        ddspipe::yaml::testing::domain_to_yaml(yml_participant, domain);
 
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::DiscoveryServerParticipantConfiguration result =
-                YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant",
-                        LATEST);
+        ddspipe::participants::DiscoveryServerParticipantConfiguration result =
+                ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
+                        "participant",
+                        ddspipe::yaml::YamlReaderVersion::LATEST);
 
         // Check result
         ASSERT_EQ(domain, result.domain);
@@ -73,9 +76,9 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add incorrect domain
         yml_participant["domain"] = "DOMAIN";
@@ -84,8 +87,9 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_domain)
 
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
-            core::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            eprosima::utils::ConfigurationException);
+            ddspipe::participants::DiscoveryServerParticipantConfiguration result =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
+            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
+            utils::ConfigurationException);
     }
 }
