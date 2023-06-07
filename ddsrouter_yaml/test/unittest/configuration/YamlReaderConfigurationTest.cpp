@@ -17,13 +17,12 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddspipe_yaml/yaml_configuration_tags.hpp>
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
+
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
-#include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 
-#include "../YamlConfigurationTestUtils.hpp"
-
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima;
 
 /**
  * Test load a whole DDS Router Configuration from yaml node for v1.0 of yaml.
@@ -31,7 +30,7 @@ using namespace eprosima::ddsrouter::yaml;
  * CASES:
  * - trivial configuration
  */
-TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
+TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
 {
     std::vector<const char*> yml_configurations =
     {
@@ -39,9 +38,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
         R"(
         version: v1.0
         participant1:
-          type: "void"
+          type: "echo"
         participant2:
-          type: "void"
+          type: "echo"
         )",
     };
 
@@ -50,12 +49,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v1)
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check is valid
-        eprosima::utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
+        ASSERT_THROW(
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
 }
 
@@ -75,9 +71,9 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
         version: v2.0
         participants:
           - name: "P1"
-            kind: "void"
+            kind: "echo"
           - name: "P2"
-            kind: "void"
+            kind: "echo"
         )",
 
         // ROS common configuration
@@ -104,66 +100,44 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check is valid
-        eprosima::utils::Formatter error_msg;
+        utils::Formatter error_msg;
         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 }
 
 /**
  * Do not set Yaml version and get default configuration
- * (currently default is v1.0)
+ * (currently default is v3.0)
  *
  * CASES:
- * - trivial configuration of v1.0
- * - trivial configuration of v2.0 fails
+ * - trivial configuration of v3.0
  */
 TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
 {
-    // trivial configuration of v1.0
-    {
-        const char* yml_configuration =
-                R"(
-            participant1:
-              type: "void"
-            participant2:
-              type: "void"
-            )";
-
-        Yaml yml = YAML::Load(yml_configuration);
-
-        // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check is valid
-        eprosima::utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
-    }
-
-    // trivial configuration of v2.0 fails
+    // trivial configuration of v3.0
     {
         const char* yml_configuration =
                 R"(
             participants:
               - name: "P1"
-                kind: "void"
+                kind: "echo"
               - name: "P2"
-                kind: void"
+                kind: "echo"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
-        // Check is not valid
-        eprosima::utils::Formatter error_msg;
-        ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
+        // Check is valid
+        utils::Formatter error_msg;
+        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
     }
 }
 
@@ -172,8 +146,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
  *
  * CASES:
  * - not existing version
- * - not correct version: specify v1.0 and is v2.0
- * - not correct version: specify v2.0 and is v1.0
+ * - get wrongly defined yaml with default version (v3.0)
  */
 TEST(YamlReaderConfigurationTest, version_negative_cases)
 {
@@ -185,61 +158,34 @@ TEST(YamlReaderConfigurationTest, version_negative_cases)
             version: v0.0
             participants:
               - name: "P1"
-                kind: "void"
+                kind: "echo"
               - name: "P2"
-                kind: void"
+                kind: "echo"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
 
         // Load configuration
         ASSERT_THROW(
-            YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            eprosima::utils::ConfigurationException);
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
-
-    // not correct version: specify v1.0 and is v2.0
+    // trivial configuration of default version is not correct
     {
-        // trivial configuration
         const char* yml_configuration =
                 R"(
-            version: v1.0
-            participants:
               - name: "P1"
-                kind: "void"
+                kind: "echo"
               - name: "P2"
-                kind: void"
+                kind: "echo"
             )";
 
         Yaml yml = YAML::Load(yml_configuration);
 
-        // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check is not valid
-        eprosima::utils::Formatter error_msg;
-        ASSERT_FALSE(configuration_result.is_valid(error_msg)) << error_msg;
-    }
-
-    // not correct version: specify v2.0 and is v1.0
-    {
-        // trivial configuration
-        const char* yml_configuration =
-                R"(
-            version: v2.0
-            participant1:
-              type: "void"
-            participant2:
-              type: "void"
-            )";
-
-        Yaml yml = YAML::Load(yml_configuration);
-
-        // Load configuration
+        // Load configuration and check is not valid
         ASSERT_THROW(
-            YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            eprosima::utils::ConfigurationException);
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+            utils::ConfigurationException);
     }
 }
 
@@ -257,9 +203,9 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
         version: v3.0
         participants:
           - name: "P1"
-            kind: "void"
+            kind: "echo"
           - name: "P2"
-            kind: "void"
+            kind: "echo"
         )";
     Yaml yml = YAML::Load(yml_configuration);
 
@@ -268,12 +214,12 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     for (unsigned int test_case : test_cases)
     {
         Yaml yml_specs;
-        yml_specs[NUMBER_THREADS_TAG] = test_case;
-        yml[SPECS_TAG] = yml_specs;
+        yml_specs[ddspipe::yaml::NUMBER_THREADS_TAG] = test_case;
+        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check threads are correct
         ASSERT_EQ(test_case, configuration_result.advanced_options.number_of_threads);
@@ -294,9 +240,9 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
         version: v3.0
         participants:
           - name: "P1"
-            kind: "void"
+            kind: "echo"
           - name: "P2"
-            kind: "void"
+            kind: "echo"
         )";
     Yaml yml = YAML::Load(yml_configuration);
 
@@ -305,12 +251,12 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
     for (unsigned int test_case : test_cases)
     {
         Yaml yml_specs;
-        yml_specs[MAX_HISTORY_DEPTH_TAG] = test_case;
-        yml[SPECS_TAG] = yml_specs;
+        yml_specs[ddspipe::yaml::MAX_HISTORY_DEPTH_TAG] = test_case;
+        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
-        core::configuration::DDSRouterConfiguration configuration_result =
-                YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
         ASSERT_EQ(test_case, configuration_result.advanced_options.max_history_depth);

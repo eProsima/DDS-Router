@@ -13,22 +13,19 @@
 # limitations under the License.
 
 #####################################
-# Yaml DDSRouter Configuration Test #
+# Yaml DdsRouter Configuration Test #
 #####################################
 
 set(TEST_NAME YamlReaderConfigurationTest)
 
 set(TEST_SOURCES
         YamlReaderConfigurationTest.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/yaml_configuration_tags.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlManager.cpp
-        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
-        ${PROJECT_SOURCE_DIR}/test/TestUtils/test_utils.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
     )
 
 set(TEST_LIST
-        get_ddsrouter_configuration_v1
+        ddsrouter_configuration_v1_not_supported
         get_ddsrouter_configuration_v2
         get_ddsrouter_configuration_no_version
         version_negative_cases
@@ -41,6 +38,43 @@ set(TEST_EXTRA_LIBRARIES
         fastcdr
         fastrtps
         cpp_utils
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
+        ddsrouter_core
+    )
+
+add_unittest_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_EXTRA_LIBRARIES}")
+
+#####################################
+# Yaml DdsRouter Configuration Test #
+#####################################
+
+set(TEST_NAME YamlGetConfigurationDdsRouterTest)
+
+set(TEST_SOURCES
+        YamlGetConfigurationDdsRouterTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
+    )
+
+set(TEST_LIST
+        get_ddsrouter_configuration_trivial
+        get_ddsrouter_configuration_ros_case
+    )
+
+set(TEST_EXTRA_LIBRARIES
+        yaml-cpp
+        fastcdr
+        fastrtps
+        cpp_utils
+        ddspipe_core
+        ddspipe_participants
+        ddspipe_yaml
         ddsrouter_core
     )
 

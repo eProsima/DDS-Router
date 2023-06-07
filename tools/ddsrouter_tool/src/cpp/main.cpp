@@ -17,8 +17,6 @@
  *
  */
 
-#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/core/DDSRouter.hpp>
 #include <cpp_utils/event/FileWatcherHandler.hpp>
 #include <cpp_utils/event/MultipleEventHandler.hpp>
 #include <cpp_utils/event/PeriodicEventHandler.hpp>
@@ -29,8 +27,11 @@
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
+
+#include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
+#include <ddsrouter_core/core/DdsRouter.hpp>
+
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
-#include <ddsrouter_yaml/YamlManager.hpp>
 
 #include "user_interface/constants.hpp"
 #include "user_interface/arguments_configuration.hpp"
@@ -142,16 +143,16 @@ int main(
         // DDS Router Initialization
 
         // Load DDS Router Configuration
-        core::configuration::DDSRouterConfiguration router_configuration =
+        core::DdsRouterConfiguration router_configuration =
                 yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
 
         // Create DDS Router
-        core::DDSRouter router(router_configuration);
+        core::DdsRouter router(router_configuration);
 
         /////
         // File Watcher Handler
 
-        // Callback will reload configuration and pass it to DDSRouter
+        // Callback will reload configuration and pass it to DdsRouter
         // WARNING: it is needed to pass file_path, as FileWatcher only retrieves file_name
         std::function<void(std::string)> filewatcher_callback =
                 [&router, file_path]
@@ -163,7 +164,7 @@ int main(
 
                     try
                     {
-                        core::configuration::DDSRouterConfiguration router_configuration =
+                        core::DdsRouterConfiguration router_configuration =
                                 yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                         router.reload_configuration(router_configuration);
                     }
@@ -187,7 +188,7 @@ int main(
         // If reload time is higher than 0, create a periodic event to reload configuration
         if (reload_time > 0)
         {
-            // Callback will reload configuration and pass it to DDSRouter
+            // Callback will reload configuration and pass it to DdsRouter
             std::function<void()> periodic_callback =
                     [&router, file_path]
                         ()
@@ -198,7 +199,7 @@ int main(
 
                         try
                         {
-                            core::configuration::DDSRouterConfiguration router_configuration =
+                            core::DdsRouterConfiguration router_configuration =
                                     yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
                             router.reload_configuration(router_configuration);
                         }

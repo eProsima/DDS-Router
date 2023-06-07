@@ -1,4 +1,4 @@
-// Copyright 2021 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,76 +18,70 @@
  */
 
 #include <cpp_utils/exception/ConfigurationException.hpp>
-#include <cpp_utils/exception/UnsupportedException.hpp>
-#include <cpp_utils/Log.hpp>
-
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/EchoParticipantConfiguration.hpp>
 #include <cpp_utils/utils.hpp>
 
-#include <core/ParticipantFactory.hpp>
-#include <participant/implementations/auxiliar/DummyParticipant.hpp>
-#include <participant/implementations/auxiliar/EchoParticipant.hpp>
-#include <participant/implementations/auxiliar/BlankParticipant.hpp>
-#include <participant/implementations/rtps/SimpleParticipant.hpp>
-#include <participant/implementations/rtps/InitialPeersParticipant.hpp>
-#include <participant/implementations/rtps/DiscoveryServerParticipant.hpp>
+#include <ddspipe_core/dynamic/DiscoveryDatabase.hpp>
+#include <ddspipe_core/dynamic/ParticipantsDatabase.hpp>
+#include <ddspipe_core/efficiency/payload/PayloadPool.hpp>
+#include <ddspipe_core/interface/IParticipant.hpp>
+#include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/EchoParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/participant/auxiliar/EchoParticipant.hpp>
+#include <ddspipe_participants/participant/rtps/DiscoveryServerParticipant.hpp>
+#include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
+#include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
+
+#include <ddsrouter_core/types/ParticipantKind.hpp>
+#include <ddsrouter_core/core/ParticipantFactory.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-using namespace eprosima::ddsrouter::core::types;
-using namespace eprosima::ddsrouter::core::configuration;
-
-std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
-        std::shared_ptr<configuration::ParticipantConfiguration> participant_configuration,
-        std::shared_ptr<PayloadPool> payload_pool,
-        std::shared_ptr<DiscoveryDatabase> discovery_database)
+std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_participant(
+        const types::ParticipantKind& kind,
+        const std::shared_ptr<ddspipe::participants::ParticipantConfiguration>& participant_configuration,
+        const std::shared_ptr<ddspipe::core::PayloadPool>& payload_pool,
+        const std::shared_ptr<ddspipe::core::DiscoveryDatabase>& discovery_database)
 {
     // Create a new Participant depending on the ParticipantKind specified by the configuration
-    switch (participant_configuration->kind)
+    switch (kind)
     {
-        case ParticipantKind::blank:
-            // BlankParticipant
-            return std::make_shared<BlankParticipant>(participant_configuration->id);
-
-        case ParticipantKind::dummy:
-            // DummyParticipant
-            return std::make_shared<DummyParticipant>(participant_configuration, payload_pool, discovery_database);
-
-        case ParticipantKind::echo:
+        case types::ParticipantKind::echo:
             // Echo Participant
         {
-            std::shared_ptr<configuration::EchoParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<configuration::EchoParticipantConfiguration>(
+            std::shared_ptr<ddspipe::participants::EchoParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<ddspipe::participants::EchoParticipantConfiguration>(
                 participant_configuration);
             if (!conf_)
             {
                 throw utils::ConfigurationException(
                           utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
-                              " is not for Participant Kind: " << participant_configuration->kind);
+                              " is not for Participant Kind: " << kind);
             }
 
-            return std::make_shared<EchoParticipant> (
+            return std::make_shared<ddspipe::participants::EchoParticipant> (
                 conf_,
                 discovery_database);
         }
 
-        case ParticipantKind::simple_rtps:
+        case types::ParticipantKind::simple:
             // Simple RTPS Participant
         {
-            std::shared_ptr<configuration::SimpleParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<configuration::SimpleParticipantConfiguration>(
+            std::shared_ptr<ddspipe::participants::SimpleParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<ddspipe::participants::SimpleParticipantConfiguration>(
                 participant_configuration);
             if (!conf_)
             {
                 throw utils::ConfigurationException(
                           utils::Formatter() << "Configuration from Participant: " << participant_configuration->id <<
-                              " is not for Participant Kind: " << participant_configuration->kind);
+                              " is not for Participant Kind: " << kind);
             }
 
-            auto participant = std::make_shared<rtps::SimpleParticipant> (
+            auto participant = std::make_shared<ddspipe::participants::rtps::SimpleParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
@@ -98,22 +92,21 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return participant;
         }
 
-        case ParticipantKind::local_discovery_server:
-        case ParticipantKind::wan_discovery_server:
+        case types::ParticipantKind::discovery_server:
             // Discovery Server RTPS Participant
         {
-            std::shared_ptr<configuration::DiscoveryServerParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<configuration::DiscoveryServerParticipantConfiguration>(
+            std::shared_ptr<ddspipe::participants::DiscoveryServerParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<ddspipe::participants::DiscoveryServerParticipantConfiguration>(
                 participant_configuration);
             // TMP: Until Transparency TopicQoS module is available
             if (!conf_)
             {
                 throw utils::ConfigurationException(
                           utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
-                              participant_configuration->kind);
+                              kind);
             }
 
-            auto participant =  std::make_shared<rtps::DiscoveryServerParticipant> (
+            auto participant =  std::make_shared<ddspipe::participants::rtps::DiscoveryServerParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
@@ -124,21 +117,21 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
             return participant;
         }
 
-        case ParticipantKind::wan_initial_peers:
+        case types::ParticipantKind::initial_peers:
             // Initial Peers RTPS Participant
         {
-            std::shared_ptr<configuration::InitialPeersParticipantConfiguration> conf_ =
-                    std::dynamic_pointer_cast<configuration::InitialPeersParticipantConfiguration>(
+            std::shared_ptr<ddspipe::participants::InitialPeersParticipantConfiguration> conf_ =
+                    std::dynamic_pointer_cast<ddspipe::participants::InitialPeersParticipantConfiguration>(
                 participant_configuration);
             // TMP: Until Transparency TopicQoS module is available
             if (!conf_)
             {
                 throw utils::ConfigurationException(
                           utils::Formatter() << "Configuration from Participant: " << participant_configuration->id << " is not for Participant Kind: " <<
-                              participant_configuration->kind);
+                              kind);
             }
 
-            auto participant =  std::make_shared<rtps::InitialPeersParticipant> (
+            auto participant =  std::make_shared<ddspipe::participants::rtps::InitialPeersParticipant> (
                 conf_,
                 payload_pool,
                 discovery_database);
@@ -148,10 +141,6 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
 
             return participant;
         }
-
-        case ParticipantKind::invalid:
-            throw utils::ConfigurationException(utils::Formatter() << "Kind: " << participant_configuration->kind
-                                                                   << " is not a valid participant kind name.");
 
         default:
             // This should not happen as every kind must be in the switch
@@ -159,13 +148,6 @@ std::shared_ptr<IParticipant> ParticipantFactory::create_participant(
                 utils::Formatter() << "Value of ParticipantKind out of enumeration.");
             return nullptr; // Unreachable code
     }
-}
-
-void ParticipantFactory::remove_participant(
-        std::shared_ptr<IParticipant> participant)
-{
-    // Currently there are no Participants that requires specific remove functionality.
-    // Add it in a switch case if in the future some functionality is required.
 }
 
 } /* namespace core */

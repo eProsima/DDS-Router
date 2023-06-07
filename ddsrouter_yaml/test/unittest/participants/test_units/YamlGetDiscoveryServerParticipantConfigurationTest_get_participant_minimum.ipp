@@ -14,17 +14,23 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
+#include <ddspipe_core/testing/random_values.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+
+#include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
+
+#include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
+
+#include <ddsrouter_core/types/ParticipantKind.hpp>
+
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
-
-#include "../../YamlConfigurationTestUtils.hpp"
-
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima;
 
 /**
  * Test get Participant Configuration from yaml
@@ -34,35 +40,34 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum)
 {
-    for (core::types::ParticipantKind kind : core::types::ALL_VALID_PARTICIPANT_KINDS)
+    for (ddsrouter::core::types::ParticipantKind kind : ddsrouter::core::types::VALUES_ParticipantKind)
     {
-        for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+        for (uint32_t i = 0; i < ddsrouter::yaml::testing::TEST_ITERATIONS; i++)
         {
-            core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
-            for (int j = 0; j < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; j++)
+            ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id(i);
+            for (uint32_t j = 0; j < ddsrouter::yaml::testing::TEST_ITERATIONS; j++)
             {
-                core::types::GuidPrefix guid = eprosima::ddsrouter::test::random_guid_prefix(j);
+                ddspipe::core::types::GuidPrefix guid = ddspipe::core::testing::random_guid_prefix(j);
 
                 // Create a configuration with this kind and this id
                 Yaml yml;
                 Yaml yml_participant;
 
-                yaml::test::participantid_to_yaml(yml_participant, id);
-                yaml::test::participantkind_to_yaml(yml_participant, kind);
-                yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid);
+                ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+                ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+                ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid);
 
                 yml["participant"] = yml_participant;
 
                 // Read Yaml
-                core::configuration::DiscoveryServerParticipantConfiguration result =
-                        YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(
+                ddspipe::participants::DiscoveryServerParticipantConfiguration result =
+                        ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(
                     yml,
                     "participant",
-                    LATEST);
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
 
                 // Check result
                 ASSERT_EQ(id, result.id);
-                ASSERT_EQ(kind, result.kind);
                 ASSERT_EQ(guid, result.discovery_server_guid_prefix);
 
                 // Check default values
@@ -70,7 +75,7 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_minimum
                 ASSERT_EQ(result.listening_addresses.size(), 0u);
                 ASSERT_FALSE(result.tls_configuration.is_active());
                 ASSERT_EQ(
-                    core::configuration::DiscoveryServerParticipantConfiguration().domain,
+                    ddspipe::participants::DiscoveryServerParticipantConfiguration().domain,
                     result.domain);
             }
         }

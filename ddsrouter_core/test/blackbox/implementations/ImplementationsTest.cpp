@@ -17,43 +17,32 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
-#include <test_utils.hpp>
 
+#include <cpp_utils/exception/InitializationException.hpp>
+#include <cpp_utils/exception/ConfigurationException.hpp>
+#include <cpp_utils/Log.hpp>
+#include <cpp_utils/utils.hpp>
 #include <cpp_utils/testing/LogChecker.hpp>
 
-#include <ddsrouter_core/core/DDSRouter.hpp>
-#include <cpp_utils/exception/ConfigurationException.hpp>
-#include <ddsrouter_core/configuration/DDSRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <cpp_utils/exception/InitializationException.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_core/types/dds/GuidPrefix.hpp>
-#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
-#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
-#include <cpp_utils/utils.hpp>
-#include <cpp_utils/Log.hpp>
+#include <ddsrouter_core/core/DdsRouter.hpp>
+#include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
+#include <ddsrouter_core/testing/random_values.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
 namespace test {
 
 constexpr const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
 constexpr const unsigned int DEFAULT_MAX_HISTORY_DEPTH = 100;
 
 } /* namespace test */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
 
-using namespace eprosima::ddsrouter;
+using namespace eprosima;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
+using namespace eprosima::ddsrouter::core::testing;
 
 /**
- * Test that creates a DDSRouter with a Pair of Participants of same kind.
- * It creates a DDSRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
+ * Test that creates a DdsRouter with a Pair of Participants of same kind.
+ * It creates a DdsRouter with two Participants of same kind, starts it, then stops it and finally destroys it.
  *
  * This test will fail if it crashes.
  */
@@ -67,39 +56,39 @@ TEST(ImplementationsTest, pair_implementation)
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     // For each Participant Kind
-    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
+    for (ParticipantKind kind : VALUES_ParticipantKind)
     {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(test::random_participant_configuration(kind, 1));
-        participant_configurations.insert(test::random_participant_configuration(kind, 2));
-
-        configuration::SpecsConfiguration specs;
-        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
-        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
-
         // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsTopic>>(),
-            participant_configurations,
-            specs);
+        DdsRouterConfiguration configuration;
+        configuration.participants_configurations.insert(
+        {
+            kind,
+            random_participant_configuration(kind, 0)
+        }
+            );
+        configuration.participants_configurations.insert(
+        {
+            kind,
+            random_participant_configuration(kind, 1)
+        }
+            );
 
-        // Create DDSRouter entity
-        DDSRouter router(configuration);
-        // Start DDSRouter
+        // Create DdsRouter entity
+        DdsRouter router(configuration);
+
+        // Start DdsRouter
         router.start();
 
         // Stop DDS Router
         router.stop();
 
-        // Let DDSRouter object destroy for the next iteration
+        // Let DdsRouter object destroy for the next iteration
     }
 }
 
 /**
- * Test that creates a DDSRouter with a Pair of Participants of same kind.
- * It creates a DDSRouter with two Participants of same kind, starts it with an active topic,
+ * Test that creates a DdsRouter with a Pair of Participants of same kind.
+ * It creates a DdsRouter with two Participants of same kind, starts it with an active topic,
  * then stops it and finally destroys it.
  *
  * This test will fail if it crashes.
@@ -114,43 +103,46 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     // For each Participant kind
-    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
+    for (ParticipantKind kind : VALUES_ParticipantKind)
     {
-        std::set<std::shared_ptr<DdsTopic>> builtin_topics = test::topic_set(
-            {test::DdsTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
-
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(test::random_participant_configuration(kind, 1));
-        participant_configurations.insert(test::random_participant_configuration(kind, 2));
-
-        configuration::SpecsConfiguration specs;
-        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
-        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
-
         // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            builtin_topics,
-            participant_configurations,
-            specs);
+        DdsRouterConfiguration configuration;
+        configuration.participants_configurations.insert(
+        {
+            kind,
+            random_participant_configuration(kind, 0)
+        }
+            );
+        configuration.participants_configurations.insert(
+        {
+            kind,
+            random_participant_configuration(kind, 1)
+        }
+            );
 
-        // Create DDSRouter entity
-        DDSRouter router(configuration);
+        // Add topic
+        eprosima::ddspipe::core::types::DdsTopic topic;
+        topic.m_topic_name = "rt/chatter";
+        topic.type_name = "std_msgs::msg::dds_::String_";
+        configuration.builtin_topics.insert(
+            utils::Heritable<eprosima::ddspipe::core::types::DdsTopic>::make_heritable(topic));
 
-        // Start DDSRouter
+        // Create DdsRouter entity
+        DdsRouter router(configuration);
+
+        // Start DdsRouter
         router.start();
 
         // Stop DDS Router
         router.stop();
 
-        // Let DDSRouter object destroy for the next iteration
+        // Let DdsRouter object destroy for the next iteration
     }
 }
 
 /**
- * Test that creates a DDSRouter with several Participants, one of each kind
- * It creates a DDSRouter with a Participant of each kind,
+ * Test that creates a DdsRouter with several Participants, one of each kind
+ * It creates a DdsRouter with a Participant of each kind,
  * starts it with an active topic, then stops it and finally destroys it.
  *
  * This test will fail if it crashes.
@@ -165,76 +157,58 @@ TEST(ImplementationsTest, all_implementations)
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
     {
-        // Set topic to active
-        std::set<std::shared_ptr<DdsTopic>> builtin_topics = test::topic_set(
-            {test::DdsTopicInput("rt/chatter", "std_msgs::msg::dds_::String_", false, false, false, false)});
-
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-
-        uint16_t participant_number = 0;
+        DdsRouterConfiguration configuration;
 
         // For each Participant Kind set it in configuration
-        for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
+        uint16_t participant_number = 0;
+        for (ParticipantKind kind : VALUES_ParticipantKind)
         {
             // Add participant
-            participant_configurations.insert(test::random_participant_configuration(kind, participant_number++));
+            configuration.participants_configurations.insert(
+            {
+                kind,
+                random_participant_configuration(kind, participant_number++)
+            }
+                );
         }
 
-        configuration::SpecsConfiguration specs;
-        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
-        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
+        // Create DdsRouter entity
+        DdsRouter router(configuration);
 
-        // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsTopic>>(),
-            participant_configurations,
-            specs);
-
-        // Create DDSRouter entity
-        DDSRouter router(configuration);
-
-        // Start DDSRouter
+        // Start DdsRouter
         router.start();
 
         // Stop DDS Router
         router.stop();
 
-        // Let DDSRouter object destroy for the next iteration
+        // Let DdsRouter object destroy for the next iteration
     }
 }
 
 /**
- * Test that creates a DDSRouter with 3 simple configurations, 2 of them with same id, fails
+ * Test that creates a DdsRouter with 3 simple configurations, 2 of them with same id, fails
  *
  * There is no easy way to test this case as the yaml will be ill-formed with two keys.
  * Thus, it must be implemented from a yaml in string format.
  */
-TEST(ImplementationsTest, duplicated_ids)
+TEST(ImplementationsTest, duplicated_ids_negative)
 {
-    // For each Participant Kind
-    for (ParticipantKind kind : ALL_VALID_PARTICIPANT_KINDS)
+    DdsRouterConfiguration configuration;
+    configuration.participants_configurations.insert(
     {
-        std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participant_configurations;
-        participant_configurations.insert(test::random_participant_configuration(kind, 0));
-        participant_configurations.insert(test::random_participant_configuration(kind, 0));
-
-        configuration::SpecsConfiguration specs;
-        specs.max_history_depth = test::DEFAULT_MAX_HISTORY_DEPTH;
-        specs.number_of_threads = test::DEFAULT_THREAD_POOL_SIZE;
-
-        // Generate configuration
-        configuration::DDSRouterConfiguration configuration(
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsFilterTopic>>(),
-            std::set<std::shared_ptr<DdsTopic>>(),
-            participant_configurations,
-            specs);
-
-        // Create DDSRouter entity
-        ASSERT_THROW(DDSRouter router(configuration), eprosima::utils::ConfigurationException) << kind;
+        ParticipantKind::simple,
+        random_participant_configuration(ParticipantKind::simple, 0)
     }
+        );
+    configuration.participants_configurations.insert(
+    {
+        ParticipantKind::simple,
+        random_participant_configuration(ParticipantKind::simple, 0)
+    }
+        );
+
+    // Create DdsRouter entity
+    ASSERT_THROW(DdsRouter router(configuration), eprosima::utils::ConfigurationException);
 }
 
 int main(

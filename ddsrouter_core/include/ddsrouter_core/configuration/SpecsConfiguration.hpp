@@ -12,33 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file SpecsConfiguration.hpp
- */
-
-#ifndef _DDSROUTERCORE_CONFIGURATION_SPECSCONFIGURATION_HPP_
-#define _DDSROUTERCORE_CONFIGURATION_SPECSCONFIGURATION_HPP_
+#pragma once
 
 #include <memory>
 #include <set>
 
 #include <cpp_utils/Formatter.hpp>
 
-#include <ddsrouter_core/configuration/BaseConfiguration.hpp>
+#include <ddspipe_core/configuration/IConfiguration.hpp>
+#include <ddspipe_core/types/dds/TopicQoS.hpp>
+
 #include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/types/dds/TopicQoS.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
-namespace configuration {
 
 /**
  * This data struct contains the values for advance configuration of the DDS Router such as:
  * - Number of threads to Thread Pool
  * - Default maximum history depth
  */
-struct SpecsConfiguration : public BaseConfiguration
+struct SpecsConfiguration : public ddspipe::core::IConfiguration
 {
 
     /////////////////////////
@@ -51,7 +46,7 @@ struct SpecsConfiguration : public BaseConfiguration
     // METHODS
     /////////////////////////
 
-    DDSROUTER_CORE_DllAPI bool is_valid(
+    DDSROUTER_CORE_DllAPI virtual bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
 
     /////////////////////////
@@ -65,12 +60,9 @@ struct SpecsConfiguration : public BaseConfiguration
      *
      * @note Default value is 5000 as in Fast DDS.
      */
-    types::HistoryDepthType max_history_depth = 5000;
+    ddspipe::core::types::HistoryDepthType max_history_depth = 5000;
 };
 
-} /* namespace configuration */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */
-
-#endif /* _DDSROUTERCORE_CONFIGURATION_SPECSCONFIGURATION_HPP_ */

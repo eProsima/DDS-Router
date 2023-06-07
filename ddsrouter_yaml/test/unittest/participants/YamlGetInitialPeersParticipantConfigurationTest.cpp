@@ -14,18 +14,22 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
+#include <ddspipe_core/testing/random_values.hpp>
+
+#include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
+
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+
+#include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
+
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/configuration/participant/InitialPeersParticipantConfiguration.hpp>
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
-
-#include "../YamlConfigurationTestUtils.hpp"
-
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima;
 
 /**
  * Test get Participant Configuration from yaml
@@ -35,38 +39,37 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::wan_initial_peers);
-    for (int i = 0; i < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; i++)
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::initial_peers;
+    for (uint32_t i = 0; i < ddsrouter::yaml::testing::TEST_ITERATIONS; i++)
     {
-        core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
-        for (int j = 0; j < eprosima::ddsrouter::test::TEST_NUMBER_ITERATIONS; j++)
+        ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id(i);
+        for (uint32_t j = 0; j < ddsrouter::yaml::testing::TEST_ITERATIONS; j++)
         {
             // Create a configuration with this kind and this id
             Yaml yml;
             Yaml yml_participant;
 
-            yaml::test::participantid_to_yaml(yml_participant, id);
-            yaml::test::participantkind_to_yaml(yml_participant, kind);
+            ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+            ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
 
             yml["participant"] = yml_participant;
 
             // Read Yaml
-            core::configuration::InitialPeersParticipantConfiguration result =
-                    YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(
+            ddspipe::participants::InitialPeersParticipantConfiguration result =
+                    ddspipe::yaml::YamlReader::get<ddspipe::participants::InitialPeersParticipantConfiguration>(
                 yml,
                 "participant",
-                LATEST);
+                ddspipe::yaml::YamlReaderVersion::LATEST);
 
             // Check result
             ASSERT_EQ(id, result.id);
-            ASSERT_EQ(kind, result.kind);
 
             // Check default values
             ASSERT_EQ(result.connection_addresses.size(), 0u);
             ASSERT_EQ(result.listening_addresses.size(), 0u);
             ASSERT_FALSE(result.tls_configuration.is_active());
             ASSERT_EQ(
-                core::configuration::InitialPeersParticipantConfiguration().domain,
+                ddspipe::participants::InitialPeersParticipantConfiguration().domain,
                 result.domain);
         }
     }
@@ -85,8 +88,8 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_minimum)
  */
 TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::wan_initial_peers);
-    core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id();
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::initial_peers;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
 
     // default
     {
@@ -94,15 +97,16 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
 
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
-                        LATEST);
+        ddspipe::participants::InitialPeersParticipantConfiguration result =
+                ddspipe::yaml::YamlReader::get<ddspipe::participants::InitialPeersParticipantConfiguration>(yml,
+                        "participant",
+                        ddspipe::yaml::YamlReaderVersion::LATEST);
 
         // Check result
         ASSERT_FALSE(result.is_repeater);
@@ -114,18 +118,19 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
 
         // Add repeater attribute
-        yaml::test::repeater_to_yaml(yml_participant, true);
+        ddspipe::yaml::testing::repeater_to_yaml(yml_participant, true);
 
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
-                        LATEST);
+        ddspipe::participants::InitialPeersParticipantConfiguration result =
+                ddspipe::yaml::YamlReader::get<ddspipe::participants::InitialPeersParticipantConfiguration>(yml,
+                        "participant",
+                        ddspipe::yaml::YamlReaderVersion::LATEST);
 
         // Check result
         ASSERT_TRUE(result.is_repeater);
@@ -137,18 +142,19 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
 
         // Add repeater attribute
-        yaml::test::repeater_to_yaml(yml_participant, false);
+        ddspipe::yaml::testing::repeater_to_yaml(yml_participant, false);
 
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml
-        core::configuration::InitialPeersParticipantConfiguration result =
-                YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant",
-                        LATEST);
+        ddspipe::participants::InitialPeersParticipantConfiguration result =
+                ddspipe::yaml::YamlReader::get<ddspipe::participants::InitialPeersParticipantConfiguration>(yml,
+                        "participant",
+                        ddspipe::yaml::YamlReaderVersion::LATEST);
 
         // Check result
         ASSERT_FALSE(result.is_repeater);
@@ -160,18 +166,19 @@ TEST(YamlGetInitialPeersParticipantConfigurationTest, get_participant_repeater)
         Yaml yml_participant;
 
         // Add required fields
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
 
         // Add incorrect repeater
-        yml_participant[IS_REPEATER_TAG] = "ERROR";
+        yml_participant[ddspipe::yaml::IS_REPEATER_TAG] = "ERROR";
 
         yml["participant"] = yml_participant;
 
         // Get configuration object from yaml and expect fail
         ASSERT_THROW(
-            core::configuration::InitialPeersParticipantConfiguration result =
-            YamlReader::get<core::configuration::InitialPeersParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::participants::InitialPeersParticipantConfiguration result =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::InitialPeersParticipantConfiguration>(yml,
+            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

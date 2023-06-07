@@ -12,41 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * @file YamlReaderConfiguration.cpp
- *
- */
+#include <ddspipe_yaml/yaml_configuration_tags.hpp>
+#include <ddspipe_yaml/Yaml.hpp>
+#include <ddspipe_yaml/YamlManager.hpp>
+#include <ddspipe_yaml/YamlReader.hpp>
 
-#include <ddsrouter_core/configuration/participant/DiscoveryServerParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/ParticipantConfiguration.hpp>
-#include <ddsrouter_core/configuration/participant/SimpleParticipantConfiguration.hpp>
-#include <ddsrouter_core/types/topic/filter/DdsFilterTopic.hpp>
-#include <ddsrouter_core/types/topic/dds/DdsTopic.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
-#include <ddsrouter_yaml/Yaml.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
-#include <ddsrouter_yaml/YamlManager.hpp>
-#include <ddsrouter_yaml/yaml_configuration_tags.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace yaml {
 
-using namespace eprosima::ddsrouter::core;
-
-core::configuration::DDSRouterConfiguration
+core::DdsRouterConfiguration
 YamlReaderConfiguration::load_ddsrouter_configuration(
         const Yaml& yml)
 {
     try
     {
-        YamlReaderVersion version;
+        ddspipe::yaml::YamlReaderVersion version;
         // Get version if present
-        if (is_tag_present(yml, VERSION_TAG))
+        if (ddspipe::yaml::YamlReader::is_tag_present(yml, ddspipe::yaml::VERSION_TAG))
         {
-            version = get<YamlReaderVersion>(yml, VERSION_TAG, LATEST);
+            version = ddspipe::yaml::YamlReader::get<ddspipe::yaml::YamlReaderVersion>(yml, ddspipe::yaml::VERSION_TAG,
+                            ddspipe::yaml::YamlReaderVersion::LATEST);
+
+            if (version == ddspipe::yaml::YamlReaderVersion::V_1_0)
+            {
+                throw eprosima::utils::ConfigurationException(
+                          utils::Formatter() <<
+                              "Yaml configuration v1.0 not supported. Please update to latest available version.");
+            }
         }
         else
         {
@@ -54,14 +51,14 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
             version = default_yaml_version();
             logWarning(DDSROUTER_YAML,
                     "No version of yaml configuration given. Using version " << version << " by default. " <<
-                    "Add " << VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
+                    "Add " << ddspipe::yaml::VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
                     "in future releases.");
         }
         logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
         // Load DDS Router Configuration
-        core::configuration::DDSRouterConfiguration router_configuration =
-                yaml::YamlReader::get<core::configuration::DDSRouterConfiguration>(yml, version);
+        core::DdsRouterConfiguration router_configuration =
+                ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, version);
 
         return router_configuration;
     }
@@ -72,16 +69,16 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
     }
 }
 
-core::configuration::DDSRouterConfiguration
+core::DdsRouterConfiguration
 YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
         const std::string& file_path)
 {
-    yaml::Yaml yml;
+    Yaml yml;
 
     // Load file
     try
     {
-        yml = yaml::YamlManager::load_file(file_path);
+        yml = ddspipe::yaml::YamlManager::load_file(file_path);
     }
     catch (const std::exception& e)
     {
@@ -93,11 +90,11 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
     return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 }
 
-YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
+ddspipe::yaml::YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
 {
-    return V_1_0;
+    return ddspipe::yaml::V_3_0;
 }
 
-} /* namespace yaml */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
+} // namespace yaml
+} // namespace ddsrouter
+} // namespace eprosima

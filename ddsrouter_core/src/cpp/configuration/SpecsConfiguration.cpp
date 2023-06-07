@@ -1,4 +1,4 @@
-// Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+// Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
  *
  */
 
+#include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/Log.hpp>
+
 #include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
-namespace configuration {
 
 bool SpecsConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
@@ -41,7 +43,6 @@ bool SpecsConfiguration::is_valid(
     return true;
 }
 
-} /* namespace configuration */
 } /* namespace core */
 } /* namespace ddsrouter */
 } /* namespace eprosima */

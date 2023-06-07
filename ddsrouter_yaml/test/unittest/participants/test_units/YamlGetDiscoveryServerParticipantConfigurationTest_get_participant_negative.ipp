@@ -14,17 +14,19 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
+#include <ddspipe_core/testing/random_values.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+
+#include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
+
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
 #include <test_utils.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
-
-#include "../../YamlConfigurationTestUtils.hpp"
-
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima;
 
 /**
  * Test get DS Participant Configuration from yaml fail cases
@@ -37,9 +39,9 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negative)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::ParticipantId id(eprosima::ddsrouter::test::random_participant_id());
-    core::types::GuidPrefix ds_guid = eprosima::ddsrouter::test::random_guid_prefix();
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::discovery_server;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
+    ddspipe::core::types::GuidPrefix ds_guid = ddspipe::core::testing::random_guid_prefix();
 
     // empty
     {
@@ -50,8 +52,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
+            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -60,29 +62,14 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
         // Create structure
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, ds_guid);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, ds_guid);
         yml["participant"] = yml_participant;
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
-            eprosima::utils::ConfigurationException);
-    }
-
-    // no type
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, ds_guid);
-        yml["participant"] = yml_participant;
-
-        // Read Yaml
-        ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
+            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -90,14 +77,14 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
     {
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
         yml["participant"] = yml_participant;
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::DiscoveryServerParticipantConfiguration result =
-            YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
+            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

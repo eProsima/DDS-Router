@@ -68,13 +68,3 @@ add_blackbox_executable(
     "${TEST_LIST}"
     "${TEST_NEEDED_SOURCES}"
     "${TEST_EXTRA_HEADERS}")
-
-# Set flaky tests as xfail
-add_xfail_label(${CMAKE_CURRENT_SOURCE_DIR}/TEST_XFAIL.list)
-
-# Set as TSAN errors due to Fast DDS
-# TODO: use a cmake_utils macro
-file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/TEST_XTSAN.list TEST_LIST)
-foreach(XTSAN_TEST ${TEST_LIST})
-    set_property(TEST ${XTSAN_TEST} PROPERTY LABELS xtsan)
-endforeach()

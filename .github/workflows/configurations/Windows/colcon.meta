@@ -1,0 +1,34 @@
+{
+    "names":
+    {
+        "ddsrouter_participants":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_CXX_FLAGS='/WX /EHsc'",
+                "-Ax64",
+                "-T host=x64"
+            ]
+        },
+
+        "ddsrouter_yaml":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_CXX_FLAGS='/WX /EHsc'",
+                "-Ax64",
+                "-T host=x64"
+            ]
+        },
+
+        "ddsrouter_tool":
+        {
+            "cmake-args":
+            [
+                "-DCMAKE_CXX_FLAGS='/WX /EHsc'",
+                "-Ax64",
+                "-T host=x64"
+            ]
+        },
+    }
+}

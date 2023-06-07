@@ -1,0 +1,55 @@
+name: ddsrouter_dependencies_ubuntu
+description: Common first step for all jobs. Checkout repository, download dependencies and install required packages.
+
+inputs:
+
+  os:
+    description: Specify runs-on machine to download specific artifact
+    required: true
+
+  cmake_build_type:
+    description: Specify cmake_build_type option to download specific artifact
+    required: true
+
+  dependencies_artifact_postfix:
+    description: Specify artifact postfix in case it wants to use a manual one
+    required: false
+    default: _nightly
+
+  target_workspace:
+    description: Specify directory to download dependencies
+    required: false
+    default: ${{ github.workspace }}/install
+
+  # This must be passed as an argument because actions do not access to workflow secrets:
+  # Unrecognized named-value: 'secrets'. https://github.com/orgs/community/discussions/27054
+  # Pass argument {{ secrets.GITHUB_TOKEN }} from workflow
+  secret_token:
+    description: 'Secret token to authenticate the WebRequest so it not get a rate limit error.'
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install Fast DDS dependencies
+      uses: eProsima/eProsima-CI/multiplatform/install_fastdds_dependencies@v0
+      with:
+        cmake_build_type: ${{ inputs.cmake_build_type }}
+
+    - name: Install yaml cpp dependency
+      uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
+      with:
+        cmake_build_type: ${{ inputs.cmake_build_type }}
+
+    # In DDS Pipe artifact there are included Fast DDS and dev-utils
+    - name: Download dependencies artifact
+      uses: eProsima/eProsima-CI/multiplatform/download_dependency@v0
+      with:
+        artifact_name: built_ddspipe_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
+        workflow_source: build_ddspipe.yml
+        workflow_source_repository: eProsima/eProsima-CI
+        target_workspace: ${{ inputs.target_workspace }}
+        secret_token: ${{ inputs.secret_token }}
+        workflow_conclusion: completed

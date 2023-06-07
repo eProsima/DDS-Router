@@ -32,15 +32,11 @@ with future releases.
         - String in ``version`` tag
         - |ddsrouter| activation release
 
-    *   - version 1.0
-        - ``v1.0``
-        - *v0.1.0*
-
     *   - version 2.0
         - ``v2.0``
         - *v0.2.0*
 
-    *   - version 3.0
+    *   - version 3.0 (default)
         - ``v3.0``
         - *v0.3.0*
 
@@ -49,12 +45,17 @@ This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when tag ``version`` is not set is *v1.0*.
+    The current default version when tag ``version`` is not set is *v3.0*.
 
 .. warning::
 
     **Deprecation Warning**.
     In future releases tag ``version`` will be mandatory.
+
+.. warning::
+
+    **Deprecation warning**.
+    Update to `v3.0` version as `v1.0` is no longer supported.
 
 
 .. _thread_configuration:
@@ -134,8 +135,8 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
     *   - History Depth
         - ``depth``
         - *integer*
-        - *default value*
-        - -
+        - :ref:`history_depth_configuration`
+        - Writers and Readers History Depth
 
     *   - Partitions
         - ``partitions``
@@ -149,6 +150,15 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - ``false``
         - ``EXCLUSIVE_OWNERSHIP_QOS`` / ``SHARED_OWNERSHIP_QOS``
 
+    *   - Key
+        - ``keyed``
+        - *bool*
+        - ``false``
+        - Topic with / without key
+
+The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
+or not. See :term:`Topic` section for further information about the topic.
+
 
 .. code-block:: yaml
 
@@ -161,6 +171,7 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
           depth: 100         # Use History Depth 100
           partitions: true   # Topic with partitions
           ownership: false   # Use QoS SHARED_OWNERSHIP_QOS
+          keyed: false       # Topic without keys
 
 
 Topic Filtering
@@ -192,7 +203,7 @@ To define these data filtering rules based on the Topics to which they belong, t
 These three lists of topics listed above are defined by a tag in the *YAML* configuration file, which defines a
 *YAML* vector (``[]``).
 This vector contains the list of topics for each filtering rule.
-Each Topic is determined by its entries ``name``, ``type`` and ``keyed``, with only the first one being mandatory.
+Each Topic is determined by its entries ``name`` and ``type``, with only the first one being mandatory.
 
 .. list-table::
     :header-rows: 1
@@ -208,13 +219,6 @@ Each Topic is determined by its entries ``name``, ``type`` and ``keyed``, with o
     *   - ``type``
         - ``string``
         - ``"*"``
-
-    *   - ``keyed``
-        - ``bool``
-        - Both ``true`` and ``false``
-
-The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
-or not. See :term:`Topic` section for further information about the topic.
 
 .. note::
 

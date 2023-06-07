@@ -16,9 +16,6 @@
 # Yaml Tests #
 ##############
 
+# TODO uncomment when new API applied
 add_subdirectory(configuration)
-add_subdirectory(entities)
 add_subdirectory(participants)
-add_subdirectory(yaml_tags)
-add_subdirectory(yaml_manager)
-add_subdirectory(yaml_reader)

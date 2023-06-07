@@ -19,16 +19,18 @@
 #include <gtest/gtest.h>
 
 #include <cpp_utils/testing/LogChecker.hpp>
-
-#include <ddsrouter_core/core/DDSRouter.hpp>
-#include <ddsrouter_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 #include <cpp_utils/Log.hpp>
+
+#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+
+#include <ddsrouter_core/core/DdsRouter.hpp>
 
 #include <test_participants.hpp>
 
-namespace eprosima {
-namespace ddsrouter {
-namespace core {
+using namespace eprosima;
+using namespace eprosima::ddspipe;
+using namespace eprosima::ddsrouter::core;
+
 namespace test {
 
 constexpr const uint32_t DEFAULT_SAMPLES_TO_RECEIVE = 5;
@@ -42,64 +44,63 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  * and any possible type (such as HelloWorld and HelloWorldKeyed) both with and without key.
  * Create 2 simple participants with domains 0 and 1
  *
- * @return configuration::DDSRouterConfiguration
+ * @return DdsRouterConfiguration
  */
-configuration::DDSRouterConfiguration dds_test_simple_configuration(
+DdsRouterConfiguration dds_test_simple_configuration(
         bool disable_dynamic_discovery = false,
         bool transient_local_readers = false)
 {
+    DdsRouterConfiguration conf;
+
     // Always filter the test topics by topic name
-    std::set<std::shared_ptr<types::DdsFilterTopic>> allowlist;   // empty
-    allowlist.insert(std::make_shared<types::WildcardDdsFilterTopic>(TOPIC_NAME));
-
-    std::set<std::shared_ptr<types::DdsFilterTopic>> blocklist;   // empty
-
-    std::set<std::shared_ptr<types::DdsTopic>> builtin_topics;   // empty
+    core::types::WildcardDdsFilterTopic topic;
+    topic.topic_name.set_value(TOPIC_NAME);
+    conf.allowlist.insert(
+        utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     if (disable_dynamic_discovery)
     {
-        types::TopicQoS qos;
+        core::types::TopicQoS qos;
         if (transient_local_readers)
         {
-            qos.reliability_qos = types::ReliabilityKind::RELIABLE;
-            qos.durability_qos = types::DurabilityKind::TRANSIENT_LOCAL;
+            qos.reliability_qos = core::types::ReliabilityKind::RELIABLE;
+            qos.durability_qos = core::types::DurabilityKind::TRANSIENT_LOCAL;
         }
         else
         {
-            qos.reliability_qos = types::ReliabilityKind::BEST_EFFORT;
-            qos.durability_qos = types::DurabilityKind::VOLATILE;
+            qos.reliability_qos = core::types::ReliabilityKind::BEST_EFFORT;
+            qos.durability_qos = core::types::DurabilityKind::VOLATILE;
         }
 
-        builtin_topics.insert(
-            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorld", false, qos));
-        builtin_topics.insert(
-            std::make_shared<types::DdsTopic>(TOPIC_NAME, "HelloWorldKeyed", true, qos));
+        core::types::DdsTopic topic;
+        topic.m_topic_name = TOPIC_NAME;
+        topic.type_name = "HelloWorld";
+        topic.topic_qos = qos;
+
+        core::types::DdsTopic topic_keyed(topic);
+        topic_keyed.type_name = "HelloWorldKeyed";
+        topic_keyed.topic_qos.keyed = true;
+
+        conf.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
+        conf.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic_keyed));
     }
 
     // Two simple participants
-    std::set<std::shared_ptr<configuration::ParticipantConfiguration>> participants_configurations(
-                    {
-                        std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_0"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                            false,
-                            types::DomainId(0u)
-                            ),
-                        std::make_shared<configuration::SimpleParticipantConfiguration>(
-                            types::ParticipantId("participant_1"),
-                            types::ParticipantKind(types::ParticipantKind::simple_rtps),
-                            false,
-                            types::DomainId(1u)
-                            )
-                    }
-        );
+    {
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("participant_0");
+        part->domain.domain_id = 0u;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
+    }
 
-    return configuration::DDSRouterConfiguration(
-        allowlist,
-        blocklist,
-        builtin_topics,
-        participants_configurations,
-        configuration::SpecsConfiguration());
+    {
+        auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
+        part->id = core::types::ParticipantId("participant_1");
+        part->domain.domain_id = 1u;
+        conf.participants_configurations.insert({types::ParticipantKind::simple, part});
+    }
+
+    return conf;
 }
 
 /**
@@ -111,7 +112,7 @@ configuration::DDSRouterConfiguration dds_test_simple_configuration(
  */
 template <class MsgStruct>
 void test_local_communication(
-        configuration::DDSRouterConfiguration ddsrouter_configuration,
+        DdsRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
         uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         uint32_t msg_size = DEFAULT_MESSAGE_SIZE,
@@ -133,7 +134,7 @@ void test_local_communication(
     // Add this string as many times as the msg size requires
     for (uint32_t i = 0; i < msg_size; i++)
     {
-        msg_str += "Testing DDSRouter Blackbox Local Communication ...";
+        msg_str += "Testing DdsRouter Blackbox Local Communication ...";
     }
     msg.message(msg_str);
 
@@ -145,9 +146,9 @@ void test_local_communication(
     TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), transient_local);
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
-    // Create DDSRouter entity
+    // Create DdsRouter entity
     // The DDS Router does not start here in order to test a transient_local communication
-    DDSRouter router(ddsrouter_configuration);
+    DdsRouter router(ddsrouter_configuration);
 
     if (transient_local)
     {
@@ -198,12 +199,6 @@ void test_local_communication(
 }
 
 } /* namespace test */
-} /* namespace core */
-} /* namespace ddsrouter */
-} /* namespace eprosima */
-
-using namespace eprosima::ddsrouter::core;
-using namespace eprosima::ddsrouter::core::types;
 
 /**
  * Test communication in HelloWorld topic between two DDS participants created in different domains,

@@ -14,17 +14,18 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
-#include <test_utils.hpp>
+#include <ddspipe_core/testing/random_values.hpp>
 
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+#include <ddspipe_yaml/YamlReader.hpp>
 #include <cpp_utils/exception/InconsistencyException.hpp>
 
-#include "../../YamlConfigurationTestUtils.hpp"
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
+#include <test_utils.hpp>
 
 /**
  * Test get specifing TLS configuration
@@ -45,17 +46,18 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     Yaml yml;
 
     // Add TLS
-    yml[TLS_TAG] = Yaml();
-    yml[TLS_TAG][TLS_CA_TAG] = "ca.pem";
-    yml[TLS_TAG][TLS_SNI_HOST_TAG] = "my_server.com";
+    yml[ddspipe::yaml::TLS_TAG] = Yaml();
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_CA_TAG] = "ca.pem";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_SNI_HOST_TAG] = "my_server.com";
 
-    core::types::security::TlsConfiguration tls_configuration =
-            YamlReader::get<core::types::security::TlsConfiguration>(yml, TLS_TAG, LATEST);
+    ddspipe::participants::types::TlsConfiguration tls_configuration =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::types::TlsConfiguration>(yml, ddspipe::yaml::TLS_TAG,
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
 
     // Check tls_configuration
-    ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::client>());
-    ASSERT_FALSE(tls_configuration.compatible<core::types::security::TlsKind::both>());
-    ASSERT_FALSE(tls_configuration.compatible<core::types::security::TlsKind::server>());
+    ASSERT_TRUE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::client>());
+    ASSERT_FALSE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::both>());
+    ASSERT_FALSE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
     ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
@@ -67,19 +69,20 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_serve
     Yaml yml;
 
     // Add TLS
-    yml[TLS_TAG] = Yaml();
-    yml[TLS_TAG][TLS_PRIVATE_KEY_TAG] = "pk-file";
-    yml[TLS_TAG][TLS_PASSWORD_TAG] = "pwd-file";
-    yml[TLS_TAG][TLS_CERT_TAG] = "cert-chain-file";
-    yml[TLS_TAG][TLS_DHPARAMS_TAG] = "dhp-file";
+    yml[ddspipe::yaml::TLS_TAG] = Yaml();
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_PRIVATE_KEY_TAG] = "pk-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_PASSWORD_TAG] = "pwd-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_CERT_TAG] = "cert-chain-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_DHPARAMS_TAG] = "dhp-file";
 
-    core::types::security::TlsConfiguration tls_configuration =
-            YamlReader::get<core::types::security::TlsConfiguration>(yml, TLS_TAG, LATEST);
+    ddspipe::participants::types::TlsConfiguration tls_configuration =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::types::TlsConfiguration>(yml, ddspipe::yaml::TLS_TAG,
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
 
     // Check tls_configuration
-    ASSERT_FALSE(tls_configuration.compatible<core::types::security::TlsKind::client>());
-    ASSERT_FALSE(tls_configuration.compatible<core::types::security::TlsKind::both>());
-    ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::server>());
+    ASSERT_FALSE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::client>());
+    ASSERT_FALSE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::both>());
+    ASSERT_TRUE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
     ASSERT_EQ(tls_configuration.private_key_file_password, "pwd-file");
@@ -94,20 +97,21 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
     Yaml yml;
 
     // Add TLS
-    yml[TLS_TAG] = Yaml();
-    yml[TLS_TAG][TLS_CA_TAG] = "ca.pem";
-    yml[TLS_TAG][TLS_PRIVATE_KEY_TAG] = "pk-file";
-    yml[TLS_TAG][TLS_PASSWORD_TAG] = "pwd-file";
-    yml[TLS_TAG][TLS_CERT_TAG] = "cert-chain-file";
-    yml[TLS_TAG][TLS_DHPARAMS_TAG] = "dhp-file";
+    yml[ddspipe::yaml::TLS_TAG] = Yaml();
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_CA_TAG] = "ca.pem";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_PRIVATE_KEY_TAG] = "pk-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_PASSWORD_TAG] = "pwd-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_CERT_TAG] = "cert-chain-file";
+    yml[ddspipe::yaml::TLS_TAG][ddspipe::yaml::TLS_DHPARAMS_TAG] = "dhp-file";
 
-    core::types::security::TlsConfiguration tls_configuration =
-            YamlReader::get<core::types::security::TlsConfiguration>(yml, TLS_TAG, LATEST);
+    ddspipe::participants::types::TlsConfiguration tls_configuration =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::types::TlsConfiguration>(yml, ddspipe::yaml::TLS_TAG,
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
 
     // Check tls_configuration
-    ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::client>());
-    ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::both>());
-    ASSERT_TRUE(tls_configuration.compatible<core::types::security::TlsKind::server>());
+    ASSERT_TRUE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::client>());
+    ASSERT_TRUE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::both>());
+    ASSERT_TRUE(tls_configuration.compatible<ddspipe::participants::types::TlsKind::server>());
     ASSERT_TRUE(tls_configuration.is_active());
 
     ASSERT_EQ(tls_configuration.certificate_authority_file, "ca.pem");
@@ -121,26 +125,26 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_clien
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inactive)
 {
     // ParticipantConfiguration with inactive TLS
-    core::types::ParticipantId id(eprosima::ddsrouter::test::random_participant_id());
-    core::types::ParticipantKind kind(core::types::ParticipantKind::local_discovery_server);
-    core::types::GuidPrefix guid_prefix = eprosima::ddsrouter::test::random_guid_prefix();
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::discovery_server;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
+    ddspipe::core::types::GuidPrefix guid_prefix = ddspipe::core::testing::random_guid_prefix();
 
     Yaml yml;
     Yaml yml_participant;
 
     // Add required fields
-    yaml::test::participantid_to_yaml(yml_participant, id);
-    yaml::test::participantkind_to_yaml(yml_participant, kind);
-    yaml::test::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
+    ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+    ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+    ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
     // Add addresses (so that participant configuration is valid)
     Yaml yml_listening_addresses;
     Yaml yml_address;
-    core::types::Address address = eprosima::ddsrouter::test::random_address();
-    yaml::test::address_to_yaml(yml_address, address);
+    ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
+    ddspipe::yaml::testing::address_to_yaml(yml_address, address);
     yml_listening_addresses.push_back(yml_address);
 
-    yml_participant[LISTENING_ADDRESSES_TAG] = yml_listening_addresses;
+    yml_participant[ddspipe::yaml::LISTENING_ADDRESSES_TAG] = yml_listening_addresses;
 
 
     // Store participant yaml node
@@ -148,14 +152,15 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_inact
     // No TLS tag insertion
 
     // Get configuration object from yaml
-    auto ds_participant_cfg = YamlReader::get<core::configuration::DiscoveryServerParticipantConfiguration>(yml,
+    auto ds_participant_cfg =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
                     "participant",
-                    LATEST);
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
 
     // Check tls_configuration
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::client>());
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::both>());
-    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<core::types::security::TlsKind::server>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<ddspipe::participants::types::TlsKind::client>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<ddspipe::participants::types::TlsKind::both>());
+    ASSERT_FALSE(ds_participant_cfg.tls_configuration.compatible<ddspipe::participants::types::TlsKind::server>());
     ASSERT_FALSE(ds_participant_cfg.tls_configuration.is_active());
 }
 
@@ -165,12 +170,12 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incor
     Yaml yml;
 
     // Add empty TLS
-    yml[TLS_TAG] = Yaml();
+    yml[ddspipe::yaml::TLS_TAG] = Yaml();
 
     ASSERT_THROW(
-        core::types::security::TlsConfiguration tls_configuration = YamlReader::get<core::types::security::TlsConfiguration>(
-            yml, TLS_TAG,
-            LATEST),
+        ddspipe::participants::types::TlsConfiguration tls_configuration = ddspipe::yaml::YamlReader::get<ddspipe::participants::types::TlsConfiguration>(
+            yml, ddspipe::yaml::TLS_TAG,
+            ddspipe::yaml::YamlReaderVersion::LATEST),
         eprosima::utils::ConfigurationException);
 }
 
@@ -182,12 +187,12 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, tls_configuration_incor
     // Add empty TLS
     Yaml yml_array;
     yml_array.push_back("ca.cert");
-    yml[TLS_TAG] = yml_array;
+    yml[ddspipe::yaml::TLS_TAG] = yml_array;
 
     // Get configuration object from yaml
     ASSERT_THROW(
-        core::types::security::TlsConfiguration tls_configuration = YamlReader::get<core::types::security::TlsConfiguration>(
-            yml, TLS_TAG,
-            LATEST),
+        ddspipe::participants::types::TlsConfiguration tls_configuration = ddspipe::yaml::YamlReader::get<ddspipe::participants::types::TlsConfiguration>(
+            yml, ddspipe::yaml::TLS_TAG,
+            ddspipe::yaml::YamlReaderVersion::LATEST),
         eprosima::utils::ConfigurationException);
 }

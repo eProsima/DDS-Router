@@ -27,7 +27,7 @@ set(TEST_LIST
         pair_implementation
         pair_implementation_with_topic
         all_implementations
-        duplicated_ids
+        duplicated_ids_negative
     )
 
 set(TEST_NEEDED_SOURCES

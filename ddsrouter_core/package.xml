@@ -17,9 +17,10 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>fastrtps</depend>
-  <depend>cpp_utils</depend>
   <depend>cmake_utils</depend>
+  <depend>cpp_utils</depend>
+  <depend>ddspipe_core</depend>
+  <depend>ddspipe_participants</depend>
 
   <doc_depend>doxygen</doc_depend>
 

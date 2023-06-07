@@ -14,19 +14,23 @@
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
+
+#include <ddspipe_core/testing/random_values.hpp>
+#include <ddspipe_core/types/participant/ParticipantId.hpp>
+#include <ddspipe_core/types/dds/DomainId.hpp>
+
+#include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/testing/generate_yaml.hpp>
+
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+
+#include <ddsrouter_yaml/testing/generate_yaml.hpp>
+
 #include <test_utils.hpp>
-
-#include <ddsrouter_core/types/participant/ParticipantKind.hpp>
-#include <ddsrouter_core/types/participant/ParticipantId.hpp>
-#include <ddsrouter_core/types/dds/DomainId.hpp>
-#include <ddsrouter_yaml/YamlReader.hpp>
-
-#include "../YamlConfigurationTestUtils.hpp"
 
 constexpr const uint32_t TEST_ITERATION_MAX = 5;
 
-using namespace eprosima::ddsrouter;
-using namespace eprosima::ddsrouter::yaml;
+using namespace eprosima;
 
 /**
  * Test get Participant Configuration from yaml
@@ -35,33 +39,34 @@ using namespace eprosima::ddsrouter::yaml;
  */
 TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
 {
-    for (core::types::ParticipantKind kind : core::types::ALL_VALID_PARTICIPANT_KINDS)
+    for (ddsrouter::core::types::ParticipantKind kind : ddsrouter::core::types::VALUES_ParticipantKind)
     {
         for (unsigned int i = 0; i < TEST_ITERATION_MAX; i++)
         {
-            core::types::ParticipantId id = eprosima::ddsrouter::test::random_participant_id(i);
+            ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id(i);
             for (unsigned int j = 0; j < TEST_ITERATION_MAX; j++)
             {
-                core::types::DomainId domain = eprosima::ddsrouter::test::random_domain(j);
+                ddspipe::core::types::DomainId domain = ddspipe::core::testing::random_domain(j);
 
                 // Create a configuration with this kind and this id
                 Yaml yml;
                 Yaml yml_participant;
 
-                yaml::test::participantid_to_yaml(yml_participant, id);
-                yaml::test::participantkind_to_yaml(yml_participant, kind);
-                yaml::test::domain_to_yaml(yml_participant, domain);
+
+                ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+                ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+                ddspipe::yaml::testing::domain_to_yaml(yml_participant, domain);
 
                 yml["participant"] = yml_participant;
 
                 // Read Yaml
-                core::configuration::SimpleParticipantConfiguration result =
-                        YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant",
-                                LATEST);
+                ddspipe::participants::SimpleParticipantConfiguration result =
+                        ddspipe::yaml::YamlReader::get<ddspipe::participants::SimpleParticipantConfiguration>(yml,
+                                "participant",
+                                ddspipe::yaml::YamlReaderVersion::LATEST);
 
                 // Check result
                 ASSERT_EQ(id, result.id);
-                ASSERT_EQ(kind, result.kind);
                 ASSERT_EQ(domain, result.domain);
             }
         }
@@ -78,9 +83,9 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant)
  */
 TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 {
-    core::types::ParticipantKind kind(core::types::ParticipantKind::simple_rtps);
-    core::types::ParticipantId id(eprosima::ddsrouter::test::random_participant_id());
-    core::types::DomainId domain(17u);
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::simple;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
+    ddspipe::core::types::DomainId domain;
 
     // empty
     {
@@ -91,8 +96,8 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::SimpleParticipantConfiguration>(yml, "participant",
+            ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -101,14 +106,14 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
         // Create structure
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantkind_to_yaml(yml_participant, kind);
-        yaml::test::domain_to_yaml(yml_participant, domain);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::domain_to_yaml(yml_participant, domain);
         yml["participant"] = yml_participant;
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::SimpleParticipantConfiguration>(yml, "participant",
+            ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 
@@ -116,14 +121,14 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
     {
         Yaml yml;
         Yaml yml_participant;
-        yaml::test::participantid_to_yaml(yml_participant, id);
-        yaml::test::domain_to_yaml(yml_participant, domain);
+        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+        ddspipe::yaml::testing::domain_to_yaml(yml_participant, domain);
         yml["participant"] = yml_participant;
 
         // Read Yaml
         ASSERT_THROW(
-            core::configuration::SimpleParticipantConfiguration result =
-            YamlReader::get<core::configuration::SimpleParticipantConfiguration>(yml, "participant", LATEST),
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::SimpleParticipantConfiguration>(yml, "participant",
+            ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
 }

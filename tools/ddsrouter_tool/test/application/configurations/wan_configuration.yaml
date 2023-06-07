@@ -1,0 +1,15 @@
+
+version: v3.0
+
+participants:
+
+  - name: local
+    kind: local
+    domain: 0
+
+  - name: wan
+    kind: wan
+    connection-addresses:
+      - ip: "127.0.0.1"
+        port: 11667
+        transport: tcp
