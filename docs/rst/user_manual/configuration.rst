@@ -421,6 +421,10 @@ Example:
 
 See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/whitelist.html>`_ for more information.
 
+.. warning::
+
+    When providing an interface whitelist, external participants with which communication is desired must also be configured with interface whitelisting.
+
 
 .. _user_manual_configuration_repeater:
 
