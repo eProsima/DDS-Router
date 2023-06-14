@@ -7,6 +7,10 @@ on:
         description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
         required: true
         default: 'master'
+      ddspipe_branch:
+        description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
+        required: true
+        default: 'main'
       ddsrouter_branch:
         description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
         required: true
@@ -25,6 +29,7 @@ jobs:
 
     env:
       DEFAULT_FASTDDS_BRANCH: 'master'
+      DEFAULT_DDSPIPE_BRANCH: 'main'
       DEFAULT_DDSROUTER_BRANCH: 'main'
       DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
       DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "vulcanexus:ci"
@@ -42,11 +47,13 @@ jobs:
         run: |
           echo "--- Input Variables ---"
           echo "github.event.inputs.fastdds_branch: ${{ github.event.inputs.fastdds_branch }}"
+          echo "github.event.inputs.ddspipe_branch: ${{ github.event.inputs.ddspipe_branch }}"
           echo "github.event.inputs.ddsrouter_branch: ${{ github.event.inputs.ddsrouter_branch }}"
           echo "--- Github Environment Variables ---"
           echo "github.head_ref: ${{ github.head_ref }}"
           echo "--- Environment Variables ---"
           echo "DEFAULT_FASTDDS_BRANCH: ${{ env.DEFAULT_FASTDDS_BRANCH }}"
+          echo "DEFAULT_DDSPIPE_BRANCH: ${{ env.DEFAULT_DDSPIPE_BRANCH }}"
           echo "DEFAULT_DDSROUTER_BRANCH: ${{ env.DEFAULT_DDSROUTER_BRANCH }}"
 
       # Build Vulcanexus Docker image
@@ -66,6 +73,7 @@ jobs:
           docker build \
             --no-cache \
             --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
+            --build-arg ddspipe_branch=${{ github.event.inputs.ddspipe_branch || env.DEFAULT_DDSPIPE_BRANCH }} \
             --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || github.head_ref || env.DEFAULT_DDSROUTER_BRANCH }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
