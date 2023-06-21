@@ -20,7 +20,7 @@ Glossary
 
     QoS
         **Quality of Service**:
-        Collection of attributes and configurations that manage the behavior of an individual DDS entity.
+        Collection of attributes and settings that configure the behavior of DDS communications.
 
     QoS Profile
         Specific QoS that is related with a name, called *profile*.

@@ -127,7 +127,7 @@ Below is the list with all the available Participant Kinds.
         - Initial Peers DDS DomainParticipant |br|
           for WAN communication.
 
-    *   - :ref:`user_manual_participants_wan`
+    *   - :ref:`user_manual_participants_xml`
         - ``xml`` |br|
           ``XML`` |br|
         - ``profile``

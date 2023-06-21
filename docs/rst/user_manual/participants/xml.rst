@@ -15,8 +15,7 @@ For further information regarding how to load XML configuration files to |ddsrou
 
 .. note::
 
-    This kind of Participant is only meant for expert users.
-    Creating an XML configuration is not an easy task, and there is a high probability that messing with internal configurations of DDS makes DDS Router to not work as expected.
+    This kind of Participant is meant for advanced users as XML profiles will overwrite the default internal settings of the DDS Router.
 
 
 Use case
@@ -51,8 +50,8 @@ Whole DomainParticipant configuration settings must be configured via XML, |ddsr
 Configuration Example
 =====================
 
-Configure a XML Participant that uses Initial Peers to communicate via WAN using TCP.
-It listens for clients in public IP ``82.0.0.1`` in port ``11600`` in ``TCP``.
+Configure a XML Participant that uses a profile called `custom_participant_configuration` loaded previously from an XML configuration.
+How to load such XML profiles is explained in `following documentation <user_manual_configuration_load_xml>`.
 
 .. code-block:: yaml
 

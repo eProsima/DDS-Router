@@ -13,7 +13,7 @@
 #   Subscribers transient do not need to receive everything, but to received from 0 to N.
 #   This is because last message of Publisher cannot assure that exists before closing Pub.
 #
-#   DDS Router has a delay to start, so to probe transient local in router.
+#   DDS Router has a delay to start, so to test transient local in router.
 #   sleep command is use for this
 #
 

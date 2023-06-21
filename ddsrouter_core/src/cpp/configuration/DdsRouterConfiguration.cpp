@@ -96,9 +96,10 @@ bool DdsRouterConfiguration::is_valid(
         return false;
     }
 
-    // If the number of ids are not equal the number of configurations, is because they are repeated
+    // Check that xml configuration files are accessible
     if (!xml_configuration.is_valid(error_msg))
     {
+        error_msg << "XML configuration is not valid. ";
         return false;
     }
 

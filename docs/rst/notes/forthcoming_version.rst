@@ -22,4 +22,4 @@ Next release will include the following **Configuration features**:
 
 Next release will include the following **features**:
 
-* XML Participant
+* `XML Participant <user_manual_participants_xml>`
