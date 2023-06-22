@@ -230,7 +230,7 @@ if __name__ == '__main__':
             stderr_parsed=stderr_parsed,
             samples=args.samples,
             duplicates_allow=args.allow_duplicates,
-            transient=args.transient,
+            transient=args.transient
             )))
 
     ret_code = validation.run_and_validate(

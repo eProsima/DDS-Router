@@ -7,6 +7,6 @@ Here there are some generators that exemplifies the generation of real certifica
 This will generate the certificates associated with a DDS Router execution configured with files in `configuration` dir.
 
 ```sh
-# from annapurna/src/router/resources/configurations/security/dds/generators/generate_certificates.sh
+# from resources/configurations/security/dds/generators/generate_certificates.sh
 ./generate_certificates.sh
 ```

@@ -41,9 +41,9 @@ In this test case, there are 2 DDS Domains and 1 DDS Router:
 ### Topics
 
 All topics are best-effort volatile.
-All topics are allowed for both Domain S and DDS Router
+All topics are allowed for both Domain *S* and DDS Router
 
 Thus, the expected behavior is:
 
-- A DataReader [topic_1]: Read something
-- S DataReader [topic_0]: Read something
+- *A* DataReader [topic_1]: Read something
+- *S* DataReader [topic_0]: Read something

@@ -62,13 +62,13 @@ DDS Router is not allowed to subscribe in `topic_5`.
 
 Thus, the expected behaviour is:
 
-- A DataReader [topic_1]: Read everything
-- A DataReader [topic_2]: Read everything
-- A DataReader [topic_3]: Read nothing
-- A DataReader [topic_4]: Read both domains
-- A DataReader [topic_5]: Read only from A
-- S DataReader [topic_0]: Read everything
-- S DataReader [topic_2]: Read nothing
-- S DataReader [topic_3]: Read everything
-- S DataReader [topic_4]: Read only from S
-- S DataReader [topic_5]: Read everything
+- *A* DataReader [topic_1]: Read everything
+- *A* DataReader [topic_2]: Read everything
+- *A* DataReader [topic_3]: Read nothing
+- *A* DataReader [topic_4]: Read both domains
+- *A* DataReader [topic_5]: Read only from *A*
+- *S* DataReader [topic_0]: Read everything
+- *S* DataReader [topic_2]: Read nothing
+- *S* DataReader [topic_3]: Read everything
+- *S* DataReader [topic_4]: Read only from *S*
+- *S* DataReader [topic_5]: Read everything

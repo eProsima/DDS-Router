@@ -25,7 +25,7 @@ Fast DDS XML Configuration
 These profiles are used to configure different DomainParticipants using profile name.
 Loading an XML file or setting the raw xml file in the |ddsrouter| YAML configuration file allows to load such profiles.
 Here there are the 2 ways to load them.
-For more information check `following section <user_manual_configuration_load_xml>`.
+For more information check :ref:`following section <user_manual_configuration_load_xml>`.
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
@@ -59,12 +59,26 @@ Execute example
 Please refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the
 |ddsrouter|.
 
-.. todo:
+Execute with Fast DDS Basic Configuration Example
+------------------------------------------------
 
-    Add link when BasicConfiguration Example is added to Fast DDS (if it happens)
+Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``0``:
 
-    Execute with Fast DDS HelloWorld Example
-    ----------------------------------------
+.. code-block:: bash
+
+    ./BasicConfigurationExample publisher --domain 0
+
+Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``1``:
+
+.. code-block:: bash
+
+    ./BasicConfigurationExample subscriber --domain 1
+
+Execute |ddsrouter| with this configuration file (available in
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
+Once the |ddsrouter| is running, messages from *publisher* in domain 0 will be forwarded by the Router
+to the *subscriber* in domain 1, that will print them in ``stdout``.
+
 
 Execute with ROS 2 demo nodes
 -----------------------------
