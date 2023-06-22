@@ -60,7 +60,7 @@ Please refer to this :ref:`section <user_manual_user_interface>` for a detailed 
 |ddsrouter|.
 
 Execute with Fast DDS Basic Configuration Example
-------------------------------------------------
+-------------------------------------------------
 
 Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``0``:
 
@@ -74,10 +74,8 @@ Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``1``:
 
     ./BasicConfigurationExample subscriber --domain 1
 
-Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
-Once the |ddsrouter| is running, messages from *publisher* in domain 0 will be forwarded by the Router
-to the *subscriber* in domain 1, that will print them in ``stdout``.
+Execute |ddsrouter| with this configuration file (available in ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
+Once the |ddsrouter| is running, messages from *publisher* in domain 0 will be forwarded by the Router to the *subscriber* in domain 1, that will print them in ``stdout``.
 
 
 Execute with ROS 2 demo nodes
@@ -95,7 +93,5 @@ Execute a ROS 2 ``demo_nodes_cpp`` *listener* in domain ``1``:
 
     ROS_DOMAIN_ID=1 ros2 run demo_nodes_cpp listener
 
-Execute |ddsrouter| with this configuration file (available in
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
-Once the |ddsrouter| is running, messages from *talker* in domain 0 will be forwarded by the Router
-to the *listener* in domain 1, that will print them in ``stdout``.
+Execute |ddsrouter| with this configuration file (available in ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
+Once the |ddsrouter| is running, messages from *talker* in domain 0 will be forwarded by the Router to the *listener* in domain 1, that will print them in ``stdout``.
