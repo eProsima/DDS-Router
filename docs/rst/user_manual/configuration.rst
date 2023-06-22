@@ -135,6 +135,12 @@ Under **optional** tag `raw`, an XML configuration (with same format as an XML f
               </participant>
           </profiles>
 
+.. note::
+
+    The |ddsrouter| does not modify any XML configuration in a :ref:`user_manual_participants_xml`.
+    However, there are some QoS that can affect performance.
+    These QoS should be configured by the user explicitly.
+    Check :ref:`user_manual_participants_xml_profiles`.
 
 .. _topic_filtering:
 

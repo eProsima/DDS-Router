@@ -26,6 +26,11 @@ Glossary
         Specific QoS that is related with a name, called *profile*.
         This is used to create several entities with the same QoS, or to specify which already established QoS an entity should use.
 
+    RPC
+        **Remote Procedural Call**:
+        Client-Server protocol that can be run over DDS.
+        ROS2 services and actions use this kind of protocol.
+
     TCP
         **Transmission Control Protocol**
 

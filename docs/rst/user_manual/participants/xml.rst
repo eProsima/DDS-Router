@@ -28,6 +28,11 @@ Main use case for this Participant is using **DDS Security**, that requires XML 
 
     Add link to security documentation
 
+.. warning::
+
+    This Participant kind does not support :term:`RPC`.
+    Thus services and actions of ROS2 will not work correctly.
+
 
 Kind aliases
 ============
@@ -39,12 +44,37 @@ Kind aliases
 Configuration
 =============
 
-XML Participant allows configure a profile name.
+XML Participant allows setting a profile name for the internal DomainParticipant of the |ddsrouter|.
 Such name will be used as QoS profile when creating the internal DomainParticipant.
-Whole DomainParticipant configuration settings must be configured via XML, |ddsrouter| will not configure any attribute or QoS for it (that is why this participant is not advisable for non expert users).
 
-* To configure the profile, check the following section
-  :ref:`Configuration section <user_manual_configuration_profile>`.
+
+.. _user_manual_participants_xml_profiles:
+
+Create a Fast DDS XML Participant profile
+-----------------------------------------
+
+Whole DomainParticipant configuration settings must be configured via XML, |ddsrouter| will not configure any attribute or QoS for it (that is why this participant is not advisable for non expert users).
+To configure the profile, check the following section: :ref:`Configuration section <user_manual_configuration_profile>`.
+
+However, there are specific QoS that will affect the performance of the |ddsrouter| and that are advisable for the user to set them.
+Notice that not setting such QoS will not affect the correct functionality of the application, but may affect its performance.
+
+1. ``ignore_local_endpoints`` avoid local matching of this participant's endpoints:
+
+.. code-block:: xml
+
+        <participant profile_name="ignore_local_endpoints_domainparticipant_xml_profile">
+            <rtps>
+                <propertiesPolicy>
+                    <properties>
+                        <property>
+                            <name>fastdds.ignore_local_endpoints</name>
+                            <value>true</value>
+                        </property>
+                    </properties>
+                </propertiesPolicy>
+            </rtps>
+        </participant>
 
 
 Configuration Example
