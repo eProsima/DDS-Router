@@ -148,7 +148,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_1  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local --topic topic_1  --domain 0
 
   publisher_sec_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -162,7 +162,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_3  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local --topic topic_3  --domain 0
 
   publisher_sec_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -176,7 +176,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_4  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local --topic topic_4  --domain 0
 
   publisher_sec_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -190,7 +190,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_5  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local --topic topic_5  --domain 0
 
   subscriber_sec_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -205,7 +205,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_0 --profile secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_0 -x secure_local --domain 0"
 
   subscriber_sec_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -220,7 +220,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--samples 20 --topic topic_2 --profile secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--samples 20 --topic topic_2 -x secure_local --domain 0"
 
   subscriber_sec_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -235,7 +235,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_3 --profile secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_3 -x secure_local --domain 0"
 
   subscriber_sec_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -250,7 +250,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_4 --profile secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_4 -x secure_local --domain 0"
 
   subscriber_sec_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -265,10 +265,10 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 20 --timeout 6 --args "--samples 20 --topic topic_5 --profile secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 20 --timeout 6 --args "--samples 20 --topic topic_5 -x secure_local --domain 0"
 
 
-  # TODO change --profile for --xml-profile when fixed
+  # TODO change -x for -x when fixed
 
 networks:
   std_net:

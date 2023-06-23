@@ -62,8 +62,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --profile secure_local --topic topic_1  --domain 0
-  # TODO change --profile for --xml-profile when fixed
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local --topic topic_1  --domain 0
 
   subscriber_sec_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -78,8 +77,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_0 --profile secure_local --domain 0"
-  # TODO change --profile for --xml-profile when fixed
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --args "--samples 20 --topic topic_0 -x secure_local --domain 0"
 
 networks:
   std_net:
