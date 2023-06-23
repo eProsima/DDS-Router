@@ -27,6 +27,15 @@ specs:
   threads: 10
   max-depth: 1000
 
+xml:
+  raw: |
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+        <participant profile_name="test_xml_ddsrouter_tool">
+            <domainId>16</domainId>
+            <rtps></rtps>
+        </participant>
+    </profiles>
 
 participants:
 
@@ -71,3 +80,7 @@ participants:
     listening-addresses:
       - ip: "127.0.0.1"
         port: 11669
+
+  - name: XML-DDS
+    kind: xml
+    profile: test_xml_ddsrouter_tool

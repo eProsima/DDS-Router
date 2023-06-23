@@ -66,11 +66,6 @@ Below are some examples on how to configure a Participant:
       kind: simple         # 'participant_1' will be created of kind 'simple'
       extra_configuration: ...
 
-.. code-block:: yaml
-
-    - name: simple         # New Participant with Name = 'simple' and Kind = 'simple'
-      extra_configuration: ...
-
 .. _user_manual_participant_participant_kinds:
 
 Participant kinds
@@ -132,6 +127,12 @@ Below is the list with all the available Participant Kinds.
         - Initial Peers DDS DomainParticipant |br|
           for WAN communication.
 
+    *   - :ref:`user_manual_participants_xml`
+        - ``xml`` |br|
+          ``XML`` |br|
+        - ``profile``
+        - XML DDS DomainParticipant |br|
+          for custom configuration.
 
 ..
     This toctree is needed so participants files are linked from somewhere. It is hidden so it is not be visible.
@@ -144,3 +145,4 @@ Below is the list with all the available Participant Kinds.
     local_discovery_server
     wan_discovery_server
     wan
+    xml

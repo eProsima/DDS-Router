@@ -1,0 +1,35 @@
+version: v3.0
+
+xml:
+  raw: |
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+        <participant profile_name="test_xml_participant_domain_1">
+            <domainId>1</domainId>
+            <rtps></rtps>
+        </participant>
+    </profiles>
+  files:
+    - /domain2_configuration.xml
+
+participants:
+
+  # loaded from raw
+  - name: Xml_1
+    kind: xml
+    profile: test_xml_participant_domain_1
+
+  # loaded from file
+  - name: Xml_2
+    kind: xml
+    profile: test_xml_participant_domain_2
+
+  # loaded by env var
+  - name: Xml_3
+    kind: xml
+    profile: test_xml_participant_domain_3
+
+  # loaded by default xml file name
+  - name: Xml_4
+    kind: xml
+    profile: test_xml_participant_domain_4

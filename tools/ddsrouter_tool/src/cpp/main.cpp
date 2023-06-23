@@ -28,6 +28,8 @@
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
+#include <ddspipe_participants/xml/XmlHandler.hpp>
+
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
@@ -37,6 +39,7 @@
 #include "user_interface/arguments_configuration.hpp"
 #include "user_interface/ProcessReturnCode.hpp"
 
+using namespace eprosima;
 using namespace eprosima::ddsrouter;
 
 int main(
@@ -145,6 +148,9 @@ int main(
         // Load DDS Router Configuration
         core::DdsRouterConfiguration router_configuration =
                 yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+
+        // Load XML profiles
+        ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
 
         // Create DDS Router
         core::DdsRouter router(router_configuration);

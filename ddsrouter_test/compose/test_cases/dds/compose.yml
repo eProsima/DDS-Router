@@ -1,0 +1,115 @@
+# Test description:
+#   This test getting the profile name for a XML participant using different ways.
+#
+# Test architecture:
+#  topic0 -> non reliable
+#  topic1 -> reliable transient_local
+#
+# Domain 1: using raw xml
+#  - publisher  topic0
+#  - subscriber topic1
+# Domain 2: loading xml file from configuration file
+#  - publisher  topic1
+#  - subscriber topic2
+# Domain 3: loading xml from env var
+#  - publisher  topic2
+#  - subscriber topic3
+# Domain 4: loading xml from default file name
+#  - publisher  topic3
+#  - subscriber topic0
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+      - ./configurations/domain2_configuration.xml:/domain2_configuration.xml
+      - ./configurations/domain3_configuration.xml:/domain3_configuration.xml
+      - ./configurations/DEFAULT_FASTRTPS_PROFILES.xml:/ddsrouter/DEFAULT_FASTRTPS_PROFILES.xml
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/domain3_configuration.xml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+
+  # DOMAIN 1
+  publisher_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 1 --topic topic0
+
+  subscriber_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t1
+    networks:
+      - std_net
+    volumes:
+      - ../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 1 --topic topic1"
+
+
+  # DOMAIN 2
+  publisher_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t1
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 2 --topic topic1
+
+  subscriber_t2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t2
+    networks:
+      - std_net
+    volumes:
+      - ../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 2 --topic topic2"
+
+
+  # DOMAIN 3
+  publisher_t2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t2
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 3 --topic topic2
+
+  subscriber_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 3 --topic topic3"
+
+
+  # DOMAIN 4
+  publisher_t3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_t3
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 4 --topic topic3
+
+  subscriber_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 4 --topic topic0"
+
+
+networks:
+  std_net:
+  default:
+    driver: none

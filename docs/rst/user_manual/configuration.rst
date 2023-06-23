@@ -93,6 +93,55 @@ topics and |ddsrouter| participants) are as big as to cause memory exhaustion is
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
 enough memory is available.
 
+
+.. _user_manual_configuration_load_xml:
+
+Load XML Configuration
+======================
+
+Fast DDS supports configuration of its internal entities (:term:`DomainParticipant`, :term:`DataWriter`, etc.) via XML Profiles.
+These XML files contains different profiles that set specific QoS, and entities can be created following such profiles.
+These XML files could be loaded in the process via *default file name* or by an environment variable.
+Check `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>` for more information.
+
+Another way of loading these XML configurations is using the |ddsrouter| yaml configuration.
+The YAML Configuration supports a ``xml`` **optional** tag that contains certain options to load Fast DDS XML configurations.
+XML configurations are then used to configure a :ref:`XML Participant <user_manual_participants_xml>`.
+
+
+Load XML Files
+--------------
+
+Under **optional** tag `files`, a list could be set with name of files to load XML from.
+
+Raw XML
+-------
+
+Under **optional** tag `raw`, an XML configuration (with same format as an XML file) could be set as string to be loaded.
+
+.. code-block:: yaml
+
+    xml:
+
+      files:
+          - "./xml_configuration.xml"
+
+      raw: |
+          <?xml version="1.0" encoding="UTF-8" ?>
+          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+              <participant profile_name="custom_participant_configuration">
+                  <domainId>1</domainId>
+                  <rtps></rtps>
+              </participant>
+          </profiles>
+
+.. note::
+
+    The |ddsrouter| does not modify any XML configuration in a :ref:`user_manual_participants_xml`.
+    However, there are some QoS that can affect performance.
+    These QoS should be configured by the user explicitly.
+    Check :ref:`user_manual_participants_xml_profiles`.
+
 .. _topic_filtering:
 
 Built-in Topics
@@ -621,6 +670,20 @@ Each element inside ``addresses`` must follow the configuration for :ref:`user_m
             transport: tcp
 
 
+.. _user_manual_configuration_profile:
+
+Profile
+-------
+
+Tag ``profile`` set the :term:`QoS Profile` to create a specific Participant.
+This profile must match with an existent profile loaded by XML.
+It will use such profile for configuring the Participant.
+
+.. code-block:: yaml
+
+    profile: participant_custom_configuration
+
+
 .. _user_manual_configuration_general_example:
 
 General Example
@@ -633,9 +696,27 @@ A complete example of all the configurations described on this page can be found
     # Version Latest
     version: v3.0
 
+    # Specifications
     specs:
       threads: 10
       max-depth: 1000
+
+    # XML configurations to load
+    xml:
+
+      # Load this file as Fast DDS XML configuration
+      files:
+          - "./xml_configuration.xml"
+
+      # Load text as Fast DDS XML configuration
+      raw: |
+          <?xml version="1.0" encoding="UTF-8" ?>
+          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+              <participant profile_name="custom_participant_configuration">
+                  <domainId>1</domainId>
+                  <rtps></rtps>
+              </participant>
+          </profiles>
 
     # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
     # Relay topic HelloWorldTopic and type HelloWorld
@@ -718,3 +799,14 @@ A complete example of all the configurations described on this page can be found
               - ip: 8.8.8.8             # IP = 8.8.8.8
                 port: 11666             # Port = 11666
                 transport: udp          # Transport = UDP
+
+
+    ####################
+
+    # Participant that will use a user set configuration via QoS Profile.
+
+      - name: xml_participant                       # Participant Name = xml_participant
+
+        kind: xml
+
+        profile: custom_participant_configuration   # Configure participant with this profile

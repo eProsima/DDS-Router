@@ -18,6 +18,19 @@ Glossary
         Usually, the machines under the router network cannot be accessed from the outside unless a Port is forwarded
         in the router configuration, or if such host has previously started a TCP communication with the message source.
 
+    QoS
+        **Quality of Service**:
+        Collection of attributes and settings that configure the behavior of DDS communications.
+
+    QoS Profile
+        Specific QoS that is related with a name, called *profile*.
+        This is used to create several entities with the same QoS, or to specify which already established QoS an entity should use.
+
+    RPC
+        **Remote Procedural Call**:
+        Client-Server protocol that can be run over DDS.
+        ROS2 services and actions use this kind of protocol.
+
     TCP
         **Transmission Control Protocol**
 

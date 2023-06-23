@@ -96,6 +96,13 @@ bool DdsRouterConfiguration::is_valid(
         return false;
     }
 
+    // Check that xml configuration files are accessible
+    if (!xml_configuration.is_valid(error_msg))
+    {
+        error_msg << "XML configuration is not valid. ";
+        return false;
+    }
+
     return true;
 }
 
