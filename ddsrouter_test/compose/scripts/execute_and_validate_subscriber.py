@@ -14,7 +14,6 @@
 
 import argparse
 import re
-import time
 
 import log
 import validation
@@ -46,8 +45,8 @@ def parse_options():
     parser.add_argument(
         '--args',
         type=str,
-        default="",
-        help='Arguments for executable .'
+        default='',
+        help='Arguments for executable.'
     )
     parser.add_argument(
         '-s',
@@ -113,7 +112,7 @@ def _subscriber_parse_output(stdout, stderr):
     :param data: Process stdout
     :return: List of received messages
     """
-    regex = re.compile('^Message\sHelloWorld\s+\d+\sRECEIVED$')
+    regex = re.compile(r'^Message\sHelloWorld\s+\d+\sRECEIVED$')
     lines = stdout.splitlines()
     filtered_data = [line for line in lines if regex.match(line)]
 
@@ -196,8 +195,8 @@ def check_transient(data):
     :return: True if transient has been fulfilled, false in case on error
     """
     # Convert every line into just the number
-    ini_str_size = len("Message HelloWorld  ")
-    end_str_size = len(" RECEIVED")
+    ini_str_size = len('Message HelloWorld  ')
+    end_str_size = len(' RECEIVED')
     numbers_received = [
         line[ini_str_size:-end_str_size]
         for line in data]

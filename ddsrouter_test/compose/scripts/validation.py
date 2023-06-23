@@ -129,7 +129,7 @@ def run_command(
 
     else:
         if not timeout_as_error:
-            log.logger.error(f'Command finished before expected.')
+            log.logger.error('Command finished before expected.')
             ret_code = ReturnCode.COMMAND_FAIL
 
         # Wait a minimum elapsed time to the signal to be received
