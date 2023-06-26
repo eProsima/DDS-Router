@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+
+    <transport_descriptors>
+        <transport_descriptor>
+            <transport_id>custom_transport</transport_id>
+            <type>UDPv4</type>
+            <!-- <output_port>11810</output_port> -->
+        </transport_descriptor>
+    </transport_descriptors>
+
+    <participant profile_name="non_secure_wan_client">
+        <rtps>
+
+            <!-- WAN CLIENT CONFIGURATION -->
+            <useBuiltinTransports>false</useBuiltinTransports>
+            <userTransports>
+                <transport_id>custom_transport</transport_id>
+            </userTransports>
+            <builtin>
+                <initialPeersList>
+                    <locator>
+                        <udpv4>
+                            <address>127.0.0.1</address>
+                            <port>11810</port>
+                        </udpv4>
+                    </locator>
+                </initialPeersList>
+                <metatrafficUnicastLocatorList>
+                    <locator>
+                        <udpv4>
+                            <address>127.0.0.1</address>
+                            <port>11812</port>
+                        </udpv4>
+                    </locator>
+                </metatrafficUnicastLocatorList>
+            </builtin>
+
+        </rtps>
+    </participant>
+
+</profiles>

@@ -67,6 +67,7 @@
    /rst/examples/ros_discovery_server_example
    /rst/examples/wan_example
    /rst/examples/repeater_example
+   /rst/examples/xml_configuration
 
 
 .. _index_use_cases:

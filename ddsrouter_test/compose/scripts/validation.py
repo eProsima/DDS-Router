@@ -34,6 +34,58 @@ class ReturnCode(Enum):
     STDERR_OUTPUT = 5
 
 
+"""
+AUXILIARY GENERIC FUNCTIONS
+"""
+
+
+def find_duplicates(data):
+    """
+    Find duplicates in a list os strings.
+
+    :param data: List of strings
+    :return: List of tuples with the index of the duplicated strings
+    """
+    duplicates = []
+    lines_seen = {}
+
+    for idx, line in enumerate(data):
+        if line not in lines_seen:
+            lines_seen[line] = idx
+        else:
+            duplicates.append((lines_seen[line], idx))
+
+    if duplicates:
+        log.logger.info('Found duplicated messages')
+    else:
+        log.logger.debug('None duplicated messages found')
+
+    return duplicates
+
+
+def validate_default(stdout_parsed, stderr_parsed) -> ReturnCode:
+    """Validate any data as correct."""
+    if stderr_parsed != '' and stderr_parsed != []:
+        return ReturnCode.STDERR_OUTPUT
+    else:
+        return ReturnCode.SUCCESS
+
+
+def parse_default(stdout, stderr) -> ReturnCode:
+    """Return stdout and stderr as they are."""
+    return (stdout, stderr)
+
+
+def validate_retcode_default(retcode: ReturnCode) -> bool:
+    """Validate that return code is SUCCESS."""
+    return retcode == ReturnCode.SUCCESS
+
+
+"""
+RUN AND VALIDATE FUNCTIONS
+"""
+
+
 def run_command(
         command: 'list[str]',
         timeout: float,
@@ -77,7 +129,7 @@ def run_command(
 
     else:
         if not timeout_as_error:
-            log.logger.error(f'Command finished before expected.')
+            log.logger.error('Command finished before expected.')
             ret_code = ReturnCode.COMMAND_FAIL
 
         # Wait a minimum elapsed time to the signal to be received
@@ -108,7 +160,8 @@ def run_and_validate(
         parse_output_function,
         validate_output_function,
         delay: float = 0,
-        timeout_as_error: bool = True):
+        timeout_as_error: bool = True,
+        parse_retcode_function=validate_retcode_default):
     """
     Run the subscriber and validate its output.
 
@@ -126,7 +179,7 @@ def run_and_validate(
         delay=delay,
         timeout_as_error=timeout_as_error)
 
-    if ret_code != ReturnCode.SUCCESS:
+    if not parse_retcode_function(ret_code):
         log.logger.error(
             f'Executable exited with '
             f'return code {ret_code}'
@@ -153,45 +206,3 @@ def run_and_validate(
             stderr_parsed)
 
         return validate_ret_code
-
-
-"""
-AUXILIARY GENERIC FUNCTIONS
-"""
-
-
-def find_duplicates(data):
-    """
-    Find duplicates in a list os strings.
-
-    :param data: List of strings
-    :return: List of tuples with the index of the duplicated strings
-    """
-    duplicates = []
-    lines_seen = {}
-
-    for idx, line in enumerate(data):
-        if line not in lines_seen:
-            lines_seen[line] = idx
-        else:
-            duplicates.append((lines_seen[line], idx))
-
-    if duplicates:
-        log.logger.info('Found duplicated messages')
-    else:
-        log.logger.debug('None duplicated messages found')
-
-    return duplicates
-
-
-def validate_default(stdout_parsed, stderr_parsed) -> ReturnCode:
-    """Validate any data as correct."""
-    if stderr_parsed != '' and stderr_parsed != []:
-        return ReturnCode.STDERR_OUTPUT
-    else:
-        return ReturnCode.SUCCESS
-
-
-def parse_default(stdout, stderr) -> ReturnCode:
-    """Return stdout and stderr as they are."""
-    return (stdout, stderr)

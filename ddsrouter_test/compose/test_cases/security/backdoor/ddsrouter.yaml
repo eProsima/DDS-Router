@@ -1,0 +1,15 @@
+version: v3.0
+
+xml:
+  files:
+    - /configurations/secure_configuration.xml
+
+participants:
+
+  - name: Simple
+    kind: simple
+    domain: 0
+
+  - name: SecureXml
+    kind: xml
+    profile: secure_router

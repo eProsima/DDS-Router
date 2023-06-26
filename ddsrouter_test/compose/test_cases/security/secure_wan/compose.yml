@@ -1,0 +1,142 @@
+# Test description:
+#   This test checks simple communication (simple discovery and UDP) with ownership
+# TODO
+#
+# Test architecture:
+#   Publishers are created with different ownerships so only one should be the one that Readers read.
+#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
+#   Readers must read without duplicities even when there are multiple writers. However it is possible
+#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
+#    message received could be duplicated.
+#
+# NOTE: Other Participants could be implemented with different security levels
+#   e.g. non authorized because of different CA
+#
+# Secure Domain Server LAN 0
+# publisher_0
+# subscriber_1
+#
+# Secure Domain Client LAN 1
+# subscriber_0
+# publisher_1
+#
+# Non Authenticated Domain LAN 2
+# publisher_0
+# subscriber_1
+#
+
+services:
+
+  # LAN 0
+  ddsrouter_server_secure_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_server_secure_0
+    networks:
+      - edge_0_net
+      - cloud_edge_net
+    volumes:
+      - ./configurations/ddsrouter_server_secure.yaml:/config.yaml
+      - ./configurations:/configurations
+      - ./certs:/certs
+    command: ddsrouter -c /config.yaml --timeout 12
+
+  publisher_sec_0_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_0_0
+    networks:
+      - edge_0_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_0 --topic topic_0
+
+  subscriber_sec_1_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_1_0
+    networks:
+      - edge_0_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --topic topic_1 -x secure_local_0"
+
+
+  # LAN 1
+  ddsrouter_client_secure_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_client_secure_1
+    networks:
+      - edge_1_net
+      - cloud_edge_net
+    volumes:
+      - ./configurations/ddsrouter_client_secure.yaml:/config.yaml
+      - ./configurations:/configurations
+      - ./certs:/certs
+    command: ddsrouter -c /config.yaml --timeout 6
+
+  subscriber_sec_0_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_sec_0_1
+    networks:
+      - edge_1_net
+    volumes:
+      - ../../../scripts:/scripts
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --topic topic_0 -x secure_local_1"
+
+  publisher_sec_1_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_sec_1_1
+    networks:
+      - edge_1_net
+    volumes:
+      - ./configurations:/configurations
+      - ./certs:/certs
+    environment:
+      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_1 --topic topic_1
+
+
+  # LAN 2
+  ddsrouter_non_authenticated_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_non_authenticated_2
+    networks:
+      - edge_2_net
+      - cloud_edge_net
+    volumes:
+      - ./configurations/ddsrouter_non_secure.yaml:/config.yaml
+      - ./configurations:/configurations
+    command: ddsrouter -c /config.yaml --timeout 6
+
+  publisher_0_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_2
+    networks:
+      - edge_2_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 --domain 2 --topic topic_0
+
+  subscriber_1_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_2
+    networks:
+      - edge_2_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--samples 10 --domain 2 --topic topic_1"
+
+networks:
+  edge_0_net:
+  edge_1_net:
+  edge_2_net:
+  cloud_edge_net:
+  default:
+    driver: none
