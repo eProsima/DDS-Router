@@ -14,13 +14,15 @@
 #
 # Secure Domain Server LAN 0
 # publisher_0
+# subscriber_1
 #
 # Secure Domain Client LAN 1
 # subscriber_0
+# publisher_1
 #
 # Non Authenticated Domain LAN 2
-# subscriber_0
 # publisher_0
+# subscriber_1
 #
 
 services:
@@ -36,7 +38,7 @@ services:
       - ./configurations/ddsrouter_server_secure.yaml:/config.yaml
       - ./configurations:/configurations
       - ./certs:/certs
-    command: ddsrouter -c /config.yaml --timeout 6
+    command: ddsrouter -c /config.yaml --timeout 10
 
   publisher_sec_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -48,7 +50,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local_0 --topic topic_0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 -x secure_local_0 --topic topic_0
 
   subscriber_sec_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -100,7 +102,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 -x secure_local_1 --topic topic_1
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 -x secure_local_1 --topic topic_1
 
 
   # LAN 2
@@ -120,7 +122,7 @@ services:
     container_name: publisher_0_2
     networks:
       - edge_2_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 50 --domain 2 --topic topic_0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 2 --topic topic_0
 
   subscriber_1_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
