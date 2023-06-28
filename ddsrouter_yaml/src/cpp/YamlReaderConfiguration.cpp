@@ -87,6 +87,13 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
                       "> :\n " << e.what());
     }
 
+    if (yml.IsNull())
+    {
+        throw eprosima::utils::ConfigurationException(
+                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
+                      "> :\n " << "yaml node is null.");
+    }
+
     return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 }
 
