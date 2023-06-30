@@ -11,6 +11,7 @@ cpp
 dataflow
 datagram
 ddsrouter
+Dev
 Diffie
 Dockerfile
 entrypoint
@@ -19,6 +20,7 @@ executables
 fastcdr
 fastdds
 fastrtps
+Foonathan
 github
 gMock
 Gtest
