@@ -1,0 +1,8 @@
+
+Version v1.2.0
+==============
+
+This release includes the following **CI improvements**:
+
+* Add blackbox tests for repeater in WAN case.
+* Upgrade deprecated actions.
