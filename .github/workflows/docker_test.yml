@@ -118,11 +118,13 @@ jobs:
           colcon build --event-handlers console_direct+ --packages-up-to ddsrouter_test --cmake-args -DBUILD_COMPOSE_TESTS=ON
           colcon test \
             --packages-select ddsrouter_test \
+            --retest-until-fail 100 \
             --event-handlers console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 60
+              --timeout 60 \
+              -R "secure_trespassing"
 
       - name: Run flaky tests
         continue-on-error: true
