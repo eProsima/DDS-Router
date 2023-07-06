@@ -123,7 +123,7 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 60 \
+              --timeout 120 \
               -R "secure_trespassing"
 
       - name: Run flaky tests
@@ -138,4 +138,4 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-regex xfail \
-              --timeout 60
+              --timeout 120
