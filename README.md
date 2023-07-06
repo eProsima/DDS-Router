@@ -8,7 +8,7 @@
 [![Forks](https://img.shields.io/github/forks/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/network/members)
 [![Stars](https://img.shields.io/github/stars/eProsima/DDS-Router.svg)](https://github.com/eProsima/DDS-Router/stargazers)
 [![test](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml/badge.svg)](https://github.com/eProsima/DDS-Router/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/eProsima/DDS-Router/branch/main/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/DDS-Router)
+[![codecov](https://codecov.io/gh/eProsima/DDS-Router/branch/v2.0.0/graph/badge.svg?token=6NA5PVA9QL)](https://codecov.io/gh/eProsima/DDS-Router)
 [![Documentation Status](https://readthedocs.org/projects/eprosima-dds-router/badge/?version=latest)](https://eprosima-dds-router.readthedocs.io/en/latest/)
 
 *eProsima DDS Router* is an end-user software application that enables the connection of distributed DDS networks.
@@ -172,7 +172,7 @@ is explained in the following section.
 ```bash
 mkdir -p ~/DDS-Router/src
 cd ~/DDS-Router
-wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+wget https://raw.githubusercontent.com/eProsima/DDS-Router/v2.0.0/ddsrouter.repos
 vcs import src < ddsrouter.repos
 ```
 
