@@ -68,7 +68,8 @@ foreach(TEST IN LISTS TESTS)
             NAME ${TEST_NAME}
             COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_BINARY_DIR}/docker-compose.sh
                 -t ${TEST_NAME}
-                -f ${CMAKE_CURRENT_BINARY_DIR}/test_cases/${TEST}/compose.yml)
+                -f ${CMAKE_CURRENT_BINARY_DIR}/test_cases/${TEST}/compose.yml
+                -d)
 
 endforeach()
 

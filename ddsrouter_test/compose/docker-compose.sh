@@ -105,6 +105,9 @@ main ()
 
     echo "Docker compose file: ${COMPOSE_FILE}"
 
+    echo "###################################################################"
+    echo $(date)
+
     # Run docker compose
     docker-compose -f ${COMPOSE_FILE} up
 
@@ -118,6 +121,9 @@ main ()
         grep -vx "^0$" | wc -l | tr -d ' ')
 
     echo "${TEST_NAME} exited with code ${EXIT_CODE}"
+
+    echo "###################################################################"
+    echo $(date)
 
     # Clean containers and networks before exiting and do not prompt for confirmation
     docker container prune --force

@@ -218,7 +218,8 @@ if __name__ == '__main__':
     args = parse_options()
 
     # Set log level
-    if args.debug:
+    # if args.debug:
+    if True:
         log.activate_debug()
 
     command = _subscriber_command(args)
