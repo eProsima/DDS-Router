@@ -124,7 +124,7 @@ jobs:
             --ctest-args \
               --label-exclude xfail \
               --timeout 120 \
-              -R "secure_trespassing|secure_wan"
+              -R "secure_wan"
 
       - name: Run flaky tests
         continue-on-error: true
