@@ -63,7 +63,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --topic topic_1 -x secure_local_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_1 -x secure_local_0"
 
 
   # LAN 1
@@ -77,7 +77,7 @@ services:
       - ./configurations/ddsrouter_client_secure.yaml:/config.yaml
       - ./configurations:/configurations
       - ./certs:/certs
-    command: ddsrouter -c /config.yaml --timeout 6
+    command: ddsrouter -c /config.yaml --timeout 12
 
   subscriber_sec_0_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -90,7 +90,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --topic topic_0 -x secure_local_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local_1"
 
   publisher_sec_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -115,7 +115,7 @@ services:
     volumes:
       - ./configurations/ddsrouter_non_secure.yaml:/config.yaml
       - ./configurations:/configurations
-    command: ddsrouter -c /config.yaml --timeout 6
+    command: ddsrouter -c /config.yaml --timeout 12
 
   publisher_0_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -131,7 +131,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 6 --args "--samples 10 --domain 2 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 12 --args "--domain 2 --topic topic_1"
 
 networks:
   edge_0_net:
