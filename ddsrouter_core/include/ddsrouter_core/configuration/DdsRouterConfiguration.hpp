@@ -17,15 +17,18 @@
 #include <memory>
 #include <set>
 
+#include <ddspipe_core/configuration/RoutesConfiguration.hpp>
+#include <ddspipe_core/configuration/TopicRoutesConfiguration.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/xml/XmlHandlerConfiguration.hpp>
 
-#include <ddsrouter_core/library/library_dll.h>
-#include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 #include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
+#include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 #include <ddsrouter_core/types/ParticipantKind.hpp>
+
+#include <ddsrouter_core/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -74,9 +77,16 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
                 ddspipe::participants::ParticipantConfiguration>>>
     participants_configurations {};
 
+    //! Custom forwarding routes
+    ddspipe::core::RoutesConfiguration routes {};
+
+    //! Custom forwarding routes per topic
+    ddspipe::core::TopicRoutesConfiguration topic_routes {};
+
     //! Advanced configurations
     SpecsConfiguration advanced_options {};
 
+    //! XML Handler configuration
     ddspipe::participants::XmlHandlerConfiguration xml_configuration {};
 
 protected:
