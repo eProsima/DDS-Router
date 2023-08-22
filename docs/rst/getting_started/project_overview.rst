@@ -64,7 +64,7 @@ The configuration in *YAML* format is very intuitive and human-readable.
 The whole application has been thought to be user-friendly, following a user-oriented design.
 
 * **RUN**: In order to run a |ddsrouter| application, just a *YAML* configuration file is required with the specific
-  configurations (see section :ref:`DDS Router Configuration <user_manual_configuration>` to check how to configure a DDS Router 
+  configurations (see section :ref:`DDS Router Configuration <user_manual_configuration>` to check how to configure a DDS Router
   and see section :ref:`Application Arguments <user_manual_user_interface_application_arguments>`
   to check the application supported arguments).
 * **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication can be

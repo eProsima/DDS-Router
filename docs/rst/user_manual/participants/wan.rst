@@ -35,13 +35,13 @@ Kind aliases
 Configuration
 =============
 
-The WAN Participant allows users to configure the listening and connection addresses (whether it should locate or 
+The WAN Participant allows users to configure the listening and connection addresses (whether it should locate or
 be located by other remote Participants):
 
-* To configure the listening addresses, check the 
+* To configure the listening addresses, check the
   :ref:`Listening Addresses <user_manual_configuration_listening_addresses>` configuration section.
 * To configure the connection addresses to connect with other Wan Participants,
-  check the 
+  check the
   :ref:`Initial Peers Connection Addresses <user_manual_configuration_initial_peers_connection_addresses>` configuration section.
 
 .. note::
