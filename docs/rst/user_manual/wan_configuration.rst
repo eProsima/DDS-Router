@@ -17,7 +17,7 @@ If the |ddsrouter| is under a :term:`NAT`, a remote |ddsrouter| in a different :
 reach it.
 Thus, NAT traversal methods will be required.
 The most common method that we recommend is configuring the network router so it forwards a specific port from
-the internet to a specific host.
+the Internet to a specific host.
 
 .. note::
 
@@ -63,8 +63,8 @@ TCP vs UDP
 ==========
 
 :term:`TCP` and :term:`UDP` are two well known network transport protocols.
-Both have their advantages and disadvantages regarding the scenario.
-These are a list of tips to help choosing whether to use one or the other.
+Both have their advantages and disadvantages depending on the scenario.
+The following comparison is meant to help users choose between one or the other.
 
 .. list-table::
     :header-rows: 1
@@ -75,21 +75,21 @@ These are a list of tips to help choosing whether to use one or the other.
 
     *   - **Communication** |br|
           **speed**
-        - Fast
-        - Slower
+        - Faster.
+        - Slower.
 
     *   - **Reliability**
         - No Transport Layer reliability |br|
-          (could has DDS reliability)
+          (but it can have DDS reliability).
         - Transport Layer reliability |br|
-          (duplicated if DDS reliability is used)
+          (duplicated if DDS reliability is enabled).
 
     *   - **Port Forwarding**
-        - Require both sides of the communication |br|
-          to have ports forwarded from the router. |br|
-          Require internal and external port to coincide.
-        - Require only server side of the communication |br|
-          to have port forwarded from the router.
+        - Both sides of the communication must have |br|
+          their ports forwarded from the router. |br|
+          Internal and external ports must coincide.
+        - Only the server side of the communication |br|
+          must have its ports forwarded from the router.
 
 .. note::
 
@@ -102,40 +102,40 @@ TLS
 ===
 
 |eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
-and its configuration can be set per participant for types WAN Discovery Server and WAN. Following is a list of the
+and its configuration can be set per participant for types WAN Discovery Server and WAN. The following is a list of the
 accepted entries under the ``tls`` tag:
 
 .. list-table::
     :header-rows: 1
 
     *   - Tag
-        - Requiredness
+        - Requirements
         - Description
         - Example
 
     *   - ``ca``
         - Mandatory for TLS clients if |br|
-          ``peer_verification`` active.
+          ``peer_verification`` is active.
         - Path to the CA (Certification- Authority) file.
         - ``ca.crt``
 
     *   - ``password``
-        - Optional for TLS servers
+        - Optional for TLS servers.
         - Password of the ``private_key`` file.
         - ``<private_key_file_password>``
 
     *   - ``private_key``
-        - Mandatory for TLS servers
+        - Mandatory for TLS servers.
         - Path to the private key certificate file.
         - ``ddsrouter.key``
 
     *   - ``cert``
-        - Mandatory for TLS servers
+        - Mandatory for TLS servers.
         - Path to the public certificate chain file.
         - ``ddsrouter.crt``
 
     *   - ``dh_params``
-        - Mandatory for TLS servers
+        - Mandatory for TLS servers.
         - Path to the Diffie-Hellman parameters file.
         - ``dh_params.pem``
 
@@ -163,11 +163,11 @@ Examples
 TCP Port Forwarding Example
 ---------------------------
 
-Let be the scenario where user *A* host *H*:sub:`A` has a private IP ``192.168.1.2`` given by network router
-*R*:sub:`A`, with a public IP ``1.1.1.1``.
-Let user *B* with host *H*:sub:`B` has a private IP ``192.168.2.2`` given by network router *R*:sub:`B`,
-with a public IP ``2.2.2.2``.
-*A* will act as server of the TCP communication, while *B* will act as client.
+Let there be a scenario where user *A* with host *H*:sub:`A` has a private IP ``192.168.1.2`` given by the network router
+*R*:sub:`A` with public IP ``1.1.1.1``.
+Let user *B* with host *H*:sub:`B` have a private IP ``192.168.2.2`` given by the network router *R*:sub:`B`
+with public IP ``2.2.2.2``.
+*A* will act as the server of the TCP communication and *B* will act as the client.
 
 User *A* should set a port forwarding rule in router *R*:sub:`A` as ``11666 -> 192.168.1.2:11667``.
 That is, every datagram that arrives to IP ``1.1.1.1:11666`` will be forwarded to ``192.168.1.2:11667``.
@@ -205,10 +205,10 @@ requiring to traverse any other NAT.
 UDP Port Forwarding Example
 ---------------------------
 
-Let be the scenario where user *A* host *H*:sub:`A` has a private IP ``192.168.1.2`` given by network router
-*R*:sub:`A`, with a public IP ``1.1.1.1``.
-Let user *B* with host *H*:sub:`B` has a private IP ``192.168.2.2`` given by network router *R*:sub:`B`,
-with a public IP ``2.2.2.2``.
+Let there be a scenario where user *A* with host *H*:sub:`A` has a private IP ``192.168.1.2`` given by the network router
+*R*:sub:`A` with public IP ``1.1.1.1``.
+Let user *B* with host *H*:sub:`B` have a private IP ``192.168.2.2`` given by the network router *R*:sub:`B`
+with public IP ``2.2.2.2``.
 *A* and *B* will communicate via UDP, so there is no need to set a client and a server.
 It does not matter whether *A* knows *B* address, *B* knows *A*, or both know each other.
 In this example, *B* will know *A* address, and not the other way around.
@@ -282,5 +282,5 @@ Below is an example on how to configure a WAN participant as a TLS server and cl
       tls:
         ca: ca.crt
 
-You may also have a look at ``<path/to/ddsrouter_tool>/share/resources/configurations/security/`` directory, which
+You may also have a look at the ``<path/to/ddsrouter_tool>/share/resources/configurations/security/`` directory, which
 contains examples of key and certificate files as well as a script with the commands used to generate them.

@@ -6,7 +6,7 @@
 User Interface
 ##############
 
-|eddsrouter| is a user application executed from command line and configured through a YAML configuration file.
+|eddsrouter| is a user application executed from the command line and configured through a YAML configuration file.
 
 .. contents::
     :local:
@@ -218,7 +218,7 @@ Both methods work over the same configuration file with which the |ddsrouter| ha
 File Watcher
 ^^^^^^^^^^^^
 
-A File Watcher is a process that runs in the background and watches for changes in the |ddsrouter| configuration file.
+A File Watcher is a process that runs in the background and tracks changes in the |ddsrouter| configuration file.
 Every time the file is changed, the OS sends a notification, and the File Watcher listens such notification
 and interacts with the |ddsrouter| in order to reload the topics.
 This event occurs every time the configuration file is saved.
@@ -232,7 +232,7 @@ a link (e.g. Kubernetes executions).
 Reload Timer
 ^^^^^^^^^^^^
 
-A timer could be set in order to periodically reload the configuration file.
+A timer can be set in order to periodically reload the configuration file.
 The configuration file will be automatically reloaded according to the specified time period.
 
 
@@ -287,9 +287,8 @@ Press ``Ctrl + C`` in the terminal where the process is running.
 SIGTERM
 ^^^^^^^
 
-Send an interruption ``SIGTERM`` signal *(signal value 15)* to the process.
-Write command ``kill <pid>`` in a different terminal, where ``<pid>`` is the id of the process running the |ddsrouter|.
-Use ``ps`` or ``top`` programs to check the process ids.
+Send an interruption ``SIGTERM`` signal *(signal value 15)* to the process by executing the command ``kill <pid>`` in a different terminal, where ``<pid>`` is the id of the process running the |ddsrouter|.
+Use the ``ps`` or ``top`` programs to check the processes' ids.
 
 TIMEOUT
 ^^^^^^^

@@ -9,9 +9,9 @@ XML Participant
 This type of :term:`Participant` refers to a :term:`DomainParticipant` that uses QoS profiles loaded from XML files to be configured.
 
 |fastdds| supports XML to fully configure a DomainParticipant.
-Using XML configuration, user have whole access to the full configuration of a DDS DomainParticipant.
-Check following `documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/domainparticipant.html>` for further information about configuring a DDS DomainParticipant with XML.
-For further information regarding how to load XML configuration files to |ddsrouter| check following section :ref:`user_manual_configuration_load_xml`.
+Using XML configuration, users have whole access to the full configuration of a DDS DomainParticipant.
+Check the following `documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/domainparticipant.html>` for further information on how to configure a DDS DomainParticipant with XML.
+For further information regarding how to load XML configuration files to the |ddsrouter|, check the :ref:`user_manual_configuration_load_xml` section.
 
 .. note::
 
@@ -22,7 +22,7 @@ Use case
 ========
 
 Use this Participant to fully configure a DomainParticipant, its discovery methods, transport options, DDS QoS, etc.
-Main use case for this Participant is using **DDS Security**, that requires XML configuration from user side.
+The main use case for this Participant is using **DDS Security**, which requires XML configuration from the user's side.
 
 .. TODO
 
@@ -44,8 +44,8 @@ Kind aliases
 Configuration
 =============
 
-XML Participant allows setting a profile name for the internal DomainParticipant of the |ddsrouter|.
-Such name will be used as QoS profile when creating the internal DomainParticipant.
+The XML Participant allows setting a profile name for the internal DomainParticipant of the |ddsrouter|.
+Such profile name will be used as the QoS profile when creating the internal DomainParticipant.
 
 
 .. _user_manual_participants_xml_profiles:
@@ -53,8 +53,8 @@ Such name will be used as QoS profile when creating the internal DomainParticipa
 Create a Fast DDS XML Participant profile
 -----------------------------------------
 
-Whole DomainParticipant configuration settings must be configured via XML, |ddsrouter| will not configure any attribute or QoS for it.
-To configure the profile, check the following section: :ref:`Configuration section <user_manual_configuration_profile>`.
+The whole DomainParticipant configuration settings must be configured via XML, |ddsrouter| will not configure any attribute or QoS for it.
+To configure the profile, check the :ref:`Profile <user_manual_configuration_profile>` configuration section.
 
 However, there are specific QoS that will affect the performance of the |ddsrouter| and that are advisable for the user to set them.
 Notice that not setting such QoS will not affect the correct functionality of the application, but may affect its performance.
