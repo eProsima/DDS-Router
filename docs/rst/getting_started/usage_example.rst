@@ -9,7 +9,7 @@ Example of usage
 This example will serve as a hands-on tutorial, aimed at introducing some of the key concepts and features that
 |eddsrouter| has to offer.
 
-Two disjoint DDS networks will be bridged by means of a pair of routers, allowing for the connection between endpoints
+Two disjoint DDS networks will be bridged by a pair of routers to connect the endpoints
 hosted at each of the networks. In particular, two `ShapesDemo <https://www.eprosima.com/index.php/products-all/eprosima-shapes-demo>`_
 instances will establish communication after proper configuration and deployment of the two aforementioned routers.
 
