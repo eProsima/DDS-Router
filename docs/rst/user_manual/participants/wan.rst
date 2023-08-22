@@ -20,7 +20,7 @@ Use case
 ========
 
 Use this Participant to communicate an internal DDS network with other LANs through a WAN communication.
-Each of the networks to be connected require a running |ddsrouter|, and the messages will be relay from one to
+Each of the networks to be connected require a running |ddsrouter|, and the messages will be relayed from one to
 another depending on the topics filtered by each of them.
 
 
@@ -35,14 +35,14 @@ Kind aliases
 Configuration
 =============
 
-WAN Participant allow configure the listening and connection addresses, whether if it should be located from
-remote Participants or it should locate others remote Participants:
+The WAN Participant allows users to configure the listening and connection addresses (whether it should locate or
+be located by other remote Participants):
 
-* To configure the listening addresses, check the following section
-  :ref:`Configuration section <user_manual_configuration_listening_addresses>`.
-* To configure the connection addresses to connect with other Wan Participant,
-  check the following section
-  :ref:`Configuration section <user_manual_configuration_initial_peers_connection_addresses>`.
+* To configure the listening addresses, check the
+  :ref:`Listening Addresses <user_manual_configuration_listening_addresses>` configuration section.
+* To configure the connection addresses to connect with other Wan Participants,
+  check the
+  :ref:`Initial Peers Connection Addresses <user_manual_configuration_initial_peers_connection_addresses>` configuration section.
 
 .. note::
 
@@ -58,7 +58,7 @@ Please refer to section :ref:`use_case_repeater` for more information.
 WAN Configuration
 -----------------
 
-Refer to section :ref:`user_manual_wan_configuration` for detailed explanation on how to correctly configure
+Refer to section :ref:`user_manual_wan_configuration` for a detailed explanation on how to correctly configure
 the |ddsrouter| for WAN communication.
 
 .. _user_manual_participants_wan_example:

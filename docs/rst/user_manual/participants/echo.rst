@@ -6,7 +6,7 @@
 Echo Participant
 ################
 
-This :term:`Participant` prints in ``stdout`` all discovery information and/or user data that is received by the |ddsrouter|.
+This :term:`Participant` prints in ``stdout`` all the discovery information and/or user data that is received by the |ddsrouter|.
 
 In the case of discovery traces, messages such as the following will be displayed:
 
@@ -54,7 +54,7 @@ Kind aliases
 Configuration
 =============
 
-Echo Participant accepts three different **optional** parameters:
+The Echo Participant accepts three different **optional** parameters:
 
 - ``discovery``: Whether to echo information regarding discovery events. Defaults to **true**.
 - ``data``: Whether to echo information regarding user data reception. Defaults to **false**.

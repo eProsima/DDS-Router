@@ -23,7 +23,7 @@ Participant nomenclature
 
     Participant
         DDS Router communication Interface.
-        It is an abstraction over DDS DomainParticipant.
+        It is an abstraction of DDS DomainParticipant.
 
         This term is explained :ref:`here <user_manual_participant_participant>`.
 
@@ -46,14 +46,14 @@ DDS nomenclature
 
     DataReader
         DDS element that subscribes to a specific Topic.
-        It belong to one and only one Participant, and it is uniquely identified by a Guid.
+        It belongs to one and only one Participant, and it is uniquely identified by a Guid.
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/subscriber/subscriber.html>`__
         for further information.
 
     DataWriter
-        DDS entity that publish data in a specific Topic.
-        It belong to one and only one Participant, and it is uniquely identified by a Guid.
+        DDS entity that publishes data in a specific Topic.
+        It belongs to one and only one Participant, and it is uniquely identified by a Guid.
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/publisher/dataWriter/dataWriter.html>`__
         for further information.
@@ -96,8 +96,8 @@ DDS nomenclature
         Identifies uniquely a DDS Participant.
 
     Initial Peers
-        It is a Fast DDS Discovery Protocol that allows to send the discovery information directly
-        to the participants configured.
+        It is a Fast DDS Discovery Protocol that allows the router to send the discovery information directly
+        to the Participants configured.
         This is highly recommended for static networks where multicast is not available (e.g. WAN).
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html#initial-peers>`__

@@ -7,12 +7,12 @@ Project Overview
 ################
 
 |ddsrouter| is a cross-platform non-graphical application developed by eProsima and powered by Fast DDS
-that allows to create a communication bridge that connects two DDS networks that otherwise would be isolated.
+that allows users to create a communication bridge that connects two DDS networks that otherwise would be isolated.
 The main use case of the |ddsrouter| is to communicate two DDS networks that are physically or virtually separated
 and belong to different LANs, allowing the entities of each network to publish and subscribe to local
 and remote topics indistinctly.
 
-The |ddsrouter| is an application that internally run :term:`Participants <Participant>`, which are an abstraction of
+|ddsrouter| is an application that internally runs :term:`Participants <Participant>`, which are an abstraction of
 DDS :term:`DomainParticipants <DomainParticipant>`.
 Each one of these Participants is an communication interface, a "door" to a specific DDS network configuration.
 These Participants allow the application to connect to different DDS networks at the same time.
@@ -38,20 +38,20 @@ to the allocated data, successfully achieving a **zero-copy** communication mech
 WAN Communication
 =================
 
-To achieve a WAN communication of two networks that work in different LANs requires a running
+Achieving a WAN communication of two networks that work in different LANs requires a running
 |ddsrouter| application on each LAN.
-The |ddsrouter| deployed will communicate to each other using DDS over WAN,
-and will route every message received in LAN to the remote |ddsrouter|.
+The |ddsrouter| deployed will communicate with each network using DDS over WAN,
+and it will reroute every message received in LAN to the remote |ddsrouter|.
 Once the remote Router receives data, it will transmit it to the local networks to which it is connected.
-This way, both DDS networks will behave as if they would belong to the same LAN.
+This way, both DDS networks will behave as if they belonged to the same LAN.
 
 Another important feature is that WAN communications are not limited to a single pair of |ddsrouter|.
 The WAN communication may be performed using the
 `eProsima Discovery Server discovery mechanism <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html#discovery-server>`__
 (dynamic discovery over non-multicast networks).
-Thus, any DDS Router connected to the same Discovery Servers will works as a standard DDS node, publishing
-and subscribing in the shared DDS topics.
-This allows to create a non limited and highly scalable decentralized and distributed DDS network.
+Thus, any DDS Router connected to the same Discovery Servers will work as a standard DDS node, publishing
+and subscribing on the shared DDS topics.
+This create an unlimited and highly scalable decentralized and distributed DDS network.
 
 .. figure:: /rst/figures/ddsrouter_overview_wan.png
 
@@ -64,10 +64,10 @@ The configuration in *YAML* format is very intuitive and human-readable.
 The whole application has been thought to be user-friendly, following a user-oriented design.
 
 * **RUN**: In order to run a |ddsrouter| application, just a *YAML* configuration file is required with the specific
-  configurations (see :ref:`section <user_manual_configuration>` to check how to configure a DDS Router)
-  (see section :ref:`section <user_manual_user_interface_application_arguments>`
+  configurations (see section :ref:`DDS Router Configuration <user_manual_configuration>` to check how to configure a DDS Router
+  and see section :ref:`Application Arguments <user_manual_user_interface_application_arguments>`
   to check the application supported arguments).
-* **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication could be
+* **INTERACT**: Once the |ddsrouter| application is running, the topics involved in this communication can be
   changed in runtime by just changing the *YAML* configuration file
   (see section :ref:`user_manual_user_interface_reload_topics`
   for more details about re-configuring a running |ddsrouter|).

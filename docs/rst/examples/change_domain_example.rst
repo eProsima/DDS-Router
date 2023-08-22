@@ -33,7 +33,7 @@ one domain to the other, allowing different DDS domains to interact with each ot
 Simple Participant Domain 0
 ---------------------------
 
-This Participant is configured with a name, a kind and the Domain Id, which is ``0`` in this case.
+This Participant is configured with a name, a kind, and a Domain Id, which is ``0`` in this case.
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
@@ -43,7 +43,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 Simple Participant Domain 1
 ---------------------------
 
-This Participant is configured with a name, a kind and the Domain Id, which is ``1`` in this case.
+This Participant is configured with a name, a kind, and a Domain Id, which is ``1`` in this case.
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
@@ -53,7 +53,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 Execute example
 ===============
 
-Please refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the
+Please refer to section :ref:`User Interface <user_manual_user_interface>` for a detailed explanation on how to execute the
 |ddsrouter|.
 
 .. todo:
@@ -78,10 +78,10 @@ Execute a ROS 2 ``demo_nodes_cpp`` *listener* in domain ``1``:
 
     ROS_DOMAIN_ID=1 ros2 run demo_nodes_cpp listener
 
-Execute |ddsrouter| with this configuration file (available in
+Execute the |ddsrouter| with this configuration file (available in
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/change_domain_allowlist.yaml``).
 Once the |ddsrouter| is running, messages from *talker* in domain 0 will be forwarded by the Router
-to the *listener* in domain 1, that will print them in ``stdout``.
+to the *listener* in domain 1 that will print them in ``stdout``.
 
 There is also available an example without ``allowlist`` (available in
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/change_domain.yaml``).

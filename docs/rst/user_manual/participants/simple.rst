@@ -8,7 +8,7 @@ Simple Participant
 
 This kind of :term:`Participant` refers to a Simple DDS :term:`DomainParticipant`.
 This Participant will discover all Participants deployed in its own local network in the same domain via multicast
-communication,and will communicate with those that share publication or subscription topics.
+communication, and will communicate with those that share publication or subscription topics.
 
 
 Use case

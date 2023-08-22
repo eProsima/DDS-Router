@@ -19,10 +19,10 @@ and :term:`Participants <Participant>` configurations. Configuration files may b
 Configuration version
 =====================
 
-The YAML Configuration support a ``version`` value to identify the configuration version to parse the file.
-In future releases could be common to change the YAML format (some key words,
-fields, etc.).
-This value allow to keep using the same YAML file using an old configuration format, maintaining compatibility
+The YAML Configuration supports a ``version`` value to identify the configuration version to parse the file.
+In future releases the YAML format (some key words,
+fields, etc.) may change.
+This value allows users to keep using the same YAML file with an old configuration format, maintaining compatibility
 with future releases.
 
 .. list-table::
@@ -45,17 +45,17 @@ This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when tag ``version`` is not set is *v3.0*.
+    The current default version when the tag ``version`` is not set is *v3.0*.
 
 .. warning::
 
     **Deprecation Warning**.
-    In future releases tag ``version`` will be mandatory.
+    In future releases, the tag ``version`` will be mandatory.
 
 .. warning::
 
     **Deprecation warning**.
-    Update to `v3.0` version as `v1.0` is no longer supported.
+    Update to  version `v3.0` since `v1.0` is no longer supported.
 
 
 .. _thread_configuration:
@@ -75,7 +75,7 @@ for the internal :code:`ThreadPool`.
 This ThreadPool allows to limit the number of threads spawned by the application.
 This improves the performance of the data transmission between Participants.
 
-This value should be set by each user depending on each system characteristics.
+This value should be set by each user depending on each system's characteristics.
 In case this value is not set, the default number of threads used is :code:`12`.
 
 .. _history_depth_configuration:
@@ -100,24 +100,24 @@ Load XML Configuration
 ======================
 
 Fast DDS supports configuration of its internal entities (:term:`DomainParticipant`, :term:`DataWriter`, etc.) via XML Profiles.
-These XML files contains different profiles that set specific QoS, and entities can be created following such profiles.
-These XML files could be loaded in the process via *default file name* or by an environment variable.
-Check `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>` for more information.
+These XML files contain different profiles that set specific QoS, and entities can be created following such profiles.
+These XML files can be loaded in the process by their *default file name* or by an environment variable.
+Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>` for more information.
 
 Another way of loading these XML configurations is using the |ddsrouter| yaml configuration.
 The YAML Configuration supports a ``xml`` **optional** tag that contains certain options to load Fast DDS XML configurations.
-XML configurations are then used to configure a :ref:`XML Participant <user_manual_participants_xml>`.
+XML configurations are then used to configure an :ref:`XML Participant <user_manual_participants_xml>`.
 
 
 Load XML Files
 --------------
 
-Under **optional** tag `files`, a list could be set with name of files to load XML from.
+Under the **optional** tag `files`, a list can be set with the names of files to load XML from.
 
 Raw XML
 -------
 
-Under **optional** tag `raw`, an XML configuration (with same format as an XML file) could be set as string to be loaded.
+Under the **optional** tag `raw`, an XML configuration (with the same format as an XML file) can be set as a string to be loaded.
 
 .. code-block:: yaml
 
@@ -150,8 +150,8 @@ Built-in Topics
 Apart from the dynamic creation of Endpoints in DDS Topics discovered,
 the discovery phase can be accelerated by using the builtin topic list (``builtin-topics``).
 By defining topics in this list, the DDS router will create the DataWriters and DataReaders in router initialization.
-This feature also allows to manually force the QoS of a specific topic, so the entities created in such topic
-follows the specified QoS and not the one first discovered.
+This feature also allows to manually force the QoS of a specific topic, so the entities created in such a topic
+will follow the specified QoS and not the one first discovered.
 
 Topic Quality of Service
 ------------------------
@@ -206,7 +206,7 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - Topic with / without key
 
 The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
-or not. See :term:`Topic` section for further information about the topic.
+or not. See the :term:`Topic` section for further information about the topic.
 
 
 .. code-block:: yaml
@@ -353,10 +353,9 @@ and ``AllowedTopic2`` regardless of its data type.
 Participant Configuration
 =========================
 
-At the yaml base level, along with ``builtin-topics`` tag, there will be the tag ``participants``.
-``participants`` handles an array of :term:`Participant` configurations.
+At the yaml base level, along with the ``builtin-topics`` tag, there will be the tag ``participants`` to handle an array of :term:`Participant` configurations.
 Each Participant is identified by a unique :term:`Participant Name` and requires to set the ``kind`` of the Participant.
-There could be any number of Participants, and Participant kinds could be repeated.
+There can be any number of Participants, and Participant kinds can be repeated.
 
 Each Participant has its specific configuration.
 Please, refer to :ref:`user_manual_participant_participant_kinds` in order to see each of the
@@ -480,10 +479,10 @@ See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/t
 Repeater Participant
 --------------------
 
-Optional tag ``repeater`` configures a :ref:`WAN Participant <user_manual_participants_wan>` as a *Repeater* point.
-This means that this Participant will forward all the information received from its Readers by its Writer.
+The optional tag ``repeater`` configures a :ref:`WAN Participant <user_manual_participants_wan>` as a *Repeater* point.
+This means that this Participant will forward all the information received from its Readers to its Writers.
 
-Check the following :ref:`use_case_repeater` to know how to use the ``repeater`` Participant attribute.
+Check the :ref:`use_case_repeater` use case to see how the ``repeater`` Participant attribute is used.
 
 .. code-block:: yaml
 
@@ -509,7 +508,7 @@ An Address is defined by:
   If it is not set, it would be chosen by default depending on the Participant Kind.
 * *IP version*: ``v4`` or ``v6``.
   If it is not set, it would be chosen depending on the *IP* string format.
-* *Domain Name*: Domain unique name to ask DNS server for the related IP.
+* *Domain Name*: Domain's unique name to ask the DNS server for the related IP.
   This field is ignored if ``ip`` is specified.
 
 .. code-block:: yaml
@@ -548,7 +547,7 @@ For more information, check section :ref:`user_manual_wan_configuration_nat_trav
 Discovery Server GuidPrefix
 ---------------------------
 
-A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order to other Participants connect to it.
+A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
 
 
@@ -587,14 +586,14 @@ This entry is ignored if ``guid`` is specified.
 ROS Discovery Server GuidPrefix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There is a specific GuidPrefix for ROS 2 executions, so it could be used using Fast DDS CLI and
+There is a specific GuidPrefix for ROS 2 executions which can be used with Fast DDS CLI and
 ROS 2 ``ROS_DISCOVERY_SERVER`` environment variable
 (`<https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/ros2/discovery_server/ros2_discovery_server.html>`__).
 
 The ROS 2 Discovery Server GuidPrefix is set by default to ``44.53.<id>.5f.45.50.52.4f.53.49.4d.41`` where ``<id>``
 is the specific id of the Server.
-This GuidPrefix also allow an ``id``` value to specify which id is used in the GuidPrefix.
-Default value for ``id`` is ``0``.
+This GuidPrefix also allows an ``id``` value to specify which id is used in the GuidPrefix.
+The default value for ``id`` is ``0``.
 
 .. code-block:: yaml
 
