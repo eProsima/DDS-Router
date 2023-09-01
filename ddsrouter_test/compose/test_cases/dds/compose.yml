@@ -99,9 +99,9 @@ services:
       - std_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 4 --topic topic3
 
-  subscriber_t0:
+  subscriber_t9:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_t0
+    container_name: subscriber_t9
     networks:
       - std_net
     volumes:
