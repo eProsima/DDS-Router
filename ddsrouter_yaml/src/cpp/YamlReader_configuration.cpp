@@ -51,6 +51,13 @@ void YamlReader::fill(
     {
         object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
     }
+
+    /////
+    // Get optional delete unused entities
+    if (YamlReader::is_tag_present(yml, DELETE_UNUSED_ENTITIES_TAG))
+    {
+        object.delete_unused_entities = YamlReader::get<bool>(yml, DELETE_UNUSED_ENTITIES_TAG, version);
+    }
 }
 
 template <>

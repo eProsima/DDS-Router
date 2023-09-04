@@ -68,6 +68,7 @@ DdsRouter::DdsRouter(
                         payload_pool_,
                         participants_database_,
                         thread_pool_,
+                        configuration_.advanced_options.delete_unused_entities,
                         configuration_.builtin_topics,
                         false,
                         configuration_.routes,
