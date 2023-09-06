@@ -72,7 +72,7 @@ DdsRouter::DdsRouter(
                         false,
                         configuration_.routes,
                         configuration_.topic_routes,
-                        configuration_.advanced_options.delete_unused_entities));
+                        configuration_.advanced_options.dynamic_tracks));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }

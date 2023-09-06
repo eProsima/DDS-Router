@@ -40,9 +40,9 @@ bool SpecsConfiguration::is_valid(
         logWarning(DDSROUTER_SPECS, "Using non limited histories could lead to memory exhaustion in long executions.");
     }
 
-    if (delete_unused_entities)
+    if (dynamic_tracks)
     {
-        logWarning(DDSROUTER_SPECS, "Deleting unused entities is inconsistent with transient local.");
+        logWarning(DDSROUTER_SPECS, "Dynamic tracks are inconsistent with transient local.");
     }
 
     return true;

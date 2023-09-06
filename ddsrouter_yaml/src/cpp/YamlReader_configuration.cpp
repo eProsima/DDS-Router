@@ -53,10 +53,10 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional delete unused entities
-    if (YamlReader::is_tag_present(yml, DELETE_UNUSED_ENTITIES_TAG))
+    // Get optional dynamic tracks
+    if (YamlReader::is_tag_present(yml, DYNAMIC_TRACKS_TAG))
     {
-        object.delete_unused_entities = YamlReader::get<bool>(yml, DELETE_UNUSED_ENTITIES_TAG, version);
+        object.dynamic_tracks = YamlReader::get<bool>(yml, DYNAMIC_TRACKS_TAG, version);
     }
 }
 

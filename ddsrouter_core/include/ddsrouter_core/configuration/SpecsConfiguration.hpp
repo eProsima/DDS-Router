@@ -68,7 +68,7 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      * @note The default value is set to false.
      * @note Setting it to true may reduce the bandwidth usage.
      */
-    bool delete_unused_entities = false;
+    bool dynamic_tracks = false;
 };
 
 } /* namespace core */
