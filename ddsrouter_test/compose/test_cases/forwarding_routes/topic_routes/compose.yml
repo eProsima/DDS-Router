@@ -1,0 +1,111 @@
+# Test description:
+#   This test checks the topic routes feature.
+#   A route is configured from Local_0 to Local_1 & Local_2.
+#   A topic route is configured from Local 0 to Local_1 for topic1.
+#   We check that the subscribers connected to Local_1 and Local_2 receive the data in topic0
+#   but that only the subscriber connected to Local_1 receives the data in topic1.
+#
+# Test architecture:
+#
+# ┌──────────────────────┐
+# │  Domain 81           │
+# │ ┌─────────────────┐  │
+# │ │ subscriber_1_t0 │  │
+# │ │                 ◄──┼───┐
+# │ │ (local)         │  │   │
+# │ └─────────────────┘  │   │
+# │                      │   │
+# │ ┌─────────────────┐  │   │        ┌─────────────────────┐
+# │ │ subscriber_1_t1 │  │   │        │          Domain 80  │
+# │ │                 ◄──┼─┐ │        │  ┌────────────────┐ │
+# │ │ (local)         │  │ │ │        │  │ publisher_0_t0 │ │
+# │ └─────────────────┘ ┌┼─┴─┴────────┼┐ │                │ │
+# │                     ││           ◄├┼─┤ (local)        │ │
+# └─────────────────────┼┘ ddsrouter  ││ └────────────────┘ │
+#                       │             ││                    │
+# ┌─────────────────────┼┐ (local)    ││ ┌────────────────┐ │
+# │  Domain 82          ││           ◄├┼─┤ publisher_0_t1 │ │
+# │ ┌─────────────────┐ └┼─┬──────────┼┘ │                │ │
+# │ │ subscriber_2_t0 │  │ │          │  │ (local)        │ │
+# │ │                 ◄──┼─┘          │  └────────────────┘ │
+# │ │ (local)         │  │            │                     │
+# │ └─────────────────┘  │            └─────────────────────┘
+# │                      │
+# │ ┌─────────────────┐  │
+# │ │ subscriber_2_t1 │  │
+# │ │                 │  │
+# │ │ (local)         │  │
+# │ └─────────────────┘  │
+# │                      │
+# └──────────────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+
+  # DOMAIN 0
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic0
+
+  publisher_0_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t1
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic1
+
+  # DOMAIN 1
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 81 --topic topic0"
+
+  subscriber_1_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t1
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 81 --topic topic1"
+
+  # DOMAIN 2
+  subscriber_2_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 82 --topic topic0"
+
+  subscriber_2_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t1
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 8 --args "--samples 20 --domain 82 --topic topic1"
+
+networks:
+  std_net:
+  default:
+    driver: none

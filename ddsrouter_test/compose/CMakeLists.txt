@@ -39,6 +39,11 @@ set(TESTS
     security/backdoor_dds
     security/secure_trespassing
     security/secure_wan
+
+    forwarding_routes/basic_route
+    forwarding_routes/parallel_routes
+    forwarding_routes/topic_routes
+    forwarding_routes/repeater
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

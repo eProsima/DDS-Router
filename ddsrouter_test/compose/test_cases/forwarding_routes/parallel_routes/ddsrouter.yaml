@@ -1,0 +1,30 @@
+version: v3.1
+
+
+participants:
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Local_81
+    kind: local
+    domain: 81
+
+  - name: Local_82
+    kind: local
+    domain: 82
+
+  - name: Local_83
+    kind: local
+    domain: 83
+
+
+routes:
+  - src: Local_80
+    dst:
+      - Local_81
+      - Local_82
+
+  - src: Local_81
+  - src: Local_82
+  - src: Local_83
