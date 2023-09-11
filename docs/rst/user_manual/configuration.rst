@@ -685,6 +685,93 @@ It will use such profile for configuring the Participant.
 
 .. _user_manual_configuration_general_example:
 
+
+Forwarding Routes
+=================
+
+The |ddsrouter| is capable of establishing different internal routes between its participants.
+This feature enables users to only send sensible data to a set of participants.
+
+.. note::
+
+    By default, when the tag ``routes`` is not set, every participant receives everything.
+
+Generic Routes
+--------------
+
+To configure a custom set of forwarding routes, use the tag ``routes`` followed by the destination participants of each source.
+
+
+.. note::
+
+    If a participant is not listed as a source, it will send the data it receives to every participant.
+
+.. note::
+
+    If a participant is listed as a source but it is not given any destination participants, it will not send the data it receives to any participant.
+
+
+Consider the following example with three participants: ``Participant0``, ``Participant1``, and ``Participant2``.
+
+.. code-block:: yaml
+
+  routes:
+    - src: Participant0
+      dst:
+        - Participant2
+
+    - src: Participant1
+
+
+When data is published:
+
+* Participant ``Participant0`` will only forward the data it receives to participant ``Participant2``.
+* Participant ``Participant1`` will not forward the data it receives to any participant, since it does not have any destination participants.
+* Participant ``Participant2`` will forward the data it receives to every participant, since it does not have a forwarding route.
+
+
+.. warning::
+
+    A repeater participant with a route defined must add itself to its route's destinations.
+
+
+Topic Routes
+------------
+
+Besides the standard routes just described, custom routes can also be configured for a specific topic.
+To configure a custom set of forwarding routes for a specific topic, use the tag ``topic-routes``.
+
+.. warning::
+
+  Topic routes take precedence over standard routes.
+  This means that when data is published on a topic with a topic route configured, the generic routes are ignored and the topic route is used.
+
+
+Again, consider the following example with three participants: ``Participant0``, ``Participant1``, and ``Participant2``.
+
+.. code-block:: yaml
+
+  topic-routes:
+    - name: HelloWorld
+      type: HelloWorld
+      routes:
+        - src: Participant1
+          dst:
+            - Participant0
+
+        - src: Participant2
+
+When data is published in the topic ``HelloWorld`` with type ``HelloWorld``:
+
+* Participant ``Participant0`` will forward the data it receives to every participant, since it does not have a forwarding route.
+* Participant ``Participant1`` will only forward the data it receives to participant ``Participant0``.
+* Participant ``Participant2`` will not forward the data it receives to any participant, since it does not have any destination participants.
+
+.. warning::
+
+  When configuring topic routes, the topic's ``type`` tag is required.
+
+
 General Example
 ===============
 
@@ -752,6 +839,16 @@ A complete example of all the configurations described on this page can be found
 
     ####################
 
+    # Simple DDS Participant in domain 3
+
+      - name: Participant1              # Participant Name = Participant1
+
+        kind: local                     # Participant Kind = local (= simple)
+
+        domain: 7                       # DomainId = 7
+
+    ####################
+
     # Discovery Server DDS Participant with ROS GuidPrefix so a local ROS 2 Client could connect to it
     # This Discovery Server will listen in ports 11600 and 11601 in localhost
 
@@ -809,3 +906,22 @@ A complete example of all the configurations described on this page can be found
         kind: xml
 
         profile: custom_participant_configuration   # Configure participant with this profile
+
+    # Custom generic forwarding route.
+
+    routes:
+
+      - src: Participant0
+        dst:
+          - Participant1
+
+    # Custom topic forwarding route.
+
+    topic-routes:
+
+      - name: HelloWorld
+        type: HelloWorld
+        routes:
+          - src: Participant0
+            dst:
+              - Participant1
