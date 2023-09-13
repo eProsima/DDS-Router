@@ -44,6 +44,12 @@ set(TESTS
     forwarding_routes/parallel_routes
     forwarding_routes/topic_routes
     forwarding_routes/repeater
+
+    dynamic_tracks/disconnect
+    dynamic_tracks/disconnect_wan
+    dynamic_tracks/persist_diff_domain
+    dynamic_tracks/persist_same_domain
+    dynamic_tracks/reconnect
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

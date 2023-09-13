@@ -32,6 +32,7 @@ class ReturnCode(Enum):
     NOT_VALID_MESSAGES = 3
     COMMAND_FAIL = 4
     STDERR_OUTPUT = 5
+    NOT_VALID_DISCONNECTS = 6
 
 
 """

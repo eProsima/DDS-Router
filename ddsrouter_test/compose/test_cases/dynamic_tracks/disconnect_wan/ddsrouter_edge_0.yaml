@@ -1,0 +1,17 @@
+version: v3.1
+
+participants:
+
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Edge_Participant
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud_0
+        port: 11666
+        transport: udp
+
+specs:
+  dynamic_tracks: true
