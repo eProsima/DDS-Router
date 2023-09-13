@@ -738,12 +738,12 @@ When data is published:
 Topic Routes
 ------------
 
-Besides the standard routes just described, custom routes can also be configured for a specific topic.
+Besides the generic routes just described, custom routes can also be configured for a specific topic.
 To configure a custom set of forwarding routes for a specific topic, use the tag ``topic-routes``.
 
 .. warning::
 
-  Topic routes take precedence over standard routes.
+  Topic routes take precedence over generic routes.
   This means that when data is published on a topic with a topic route configured, the generic routes are ignored and the topic route is used.
 
 

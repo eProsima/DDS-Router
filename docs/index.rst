@@ -68,6 +68,7 @@
    /rst/examples/wan_example
    /rst/examples/repeater_example
    /rst/examples/xml_configuration
+   /rst/examples/forwarding_routes
 
 
 .. _index_use_cases:
