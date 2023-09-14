@@ -42,19 +42,22 @@ RUN pip3 install \
 WORKDIR /ddsrouter
 
 
+ARG fastcdr_branch=master
 ARG fastdds_branch=master
 ARG devutils_branch=main
 ARG ddspipe_branch=main
 ARG ddsrouter_branch=main
 
-RUN echo "fastdds branch: <${fastdds_branch}>"
-RUN echo "devutils branch: <${devutils_branch}>"
-RUN echo "ddspipe branch: <${ddspipe_branch}>"
-RUN echo "ddsrouter branch: <${ddsrouter_branch}>"
+RUN echo "fastcdr branch: <${fastcdr_branch}>" && \
+    echo "fastdds branch: <${fastdds_branch}>" && \
+    echo "devutils branch: <${devutils_branch}>" && \
+    echo "ddspipe branch: <${ddspipe_branch}>"  && \
+    echo "ddsrouter branch: <${ddsrouter_branch}>"
 
 RUN mkdir src && \
     wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
     vcs import src < ddsrouter.repos && \
+    cd src/fastcdr && git checkout ${fastcdr_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
     cd src/dev-utils && git checkout ${devutils_branch} && cd ../.. && \
     cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../.. && \
