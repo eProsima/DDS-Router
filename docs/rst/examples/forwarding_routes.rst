@@ -67,7 +67,7 @@ Then, we declare the route for each participant.
 
 .. warning::
 
-    When there is not a topic forwarding route for a specific participant, the generic forwarding route will be ignored and it will forward messages to every participant.
+    When there is not a topic forwarding route for a specific topic, the generic forwarding route will be completely ignored and the topic forwarding route will be used instead.
 
 This route is configured so that ``SimpleParticipant_0`` will subscribe to the data published by ``SimpleParticipant_1``.
 

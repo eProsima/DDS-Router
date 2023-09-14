@@ -50,7 +50,7 @@ routes:                                                           # 5
 topic-routes:                                                     # 11
 
   - name: Circle                                                  # 12
-    type: ShapeType                                               # 13
+    type: HelloWorld                                              # 13
 
     routes:                                                       # 14
 
