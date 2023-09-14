@@ -38,16 +38,16 @@ services:
 
 
   # DOMAIN 1
-  publisher_t0:
+  publisher_1_t0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: publisher_t0
+    container_name: publisher_1_t0
     networks:
       - std_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 1 --topic topic0
 
-  subscriber_t1:
+  subscriber_1_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_t1
+    container_name: subscriber_1_t1
     networks:
       - std_net
     volumes:
@@ -56,16 +56,16 @@ services:
 
 
   # DOMAIN 2
-  publisher_t1:
+  publisher_2_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: publisher_t1
+    container_name: publisher_2_t1
     networks:
       - std_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 2 --topic topic1
 
-  subscriber_t2:
+  subscriber_2_t2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_t2
+    container_name: subscriber_2_t2
     networks:
       - std_net
     volumes:
@@ -74,16 +74,16 @@ services:
 
 
   # DOMAIN 3
-  publisher_t2:
+  publisher_3_t2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: publisher_t2
+    container_name: publisher_3_t2
     networks:
       - std_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 3 --topic topic2
 
-  subscriber_t0:
+  subscriber_3_t0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_t0
+    container_name: subscriber_3_t0
     networks:
       - std_net
     volumes:
@@ -92,16 +92,16 @@ services:
 
 
   # DOMAIN 4
-  publisher_t3:
+  publisher_4_t3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: publisher_t3
+    container_name: publisher_4_t3
     networks:
       - std_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 4 --topic topic3
 
-  subscriber_t0:
+  subscriber_4_t0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_t0
+    container_name: subscriber_4_t0
     networks:
       - std_net
     volumes:
