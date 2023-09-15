@@ -1,5 +1,5 @@
 # Test description:
-#   Check that tracks get deleted when their last subscriber disconnects.
+#   This test checks that tracks get deleted when their last subscriber disconnects.
 #
 # Test architecture:
 #

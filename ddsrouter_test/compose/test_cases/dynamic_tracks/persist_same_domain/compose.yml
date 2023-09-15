@@ -1,5 +1,5 @@
 # Test description:
-#   Check that the dynamic tracks can handle several subscriber in the same domain.
+#   Check that the dynamic tracks can handle several subscribers in the same domain.
 #   Check that dynamic tracks do not get deleted when the participant who created them disconnects.
 #
 # Test architecture:

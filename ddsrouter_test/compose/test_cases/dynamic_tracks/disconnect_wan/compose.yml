@@ -1,8 +1,9 @@
 # Test description:
-#   This test checks the UDP functionality by creating 4 routers, 2 edges and 2 cloud.
-#   The cloud router will forward every message from 1 to 2 by two different participants connected by UDP.
-#   It also probes the Initial Peers functionality, avoiding the discovery of edge routers with those routers that
-#    that are not the one suppose to connect with.
+#   This test checks that the dynamic tracks are capable of not using bandwidth
+#   over a WAN connection when there aren't any subscribers. To achieve it, the
+#   test sets up four routers, a subscriber, and a publisher. It then checks
+#   that the subscriber receives the data from the publisher, and then it stops
+#   the connection and checks if the tracks have been destroyed.
 #
 # Test architecture:
 #
