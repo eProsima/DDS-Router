@@ -49,7 +49,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 10
+    command: ddsrouter -c /config.yaml --timeout 12
 
 
   # DOMAIN 80
@@ -60,7 +60,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --samples 80 --domain 80 --topic topic0 --interval 100
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --samples 110 --domain 80 --topic topic0 --interval 100
 
 
   # DOMAIN 81
@@ -80,7 +80,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 3 --delay 4 --args "--samples 20 --domain 81 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 6 --delay 4 --args "--samples 20 --domain 81 --topic topic0"
 
 networks:
   std_net:
