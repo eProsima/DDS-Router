@@ -11,4 +11,4 @@ participants:
     domain: 81
 
 specs:
-  dynamic-tracks: true
+  remove-unused-entities: true

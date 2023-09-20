@@ -1,5 +1,5 @@
 # Test description:
-#   This test checks that the dynamic tracks are capable of not using bandwidth
+#   This test checks that the removal of unused entities frees up bandwidth
 #   over a WAN connection when there aren't any subscribers. To achieve it, the
 #   test sets up four routers, a subscriber, and a publisher. It then checks
 #   that the subscriber receives the data from the publisher, and then it stops

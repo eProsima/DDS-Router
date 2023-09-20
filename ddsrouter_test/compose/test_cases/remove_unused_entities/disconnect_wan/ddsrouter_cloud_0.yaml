@@ -17,4 +17,4 @@ participants:
         transport: udp
 
 specs:
-  dynamic_tracks: true
+  remove-unused-entities: true
