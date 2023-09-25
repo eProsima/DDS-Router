@@ -735,17 +735,13 @@ Consider the following example with three participants: ``Participant0``, ``Part
 Topic Routes
 ------------
 
-Besides the generic routes just described, custom routes can also be configured for a specific topic.
+Besides the generic routes just described, custom routes can also be configured for a specific topic (determined by a ``name`` and ``type`` pair).
 To configure a custom set of forwarding routes for a specific topic, use the tag ``topic-routes``.
 
 .. warning::
 
   Topic routes take precedence over generic routes.
   This means that when data is published on a topic with a topic route configured, the generic routes are ignored and the topic route is used.
-
-.. warning::
-
-  When configuring topic routes, the topic's ``type`` tag is required.
 
 Again, consider the following example with three participants: ``Participant0``, ``Participant1``, and ``Participant2``.
 
