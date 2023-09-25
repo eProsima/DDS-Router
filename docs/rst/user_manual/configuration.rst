@@ -690,25 +690,25 @@ Forwarding Routes
 =================
 
 The |ddsrouter| is capable of establishing different internal routes between its participants.
-This feature enables users to only send sensible data to a set of participants.
+This feature enables users to only forward sensitive data to a set of participants.
 
 .. note::
 
-    By default, when the tag ``routes`` is not set, every participant receives everything.
+    By default, when the tag ``routes`` is not set, every participant forwards the data it receives to every other participant.
 
 Generic Routes
 --------------
 
-To configure a custom set of forwarding routes, use the tag ``routes`` followed by the destination participants of each source.
+To configure a custom set of forwarding routes, use the tag ``routes`` followed by the destination participants for each source participant.
 
 
 .. note::
 
-    If a participant is not listed as a source, it will send the data it receives to every participant.
+    If a participant is not listed as a source, it will forward the data it receives to every other participant.
 
 .. note::
 
-    If a participant is listed as a source but it is not given any destination participants, it will not send the data it receives to any participant.
+    If a participant is listed as a source but it is not given any destination participants, it will not forward the data it receives to any participant.
 
 
 Consider the following example with three participants: ``Participant0``, ``Participant1``, and ``Participant2``.
@@ -722,12 +722,9 @@ Consider the following example with three participants: ``Participant0``, ``Part
 
     - src: Participant1
 
-
-When data is published:
-
 * Participant ``Participant0`` will only forward the data it receives to participant ``Participant2``.
 * Participant ``Participant1`` will not forward the data it receives to any participant, since it does not have any destination participants.
-* Participant ``Participant2`` will forward the data it receives to every participant, since it does not have a forwarding route.
+* Participant ``Participant2`` will forward the data it receives to every participant (``Participant0`` and ``Participant1``), since it does not have a forwarding route.
 
 
 .. warning::
@@ -746,6 +743,9 @@ To configure a custom set of forwarding routes for a specific topic, use the tag
   Topic routes take precedence over generic routes.
   This means that when data is published on a topic with a topic route configured, the generic routes are ignored and the topic route is used.
 
+.. warning::
+
+  When configuring topic routes, the topic's ``type`` tag is required.
 
 Again, consider the following example with three participants: ``Participant0``, ``Participant1``, and ``Participant2``.
 
@@ -766,10 +766,6 @@ When data is published in the topic ``HelloWorld`` with type ``HelloWorld``:
 * Participant ``Participant0`` will forward the data it receives to every participant, since it does not have a forwarding route.
 * Participant ``Participant1`` will only forward the data it receives to participant ``Participant0``.
 * Participant ``Participant2`` will not forward the data it receives to any participant, since it does not have any destination participants.
-
-.. warning::
-
-  When configuring topic routes, the topic's ``type`` tag is required.
 
 
 General Example

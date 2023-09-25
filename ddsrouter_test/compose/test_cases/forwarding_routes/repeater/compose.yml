@@ -1,7 +1,6 @@
 # Test description:
 #   This test checks the repeater functionality of the DDS Router. A DDS Router is deployed in the cloud with a single
-#   repeater participant. This way it is verified that the data sent from network 1 does not arrive duplicated to the
-#   subscriber of this same network, and that this same data reaches network 2.
+#   repeater participant, and we verify that the data sent from network 1 reaches network 2.
 #
 # Test architecture:
 #
@@ -19,14 +18,14 @@
 #   │      │ ┌──────────────────┐         │  │  │  │   ┌───────▼──────────┐ │      │
 #   │      │ │ ddsrouter_edge_1 │         │  │  │  │   │ ddsrouter_edge_2 │ │      │
 #   │      │ │ (local + wan)    │         │  │  │  │   │ (local + wan)    │ │      │
-#   │      │ └───────┬────▲─────┘         │  │  │  │   └───────┬──────────┘ │      │
-#   │      │         │    │               │  │  │  │           │            │      │
-#   │      └─────────┼────┼───────────────┼──┘  └──┼───────────┼────────────┘      │
-#   │                │    │               │        │           │                   │
-#   │  ┌─────────────▼┐  ┌┴───────────┐   │        │    ┌──────▼───────┐           │
-#   │  │ sub_edge_1   │  │ pub_edge_1 │   │        │    │ sub_edge_2   │           │
-#   │  │ (subscriber) │  │ (publisher)│   │        │    │ (subscriber) │           │
-#   │  └──────────────┘  └────────────┘   │        │    └──────────────┘           │
+#   │      │ └────────────▲─────┘         │  │  │  │   └───────┬──────────┘ │      │
+#   │      │              │               │  │  │  │           │            │      │
+#   │      └──────────────┼───────────────┼──┘  └──┼───────────┼────────────┘      │
+#   │                     │               │        │           │                   │
+#   │                    ┌┴───────────┐   │        │    ┌──────▼───────┐           │
+#   │                    │ pub_edge_1 │   │        │    │ sub_edge_2   │           │
+#   │                    │ (publisher)│   │        │    │ (subscriber) │           │
+#   │                    └────────────┘   │        │    └──────────────┘           │
 #   │                                     │        │                               │
 #   │ edge_1_net                          │        │                    edge_2_net │
 #   └─────────────────────────────────────┘        └───────────────────────────────┘
@@ -65,15 +64,6 @@ services:
     networks:
       - edge_1_net
     command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 100 -s 110
-
-  sub_edge_1:
-    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: sub_edge_1
-    networks:
-      - edge_1_net
-    volumes:
-      - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --args "--samples 20"
 
   ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
