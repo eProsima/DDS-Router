@@ -239,7 +239,7 @@ if __name__ == '__main__':
         parse_output_function=_subscriber_parse_output,
         validate_output_function=validate_func,
         parse_retcode_function=_subscriber_get_retcode_validate(args.samples),
-        timeout_as_error=args.samples>0)
+        timeout_as_error=args.samples > 0)
 
     log.logger.info(f'Subscriber validator exited with code {ret_code}')
 
