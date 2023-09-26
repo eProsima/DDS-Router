@@ -56,8 +56,9 @@ bool DdsRouterConfiguration::is_valid(
     }
 
     // Check Participant Configurations AND
-    // check Participant Configuration IDs are not repeated
-    std::set<ddspipe::core::types::ParticipantId> ids;
+    // check Participant Configuration IDs are not repeated.
+    // Additionally, store is_repeater attribute for validating routes afterwards.
+    std::map<ddspipe::core::types::ParticipantId, bool> ids;
     for (std::pair<types::ParticipantKind, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>
             configuration : participants_configurations)
     {
@@ -85,14 +86,36 @@ bool DdsRouterConfiguration::is_valid(
             return false;
         }
 
-        // Store every id in a set to see if there are repetitions
-        ids.insert(configuration.second->id);
+        // Store every id to see if there are repetitions.
+        // Additionally, store is_repeater attribute for validating routes afterwards.
+        ids[configuration.second->id] = configuration.second->is_repeater;
     }
 
     // If the number of ids are not equal the number of configurations, is because they are repeated
     if (ids.size() != participants_configurations.size())
     {
         error_msg << "Participant ids are not unique. ";
+        return false;
+    }
+
+    // Check that routes configuration is valid
+    if (!routes.is_valid(error_msg, ids))
+    {
+        error_msg << "Routes configuration is not valid. ";
+        return false;
+    }
+
+    // Check that topic routes configuration is valid
+    if (!topic_routes.is_valid(error_msg, ids))
+    {
+        error_msg << "Topic routes configuration is not valid. ";
+        return false;
+    }
+
+    // Check that specs configuration is valid
+    if (!advanced_options.is_valid(error_msg))
+    {
+        error_msg << "Specs configuration is not valid. ";
         return false;
     }
 

@@ -171,6 +171,27 @@ void YamlReader::fill(
     }
 
     /////
+    // Get optional routes
+    if (YamlReader::is_tag_present(yml, ROUTES_TAG))
+    {
+        YamlReader::fill<ddspipe::core::RoutesConfiguration>(
+            object.routes,
+            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
+            version);
+    }
+
+    /////
+    // Get optional topic routes
+    if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
+    {
+        // get list, and parse each element as above
+        YamlReader::fill<ddspipe::core::TopicRoutesConfiguration>(
+            object.topic_routes,
+            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
+            version);
+    }
+
+    /////
     // Get optional specs configuration
     if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
