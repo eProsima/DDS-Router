@@ -683,7 +683,7 @@ It will use such profile for configuring the Participant.
     profile: participant_custom_configuration
 
 
-.. _user_manual_configuration_general_example:
+.. _user_manual_configuration_forwarding_routes:
 
 
 Forwarding Routes
@@ -763,6 +763,7 @@ When data is published in the topic ``HelloWorld`` with type ``HelloWorld``:
 * Participant ``Participant1`` will only forward the data it receives to participant ``Participant0``.
 * Participant ``Participant2`` will not forward the data it receives to any participant, since it does not have any destination participants.
 
+.. _user_manual_configuration_general_example:
 
 General Example
 ===============

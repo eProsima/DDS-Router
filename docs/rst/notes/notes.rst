@@ -2,9 +2,7 @@
 
 .. _release_notes:
 
-.. comment the include of forthcoming when new info is added
-
-.. .. include:: forthcoming_version.rst
+.. include:: forthcoming_version.rst
 
 ##############
 Version v2.0.0
@@ -17,7 +15,7 @@ This release adds new **Requirements**:
 This release has the following **Features**:
 
 * Main functionality has been moved to new repository `DDS Pipe <https://github.com/eProsima/DDS-Pipe>`_ to reuse it in other projects.
-* `XML Participant <user_manual_participants_xml>`
+* :ref:`XML Participant <user_manual_participants_xml>`
 * Support for `DDS Security <https://fast-dds.docs.eprosima.com/en/v2.10.1/fastdds/security/security.html>`_.
 
 This release includes the following **Internal Implementation Features**:
