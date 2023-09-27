@@ -832,7 +832,7 @@ A complete example of all the configurations described on this page can be found
 
     ####################
 
-    # Simple DDS Participant in domain 3
+    # Simple DDS Participant in domain 7
 
       - name: Participant1              # Participant Name = Participant1
 

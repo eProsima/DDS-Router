@@ -6,10 +6,10 @@
 Forthcoming Version
 ###################
 
-This release has the following **Features**:
+The next release will include the following **Features**:
 
 * :ref:`Forwarding Routes <user_manual_configuration_forwarding_routes>`.
 
-This release includes the following **Bugfixes**:
+The next release will include the following **Bugfixes**:
 
 * Save the instanceHandle data for keyed topics.
