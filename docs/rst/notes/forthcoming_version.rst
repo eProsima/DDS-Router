@@ -12,4 +12,4 @@ The next release will include the following **Features**:
 
 The next release will include the following **Bugfixes**:
 
-* Save the instanceHandle data for keyed topics.
+* Save the instance handle data for keyed topics.
