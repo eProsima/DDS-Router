@@ -1,0 +1,113 @@
+######################
+# FORWARDING ROUTES  #
+######################
+
+#######################
+# CONFIGURATION VERSION
+version: v3.1                                                     # 0
+
+##############
+# PARTICIPANTS
+participants:                                                     # 1
+
+####################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in domain 0.
+
+  - name: SimpleParticipant_0                                     # 2
+    kind: local                                                   # 3
+    domain: 0                                                     # 4
+
+####################
+# SIMPLE PARTICIPANT
+# This participant will subscribe to topics in domain 1.
+
+  - name: SimpleParticipant_1
+    kind: local
+    domain: 1
+
+
+################
+# GENERIC ROUTES
+routes:                                                           # 5
+
+#######
+# ROUTE
+# This participant will forward the data it receives to
+# SimpleParticipant_1
+  - src: SimpleParticipant_0                                      # 6
+    dst:                                                          # 7
+      - SimpleParticipant_1                                       # 8
+
+#######
+# ROUTE
+# This participant will not forward the data it receives.
+  - src: SimpleParticipant_1                                      # 10
+
+
+##############
+# TOPIC ROUTES
+topic-routes:                                                     # 11
+
+  - name: Circle                                                  # 12
+    type: HelloWorld                                              # 13
+
+    routes:                                                       # 14
+
+#############
+# TOPIC ROUTE
+# This participant will forward the data it receives on
+# topic Circle to SimpleParticipant_0.
+      - src: SimpleParticipant_1                                  # 15
+        dst:                                                      # 16
+          - SimpleParticipant_0                                   # 17
+
+#############
+# TOPIC ROUTE
+# This participant will not forward the data it receives
+# on topic Circle.
+      - src: SimpleParticipant_0
+
+##################################
+# CONFIGURATION DESCRIPTION
+
+# This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
+# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
+# to DDS Domain 1.
+# The communication is in both directions.
+
+# 0: Use YAML configuration version v3.1
+
+# 1: List the internal participants of the router.
+
+# 2: New Participant with name <SimpleParticipant_0>.
+
+# 3: Kind of SimpleParticipant_0: <local>.
+# LAN UDP communication with default simple multicast discovery.
+
+# 4: SimpleParticipant_0 will use DDS Domain ID <0>.
+
+# 5: List the generic forwarding routes between the router's internal participants.
+
+# 6: New forwarding route for SimpleParticipant_0.
+
+# 7: List the participants SimpleParticipant_0 will forward messages to.
+
+# 8: SimpleParticipant_0 will forward messages to SimpleParticipant_1.
+
+# 10: New forwarding route for SimpleParticipant_0.
+# Since it doesn't have a dst tag, it will not forward messages to any participant.
+
+# 11: List the topic forwarding routes between the router's internal participants.
+
+# 12: New topic forwarding route for topic Circle.
+
+# 13: The type of the topic Circle for this topic forwarding route to apply must be ShapeType.
+
+# 14: List the topic forwarding route for topic Circle.
+
+# 15: New topic forwarding route for SimpleParticipant_0 on topic Circle.
+
+# 16: List the participants SimpleParticipant_1 will forward messages to on topic Circle.
+
+# 17: SimpleParticipant_1 will forward messages to SimpleParticipant_0 on topic Circle.

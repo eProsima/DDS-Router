@@ -1,0 +1,96 @@
+# Test description:
+#   This test checks that if we set up a router between four participants such that the
+#   participant at domain 0 has a route to the participants at domains 1 and 2, but not
+#   to the participant at domain 3, both the participants at domains 1 and 2 receive the
+#   data published by the participant at domain 0, but the participant at domain 3 doesn't.
+#
+# Test architecture:
+#
+# ┌──────────────────────────┐
+# │  Domain 81               │
+# │ ┌─────────────────┐      │
+# │ │ subscriber_1_t0 │      │
+# │ │                 │      │
+# │ │ (local)         ◄──────┼─┐
+# │ └─────────────────┘      │ │
+# │                        ┌─┼─┴───────────┐
+# └────────────────────────┼─┘             │
+#                          │               │
+# ┌────────────────────────┼─┐           ┌─┼───────────────────────┐
+# │  Domain 82             │ │           │ │            Domain 80  │
+# │ ┌─────────────────┐    │ │           │ │    ┌────────────────┐ │
+# │ │ subscriber_2_t0 │    │ │ ddsrouter │ │    │ publisher_0_t0 │ │
+# │ │                 ◄────┤ │           │◄├────┼─               │ │
+# │ │ (local)         │    │ │ (local)   │ │    │ (local)        │ │
+# │ └─────────────────┘    │ │           │ │    └────────────────┘ │
+# │                        │ │           │ │                       │
+# └────────────────────────┼─┘           └─┼───────────────────────┘
+#                          │               │
+# ┌────────────────────────┼─┐             │
+# │  Domain 83             └─┼─────────────┘
+# │ ┌─────────────────┐      │
+# │ │ subscriber_3_t0 │      │
+# │ │                 │      │
+# │ │ (local)         │      │
+# │ └─────────────────┘      │
+# │                          │
+# └──────────────────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+
+  # DOMAIN 0
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic0
+
+
+  # DOMAIN 1
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 81 --topic topic0"
+
+
+  # DOMAIN 2
+  subscriber_2_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --args "--samples 20 --domain 82 --topic topic0"
+
+
+  # DOMAIN 3
+  subscriber_3_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 8 --args "--samples 20 --domain 83 --topic topic0"
+
+networks:
+  std_net:
+  default:
+    driver: none
