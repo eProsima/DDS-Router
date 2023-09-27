@@ -915,6 +915,6 @@ A complete example of all the configurations described on this page can be found
       - name: HelloWorld
         type: HelloWorld
         routes:
-          - src: Participant0
+          - src: Participant1
             dst:
-              - Participant1
+              - Participant0
