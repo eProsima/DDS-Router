@@ -1,4 +1,4 @@
-version: v3.0
+version: v3.1
 
 participants:
 
@@ -12,4 +12,3 @@ participants:
       - domain: ddsrouter_cloud
         port: 21666
         transport: udp
-

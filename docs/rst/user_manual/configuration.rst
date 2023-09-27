@@ -36,16 +36,16 @@ with future releases.
         - ``v2.0``
         - *v0.2.0*
 
-    *   - version 3.0 (default)
-        - ``v3.0``
-        - *v0.3.0*
+    *   - version 3.1 (default)
+        - ``v3.1``
+        - *v0.3.1*
 
-**Current configuration version is v3.0**.
+**Current configuration version is v3.1**.
 This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when the tag ``version`` is not set is *v3.0*.
+    The current default version when the tag ``version`` is not set is *v3.1*.
 
 .. warning::
 
@@ -55,7 +55,7 @@ This is the configuration version that is described along this page.
 .. warning::
 
     **Deprecation warning**.
-    Update to  version `v3.0` since `v1.0` is no longer supported.
+    Update to  version `v3.1` since `v1.0` is no longer supported.
 
 
 .. _thread_configuration:
@@ -102,7 +102,7 @@ Load XML Configuration
 Fast DDS supports configuration of its internal entities (:term:`DomainParticipant`, :term:`DataWriter`, etc.) via XML Profiles.
 These XML files contain different profiles that set specific QoS, and entities can be created following such profiles.
 These XML files can be loaded in the process by their *default file name* or by an environment variable.
-Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>` for more information.
+Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>`_ for more information.
 
 Another way of loading these XML configurations is using the |ddsrouter| yaml configuration.
 The YAML Configuration supports a ``xml`` **optional** tag that contains certain options to load Fast DDS XML configurations.
@@ -773,7 +773,7 @@ A complete example of all the configurations described on this page can be found
 .. code-block:: yaml
 
     # Version Latest
-    version: v3.0
+    version: v3.1
 
     # Specifications
     specs:
