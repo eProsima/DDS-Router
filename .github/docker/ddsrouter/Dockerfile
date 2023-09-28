@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL author=raul@eprosima.com
 
 # Avoid interactuation with installation of some package that needs the locale.
