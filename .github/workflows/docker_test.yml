@@ -6,7 +6,7 @@ on:
       fastcdr_branch:
         description: 'Branch or tag of Fast CDR repository (https://github.com/eProsima/Fast-CDR)'
         required: true
-        default: '1.1.x'
+        default: 'master'
       fastdds_branch:
         description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
         required: true
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      DEFAULT_FASTCDR_BRANCH: '1.1.x'
+      DEFAULT_FASTCDR_BRANCH: 'master'
       DEFAULT_FASTDDS_BRANCH: 'master'
       DEFAULT_DDSPIPE_BRANCH: 'main'
       DEFAULT_DDSROUTER_BRANCH: 'main'
