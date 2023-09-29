@@ -45,6 +45,18 @@
 # │ └──────────────┘ └┼────────────┼┘ └───────────────┘ │
 # │                   │            │                    │
 # └───────────────────┘            └────────────────────┘
+#
+# 4. Check that when the subscriber disconnects the track gets deleted.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │  Domain 82         │
+# │ ┌──────────────┐ ┌┼─────────────┼┐                   │
+# │ │publisher_0_t0│ ││  ddsrouter  ││                   │
+# │ │              │ ││             ││                   │
+# │ │(local)       │ ││  (local)    ││                   │
+# │ └──────────────┘ └┼─────────────┼┘                   │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
 
 services:
 
@@ -56,7 +68,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 10
+    command: ddsrouter -c /config.yaml --timeout 12
 
 
   # DOMAIN 80
@@ -67,7 +79,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --samples 80 --domain 80 --topic topic0 --interval 100
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --disconnects 1 --timeout 11 --args "--samples 110 --domain 80 --topic topic0 --interval 100"
 
 
   # DOMAIN 81
@@ -78,7 +90,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 4 --args "--samples 20 --domain 81 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 6 --args "--samples 40 --domain 81 --topic topic0"
 
   subscriber_t0_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -87,7 +99,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 4 --delay 2 --args "--samples 20 --domain 81 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 8 --delay 2 --args "--samples 40 --domain 81 --topic topic0"
 
 networks:
   std_net:
