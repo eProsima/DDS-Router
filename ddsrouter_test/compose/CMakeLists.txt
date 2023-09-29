@@ -50,6 +50,7 @@ set(TESTS
     remove_unused_entities/persist_diff_domain
     remove_unused_entities/persist_same_domain
     remove_unused_entities/reconnect
+    remove_unused_entities/reconnect_wan
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
