@@ -30,6 +30,8 @@
 #include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
+#include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
+
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
@@ -62,6 +64,14 @@ DdsRouter::DdsRouter(
     // Load Participants
     init_participants_();
 
+    // Initialize the DdsPipeConfiguration
+    ddspipe::core::DdsPipeConfiguration *ddspipe_config = new ddspipe::core::DdsPipeConfiguration();
+
+    ddspipe_config->routes_config = configuration_.routes;
+    ddspipe_config->topic_routes_config = configuration_.topic_routes;
+    ddspipe_config->remove_unused_entities = configuration_.advanced_options.remove_unused_entities;
+
+    // Initialize the DdsPipe
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
                         allowed_topics_,
                         discovery_database_,
@@ -70,9 +80,7 @@ DdsRouter::DdsRouter(
                         thread_pool_,
                         configuration_.builtin_topics,
                         false,
-                        configuration_.routes,
-                        configuration_.topic_routes,
-                        configuration_.advanced_options.remove_unused_entities));
+                        *ddspipe_config));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
