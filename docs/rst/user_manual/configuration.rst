@@ -111,6 +111,8 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
+.. _user_manual_configuration_max_reception_rate:
+
 Max Reception Rate
 ------------------
 
@@ -121,6 +123,8 @@ By default it is set to ``0``; it processes samples at an unlimited reception ra
 .. note::
 
     The ``max-reception-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+
+.. _user_manual_configuration_downsampling:
 
 Downsampling
 ------------
@@ -831,12 +835,9 @@ A complete example of all the configurations described on this page can be found
     specs:
       threads: 10
       max-depth: 1000
-<<<<<<< HEAD
       remove-unused-entities: false
-=======
       downsampling: 3
       max-reception-rate: 20
->>>>>>> 18dd4fb (Documentation)
 
     # XML configurations to load
     xml:
