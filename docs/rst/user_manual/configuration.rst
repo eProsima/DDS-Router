@@ -111,6 +111,28 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
+Max Reception Rate
+------------------
+
+The ``max-reception-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-reception-rate` seconds have passed since the last processed message.
+It only accepts non-negative numbers.
+By default it is set to ``0``; it processes samples at an unlimited reception rate.
+
+.. note::
+
+    The ``max-reception-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+
+Downsampling
+------------
+
+The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
+When the ``max-reception-rate`` tag is also set, downsampling only applies to messages that have passed the ``max-reception-rate`` filter.
+It only accepts positive integers.
+By default it is set to ``1``; it accepts every message.
+
+.. note::
+
+    The ``downsampling`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_load_xml:
 
@@ -223,8 +245,20 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - ``false``
         - Topic with / without key
 
-The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
-or not. See the :term:`Topic` section for further information about the topic.
+    *   - Downsampling
+        - ``downsampling``
+        - *integer*
+        - *default value*
+        - Downsampling factor
+
+    *   - Max Reception Rate
+        - ``max-reception-rate``
+        - *float*
+        - *default value*
+        - Maximum sample reception rate [Hz]
+
+The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
+See the :term:`Topic` section for further information about the topic.
 
 
 .. code-block:: yaml
@@ -797,7 +831,12 @@ A complete example of all the configurations described on this page can be found
     specs:
       threads: 10
       max-depth: 1000
+<<<<<<< HEAD
       remove-unused-entities: false
+=======
+      downsampling: 3
+      max-reception-rate: 20
+>>>>>>> 18dd4fb (Documentation)
 
     # XML configurations to load
     xml:
@@ -829,6 +868,8 @@ A complete example of all the configurations described on this page can be found
         qos:
           reliability: true
           durability: true
+          max-reception-rate: 10
+          downsampling: 4
 
     # Do not allow ROS2 services
 
@@ -849,6 +890,8 @@ A complete example of all the configurations described on this page can be found
 
         domain: 3                       # DomainId = 3
 
+        downsampling: 1                 # Downsampling = 1
+
     ####################
 
     # Simple DDS Participant in domain 7
@@ -858,6 +901,8 @@ A complete example of all the configurations described on this page can be found
         kind: local                     # Participant Kind = local (= simple)
 
         domain: 7                       # DomainId = 7
+
+        max-reception-rate: 15          # Max Reception Rate = 15
 
     ####################
 
