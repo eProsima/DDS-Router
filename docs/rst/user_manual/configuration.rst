@@ -93,6 +93,8 @@ topics and |ddsrouter| participants) are as big as to cause memory exhaustion is
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
 enough memory is available.
 
+.. _user_manual_configuration_max_reception_rate:
+
 Max Reception Rate
 ------------------
 
@@ -103,6 +105,8 @@ By default it is set to ``0``; it processes samples at an unlimited reception ra
 .. note::
 
     The ``max-reception-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+
+.. _user_manual_configuration_downsampling:
 
 Downsampling
 ------------
