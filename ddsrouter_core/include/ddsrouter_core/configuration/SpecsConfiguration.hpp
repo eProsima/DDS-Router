@@ -61,6 +61,20 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      * @note Default value is 5000 as in Fast DDS.
      */
     ddspipe::core::types::HistoryDepthType max_history_depth = 5000;
+
+    /**
+     * @brief Downsampling value by default in those topics where it is not specified.
+     *
+     * @note Default value is 1 as in Fast DDS.
+     */
+    unsigned int downsampling = 1;
+
+    /**
+     * @brief Maximum Reception Rate by default in those topics where it is not specified.
+     *
+     * @note Default value is 0 as in Fast DDS.
+     */
+    float max_reception_rate = 0;
 };
 
 } /* namespace core */
