@@ -70,6 +70,20 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      * @warning Setting it to true is incompatible with transient-local durability.
      */
     bool remove_unused_entities = false;
+
+    /**
+     * @brief Downsampling value by default in those topics where it is not specified.
+     *
+     * @note Default value is 1 as in Fast DDS.
+     */
+    unsigned int downsampling = 1;
+
+    /**
+     * @brief Maximum Reception Rate by default in those topics where it is not specified.
+     *
+     * @note Default value is 0 as in Fast DDS.
+     */
+    float max_reception_rate = 0;
 };
 
 } /* namespace core */

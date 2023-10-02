@@ -59,6 +59,23 @@ void YamlReader::fill(
     {
         object.remove_unused_entities = YamlReader::get<bool>(yml, REMOVE_UNUSED_ENTITIES_TAG, version);
     }
+
+    // Get optional downsampling
+    if (YamlReader::is_tag_present(yml, DOWNSAMPLING_TAG))
+    {
+        auto downsampling = YamlReader::get_positive_int(yml, DOWNSAMPLING_TAG);
+        // Set default value for downsampling
+        ddspipe::core::types::TopicQoS::default_downsampling.store(downsampling);
+    }
+
+    /////
+    // Get optional max reception rate
+    if (YamlReader::is_tag_present(yml, MAX_RECEPTION_RATE_TAG))
+    {
+        // Set default value for max reception rate
+        ddspipe::core::types::TopicQoS::default_max_reception_rate.store(YamlReader::get_nonnegative_float(yml,
+                MAX_RECEPTION_RATE_TAG));
+    }
 }
 
 template <>
