@@ -74,15 +74,15 @@ void YamlReader::fill(
 
     /////
     // Get optional max reception rate
-    if (YamlReader::is_tag_present(yml, MAX_RECEPTION_RATE_TAG))
+    if (YamlReader::is_tag_present(yml, MAX_RX_RATE_TAG))
     {
-        auto max_reception_rate = YamlReader::get_nonnegative_float(yml, MAX_RECEPTION_RATE_TAG);
+        auto max_rx_rate = YamlReader::get_nonnegative_float(yml, MAX_RX_RATE_TAG);
 
         // Save the max reception rate value in the advanced options
-        object.max_reception_rate = max_reception_rate;
+        object.max_rx_rate = max_rx_rate;
 
         // Set default value for max reception rate
-        ddspipe::core::types::TopicQoS::default_max_reception_rate.store(max_reception_rate);
+        ddspipe::core::types::TopicQoS::default_max_rx_rate.store(max_rx_rate);
     }
 }
 
@@ -213,6 +213,19 @@ void YamlReader::fill(
         object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
                         BUILTIN_TAG,
                         version);
+    }
+
+    /////
+    // Get optional topics
+    if (YamlReader::is_tag_present(yml, TOPICS_TAG))
+    {
+        auto manual_topics = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, TOPICS_TAG, version);
+
+        for (auto const& manual_topic : manual_topics)
+        {
+            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(manual_topic);
+            object.manual_topics.insert(new_topic);
+        }
     }
 
     /////

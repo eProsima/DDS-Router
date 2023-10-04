@@ -374,7 +374,7 @@ TEST(YamlReaderConfigurationTest, invalid_routes)
  * CASES:
  * - trivial configuration
  */
-TEST(YamlReaderConfigurationTest, max_reception_rate)
+TEST(YamlReaderConfigurationTest, max_rx_rate)
 {
     const char* yml_configuration =
             // trivial configuration
@@ -393,7 +393,7 @@ TEST(YamlReaderConfigurationTest, max_reception_rate)
     for (unsigned int test_case : test_cases)
     {
         Yaml yml_specs;
-        yml_specs[ddspipe::yaml::MAX_RECEPTION_RATE_TAG] = test_case;
+        yml_specs[ddspipe::yaml::MAX_RX_RATE_TAG] = test_case;
         yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
@@ -401,12 +401,12 @@ TEST(YamlReaderConfigurationTest, max_reception_rate)
                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advanced_options.max_reception_rate);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.max_rx_rate);
     }
 }
 
 /**
- * Test load of max reception rate in the configuration
+ * Test load of downsampling in the configuration
  *
  * CASES:
  * - trivial configuration

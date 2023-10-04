@@ -111,18 +111,18 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
-.. _user_manual_configuration_max_reception_rate:
+.. _user_manual_configuration_max_rx_rate:
 
 Max Reception Rate
 ------------------
 
-The ``max-reception-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-reception-rate` seconds have passed since the last processed message.
+The ``max-rx-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-rx-rate` seconds have passed since the last processed message.
 It only accepts non-negative numbers.
 By default it is set to ``0``; it processes samples at an unlimited reception rate.
 
 .. note::
 
-    The ``max-reception-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+    The ``max-rx-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_downsampling:
 
@@ -130,7 +130,7 @@ Downsampling
 ------------
 
 The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
-When the ``max-reception-rate`` tag is also set, downsampling only applies to messages that have passed the ``max-reception-rate`` filter.
+When the ``max-rx-rate`` tag is also set, downsampling only applies to messages that have passed the ``max-rx-rate`` filter.
 It only accepts positive integers.
 By default it is set to ``1``; it accepts every message.
 
@@ -256,7 +256,7 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - Downsampling factor
 
     *   - Max Reception Rate
-        - ``max-reception-rate``
+        - ``max-rx-rate``
         - *float*
         - *default value*
         - Maximum sample reception rate [Hz]
@@ -837,7 +837,15 @@ A complete example of all the configurations described on this page can be found
       max-depth: 1000
       remove-unused-entities: false
       downsampling: 3
+<<<<<<< HEAD
       max-reception-rate: 20
+<<<<<<< HEAD
+=======
+>>>>>>> 18dd4fb (Documentation)
+=======
+      max-rx-rate: 20
+>>>>>>> eec63db (Rename max-reception-rate to max-rx-rate)
+>>>>>>> cccec2a (Rename max-reception-rate to max-rx-rate)
 
     # XML configurations to load
     xml:
@@ -869,7 +877,7 @@ A complete example of all the configurations described on this page can be found
         qos:
           reliability: true
           durability: true
-          max-reception-rate: 10
+          max-rx-rate: 10
           downsampling: 4
 
     # Do not allow ROS2 services
@@ -903,7 +911,7 @@ A complete example of all the configurations described on this page can be found
 
         domain: 7                       # DomainId = 7
 
-        max-reception-rate: 15          # Max Reception Rate = 15
+        max-rx-rate: 15                 # Max Reception Rate = 15
 
     ####################
 

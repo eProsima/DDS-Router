@@ -83,7 +83,7 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      *
      * @note Default value is 0 as in Fast DDS.
      */
-    float max_reception_rate = 0;
+    float max_rx_rate = 0;
 };
 
 } /* namespace core */
