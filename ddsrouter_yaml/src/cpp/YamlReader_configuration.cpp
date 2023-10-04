@@ -64,6 +64,10 @@ void YamlReader::fill(
     if (YamlReader::is_tag_present(yml, DOWNSAMPLING_TAG))
     {
         auto downsampling = YamlReader::get_positive_int(yml, DOWNSAMPLING_TAG);
+
+        // Save the downsampling value in the advanced options
+        object.downsampling = downsampling;
+
         // Set default value for downsampling
         ddspipe::core::types::TopicQoS::default_downsampling.store(downsampling);
     }
@@ -72,9 +76,13 @@ void YamlReader::fill(
     // Get optional max reception rate
     if (YamlReader::is_tag_present(yml, MAX_RECEPTION_RATE_TAG))
     {
+        auto max_reception_rate = YamlReader::get_nonnegative_float(yml, MAX_RECEPTION_RATE_TAG);
+
+        // Save the max reception rate value in the advanced options
+        object.max_reception_rate = max_reception_rate;
+
         // Set default value for max reception rate
-        ddspipe::core::types::TopicQoS::default_max_reception_rate.store(YamlReader::get_nonnegative_float(yml,
-                MAX_RECEPTION_RATE_TAG));
+        ddspipe::core::types::TopicQoS::default_max_reception_rate.store(max_reception_rate);
     }
 }
 
