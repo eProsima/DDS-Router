@@ -119,6 +119,12 @@ protected:
      */
     void init_participants_();
 
+
+    /**
+     * @brief TODO
+     */
+    void load_manual_topics_into_participants_();
+
     DdsRouterConfiguration configuration_;
 
     std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database_;
