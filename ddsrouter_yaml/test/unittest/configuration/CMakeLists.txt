@@ -31,6 +31,8 @@ set(TEST_LIST
         version_negative_cases
         number_of_threads
         max_history_depth
+        max_reception_rate
+        downsampling
     )
 
 set(TEST_EXTRA_LIBRARIES
