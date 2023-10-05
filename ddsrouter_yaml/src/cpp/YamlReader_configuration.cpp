@@ -24,6 +24,7 @@
 #include <ddspipe_yaml/YamlManager.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
 
+#include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
@@ -114,6 +115,44 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
 
 template <>
 void YamlReader::fill(
+        ddspipe::core::DdsPipeConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    /////
+    // Get optional routes
+    if (YamlReader::is_tag_present(yml, ROUTES_TAG))
+    {
+        YamlReader::fill<ddspipe::core::RoutesConfiguration>(
+            object.routes,
+            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
+            version);
+    }
+
+    /////
+    // Get optional topic routes
+    if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
+    {
+        // get list, and parse each element as above
+        YamlReader::fill<ddspipe::core::TopicRoutesConfiguration>(
+            object.topic_routes,
+            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
+            version);
+    }
+}
+
+template <>
+ddspipe::core::DdsPipeConfiguration YamlReader::get<ddspipe::core::DdsPipeConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    ddspipe::core::DdsPipeConfiguration object;
+    fill<ddspipe::core::DdsPipeConfiguration>(object, yml, version);
+    return object;
+}
+
+template <>
+void YamlReader::fill(
         ddsrouter::core::DdsRouterConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
@@ -178,27 +217,6 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional routes
-    if (YamlReader::is_tag_present(yml, ROUTES_TAG))
-    {
-        YamlReader::fill<ddspipe::core::RoutesConfiguration>(
-            object.routes,
-            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
-            version);
-    }
-
-    /////
-    // Get optional topic routes
-    if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
-    {
-        // get list, and parse each element as above
-        YamlReader::fill<ddspipe::core::TopicRoutesConfiguration>(
-            object.topic_routes,
-            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
-            version);
-    }
-
-    /////
     // Get optional specs configuration
     if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
@@ -207,6 +225,18 @@ void YamlReader::fill(
             YamlReader::get_value_in_tag(yml, SPECS_TAG),
             version);
     }
+
+    // DDS Pipe Configuration
+
+    object.ddspipe_configuration = YamlReader::get<ddspipe::core::DdsPipeConfiguration>(yml, version);
+
+    /* NOTE
+     *
+     * remove_unused_entities is an attribute of SpecsConfiguration because it is under the tag specs,
+     * but since it is used in the DdsPipe, we have two choices: copying it to the DdsPipeConfiguration,
+     * as we are doing, or refill the SpecsConfiguraton in the DdsPipeConfiguration fill and take it from there.
+     */
+    object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
 
     /////
     // Get optional xml configuration

@@ -99,16 +99,9 @@ bool DdsRouterConfiguration::is_valid(
     }
 
     // Check that routes configuration is valid
-    if (!routes.is_valid(error_msg, ids))
+    if (!ddspipe_configuration.is_valid(error_msg, ids))
     {
         error_msg << "Routes configuration is not valid. ";
-        return false;
-    }
-
-    // Check that topic routes configuration is valid
-    if (!topic_routes.is_valid(error_msg, ids))
-    {
-        error_msg << "Topic routes configuration is not valid. ";
         return false;
     }
 
