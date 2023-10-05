@@ -84,6 +84,19 @@ void YamlReader::fill(
         // Set default value for max reception rate
         ddspipe::core::types::TopicQoS::default_max_rx_rate.store(max_rx_rate);
     }
+
+    /////
+    // Get optional max transmission rate
+    if (YamlReader::is_tag_present(yml, MAX_TX_RATE_TAG))
+    {
+        auto max_tx_rate = YamlReader::get_nonnegative_float(yml, MAX_TX_RATE_TAG);
+
+        // Save the max reception rate value in the advanced options
+        object.max_tx_rate = max_tx_rate;
+
+        // Set default value for max reception rate
+        ddspipe::core::types::TopicQoS::default_max_tx_rate.store(max_tx_rate);
+    }
 }
 
 template <>

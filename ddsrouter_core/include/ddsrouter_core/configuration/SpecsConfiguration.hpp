@@ -71,19 +71,14 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      */
     bool remove_unused_entities = false;
 
-    /**
-     * @brief Downsampling value by default in those topics where it is not specified.
-     *
-     * @note Default value is 1 as in Fast DDS.
-     */
+    //! Downsampling value by default in those topics where it is not specified.
     unsigned int downsampling = 1;
 
-    /**
-     * @brief Maximum Reception Rate by default in those topics where it is not specified.
-     *
-     * @note Default value is 0 as in Fast DDS.
-     */
+    //! Maximum Reception Rate by default in those topics where it is not specified.
     float max_rx_rate = 0;
+
+    //! Maximum Transmission Rate by default in those topics where it is not specified.
+    float max_tx_rate = 0;
 };
 
 } /* namespace core */
