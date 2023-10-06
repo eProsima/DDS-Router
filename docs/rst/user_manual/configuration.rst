@@ -93,6 +93,8 @@ topics and |ddsrouter| participants) are as big as to cause memory exhaustion is
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
 enough memory is available.
 
+.. _user_manual_configuration_remove_unused_entities:
+
 Remove Unused Entities
 ----------------------
 
