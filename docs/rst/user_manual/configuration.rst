@@ -111,6 +111,19 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
+.. _user_manual_configuration_max_tx_rate:
+
+Max Transmission Rate
+---------------------
+
+The ``max-tx-rate`` tag limits the frequency [Hz] at which samples are sent by discarding messages transmitted before :code:`1/max-tx-rate` seconds have passed since the last sent message.
+It only accepts non-negative numbers.
+By default it is set to ``0``; it sends samples at an unlimited transmission rate.
+
+.. note::
+
+    The ``max-tx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
+
 .. _user_manual_configuration_max_rx_rate:
 
 Max Reception Rate
@@ -122,21 +135,21 @@ By default it is set to ``0``; it processes samples at an unlimited reception ra
 
 .. note::
 
-    The ``max-rx-rate`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+    The ``max-rx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_downsampling:
 
-Downsampling
-------------
+Down-sampling
+-------------
 
 The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
-When the ``max-rx-rate`` tag is also set, downsampling only applies to messages that have passed the ``max-rx-rate`` filter.
+When the ``max-rx-rate`` tag is also set, down-sampling only applies to messages that have passed the ``max-rx-rate`` filter.
 It only accepts positive integers.
 By default it is set to ``1``; it accepts every message.
 
 .. note::
 
-    The ``downsampling`` tag can be set (in order of precedence) for built-in topics, for participants, and globally in specs.
+    The ``downsampling`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_load_xml:
 
@@ -249,17 +262,23 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - ``false``
         - Topic with / without key
 
-    *   - Downsampling
-        - ``downsampling``
-        - *integer*
+    *   - Max Transmission Rate
+        - ``max-tx-rate``
+        - *float*
         - *default value*
-        - Downsampling factor
+        - Maximum sample transmission rate [Hz]
 
     *   - Max Reception Rate
         - ``max-rx-rate``
         - *float*
         - *default value*
         - Maximum sample reception rate [Hz]
+
+    *   - Down-sampling
+        - ``downsampling``
+        - *integer*
+        - *default value*
+        - Down-sampling factor
 
 The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
 See the :term:`Topic` section for further information about the topic.
@@ -836,6 +855,7 @@ A complete example of all the configurations described on this page can be found
       threads: 10
       max-depth: 1000
       remove-unused-entities: false
+<<<<<<< HEAD
       downsampling: 3
 <<<<<<< HEAD
       max-reception-rate: 20
@@ -846,6 +866,11 @@ A complete example of all the configurations described on this page can be found
       max-rx-rate: 20
 >>>>>>> eec63db (Rename max-reception-rate to max-rx-rate)
 >>>>>>> cccec2a (Rename max-reception-rate to max-rx-rate)
+=======
+      max-tx-rate: 0
+      max-rx-rate: 20
+      downsampling: 3
+>>>>>>> 379ec47 (Max transmission rate documentation)
 
     # XML configurations to load
     xml:
@@ -877,6 +902,7 @@ A complete example of all the configurations described on this page can be found
         qos:
           reliability: true
           durability: true
+          max-tx-rate: 5
           max-rx-rate: 10
           downsampling: 4
 
@@ -899,7 +925,11 @@ A complete example of all the configurations described on this page can be found
 
         domain: 3                       # DomainId = 3
 
-        downsampling: 1                 # Downsampling = 1
+        qos:
+
+          max-rx-rate: 0                  # Max Transmission Rate = 0 (unlimited)
+
+          downsampling: 1                 # Downsampling = 1
 
     ####################
 
@@ -911,7 +941,9 @@ A complete example of all the configurations described on this page can be found
 
         domain: 7                       # DomainId = 7
 
-        max-rx-rate: 15                 # Max Reception Rate = 15
+        qos:
+
+          max-rx-rate: 15                 # Max Reception Rate = 15
 
     ####################
 
