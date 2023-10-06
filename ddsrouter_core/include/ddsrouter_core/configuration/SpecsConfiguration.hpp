@@ -71,14 +71,14 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      */
     bool remove_unused_entities = false;
 
-    //! Downsampling value by default in those topics where it is not specified.
-    unsigned int downsampling = 1;
+    //! Maximum Transmission Rate by default in those topics where it is not specified.
+    float max_tx_rate = 0;
 
     //! Maximum Reception Rate by default in those topics where it is not specified.
     float max_rx_rate = 0;
 
-    //! Maximum Transmission Rate by default in those topics where it is not specified.
-    float max_tx_rate = 0;
+    //! Downsampling value by default in those topics where it is not specified.
+    unsigned int downsampling = 1;
 };
 
 } /* namespace core */

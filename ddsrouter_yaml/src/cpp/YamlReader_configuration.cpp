@@ -60,16 +60,17 @@ void YamlReader::fill(
         object.remove_unused_entities = YamlReader::get<bool>(yml, REMOVE_UNUSED_ENTITIES_TAG, version);
     }
 
-    // Get optional downsampling
-    if (YamlReader::is_tag_present(yml, DOWNSAMPLING_TAG))
+    /////
+    // Get optional max transmission rate
+    if (YamlReader::is_tag_present(yml, MAX_TX_RATE_TAG))
     {
-        auto downsampling = YamlReader::get_positive_int(yml, DOWNSAMPLING_TAG);
+        auto max_tx_rate = YamlReader::get_nonnegative_float(yml, MAX_TX_RATE_TAG);
 
-        // Save the downsampling value in the advanced options
-        object.downsampling = downsampling;
+        // Save the max reception rate value in the advanced options
+        object.max_tx_rate = max_tx_rate;
 
-        // Set default value for downsampling
-        ddspipe::core::types::TopicQoS::default_downsampling.store(downsampling);
+        // Set default value for max reception rate
+        ddspipe::core::types::TopicQoS::default_max_tx_rate.store(max_tx_rate);
     }
 
     /////
@@ -85,17 +86,16 @@ void YamlReader::fill(
         ddspipe::core::types::TopicQoS::default_max_rx_rate.store(max_rx_rate);
     }
 
-    /////
-    // Get optional max transmission rate
-    if (YamlReader::is_tag_present(yml, MAX_TX_RATE_TAG))
+    // Get optional downsampling
+    if (YamlReader::is_tag_present(yml, DOWNSAMPLING_TAG))
     {
-        auto max_tx_rate = YamlReader::get_nonnegative_float(yml, MAX_TX_RATE_TAG);
+        auto downsampling = YamlReader::get_positive_int(yml, DOWNSAMPLING_TAG);
 
-        // Save the max reception rate value in the advanced options
-        object.max_tx_rate = max_tx_rate;
+        // Save the downsampling value in the advanced options
+        object.downsampling = downsampling;
 
-        // Set default value for max reception rate
-        ddspipe::core::types::TopicQoS::default_max_tx_rate.store(max_tx_rate);
+        // Set default value for downsampling
+        ddspipe::core::types::TopicQoS::default_downsampling.store(downsampling);
     }
 }
 
@@ -177,6 +177,19 @@ void YamlReader::fill(
             YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
             version);
     }
+
+    /////
+    // Get optional topics
+    if (YamlReader::is_tag_present(yml, TOPICS_TAG))
+    {
+        auto manual_topics = YamlReader::get_list<core::types::WildcardDdsFilterTopic>(yml, TOPICS_TAG, version);
+
+        for (auto const& manual_topic : manual_topics)
+        {
+            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(manual_topic);
+            object.manual_topics.push_back(new_topic);
+        }
+    }
 }
 
 template <>
@@ -229,19 +242,6 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional topics
-    if (YamlReader::is_tag_present(yml, TOPICS_TAG))
-    {
-        auto manual_topics = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, TOPICS_TAG, version);
-
-        for (auto const& manual_topic : manual_topics)
-        {
-            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(manual_topic);
-            object.manual_topics.insert(new_topic);
-        }
-    }
-
-    /////
     // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
     auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
 
@@ -278,7 +278,6 @@ void YamlReader::fill(
     }
 
     // DDS Pipe Configuration
-
     object.ddspipe_configuration = YamlReader::get<ddspipe::core::DdsPipeConfiguration>(yml, version);
 
     /* NOTE

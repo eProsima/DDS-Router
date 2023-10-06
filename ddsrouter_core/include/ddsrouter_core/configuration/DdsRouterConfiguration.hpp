@@ -19,7 +19,6 @@
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
-#include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/xml/XmlHandlerConfiguration.hpp>
@@ -68,9 +67,6 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
 
     //! Builtin topics to create at the beggining of the execution
     std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>> builtin_topics {};
-
-    //! TODO
-    std::set<utils::Heritable<ddspipe::core::types::WildcardDdsFilterTopic>> manual_topics {};
 
     //! Participant configurations
     std::set<

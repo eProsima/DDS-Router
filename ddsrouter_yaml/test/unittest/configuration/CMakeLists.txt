@@ -34,6 +34,7 @@ set(TEST_LIST
         remove_unused_entities
         valid_routes
         invalid_routes
+        max_tx_rate
         max_rx_rate
         downsampling
     )

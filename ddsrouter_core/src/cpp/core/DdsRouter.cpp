@@ -63,9 +63,6 @@ DdsRouter::DdsRouter(
     // Load Participants
     init_participants_();
 
-    // Load Manual Topics into Participants
-    load_manual_topics_into_participants_();
-
     // Initialize the DdsPipe
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
                         allowed_topics_,
@@ -124,17 +121,6 @@ void DdsRouter::init_participants_()
         {
             throw utils::ConfigurationException(utils::Formatter()
                           << "Participant ids must be unique. The id " << new_participant->id() << " is duplicated.");
-        }
-    }
-}
-
-void DdsRouter::load_manual_topics_into_participants_()
-{
-    for (const auto& manual_topic : configuration_.manual_topics)
-    {
-        for (const auto& participant_id : manual_topic->participants.get_value())
-        {
-            participants_database_->get_participant(participant_id)->manual_topics.insert(manual_topic);
         }
     }
 }
