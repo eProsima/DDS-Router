@@ -298,6 +298,25 @@ See the :term:`Topic` section for further information about the topic.
           keyed: false       # Topic without keys
 
 
+.. _user_manual_configuration_manual_topics:
+
+Manual Topics
+=============
+
+At times it can be useful to manually predefine a subset of Topic QoS for a set of Participants.
+
+.. code-block:: yaml
+
+    topics:
+      - name: temperature/*
+        type: temp*
+        qos:
+            max-tx-rate: 15
+            downsampling: 2
+        participants:
+            - Participant0
+            - Participant1
+
 Topic Filtering
 ===============
 
