@@ -59,6 +59,26 @@ void YamlReader::fill(
         fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
         core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
+
+    /////
+    // Get optional entity creation trigger tag
+    if (YamlReader::is_tag_present(yml, ENTITY_CREATION_TRIGGER_TAG))
+    {
+        const auto& entity_creation_trigger = YamlReader::get<std::string>(yml, ENTITY_CREATION_TRIGGER_TAG, version);
+
+        if (entity_creation_trigger == "any")
+        {
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::ANY;
+        }
+        else if (entity_creation_trigger == "writer")
+        {
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::WRITER;
+        }
+        else
+        {
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
+        }
+    }
 }
 
 template <>
@@ -239,12 +259,13 @@ void YamlReader::fill(
 
     /* NOTE
      *
-     * remove_unused_entities is an attribute of SpecsConfiguration because it is under the tag specs,
-     * but since it is used in the DdsPipe, we have two choices: copying it from the SpecsConfiguration to the
-     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill and
-     * taking it from there.
+     * remove_unused_entities and entity_creation_trigger are attributes of SpecsConfiguration because they are
+     * under the tag specs, but since they are used in the DdsPipe, we have two choices: copying them to the
+     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill
+     * and taking both attributes from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
+    object.ddspipe_configuration.entity_creation_trigger = object.advanced_options.entity_creation_trigger;
 
     /////
     // Get optional xml configuration

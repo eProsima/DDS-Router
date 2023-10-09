@@ -19,6 +19,7 @@
 
 #include <cpp_utils/Formatter.hpp>
 
+#include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
@@ -66,6 +67,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
 
     //! The globally configured Topic QoS.
     ddspipe::core::types::TopicQoS topic_qos{};
+
+    //! Downsampling value by default in those topics where it is not specified.
+    ddspipe::core::EntityCreationTrigger entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
 };
 
 } /* namespace core */
