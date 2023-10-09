@@ -2,9 +2,9 @@
 
 .. _user_manual_configuration:
 
-########################
-DDS Router Configuration
-########################
+##############
+Configuration
+##############
 
 A |ddsrouter| is configured by a *.yaml* configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering
@@ -201,21 +201,13 @@ Under the **optional** tag `raw`, an XML configuration (with the same format as 
 
 .. _topic_filtering:
 
-Built-in Topics
-===============
-
-Apart from the dynamic creation of Endpoints in DDS Topics discovered,
-the discovery phase can be accelerated by using the builtin topic list (``builtin-topics``).
-By defining topics in this list, the DDS router will create the DataWriters and DataReaders in router initialization.
-This feature also allows to manually force the QoS of a specific topic, so the entities created in such a topic
-will follow the specified QoS and not the one first discovered.
+Topics Configuration
+====================
 
 Topic Quality of Service
 ------------------------
 
-For every topic contained in this list, both ``name`` and ``type`` must be specified and contain no wildcard
-characters. The entry ``keyed`` is optional, and defaults to ``false``.
-Apart from these values, the tag ``qos`` under each topic allows to configure the following values:
+The following is the set of Quality of Services that are configurable for a topic:
 
 .. list-table::
     :header-rows: 1
@@ -280,8 +272,39 @@ Apart from these values, the tag ``qos`` under each topic allows to configure th
         - *default value*
         - Down-sampling factor
 
-The entry ``keyed`` determines whether the corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
-See the :term:`Topic` section for further information about the topic.
+The entry ``keyed`` determines whether its corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
+For further information on topics, please read the `Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
+
+Topics
+------
+
+A subset of QoSs can be manually configured for a specific topic under the tag ``topics``.
+The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
+It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoSs that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
+If a ``qos`` is not manually configured, it will get its value by discovery; if there ``participants`` tag is empty or inexistent, the configuration will apply to all participants.
+
+
+.. code-block:: yaml
+
+    topics:
+      - name: temperature/*
+        type: temperature/types/*
+        qos:
+            max-tx-rate: 15
+            downsampling: 2
+        participants:
+            - Participant0
+            - Participant1
+
+
+Built-in Topics
+---------------
+
+The discovery phase can be accelerated by listing topics under the ``builtin-topics`` tag.
+The |ddsrouter| will create the DataWriters and DataReaders for these topics in the |ddsrouter| initialization.
+The QoSs for these topics can be manually configured; if a QoS is not configured, it will take its default value.
+
+The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard characters.
 
 
 .. code-block:: yaml
@@ -300,25 +323,8 @@ See the :term:`Topic` section for further information about the topic.
 
 .. _user_manual_configuration_manual_topics:
 
-Manual Topics
-=============
-
-At times it can be useful to manually predefine a subset of Topic QoS for a set of Participants.
-
-.. code-block:: yaml
-
-    topics:
-      - name: temperature/*
-        type: temp*
-        qos:
-            max-tx-rate: 15
-            downsampling: 2
-        participants:
-            - Participant0
-            - Participant1
-
 Topic Filtering
-===============
+---------------
 
 |ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
 By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
@@ -374,7 +380,7 @@ Each Topic is determined by its entries ``name`` and ``type``, with only the fir
     characters must be enclosed by single or double quotation marks.
 
 Allow topic list (``allowlist``)
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This is the list of topics that |ddsrouter| will forward, i.e. the data published under the topics matching the
 expressions in the ``allowlist`` will be relayed by |ddsrouter|.
 
@@ -384,7 +390,7 @@ expressions in the ``allowlist`` will be relayed by |ddsrouter|.
 
 
 Block topic list (``blocklist``)
---------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 This is the list of topics that the |ddsrouter| will block, that is, all data published under the topics matching the
 filters specified in the ``blocklist`` will be discarded by the |ddsrouter| and therefore will not be relayed.
 
@@ -394,13 +400,13 @@ causing the data under this topic to be discarded.
 
 
 Examples of usage
------------------
+^^^^^^^^^^^^^^^^^
 
 The following is an example of how to use the ``allowlist``, ``blocklist`` and ``builtin-topics`` configurations to
 setup the |ddsrouter| filtering rules.
 
 Dynamic topic discovery example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""
 
 This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2
 topic for ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
@@ -420,7 +426,7 @@ Additionally, two rules are specified in the ``blocklist`` in order to filter ou
 
 
 Allowlist and blocklist collision
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""
 
 In the following example, the ``HelloWorldTopic`` topic is both in the ``allowlist`` and (implicitly) in the
 ``blocklist``, so according to the ``blocklist`` preference rule this topic is blocked.
