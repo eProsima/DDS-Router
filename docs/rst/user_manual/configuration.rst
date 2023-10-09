@@ -104,16 +104,12 @@ Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entit
 
 At times it can be useful to remove the internal entities that are not being used.
 Consider the following example.
-Two *DDS Routers* are communicating between each other through a WAN connection, when the last of their Subscribers disconnects.
+Two *DDS Routers* are communicating through a WAN connection, when the last of the external Subscribers to which they are forwarding data disconnects.
 By default, the internal entities of the *DDS Routers* would *not* be removed, so the *DDS Routers* would keep consuming bandwidth, even though the data is never read.
 By setting the ``remove-unused-entities`` option to ``true``, the internal entities of the |ddsrouter| would be removed, and the *DDS Routers* would stop communicating and free up the bandwidth.
 
-.. note::
-  For the |ddsrouter| to detect that a Subscriber has disconnected, the Subscriber must be closed correctly.
-  If the Subscriber's process is killed, for example, the |ddsrouter| would not receive the disconnection signal and it would consider that the Subscriber is still running.
-
 .. warning::
-  At the time being, the removal of unused entities is incompatible with ``transient-local``.
+  At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
 
 .. _user_manual_configuration_load_xml:

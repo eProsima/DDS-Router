@@ -1,4 +1,4 @@
-# Copyright 2022 Proyectos y Sistemas de Mantenimiento SL (eProsima).
+# Copyright 2023 Proyectos y Sistemas de Mantenimiento SL (eProsima).
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import re
 import log
 import validation
 
-DESCRIPTION = """Validate that the router's publisher gets deleted"""
+DESCRIPTION = """Script to validate the publishers' output"""
 USAGE = ('python3 validate_publisher.py -e <path/to/application/executable>')
 
 
@@ -42,7 +42,7 @@ def parse_options():
         '--exe',
         type=str,
         required=True,
-        help='Path to discovery-server executable.'
+        help='Path to publisher or subscriber executable.'
     )
 
     parser.add_argument(
@@ -103,7 +103,7 @@ def _publisher_parse_output(stdout, stderr):
     Transform the output of the program in a list of received disconnects.
 
     :param data: Process stdout
-    :return: List of participants who have disconnected
+    :return: List of readers or subscribers who have disconnected
     """
     regex = re.compile(r'^Publisher unmatched \[.+\].$')
     lines = stdout.splitlines()

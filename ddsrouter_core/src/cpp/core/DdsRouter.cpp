@@ -62,7 +62,7 @@ DdsRouter::DdsRouter(
     // Load Participants
     init_participants_();
 
-    // Initialize the DdsPipe
+    // Create DdsPipe instance
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
                         allowed_topics_,
                         discovery_database_,
