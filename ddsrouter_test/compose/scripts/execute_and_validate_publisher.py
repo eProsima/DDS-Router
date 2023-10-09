@@ -117,9 +117,10 @@ def _publisher_get_retcode_validate(
     if disconnects != 0:
         return validation.validate_retcode_default
 
-    accept_timeout = lambda retcode: retcode in [
-        validation.ReturnCode.SUCCESS,
-        validation.ReturnCode.TIMEOUT]
+    def accept_timeout(retcode):
+        return retcode in [
+            validation.ReturnCode.SUCCESS,
+            validation.ReturnCode.TIMEOUT]
 
     return accept_timeout
 
@@ -169,7 +170,6 @@ if __name__ == '__main__':
         parse_retcode_function=_publisher_get_retcode_validate(
             args.disconnects),
         timeout_as_error=False)
-
 
     log.logger.info(f'Publisher validator exited with code {ret_code}')
 

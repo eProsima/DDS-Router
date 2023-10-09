@@ -67,7 +67,7 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      *
      * @note The default value is set to false.
      * @note Setting it to true may reduce the bandwidth usage.
-     * @warning Setting it to true is imcompatible with transient-local durability.
+     * @warning Setting it to true is incompatible with transient-local durability.
      */
     bool remove_unused_entities = false;
 };
