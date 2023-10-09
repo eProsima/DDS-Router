@@ -42,7 +42,7 @@ def parse_options():
         '--exe',
         type=str,
         required=True,
-        help='Path to publisher or subscriber executable.'
+        help='Path to publisher executable.'
     )
 
     parser.add_argument(
@@ -103,7 +103,7 @@ def _publisher_parse_output(stdout, stderr):
     Transform the output of the program in a list of received disconnects.
 
     :param data: Process stdout
-    :return: List of readers or subscribers who have disconnected
+    :return: List of subscribers who have disconnected
     """
     regex = re.compile(r'^Publisher unmatched \[.+\].$')
     lines = stdout.splitlines()
