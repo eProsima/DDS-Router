@@ -65,14 +65,14 @@ DdsRouter::DdsRouter(
 
     // Initialize the DdsPipe
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
+                        configuration_.ddspipe_configuration,
                         allowed_topics_,
                         discovery_database_,
                         payload_pool_,
                         participants_database_,
                         thread_pool_,
                         configuration_.builtin_topics,
-                        false,
-                        configuration_.ddspipe_configuration));
+                        false));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
