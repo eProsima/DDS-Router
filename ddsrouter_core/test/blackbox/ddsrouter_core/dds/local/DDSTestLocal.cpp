@@ -55,7 +55,7 @@ DdsRouterConfiguration dds_test_simple_configuration(
     // Always filter the test topics by topic name
     core::types::WildcardDdsFilterTopic topic;
     topic.topic_name.set_value(TOPIC_NAME);
-    conf.allowlist.insert(
+    conf.ddspipe_configuration.allowlist.insert(
         utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     if (disable_dynamic_discovery)
@@ -81,8 +81,8 @@ DdsRouterConfiguration dds_test_simple_configuration(
         topic_keyed.type_name = "HelloWorldKeyed";
         topic_keyed.topic_qos.keyed = true;
 
-        conf.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
-        conf.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic_keyed));
+        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
+        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic_keyed));
     }
 
     // Two simple participants

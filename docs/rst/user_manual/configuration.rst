@@ -281,7 +281,7 @@ Topics
 A subset of QoSs can be manually configured for a specific topic under the tag ``topics``.
 The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
 It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoSs that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
-If a ``qos`` is not manually configured, it will get its value by discovery; if there ``participants`` tag is empty or inexistent, the configuration will apply to all participants.
+If a ``qos`` is not manually configured, it will get its value by discovery; if there ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
 
 
 .. code-block:: yaml

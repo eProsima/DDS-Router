@@ -124,7 +124,7 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
         eprosima::ddspipe::core::types::DdsTopic topic;
         topic.m_topic_name = "rt/chatter";
         topic.type_name = "std_msgs::msg::dds_::String_";
-        configuration.builtin_topics.insert(
+        configuration.ddspipe_configuration.builtin_topics.insert(
             utils::Heritable<eprosima::ddspipe::core::types::DdsTopic>::make_heritable(topic));
 
         // Create DdsRouter entity

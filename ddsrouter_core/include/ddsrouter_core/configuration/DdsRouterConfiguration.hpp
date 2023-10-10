@@ -23,7 +23,6 @@
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
 #include <ddspipe_participants/xml/XmlHandlerConfiguration.hpp>
 
-#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/configuration/SpecsConfiguration.hpp>
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 
@@ -39,7 +38,7 @@ namespace core {
  * - Participant configurations.
  * - Advanced configurations.
  */
-struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
+struct DdsRouterConfiguration : public ddspipe::core::IConfiguration
 {
 
     /////////////////////////
@@ -53,10 +52,6 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
     // METHODS
     /////////////////////////
 
-    //! Set internal values with the values reloaded
-    DDSROUTER_CORE_DllAPI void reload(
-            const DdsRouterReloadConfiguration& new_configuration);
-
     //! Override \c is_valid method.
     DDSROUTER_CORE_DllAPI bool is_valid(
             utils::Formatter& error_msg) const noexcept override;
@@ -64,9 +59,6 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
     /////////////////////////
     // VARIABLES
     /////////////////////////
-
-    //! Builtin topics to create at the beggining of the execution
-    std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>> builtin_topics {};
 
     //! Participant configurations
     std::set<

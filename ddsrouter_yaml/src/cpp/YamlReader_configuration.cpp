@@ -158,6 +158,39 @@ void YamlReader::fill(
         const YamlReaderVersion version)
 {
     /////
+    // Get optional allowlist
+    if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
+    {
+        auto allowlist_set = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, ALLOWLIST_TAG, version);
+        for (auto const& wild_topic : allowlist_set)
+        {
+            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
+            object.allowlist.insert(new_topic);
+        }
+    }
+
+    /////
+    // Get optional blocklist
+    if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
+    {
+        auto blocklist_set = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, BLOCKLIST_TAG, version);
+        for (auto const& wild_topic : blocklist_set)
+        {
+            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
+            object.blocklist.insert(new_topic);
+        }
+    }
+
+    /////
+    // Get optional builtin topics
+    if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
+    {
+        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
+                        BUILTIN_TAG,
+                        version);
+    }
+
+    /////
     // Get optional routes
     if (YamlReader::is_tag_present(yml, ROUTES_TAG))
     {
@@ -208,39 +241,6 @@ void YamlReader::fill(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    /////
-    // Get optional allowlist
-    if (YamlReader::is_tag_present(yml, ALLOWLIST_TAG))
-    {
-        auto allowlist_set = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, ALLOWLIST_TAG, version);
-        for (auto const& wild_topic : allowlist_set)
-        {
-            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
-            object.allowlist.insert(new_topic);
-        }
-    }
-
-    /////
-    // Get optional blocklist
-    if (YamlReader::is_tag_present(yml, BLOCKLIST_TAG))
-    {
-        auto blocklist_set = YamlReader::get_set<core::types::WildcardDdsFilterTopic>(yml, BLOCKLIST_TAG, version);
-        for (auto const& wild_topic : blocklist_set)
-        {
-            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
-            object.blocklist.insert(new_topic);
-        }
-    }
-
-    /////
-    // Get optional builtin topics
-    if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
-    {
-        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
-                        BUILTIN_TAG,
-                        version);
-    }
-
     /////
     // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
     auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);

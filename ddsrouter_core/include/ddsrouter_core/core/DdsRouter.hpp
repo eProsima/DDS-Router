@@ -26,7 +26,6 @@
 
 #include <ddsrouter_core/core/ParticipantFactory.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/library/library_dll.h>
 
 namespace eprosima {
@@ -78,7 +77,7 @@ public:
      * @throw \c ConfigurationException in case the new yaml is not well-formed
      */
     DDSROUTER_CORE_DllAPI utils::ReturnCode reload_configuration(
-            const DdsRouterReloadConfiguration& configuration);
+            const DdsRouterConfiguration& configuration);
 
     /**
      * @brief Start communication in DDS Router
@@ -103,13 +102,6 @@ public:
     DDSROUTER_CORE_DllAPI utils::ReturnCode stop() noexcept;
 
 protected:
-
-    /**
-     * @brief Load allowed topics from configuration
-     *
-     * @throw \c ConfigurationException in case the yaml inside allowlist is not well-formed
-     */
-    void init_allowed_topics_();
 
     /**
      * @brief  Create participants and add them to the participants database

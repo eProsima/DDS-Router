@@ -25,29 +25,15 @@
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/types/ParticipantKind.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
 
-void DdsRouterConfiguration::reload(
-        const DdsRouterReloadConfiguration& new_configuration)
-{
-    this->allowlist = new_configuration.allowlist;
-    this->blocklist = new_configuration.blocklist;
-}
-
 bool DdsRouterConfiguration::is_valid(
         utils::Formatter& error_msg) const noexcept
 {
-    // Check Allow list topics
-    if (!DdsRouterReloadConfiguration::is_valid(error_msg))
-    {
-        return false;
-    }
-
     // Check there are at least two participants
     if (participants_configurations.size() < 1)
     {
