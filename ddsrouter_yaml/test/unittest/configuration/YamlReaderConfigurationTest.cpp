@@ -263,6 +263,111 @@ TEST(YamlReaderConfigurationTest, max_history_depth)
     }
 }
 
+/**
+ * Test setting remove unused entities in the configuration.
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, remove_unused_entities)
+{
+    const char* yml_configuration =
+            // trivial configuration
+            R"(
+        version: v3.1
+        participants:
+          - name: "P1"
+            kind: "echo"
+          - name: "P2"
+            kind: "echo"
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    std::vector<bool> test_cases = {false, true};
+
+    for (bool test_case : test_cases)
+    {
+        Yaml yml_specs;
+        yml_specs[ddspipe::yaml::REMOVE_UNUSED_ENTITIES_TAG] = test_case;
+        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
+
+        // Load configuration
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        // Check remove unused entities is correct
+        ASSERT_EQ(test_case, configuration_result.advanced_options.remove_unused_entities);
+    }
+}
+
+/**
+ * Test setting routes and topic routes in the configuration.
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, valid_routes)
+{
+    const char* yml_configuration =
+            R"(
+        version: v3.1
+        participants:
+          - name: "P1"
+            kind: "echo"
+          - name: "P2"
+            kind: "echo"
+        routes:
+          - src: P1
+            dst:
+              - P2
+          - src: P2
+            dst:
+              - P1
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    // Load configuration
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+    // Check that the configuration is valid
+    utils::Formatter error_msg;
+    ASSERT_TRUE(configuration_result.is_valid(error_msg));
+}
+
+/**
+ * Test setting invalid routes in the configuration.
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, invalid_routes)
+{
+    const char* yml_configuration =
+            // trivial configuration
+            R"(
+        version: v3.1
+        participants:
+          - name: "P1"
+            kind: "echo"
+          - name: "P2"
+            kind: "echo"
+        routes:
+          - src: P8
+            dst:
+              - P5
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    // Load configuration
+    ddsrouter::core::DdsRouterConfiguration configuration_result =
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+    // Check the configuration is invalid
+    utils::Formatter error_msg;
+    ASSERT_FALSE(configuration_result.is_valid(error_msg));
+}
+
 int main(
         int argc,
         char** argv)
