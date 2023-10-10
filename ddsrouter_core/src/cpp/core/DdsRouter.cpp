@@ -62,6 +62,7 @@ DdsRouter::DdsRouter(
     // Load Participants
     init_participants_();
 
+    // Create DdsPipe instance
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
                         allowed_topics_,
                         discovery_database_,
@@ -70,8 +71,7 @@ DdsRouter::DdsRouter(
                         thread_pool_,
                         configuration_.builtin_topics,
                         false,
-                        configuration_.routes,
-                        configuration_.topic_routes));
+                        configuration_.ddspipe_configuration));
 
     logDebug(DDSROUTER, "DDS Router created.");
 }

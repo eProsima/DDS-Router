@@ -31,6 +31,9 @@ set(TEST_LIST
         version_negative_cases
         number_of_threads
         max_history_depth
+        remove_unused_entities
+        valid_routes
+        invalid_routes
     )
 
 set(TEST_EXTRA_LIBRARIES

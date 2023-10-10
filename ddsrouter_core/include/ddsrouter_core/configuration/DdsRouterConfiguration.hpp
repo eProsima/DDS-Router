@@ -17,8 +17,7 @@
 #include <memory>
 #include <set>
 
-#include <ddspipe_core/configuration/RoutesConfiguration.hpp>
-#include <ddspipe_core/configuration/TopicRoutesConfiguration.hpp>
+#include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/types/topic/dds/DdsTopic.hpp>
 
 #include <ddspipe_participants/configuration/ParticipantConfiguration.hpp>
@@ -77,11 +76,8 @@ struct DdsRouterConfiguration : public DdsRouterReloadConfiguration
                 ddspipe::participants::ParticipantConfiguration>>>
     participants_configurations {};
 
-    //! Custom forwarding routes
-    ddspipe::core::RoutesConfiguration routes {};
-
-    //! Custom forwarding routes per topic
-    ddspipe::core::TopicRoutesConfiguration topic_routes {};
+    //! DdsPipe configuration
+    ddspipe::core::DdsPipeConfiguration ddspipe_configuration {};
 
     //! Advanced configurations
     SpecsConfiguration advanced_options {};

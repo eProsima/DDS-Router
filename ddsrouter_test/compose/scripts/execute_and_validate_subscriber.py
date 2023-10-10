@@ -40,7 +40,7 @@ def parse_options():
         '--exe',
         type=str,
         required=True,
-        help='Path to discovery-server executable.'
+        help='Path to subscriber executable.'
     )
     parser.add_argument(
         '--args',

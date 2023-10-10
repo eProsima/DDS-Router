@@ -61,6 +61,15 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      * @note Default value is 5000 as in Fast DDS.
      */
     ddspipe::core::types::HistoryDepthType max_history_depth = 5000;
+
+    /**
+     * @brief Whether readers that aren't connected to any writers should be deleted.
+     *
+     * @note The default value is set to false.
+     * @note Setting it to true may reduce the bandwidth usage.
+     * @warning Setting it to true is incompatible with transient-local durability.
+     */
+    bool remove_unused_entities = false;
 };
 
 } /* namespace core */

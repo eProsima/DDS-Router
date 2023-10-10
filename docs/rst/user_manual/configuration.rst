@@ -93,6 +93,24 @@ topics and |ddsrouter| participants) are as big as to cause memory exhaustion is
 Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
 enough memory is available.
 
+.. _user_manual_configuration_remove_unused_entities:
+
+Remove Unused Entities
+----------------------
+
+``specs`` supports a ``remove-unused-entities`` **optional** value that configures the deletion of unused internal entities in the |ddsrouter|.
+By default, unused internal entities are *not* removed.
+Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
+
+At times it can be useful to remove the internal entities that are not being used.
+Consider the following example.
+Two *DDS Routers* are communicating through a WAN connection, when the last of the external Subscribers to which they are forwarding data disconnects.
+By default, the internal entities of the *DDS Routers* would *not* be removed, so the *DDS Routers* would keep consuming bandwidth, even though the data is never read.
+By setting the ``remove-unused-entities`` option to ``true``, the internal entities of the |ddsrouter| would be removed, and the *DDS Routers* would stop communicating and free up the bandwidth.
+
+.. warning::
+  At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
+
 
 .. _user_manual_configuration_load_xml:
 
@@ -779,6 +797,7 @@ A complete example of all the configurations described on this page can be found
     specs:
       threads: 10
       max-depth: 1000
+      remove-unused-entities: false
 
     # XML configurations to load
     xml:
