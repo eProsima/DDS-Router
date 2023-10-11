@@ -85,6 +85,18 @@ def parse_options():
         default=0,
         help='Time to wait before executing the command.'
     )
+    parser.add_argument(
+        '--min-time',
+        type=int,
+        default=0,
+        help='Minimum amount of time the command should take before finishing.'
+    )
+    parser.add_argument(
+        '--max-time',
+        type=int,
+        default=0,
+        help='Maximum amount of time the command should take before finishing.'
+    )
 
     return parser.parse_args()
 
@@ -239,7 +251,9 @@ if __name__ == '__main__':
         parse_output_function=_subscriber_parse_output,
         validate_output_function=validate_func,
         parse_retcode_function=_subscriber_get_retcode_validate(args.samples),
-        timeout_as_error=args.samples > 0)
+        timeout_as_error=args.samples > 0,
+        min_time=args.min_time,
+        max_time=args.max_time)
 
     log.logger.info(f'Subscriber validator exited with code {ret_code}')
 
