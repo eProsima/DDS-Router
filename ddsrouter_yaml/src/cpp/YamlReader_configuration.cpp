@@ -66,17 +66,26 @@ void YamlReader::fill(
     {
         const auto& entity_creation_trigger = YamlReader::get<std::string>(yml, ENTITY_CREATION_TRIGGER_TAG, version);
 
-        if (entity_creation_trigger == "any")
+        if (entity_creation_trigger == "reader")
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::ANY;
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
         }
         else if (entity_creation_trigger == "writer")
         {
             object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::WRITER;
         }
+        else if (entity_creation_trigger == "none")
+        {
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::NONE;
+        }
+        else if (entity_creation_trigger == "any")
+        {
+            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::ANY;
+        }
         else
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
+            throw eprosima::utils::ConfigurationException(
+                utils::Formatter() << "The entity-creation-trigger " << entity_creation_trigger << " is not valid.");
         }
     }
 }
