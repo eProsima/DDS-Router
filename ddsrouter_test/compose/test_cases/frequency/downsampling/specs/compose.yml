@@ -1,7 +1,7 @@
 # Test description:
-#   This test checks that if we set up a router with a route from a participant A to participant B,
-#   participant B receives the data published by participant A, but participant A doesn't receive
-#   the data published by participant B.
+#   This test checks that if we set up a router with a globally configured downsampling factor of N,
+#   every participant only processes one out of every N messages. More concretely, this test checks
+#   that the sending frequency of the router is reduced by a factor of N.
 #
 # Test architecture:
 #

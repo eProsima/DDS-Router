@@ -34,7 +34,7 @@ namespace core {
 
 /**
  * This data struct joins every DdsRouter feature configuration such as:
- * - Modifiable values (from \c DdsRouterReloadConfiguration ).
+ * - DdsPipe configuration.
  * - Participant configurations.
  * - Advanced configurations.
  */

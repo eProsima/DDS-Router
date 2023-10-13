@@ -1,7 +1,7 @@
 # Test description:
-#   This test checks that if we set up a router with a route from a participant A to participant B,
-#   participant B receives the data published by participant A, but participant A doesn't receive
-#   the data published by participant B.
+#   This test checks that if we set up a router that has a participant A with a max-tx-rate
+#   configured and a participant B without it, participant A will forward messages at the
+#   max-tx-rate specified while participant B will forward messages at full rate.
 #
 # Test architecture:
 #                                     topic_1 10 Hz┌────────────┐

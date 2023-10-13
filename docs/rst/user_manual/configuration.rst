@@ -2,9 +2,9 @@
 
 .. _user_manual_configuration:
 
-##############
+#############
 Configuration
-##############
+#############
 
 A |ddsrouter| is configured by a *.yaml* configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering
@@ -275,6 +275,8 @@ The following is the set of Quality of Services that are configurable for a topi
 The entry ``keyed`` determines whether its corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
 For further information on topics, please read the `Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
 
+.. _user_manual_configuration_manual_topics:
+
 Topics
 ------
 
@@ -319,9 +321,6 @@ The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard cha
           partitions: true   # Topic with partitions
           ownership: false   # Use QoS SHARED_OWNERSHIP_QOS
           keyed: false       # Topic without keys
-
-
-.. _user_manual_configuration_manual_topics:
 
 Topic Filtering
 ---------------
@@ -880,22 +879,9 @@ A complete example of all the configurations described on this page can be found
       threads: 10
       max-depth: 1000
       remove-unused-entities: false
-<<<<<<< HEAD
-      downsampling: 3
-<<<<<<< HEAD
-      max-reception-rate: 20
-<<<<<<< HEAD
-=======
->>>>>>> 18dd4fb (Documentation)
-=======
-      max-rx-rate: 20
->>>>>>> eec63db (Rename max-reception-rate to max-rx-rate)
->>>>>>> cccec2a (Rename max-reception-rate to max-rx-rate)
-=======
       max-tx-rate: 0
       max-rx-rate: 20
       downsampling: 3
->>>>>>> 379ec47 (Max transmission rate documentation)
 
     # XML configurations to load
     xml:

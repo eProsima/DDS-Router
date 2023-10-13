@@ -1,7 +1,7 @@
 # Test description:
-#   This test checks that if we set up a router with a route from a participant A to participant B,
-#   participant B receives the data published by participant A, but participant A doesn't receive
-#   the data published by participant B.
+#   This test checks that if we set up a router that has a participant A with a max-rx-rate
+#   configured and a participant B without it, participant A will receive messages at the
+#   max-rx-rate specified while participant B will receive messages at full rate.
 #
 # Test architecture:
 #

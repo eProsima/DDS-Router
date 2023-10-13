@@ -1,7 +1,6 @@
 # Test description:
-#   This test checks that if we set up a router with a route from a participant A to participant B,
-#   participant B receives the data published by participant A, but participant A doesn't receive
-#   the data published by participant B.
+#   This test checks that if we set up a router with two manually configured topics,
+#   the manually configured topic qos get applied for the specified participants.
 #
 # Test architecture:
 #
