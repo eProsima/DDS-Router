@@ -268,7 +268,7 @@ The following is the set of Quality of Services that are configurable for a topi
 
     *   - Down-sampling
         - ``downsampling``
-        - *integer*
+        - *unsigned integer*
         - *default value*
         - Down-sampling factor
 
@@ -277,13 +277,13 @@ For further information on topics, please read the `Topic <https://fast-dds.docs
 
 .. _user_manual_configuration_manual_topics:
 
-Topics
-------
+Manual Topics
+-------------
 
 A subset of QoSs can be manually configured for a specific topic under the tag ``topics``.
 The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
 It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoSs that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
-If a ``qos`` is not manually configured, it will get its value by discovery; if there ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
+If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
 
 
 .. code-block:: yaml
@@ -292,11 +292,11 @@ If a ``qos`` is not manually configured, it will get its value by discovery; if 
       - name: temperature/*
         type: temperature/types/*
         qos:
-            max-tx-rate: 15
-            downsampling: 2
+          max-tx-rate: 15
+          downsampling: 2
         participants:
-            - Participant0
-            - Participant1
+          - Participant0
+          - Participant1
 
 
 Built-in Topics
@@ -916,6 +916,19 @@ A complete example of all the configurations described on this page can be found
           max-tx-rate: 5
           max-rx-rate: 10
           downsampling: 4
+
+    # Manually configure Topic QoS for a set of participants on a topic
+
+    topics:
+
+      - name: temperature/*
+        type: temperature/types/*
+        qos:
+          max-tx-rate: 15
+          downsampling: 2
+        participants:
+          - Participant0
+          - Participant1
 
     # Do not allow ROS2 services
 

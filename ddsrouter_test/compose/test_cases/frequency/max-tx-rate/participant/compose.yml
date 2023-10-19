@@ -1,18 +1,19 @@
 # Test description:
-#   This test checks that if we set up a router that has a participant A with a max-tx-rate
-#   configured and a participant B without it, participant A will forward messages at the
-#   max-tx-rate specified while participant B will forward messages at full rate.
+#   This test checks that if we set up a router that has two participants with two
+#   different max-tx-rates configured, the subscribers connected to these participants
+#   receive the messages at the max-tx-rate specified in the participant they are
+#   connected to.
 #
 # Test architecture:
-#                                     topic_1 10 Hz┌────────────┐
+#                                     topic_0 10 Hz┌────────────┐
 #                                   ┌──────────────►subscriber_1│
 #                                   │              │            │
 # ┌───────────┐             ┌───────┴─┐            │(local)     │
-# │publisher_0│topic_1 20 Hz│ddsrouter│            └────────────┘
+# │publisher_0│topic_0 20 Hz│ddsrouter│            └────────────┘
 # │           ├─────────────►         │
 # │(local)    │             │(local)  │            ┌────────────┐
 # └───────────┘             └───────┬─┘            │subscriber_2│
-#                                   │  topic_1 5 Hz│            │
+#                                   │  topic_0 5 Hz│            │
 #                                   └──────────────►(local)     │
 #                                                  └────────────┘
 

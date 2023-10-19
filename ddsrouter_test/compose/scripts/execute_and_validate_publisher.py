@@ -19,7 +19,7 @@ import log
 import validation
 
 DESCRIPTION = """Script to validate the publishers' output"""
-USAGE = ('python3 validate_publisher.py -e <path/to/application/executable>')
+USAGE = ('python3 execute_and_validate_publisher.py -e <path/to/application/executable>')
 
 
 def parse_options():

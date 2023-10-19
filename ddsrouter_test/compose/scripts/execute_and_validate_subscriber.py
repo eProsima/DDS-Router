@@ -19,7 +19,7 @@ import log
 import validation
 
 DESCRIPTION = """Script to validate subscribers output"""
-USAGE = ('python3 validate_subscriber.py -e <path/to/application/executable>')
+USAGE = ('python3 execute_and_validate_subscriber.py -e <path/to/application/executable>')
 
 
 def parse_options():
@@ -89,13 +89,13 @@ def parse_options():
         '--min-time',
         type=int,
         default=0,
-        help='Minimum amount of time the command should take before finishing.'
+        help='Minimum amount of seconds the command should take before finishing.'
     )
     parser.add_argument(
         '--max-time',
         type=int,
         default=0,
-        help='Maximum amount of time the command should take before finishing.'
+        help='Maximum amount of seconds the command should take before finishing.'
     )
 
     return parser.parse_args()

@@ -3,15 +3,15 @@
 #   every participant forwards data at the max-tx-rate specified.
 #
 # Test architecture:
-#                                      topic_1 5 Hz┌────────────┐
+#                                      topic_0 5 Hz┌────────────┐
 #                                   ┌──────────────►subscriber_1│
 #                                   │              │            │
 # ┌───────────┐             ┌───────┴─┐            │(local)     │
-# │publisher_0│topic_1 10 Hz│ddsrouter│            └────────────┘
+# │publisher_0│topic_0 10 Hz│ddsrouter│            └────────────┘
 # │           ├─────────────►         │
 # │(local)    │             │(local)  │            ┌────────────┐
 # └───────────┘             └───────┬─┘            │subscriber_2│
-#                                   │  topic_1 5 Hz│            │
+#                                   │  topic_0 5 Hz│            │
 #                                   └──────────────►(local)     │
 #                                                  └────────────┘
 

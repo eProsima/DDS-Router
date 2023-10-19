@@ -198,7 +198,7 @@ def run_and_validate(
 
     elif max_time > 0 and elapsed_time > max_time:
         log.logger.error(
-            f'Executable exited before max-time.')
+            f'Executable exited after max-time.')
 
         return ReturnCode.FINISHED_TOO_SLOWLY
 

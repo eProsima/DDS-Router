@@ -69,7 +69,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --max-time 8 --args "--samples 20 --domain 83 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 83 --topic topic_1"
 
 networks:
   std_net:
