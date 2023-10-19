@@ -59,7 +59,9 @@ set(TESTS
     frequency/downsampling/specs
     frequency/downsampling/participant
 
-    manual_topics
+    manual_topics/generic
+    manual_topics/participants
+    manual_topics/precedence
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
