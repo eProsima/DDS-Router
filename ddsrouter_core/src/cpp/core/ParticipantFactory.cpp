@@ -155,55 +155,58 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
     switch (kind)
     {
         case types::ParticipantKind::echo:
-            // Echo Participant
-        {
-            return create_participant_no_init_<
+            return generic_create_participant<
                 ddspipe::participants::EchoParticipantConfiguration,
-                ddspipe::participants::EchoParticipant>(
-                    kind,
-                    participant_configuration,
-                    discovery_database
-                );
-        }
+                ddspipe::participants::EchoParticipant>
+                   (
+                kind,
+                participant_configuration,
+                discovery_database
+                   );
 
         case types::ParticipantKind::simple:
-            // Simple RTPS Participant
-        {
-            return create_participant_<
+            return generic_create_participant_with_init<
                 ddspipe::participants::SimpleParticipantConfiguration,
-                ddspipe::participants::rtps::SimpleParticipant>(
-                    kind,
-                    participant_configuration,
-                    payload_pool,
-                    discovery_database
-                );
-        }
+                ddspipe::participants::rtps::SimpleParticipant>
+                   (
+                kind,
+                participant_configuration,
+                payload_pool,
+                discovery_database
+                   );
 
         case types::ParticipantKind::discovery_server:
-            // Discovery Server RTPS Participant
-        {
-            return create_participant_<
+            return generic_create_participant_with_init<
                 ddspipe::participants::DiscoveryServerParticipantConfiguration,
-                ddspipe::participants::rtps::DiscoveryServerParticipant>(
-                    kind,
-                    participant_configuration,
-                    payload_pool,
-                    discovery_database
-                );
-        }
+                ddspipe::participants::rtps::DiscoveryServerParticipant>
+                   (
+                kind,
+                participant_configuration,
+                payload_pool,
+                discovery_database
+                   );
 
         case types::ParticipantKind::initial_peers:
-            // Initial Peers RTPS Participant
-        {
-            return create_participant_<
+            return generic_create_participant_with_init<
                 ddspipe::participants::InitialPeersParticipantConfiguration,
-                ddspipe::participants::rtps::InitialPeersParticipant>(
-                    kind,
-                    participant_configuration,
-                    payload_pool,
-                    discovery_database
-                );
-        }
+                ddspipe::participants::rtps::InitialPeersParticipant>
+                   (
+                kind,
+                participant_configuration,
+                payload_pool,
+                discovery_database
+                   );
+
+        case types::ParticipantKind::xml:
+            return generic_create_participant_with_init<
+                ddspipe::participants::XmlParticipantConfiguration,
+                ddspipe::participants::dds::XmlParticipant>
+                   (
+                kind,
+                participant_configuration,
+                payload_pool,
+                discovery_database
+                   );
 
         case types::ParticipantKind::dyn_types_publication:
             // Dynamic Types Publication Participant
