@@ -227,43 +227,6 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
 }
 
 /**
- * Test load of maximum history depth in the configuration
- *
- * CASES:
- * - trivial configuration
- */
-TEST(YamlReaderConfigurationTest, max_history_depth)
-{
-    const char* yml_configuration =
-            // trivial configuration
-            R"(
-        version: v3.0
-        participants:
-          - name: "P1"
-            kind: "echo"
-          - name: "P2"
-            kind: "echo"
-        )";
-    Yaml yml = YAML::Load(yml_configuration);
-
-    std::vector<unsigned int> test_cases = {10, 100, 1000, 5000, 10000};
-
-    for (unsigned int test_case : test_cases)
-    {
-        Yaml yml_specs;
-        yml_specs[ddspipe::yaml::MAX_HISTORY_DEPTH_TAG] = test_case;
-        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
-
-        // Load configuration
-        ddsrouter::core::DdsRouterConfiguration configuration_result =
-                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
-
-        // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advanced_options.max_history_depth);
-    }
-}
-
-/**
  * Test setting remove unused entities in the configuration.
  *
  * CASES:
@@ -369,6 +332,46 @@ TEST(YamlReaderConfigurationTest, invalid_routes)
 }
 
 /**
+ * Test load of maximum history depth in the configuration
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, max_history_depth)
+{
+    const char* yml_configuration =
+            // trivial configuration
+            R"(
+        version: v3.0
+        participants:
+          - name: "P1"
+            kind: "echo"
+          - name: "P2"
+            kind: "echo"
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    std::vector<unsigned int> test_cases = {10, 100, 1000, 5000, 10000};
+
+    for (unsigned int test_case : test_cases)
+    {
+        Yaml yml_topic_qos;
+        Yaml yml_specs;
+
+        yml_topic_qos[ddspipe::yaml::QOS_HISTORY_DEPTH_TAG] = test_case;
+        yml_specs[ddspipe::yaml::SPECS_QOS_TAG] = yml_topic_qos;
+        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
+
+        // Load configuration
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        // Check max history depth is correct
+        ASSERT_EQ(test_case, configuration_result.advanced_options.topic_qos.history_depth);
+    }
+}
+
+/**
  * Test load of max transmission rate in the configuration
  *
  * CASES:
@@ -392,8 +395,11 @@ TEST(YamlReaderConfigurationTest, max_tx_rate)
 
     for (unsigned int test_case : test_cases)
     {
+        Yaml yml_topic_qos;
         Yaml yml_specs;
-        yml_specs[ddspipe::yaml::MAX_TX_RATE_TAG] = test_case;
+
+        yml_topic_qos[ddspipe::yaml::QOS_MAX_TX_RATE_TAG] = test_case;
+        yml_specs[ddspipe::yaml::SPECS_QOS_TAG] = yml_topic_qos;
         yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
@@ -401,7 +407,7 @@ TEST(YamlReaderConfigurationTest, max_tx_rate)
                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advanced_options.max_tx_rate);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.topic_qos.max_tx_rate);
     }
 }
 
@@ -429,8 +435,11 @@ TEST(YamlReaderConfigurationTest, max_rx_rate)
 
     for (unsigned int test_case : test_cases)
     {
+        Yaml yml_topic_qos;
         Yaml yml_specs;
-        yml_specs[ddspipe::yaml::MAX_RX_RATE_TAG] = test_case;
+
+        yml_topic_qos[ddspipe::yaml::QOS_MAX_RX_RATE_TAG] = test_case;
+        yml_specs[ddspipe::yaml::SPECS_QOS_TAG] = yml_topic_qos;
         yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
@@ -438,7 +447,7 @@ TEST(YamlReaderConfigurationTest, max_rx_rate)
                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advanced_options.max_rx_rate);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.topic_qos.max_rx_rate);
     }
 }
 
@@ -466,8 +475,11 @@ TEST(YamlReaderConfigurationTest, downsampling)
 
     for (unsigned int test_case : test_cases)
     {
+        Yaml yml_topic_qos;
         Yaml yml_specs;
-        yml_specs[ddspipe::yaml::DOWNSAMPLING_TAG] = test_case;
+
+        yml_topic_qos[ddspipe::yaml::QOS_DOWNSAMPLING_TAG] = test_case;
+        yml_specs[ddspipe::yaml::SPECS_QOS_TAG] = yml_topic_qos;
         yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
 
         // Load configuration
@@ -475,7 +487,7 @@ TEST(YamlReaderConfigurationTest, downsampling)
                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
         // Check max history depth is correct
-        ASSERT_EQ(test_case, configuration_result.advanced_options.downsampling);
+        ASSERT_EQ(test_case, configuration_result.advanced_options.topic_qos.downsampling);
     }
 }
 

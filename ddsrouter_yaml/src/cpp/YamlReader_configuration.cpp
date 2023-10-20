@@ -47,55 +47,17 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional maximum history depth
-    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
-    {
-        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
-    }
-
-    /////
     // Get optional remove unused entities tag
     if (YamlReader::is_tag_present(yml, REMOVE_UNUSED_ENTITIES_TAG))
     {
         object.remove_unused_entities = YamlReader::get<bool>(yml, REMOVE_UNUSED_ENTITIES_TAG, version);
     }
 
-    /////
-    // Get optional max transmission rate
-    if (YamlReader::is_tag_present(yml, MAX_TX_RATE_TAG))
+    // Optional Topic QoS
+    if (is_tag_present(yml, SPECS_QOS_TAG))
     {
-        auto max_tx_rate = YamlReader::get_nonnegative_float(yml, MAX_TX_RATE_TAG);
-
-        // Save the max reception rate value in the advanced options
-        object.max_tx_rate = max_tx_rate;
-
-        // Set default value for max reception rate
-        ddspipe::core::types::TopicQoS::default_max_tx_rate.store(max_tx_rate);
-    }
-
-    /////
-    // Get optional max reception rate
-    if (YamlReader::is_tag_present(yml, MAX_RX_RATE_TAG))
-    {
-        auto max_rx_rate = YamlReader::get_nonnegative_float(yml, MAX_RX_RATE_TAG);
-
-        // Save the max reception rate value in the advanced options
-        object.max_rx_rate = max_rx_rate;
-
-        // Set default value for max reception rate
-        ddspipe::core::types::TopicQoS::default_max_rx_rate.store(max_rx_rate);
-    }
-
-    // Get optional downsampling
-    if (YamlReader::is_tag_present(yml, DOWNSAMPLING_TAG))
-    {
-        auto downsampling = YamlReader::get_positive_int(yml, DOWNSAMPLING_TAG);
-
-        // Save the downsampling value in the advanced options
-        object.downsampling = downsampling;
-
-        // Set default value for downsampling
-        ddspipe::core::types::TopicQoS::default_downsampling.store(downsampling);
+        fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
+        ddspipe::core::types::TopicQoS::default_topic_qos.store(object.topic_qos);
     }
 }
 
