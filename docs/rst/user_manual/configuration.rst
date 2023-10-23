@@ -7,9 +7,7 @@ Configuration
 #############
 
 A |ddsrouter| is configured by a *.yaml* configuration file.
-This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering
-and :term:`Participants <Participant>` configurations. Configuration files may be easily validated by using the
-:ref:`yaml_validator` tool.
+This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering and :term:`Participants <Participant>` configurations.
 
 .. contents::
     :local:
@@ -20,10 +18,8 @@ Configuration version
 =====================
 
 The YAML Configuration supports a ``version`` value to identify the configuration version to parse the file.
-In future releases the YAML format (some key words,
-fields, etc.) may change.
-This value allows users to keep using the same YAML file with an old configuration format, maintaining compatibility
-with future releases.
+In future releases the YAML format (some key words, fields, etc.) may change.
+This value allows users to keep using the same YAML file with an old configuration format, maintaining compatibility with future releases.
 
 .. list-table::
     :header-rows: 1
@@ -57,100 +53,6 @@ This is the configuration version that is described along this page.
     **Deprecation warning**.
     Update to  version `v3.0` since `v1.0` is no longer supported.
 
-
-.. _thread_configuration:
-
-Specs Configuration
-===================
-
-The YAML Configuration supports a ``specs`` **optional** tag that contains certain options related with the
-overall configuration of the DDS Router instance to run.
-The values available to configure are:
-
-Number of Threads
------------------
-
-``specs`` supports a ``threads`` **optional** value that allows the user to set a maximum number of threads
-for the internal :code:`ThreadPool`.
-This ThreadPool allows to limit the number of threads spawned by the application.
-This improves the performance of the data transmission between Participants.
-
-This value should be set by each user depending on each system's characteristics.
-In case this value is not set, the default number of threads used is :code:`12`.
-
-.. _history_depth_configuration:
-
-Maximum History Depth
----------------------
-
-``specs`` supports a ``max-depth`` **optional** value that configures the history size
-of the Fast DDS internal entities.
-By default, the depth of every RTPS History instance is :code:`5000`, which sets a constraint on the maximum number of
-samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT_LOCAL``
-`DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
-Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of
-topics and |ddsrouter| participants) are as big as to cause memory exhaustion issues.
-Likewise, one may choose to increase this value if wishing to deliver a greater number of samples to late joiners and
-enough memory is available.
-
-.. _user_manual_configuration_remove_unused_entities:
-
-Remove Unused Entities
-----------------------
-
-``specs`` supports a ``remove-unused-entities`` **optional** value that configures the deletion of unused internal entities in the |ddsrouter|.
-By default, unused internal entities are *not* removed.
-Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
-
-At times it can be useful to remove the internal entities that are not being used.
-Consider the following example.
-Two *DDS Routers* are communicating through a WAN connection, when the last of the external Subscribers to which they are forwarding data disconnects.
-By default, the internal entities of the *DDS Routers* would *not* be removed, so the *DDS Routers* would keep consuming bandwidth, even though the data is never read.
-By setting the ``remove-unused-entities`` option to ``true``, the internal entities of the |ddsrouter| would be removed, and the *DDS Routers* would stop communicating and free up the bandwidth.
-
-.. warning::
-  At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
-
-.. _user_manual_configuration_max_tx_rate:
-
-Max Transmission Rate
----------------------
-
-The ``max-tx-rate`` tag limits the frequency [Hz] at which samples are sent by discarding messages transmitted before :code:`1/max-tx-rate` seconds have passed since the last sent message.
-It only accepts non-negative numbers.
-By default it is set to ``0``; it sends samples at an unlimited transmission rate.
-
-.. note::
-
-    The ``max-tx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
-
-.. _user_manual_configuration_max_rx_rate:
-
-Max Reception Rate
-------------------
-
-The ``max-rx-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-rx-rate` seconds have passed since the last processed message.
-It only accepts non-negative numbers.
-By default it is set to ``0``; it processes samples at an unlimited reception rate.
-
-.. note::
-
-    The ``max-rx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
-
-.. _user_manual_configuration_downsampling:
-
-Down-sampling
--------------
-
-The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
-When the ``max-rx-rate`` tag is also set, down-sampling only applies to messages that have passed the ``max-rx-rate`` filter.
-It only accepts positive integers.
-By default it is set to ``1``; it accepts every message.
-
-.. note::
-
-    The ``downsampling`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
-
 .. _user_manual_configuration_load_xml:
 
 Load XML Configuration
@@ -159,7 +61,7 @@ Load XML Configuration
 Fast DDS supports configuration of its internal entities (:term:`DomainParticipant`, :term:`DataWriter`, etc.) via XML Profiles.
 These XML files contain different profiles that set specific QoS, and entities can be created following such profiles.
 These XML files can be loaded in the process by their *default file name* or by an environment variable.
-Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>` for more information.
+Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/xml_configuration.html>`_ for more information.
 
 Another way of loading these XML configurations is using the |ddsrouter| yaml configuration.
 The YAML Configuration supports a ``xml`` **optional** tag that contains certain options to load Fast DDS XML configurations.
@@ -169,12 +71,12 @@ XML configurations are then used to configure an :ref:`XML Participant <user_man
 Load XML Files
 --------------
 
-Under the **optional** tag `files`, a list can be set with the names of files to load XML from.
+Under the **optional** tag ``files``, a list can be set with the names of files to load XML from.
 
 Raw XML
 -------
 
-Under the **optional** tag `raw`, an XML configuration (with the same format as an XML file) can be set as a string to be loaded.
+Under the **optional** tag ``raw``, an XML configuration (with the same format as an XML file) can be set as a string to be loaded.
 
 .. code-block:: yaml
 
@@ -199,112 +101,17 @@ Under the **optional** tag `raw`, an XML configuration (with the same format as 
     These QoS should be configured by the user explicitly.
     Check :ref:`user_manual_participants_xml_profiles`.
 
-.. _topic_filtering:
-
 Topics Configuration
 ====================
 
-Topic Quality of Service
-------------------------
-
-The following is the set of Quality of Services that are configurable for a topic:
-
-.. list-table::
-    :header-rows: 1
-
-    *   - Quality of Service
-        - Yaml tag
-        - Data type
-        - Default value
-        - QoS set
-
-    *   - Reliability
-        - ``reliability``
-        - *bool*
-        - ``false``
-        - ``RELIABLE`` / ``BEST_EFFORT``
-
-    *   - Durability
-        - ``durability``
-        - *bool*
-        - ``false``
-        - ``TRANSIENT_LOCAL`` / ``VOLATILE``
-
-    *   - History Depth
-        - ``depth``
-        - *integer*
-        - :ref:`history_depth_configuration`
-        - Writers and Readers History Depth
-
-    *   - Partitions
-        - ``partitions``
-        - *bool*
-        - ``false``
-        - Topic with / without partitions
-
-    *   - Ownership
-        - ``ownership``
-        - *bool*
-        - ``false``
-        - ``EXCLUSIVE_OWNERSHIP_QOS`` / ``SHARED_OWNERSHIP_QOS``
-
-    *   - Key
-        - ``keyed``
-        - *bool*
-        - ``false``
-        - Topic with / without key
-
-    *   - Max Transmission Rate
-        - ``max-tx-rate``
-        - *float*
-        - *default value*
-        - Maximum sample transmission rate [Hz]
-
-    *   - Max Reception Rate
-        - ``max-rx-rate``
-        - *float*
-        - *default value*
-        - Maximum sample reception rate [Hz]
-
-    *   - Down-sampling
-        - ``downsampling``
-        - *unsigned integer*
-        - *default value*
-        - Down-sampling factor
-
-The entry ``keyed`` determines whether its corresponding topic is `keyed <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_ or not.
-For further information on topics, please read the `Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
-
-.. _user_manual_configuration_manual_topics:
-
-Manual Topics
--------------
-
-A subset of QoSs can be manually configured for a specific topic under the tag ``topics``.
-The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
-It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoSs that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
-If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
-
-
-.. code-block:: yaml
-
-    topics:
-      - name: temperature/*
-        type: temperature/types/*
-        qos:
-          max-tx-rate: 15
-          downsampling: 2
-        participants:
-          - Participant0
-          - Participant1
-
+.. _user_manual_configuration_builtin_topics:
 
 Built-in Topics
 ---------------
 
 The discovery phase can be accelerated by listing topics under the ``builtin-topics`` tag.
 The |ddsrouter| will create the DataWriters and DataReaders for these topics in the |ddsrouter| initialization.
-The QoSs for these topics can be manually configured; if a QoS is not configured, it will take its default value.
+The :ref:`user_manual_configuration_topic_qos` for these topics can be manually configured; if a QoS is not configured, it will take its default value.
 
 The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard characters.
 
@@ -314,33 +121,23 @@ The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard cha
     builtin-topics:
       - name: HelloWorldTopic
         type: HelloWorld
-        qos:
-          reliability: true  # Use QoS RELIABLE
-          durability: true   # Use QoS TRANSIENT_LOCAL
-          depth: 100         # Use History Depth 100
-          partitions: true   # Topic with partitions
-          ownership: false   # Use QoS SHARED_OWNERSHIP_QOS
-          keyed: false       # Topic without keys
+
+.. _topic_filtering:
 
 Topic Filtering
 ---------------
 
-|ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
-By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>`
-and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each
-discovered topic.
+The |ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
+By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each discovered topic.
 
 .. note::
 
     DDS Router entities are created with the QoS of the first Subscriber found in this Topic.
 
-|ddsrouter| allows filtering of DDS :term:`Topics<Topic>`, that is, it allows to define which DDS Topics are going to be
-relayed by the application.
-This way, it is possible to define a set of rules in |ddsrouter| to filter those data samples the user does not wish to
-forward.
+The |ddsrouter| allows filtering DDS :term:`Topics<Topic>`, that is, it allows to define which DDS :term:`Topics<Topic>` are going to be relayed by the application.
+This way, it is possible to define a set of rules in the |ddsrouter| to filter those data samples the user does not wish to forward.
 
-It is not mandatory to define such set of rules in the configuration file. In this case, a DDS Router will forward all
-the data published under the topics that it automatically discovers within the DDS network to which it connects.
+If the allowed DDS :term:`Topics<Topic>` are not defined in the configuration file, the |ddsrouter| will forward all the data published under the topics that it automatically discovers within the DDS network to which it connects.
 
 To define these data filtering rules based on the Topics to which they belong, three lists are available:
 
@@ -348,8 +145,7 @@ To define these data filtering rules based on the Topics to which they belong, t
 * Block topics list (``blocklist``)
 * Builtin topics list (``builtin-topics``)
 
-These three lists of topics listed above are defined by a tag in the *YAML* configuration file, which defines a
-*YAML* vector (``[]``).
+These three lists of topics listed above are defined by a tag in the *YAML* configuration file, which defines a *YAML* vector (``[]``).
 This vector contains the list of topics for each filtering rule.
 Each Topic is determined by its entries ``name`` and ``type``, with only the first one being mandatory.
 
@@ -396,7 +192,6 @@ filters specified in the ``blocklist`` will be discarded by the |ddsrouter| and 
 This list takes precedence over the ``allowlist``.
 If a topic matches an expression both in the ``allowlist`` and in the ``blocklist``, the ``blocklist`` takes precedence,
 causing the data under this topic to be discarded.
-
 
 Examples of usage
 ^^^^^^^^^^^^^^^^^
@@ -448,6 +243,199 @@ and ``AllowedTopic2`` regardless of its data type.
       - name: "*"
         type: HelloWorld
 
+.. _user_manual_configuration_topic_qos:
+
+Topic Quality of Service
+------------------------
+
+The following is the set of Qualities of Service that are configurable for a topic.
+For further information on topics, please read the `Fast DDS Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Quality of Service
+        - Yaml tag
+        - Data type
+        - Default value
+        - QoS set
+
+    *   - Reliability
+        - ``reliability``
+        - *bool*
+        - ``false``
+        - ``RELIABLE`` / ``BEST_EFFORT``
+
+    *   - Durability
+        - ``durability``
+        - *bool*
+        - ``false``
+        - ``TRANSIENT_LOCAL`` / ``VOLATILE``
+
+    *   - Ownership
+        - ``ownership``
+        - *bool*
+        - ``false``
+        - ``EXCLUSIVE_OWNERSHIP_QOS`` / ``SHARED_OWNERSHIP_QOS``
+
+    *   - Partitions
+        - ``partitions``
+        - *bool*
+        - ``false``
+        - Topic with / without partitions
+
+    *   - Key
+        - ``keyed``
+        - *bool*
+        - ``false``
+        - Topic with / without key
+
+    *   - History Depth
+        - ``history-depth``
+        - *integer*
+        - ``5000``
+        - :ref:`user_manual_configuration_history_depth`
+
+    *   - Max Transmission Rate
+        - ``max-tx-rate``
+        - *float*
+        - ``0`` (unlimited)
+        - :ref:`user_manual_configuration_max_tx_rate`
+
+    *   - Max Reception Rate
+        - ``max-rx-rate``
+        - *float*
+        - ``0`` (unlimited)
+        - :ref:`user_manual_configuration_max_rx_rate`
+
+    *   - Down-sampling
+        - ``downsampling``
+        - *unsigned integer*
+        - ``1``
+        - :ref:`user_manual_configuration_downsampling`
+
+.. _user_manual_configuration_keyed:
+
+Keyed
+^^^^^
+
+The entry ``keyed`` determines whether its corresponding topic has a `key <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_.
+By default it is set to ``false``.
+
+.. _user_manual_configuration_history_depth:
+
+History Depth
+^^^^^^^^^^^^^
+
+The ``history-depth`` tag configures the history depth of the Fast DDS internal entities.
+By default, the depth of every RTPS History instance is :code:`5000`, which sets a constraint on the maximum number of samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT_LOCAL`` `DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
+Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of topics and |ddsrouter| participants) are big enough to cause memory exhaustion issues.
+If enough memory is available, however, the ``history-depth`` could be increased to deliver a greater number of samples to late joiners.
+
+.. _user_manual_configuration_max_tx_rate:
+
+Max Transmission Rate
+^^^^^^^^^^^^^^^^^^^^^
+
+The ``max-tx-rate`` tag limits the frequency [Hz] at which samples are sent by discarding messages transmitted before :code:`1/max-tx-rate` seconds have passed since the last sent message.
+It only accepts non-negative numbers.
+By default it is set to ``0``; it sends samples at an unlimited transmission rate.
+
+.. note::
+
+    The ``max-tx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
+
+.. _user_manual_configuration_max_rx_rate:
+
+Max Reception Rate
+^^^^^^^^^^^^^^^^^^
+
+The ``max-rx-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-rx-rate` seconds have passed since the last processed message.
+It only accepts non-negative numbers.
+By default it is set to ``0``; it processes samples at an unlimited reception rate.
+
+.. note::
+
+    The ``max-rx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
+
+.. _user_manual_configuration_downsampling:
+
+Down-sampling
+^^^^^^^^^^^^^
+
+The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
+When the ``max-rx-rate`` tag is also set, down-sampling only applies to messages that have passed the ``max-rx-rate`` filter.
+It only accepts positive integers.
+By default it is set to ``1``; it accepts every message.
+
+.. note::
+
+    The ``downsampling`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
+
+.. _user_manual_configuration_manual_topics:
+
+Manual Topics
+-------------
+
+A subset of QoS can be manually configured for a specific topic under the tag ``topics``.
+The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
+It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoS that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
+If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
+
+
+.. code-block:: yaml
+
+    topics:
+      - name: temperature/*
+        type: temperature/types/*
+        qos:
+          max-tx-rate: 15
+          downsampling: 2
+        participants:
+          - Participant0
+          - Participant1
+
+Specs Configuration
+===================
+
+The YAML Configuration supports a ``specs`` **optional** tag that contains certain options related with the overall configuration of the DDS Router instance to run.
+The values available to configure are:
+
+.. _thread_configuration:
+
+Number of Threads
+-----------------
+
+``specs`` supports a ``threads`` **optional** value that allows the user to set a maximum number of threads
+for the internal :code:`ThreadPool`.
+This ThreadPool allows to limit the number of threads spawned by the application.
+This improves the performance of the data transmission between Participants.
+
+This value should be set by each user depending on each system's characteristics.
+In case this value is not set, the default number of threads used is :code:`12`.
+
+.. _user_manual_configuration_remove_unused_entities:
+
+Remove Unused Entities
+----------------------
+
+``specs`` supports a ``remove-unused-entities`` **optional** value that configures the deletion of unused internal entities in the |ddsrouter|.
+By default, unused internal entities are *not* removed.
+Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
+
+At times it can be useful to remove the internal entities that are not being used.
+Consider the following example.
+Two *DDS Routers* are communicating through a WAN connection, when the last of the external Subscribers to which they are forwarding data disconnects.
+By default, the internal entities of the *DDS Routers* would *not* be removed, so the *DDS Routers* would keep consuming bandwidth, even though the data is never read.
+By setting the ``remove-unused-entities`` option to ``true``, the internal entities of the |ddsrouter| would be removed, and the *DDS Routers* would stop communicating and free up the bandwidth.
+
+.. warning::
+  At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
+
+Qualities of Service
+--------------------
+
+``specs`` supports a ``qos`` **optional** value to configure the default values of the :ref:`user_manual_configuration_topic_qos`.
 
 Participant Configuration
 =========================
@@ -877,11 +865,12 @@ A complete example of all the configurations described on this page can be found
     # Specifications
     specs:
       threads: 10
-      max-depth: 1000
       remove-unused-entities: false
-      max-tx-rate: 0
-      max-rx-rate: 20
-      downsampling: 3
+      qos:
+        history-depth: 1000
+        max-tx-rate: 0
+        max-rx-rate: 20
+        downsampling: 3
 
     # XML configurations to load
     xml:

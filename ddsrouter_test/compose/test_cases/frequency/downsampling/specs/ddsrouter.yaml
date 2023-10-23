@@ -19,4 +19,5 @@ participants:
     domain: 83
 
 specs:
-  downsampling: 2
+  qos:
+    downsampling: 2

@@ -15,4 +15,5 @@ participants:
     domain: 82
 
 specs:
-  max-tx-rate: 5
+  qos:
+    max-tx-rate: 5

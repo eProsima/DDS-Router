@@ -57,7 +57,7 @@ void YamlReader::fill(
     if (is_tag_present(yml, SPECS_QOS_TAG))
     {
         fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
-        ddspipe::core::types::TopicQoS::default_topic_qos.store(object.topic_qos);
+        ddspipe::core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
 }
 
@@ -245,8 +245,9 @@ void YamlReader::fill(
     /* NOTE
      *
      * remove_unused_entities is an attribute of SpecsConfiguration because it is under the tag specs,
-     * but since it is used in the DdsPipe, we have two choices: copying it to the DdsPipeConfiguration,
-     * as we are doing, or refill the SpecsConfiguraton in the DdsPipeConfiguration fill and take it from there.
+     * but since it is used in the DdsPipe, we have two choices: copying it from the SpecsConfiguration to the
+     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill and
+     * taking it from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
 

@@ -25,7 +25,9 @@ blocklist:
 
 specs:
   threads: 10
-  max-depth: 1000
+
+  qos:
+    history-depth: 1000
 
 xml:
   raw: |
