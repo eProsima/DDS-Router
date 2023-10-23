@@ -111,7 +111,7 @@ Built-in Topics
 
 The discovery phase can be accelerated by listing topics under the ``builtin-topics`` tag.
 The |ddsrouter| will create the DataWriters and DataReaders for these topics in the |ddsrouter| initialization.
-The :ref:`user_manual_configuration_topic_qos` for these topics can be manually configured; if a QoS is not configured, it will take its default value.
+The :ref:`Topic QoS <user_manual_configuration_topic_qos>` for these topics can be manually configured with a :ref:`Manual Topic <user_manual_configuration_manual_topics>`; if a :ref:`Topic QoS <user_manual_configuration_topic_qos>` is not configured, it will take its default value.
 
 The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard characters.
 
@@ -132,7 +132,7 @@ By automatically detecting these topics, a |ddsrouter| creates internal DDS :ter
 
 .. note::
 
-    DDS Router entities are created with the QoS of the first Subscriber found in this Topic.
+    DDS Router entities are created with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` of the first Subscriber found in this Topic.
 
 The |ddsrouter| allows filtering DDS :term:`Topics<Topic>`, that is, it allows to define which DDS :term:`Topics<Topic>` are going to be relayed by the application.
 This way, it is possible to define a set of rules in the |ddsrouter| to filter those data samples the user does not wish to forward.
@@ -245,11 +245,11 @@ and ``AllowedTopic2`` regardless of its data type.
 
 .. _user_manual_configuration_topic_qos:
 
-Topic Quality of Service
-------------------------
+Topic QoS
+---------
 
-The following is the set of Qualities of Service that are configurable for a topic.
-For further information on topics, please read the `Fast DDS Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
+The following is the set of QoS that are configurable for a topic.
+For more information on topics, please read the `Fast DDS Topic <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`_ section.
 
 .. list-table::
     :header-rows: 1
@@ -377,9 +377,9 @@ By default it is set to ``1``; it accepts every message.
 Manual Topics
 -------------
 
-A subset of QoS can be manually configured for a specific topic under the tag ``topics``.
+A subset of :ref:`Topic QoS <user_manual_configuration_topic_qos>` can be manually configured for a specific topic under the tag ``topics``.
 The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
-It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the QoS that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
+It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
 If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
 
 
@@ -432,10 +432,10 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
-Qualities of Service
---------------------
+QoS
+---
 
-``specs`` supports a ``qos`` **optional** value to configure the default values of the :ref:`user_manual_configuration_topic_qos`.
+``specs`` supports a ``qos`` **optional** value to configure the default values of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
 
 Participant Configuration
 =========================
