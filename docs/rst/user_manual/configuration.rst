@@ -211,7 +211,7 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - ``keyed``
         - *bool*
         - ``false``
-        - Topic with / without key
+        - Topic with / without `key <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
 
     *   - History Depth
         - ``history-depth``
@@ -237,14 +237,6 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - ``1``
         - :ref:`user_manual_configuration_downsampling`
 
-.. _user_manual_configuration_keyed:
-
-Keyed
-^^^^^
-
-The entry ``keyed`` determines whether its corresponding topic has a `key <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_.
-By default it is set to ``false``.
-
 .. _user_manual_configuration_history_depth:
 
 History Depth
@@ -264,10 +256,6 @@ The ``max-tx-rate`` tag limits the frequency [Hz] at which samples are sent by d
 It only accepts non-negative numbers.
 By default it is set to ``0``; it sends samples at an unlimited transmission rate.
 
-.. note::
-
-    The ``max-tx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
-
 .. _user_manual_configuration_max_rx_rate:
 
 Max Reception Rate
@@ -276,10 +264,6 @@ Max Reception Rate
 The ``max-rx-rate`` tag limits the frequency [Hz] at which samples are processed by discarding messages received before :code:`1/max-rx-rate` seconds have passed since the last processed message.
 It only accepts non-negative numbers.
 By default it is set to ``0``; it processes samples at an unlimited reception rate.
-
-.. note::
-
-    The ``max-rx-rate`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_downsampling:
 
@@ -290,10 +274,6 @@ The ``downsampling`` tag reduces the sampling rate of the received data by only 
 When the ``max-rx-rate`` tag is also set, down-sampling only applies to messages that have passed the ``max-rx-rate`` filter.
 It only accepts positive integers.
 By default it is set to ``1``; it accepts every message.
-
-.. note::
-
-    The ``downsampling`` tag can be set (in order of precedence) for topics, for participants, and globally in specs.
 
 .. _user_manual_configuration_manual_topics:
 
@@ -308,8 +288,8 @@ If a ``qos`` is not manually configured, it will get its value by discovery; if 
 .. code-block:: yaml
 
     topics:
-      - name: temperature/*
-        type: temperature/types/*
+      - name: "temperature/*"
+        type: "temperature/types/*"
         qos:
           max-tx-rate: 15
           downsampling: 2
@@ -357,7 +337,7 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 QoS
 ---
 
-``specs`` supports a ``qos`` **optional** value to configure the default values of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+``specs`` supports a ``qos`` **optional** tag to configure the default values of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
 
 Participant Configuration
 =========================
@@ -691,9 +671,12 @@ It will use such profile for configuring the Participant.
 
     profile: participant_custom_configuration
 
+QoS
+---
+
+Participants support a ``qos`` **optional** tag to manually configure their :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
 
 .. _user_manual_configuration_forwarding_routes:
-
 
 Forwarding Routes
 =================
@@ -826,8 +809,8 @@ A complete example of all the configurations described on this page can be found
 
     topics:
 
-      - name: temperature/*
-        type: temperature/types/*
+      - name: "temperature/*"
+        type: "temperature/types/*"
         qos:
           max-tx-rate: 15
           downsampling: 2
