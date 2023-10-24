@@ -337,7 +337,7 @@ TEST(YamlReaderConfigurationTest, invalid_routes)
  * CASES:
  * - trivial configuration
  */
-TEST(YamlReaderConfigurationTest, max_history_depth)
+TEST(YamlReaderConfigurationTest, history_depth)
 {
     const char* yml_configuration =
             // trivial configuration

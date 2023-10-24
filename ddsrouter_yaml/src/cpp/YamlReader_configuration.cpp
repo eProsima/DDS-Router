@@ -57,7 +57,7 @@ void YamlReader::fill(
     if (is_tag_present(yml, SPECS_QOS_TAG))
     {
         fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
-        ddspipe::core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
+        core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
 }
 
@@ -115,7 +115,7 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
 
 template <>
 void YamlReader::fill(
-        ddspipe::core::DdsPipeConfiguration& object,
+        core::DdsPipeConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
@@ -147,7 +147,7 @@ void YamlReader::fill(
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
+        object.builtin_topics = YamlReader::get_set<utils::Heritable<core::types::DistributedTopic>>(yml,
                         BUILTIN_TAG,
                         version);
     }
@@ -156,7 +156,7 @@ void YamlReader::fill(
     // Get optional routes
     if (YamlReader::is_tag_present(yml, ROUTES_TAG))
     {
-        YamlReader::fill<ddspipe::core::RoutesConfiguration>(
+        YamlReader::fill<core::RoutesConfiguration>(
             object.routes,
             YamlReader::get_value_in_tag(yml, ROUTES_TAG),
             version);
@@ -167,7 +167,7 @@ void YamlReader::fill(
     if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
     {
         // get list, and parse each element as above
-        YamlReader::fill<ddspipe::core::TopicRoutesConfiguration>(
+        YamlReader::fill<core::TopicRoutesConfiguration>(
             object.topic_routes,
             YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
             version);
@@ -188,12 +188,12 @@ void YamlReader::fill(
 }
 
 template <>
-ddspipe::core::DdsPipeConfiguration YamlReader::get<ddspipe::core::DdsPipeConfiguration>(
+core::DdsPipeConfiguration YamlReader::get<core::DdsPipeConfiguration>(
         const Yaml& yml,
         const YamlReaderVersion version)
 {
-    ddspipe::core::DdsPipeConfiguration object;
-    fill<ddspipe::core::DdsPipeConfiguration>(object, yml, version);
+    core::DdsPipeConfiguration object;
+    fill<core::DdsPipeConfiguration>(object, yml, version);
     return object;
 }
 
@@ -240,7 +240,7 @@ void YamlReader::fill(
     }
 
     // DDS Pipe Configuration
-    object.ddspipe_configuration = YamlReader::get<ddspipe::core::DdsPipeConfiguration>(yml, version);
+    object.ddspipe_configuration = YamlReader::get<core::DdsPipeConfiguration>(yml, version);
 
     /* NOTE
      *
@@ -255,7 +255,7 @@ void YamlReader::fill(
     // Get optional xml configuration
     if (YamlReader::is_tag_present(yml, XML_TAG))
     {
-        YamlReader::fill<ddspipe::participants::XmlHandlerConfiguration>(
+        YamlReader::fill<participants::XmlHandlerConfiguration>(
             object.xml_configuration,
             YamlReader::get_value_in_tag(yml, XML_TAG),
             version);
