@@ -68,8 +68,8 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
     //! The globally configured Topic QoS.
     ddspipe::core::types::TopicQoS topic_qos{};
 
-    //! Downsampling value by default in those topics where it is not specified.
-    ddspipe::core::EntityCreationTrigger entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
+    //! The type of the entities whose discovery triggers the discovery callbacks.
+    ddspipe::core::DiscoveryTrigger discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
 };
 
 } /* namespace core */

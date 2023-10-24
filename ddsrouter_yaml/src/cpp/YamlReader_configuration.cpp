@@ -61,31 +61,31 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional entity creation trigger tag
-    if (YamlReader::is_tag_present(yml, ENTITY_CREATION_TRIGGER_TAG))
+    // Get optional discovery trigger tag
+    if (YamlReader::is_tag_present(yml, DISCOVERY_TRIGGER_TAG))
     {
-        const auto& entity_creation_trigger = YamlReader::get<std::string>(yml, ENTITY_CREATION_TRIGGER_TAG, version);
+        const auto& discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
 
-        if (entity_creation_trigger == "reader")
+        if (discovery_trigger == "reader")
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::READER;
+            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
         }
-        else if (entity_creation_trigger == "writer")
+        else if (discovery_trigger == "writer")
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::WRITER;
+            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::WRITER;
         }
-        else if (entity_creation_trigger == "none")
+        else if (discovery_trigger == "none")
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::NONE;
+            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::NONE;
         }
-        else if (entity_creation_trigger == "any")
+        else if (discovery_trigger == "any")
         {
-            object.entity_creation_trigger = ddspipe::core::EntityCreationTrigger::ANY;
+            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::ANY;
         }
         else
         {
             throw eprosima::utils::ConfigurationException(
-                utils::Formatter() << "The entity-creation-trigger " << entity_creation_trigger << " is not valid.");
+                utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
 }
@@ -268,13 +268,13 @@ void YamlReader::fill(
 
     /* NOTE
      *
-     * remove_unused_entities and entity_creation_trigger are attributes of SpecsConfiguration because they are
+     * remove_unused_entities and discovery_trigger are attributes of SpecsConfiguration because they are
      * under the tag specs, but since they are used in the DdsPipe, we have two choices: copying them to the
      * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill
      * and taking both attributes from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
-    object.ddspipe_configuration.entity_creation_trigger = object.advanced_options.entity_creation_trigger;
+    object.ddspipe_configuration.discovery_trigger = object.advanced_options.discovery_trigger;
 
     /////
     // Get optional xml configuration
