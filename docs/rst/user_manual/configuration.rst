@@ -127,121 +127,44 @@ The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard cha
 Topic Filtering
 ---------------
 
-The |ddsrouter| includes a mechanism to automatically detect which topics are being used in a DDS network.
-By automatically detecting these topics, a |ddsrouter| creates internal DDS :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each topic and for each Participant in order to relay the data published on each discovered topic.
+The |ddsrouter| automatically detects the topics that are being used in a DDS Network.
+The |ddsrouter| then creates internal DDS :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each participant in each topic, and forwards the data published on each topic.
 
 .. note::
 
-    DDS Router entities are created with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` of the first Subscriber found in this Topic.
+    |ddsrouter| entities are created with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` of the first Subscriber found in this Topic.
 
-The |ddsrouter| allows filtering DDS :term:`Topics<Topic>`, that is, it allows to define which DDS :term:`Topics<Topic>` are going to be relayed by the application.
-This way, it is possible to define a set of rules in the |ddsrouter| to filter those data samples the user does not wish to forward.
+The |ddsrouter| allows filtering DDS :term:`Topics<Topic>`, that is, it allows users to configure which DDS :term:`Topics<Topic>` should be forwarded by the application.
+These data filtering rules can be configured under the ``allowlist`` and ``blocklist`` tags.
+If the ``allowlist`` and ``blocklist`` are not configured, the |ddsrouter| will forward all the data published on the topics it discovers.
+If both the ``allowlist`` and ``blocklist`` are configured and a topic appears in both of them, the ``blocklist`` has priority and the topic will be blocked.
 
-If the allowed DDS :term:`Topics<Topic>` are not defined in the configuration file, the |ddsrouter| will forward all the data published under the topics that it automatically discovers within the DDS network to which it connects.
-
-To define these data filtering rules based on the Topics to which they belong, three lists are available:
-
-* Allowed topics list (``allowlist``)
-* Block topics list (``blocklist``)
-* Builtin topics list (``builtin-topics``)
-
-These three lists of topics listed above are defined by a tag in the *YAML* configuration file, which defines a *YAML* vector (``[]``).
-This vector contains the list of topics for each filtering rule.
-Each Topic is determined by its entries ``name`` and ``type``, with only the first one being mandatory.
-
-.. list-table::
-    :header-rows: 1
-
-    *   - Topic entries
-        - Data type
-        - Default value
-
-    *   - ``name``
-        - ``string``
-        - \-
-
-    *   - ``type``
-        - ``string``
-        - ``"*"``
+Topics are determined by the tags ``name`` (required) and ``type``, both of which accept wildcard characters.
 
 .. note::
 
-    Tags ``allowlist``, ``blocklist`` and ``builtin-topics`` must be at yaml base level (it must not be inside any
-    other tag).
+    Placing quotation marks around values in a YAML file is generally optional, but values containing wildcard characters do require single or double quotation marks.
 
-.. note::
-
-    Placing quotation marks around values in a YAML file is generally optional. However, values containing wildcard
-    characters must be enclosed by single or double quotation marks.
-
-Allow topic list (``allowlist``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is the list of topics that |ddsrouter| will forward, i.e. the data published under the topics matching the
-expressions in the ``allowlist`` will be relayed by |ddsrouter|.
-
-.. note::
-
-    If no ``allowlist`` is provided, data will be forwarded for all topics (unless filtered out in ``blocklist``).
-
-
-Block topic list (``blocklist``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is the list of topics that the |ddsrouter| will block, that is, all data published under the topics matching the
-filters specified in the ``blocklist`` will be discarded by the |ddsrouter| and therefore will not be relayed.
-
-This list takes precedence over the ``allowlist``.
-If a topic matches an expression both in the ``allowlist`` and in the ``blocklist``, the ``blocklist`` takes precedence,
-causing the data under this topic to be discarded.
-
-Examples of usage
-^^^^^^^^^^^^^^^^^
-
-The following is an example of how to use the ``allowlist``, ``blocklist`` and ``builtin-topics`` configurations to
-setup the |ddsrouter| filtering rules.
-
-Dynamic topic discovery example
-"""""""""""""""""""""""""""""""
-
-This example shows how the |ddsrouter| is initially configured to forward the ``rt/chatter`` topic (default ROS 2
-topic for ``talker`` and ``listener``) with type name ``std_msgs::msg::dds_::String_``, while the rest of the
-topics in the DDS network are expected to be dynamically discovered.
-Additionally, two rules are specified in the ``blocklist`` in order to filter out messages of no interest to the user
-(in this case ROS2 services related topics).
-
-.. code-block:: yaml
-
-    builtin-topics:
-      - name: rt/chatter
-        type: std_msgs::msg::dds_::String_
-
-    blocklist:
-      - name: "rq/*"
-      - name: "rr/*"
-
-
-Allowlist and blocklist collision
-"""""""""""""""""""""""""""""""""
-
-In the following example, the ``HelloWorldTopic`` topic is both in the ``allowlist`` and (implicitly) in the
-``blocklist``, so according to the ``blocklist`` preference rule this topic is blocked.
-Moreover, only the topics present in the allowlist are relayed, regardless of whether more topics are dynamically
-discovered in the DDS network.
-In this case the forwarded topics are ``AllowedTopic1`` with data type ``Allowed``
-and ``AllowedTopic2`` regardless of its data type.
+Consider the following example:
 
 .. code-block:: yaml
 
     allowlist:
       - name: AllowedTopic1
         type: Allowed
+
       - name: AllowedTopic2
         type: "*"
+
       - name: HelloWorldTopic
         type: HelloWorld
 
     blocklist:
       - name: "*"
         type: HelloWorld
+
+In this example, the data in the topic ``AllowedTopic1`` with type ``Allowed`` and the data in the topic ``AllowedTopic2`` with any type will be forwarded by the |ddsrouter|.
+The data in the topic ``HelloWorldTopic`` with type ``HelloWorld`` will be blocked, since the ``blocklist`` is blocking all topics with any name and with type ``HelloWorld``.
 
 .. _user_manual_configuration_topic_qos:
 
@@ -381,7 +304,6 @@ A subset of :ref:`Topic QoS <user_manual_configuration_topic_qos>` can be manual
 The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
 It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
 If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
-
 
 .. code-block:: yaml
 
@@ -899,12 +821,6 @@ A complete example of all the configurations described on this page can be found
 
       - name: HelloWorldTopic
         type: HelloWorld
-        qos:
-          reliability: true
-          durability: true
-          max-tx-rate: 5
-          max-rx-rate: 10
-          downsampling: 4
 
     # Manually configure Topic QoS for a set of participants on a topic
 
@@ -940,7 +856,7 @@ A complete example of all the configurations described on this page can be found
 
         qos:
 
-          max-rx-rate: 0                  # Max Transmission Rate = 0 (unlimited)
+          max-rx-rate: 0                  # Max Reception Rate = 0 (unlimited)
 
           downsampling: 1                 # Downsampling = 1
 
