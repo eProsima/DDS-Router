@@ -3,7 +3,7 @@ version: v3.1
 topics:
   - name: topic_0
     qos:
-      max-tx-rate: 5
+      max-tx-rate: 10
     participants:
       - Local_81
 
@@ -16,7 +16,7 @@ participants:
     kind: local
     domain: 81
     qos:
-      max-tx-rate: 10
+      max-tx-rate: 5
 
   - name: Local_82
     kind: local
@@ -24,4 +24,4 @@ participants:
 
 specs:
   qos:
-    max-tx-rate: 15
+    max-tx-rate: 10
