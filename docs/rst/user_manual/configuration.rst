@@ -215,7 +215,7 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
 
     *   - History Depth
         - ``history-depth``
-        - *integer*
+        - *unsigned integer*
         - ``5000``
         - :ref:`user_manual_configuration_history_depth`
 
@@ -297,6 +297,10 @@ If a ``qos`` is not manually configured, it will get its value by discovery; if 
           - Participant0
           - Participant1
 
+.. note::
+
+    The :ref:`Topic QoS <user_manual_configuration_topic_qos>` configured in the Manual Topics take precedence over the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`.
+
 Specs Configuration
 ===================
 
@@ -334,10 +338,16 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
+.. _user_manual_configuration_specs_topic_qos:
+
 QoS
 ---
 
 ``specs`` supports a ``qos`` **optional** tag to configure the default values of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+
+.. note::
+
+    The :ref:`Topic QoS <user_manual_configuration_topic_qos>` configured in ``specs`` can be overwritten by the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Manual Topics <user_manual_configuration_manual_topics>`.
 
 Participant Configuration
 =========================
@@ -671,10 +681,17 @@ It will use such profile for configuring the Participant.
 
     profile: participant_custom_configuration
 
+
+.. _user_manual_configuration_participant_topic_qos:
+
 QoS
 ---
 
 Participants support a ``qos`` **optional** tag to manually configure their :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+
+.. note::
+
+    The :ref:`Topic QoS <user_manual_configuration_topic_qos>` configured for a Participant can be overwritten by the :ref:`Manual Topics <user_manual_configuration_manual_topics>` but take precedence over the :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`.
 
 .. _user_manual_configuration_forwarding_routes:
 

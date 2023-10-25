@@ -68,7 +68,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --args "--samples 20 --domain 81 --topic topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 81 --topic topic_0"
 
   subscriber_1_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -87,7 +87,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --args "--samples 20 --domain 82 --topic topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 82 --topic topic_0"
 
   subscriber_2_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --args "--samples 20 --domain 82 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 82 --topic topic_1"
 
 networks:
   std_net:
