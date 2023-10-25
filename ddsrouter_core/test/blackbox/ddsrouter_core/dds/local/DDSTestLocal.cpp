@@ -82,7 +82,8 @@ DdsRouterConfiguration dds_test_simple_configuration(
         topic_keyed.topic_qos.keyed = true;
 
         conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
-        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic_keyed));
+        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
+                    topic_keyed));
     }
 
     // Two simple participants

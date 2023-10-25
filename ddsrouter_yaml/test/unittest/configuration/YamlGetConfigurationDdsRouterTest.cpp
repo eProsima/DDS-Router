@@ -58,8 +58,10 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
-    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
     ASSERT_EQ(configuration_result.ddspipe_configuration.builtin_topics,
             std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>>());
 
@@ -111,8 +113,10 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
-    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
-    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
 
     // Check Builtin Topics has one correct topic
     ASSERT_EQ(configuration_result.ddspipe_configuration.builtin_topics.size(), 1u);
