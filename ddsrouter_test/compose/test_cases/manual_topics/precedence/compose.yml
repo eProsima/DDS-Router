@@ -9,25 +9,25 @@
 #                                                         │subscriber_1_t0│
 #                                                         │               │
 #                                        ┌────────────────►(local)        │
-#                                        │   topic_0 10 Hz└───────────────┘
+#                                        │   topic_0 5 Hz └───────────────┘
 #                                        │
 # ┌──────────────┐                       │                ┌───────────────┐
 # │publisher_0_t0│                       │                │subscriber_1_t1│
 # │              │                       │                │               │
 # │(local)       │                       │                │(local)        │
 # └────────────┬─┘                       │                └─▲─────────────┘
-#              │   topic_0 20 Hz ┌───────┴─┐ topic_1 5 Hz   │
+#              │   topic_0 10 Hz ┌───────┴─┐ topic_1 10 Hz  │
 #              └─────────────────►ddsrouter├────────────────┘
 #                                │         │
 #              ┌─────────────────►(local)  ├────────────────┐
-#              │   topic_1 20 Hz └───────┬─┘ topic_0 10 Hz  │
+#              │   topic_1 10 Hz └───────┬─┘ topic_0 5 Hz   │
 # ┌────────────┴─┐                       │                ┌─▼─────────────┐
 # │publisher_0_t1│                       │                │subscriber_2_t0│
 # │              │                       │                │               │
 # │(local)       │                       │                │(local)        │
 # └──────────────┘                       │                └───────────────┘
 #                                        │
-#                                        │   topic_1 10 Hz┌───────────────┐
+#                                        │   topic_1 5 Hz ┌───────────────┐
 #                                        └────────────────►subscriber_2_t1│
 #                                                         │               │
 #                                                         │(local)        │
@@ -51,14 +51,14 @@ services:
     container_name: publisher_0_t0
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 50 --samples 160 --domain 80 --topic topic_0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic_0
 
   publisher_0_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_0_t1
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 50 --samples 160 --domain 80 --topic topic_1
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic_1
 
   # DOMAIN 1
   subscriber_1_t0:
@@ -68,7 +68,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 81 --topic topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 81 --topic topic_0"
 
   subscriber_1_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -77,7 +77,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 81 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 40 --timeout 8 --min-time 4 --args "--samples 40 --domain 81 --topic topic_1"
 
   # DOMAIN 2
   subscriber_2_t0:
@@ -87,7 +87,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 82 --topic topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --topic topic_0"
 
   subscriber_2_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 2 --max-time 4 --args "--samples 20 --domain 82 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --topic topic_1"
 
 networks:
   std_net:
