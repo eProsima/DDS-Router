@@ -134,7 +134,7 @@ The |ddsrouter| then creates internal DDS :term:`Writers<DataWriter>` and :term:
 
     |ddsrouter| entities are created with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` of the first Subscriber found in this Topic.
 
-The |ddsrouter| allows filtering DDS :term:`Topics<Topic>`, that is, it allows users to configure which DDS :term:`Topics<Topic>` should be forwarded by the application.
+The |ddsrouter| allows filtering DDS :term:`Topics<Topic>` to allow users to configure the DDS :term:`Topics<Topic>` that must be forwarded.
 These data filtering rules can be configured under the ``allowlist`` and ``blocklist`` tags.
 If the ``allowlist`` and ``blocklist`` are not configured, the |ddsrouter| will forward all the data published on the topics it discovers.
 If both the ``allowlist`` and ``blocklist`` are configured and a topic appears in both of them, the ``blocklist`` has priority and the topic will be blocked.
@@ -284,6 +284,8 @@ A subset of :ref:`Topic QoS <user_manual_configuration_topic_qos>` can be manual
 The tag ``topics`` has a required ``name`` tag that accepts wildcard characters.
 It also has three optional tags: a ``type`` tag that accepts wildcard characters, a ``qos`` tag with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` that the user wants to manually configure, and a ``participants`` tag that lists the participants to which the configuration applies.
 If a ``qos`` is not manually configured, it will get its value by discovery; if the ``participants`` tag is empty or non-existent, the configuration will apply to all participants.
+
+**Example of usage**
 
 .. code-block:: yaml
 

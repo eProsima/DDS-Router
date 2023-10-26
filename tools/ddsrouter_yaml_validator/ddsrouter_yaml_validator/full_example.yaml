@@ -15,9 +15,14 @@ blocklist:
 builtin-topics:
 - name: rt/chatter # Required
   type: std_msgs::msg::dds_::String_ # Required
-  keyed: true
+  
 - name: custom_topic # Required
   type: custom_topic_type # Required
+
+topics:
+  - name: rt/chatter
+    qos:
+      keyed: true
 
 
 participants:

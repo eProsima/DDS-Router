@@ -10,7 +10,11 @@ builtin-topics:
     type: "std_msgs::msg::dds_::String_"
   - name: "rt/chatter/key"
     type: "std_msgs::msg::dds_::String_"
-    keyed: true
+
+topics:
+  - name: rt/chatter/key
+    qos:
+      keyed: true
 
 participants:
 
