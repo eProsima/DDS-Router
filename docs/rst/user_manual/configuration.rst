@@ -21,37 +21,30 @@ The YAML Configuration supports a ``version`` value to identify the configuratio
 In future releases the YAML format (some key words, fields, etc.) may change.
 This value allows users to keep using the same YAML file with an old configuration format, maintaining compatibility with future releases.
 
-.. list-table::
-    :header-rows: 1
+..
+    .. list-table::
+        :header-rows: 1
 
-    *   - Configuration Versions
-        - String in ``version`` tag
-        - |ddsrouter| activation release
+        *   - Configuration Versions
+            - String in ``version`` tag
+            - |ddsrouter| activation release
 
-    *   - version 2.0
-        - ``v2.0``
-        - *v0.2.0*
+        *   - version 4.0
+            - ``v4.0``
+            - *v2.0.0*
 
-    *   - version 3.0 (default)
-        - ``v3.0``
-        - *v0.3.0*
 
-**Current configuration version is v4.0**.
+**The current configuration version is v4.0**.
 This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when the tag ``version`` is not set is *v3.0*.
-
-.. warning::
-
-    **Deprecation Warning**.
-    In future releases, the tag ``version`` will be mandatory.
+    The current default version when the tag ``version`` is not set is *v4.0*.
 
 .. warning::
 
     **Deprecation warning**.
-    Update to  version `v3.0` since `v1.0` is no longer supported.
+    Update to version `v4.0` since previous `v3.1` is no longer supported.
 
 .. _user_manual_configuration_load_xml:
 
@@ -231,7 +224,7 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - ``0`` (unlimited)
         - :ref:`user_manual_configuration_max_rx_rate`
 
-    *   - Down-sampling
+    *   - Downsampling
         - ``downsampling``
         - *unsigned integer*
         - ``1``
@@ -267,11 +260,11 @@ By default it is set to ``0``; it processes samples at an unlimited reception ra
 
 .. _user_manual_configuration_downsampling:
 
-Down-sampling
+Downsampling
 ^^^^^^^^^^^^^
 
 The ``downsampling`` tag reduces the sampling rate of the received data by only keeping *1* out of every *n* samples received (per topic), where *n* is the value specified under the ``downsampling`` tag.
-When the ``max-rx-rate`` tag is also set, down-sampling only applies to messages that have passed the ``max-rx-rate`` filter.
+When the ``max-rx-rate`` tag is also set, downsampling only applies to messages that have passed the ``max-rx-rate`` filter.
 It only accepts positive integers.
 By default it is set to ``1``; it accepts every message.
 
