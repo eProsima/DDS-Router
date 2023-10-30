@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <ddspipe_core/types/dynamic_types/types.hpp>
+
 #include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/EchoParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
@@ -131,6 +133,12 @@ void YamlReader::fill(
             auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
             object.allowlist.insert(new_topic);
         }
+
+        // Add to allowlist always the type object topic
+        core::types::WildcardDdsFilterTopic internal_topic;
+        internal_topic.topic_name.set_value(core::types::TYPE_OBJECT_TOPIC_NAME);
+        object.allowlist.insert(
+            utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(internal_topic));
     }
 
     /////
