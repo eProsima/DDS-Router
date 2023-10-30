@@ -36,7 +36,7 @@ This value allows users to keep using the same YAML file with an old configurati
         - ``v3.0``
         - *v0.3.0*
 
-**Current configuration version is v3.0**.
+**Current configuration version is v4.0**.
 This is the configuration version that is described along this page.
 
 .. note::
@@ -784,7 +784,7 @@ A complete example of all the configurations described on this page can be found
 .. code-block:: yaml
 
     # Version Latest
-    version: v3.0
+    version: v4.0
 
     # Specifications
     specs:

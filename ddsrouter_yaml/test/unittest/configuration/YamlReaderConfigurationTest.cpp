@@ -200,7 +200,7 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -237,7 +237,7 @@ TEST(YamlReaderConfigurationTest, remove_unused_entities)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.1
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -273,7 +273,7 @@ TEST(YamlReaderConfigurationTest, valid_routes)
 {
     const char* yml_configuration =
             R"(
-        version: v3.1
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -309,7 +309,7 @@ TEST(YamlReaderConfigurationTest, invalid_routes)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.1
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -342,7 +342,7 @@ TEST(YamlReaderConfigurationTest, history_depth)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -382,7 +382,7 @@ TEST(YamlReaderConfigurationTest, max_tx_rate)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -422,7 +422,7 @@ TEST(YamlReaderConfigurationTest, max_rx_rate)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -462,7 +462,7 @@ TEST(YamlReaderConfigurationTest, downsampling)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v3.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"

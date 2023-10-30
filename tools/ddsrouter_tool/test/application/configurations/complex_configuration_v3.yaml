@@ -6,7 +6,7 @@
 # 1 Initial Peers repeater Participant with connection and listening addresses
 # 2 topics, one with key and one without
 
-version: v3.0
+version: v4.0
 
 builtin-topics:
   - name: "rt/chatter"
