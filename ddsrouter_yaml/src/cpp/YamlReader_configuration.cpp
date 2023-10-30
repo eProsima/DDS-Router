@@ -177,13 +177,8 @@ void YamlReader::fill(
     // Get optional topics
     if (YamlReader::is_tag_present(yml, TOPICS_TAG))
     {
-        auto manual_topics = YamlReader::get_list<core::types::WildcardDdsFilterTopic>(yml, TOPICS_TAG, version);
-
-        for (auto const& manual_topic : manual_topics)
-        {
-            auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(manual_topic);
-            object.manual_topics.push_back(new_topic);
-        }
+        const auto& manual_topics = YamlReader::get_list<core::types::ManualTopic>(yml, TOPICS_TAG, version);
+        object.manual_topics = std::vector<core::types::ManualTopic>(manual_topics.begin(), manual_topics.end());
     }
 }
 
