@@ -104,7 +104,7 @@ Built-in Topics
 
 The discovery phase can be accelerated by listing topics under the ``builtin-topics`` tag.
 The |ddsrouter| will create the DataWriters and DataReaders for these topics in the |ddsrouter| initialization.
-The :ref:`Topic QoS <user_manual_configuration_topic_qos>` for these topics can be manually configured with a :ref:`Manual Topic <user_manual_configuration_manual_topics>`; if a :ref:`Topic QoS <user_manual_configuration_topic_qos>` is not configured, it will take its default value.
+The :ref:`Topic QoS <user_manual_configuration_topic_qos>` for these topics can be manually configured with a :ref:`Manual Topic <user_manual_configuration_manual_topics>`, a :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>`, and a :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`; if a :ref:`Topic QoS <user_manual_configuration_topic_qos>` is not configured, it will take its default value.
 
 The ``builtin-topics`` must specify a ``name`` and ``type`` without wildcard characters.
 
