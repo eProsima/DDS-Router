@@ -230,6 +230,10 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - ``1``
         - :ref:`user_manual_configuration_downsampling`
 
+.. warning::
+
+    The ``TRANSIENT_LOCAL`` durability is not compatible with the ``BEST_EFFORT`` reliability.
+
 .. _user_manual_configuration_history_depth:
 
 History Depth
