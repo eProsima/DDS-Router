@@ -1,4 +1,4 @@
-version: v2.0
+version: v4.0
 
 builtin-topics:
   - name: HelloWorldTopic

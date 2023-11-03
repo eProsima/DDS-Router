@@ -232,7 +232,8 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
 
 .. warning::
 
-    The ``TRANSIENT_LOCAL`` durability is not compatible with the ``BEST_EFFORT`` reliability.
+    Manually configuring ``TRANSIENT_LOCAL`` durability may lead to incompatibility issues when the discovered reliability is ``BEST_EFFORT``.
+    Please ensure to always configure the ``reliability`` when configuring the ``durability`` to avoid the issue.
 
 .. _user_manual_configuration_history_depth:
 

@@ -1,4 +1,4 @@
-version: v2.0 # Required
+version: v4.0 # Required
 
 threads: 32 # Optional
 
@@ -15,7 +15,7 @@ blocklist:
 builtin-topics:
 - name: rt/chatter # Required
   type: std_msgs::msg::dds_::String_ # Required
-  
+
 - name: custom_topic # Required
   type: custom_topic_type # Required
 

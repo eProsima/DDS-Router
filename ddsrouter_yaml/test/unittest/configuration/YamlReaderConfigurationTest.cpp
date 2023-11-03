@@ -36,7 +36,7 @@ TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
     {
         // trivial configuration
         R"(
-        version: v1.0
+        version: v4.0
         participant1:
           type: "echo"
         participant2:
@@ -68,7 +68,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
     {
         // trivial configuration
         R"(
-        version: v2.0
+        version: v4.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -78,7 +78,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
 
         // ROS common configuration
         R"(
-        version: v2.0
+        version: v4.0
         builtin:
           - name: "rt/chatter"
             type: "std_msgs::msg::dds_::String_"
