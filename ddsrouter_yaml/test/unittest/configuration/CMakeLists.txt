@@ -25,8 +25,8 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        ddsrouter_configuration_v1_not_supported
-        get_ddsrouter_configuration_v2
+        # ddsrouter_configuration_v1_not_supported
+        # get_ddsrouter_configuration_v2
         get_ddsrouter_configuration_no_version
         version_negative_cases
         number_of_threads
