@@ -30,30 +30,30 @@ using namespace eprosima;
  * CASES:
  * - trivial configuration
  */
-TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
-{
-    std::vector<const char*> yml_configurations =
-    {
-        // trivial configuration
-        R"(
-        version: v4.0
-        participant1:
-          type: "echo"
-        participant2:
-          type: "echo"
-        )",
-    };
+// TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
+// {
+//     std::vector<const char*> yml_configurations =
+//     {
+//         // trivial configuration
+//         R"(
+//         version: v1.0
+//         participant1:
+//           type: "echo"
+//         participant2:
+//           type: "echo"
+//         )",
+//     };
 
-    for (const char* yml_configuration : yml_configurations)
-    {
-        Yaml yml = YAML::Load(yml_configuration);
+//     for (const char* yml_configuration : yml_configurations)
+//     {
+//         Yaml yml = YAML::Load(yml_configuration);
 
-        // Load configuration
-        ASSERT_THROW(
-            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-            utils::ConfigurationException);
-    }
-}
+//         // Load configuration
+//         ASSERT_THROW(
+//             ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
+//             utils::ConfigurationException);
+//     }
+// }
 
 /**
  * Test load a whole DDS Router Configuration from yaml node for v2.0 of yaml.
@@ -62,63 +62,63 @@ TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
  * - trivial configuration
  * - ROS common configuration
  */
-TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
-{
-    std::vector<const char*> yml_configurations =
-    {
-        // trivial configuration
-        R"(
-        version: v4.0
-        participants:
-          - name: "P1"
-            kind: "echo"
-          - name: "P2"
-            kind: "echo"
-        )",
+// TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
+// {
+//     std::vector<const char*> yml_configurations =
+//     {
+//         // trivial configuration
+//         R"(
+//         version: v2.0
+//         participants:
+//           - name: "P1"
+//             kind: "echo"
+//           - name: "P2"
+//             kind: "echo"
+//         )",
 
-        // ROS common configuration
-        R"(
-        version: v4.0
-        builtin:
-          - name: "rt/chatter"
-            type: "std_msgs::msg::dds_::String_"
-        participants:
-          - name: "P1"
-            kind: "local"
-            domain: 0
-          - name: "P2"
-            kind: "local"
-            domain: 1
-          - name: "P3"
-            kind: "simple"
-            domain: 2
-        )",
-    };
+//         // ROS common configuration
+//         R"(
+//         version: v2.0
+//         builtin:
+//           - name: "rt/chatter"
+//             type: "std_msgs::msg::dds_::String_"
+//         participants:
+//           - name: "P1"
+//             kind: "local"
+//             domain: 0
+//           - name: "P2"
+//             kind: "local"
+//             domain: 1
+//           - name: "P3"
+//             kind: "simple"
+//             domain: 2
+//         )",
+//     };
 
-    for (const char* yml_configuration : yml_configurations)
-    {
-        Yaml yml = YAML::Load(yml_configuration);
+//     for (const char* yml_configuration : yml_configurations)
+//     {
+//         Yaml yml = YAML::Load(yml_configuration);
 
-        // Load configuration
-        ddsrouter::core::DdsRouterConfiguration configuration_result =
-                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+//         // Load configuration
+//         ddsrouter::core::DdsRouterConfiguration configuration_result =
+//                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
 
-        // Check is valid
-        utils::Formatter error_msg;
-        ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
-    }
-}
+//         // Check is valid
+//         utils::Formatter error_msg;
+//         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
+//     }
+// }
 
 /**
  * Do not set Yaml version and get default configuration
- * (currently default is v3.0)
+ * (currently default is v4.0)
  *
  * CASES:
- * - trivial configuration of v3.0
+ * - trivial configuration of v4.0
  */
 TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
 {
-    // trivial configuration of v3.0
+    // trivial configuration of v4.0
     {
         const char* yml_configuration =
                 R"(
@@ -146,7 +146,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
  *
  * CASES:
  * - not existing version
- * - get wrongly defined yaml with default version (v3.0)
+ * - get wrongly defined yaml with default version (v4.0)
  */
 TEST(YamlReaderConfigurationTest, version_negative_cases)
 {

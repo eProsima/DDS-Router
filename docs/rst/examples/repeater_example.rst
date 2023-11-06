@@ -16,7 +16,7 @@ Configuration
 Version
 -------
 
-The version attribute is required, as the :code:`repeater` tag is only supported from v3.0 configuration version.
+The version attribute is required, as the :code:`repeater` tag is only supported from v4.0 configuration version.
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml

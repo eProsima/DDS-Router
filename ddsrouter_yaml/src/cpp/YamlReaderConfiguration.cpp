@@ -38,11 +38,22 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
             version = ddspipe::yaml::YamlReader::get<ddspipe::yaml::YamlReaderVersion>(yml, ddspipe::yaml::VERSION_TAG,
                             ddspipe::yaml::YamlReaderVersion::LATEST);
 
-            if (version == ddspipe::yaml::YamlReaderVersion::V_1_0)
+            switch (version)
             {
-                throw eprosima::utils::ConfigurationException(
+                case ddspipe::yaml::YamlReaderVersion::V_1_0:
+                case ddspipe::yaml::YamlReaderVersion::V_2_0:
+                case ddspipe::yaml::YamlReaderVersion::V_3_0:
+                case ddspipe::yaml::YamlReaderVersion::V_3_1:
+
+                    throw eprosima::utils::ConfigurationException(
                           utils::Formatter() <<
-                              "Yaml configuration v1.0 not supported. Please update to latest available version.");
+                              "The specified yaml configuration version is no longer supported. Please update to v4.0.");
+                    break;
+
+                case ddspipe::yaml::YamlReaderVersion::V_4_0:
+                default:
+
+                    break;
             }
         }
         else
@@ -54,6 +65,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                     "Add " << ddspipe::yaml::VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
                     "in future releases.");
         }
+
         logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
         // Load DDS Router Configuration

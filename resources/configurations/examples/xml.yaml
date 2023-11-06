@@ -58,7 +58,7 @@ participants:
 # to DDS Domain 1.
 # The communication is in both directions.
 
-# 0: Use YAML configuration version v3.0
+# 0: Use YAML configuration version v4.0
 
 # 1: Configure how to load XML configurations.
 
