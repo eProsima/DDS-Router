@@ -122,11 +122,6 @@ Topic Filtering
 
 The |ddsrouter| automatically detects the topics that are being used in a DDS Network.
 The |ddsrouter| then creates internal DDS :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each participant in each topic, and forwards the data published on each topic.
-
-.. note::
-
-    |ddsrouter| entities are created with the :ref:`Topic QoS <user_manual_configuration_topic_qos>` of the first Subscriber found in this Topic.
-
 The |ddsrouter| allows filtering DDS :term:`Topics<Topic>` to allow users to configure the DDS :term:`Topics<Topic>` that must be forwarded.
 These data filtering rules can be configured under the ``allowlist`` and ``blocklist`` tags.
 If the ``allowlist`` and ``blocklist`` are not configured, the |ddsrouter| will forward all the data published on the topics it discovers.
