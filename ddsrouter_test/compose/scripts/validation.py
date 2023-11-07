@@ -164,7 +164,7 @@ def run_and_validate(
         validate_output_function,
         delay: float = 0,
         timeout_as_error: bool = True,
-        parse_retcode_function = validate_retcode_default,
+        parse_retcode_function=validate_retcode_default,
         min_time: int = 0,
         max_time: int = 0):
     """
@@ -192,13 +192,13 @@ def run_and_validate(
 
     if elapsed_time < min_time:
         log.logger.error(
-            f'Executable exited before min-time.')
+            'Executable exited before min-time.')
 
         return ReturnCode.FINISHED_TOO_QUICKLY
 
     elif max_time > 0 and elapsed_time > max_time:
         log.logger.error(
-            f'Executable exited after max-time.')
+            'Executable exited after max-time.')
 
         return ReturnCode.FINISHED_TOO_SLOWLY
 
