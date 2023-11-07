@@ -40,19 +40,19 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
 
             switch (version)
             {
+                case ddspipe::yaml::YamlReaderVersion::V_4_0:
+                case ddspipe::yaml::YamlReaderVersion::LATEST:
+                    break;
+
                 case ddspipe::yaml::YamlReaderVersion::V_1_0:
                 case ddspipe::yaml::YamlReaderVersion::V_2_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_1:
+                default:
 
                     throw eprosima::utils::ConfigurationException(
                           utils::Formatter() <<
-                              "The specified yaml configuration version is no longer supported. Please update to v4.0.");
-                    break;
-
-                case ddspipe::yaml::YamlReaderVersion::V_4_0:
-                default:
-
+                              "The yaml configuration version " << version << " is no longer supported. Please update to v4.0.");
                     break;
             }
         }
@@ -111,7 +111,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
 
 ddspipe::yaml::YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
 {
-    return ddspipe::yaml::V_3_1;
+    return ddspipe::yaml::V_4_0;
 }
 
 } // namespace yaml

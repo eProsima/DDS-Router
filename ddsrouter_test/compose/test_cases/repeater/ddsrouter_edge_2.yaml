@@ -2,8 +2,6 @@ version: v4.0
 
 participants:
 
-
-
   - name: Simple_Participant
     kind: local
     domain: 0
