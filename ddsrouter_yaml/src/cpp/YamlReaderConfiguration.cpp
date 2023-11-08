@@ -51,8 +51,9 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                 default:
 
                     throw eprosima::utils::ConfigurationException(
-                          utils::Formatter() <<
-                              "The yaml configuration version " << version << " is no longer supported. Please update to v4.0.");
+                              utils::Formatter() <<
+                                  "The yaml configuration version " << version <<
+                                  " is no longer supported. Please update to v4.0.");
                     break;
             }
         }
