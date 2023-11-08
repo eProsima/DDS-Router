@@ -56,13 +56,6 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
     unsigned int number_of_threads = 12;
 
     /**
-     * @brief Maximum of History depth by default in those topics where it is not specified.
-     *
-     * @note Default value is 5000 as in Fast DDS.
-     */
-    ddspipe::core::types::HistoryDepthType max_history_depth = 5000;
-
-    /**
      * @brief Whether readers that aren't connected to any writers should be deleted.
      *
      * @note The default value is set to false.
@@ -70,6 +63,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
      * @warning Setting it to true is incompatible with transient-local durability.
      */
     bool remove_unused_entities = false;
+
+    //! The globally configured Topic QoS.
+    ddspipe::core::types::TopicQoS topic_qos{};
 };
 
 } /* namespace core */

@@ -1,0 +1,23 @@
+version: v4.0
+
+topics:
+  - name: topic_0
+    qos:
+      max-tx-rate: 5
+
+  - name: topic_1
+    qos:
+      max-tx-rate: 5
+
+participants:
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Local_81
+    kind: local
+    domain: 81
+
+  - name: Local_82
+    kind: local
+    domain: 82

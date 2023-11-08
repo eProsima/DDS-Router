@@ -51,6 +51,17 @@ set(TESTS
     remove_unused_entities/persist_same_domain
     remove_unused_entities/reconnect
     remove_unused_entities/reconnect_wan
+
+    frequency/max-tx-rate/specs
+    frequency/max-tx-rate/participant
+    frequency/max-rx-rate/specs
+    frequency/max-rx-rate/participant
+    frequency/downsampling/specs
+    frequency/downsampling/participant
+
+    manual_topics/generic
+    manual_topics/participants
+    manual_topics/precedence
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

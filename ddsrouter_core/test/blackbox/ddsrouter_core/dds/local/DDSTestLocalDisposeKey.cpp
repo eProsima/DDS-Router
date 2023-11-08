@@ -54,7 +54,7 @@ DdsRouterConfiguration dds_test_simple_configuration()
     // Always filter the test topics by topic name
     core::types::WildcardDdsFilterTopic topic;
     topic.topic_name.set_value(TOPIC_NAME);
-    conf.allowlist.insert(
+    conf.ddspipe_configuration.allowlist.insert(
         utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // Two simple participants

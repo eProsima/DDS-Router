@@ -9,8 +9,8 @@ Include module is the public API used to configure a DDS Router and to interact 
 
 * **Configuration**: configuration objects that contains the information needed for a DDS Router. Are divided in:
   * *ParticipantConfiguration*: configuration for each participant inside the DDS Router.
-  * *DdsRouterConfiguration*: configuration to execute a DDS Router, with its Participants and allowed lists.
-  * *DdsRouterReloadConfiguration*: configuration to change topics in a running DDS Router.
+  * *DdsRouterConfiguration*: configuration to execute a DDS Router, with its Participants and DdsPipeConfiguration.
+  * *DdsPipeConfiguration*: configuration to execute a DDS Pipe, with its allowlist, blocklist, manual topics, and built-in topics.
 
 * **Core**: it only contains the proxy of DDS Router class, which implementation is inside private modules.
   It allows to execute a DDS Router, and to interact with it while running.

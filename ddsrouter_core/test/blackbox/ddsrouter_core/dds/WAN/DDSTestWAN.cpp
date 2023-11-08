@@ -236,7 +236,7 @@ DdsRouterConfiguration router_configuration(
     // One topic
     core::types::WildcardDdsFilterTopic topic;
     topic.topic_name.set_value(TOPIC_NAME);
-    conf.allowlist.insert(
+    conf.ddspipe_configuration.allowlist.insert(
         utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // Two participants, one custom and other simple. If server, simple will work in 0, if not in 1

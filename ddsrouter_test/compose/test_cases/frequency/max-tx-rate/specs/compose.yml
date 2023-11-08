@@ -1,0 +1,61 @@
+# Test description:
+#   This test checks that if we set up a router with a globally configured max-tx-rate,
+#   every participant forwards data at the max-tx-rate specified.
+#
+# Test architecture:
+#                                      topic_0 5 Hz┌────────────┐
+#                                   ┌──────────────►subscriber_1│
+#                                   │              │            │
+# ┌───────────┐             ┌───────┴─┐            │(local)     │
+# │publisher_0│topic_0 10 Hz│ddsrouter│            └────────────┘
+# │           ├─────────────►         │
+# │(local)    │             │(local)  │            ┌────────────┐
+# └───────────┘             └───────┬─┘            │subscriber_2│
+#                                   │  topic_0 5 Hz│            │
+#                                   └──────────────►(local)     │
+#                                                  └────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  # DOMAIN 0
+  publisher_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic_0
+
+  # DOMAIN 1
+  subscriber_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 81 --topic topic_0"
+
+  # DOMAIN 2
+  subscriber_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --topic topic_0"
+
+networks:
+  std_net:
+  default:
+    driver: none

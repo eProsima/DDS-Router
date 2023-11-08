@@ -1,0 +1,19 @@
+version: v4.0
+
+
+participants:
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Local_81
+    kind: local
+    domain: 81
+
+  - name: Local_82
+    kind: local
+    domain: 82
+
+specs:
+  qos:
+    max-tx-rate: 5

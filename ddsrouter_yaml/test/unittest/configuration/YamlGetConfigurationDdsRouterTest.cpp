@@ -39,7 +39,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
 {
     const char* yml_str =
             R"(
-            version: v3.0
+            version: v4.0
             participants:
               - name: "P1"
                 kind: "echo"
@@ -58,9 +58,11 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
-    ASSERT_EQ(configuration_result.builtin_topics,
+    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.builtin_topics,
             std::set<utils::Heritable<ddspipe::core::types::DistributedTopic>>());
 
     // Check Participant configurations
@@ -84,7 +86,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
 {
     const char* yml_str =
             R"(
-            version: v3.0
+            version: v4.0
             builtin-topics:
               - name: "rt/chatter"
                 type: "std_msgs::msg::dds_::String_"
@@ -111,12 +113,17 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
     ASSERT_TRUE(configuration_result.is_valid(error_msg));
 
     // Check Topic lists are empty
-    ASSERT_EQ(configuration_result.allowlist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
-    ASSERT_EQ(configuration_result.blocklist, std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.blocklist,
+            std::set<utils::Heritable<ddspipe::core::types::IFilterTopic>>());
 
     // Check Builtin Topics has one correct topic
-    ASSERT_EQ(configuration_result.builtin_topics.size(), 1u);
-    utils::Heritable<ddspipe::core::types::DdsTopic> topic_result = (*configuration_result.builtin_topics.begin());
+    ASSERT_EQ(configuration_result.ddspipe_configuration.builtin_topics.size(), 1u);
+
+    utils::Heritable<ddspipe::core::types::DdsTopic> topic_result =
+            (*configuration_result.ddspipe_configuration.builtin_topics.begin());
+
     ASSERT_EQ(topic_result->topic_name(), "rt/chatter");
     ASSERT_EQ(topic_result->type_name, "std_msgs::msg::dds_::String_");
     ASSERT_EQ(topic_result->topic_qos.keyed, false);

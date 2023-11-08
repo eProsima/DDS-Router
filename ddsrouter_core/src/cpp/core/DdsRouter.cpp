@@ -27,7 +27,6 @@
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
-#include <ddsrouter_core/configuration/DdsRouterReloadConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
 namespace eprosima {
@@ -53,36 +52,18 @@ DdsRouter::DdsRouter(
                       "Configuration for DDS Router is invalid: " << error_msg);
     }
 
-    // Set default value for history
-    ddspipe::core::types::TopicQoS::default_history_depth.store(
-        configuration_.advanced_options.max_history_depth);
-
-    // Init topic allowed
-    init_allowed_topics_();
     // Load Participants
     init_participants_();
 
-    // Create DdsPipe instance
+    // Initialize the DdsPipe
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(
-                        allowed_topics_,
+                        configuration_.ddspipe_configuration,
                         discovery_database_,
                         payload_pool_,
                         participants_database_,
-                        thread_pool_,
-                        configuration_.builtin_topics,
-                        false,
-                        configuration_.ddspipe_configuration));
+                        thread_pool_));
 
     logDebug(DDSROUTER, "DDS Router created.");
-}
-
-void DdsRouter::init_allowed_topics_()
-{
-    allowed_topics_ = std::make_shared<ddspipe::core::AllowedTopicList>(
-        configuration_.allowlist,
-        configuration_.blocklist);
-
-    logInfo(DDSROUTER, "DDS Router configured with allowed topics: " << *allowed_topics_);
 }
 
 void DdsRouter::init_participants_()
@@ -125,7 +106,7 @@ void DdsRouter::init_participants_()
 }
 
 utils::ReturnCode DdsRouter::reload_configuration(
-        const DdsRouterReloadConfiguration& new_configuration)
+        const DdsRouterConfiguration& new_configuration)
 {
     // Check that the configuration is correct
     utils::Formatter error_msg;
@@ -136,11 +117,8 @@ utils::ReturnCode DdsRouter::reload_configuration(
                       "Configuration for Reload DDS Router is invalid: " << error_msg);
     }
 
-    allowed_topics_ = std::make_shared<ddspipe::core::AllowedTopicList>(
-        new_configuration.allowlist,
-        new_configuration.blocklist);
-
-    return ddspipe_->reload_allowed_topics(allowed_topics_);
+    // Reload the DdsPipe configuration, since it is the only reconfigurable attribute.
+    return ddspipe_->reload_configuration(new_configuration.ddspipe_configuration);
 }
 
 utils::ReturnCode DdsRouter::start() noexcept

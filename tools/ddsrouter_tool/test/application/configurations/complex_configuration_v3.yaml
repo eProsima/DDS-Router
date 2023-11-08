@@ -6,14 +6,18 @@
 # 1 Initial Peers repeater Participant with connection and listening addresses
 # 2 topics, one with key and one without
 
-version: v3.0
+version: v4.0
 
 builtin-topics:
   - name: "rt/chatter"
     type: "std_msgs::msg::dds_::String_"
   - name: "rt/chatter/key"
     type: "std_msgs::msg::dds_::String_"
-    keyed: true
+
+topics:
+  - name: rt/chatter/key
+    qos:
+      keyed: true
 
 allowlist:
   - name: "rt/*"
@@ -25,7 +29,9 @@ blocklist:
 
 specs:
   threads: 10
-  max-depth: 1000
+
+  qos:
+    history-depth: 1000
 
 xml:
   raw: |

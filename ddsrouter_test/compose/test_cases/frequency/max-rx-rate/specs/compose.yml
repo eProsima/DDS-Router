@@ -1,0 +1,74 @@
+# Test description:
+#   This test checks that if we set up a router with a globally configured max-rx-rate,
+#   every participant receives data at the max-rx-rate specified.
+#
+# Test architecture:
+#
+# ┌──────────────┐                                        ┌───────────────┐
+# │publisher_0_t0│                                        │subscriber_2_t0│
+# │              │                                        │               │
+# │(local)       │                                        │(local)        │
+# └────────────┬─┘                                        └─▲─────────────┘
+#              │   topic_0 10 Hz ┌─────────┐ topic_0 5 Hz   │
+#              └─────────────────►ddsrouter├────────────────┘
+#                                │         │
+#              ┌─────────────────►(local)  ├────────────────┐
+#              │   topic_1 20 Hz └─────────┘ topic_1 5 Hz   │
+# ┌────────────┴─┐                                        ┌─▼─────────────┐
+# │publisher_1_t1│                                        │subscriber_3_t1│
+# │              │                                        │               │
+# │(local)       │                                        │(local)        │
+# └──────────────┘                                        └───────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  # DOMAIN 0
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic_0
+
+  # DOMAIN 1
+  publisher_1_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1_t1
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 50 --samples 160 --domain 81 --topic topic_1
+
+  # DOMAIN 2
+  subscriber_2_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --topic topic_0"
+
+  # DOMAIN 3
+  subscriber_3_t1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3_t1
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 83 --topic topic_1"
+
+networks:
+  std_net:
+  default:
+    driver: none

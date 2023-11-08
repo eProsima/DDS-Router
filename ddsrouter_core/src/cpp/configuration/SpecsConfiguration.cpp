@@ -35,7 +35,7 @@ bool SpecsConfiguration::is_valid(
         return false;
     }
 
-    if (max_history_depth == 0)
+    if (topic_qos.history_depth == 0U)
     {
         logWarning(DDSROUTER_SPECS, "Using non limited histories could lead to memory exhaustion in long executions.");
     }

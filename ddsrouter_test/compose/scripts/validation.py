@@ -33,6 +33,8 @@ class ReturnCode(Enum):
     COMMAND_FAIL = 4
     STDERR_OUTPUT = 5
     NOT_VALID_DISCONNECTS = 6
+    FINISHED_TOO_QUICKLY = 7
+    FINISHED_TOO_SLOWLY = 8
 
 
 """
@@ -162,7 +164,9 @@ def run_and_validate(
         validate_output_function,
         delay: float = 0,
         timeout_as_error: bool = True,
-        parse_retcode_function=validate_retcode_default):
+        parse_retcode_function=validate_retcode_default,
+        min_time: int = 0,
+        max_time: int = 0):
     """
     Run the subscriber and validate its output.
 
@@ -174,13 +178,31 @@ def run_and_validate(
 
     :return: exit code
     """
+    starting_time = time.time()
+
     ret_code, stdout, stderr = run_command(
         command=command,
         timeout=timeout,
         delay=delay,
         timeout_as_error=timeout_as_error)
 
-    if not parse_retcode_function(ret_code):
+    finishing_time = time.time()
+
+    elapsed_time = finishing_time - starting_time
+
+    if elapsed_time < min_time:
+        log.logger.error(
+            'Executable exited before min-time.')
+
+        return ReturnCode.FINISHED_TOO_QUICKLY
+
+    elif max_time > 0 and elapsed_time > max_time:
+        log.logger.error(
+            'Executable exited after max-time.')
+
+        return ReturnCode.FINISHED_TOO_SLOWLY
+
+    elif not parse_retcode_function(ret_code):
         log.logger.error(
             f'Executable exited with '
             f'return code {ret_code}'

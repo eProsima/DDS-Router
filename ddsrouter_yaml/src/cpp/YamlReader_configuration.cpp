@@ -47,17 +47,17 @@ void YamlReader::fill(
     }
 
     /////
-    // Get optional maximum history depth
-    if (YamlReader::is_tag_present(yml, MAX_HISTORY_DEPTH_TAG))
-    {
-        object.max_history_depth = YamlReader::get<unsigned int>(yml, MAX_HISTORY_DEPTH_TAG, version);
-    }
-
-    /////
     // Get optional remove unused entities tag
     if (YamlReader::is_tag_present(yml, REMOVE_UNUSED_ENTITIES_TAG))
     {
         object.remove_unused_entities = YamlReader::get<bool>(yml, REMOVE_UNUSED_ENTITIES_TAG, version);
+    }
+
+    // Optional Topic QoS
+    if (is_tag_present(yml, SPECS_QOS_TAG))
+    {
+        fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
+        core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
 }
 
@@ -115,45 +115,7 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
 
 template <>
 void YamlReader::fill(
-        ddspipe::core::DdsPipeConfiguration& object,
-        const Yaml& yml,
-        const YamlReaderVersion version)
-{
-    /////
-    // Get optional routes
-    if (YamlReader::is_tag_present(yml, ROUTES_TAG))
-    {
-        YamlReader::fill<ddspipe::core::RoutesConfiguration>(
-            object.routes,
-            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
-            version);
-    }
-
-    /////
-    // Get optional topic routes
-    if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
-    {
-        // get list, and parse each element as above
-        YamlReader::fill<ddspipe::core::TopicRoutesConfiguration>(
-            object.topic_routes,
-            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
-            version);
-    }
-}
-
-template <>
-ddspipe::core::DdsPipeConfiguration YamlReader::get<ddspipe::core::DdsPipeConfiguration>(
-        const Yaml& yml,
-        const YamlReaderVersion version)
-{
-    ddspipe::core::DdsPipeConfiguration object;
-    fill<ddspipe::core::DdsPipeConfiguration>(object, yml, version);
-    return object;
-}
-
-template <>
-void YamlReader::fill(
-        ddsrouter::core::DdsRouterConfiguration& object,
+        core::DdsPipeConfiguration& object,
         const Yaml& yml,
         const YamlReaderVersion version)
 {
@@ -185,11 +147,57 @@ void YamlReader::fill(
     // Get optional builtin topics
     if (YamlReader::is_tag_present(yml, BUILTIN_TAG))
     {
-        object.builtin_topics = YamlReader::get_set<utils::Heritable<ddspipe::core::types::DistributedTopic>>(yml,
+        object.builtin_topics = YamlReader::get_set<utils::Heritable<core::types::DistributedTopic>>(yml,
                         BUILTIN_TAG,
                         version);
     }
 
+    /////
+    // Get optional routes
+    if (YamlReader::is_tag_present(yml, ROUTES_TAG))
+    {
+        YamlReader::fill<core::RoutesConfiguration>(
+            object.routes,
+            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
+            version);
+    }
+
+    /////
+    // Get optional topic routes
+    if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
+    {
+        // get list, and parse each element as above
+        YamlReader::fill<core::TopicRoutesConfiguration>(
+            object.topic_routes,
+            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
+            version);
+    }
+
+    /////
+    // Get optional topics
+    if (YamlReader::is_tag_present(yml, TOPICS_TAG))
+    {
+        const auto& manual_topics = YamlReader::get_list<core::types::ManualTopic>(yml, TOPICS_TAG, version);
+        object.manual_topics = std::vector<core::types::ManualTopic>(manual_topics.begin(), manual_topics.end());
+    }
+}
+
+template <>
+core::DdsPipeConfiguration YamlReader::get<core::DdsPipeConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    core::DdsPipeConfiguration object;
+    fill<core::DdsPipeConfiguration>(object, yml, version);
+    return object;
+}
+
+template <>
+void YamlReader::fill(
+        ddsrouter::core::DdsRouterConfiguration& object,
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
     /////
     // Get participants configurations. Required field, if get_value_in_tag fail propagate exception.
     auto participants_configurations_yml = YamlReader::get_value_in_tag(yml, COLLECTION_PARTICIPANTS_TAG);
@@ -227,14 +235,14 @@ void YamlReader::fill(
     }
 
     // DDS Pipe Configuration
-
-    object.ddspipe_configuration = YamlReader::get<ddspipe::core::DdsPipeConfiguration>(yml, version);
+    object.ddspipe_configuration = YamlReader::get<core::DdsPipeConfiguration>(yml, version);
 
     /* NOTE
      *
      * remove_unused_entities is an attribute of SpecsConfiguration because it is under the tag specs,
-     * but since it is used in the DdsPipe, we have two choices: copying it to the DdsPipeConfiguration,
-     * as we are doing, or refill the SpecsConfiguraton in the DdsPipeConfiguration fill and take it from there.
+     * but since it is used in the DdsPipe, we have two choices: copying it from the SpecsConfiguration to the
+     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill and
+     * taking it from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
 
@@ -242,7 +250,7 @@ void YamlReader::fill(
     // Get optional xml configuration
     if (YamlReader::is_tag_present(yml, XML_TAG))
     {
-        YamlReader::fill<ddspipe::participants::XmlHandlerConfiguration>(
+        YamlReader::fill<participants::XmlHandlerConfiguration>(
             object.xml_configuration,
             YamlReader::get_value_in_tag(yml, XML_TAG),
             version);

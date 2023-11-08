@@ -28,13 +28,6 @@
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 #include <ddsrouter_core/testing/random_values.hpp>
 
-namespace test {
-
-constexpr const unsigned int DEFAULT_THREAD_POOL_SIZE = 2;
-constexpr const unsigned int DEFAULT_MAX_HISTORY_DEPTH = 100;
-
-} /* namespace test */
-
 using namespace eprosima;
 using namespace eprosima::ddsrouter::core;
 using namespace eprosima::ddsrouter::core::types;
@@ -124,7 +117,7 @@ TEST(ImplementationsTest, pair_implementation_with_topic)
         eprosima::ddspipe::core::types::DdsTopic topic;
         topic.m_topic_name = "rt/chatter";
         topic.type_name = "std_msgs::msg::dds_::String_";
-        configuration.builtin_topics.insert(
+        configuration.ddspipe_configuration.builtin_topics.insert(
             utils::Heritable<eprosima::ddspipe::core::types::DdsTopic>::make_heritable(topic));
 
         // Create DdsRouter entity

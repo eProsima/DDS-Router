@@ -1,0 +1,23 @@
+version: v4.0
+
+
+participants:
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Local_81
+    kind: local
+    domain: 81
+
+  - name: Local_82
+    kind: local
+    domain: 82
+
+  - name: Local_83
+    kind: local
+    domain: 83
+
+specs:
+  qos:
+    downsampling: 2
