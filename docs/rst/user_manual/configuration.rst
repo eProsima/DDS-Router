@@ -333,6 +333,40 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
+.. _user_manual_configuration_dynamic_trigger:
+
+Discovery Trigger
+-----------------
+
+``specs`` supports a ``discovery-trigger`` **optional** value that configures what type of external entity triggers the discovery callbacks in the |ddsrouter|.
+The possible values for the ``discovery-trigger`` are:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Value
+        - Tag
+        - Description
+
+    *   - Reader
+        - ``reader``
+        - The discovery callbacks get triggered by the discovery of a reader.
+
+    *   - Writer
+        - ``writer``
+        - The discovery callbacks get triggered by the discovery of a writer.
+
+    *   - Any
+        - ``any``
+        - The discovery callbacks get triggered by the discovery of either a reader or a writer.
+
+    *   - None
+        - ``none``
+        - The discovery callbacks don't get triggered by the discovery of readers or writers.
+
+.. warning::
+  At the time being, ``remove-unused-entities`` is only compatible with ``discovery-trigger: reader``.
+
 .. _user_manual_configuration_specs_topic_qos:
 
 QoS
@@ -783,6 +817,7 @@ A complete example of all the configurations described on this page can be found
     specs:
       threads: 10
       remove-unused-entities: false
+      discovery-trigger: reader
       qos:
         history-depth: 1000
         max-tx-rate: 0
