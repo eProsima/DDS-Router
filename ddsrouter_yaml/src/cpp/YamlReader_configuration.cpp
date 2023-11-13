@@ -85,7 +85,7 @@ void YamlReader::fill(
         else
         {
             throw eprosima::utils::ConfigurationException(
-                utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
+                      utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
 }
