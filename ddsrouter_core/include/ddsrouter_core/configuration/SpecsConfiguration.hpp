@@ -20,6 +20,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddspipe_core/configuration/IConfiguration.hpp>
+#include <ddspipe_core/types/configuration/Verbosity.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
@@ -66,6 +67,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
 
     //! The globally configured Topic QoS.
     ddspipe::core::types::TopicQoS topic_qos{};
+
+    //! TODO
+    ddspipe::core::types::VerbosityLevelType verbosity = ddspipe::core::types::VerbosityLevelValues::QUIET;
 };
 
 } /* namespace core */

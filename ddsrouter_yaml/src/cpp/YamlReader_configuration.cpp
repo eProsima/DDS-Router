@@ -25,6 +25,7 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
+#include <ddspipe_core/types/configuration/Verbosity.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
@@ -53,11 +54,19 @@ void YamlReader::fill(
         object.remove_unused_entities = YamlReader::get<bool>(yml, REMOVE_UNUSED_ENTITIES_TAG, version);
     }
 
-    // Optional Topic QoS
+    /////
+    // Get optional Topic QoS tag
     if (is_tag_present(yml, SPECS_QOS_TAG))
     {
         fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
         core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
+    }
+
+    /////
+    // TODO
+    if (is_tag_present(yml, SPECS_VERBOSITY_TAG))
+    {
+        object.verbosity = YamlReader::get<core::types::VerbosityLevelType>(yml, version);
     }
 }
 
@@ -245,6 +254,9 @@ void YamlReader::fill(
      * taking it from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
+
+    // TODO
+    object.ddspipe_configuration.verbosity = object.advanced_options.verbosity;
 
     /////
     // Get optional xml configuration
