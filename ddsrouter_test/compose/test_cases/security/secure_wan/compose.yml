@@ -131,7 +131,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 12 --args "--domain 2 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --n-matches 1 --n-unmatches 0 --timeout 12 --args "--domain 2 --topic topic_1"
 
 networks:
   edge_0_net:
