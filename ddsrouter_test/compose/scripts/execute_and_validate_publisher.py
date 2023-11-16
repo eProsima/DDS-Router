@@ -75,14 +75,12 @@ def parse_options():
     parser.add_argument(
         '--n-matches',
         type=int,
-        default=1,
         help='Number of times the other participant is expected to match.'
     )
 
     parser.add_argument(
         '--n-unmatches',
         type=int,
-        default=1,
         help='Number of times the other participant is expected to unmatch.'
     )
 
@@ -127,14 +125,9 @@ def _publisher_parse_output(stdout, stderr):
     return filtered_data, stderr
 
 
-def _publisher_get_retcode_validate(
-        n_matches, n_unmatches):
-
-    if n_matches == 0 and n_unmatches == 0:
-        return lambda retcode: retcode == validation.ReturnCode.SUCCESS or \
-                               retcode == validation.ReturnCode.TIMEOUT
-
-    return validation.validate_retcode_default
+def _publisher_get_retcode_validate():
+    return lambda retcode: retcode == validation.ReturnCode.SUCCESS or \
+                           retcode == validation.ReturnCode.TIMEOUT
 
 
 def _publisher_validate(
@@ -146,14 +139,14 @@ def _publisher_validate(
     # Check default validator
     ret_code = validation.validate_default(stdout_parsed, stderr_parsed)
 
-    if stdout_parsed["matches"] != n_matches:
+    if n_matches is not None and stdout_parsed["matches"] != n_matches:
         log.logger.error(f'Number of matched receivers: \
                          {len(stdout_parsed)}. '
                          f'Expected {n_matches}')
 
         return validation.ReturnCode.NOT_VALID_MATCHES
 
-    if stdout_parsed["unmatches"] != n_unmatches:
+    if n_unmatches is not None and stdout_parsed["unmatches"] != n_unmatches:
         log.logger.error(f'Number of unmatched receivers: \
                          {len(stdout_parsed)}. '
                          f'Expected {n_unmatches}')
@@ -188,8 +181,7 @@ if __name__ == '__main__':
         delay=args.delay,
         parse_output_function=_publisher_parse_output,
         validate_output_function=validate_func,
-        parse_retcode_function=_publisher_get_retcode_validate(
-            args.n_matches, args.n_unmatches),
+        parse_retcode_function=_publisher_get_retcode_validate(),
         timeout_as_error=False)
 
     log.logger.info(f'Publisher validator exited with code {ret_code}')

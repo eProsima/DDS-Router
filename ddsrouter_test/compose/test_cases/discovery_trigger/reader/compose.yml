@@ -1,9 +1,23 @@
 # Test description:
-#   TODO
+#   This test checks that if we set up a router with the reader as the discovery trigger,
+#   a publisher doesn't match with the router (since it doesn't create any entities) but
+#   a subscriber does (since the discovery trigger is set to reader).
 #
 # Test architecture:
-#   TODO
 #
+# 1.
+# ┌──────────┐    ┌─────────┐
+# │publisher │    │ddsrouter│
+# │          │    │         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
+#
+# 2.
+# ┌──────────┐    ┌─────────┐
+# │subscriber│    │ddsrouter│
+# │          ├────►         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
 
 services:
 

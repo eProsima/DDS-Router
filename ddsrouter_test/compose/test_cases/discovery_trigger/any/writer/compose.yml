@@ -1,9 +1,14 @@
 # Test description:
-#   TODO
+#   This test checks that if we set up a router with any as the discovery trigger,
+#   a publisher does match with the router (since it triggers the creation of entities).
 #
 # Test architecture:
-#   TODO
 #
+# ┌──────────┐    ┌─────────┐
+# │publisher │    │ddsrouter│
+# │          ├────►         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
 
 services:
 

@@ -101,14 +101,12 @@ def parse_options():
     parser.add_argument(
         '--n-matches',
         type=int,
-        default=1,
         help='Number of times the other participant is expected to match.'
     )
 
     parser.add_argument(
         '--n-unmatches',
         type=int,
-        default=1,
         help='Number of times the other participant is expected to unmatch.'
     )
 
@@ -159,8 +157,8 @@ def _subscriber_parse_output(stdout, stderr):
 
 
 def _subscriber_get_retcode_validate(
-        samples, n_matches):
-    if samples == 0 or n_matches == 0:
+        samples):
+    if samples == 0:
         return lambda retcode: retcode == validation.ReturnCode.SUCCESS or \
                                retcode == validation.ReturnCode.TIMEOUT
 
@@ -197,22 +195,19 @@ def _subscriber_validate(
                          f'Expected {samples}')
         return validation.ReturnCode.NOT_VALID_MESSAGES
 
-    # The n-matches and n-unmatches options only apply when there aren't any samples
-    if samples == 0:
+    if n_matches is not None and stdout_parsed["matches"] != n_matches:
+        log.logger.error(f'Number of matched receivers: \
+                            {stdout_parsed["matches"]}. '
+                            f'Expected {n_matches}')
 
-        if stdout_parsed["matches"] != n_matches:
-            log.logger.error(f'Number of matched receivers: \
-                                {stdout_parsed["matches"]}. '
-                                f'Expected {n_matches}')
+        return validation.ReturnCode.NOT_VALID_MATCHES
 
-            return validation.ReturnCode.NOT_VALID_MATCHES
+    if n_unmatches is not None and stdout_parsed["unmatches"] != n_unmatches:
+        log.logger.error(f'Number of unmatched receivers: \
+                        {stdout_parsed["unmatches"]}.'
+                        f'Expected {n_unmatches}')
 
-        if stdout_parsed["unmatches"] != n_unmatches:
-            log.logger.error(f'Number of unmatched receivers: \
-                            {stdout_parsed["unmatches"]}.'
-                            f'Expected {n_unmatches}')
-
-            return validation.ReturnCode.NOT_VALID_UNMATCHES
+        return validation.ReturnCode.NOT_VALID_UNMATCHES
 
     return ret_code
 
@@ -295,7 +290,7 @@ if __name__ == '__main__':
         delay=args.delay,
         parse_output_function=_subscriber_parse_output,
         validate_output_function=validate_func,
-        parse_retcode_function=_subscriber_get_retcode_validate(args.samples, args.n_matches),
+        parse_retcode_function=_subscriber_get_retcode_validate(args.samples),
         timeout_as_error=args.samples > 0,
         min_time=args.min_time,
         max_time=args.max_time)
