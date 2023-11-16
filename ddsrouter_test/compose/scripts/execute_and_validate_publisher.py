@@ -73,10 +73,17 @@ def parse_options():
     )
 
     parser.add_argument(
-        '--disconnects',
+        '--n-matches',
         type=int,
-        default=0,
-        help='Number of times the other participant is expected to disconnect.'
+        default=1,
+        help='Number of times the other participant is expected to match.'
+    )
+
+    parser.add_argument(
+        '--n-unmatches',
+        type=int,
+        default=1,
+        help='Number of times the other participant is expected to unmatch.'
     )
 
     return parser.parse_args()
@@ -100,45 +107,58 @@ def _publisher_command(args):
 
 def _publisher_parse_output(stdout, stderr):
     """
-    Transform the output of the program in a list of received disconnects.
+    Transform the output to a list of received matches and unmatches.
 
     :param data: Process stdout
-    :return: List of subscribers who have disconnected
+    :return: List of subscribers who have matched and unmatched
     """
-    regex = re.compile(r'^Publisher unmatched \[.+\].$')
-    lines = stdout.splitlines()
-    filtered_data = [line for line in lines if regex.match(line)]
+    match_regex = re.compile(r'^Publisher matched \[.+\].$')
+    unmatch_regex = re.compile(r'^Publisher unmatched \[.+\].$')
+
+    filtered_data = {"matches": 0, "unmatches": 0}
+
+    for line in stdout.splitlines():
+        if match_regex.match(line):
+            filtered_data["matches"] += 1
+
+        elif unmatch_regex.match(line):
+            filtered_data["unmatches"] += 1
 
     return filtered_data, stderr
 
 
 def _publisher_get_retcode_validate(
-        disconnects):
-    if disconnects != 0:
-        return validation.validate_retcode_default
+        n_matches, n_unmatches):
 
-    def accept_timeout(retcode):
-        return retcode in [
-            validation.ReturnCode.SUCCESS,
-            validation.ReturnCode.TIMEOUT]
+    if n_matches == 0 and n_unmatches == 0:
+        return lambda retcode: retcode == validation.ReturnCode.SUCCESS or \
+                               retcode == validation.ReturnCode.TIMEOUT
 
-    return accept_timeout
+    return validation.validate_retcode_default
 
 
 def _publisher_validate(
         stdout_parsed,
         stderr_parsed,
-        disconnects):
+        n_matches,
+        n_unmatches):
 
     # Check default validator
     ret_code = validation.validate_default(stdout_parsed, stderr_parsed)
 
-    if len(stdout_parsed) != disconnects:
-        log.logger.error(f'Number of disconnected receivers: \
+    if stdout_parsed["matches"] != n_matches:
+        log.logger.error(f'Number of matched receivers: \
                          {len(stdout_parsed)}. '
-                         f'Expected {disconnects}')
+                         f'Expected {n_matches}')
 
-        return validation.ReturnCode.NOT_VALID_DISCONNECTS
+        return validation.ReturnCode.NOT_VALID_MATCHES
+
+    if stdout_parsed["unmatches"] != n_unmatches:
+        log.logger.error(f'Number of unmatched receivers: \
+                         {len(stdout_parsed)}. '
+                         f'Expected {n_unmatches}')
+
+        return validation.ReturnCode.NOT_VALID_UNMATCHES
 
     return ret_code
 
@@ -158,7 +178,8 @@ if __name__ == '__main__':
         _publisher_validate(
             stdout_parsed,
             stderr_parsed,
-            args.disconnects
+            args.n_matches,
+            args.n_unmatches
             )))
 
     ret_code = validation.run_and_validate(
@@ -168,7 +189,7 @@ if __name__ == '__main__':
         parse_output_function=_publisher_parse_output,
         validate_output_function=validate_func,
         parse_retcode_function=_publisher_get_retcode_validate(
-            args.disconnects),
+            args.n_matches, args.n_unmatches),
         timeout_as_error=False)
 
     log.logger.info(f'Publisher validator exited with code {ret_code}')
