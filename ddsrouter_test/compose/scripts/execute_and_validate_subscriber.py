@@ -197,19 +197,22 @@ def _subscriber_validate(
                          f'Expected {samples}')
         return validation.ReturnCode.NOT_VALID_MESSAGES
 
-    if stdout_parsed["matches"] != n_matches:
-        log.logger.error(f'Number of matched receivers: \
-                            {stdout_parsed["matches"]}. '
-                            f'Expected {n_matches}')
+    # The n-matches and n-unmatches options only apply when there aren't any samples
+    if samples == 0:
 
-        return validation.ReturnCode.NOT_VALID_MATCHES
+        if stdout_parsed["matches"] != n_matches:
+            log.logger.error(f'Number of matched receivers: \
+                                {stdout_parsed["matches"]}. '
+                                f'Expected {n_matches}')
 
-    if stdout_parsed["unmatches"] != n_unmatches:
-        log.logger.error(f'Number of unmatched receivers: \
-                         {stdout_parsed["unmatches"]}.'
-                         f'Expected {n_unmatches}')
+            return validation.ReturnCode.NOT_VALID_MATCHES
 
-        return validation.ReturnCode.NOT_VALID_UNMATCHES
+        if stdout_parsed["unmatches"] != n_unmatches:
+            log.logger.error(f'Number of unmatched receivers: \
+                            {stdout_parsed["unmatches"]}.'
+                            f'Expected {n_unmatches}')
+
+            return validation.ReturnCode.NOT_VALID_UNMATCHES
 
     return ret_code
 
