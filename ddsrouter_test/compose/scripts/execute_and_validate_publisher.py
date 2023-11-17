@@ -113,14 +113,14 @@ def _publisher_parse_output(stdout, stderr):
     match_regex = re.compile(r'^Publisher matched \[.+\].$')
     unmatch_regex = re.compile(r'^Publisher unmatched \[.+\].$')
 
-    filtered_data = {"matches": 0, "unmatches": 0}
+    filtered_data = {'matches': 0, 'unmatches': 0}
 
     for line in stdout.splitlines():
         if match_regex.match(line):
-            filtered_data["matches"] += 1
+            filtered_data['matches'] += 1
 
         elif unmatch_regex.match(line):
-            filtered_data["unmatches"] += 1
+            filtered_data['unmatches'] += 1
 
     return filtered_data, stderr
 
@@ -139,14 +139,14 @@ def _publisher_validate(
     # Check default validator
     ret_code = validation.validate_default(stdout_parsed, stderr_parsed)
 
-    if n_matches is not None and stdout_parsed["matches"] != n_matches:
+    if n_matches is not None and stdout_parsed['matches'] != n_matches:
         log.logger.error(f'Number of matched receivers: \
                          {len(stdout_parsed)}. '
                          f'Expected {n_matches}')
 
         return validation.ReturnCode.NOT_VALID_MATCHES
 
-    if n_unmatches is not None and stdout_parsed["unmatches"] != n_unmatches:
+    if n_unmatches is not None and stdout_parsed['unmatches'] != n_unmatches:
         log.logger.error(f'Number of unmatched receivers: \
                          {len(stdout_parsed)}. '
                          f'Expected {n_unmatches}')

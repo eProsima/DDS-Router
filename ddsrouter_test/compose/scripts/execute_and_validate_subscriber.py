@@ -141,17 +141,17 @@ def _subscriber_parse_output(stdout, stderr):
     match_regex = re.compile(r'^Subscriber matched \[.+\].$')
     unmatch_regex = re.compile(r'^Subscriber unmatched \[.+\].$')
 
-    filtered_data = {"messages": [], "matches": 0, "unmatches": 0}
+    filtered_data = {'messages': [], 'matches': 0, 'unmatches': 0}
 
     for line in stdout.splitlines():
         if msgs_regex.match(line):
-            filtered_data["messages"].append(line)
+            filtered_data['messages'].append(line)
 
         elif match_regex.match(line):
-            filtered_data["matches"] += 1
+            filtered_data['matches'] += 1
 
         elif unmatch_regex.match(line):
-            filtered_data["unmatches"] += 1
+            filtered_data['unmatches'] += 1
 
     return filtered_data, stderr
 
@@ -175,10 +175,10 @@ def _subscriber_validate(
         n_unmatches):
 
     # Check default validator
-    ret_code = validation.validate_default(stdout_parsed["messages"], stderr_parsed)
+    ret_code = validation.validate_default(stdout_parsed['messages'], stderr_parsed)
 
     if duplicates_allow != -1:
-        duplicated_n = len(find_duplicates(stdout_parsed["messages"]))
+        duplicated_n = len(find_duplicates(stdout_parsed['messages']))
         if duplicated_n > duplicates_allow:
             log.logger.error(
                 f'{duplicated_n} duplicated messages found. '
@@ -186,26 +186,24 @@ def _subscriber_validate(
             return validation.ReturnCode.NOT_VALID_MESSAGES
 
     if transient:
-        if not check_transient(stdout_parsed["messages"]):
+        if not check_transient(stdout_parsed['messages']):
             log.logger.error('Transient messages incorrect reception.')
             return validation.ReturnCode.NOT_VALID_MESSAGES
 
-    if len(stdout_parsed["messages"]) != samples:
+    if len(stdout_parsed['messages']) != samples:
         log.logger.error(f'Number of messages received: {len(stdout_parsed["messages"])}. '
                          f'Expected {samples}')
         return validation.ReturnCode.NOT_VALID_MESSAGES
 
-    if n_matches is not None and stdout_parsed["matches"] != n_matches:
-        log.logger.error(f'Number of matched receivers: \
-                            {stdout_parsed["matches"]}. '
-                            f'Expected {n_matches}')
+    if n_matches is not None and stdout_parsed['matches'] != n_matches:
+        log.logger.error(f'Number of matched receivers: {stdout_parsed["matches"]}.'
+                         f'Expected {n_matches}')
 
         return validation.ReturnCode.NOT_VALID_MATCHES
 
-    if n_unmatches is not None and stdout_parsed["unmatches"] != n_unmatches:
-        log.logger.error(f'Number of unmatched receivers: \
-                        {stdout_parsed["unmatches"]}.'
-                        f'Expected {n_unmatches}')
+    if n_unmatches is not None and stdout_parsed['unmatches'] != n_unmatches:
+        log.logger.error(f'Number of unmatched receivers: {stdout_parsed["unmatches"]}.'
+                         f'Expected {n_unmatches}')
 
         return validation.ReturnCode.NOT_VALID_UNMATCHES
 
