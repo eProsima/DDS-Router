@@ -52,7 +52,6 @@ def parse_options():
         '-s',
         '--samples',
         type=int,
-        default=0,
         help='Samples to receive.'
     )
     parser.add_argument(
@@ -158,7 +157,7 @@ def _subscriber_parse_output(stdout, stderr):
 
 def _subscriber_get_retcode_validate(
         samples):
-    if samples == 0:
+    if samples is None or samples == 0:
         return lambda retcode: retcode == validation.ReturnCode.SUCCESS or \
                                retcode == validation.ReturnCode.TIMEOUT
 
@@ -190,7 +189,7 @@ def _subscriber_validate(
             log.logger.error('Transient messages incorrect reception.')
             return validation.ReturnCode.NOT_VALID_MESSAGES
 
-    if len(stdout_parsed['messages']) != samples:
+    if samples is not None and len(stdout_parsed['messages']) != samples:
         log.logger.error(f'Number of messages received: {len(stdout_parsed["messages"])}. '
                          f'Expected {samples}')
         return validation.ReturnCode.NOT_VALID_MESSAGES
