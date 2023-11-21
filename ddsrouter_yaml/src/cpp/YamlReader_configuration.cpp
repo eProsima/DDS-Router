@@ -66,17 +66,12 @@ void YamlReader::fill(
     // Get optional discovery trigger tag
     if (YamlReader::is_tag_present(yml, DISCOVERY_TRIGGER_TAG))
     {
-        // Create builder
-        utils::EnumBuilder<ddspipe::core::DiscoveryTrigger> builder(
-        {
-            { ddspipe::core::DiscoveryTrigger::READER, { "reader" } },
-            { ddspipe::core::DiscoveryTrigger::WRITER, { "writer" } },
-            { ddspipe::core::DiscoveryTrigger::NONE, { "none" } },
-            { ddspipe::core::DiscoveryTrigger::ANY, { "any" } }
-        });
+        const std::string discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
 
-        const auto& discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
-        const bool ret_code = builder.string_to_enumeration(discovery_trigger, object.discovery_trigger);
+        std::string discovery_trigger_caps = discovery_trigger;
+        utils::to_uppercase(discovery_trigger_caps);
+
+        const bool ret_code = ddspipe::core::string_to_enumeration(discovery_trigger_caps, object.discovery_trigger);
 
         if (!ret_code) {
             throw eprosima::utils::ConfigurationException(

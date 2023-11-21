@@ -322,7 +322,7 @@ Remove Unused Entities
 
 ``specs`` supports a ``remove-unused-entities`` **optional** value that configures the deletion of unused internal entities in the |ddsrouter|.
 By default, unused internal entities are *not* removed.
-Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
+Thus, when the |ddsrouter| discovers a Subscriber (by default; see :ref:`Discovery Trigger <user_manual_configuration_discovery_trigger>`), the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
 
 At times it can be useful to remove the internal entities that are not being used.
 Consider the following example.
@@ -353,19 +353,22 @@ The possible values for the ``discovery-trigger`` are:
 
     *   - Reader
         - ``reader``
-        - The discovery callbacks get triggered by the discovery of a reader.
+        - The creation/removal of readers triggers the creation/removal of internal entities.
 
     *   - Writer
         - ``writer``
-        - The discovery callbacks get triggered by the discovery of a writer.
+        - The creation/removal of writers triggers the creation/removal of internal entities.
 
     *   - Any
         - ``any``
-        - The discovery callbacks get triggered by the discovery of either a reader or a writer.
+        - The creation/removal of readers or writers triggers the creation/removal of internal entities.
 
     *   - None
         - ``none``
-        - The discovery callbacks don't get triggered by the discovery of readers or writers.
+        - The creation/removal of enternal readers or writers doesn't trigger the creation/removal of internal entities.
+
+.. warning::
+  When the ``discovery-trigger`` is set to ``writer`` (or to ``any``), the |ddsrouter| will create its internal entities with the writer's :ref:`Topic QoS <user_manual_configuration_topic_qos>` (in the case of ``any``, it will only happen when the |ddsrouter| discovers a writer on that topic first), which may lead to incompatibility issues.
 
 .. warning::
   At the time being, :ref:`remove-unused-entities <user_manual_configuration_remove_unused_entities>` set to ``true`` is only compatible with a ``discovery-trigger: reader``.
