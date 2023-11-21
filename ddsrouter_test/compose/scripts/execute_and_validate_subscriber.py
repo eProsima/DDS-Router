@@ -270,6 +270,8 @@ if __name__ == '__main__':
 
     command = _subscriber_command(args)
 
+    timeout_as_error = args.samples is not None and args.samples > 0
+
     validate_func = (lambda stdout_parsed, stderr_parsed: (
         _subscriber_validate(
             stdout_parsed=stdout_parsed,
@@ -288,7 +290,7 @@ if __name__ == '__main__':
         parse_output_function=_subscriber_parse_output,
         validate_output_function=validate_func,
         parse_retcode_function=_subscriber_get_retcode_validate(args.samples),
-        timeout_as_error=args.samples > 0,
+        timeout_as_error=timeout_as_error,
         min_time=args.min_time,
         max_time=args.max_time)
 
