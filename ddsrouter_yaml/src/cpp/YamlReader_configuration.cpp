@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cpp_utils/enum/EnumBuilder.hpp>
+
 #include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/EchoParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
@@ -64,28 +66,21 @@ void YamlReader::fill(
     // Get optional discovery trigger tag
     if (YamlReader::is_tag_present(yml, DISCOVERY_TRIGGER_TAG))
     {
-        const auto& discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
+        // Create builder
+        utils::EnumBuilder<ddspipe::core::DiscoveryTrigger> builder(
+        {
+            { ddspipe::core::DiscoveryTrigger::READER, { "reader" } },
+            { ddspipe::core::DiscoveryTrigger::WRITER, { "writer" } },
+            { ddspipe::core::DiscoveryTrigger::NONE, { "none" } },
+            { ddspipe::core::DiscoveryTrigger::ANY, { "any" } }
+        });
 
-        if (discovery_trigger == "reader")
-        {
-            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
-        }
-        else if (discovery_trigger == "writer")
-        {
-            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::WRITER;
-        }
-        else if (discovery_trigger == "none")
-        {
-            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::NONE;
-        }
-        else if (discovery_trigger == "any")
-        {
-            object.discovery_trigger = ddspipe::core::DiscoveryTrigger::ANY;
-        }
-        else
-        {
+        const auto& discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
+        const bool ret_code = builder.string_to_enumeration(discovery_trigger, object.discovery_trigger);
+
+        if (!ret_code) {
             throw eprosima::utils::ConfigurationException(
-                      utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
+                    utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
 }
