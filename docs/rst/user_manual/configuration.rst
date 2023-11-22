@@ -365,7 +365,7 @@ The possible values for the ``discovery-trigger`` are:
 
     *   - None
         - ``none``
-        - The creation/removal of enternal readers or writers doesn't trigger the creation/removal of internal entities.
+        - The creation/removal of external readers or writers doesn't trigger the creation/removal of internal entities.
 
 .. warning::
   When the |ddsrouter| creates internal entities triggered by the discovery of a writer (i.e. the ``discovery-trigger`` is either ``writer`` or ``any``), the |ddsrouter| will create its internal entities with the writer's :ref:`Topic QoS <user_manual_configuration_topic_qos>`, and, therefore, the QoS of the communication between the external entities and the |ddsrouter| may differ from the QoS of the communication without the |ddsrouter|.
