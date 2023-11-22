@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cpp_utils/enum/EnumBuilder.hpp>
-
 #include <ddspipe_participants/configuration/DiscoveryServerParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/EchoParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/InitialPeersParticipantConfiguration.hpp>
