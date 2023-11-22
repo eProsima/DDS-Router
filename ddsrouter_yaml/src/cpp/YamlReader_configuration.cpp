@@ -73,9 +73,10 @@ void YamlReader::fill(
 
         const bool ret_code = ddspipe::core::string_to_enumeration(discovery_trigger_caps, object.discovery_trigger);
 
-        if (!ret_code) {
+        if (!ret_code)
+        {
             throw eprosima::utils::ConfigurationException(
-                    utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
+                      utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
 }
