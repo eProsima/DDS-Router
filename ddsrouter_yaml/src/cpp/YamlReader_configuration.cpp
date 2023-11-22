@@ -59,6 +59,24 @@ void YamlReader::fill(
         fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
         core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
+
+    /////
+    // Get optional discovery trigger tag
+    if (YamlReader::is_tag_present(yml, DISCOVERY_TRIGGER_TAG))
+    {
+        const std::string discovery_trigger = YamlReader::get<std::string>(yml, DISCOVERY_TRIGGER_TAG, version);
+
+        std::string discovery_trigger_caps = discovery_trigger;
+        utils::to_uppercase(discovery_trigger_caps);
+
+        const bool ret_code = ddspipe::core::string_to_enumeration(discovery_trigger_caps, object.discovery_trigger);
+
+        if (!ret_code)
+        {
+            throw eprosima::utils::ConfigurationException(
+                      utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
+        }
+    }
 }
 
 template <>
@@ -239,12 +257,13 @@ void YamlReader::fill(
 
     /* NOTE
      *
-     * remove_unused_entities is an attribute of SpecsConfiguration because it is under the tag specs,
-     * but since it is used in the DdsPipe, we have two choices: copying it from the SpecsConfiguration to the
-     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill and
-     * taking it from there.
+     * remove_unused_entities and discovery_trigger are attributes of SpecsConfiguration because they are
+     * under the tag specs, but since they are used in the DdsPipe, we have two choices: copying them to the
+     * DdsPipeConfiguration, as we are doing, or refilling the SpecsConfiguraton in the DdsPipeConfiguration fill
+     * and taking both attributes from there.
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
+    object.ddspipe_configuration.discovery_trigger = object.advanced_options.discovery_trigger;
 
     /////
     // Get optional xml configuration

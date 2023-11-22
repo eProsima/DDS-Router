@@ -31,6 +31,7 @@ set(TEST_LIST
         version_negative_cases
         number_of_threads
         remove_unused_entities
+        discovery_trigger
         valid_routes
         invalid_routes
         history_depth

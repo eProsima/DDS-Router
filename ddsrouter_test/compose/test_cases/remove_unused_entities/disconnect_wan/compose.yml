@@ -80,7 +80,7 @@ services:
       - edge_0_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --disconnects 1 --timeout 8 --args "--samples 80 --domain 80 --interval 100"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --n-unmatches 1 --timeout 8 --args "--samples 80 --domain 80 --interval 100"
 
   # DOMAIN 81
   ddsrouter_edge_1:

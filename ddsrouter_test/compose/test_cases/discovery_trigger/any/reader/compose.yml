@@ -1,0 +1,38 @@
+# Test description:
+#   This test checks that if we set up a router with any as the discovery trigger,
+#   a subscriber does match with the router (since it triggers the creation of entities).
+#
+# Test architecture:
+#
+# ┌──────────┐    ┌─────────┐
+# │subscriber│    │ddsrouter│
+# │          ├────►         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 4
+
+  # DOMAIN 0
+  subscriber_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_0_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-matches 1 --timeout 4 --args "--domain 80"
+
+networks:
+  std_net:
+  default:
+    driver: none

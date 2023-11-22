@@ -62,6 +62,12 @@ set(TESTS
     manual_topics/generic
     manual_topics/participants
     manual_topics/precedence
+
+    discovery_trigger/reader
+    discovery_trigger/writer
+    discovery_trigger/none
+    discovery_trigger/any/reader
+    discovery_trigger/any/writer
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

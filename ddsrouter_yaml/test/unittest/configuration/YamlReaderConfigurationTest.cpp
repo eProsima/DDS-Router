@@ -264,6 +264,59 @@ TEST(YamlReaderConfigurationTest, remove_unused_entities)
 }
 
 /**
+ * Test setting the discovery trigger in the configuration.
+ *
+ * CASES:
+ * - trivial configuration
+ */
+TEST(YamlReaderConfigurationTest, discovery_trigger)
+{
+    const char* yml_configuration =
+            // trivial configuration
+            R"(
+        version: v4.0
+        participants:
+          - name: "P1"
+            kind: "echo"
+          - name: "P2"
+            kind: "echo"
+        )";
+    Yaml yml = YAML::Load(yml_configuration);
+
+    std::vector<std::string> test_cases = {"reader", "writer", "any", "none"};
+
+    for (const auto& test_case : test_cases)
+    {
+        Yaml yml_specs;
+        yml_specs[ddspipe::yaml::DISCOVERY_TRIGGER_TAG] = test_case;
+        yml[ddspipe::yaml::SPECS_TAG] = yml_specs;
+
+        // Load configuration
+        ddsrouter::core::DdsRouterConfiguration configuration_result =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        // Check that the discovery trigger has been set correctly
+        if (test_case == "reader")
+        {
+            ASSERT_EQ(ddspipe::core::DiscoveryTrigger::READER, configuration_result.advanced_options.discovery_trigger);
+        }
+        else if (test_case == "writer")
+        {
+            ASSERT_EQ(ddspipe::core::DiscoveryTrigger::WRITER, configuration_result.advanced_options.discovery_trigger);
+        }
+        else if (test_case == "none")
+        {
+            ASSERT_EQ(ddspipe::core::DiscoveryTrigger::NONE, configuration_result.advanced_options.discovery_trigger);
+        }
+        else if (test_case == "any")
+        {
+            ASSERT_EQ(ddspipe::core::DiscoveryTrigger::ANY, configuration_result.advanced_options.discovery_trigger);
+        }
+
+    }
+}
+
+/**
  * Test setting routes and topic routes in the configuration.
  *
  * CASES:

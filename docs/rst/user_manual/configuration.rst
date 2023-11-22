@@ -322,7 +322,7 @@ Remove Unused Entities
 
 ``specs`` supports a ``remove-unused-entities`` **optional** value that configures the deletion of unused internal entities in the |ddsrouter|.
 By default, unused internal entities are *not* removed.
-Thus, when the |ddsrouter| discovers a Subscriber, the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
+Thus, when the |ddsrouter| discovers a Subscriber (by default; see :ref:`Discovery Trigger <user_manual_configuration_discovery_trigger>`), the |ddsrouter| creates entities in all of its participants, and these entities stay up even after the Subscriber disconnects.
 
 At times it can be useful to remove the internal entities that are not being used.
 Consider the following example.
@@ -332,6 +332,46 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
+
+.. warning::
+  At the time being, ``remove-unused-entities: true`` is only compatible with a :ref:`discovery-trigger <user_manual_configuration_discovery_trigger>` set to ``reader``.
+
+.. _user_manual_configuration_discovery_trigger:
+
+Discovery Trigger
+-----------------
+
+``specs`` supports a ``discovery-trigger`` **optional** value that configures what type of external entity triggers the creation/removal of entities in the |ddsrouter|.
+The possible values for the ``discovery-trigger`` are:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Value
+        - Tag
+        - Description
+
+    *   - Reader
+        - ``reader``
+        - The creation/removal of readers triggers the creation/removal of internal entities.
+
+    *   - Writer
+        - ``writer``
+        - The creation/removal of writers triggers the creation/removal of internal entities.
+
+    *   - Any
+        - ``any``
+        - The creation/removal of readers or writers triggers the creation/removal of internal entities.
+
+    *   - None
+        - ``none``
+        - The creation/removal of external readers or writers doesn't trigger the creation/removal of internal entities.
+
+.. warning::
+  When the |ddsrouter| creates internal entities triggered by the discovery of a writer (i.e. the ``discovery-trigger`` is either ``writer`` or ``any``), the |ddsrouter| will create its internal entities with the writer's :ref:`Topic QoS <user_manual_configuration_topic_qos>`, and, therefore, the QoS of the communication between the external entities and the |ddsrouter| may differ from the QoS of the communication without the |ddsrouter|.
+
+.. warning::
+  At the time being, :ref:`remove-unused-entities <user_manual_configuration_remove_unused_entities>` set to ``true`` is only compatible with a ``discovery-trigger: reader``.
 
 .. _user_manual_configuration_specs_topic_qos:
 
@@ -462,11 +502,6 @@ Example:
       - "127.0.0.1"    # Localhost only
 
 See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/whitelist.html>`_ for more information.
-
-.. warning::
-
-    When providing an interface whitelist, external participants with which communication is desired must also be configured with interface whitelisting.
-
 
 .. _user_manual_configuration_repeater:
 
@@ -783,6 +818,7 @@ A complete example of all the configurations described on this page can be found
     specs:
       threads: 10
       remove-unused-entities: false
+      discovery-trigger: reader
       qos:
         history-depth: 1000
         max-tx-rate: 0
