@@ -19,6 +19,7 @@
 
 #include <cpp_utils/Formatter.hpp>
 
+#include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
@@ -66,6 +67,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
 
     //! The globally configured Topic QoS.
     ddspipe::core::types::TopicQoS topic_qos{};
+
+    //! The type of the entities whose discovery triggers the discovery callbacks.
+    ddspipe::core::DiscoveryTrigger discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
 };
 
 } /* namespace core */

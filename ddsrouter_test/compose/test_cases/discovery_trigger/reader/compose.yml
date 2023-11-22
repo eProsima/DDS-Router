@@ -1,0 +1,57 @@
+# Test description:
+#   This test checks that if we set up a router with the reader as the discovery trigger,
+#   a publisher doesn't match with the router (since it doesn't create any entities) but
+#   a subscriber does (since the discovery trigger is set to reader).
+#
+# Test architecture:
+#
+# 1.
+# ┌──────────┐    ┌─────────┐
+# │publisher │    │ddsrouter│
+# │          │    │         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
+#
+# 2.
+# ┌──────────┐    ┌─────────┐
+# │subscriber│    │ddsrouter│
+# │          ├────►         │
+# │(local)   │    │(local)  │
+# └──────────┘    └─────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  # DOMAIN 0
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-matches 0 --n-unmatches 0 --timeout 3 --args "--samples 80 --domain 80"
+
+  # DOMAIN 1
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-matches 1 --delay 4 --timeout 8 --args "--domain 81"
+
+networks:
+  std_net:
+  default:
+    driver: none
