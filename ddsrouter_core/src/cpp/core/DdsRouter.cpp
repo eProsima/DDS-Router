@@ -25,6 +25,7 @@
 #include <ddspipe_core/dynamic/AllowedTopicList.hpp>
 #include <ddspipe_core/efficiency/payload/FastPayloadPool.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
+#include <ddspipe_core/types/dynamic_types/types.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
@@ -32,6 +33,8 @@
 namespace eprosima {
 namespace ddsrouter {
 namespace core {
+
+using namespace eprosima::ddspipe::core::types;
 
 DdsRouter::DdsRouter(
         const DdsRouterConfiguration& configuration)
@@ -54,6 +57,20 @@ DdsRouter::DdsRouter(
 
     // Load Participants
     init_participants_();
+
+    // Create an internal topic to transmit the dynamic types
+    configuration_.ddspipe_configuration.builtin_topics.insert(
+        utils::Heritable<DdsTopic>::make_heritable(type_object_topic()));
+
+    if (!configuration_.ddspipe_configuration.allowlist.empty())
+    {
+        // The allowlist is not empty. Add the type object topic.
+        WildcardDdsFilterTopic internal_topic;
+        internal_topic.topic_name.set_value(TYPE_OBJECT_TOPIC_NAME);
+
+        configuration_.ddspipe_configuration.allowlist.insert(
+            utils::Heritable<WildcardDdsFilterTopic>::make_heritable(internal_topic));
+    }
 
     // Initialize the DdsPipe
     ddspipe_ = std::unique_ptr<ddspipe::core::DdsPipe>(new ddspipe::core::DdsPipe(

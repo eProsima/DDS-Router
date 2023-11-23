@@ -151,12 +151,6 @@ void YamlReader::fill(
             auto new_topic = utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(wild_topic);
             object.allowlist.insert(new_topic);
         }
-
-        // Add to allowlist always the type object topic
-        core::types::WildcardDdsFilterTopic internal_topic;
-        internal_topic.topic_name.set_value(core::types::TYPE_OBJECT_TOPIC_NAME);
-        object.allowlist.insert(
-            utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(internal_topic));
     }
 
     /////
