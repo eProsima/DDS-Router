@@ -17,3 +17,4 @@ add_subdirectory(labels)
 
 # Add subdirectory with tests
 add_subdirectory(blackbox)
+add_subdirectory(unittest)
