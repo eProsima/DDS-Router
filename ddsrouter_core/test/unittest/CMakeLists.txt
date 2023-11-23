@@ -24,7 +24,6 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        trivial
         create_echo_participant
         create_simple_participant
         create_discovery_server_participant

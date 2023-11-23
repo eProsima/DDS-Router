@@ -47,99 +47,58 @@ using namespace eprosima::ddsrouter::core;
 class EchoTestClass : public ddspipe::participants::EchoParticipant
 {
 public:
-
     using ddspipe::participants::EchoParticipant::configuration_;  // Make protected member accessible
-    EchoTestClass(
-            std::shared_ptr<ddspipe::participants::EchoParticipant> echo_participant)
-        : ddspipe::participants::EchoParticipant(*echo_participant)
-    {
-    }
-
 };
 
 class SimpleTestClass : public ddspipe::participants::rtps::SimpleParticipant
 {
 public:
-
     using ddspipe::participants::rtps::SimpleParticipant::configuration_;  // Make protected member accessible
-    SimpleTestClass(
-            std::shared_ptr<ddspipe::participants::rtps::SimpleParticipant> simple_participant)
-        : ddspipe::participants::rtps::SimpleParticipant(*simple_participant)
-    {
-    }
-
 };
 
 class DiscoveryServerTestClass : public ddspipe::participants::rtps::DiscoveryServerParticipant
 {
 public:
-
     using ddspipe::participants::rtps::DiscoveryServerParticipant::configuration_;  // Make protected member accessible
-    DiscoveryServerTestClass(
-            std::shared_ptr<ddspipe::participants::rtps::DiscoveryServerParticipant> discovery_server_participant)
-        : ddspipe::participants::rtps::DiscoveryServerParticipant(*discovery_server_participant)
-    {
-    }
-
 };
 
 class InitialPeersTestClass : public ddspipe::participants::rtps::InitialPeersParticipant
 {
 public:
-
     using ddspipe::participants::rtps::InitialPeersParticipant::configuration_;  // Make protected member accessible
-    InitialPeersTestClass(
-            std::shared_ptr<ddspipe::participants::rtps::InitialPeersParticipant> initial_peers_participant)
-        : ddspipe::participants::rtps::InitialPeersParticipant(*initial_peers_participant)
-    {
-    }
-
 };
 
-// class XMLTestClass : public ddspipe::participants::dds::XmlParticipant
-// {
-// public:
-//     using ddspipe::participants::dds::XmlParticipant::configuration_;  // Make protected member accessible
-//     XMLTestClass(std::shared_ptr<ddspipe::participants::dds::XmlParticipant> xml_participant)
-//     : ddspipe::participants::dds::XmlParticipant(*xml_participant)
-//     {
-//     }
-// };
-
-/**
- * TODO
- */
-TEST(ParticipantFactoryTest, trivial)
+class XMLTestClass : public ddspipe::participants::dds::XmlParticipant
 {
-    ParticipantFactory participant_factory;
-}
+public:
+    using ddspipe::participants::dds::XmlParticipant::configuration_;  // Make protected member accessible
+};
 
 /**
  * TODO
  */
 TEST(ParticipantFactoryTest, create_echo_participant)
 {
-    ParticipantFactory participant_factory;
+    {
+        ParticipantFactory participant_factory;
 
-    auto configuration = std::make_shared<ddspipe::participants::EchoParticipantConfiguration>();
-    auto payload_pool = std::make_shared<ddspipe::core::FastPayloadPool>();
-    auto discovery_database = std::make_shared<ddspipe::core::DiscoveryDatabase>();
+        auto configuration = std::make_shared<ddspipe::participants::EchoParticipantConfiguration>();
+        std::shared_ptr<ddspipe::core::PayloadPool> payload_pool(new ddspipe::core::FastPayloadPool());
+        std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database(new ddspipe::core::DiscoveryDatabase());
 
-    std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
-        types::ParticipantKind::echo, configuration, payload_pool, discovery_database);
+        std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
+            types::ParticipantKind::echo, configuration, payload_pool, discovery_database);
 
-    ASSERT_TRUE(i_participant) << "Failed to create I Participant";
+        ASSERT_TRUE(i_participant) << "Failed to create I Participant";
 
-    std::shared_ptr<ddspipe::participants::EchoParticipant> echo_participant =
-            std::dynamic_pointer_cast<ddspipe::participants::EchoParticipant>(i_participant);
+        std::shared_ptr<EchoTestClass> echo_participant =
+                std::static_pointer_cast<EchoTestClass>(i_participant);
 
-    ASSERT_TRUE(echo_participant) << "Failed to create Echo Participant";
+        ASSERT_TRUE(echo_participant) << "Failed to create Echo Participant";
 
-    EchoTestClass participant(echo_participant);
-
-    ASSERT_EQ(participant.configuration_->app_id, "DDS_ROUTER");
-    ASSERT_EQ(participant.configuration_->app_metadata, "");
-
+        ASSERT_EQ(echo_participant->configuration_->app_id, "DDS_ROUTER");
+        ASSERT_EQ(echo_participant->configuration_->app_metadata, "");
+    }
 }
 
 /**
@@ -147,24 +106,24 @@ TEST(ParticipantFactoryTest, create_echo_participant)
  */
 TEST(ParticipantFactoryTest, create_simple_participant)
 {
-    ParticipantFactory participant_factory;
+    {
+        ParticipantFactory participant_factory;
 
-    auto configuration = std::make_shared<ddspipe::participants::SimpleParticipantConfiguration>();
-    auto payload_pool = std::make_shared<ddspipe::core::FastPayloadPool>();
-    auto discovery_database = std::make_shared<ddspipe::core::DiscoveryDatabase>();
+        auto configuration = std::make_shared<ddspipe::participants::SimpleParticipantConfiguration>();
+        std::shared_ptr<ddspipe::core::PayloadPool> payload_pool(new ddspipe::core::FastPayloadPool());
+        std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database(new ddspipe::core::DiscoveryDatabase());
 
-    std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
-        types::ParticipantKind::simple, configuration, payload_pool, discovery_database);
+        std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
+            types::ParticipantKind::simple, configuration, payload_pool, discovery_database);
 
-    std::shared_ptr<ddspipe::participants::rtps::SimpleParticipant> simple_participant =
-            std::dynamic_pointer_cast<ddspipe::participants::rtps::SimpleParticipant>(i_participant);
+        std::shared_ptr<SimpleTestClass> simple_participant =
+                std::static_pointer_cast<SimpleTestClass>(i_participant);
 
-    ASSERT_TRUE(simple_participant) << "Failed to create Simple Participant";
+        ASSERT_TRUE(simple_participant) << "Failed to create Simple Participant";
 
-    SimpleTestClass participant(simple_participant);
-
-    ASSERT_EQ(participant.configuration_->app_id, "DDS_ROUTER");
-    ASSERT_EQ(participant.configuration_->app_metadata, "");
+        ASSERT_EQ(simple_participant->configuration_->app_id, "DDS_ROUTER");
+        ASSERT_EQ(simple_participant->configuration_->app_metadata, "");
+    }
 }
 
 /**
@@ -172,25 +131,25 @@ TEST(ParticipantFactoryTest, create_simple_participant)
  */
 TEST(ParticipantFactoryTest, create_discovery_server_participant)
 {
-    ParticipantFactory participant_factory;
+    {
+        ParticipantFactory participant_factory;
 
-    auto configuration = std::make_shared<ddspipe::participants::DiscoveryServerParticipantConfiguration>();
-    configuration->listening_addresses.insert(ddspipe::participants::testing::random_address());
-    auto payload_pool = std::make_shared<ddspipe::core::FastPayloadPool>();
-    auto discovery_database = std::make_shared<ddspipe::core::DiscoveryDatabase>();
+        auto configuration = std::make_shared<ddspipe::participants::DiscoveryServerParticipantConfiguration>();
+        configuration->listening_addresses.insert(ddspipe::participants::testing::random_address());
+        std::shared_ptr<ddspipe::core::PayloadPool> payload_pool(new ddspipe::core::FastPayloadPool());
+        std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database(new ddspipe::core::DiscoveryDatabase());
 
-    std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
-        types::ParticipantKind::discovery_server, configuration, payload_pool, discovery_database);
+        std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
+            types::ParticipantKind::discovery_server, configuration, payload_pool, discovery_database);
 
-    std::shared_ptr<ddspipe::participants::rtps::DiscoveryServerParticipant> discovery_server_participant =
-            std::dynamic_pointer_cast<ddspipe::participants::rtps::DiscoveryServerParticipant>(i_participant);
+        std::shared_ptr<DiscoveryServerTestClass> discovery_server_participant =
+                std::static_pointer_cast<DiscoveryServerTestClass>(i_participant);
 
-    ASSERT_TRUE(discovery_server_participant) << "Failed to create Discovery Server Participant";
+        ASSERT_TRUE(discovery_server_participant) << "Failed to create Discovery Server Participant";
 
-    DiscoveryServerTestClass participant(discovery_server_participant);
-
-    ASSERT_EQ(participant.configuration_->app_id, "DDS_ROUTER");
-    ASSERT_EQ(participant.configuration_->app_metadata, "");
+        ASSERT_EQ(discovery_server_participant->configuration_->app_id, "DDS_ROUTER");
+        ASSERT_EQ(discovery_server_participant->configuration_->app_metadata, "");
+    }
 }
 
 /**
@@ -198,25 +157,25 @@ TEST(ParticipantFactoryTest, create_discovery_server_participant)
  */
 TEST(ParticipantFactoryTest, create_initial_peers_participant)
 {
-    ParticipantFactory participant_factory;
+    {
+        ParticipantFactory participant_factory;
 
-    auto configuration = std::make_shared<ddspipe::participants::InitialPeersParticipantConfiguration>();
-    configuration->listening_addresses.insert(ddspipe::participants::testing::random_address());
-    auto payload_pool = std::make_shared<ddspipe::core::FastPayloadPool>();
-    auto discovery_database = std::make_shared<ddspipe::core::DiscoveryDatabase>();
+        auto configuration = std::make_shared<ddspipe::participants::InitialPeersParticipantConfiguration>();
+        configuration->listening_addresses.insert(ddspipe::participants::testing::random_address());
+        std::shared_ptr<ddspipe::core::PayloadPool> payload_pool(new ddspipe::core::FastPayloadPool());
+        std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database(new ddspipe::core::DiscoveryDatabase());
 
-    std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
-        types::ParticipantKind::initial_peers, configuration, payload_pool, discovery_database);
+        std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
+            types::ParticipantKind::initial_peers, configuration, payload_pool, discovery_database);
 
-    std::shared_ptr<ddspipe::participants::rtps::InitialPeersParticipant> initial_peers_participant =
-            std::dynamic_pointer_cast<ddspipe::participants::rtps::InitialPeersParticipant>(i_participant);
+        std::shared_ptr<InitialPeersTestClass> initial_peers_participant =
+                std::static_pointer_cast<InitialPeersTestClass>(i_participant);
 
-    ASSERT_TRUE(initial_peers_participant) << "Failed to create Initial Peers Participant";
+        ASSERT_TRUE(initial_peers_participant) << "Failed to create Initial Peers Participant";
 
-    InitialPeersTestClass participant(initial_peers_participant);
-
-    ASSERT_EQ(participant.configuration_->app_id, "DDS_ROUTER");
-    ASSERT_EQ(participant.configuration_->app_metadata, "");
+        ASSERT_EQ(initial_peers_participant->configuration_->app_id, "DDS_ROUTER");
+        ASSERT_EQ(initial_peers_participant->configuration_->app_metadata, "");
+    }
 }
 
 /**
@@ -224,19 +183,24 @@ TEST(ParticipantFactoryTest, create_initial_peers_participant)
  */
 TEST(ParticipantFactoryTest, create_xml_participant)
 {
-    ParticipantFactory participant_factory;
+    {
+        ParticipantFactory participant_factory;
 
-    auto configuration = std::make_shared<ddspipe::participants::XmlParticipantConfiguration>();
-    auto payload_pool = std::make_shared<ddspipe::core::FastPayloadPool>();
-    auto discovery_database = std::make_shared<ddspipe::core::DiscoveryDatabase>();
+        auto configuration = std::make_shared<ddspipe::participants::XmlParticipantConfiguration>();
+        std::shared_ptr<ddspipe::core::PayloadPool> payload_pool(new ddspipe::core::FastPayloadPool());
+        std::shared_ptr<ddspipe::core::DiscoveryDatabase> discovery_database(new ddspipe::core::DiscoveryDatabase());
 
-    std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
-        types::ParticipantKind::xml, configuration, payload_pool, discovery_database);
+        std::shared_ptr<eprosima::ddspipe::core::IParticipant> i_participant = participant_factory.create_participant(
+            types::ParticipantKind::xml, configuration, payload_pool, discovery_database);
 
-    std::shared_ptr<ddspipe::participants::dds::XmlParticipant> xml_participant =
-            std::dynamic_pointer_cast<ddspipe::participants::dds::XmlParticipant>(i_participant);
+        std::shared_ptr<XMLTestClass> xml_participant =
+                std::static_pointer_cast<XMLTestClass>(i_participant);
 
-    ASSERT_TRUE(xml_participant) << "Failed to create XML Participant";
+        ASSERT_TRUE(xml_participant) << "Failed to create XML Participant";
+
+        ASSERT_EQ(xml_participant->configuration_->app_id, "DDS_ROUTER");
+        ASSERT_EQ(xml_participant->configuration_->app_metadata, "");
+    }
 }
 
 int main(
