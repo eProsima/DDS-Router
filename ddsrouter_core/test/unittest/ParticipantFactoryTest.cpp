@@ -47,30 +47,35 @@ using namespace eprosima::ddsrouter::core;
 class EchoTestClass : public ddspipe::participants::EchoParticipant
 {
 public:
+
     using ddspipe::participants::EchoParticipant::configuration_;  // Make protected member accessible
 };
 
 class SimpleTestClass : public ddspipe::participants::rtps::SimpleParticipant
 {
 public:
+
     using ddspipe::participants::rtps::SimpleParticipant::configuration_;  // Make protected member accessible
 };
 
 class DiscoveryServerTestClass : public ddspipe::participants::rtps::DiscoveryServerParticipant
 {
 public:
+
     using ddspipe::participants::rtps::DiscoveryServerParticipant::configuration_;  // Make protected member accessible
 };
 
 class InitialPeersTestClass : public ddspipe::participants::rtps::InitialPeersParticipant
 {
 public:
+
     using ddspipe::participants::rtps::InitialPeersParticipant::configuration_;  // Make protected member accessible
 };
 
 class XMLTestClass : public ddspipe::participants::dds::XmlParticipant
 {
 public:
+
     using ddspipe::participants::dds::XmlParticipant::configuration_;  // Make protected member accessible
 };
 
