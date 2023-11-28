@@ -44,6 +44,11 @@
 using namespace eprosima;
 using namespace eprosima::ddsrouter::core;
 
+/**
+ * This class is a subclass of ddspipe::participants::EchoParticipant.
+ * It provides public access to the protected member 'configuration_' from its base class
+ * ddspipe::participants::EchoParticipant.
+ */
 class EchoTestClass : public ddspipe::participants::EchoParticipant
 {
 public:
@@ -51,6 +56,11 @@ public:
     using ddspipe::participants::EchoParticipant::configuration_;  // Make protected member accessible
 };
 
+/**
+ * This class is a subclass of ddspipe::participants::SimpleParticipant.
+ * It provides public access to the protected member 'configuration_' from its base class
+ * ddspipe::participants::SimpleParticipant.
+ */
 class SimpleTestClass : public ddspipe::participants::rtps::SimpleParticipant
 {
 public:
@@ -58,6 +68,11 @@ public:
     using ddspipe::participants::rtps::SimpleParticipant::configuration_;  // Make protected member accessible
 };
 
+/**
+ * This class is a subclass of ddspipe::participants::DiscoveryServerParticipant.
+ * It provides public access to the protected member 'configuration_' from its base class
+ * ddspipe::participants::DiscoveryServerParticipant.
+ */
 class DiscoveryServerTestClass : public ddspipe::participants::rtps::DiscoveryServerParticipant
 {
 public:
@@ -65,6 +80,11 @@ public:
     using ddspipe::participants::rtps::DiscoveryServerParticipant::configuration_;  // Make protected member accessible
 };
 
+/**
+ * This class is a subclass of ddspipe::participants::InitialPeersParticipant.
+ * It provides public access to the protected member 'configuration_' from its base class
+ * ddspipe::participants::InitialPeersParticipant.
+ */
 class InitialPeersTestClass : public ddspipe::participants::rtps::InitialPeersParticipant
 {
 public:
@@ -72,6 +92,11 @@ public:
     using ddspipe::participants::rtps::InitialPeersParticipant::configuration_;  // Make protected member accessible
 };
 
+/**
+ * This class is a subclass of ddspipe::participants::XmlParticipant.
+ * It provides public access to the protected member 'configuration_' from its base class
+ * ddspipe::participants::XmlParticipant.
+ */
 class XMLTestClass : public ddspipe::participants::dds::XmlParticipant
 {
 public:
@@ -80,7 +105,9 @@ public:
 };
 
 /**
- * TODO
+ * This test case is for the ParticipantFactory class, specifically testing the creation
+ * of an EchoParticipant. The test checks whether the created EchoParticipant has the
+ * expected configuration values.
  */
 TEST(ParticipantFactoryTest, create_echo_participant)
 {
@@ -107,7 +134,9 @@ TEST(ParticipantFactoryTest, create_echo_participant)
 }
 
 /**
- * TODO
+ * This test case is for the ParticipantFactory class, specifically testing the creation
+ * of an SimpleParticipant. The test checks whether the created SimpleParticipant has the
+ * expected configuration values.
  */
 TEST(ParticipantFactoryTest, create_simple_participant)
 {
@@ -132,7 +161,9 @@ TEST(ParticipantFactoryTest, create_simple_participant)
 }
 
 /**
- * TODO
+ * This test case is for the ParticipantFactory class, specifically testing the creation
+ * of an DiscoveryServerParticipant. The test checks whether the created DiscoveryServerParticipant has the
+ * expected configuration values.
  */
 TEST(ParticipantFactoryTest, create_discovery_server_participant)
 {
@@ -158,7 +189,9 @@ TEST(ParticipantFactoryTest, create_discovery_server_participant)
 }
 
 /**
- * TODO
+ * This test case is for the ParticipantFactory class, specifically testing the creation
+ * of an InitialPeersParticipant. The test checks whether the created InitialPeersParticipant has the
+ * expected configuration values.
  */
 TEST(ParticipantFactoryTest, create_initial_peers_participant)
 {
@@ -184,7 +217,9 @@ TEST(ParticipantFactoryTest, create_initial_peers_participant)
 }
 
 /**
- * TODO
+ * This test case is for the ParticipantFactory class, specifically testing the creation
+ * of an XmlParticipant. The test checks whether the created XmlParticipant has the
+ * expected configuration values.
  */
 TEST(ParticipantFactoryTest, create_xml_participant)
 {
