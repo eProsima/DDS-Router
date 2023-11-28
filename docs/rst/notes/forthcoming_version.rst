@@ -16,6 +16,7 @@ The next release will include the following **Features**:
 * :ref:`Downsampling <user_manual_configuration_downsampling>`.
 * :ref:`Discovery Trigger <user_manual_configuration_discovery_trigger>`.
 * Rename the `max-depth` under the `specs` tag to `history-depth`.
+* Set `app_id` and `app_metadata` attributes in *eProsima DDS Router* participants.
 
 The next release will include the following **Bugfixes**:
 
