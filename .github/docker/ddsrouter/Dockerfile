@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
 
 # Install required python modules
 RUN pip3 install \
-        empy==3.3.4 \
         colcon-common-extensions \
         colcon-mixin \
         lxml \
