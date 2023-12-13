@@ -336,6 +336,9 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, ``remove-unused-entities: true`` is only compatible with a :ref:`discovery-trigger <user_manual_configuration_discovery_trigger>` set to ``reader``.
 
+.. note::
+  The ``remove-unused-entities`` option doesn't apply to :ref:`Built-in Topics <user_manual_configuration_builtin_topics>` since they are created before they are discovered by a :term:`Participant`.
+
 .. _user_manual_configuration_discovery_trigger:
 
 Discovery Trigger
