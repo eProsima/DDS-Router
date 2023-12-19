@@ -111,7 +111,7 @@ DdsRouterConfiguration dds_test_simple_configuration(
  * The transient_local option changes the test behavior to verify that the communication is transient_local and all old data is sent
  * to Late Joiners.
  */
-template <class MsgStruct>
+template <class MsgStruct, class MsgStructType>
 void test_local_communication(
         DdsRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
@@ -130,6 +130,8 @@ void test_local_communication(
 
     // Create a message with size specified by repeating the same string
     MsgStruct msg;
+    MsgStructType type;
+
     std::string msg_str;
 
     // Add this string as many times as the msg size requires
@@ -140,11 +142,11 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<MsgStruct> publisher(msg.isKeyDefined());
+    TestPublisher<MsgStruct> publisher(type.m_isGetKeyDefined);
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), transient_local);
+    TestSubscriber<MsgStruct> subscriber(type.m_isGetKeyDefined, transient_local);
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DdsRouter entity
@@ -207,7 +209,7 @@ void test_local_communication(
  */
 TEST(DDSTestLocal, end_to_end_local_communication)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration());
 }
 
@@ -217,7 +219,7 @@ TEST(DDSTestLocal, end_to_end_local_communication)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
-    test::test_local_communication<HelloWorldKeyed>(
+    test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
         test::dds_test_simple_configuration());
 }
 
@@ -228,13 +230,13 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(true));
 }
 
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
 {
-    test::test_local_communication<HelloWorldKeyed>(
+    test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
         test::dds_test_simple_configuration(true));
 }
 
@@ -247,7 +249,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keye
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         1000,   // wait for 1000 samples received
         0);     // send it without waiting from one sample to the other
@@ -262,7 +264,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_size)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
@@ -280,7 +282,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_size)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         500,
         1,
@@ -293,7 +295,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
@@ -307,7 +309,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynamic_discovery)
 {
-    test::test_local_communication<HelloWorld>(
+    test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(true, true),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
