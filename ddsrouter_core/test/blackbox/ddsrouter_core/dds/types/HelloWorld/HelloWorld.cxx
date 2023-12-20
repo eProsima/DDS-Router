@@ -122,7 +122,6 @@ uint32_t& HelloWorld::index()
     return m_index;
 }
 
-
 /*!
  * @brief This function copies the value in member message
  * @param _message New value to be copied in member message
@@ -160,7 +159,6 @@ std::string& HelloWorld::message()
 {
     return m_message;
 }
-
 
 // Include auxiliary functions like for serializing/deserializing.
 #include "HelloWorldCdrAux.ipp"

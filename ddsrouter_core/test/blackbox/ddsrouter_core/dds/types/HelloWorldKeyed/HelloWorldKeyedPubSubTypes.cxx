@@ -36,10 +36,10 @@ HelloWorldKeyedPubSubType::HelloWorldKeyedPubSubType()
     setName("HelloWorldKeyed");
     uint32_t type_size =
 #if FASTCDR_VERSION_MAJOR == 1
-        static_cast<uint32_t>(HelloWorldKeyed::getMaxCdrSerializedSize());
+            static_cast<uint32_t>(HelloWorldKeyed::getMaxCdrSerializedSize());
 #else
-        HelloWorldKeyed_max_cdr_typesize;
-#endif
+            HelloWorldKeyed_max_cdr_typesize;
+#endif // if FASTCDR_VERSION_MAJOR == 1
     type_size += static_cast<uint32_t>(eprosima::fastcdr::Cdr::alignment(type_size, 4)); /* possible submessage alignment */
     m_typeSize = type_size + 4; /*encapsulation*/
     m_isGetKeyDefined = true;
@@ -150,8 +150,8 @@ std::function<uint32_t()> HelloWorldKeyedPubSubType::getSerializedSizeProvider(
                        eprosima::fastcdr::CdrVersion::XCDRv1 :eprosima::fastcdr::CdrVersion::XCDRv2);
                    size_t current_alignment {0};
                    return static_cast<uint32_t>(calculator.calculate_serialized_size(
-                               *static_cast<HelloWorldKeyed*>(data), current_alignment)) +
-                           4u /*encapsulation*/;
+                              *static_cast<HelloWorldKeyed*>(data), current_alignment)) +
+                          4u /*encapsulation*/;
                }
                catch (eprosima::fastcdr::exception::Exception& /*exception*/)
                {
@@ -189,7 +189,8 @@ bool HelloWorldKeyedPubSubType::getKey(
             HelloWorldKeyed_max_key_cdr_typesize);
 
     // Object that serializes the data.
-    eprosima::fastcdr::Cdr ser(fastbuffer, eprosima::fastcdr::Cdr::BIG_ENDIANNESS, eprosima::fastcdr::CdrVersion::XCDRv1);
+    eprosima::fastcdr::Cdr ser(fastbuffer, eprosima::fastcdr::Cdr::BIG_ENDIANNESS,
+            eprosima::fastcdr::CdrVersion::XCDRv1);
 #if FASTCDR_VERSION_MAJOR == 1
     p_type->serializeKey(ser);
 #else
@@ -218,4 +219,3 @@ bool HelloWorldKeyedPubSubType::getKey(
     }
     return true;
 }
-

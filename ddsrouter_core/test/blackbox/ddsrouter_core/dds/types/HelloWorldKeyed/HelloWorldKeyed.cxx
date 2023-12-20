@@ -127,7 +127,6 @@ int32_t& HelloWorldKeyed::id()
     return m_id;
 }
 
-
 /*!
  * @brief This function sets a value in member index
  * @param _index New value for member index
@@ -155,7 +154,6 @@ uint32_t& HelloWorldKeyed::index()
 {
     return m_index;
 }
-
 
 /*!
  * @brief This function copies the value in member message
@@ -194,7 +192,6 @@ std::string& HelloWorldKeyed::message()
 {
     return m_message;
 }
-
 
 // Include auxiliary functions like for serializing/deserializing.
 #include "HelloWorldKeyedCdrAux.ipp"
