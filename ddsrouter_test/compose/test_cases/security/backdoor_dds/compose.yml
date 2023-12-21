@@ -1,18 +1,26 @@
 # Test description:
-#   This test checks simple communication (simple discovery and UDP) with ownership
-# TODO
+#   This test checks that if we set up a router with two xml participants, one with
+#   security and one without it, the router can be used as a security backdoor: it
+#   can communicate a publisher with security to a subscriber without security and
+#   a publisher without security to a subscriber with security.
 #
 # Test architecture:
-#   Publishers are created with different ownerships so only one should be the one that Readers read.
-#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
-#   Readers must read without duplicities even when there are multiple writers. However it is possible
-#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
-#    message received could be duplicated.
 #
-#   Domain 0       <->  Router  <->      Secure Domain 0
-# publisher_0            --->             subscriber_0
-# subscriber_1           <---             publisher_1
-#
+# ┌──────────┐                         ┌──────────┐
+# │publisher │                         │publisher │
+# │          │                         │          │
+# │sec       │   ┌─────────────────┐   │no_sec    │
+# │          │   │    ddsrouter    │   │          │
+# │topic_1   ├───► ┌────┐ ┌──────┐ ◄───┤topic_0   │
+# └──────────┘   │ │sec │ │no sec│ │   └──────────┘
+#                │ │    │ │      │ │
+# ┌──────────┐   │ │xml │ │xml   │ │   ┌──────────┐
+# │subscriber├───► └────┘ └──────┘ ◄───┤subscriber│
+# │          │   │                 │   │          │
+# │sec       │   └─────────────────┘   │no_sec    │
+# │          │                         │          │
+# │topic_0   │                         │topic_1   │
+# └──────────┘                         └──────────┘
 
 services:
 
