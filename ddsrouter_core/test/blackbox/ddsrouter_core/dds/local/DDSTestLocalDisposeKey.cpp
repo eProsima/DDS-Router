@@ -98,6 +98,7 @@ void test_local_communication_key_dispose(
 
     // Create a message with size specified by repeating the same string
     HelloWorldKeyed msg;
+    HelloWorldKeyedPubSubType type;
     std::string msg_str;
 
     // Add this string as many times as the msg size requires
@@ -109,11 +110,11 @@ void test_local_communication_key_dispose(
     msg.id(666);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<HelloWorldKeyed> publisher(msg.isKeyDefined());
+    TestPublisher<HelloWorldKeyed> publisher(type.m_isGetKeyDefined);
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<HelloWorldKeyed> subscriber(msg.isKeyDefined());
+    TestSubscriber<HelloWorldKeyed> subscriber(type.m_isGetKeyDefined);
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
     // Create DdsRouter entity
