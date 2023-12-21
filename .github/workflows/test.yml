@@ -47,7 +47,7 @@
 #     - test python linter
 #
 
-name: test
+name: ddsrouter-tests
 
 on:
 

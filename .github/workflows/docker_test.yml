@@ -1,4 +1,4 @@
-name: docker_test
+name: ddsrouter-docker-tests
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ env:
   default_dependencies_artifact_postfix: '_nightly'
 
 jobs:
-  docker_test:
+  docker-test:
 
     runs-on: ubuntu-20.04
 
@@ -119,19 +119,6 @@ jobs:
           colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
 
       # Run ddsrouter_test compose tests
-      - name: Run tests
-        run: |
-          export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
-          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
-          source ${{ github.workspace }}/install/setup.bash
-          colcon test \
-            --packages-select ddsrouter_test \
-            --event-handlers console_direct+ \
-            --return-code-on-test-failure \
-            --ctest-args \
-              --label-exclude xfail \
-              --timeout 120
-
       - name: Run flaky tests
         continue-on-error: true
         run: |
@@ -144,4 +131,17 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-regex xfail \
+              --timeout 120
+
+      - name: Run tests
+        run: |
+          export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
+          export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
+          source ${{ github.workspace }}/install/setup.bash
+          colcon test \
+            --packages-select ddsrouter_test \
+            --event-handlers console_direct+ \
+            --return-code-on-test-failure \
+            --ctest-args \
+              --label-exclude xfail \
               --timeout 120
