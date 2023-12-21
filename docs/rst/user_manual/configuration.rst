@@ -31,7 +31,7 @@ This value allows users to keep using the same YAML file with an old configurati
 
         *   - version 4.0
             - ``v4.0``
-            - *v2.0.0*
+            - *v2.1.0*
 
 
 **The current configuration version is v4.0**.
