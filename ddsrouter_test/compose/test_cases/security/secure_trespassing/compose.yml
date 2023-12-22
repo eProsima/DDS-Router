@@ -1,31 +1,53 @@
 # Test description:
-#   This test checks simple communication (simple discovery and UDP) with ownership
-# TODO
+#   This test checks that the DDS Router can communicate a publisher without security
+#   with a subscriber with security and a publisher with security with a subscriber
+#   without security.
+#
+#   The test has three parts:
+#     1. In topics 0 & 1, the scenario is the same as in the backdoor test.
+#     2. In topics 2 & 3, the participant without security doesn't communicate with the
+#        participant with security since the router doesn't have permissions for topics 2 & 3.
+#     3. In topics 4 & 5, one of the participants without security communicates with one of
+#        the participants with security; making one of the participants receive the data twice.
 #
 # Test architecture:
-#   Publishers are created with different ownerships so only one should be the one that Readers read.
-#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
-#   Readers must read without duplicities even when there are multiple writers. However it is possible
-#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
-#    message received could be duplicated.
 #
-#   Domain 0       <->  Router  <->      Secure Domain 0
-# publisher_0            --->             subscriber_0
+#  DOMAIN INSECURE                                          DOMAIN SECURE
+#  ┌──────────┐                                             ┌──────────┐
+#  │publisher │                                             │subscriber│
+#  │          │                                             │          │
+#  │topic_0   │                                             │topic_0   │
+#  └──────────┘                                             └──────────┘
 #
-# subscriber_1           <---             publisher_1
+#              ┌──────────┐                                              ┌──────────┐
+#              │subscriber│                                              │publisher │
+#              │          │                                              │          │
+#              │topic_1   │                                              │topic_1   │
+#              └──────────┘                                              └──────────┘
+#                           ┌─────────────────────────────┐
+# ┌──────────┐ ┌──────────┐ │     router                  │ ┌──────────┐
+# │publisher │ │subscriber│ │ ┌──────┐ ┌────────────────┐ │ │subscriber│
+# │          │ │          │ │ │no_sec│ │sec             │ │ │          │
+# │topic_2   │ │topic_2   │ │ │      │ │                │ │ │topic_2   │
+# └──────────┘ └──────────┘ │ │local │ │xml             │ │ └──────────┘
+#                           │ └──────┘ │                │ │
+#              ┌──────────┐ │          │allow-pub:0,1,5 │ │ ┌──────────┐ ┌──────────┐
+#              │subscriber│ │          │allow-sub:0,1,4 │ │ │subscriber│ │publisher │
+#              │          │ │          └────────────────┘ │ │          │ │          │
+#              │topic_3   │ │                             │ │topic_3   │ │topic_3   │
+#              └──────────┘ └─────────────────────────────┘ └──────────┘ └──────────┘
+
+# ┌──────────┐ ┌──────────┐                                 ┌──────────┐ ┌──────────┐
+# │publisher │ │subscriber│                                 │subscriber│ │publisher │
+# │          │ │          │                                 │          │ │          │
+# │topic_4   │ │topic_4   │                                 │topic_4   │ │topic_4   │
+# └──────────┘ └──────────┘                                 └──────────┘ └──────────┘
 #
-# publisher_2            -x->             subscriber_2
-# subscriber_2
-#
-# subscriber_3           <-x-             publisher_3
-#                                         subscriber_3
-#
-# publisher_4            -x->             subscriber_4
-# subscriber_4           <---             publisher_4
-#
-# publisher_5            --->             subscriber_5
-# subscriber_5           <-x-             publisher_5
-#
+# ┌──────────┐ ┌──────────┐                                 ┌──────────┐ ┌──────────┐
+# │publisher │ │subscriber│                                 │subscriber│ │publisher │
+# │          │ │          │                                 │          │ │          │
+# │topic_5   │ │topic_5   │                                 │topic_5   │ │topic_5   │
+# └──────────┘ └──────────┘                                 └──────────┘ └──────────┘
 
 services:
 
