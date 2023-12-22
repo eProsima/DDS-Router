@@ -10,6 +10,12 @@
 #     3. In topics 4 & 5, one of the participants without security communicates with one of
 #        the participants with security; making one of the participants receive the data twice.
 #
+# NOTE:
+#   The logged warnings and errors when running the tests are expected. Fast-DDS logs warnings
+#   and errors when a participant without permissions tries to connect. Four sets of logs
+#   should be reported: failed to create reader & writer for participants on topics 2 & 3,
+#   failed to create writer on topic 4, and failed to create reader on topic 5.
+#
 # Test architecture:
 #
 #  DOMAIN INSECURE                                          DOMAIN SECURE
