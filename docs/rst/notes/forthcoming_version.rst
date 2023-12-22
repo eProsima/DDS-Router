@@ -18,6 +18,10 @@ The next release will include the following **Features**:
 * Rename the `max-depth` under the `specs` tag to `history-depth`.
 * Set `app_id` and `app_metadata` attributes in *eProsima DDS Router* participants.
 
+The next release will include the following **Fixes**:
+
+* Make :ref:`Remove Unused Entities <user_manual_configuration_remove_unused_entities>` compatible with :ref:`Built-in Topics <user_manual_configuration_builtin_topics>`.
+
 The next release will include the following **Bugfixes**:
 
 * Save the instance handle data for keyed topics.
