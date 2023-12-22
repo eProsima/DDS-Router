@@ -16,33 +16,97 @@ touch ${EXTRA_WORKSPACE}/index.txt
 
 openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
 
-openssl req -nodes -x509 -days 3650 -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -keyout ${EXTRA_WORKSPACE}/maincakey.pem -out ${EXTRA_WORKSPACE}/maincacert.pem -config ${CONF_WORKSPACE}/maincaconf.cnf
+openssl req -nodes -x509 -days 3650 -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -keyout ${EXTRA_WORKSPACE}/main_ca_key.pem -out ${EXTRA_WORKSPACE}/main_ca_cert.pem -config ${CONF_WORKSPACE}/main_ca_conf.cnf
 
 openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
 
-openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/localconf.cnf -keyout ${EXTRA_WORKSPACE}/localkey.pem -out ${EXTRA_WORKSPACE}/localreq.pem
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_pub1_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_pub1_key.pem -out ${EXTRA_WORKSPACE}/local_pub1_req.pem
 
-openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/maincaconf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/localreq.pem -out ${EXTRA_WORKSPACE}/localcert.pem
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_pub1_req.pem -out ${EXTRA_WORKSPACE}/local_pub1_cert.pem
 
 openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
 
-openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/routerconf.cnf -keyout ${EXTRA_WORKSPACE}/routerkey.pem -out ${EXTRA_WORKSPACE}/routerreq.pem
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_pub3_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_pub3_key.pem -out ${EXTRA_WORKSPACE}/local_pub3_req.pem
 
-openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/maincaconf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/routerreq.pem -out ${EXTRA_WORKSPACE}/routercert.pem
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_pub3_req.pem -out ${EXTRA_WORKSPACE}/local_pub3_cert.pem
 
-openssl smime -sign -in governance.xml -text -out ${EXTRA_WORKSPACE}/governance.smime -signer ${EXTRA_WORKSPACE}/maincacert.pem -inkey ${EXTRA_WORKSPACE}/maincakey.pem
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
 
-openssl smime -sign -in permissions.xml -text -out ${EXTRA_WORKSPACE}/permissions.smime -signer ${EXTRA_WORKSPACE}/maincacert.pem -inkey ${EXTRA_WORKSPACE}/maincakey.pem
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_pub4_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_pub4_key.pem -out ${EXTRA_WORKSPACE}/local_pub4_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_pub4_req.pem -out ${EXTRA_WORKSPACE}/local_pub4_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_pub5_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_pub5_key.pem -out ${EXTRA_WORKSPACE}/local_pub5_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_pub5_req.pem -out ${EXTRA_WORKSPACE}/local_pub5_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_sub0_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_sub0_key.pem -out ${EXTRA_WORKSPACE}/local_sub0_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_sub0_req.pem -out ${EXTRA_WORKSPACE}/local_sub0_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_sub2_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_sub2_key.pem -out ${EXTRA_WORKSPACE}/local_sub2_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_sub2_req.pem -out ${EXTRA_WORKSPACE}/local_sub2_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_sub3_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_sub3_key.pem -out ${EXTRA_WORKSPACE}/local_sub3_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_sub3_req.pem -out ${EXTRA_WORKSPACE}/local_sub3_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_sub4_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_sub4_key.pem -out ${EXTRA_WORKSPACE}/local_sub4_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_sub4_req.pem -out ${EXTRA_WORKSPACE}/local_sub4_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/local_sub5_conf.cnf -keyout ${EXTRA_WORKSPACE}/local_sub5_key.pem -out ${EXTRA_WORKSPACE}/local_sub5_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/local_sub5_req.pem -out ${EXTRA_WORKSPACE}/local_sub5_cert.pem
+
+openssl ecparam -name prime256v1 > ${EXTRA_WORKSPACE}/ecdsaparam
+
+openssl req -nodes -new -newkey ec:${EXTRA_WORKSPACE}/ecdsaparam -config ${CONF_WORKSPACE}/router_conf.cnf -keyout ${EXTRA_WORKSPACE}/router_key.pem -out ${EXTRA_WORKSPACE}/router_req.pem
+
+openssl ca -batch -create_serial -config ${CONF_WORKSPACE}/main_ca_conf.cnf -days 3650 -in ${EXTRA_WORKSPACE}/router_req.pem -out ${EXTRA_WORKSPACE}/router_cert.pem
+
+openssl smime -sign -in governance.xml -text -out ${EXTRA_WORKSPACE}/governance.smime -signer ${EXTRA_WORKSPACE}/main_ca_cert.pem -inkey ${EXTRA_WORKSPACE}/main_ca_key.pem
+
+openssl smime -sign -in permissions.xml -text -out ${EXTRA_WORKSPACE}/permissions.smime -signer ${EXTRA_WORKSPACE}/main_ca_cert.pem -inkey ${EXTRA_WORKSPACE}/main_ca_key.pem
 
 #########
 # Copy result files required in CERTS directory
 
 file_list=(
-    "maincacert.pem"
-    "localkey.pem"
-    "localcert.pem"
-    "routerkey.pem"
-    "routercert.pem"
+    "main_ca_cert.pem"
+    "local_pub1_key.pem"
+    "local_pub1_cert.pem"
+    "local_pub3_key.pem"
+    "local_pub3_cert.pem"
+    "local_pub4_key.pem"
+    "local_pub4_cert.pem"
+    "local_pub5_key.pem"
+    "local_pub5_cert.pem"
+    "local_sub0_key.pem"
+    "local_sub0_cert.pem"
+    "local_sub2_key.pem"
+    "local_sub2_cert.pem"
+    "local_sub3_key.pem"
+    "local_sub3_cert.pem"
+    "local_sub4_key.pem"
+    "local_sub4_cert.pem"
+    "local_sub5_key.pem"
+    "local_sub5_cert.pem"
+    "router_key.pem"
+    "router_cert.pem"
     "governance.smime"
     "permissions.smime"
 )
