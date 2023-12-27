@@ -17,14 +17,9 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </publish>
-                <subscribe>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </subscribe>
             </allow_rule>
             <default>DENY</default>
         </grant>
@@ -44,14 +39,9 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_3</topic>
                     </topics>
                 </publish>
-                <subscribe>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </subscribe>
             </allow_rule>
             <default>DENY</default>
         </grant>
@@ -71,14 +61,9 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_4</topic>
                     </topics>
                 </publish>
-                <subscribe>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </subscribe>
             </allow_rule>
             <default>DENY</default>
         </grant>
@@ -98,14 +83,9 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_5</topic>
                     </topics>
                 </publish>
-                <subscribe>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </subscribe>
             </allow_rule>
             <default>DENY</default>
         </grant>
@@ -123,14 +103,9 @@
                         <max>230</max>
                     </id_range>
                 </domains>
-                <publish>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -150,14 +125,9 @@
                         <max>230</max>
                     </id_range>
                 </domains>
-                <publish>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_2</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -177,14 +147,9 @@
                         <max>230</max>
                     </id_range>
                 </domains>
-                <publish>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_3</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -204,14 +169,9 @@
                         <max>230</max>
                     </id_range>
                 </domains>
-                <publish>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_4</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -231,14 +191,9 @@
                         <max>230</max>
                     </id_range>
                 </domains>
-                <publish>
-                    <topics>
-                        <topic>*</topic>
-                    </topics>
-                </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_5</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
