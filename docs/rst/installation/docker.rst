@@ -7,7 +7,7 @@
 Docker image
 ############
 
-eProsima distributes a Docker image of |ddsrouter| with Ubuntu 20.04 as base image.
+eProsima distributes a Docker image of |ddsrouter| with Ubuntu 22.04 as base image.
 This image launches an instance of |ddsrouter| that is configured using a *YAML* configuration file provided by the user
 and shared with the Docker container.
 The steps to run |ddsrouter| in a Docker container are explained below.
