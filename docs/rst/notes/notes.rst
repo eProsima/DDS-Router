@@ -44,7 +44,7 @@ This release includes the following **Dependencies Update**:
     *   - Fast DDS
         - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`_
         - `v2.11.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.11.0>`_
-        - `v2.13.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.0>`_
+        - `v2.13.1 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1>`_
     *   - Dev Utils
         - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
         - `v0.4.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.4.0>`_
@@ -52,7 +52,7 @@ This release includes the following **Dependencies Update**:
     *   - DDS Pipe
         - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
         - `v0.2.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.2.0>`_
-        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`_
+        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`__
 
 #################
 Previous Versions
