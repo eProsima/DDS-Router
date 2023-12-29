@@ -24,6 +24,36 @@ The next release will include the following **Bugfixes**:
 
 * Save the instance handle data for keyed topics.
 
+This release includes the following **Dependencies Update**:
+
+.. list-table::
+    :header-rows: 1
+
+    *   -
+        - Repository
+        - Old Version
+        - New Version
+    *   - Foonathan Memory Vendor
+        - `eProsima/foonathan_memory_vendor <https://github.com/eProsima/foonathan_memory_vendor>`_
+        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
+        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
+    *   - Fast CDR
+        - `eProsima/Fast-CDR <https://github.com/eProsima/Fast-CDR>`_
+        - `v1.1.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v1.1.0>`_
+        - `v2.1.2 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.2>`_
+    *   - Fast DDS
+        - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`_
+        - `v2.11.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.11.0>`_
+        - `v2.13.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.0>`_
+    *   - Dev Utils
+        - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
+        - `v0.4.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.4.0>`_
+        - `v0.5.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.5.0>`_
+    *   - DDS Pipe
+        - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
+        - `v0.2.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.2.0>`_
+        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`_
+
 #################
 Previous Versions
 #################
