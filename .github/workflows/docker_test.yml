@@ -38,7 +38,7 @@ env:
 jobs:
   docker_test:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     env:
       DEFAULT_FASTCDR_BRANCH: 'master'
@@ -104,7 +104,7 @@ jobs:
       - name: Download dependencies and install requirements
         uses: ./src/.github/actions/project_dependencies
         with:
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           cmake_build_type: "Release"
           dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
