@@ -107,7 +107,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
