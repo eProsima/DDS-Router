@@ -201,7 +201,7 @@ TEST(ImplementationsTest, duplicated_ids_negative)
         );
 
     // Create DdsRouter entity
-    ASSERT_THROW(DdsRouter router(configuration), eprosima::utils::ConfigurationException);
+    ASSERT_THROW(DdsRouter router(configuration), eprosima::utils::InitializationException);
 }
 
 int main(

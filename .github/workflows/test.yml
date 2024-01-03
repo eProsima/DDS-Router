@@ -115,6 +115,14 @@ jobs:
           ctest_args: --label-exclude "xfail"
           colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
 
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: "${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
+          path: ${{ github.workspace }}/test_results/*.xml
+          reporter: 'java-junit'
+          working-directory: 'src'
 
 #####################################################################
 # ASAN

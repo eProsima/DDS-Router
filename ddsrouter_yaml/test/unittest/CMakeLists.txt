@@ -18,4 +18,4 @@
 
 # TODO uncomment when new API applied
 add_subdirectory(configuration)
-add_subdirectory(participants)
+# add_subdirectory(participants)
