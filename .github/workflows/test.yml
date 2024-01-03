@@ -71,6 +71,11 @@ env:
   docs_packages_names: 'ddsrouter_docs'
   default_dependencies_artifact_postfix: '_nightly'
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
 
 
@@ -107,6 +112,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
+        id: compile_and_test
         uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
@@ -120,7 +126,7 @@ jobs:
         if: success() || failure()
         with:
           name: "${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
-          path: ${{ github.workspace }}/test_results/*.xml
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}/*.xml"
           reporter: 'java-junit'
           working-directory: 'src'
 
