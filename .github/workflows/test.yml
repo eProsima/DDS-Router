@@ -71,11 +71,6 @@ env:
   docs_packages_names: 'ddsrouter_docs'
   default_dependencies_artifact_postfix: '_nightly'
 
-permissions:
-  contents: read
-  actions: read
-  checks: write
-
 jobs:
 
 
