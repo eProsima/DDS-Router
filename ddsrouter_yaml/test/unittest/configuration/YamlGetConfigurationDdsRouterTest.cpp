@@ -70,7 +70,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
             std::shared_ptr<ddspipe::participants::ParticipantConfiguration>>>
     participant_configurations = configuration_result.participants_configurations;
 
-    ASSERT_EQ(participant_configurations.size(), 4u);
+    ASSERT_EQ(participant_configurations.size(), 2u);
 
     for (auto participant : participant_configurations)
     {
