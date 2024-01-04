@@ -122,13 +122,13 @@ jobs:
           colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
 
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
         if: success() || failure()
         with:
           name: "${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}/*.xml"
-          reporter: 'java-junit'
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
+          path-replace-backslashes: 'true'
 
 #####################################################################
 # ASAN
@@ -151,11 +151,19 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@v0
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
 
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        if: success() || failure()
+        with:
+          name: "ASAN Tests "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
 
 #####################################################################
 # TSAN
@@ -178,11 +186,19 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@v0
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
 
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        if: success() || failure()
+        with:
+          name: "TSAN Tests "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
 
 #####################################################################
 # CLANG
@@ -234,7 +250,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@v0
+        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
@@ -263,11 +279,21 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test_flaky@v0
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@feature/test-results
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
+          ctest_args: --label-regex "xfail"
 
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        if: success() || failure()
+        with:
+          name: "Flaky Tests "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
+          fail-on-empty: 'false'
 
 #####################################################################
 # DOCUMENTATION TEST
