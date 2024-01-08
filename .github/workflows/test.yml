@@ -120,7 +120,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
         if: success() || failure()
         with:
-          name: "${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
+          name: "Report: ${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           path-replace-backslashes: 'true'
@@ -156,7 +156,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
         if: success() || failure()
         with:
-          name: "ASAN Tests "
+          name: "Report: ASAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
 
@@ -191,7 +191,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
         if: success() || failure()
         with:
-          name: "TSAN Tests "
+          name: "Report: TSAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
 
@@ -285,7 +285,7 @@ jobs:
         uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
         if: success() || failure()
         with:
-          name: "Flaky Tests "
+          name: "Report: Flaky "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           fail-on-empty: 'false'
