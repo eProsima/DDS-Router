@@ -108,7 +108,7 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@feature/test-results
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
         with:
           packages_names: ${{ env.code_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
@@ -117,7 +117,7 @@ jobs:
           colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        uses: eProsima/eProsima-CI/external/test-reporter@main
         if: success() || failure()
         with:
           name: "Report: ${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
@@ -148,13 +148,13 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@feature/test-results
+        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@main
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        uses: eProsima/eProsima-CI/external/test-reporter@main
         if: success() || failure()
         with:
           name: "Report: ASAN "
@@ -184,13 +184,13 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@feature/test-results
+        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@main
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        uses: eProsima/eProsima-CI/external/test-reporter@main
         if: success() || failure()
         with:
           name: "Report: TSAN "
@@ -248,7 +248,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile and run tests
-        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@feature/test-results
+        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@main
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
@@ -278,14 +278,14 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@feature/test-results
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: ${{ github.workspace }}/install
           ctest_args: --label-regex "xfail"
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/test-results
+        uses: eProsima/eProsima-CI/external/test-reporter@main
         if: success() || failure()
         with:
           name: "Report: Flaky "
