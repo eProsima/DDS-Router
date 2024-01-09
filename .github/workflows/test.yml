@@ -124,6 +124,7 @@ jobs:
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           path-replace-backslashes: 'true'
+          list-tests: 'failed'
 
 #####################################################################
 # ASAN
@@ -159,6 +160,7 @@ jobs:
           name: "Report: ASAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
+          list-tests: 'failed'
 
 #####################################################################
 # TSAN
@@ -194,6 +196,7 @@ jobs:
           name: "Report: TSAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
+          list-tests: 'failed'
 
 #####################################################################
 # CLANG
@@ -289,6 +292,7 @@ jobs:
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           fail-on-empty: 'false'
+          list-tests: 'failed'
 
 #####################################################################
 # DOCUMENTATION TEST
