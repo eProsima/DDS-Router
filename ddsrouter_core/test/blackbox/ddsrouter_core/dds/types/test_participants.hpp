@@ -47,8 +47,13 @@
 #include <fastrtps/xmlparser/XMLProfileManager.h>
 #include <fastdds/dds/common/InstanceHandle.hpp>
 
-#include "HelloWorld/HelloWorldPubSubTypes.h"
-#include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
+#if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
+    #include "v1/HelloWorld/HelloWorldPubSubTypes.h"
+    #include "v1/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
+#else
+    #include "v2/HelloWorld/HelloWorldPubSubTypes.h"
+    #include "v2/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
+#endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
 namespace test {
 
