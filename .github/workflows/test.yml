@@ -301,8 +301,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Build and test documentation
-        uses: eProsima/eProsima-CI/ubuntu/sphinx_docs@v0
+        uses: eProsima/eProsima-CI/ubuntu/sphinx_docs@main
         with:
+          checkout_path: "${{ github.workspace }}/src/ddsrouter"
+          path_to_requirements: "${{ github.workspace }}/src/ddsrouter/docs/requirements.txt"
           docs_subpackage_name: ${{ env.docs_packages_names }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
