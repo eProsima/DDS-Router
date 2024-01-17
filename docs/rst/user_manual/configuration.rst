@@ -334,9 +334,6 @@ By setting the ``remove-unused-entities`` option to ``true``, the internal entit
 .. warning::
   At the time being, the removal of unused entities is incompatible with the `Transient-Local Durability QoS <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicy>`_.
 
-.. warning::
-  At the time being, ``remove-unused-entities: true`` is only compatible with a :ref:`discovery-trigger <user_manual_configuration_discovery_trigger>` set to ``reader``.
-
 .. note::
   The ``remove-unused-entities`` option doesn't apply to :ref:`Built-in Topics <user_manual_configuration_builtin_topics>` since they are created before being discovered by a :term:`Participant`.
 
@@ -372,10 +369,7 @@ The possible values for the ``discovery-trigger`` are:
         - The creation/removal of external readers or writers doesn't trigger the creation/removal of internal entities.
 
 .. warning::
-  When the |ddsrouter| creates internal entities triggered by the discovery of a writer (i.e. the ``discovery-trigger`` is either ``writer`` or ``any``), the |ddsrouter| will create its internal entities with the writer's :ref:`Topic QoS <user_manual_configuration_topic_qos>`, and, therefore, the QoS of the communication between the external entities and the |ddsrouter| may differ from the QoS of the communication without the |ddsrouter|.
-
-.. warning::
-  At the time being, :ref:`remove-unused-entities <user_manual_configuration_remove_unused_entities>` set to ``true`` is only compatible with a ``discovery-trigger: reader``.
+  When the |ddsrouter| creates internal entities triggered by the discovery of a writer (i.e. the ``    `` is either ``writer`` or ``any``), the |ddsrouter| will create its internal entities with the writer's :ref:`Topic QoS <user_manual_configuration_topic_qos>`, and, therefore, the QoS of the communication between the external entities and the |ddsrouter| may differ from the QoS of the communication without the |ddsrouter|.
 
 .. _user_manual_configuration_specs_topic_qos:
 
