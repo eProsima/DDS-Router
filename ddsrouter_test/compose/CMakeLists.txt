@@ -70,6 +70,10 @@ set(TESTS
     discovery_trigger/any/writer
 
     stress/repeater_mixed_data_sizes
+    stress/single_router
+    stress/multi_routers_local
+    stress/multi_routers_wan
+    stress/multi_routers_cloud
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

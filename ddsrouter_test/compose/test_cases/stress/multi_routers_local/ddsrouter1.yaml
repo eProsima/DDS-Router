@@ -1,0 +1,16 @@
+#############################
+# CHANGE DDS DOMAIN EXAMPLE #
+#############################
+
+# Yaml configuration file version
+version: v4.0
+
+participants:
+
+  - name: d103
+    kind: local
+    domain: 103
+
+  - name: d113
+    kind: local
+    domain: 113
