@@ -1,0 +1,19 @@
+version: v4.0
+
+participants:
+
+
+
+  - name: Cloud_Participant_1_1
+    kind: wan
+    listening-addresses:
+      - domain: ddsrouter_cloud_1
+        port: 11800
+        transport: udp
+
+  - name: Cloud_Participant_1_2
+    kind: wan
+    listening-addresses:
+      - domain: ddsrouter_cloud_1
+        port: 21800
+        transport: udp
