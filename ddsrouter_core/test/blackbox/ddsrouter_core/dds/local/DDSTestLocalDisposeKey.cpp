@@ -100,7 +100,7 @@ void test_local_communication_key_dispose(
     HelloWorldKeyed msg;
 
     #if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
-        HelloWorldKeyedPubSubType type;
+    HelloWorldKeyedPubSubType type;
     #endif // if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
 
     std::string msg_str;
@@ -115,18 +115,18 @@ void test_local_communication_key_dispose(
 
     // Create DDS Publisher in domain 0
     #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-        TestPublisher<HelloWorldKeyed> publisher(msg.isKeyDefined());
+    TestPublisher<HelloWorldKeyed> publisher(msg.isKeyDefined());
     #else
-        TestPublisher<HelloWorldKeyed> publisher(type.m_isGetKeyDefined);
+    TestPublisher<HelloWorldKeyed> publisher(type.m_isGetKeyDefined);
     #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
     #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-        TestSubscriber<HelloWorldKeyed> subscriber(msg.isKeyDefined());
+    TestSubscriber<HelloWorldKeyed> subscriber(msg.isKeyDefined());
     #else
-        TestSubscriber<HelloWorldKeyed> subscriber(type.m_isGetKeyDefined);
+    TestSubscriber<HelloWorldKeyed> subscriber(type.m_isGetKeyDefined);
     #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
