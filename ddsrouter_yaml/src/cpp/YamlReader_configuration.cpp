@@ -91,7 +91,7 @@ bool YamlValidator::validate<ddsrouter::core::SpecsConfiguration>(
         SPECS_QOS_TAG,
         DISCOVERY_TRIGGER_TAG};
 
-    return YamlValidator::validate_tags_(yml, tags);
+    return YamlValidator::validate_tags(yml, tags);
 }
 
 template <>
@@ -311,7 +311,7 @@ bool YamlValidator::validate<ddsrouter::core::DdsRouterConfiguration>(
         TOPICS_TAG,
         SPECS_TAG};
 
-    return YamlValidator::validate_tags_(yml, tags);
+    return YamlValidator::validate_tags(yml, tags);
 }
 
 template <>
