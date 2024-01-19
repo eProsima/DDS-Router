@@ -267,7 +267,9 @@ void YamlReader::fill(
     // Get optional specs configuration
     if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
-        object.advanced_options = get<ddsrouter::core::SpecsConfiguration>(YamlReader::get_value_in_tag(yml, SPECS_TAG), version);
+        object.advanced_options = get<ddsrouter::core::SpecsConfiguration>(YamlReader::get_value_in_tag(yml,
+                        SPECS_TAG),
+                        version);
     }
 
     // DDS Pipe Configuration
