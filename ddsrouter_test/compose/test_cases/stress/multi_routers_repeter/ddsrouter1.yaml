@@ -14,6 +14,6 @@ participants:
   - name: ClientWAN_1
     kind: wan
     connection-addresses:
-      - domain: ddsrouter_2
+      - domain: ddsrouter_cloud
         port: 11800
         transport: udp

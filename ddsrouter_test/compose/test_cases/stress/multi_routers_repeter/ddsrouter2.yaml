@@ -11,9 +11,9 @@ participants:
     kind: local
     domain: 105
 
-  - name: ServerWAN_1
+  - name: ClientWAN_2
     kind: wan
-    listening-addresses:
-      - domain: ddsrouter_2
-        port: 11800
+    connection-addresses:
+      - domain: ddsrouter_cloud
+        port: 21800
         transport: udp

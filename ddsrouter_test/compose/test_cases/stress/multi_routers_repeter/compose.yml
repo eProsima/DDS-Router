@@ -44,27 +44,44 @@
 services:
 
   # ROUTERS
+
+  ddsrouter_cloud:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_cloud
+    networks:
+      cloud_edge_1_net:
+        aliases:
+            - ddsrouter_cloud.edge_1
+      cloud_edge_2_net:
+        aliases:
+            - ddsrouter_cloud.edge_2
+    volumes:
+      - ./ddsrouter_cloud.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
   ddsrouter_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: ddsrouter_1
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_cloud
     networks:
-      - cloud_edge_net
+      - cloud_edge_1_net
       - edge_1_net
     volumes:
       - ./ddsrouter1.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 15
+    command: ddsrouter -c /config.yaml --timeout 12
 
   ddsrouter_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: ddsrouter_2
+    depends_on:
+      - ddsrouter_cloud
     networks:
-      - cloud_edge_net
+      - cloud_edge_2_net
       - edge_2_net
     volumes:
       - ./ddsrouter2.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 15
+    command: ddsrouter -c /config.yaml --timeout 12
 
  # SUBSCRIBERS
   subscriber_1:
@@ -240,6 +257,7 @@ services:
 networks:
   edge_1_net:
   edge_2_net:
-  cloud_edge_net:
+  cloud_edge_1_net:
+  cloud_edge_2_net:
   default:
     driver: none
