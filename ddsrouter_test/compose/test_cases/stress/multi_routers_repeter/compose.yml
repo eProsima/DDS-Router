@@ -1,43 +1,59 @@
 # Test description:
 #   This test simulates a busy network:
-#   If we set up two routers with two participants each (one wan participant
-#   comunicating through wan with the other router and a local participant
-#   comunicating with local network), twelve best-effort publishers
-#   sending large messages to three best-effort subscribers on three different topics
-#   and one reliable publisher sending messages to a reliable subscriber,
-#   the test checks if all the messages are forwarding from the reliable publisher
+#   If we set up 1 repeater router, 2 routers with 2 participants each (1 wan participant
+#   comunicating through wan with the repeater router and a local participant
+#   comunicating with local network), 12 best-effort publishers
+#   sending large messages to 3 best-effort subscribers on 3 different topics
+#   and 1 reliable publisher sending messages to a reliable subscriber,
+#   the test checks if all the messages are forwarded from the reliable publisher
 #   to the reliable subscriber.
 #
 # Test architecture:
-#  ┌───────────────────────┐                            ┌────────────────────────┐
-#  │  Domain 103           │                            │            Domain  105 │
-#  │ ┌──────────────────┐  │                            │                        │
-#  │ │ publisher_1      │ ┌┼───────────┐    ┌───────────┼┐ ┌───────────────────┐ │
-#  │ │ ...              │ ││           │    │           ││ │ subscriber_1      │ │
-#  │ │ publisher_4      ├─►│           │    │           │┼─► (edge_2_net)      │ │
-#  │ │ (edge_1_net)     │ ││           │    │           ││ └───────────────────┘ │
-#  │ └──────────────────┘ ││           │    │           ││                       │
-#  │                      ││           │    │           ││ ┌───────────────────┐ │
-#  │ ┌──────────────────┐ ││           │    │           ││ │ subscriber_2      │ │
-#  │ │ publisher_5      │ ││           │    │           │┼─► (edge_2_net)      │ │
-#  │ │ ...              │ ││           │    │           ││ └───────────────────┘ │
-#  │ │ publisher_8      ├─►│ ddsrouter1│    │ ddsrouter2││                       │
-#  │ │ (edge_1_net)     │ ││           ◄────►           ││ ┌───────────────────┐ │
-#  │ └──────────────────┘ ││(edge_1_net│    │(edge_2_net││ │ subscriber_3      │ │
-#  │                      ││     +     │    │     +     │┼─► (edge_2_net)      │ │
-#  │ ┌──────────────────┐ ││   wan)    │    │   wan)    ││ └───────────────────┘ │
-#  │ │ publisher_9      │ ││           │    │           ││                       │
-#  │ │ ...              │ ││           │    │           ││ ┌───────────────────┐ │
-#  │ │ publisher_12     ├─►│           │    │           ││ │subscriber_reliable│ │
-#  │ │ (edge_1_net)     │ ││           │    │           │┼─► (edge_2_net)      │ │
-#  │ └──────────────────┘ ││           │    │           ││ └───────────────────┘ │
-#  │                      ││           │    │           ││                       │
-#  │ ┌──────────────────┐ ││           │    │           ││                       │
-#  │ │publisher_reliable├─►│           │    │           ││                       │
-#  │ │ (edge_1_net)     │ └┼───────────┘    └───────────┼┘                       │
-#  │ └──────────────────┘  │                            │                        │
-#  │                       │                            └────────────────────────┘
-#  └───────────────────────┘
+# ┌───────────────────────────────────────────────────────────────┐
+# │ cloud_edge_net                                                │
+# │                ┌──────────────────────────────┐               │
+# │                │       ddsrouter_cloud        │               │
+# │                │       (wan [repeater])       │               │
+# │                └▲────────────────────────────┬┘               │
+# │                 │                            │                │
+# │       ┌─────────┴──────────┐     ┌───────────▼────────┐       │
+# │       │  ddsrouter_edge_1  │     │  ddsrouter_edge_2  │       │
+# │       │                    │     │                    │       │
+# │       │  (edge_1_net+wan)  │     │  (edge_1_net+wan)  │       │
+# └───────┼────────────────────┼─────┼────────────────────┼───────┘
+# ┌───────┼────────────────────┼─┐ ┌─┼────────────────────┼───────┐
+# │       └───────────▲─▲─▲─▲──┘ │ │ └──┬─┬─┬─┬───────────┘       │
+# │                   │ │ │ │    │ │    │ │ │ │                   │
+# │  Domain 103       │ │ │ │    │ │    │ │ │ │       Domain  105 │
+# │ ┌───────────────┐ │ │ │ │    │ │    │ │ │ │                   │
+# │ │ publisher_1   │ │ │ │ │    │ │    │ │ │ │ ┌───────────────┐ │
+# │ │ ...           ├─┘ │ │ │    │ │    │ │ │ │ │ subscriber_1  │ │
+# │ │ publisher_4   │   │ │ │    │ │    │ │ │ └─► (edge_2_net)  │ │
+# │ │ (edge_1_net)  │   │ │ │    │ │    │ │ │   └───────────────┘ │
+# │ └───────────────┘   │ │ │    │ │    │ │ │                     │
+# │                     │ │ │    │ │    │ │ │   ┌───────────────┐ │
+# │ ┌───────────────┐   │ │ │    │ │    │ │ │   │ subscriber_2  │ │
+# │ │ publisher_5   │   │ │ │    │ │    │ │ └───► (edge_2_net)  │ │
+# │ │ ...           │   │ │ │    │ │    │ │     └───────────────┘ │
+# │ │ publisher_8   ├───┘ │ │    │ │    │ │                       │
+# │ │ (edge_1_net)  │     │ │    │ │    │ │     ┌───────────────┐ │
+# │ └───────────────┘     │ │    │ │    │ │     │ subscriber_3  │ │
+# │                       │ │    │ │    │ └─────► (edge_2_net)  │ │
+# │ ┌───────────────┐     │ │    │ │    │       └───────────────┘ │
+# │ │ publisher_9   │     │ │    │ │    │                         │
+# │ │ ...           │     │ │    │ │    │   ┌───────────────────┐ │
+# │ │ publisher_12  ├─────┘ │    │ │    │   │subscriber_reliable│ │
+# │ │ (edge_1_net)  │       │    │ │    └───► (edge_2_net)      │ │
+# │ └───────────────┘       │    │ │        └───────────────────┘ │
+# │                         │    │ │                              │
+# │ ┌──────────────────┐    │    │ │                              │
+# │ │publisher_reliable│    │    │ │                              │
+# │ │ (edge_1_net)     ├────┘    │ │                              │
+# │ └──────────────────┘         │ │                              │
+# └──────────────────────────────┘ └──────────────────────────────┘
+
+
+
 
 
 

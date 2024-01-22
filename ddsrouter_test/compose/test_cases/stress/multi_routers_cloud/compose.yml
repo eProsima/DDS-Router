@@ -1,10 +1,10 @@
 # Test description:
 #   This test simulates a busy network:
-#   If we set up four routers, 2 edges and 2 clouds (the cloud router will forward the
-#   messages from 1 to 2 and the edge will forward them to DomainParticipants), twelve
+#   If we set up 4 routers, 2 edges and 2 clouds (the cloud router will forward the
+#   messages from 1 to 2 and the edge will forward them to DomainParticipants), 12
 #   best-effort publishers sending large messages to three best-effort subscribers on
 #   three different topics and one reliable publisher sending messages to a reliable
-#   subscriber, the test checks if all the messages are forwarding from the reliable
+#   subscriber, the test checks if all the messages are forwarded from the reliable
 #   publisher to the reliable subscriber.
 #
 # Test architecture:

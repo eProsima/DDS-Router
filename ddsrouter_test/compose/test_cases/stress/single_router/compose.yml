@@ -1,9 +1,9 @@
 # Test description:
 #   This test simulates a busy network:
-#   If we set up a router with two participants, twelve best-effort publishers
-#   sending large messages to three best-effort subscribers on three different topics
-#   and one reliable publisher sending messages to a reliable subscriber,
-#   the test checks if all the messages are forwarding from the reliable publisher
+#   If we set up a router with 2 participants, 12 best-effort publishers
+#   sending large messages to 3 best-effort subscribers on 3 different topics
+#   and 1 reliable publisher sending messages to a reliable subscriber,
+#   the test checks if all the messages are forwarded from the reliable publisher
 #   to the reliable subscriber.
 #
 # Test architecture:
