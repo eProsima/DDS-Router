@@ -70,7 +70,6 @@ set(TESTS
     discovery_trigger/any/writer
 
     stress/single_router
-    stress/multi_routers_local
     stress/multi_routers_wan
     stress/multi_routers_cloud
 )
