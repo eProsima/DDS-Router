@@ -133,10 +133,8 @@ def run_command(
 
     else:
         if not timeout_as_error:
-            # A timeout is expected when timing out is not an error
-            # TODO: add a is_timeout_expected parameter
             log.logger.error('Command finished before expected.')
-            ret_code = ReturnCode.FINISHED_TOO_QUICKLY
+            ret_code = ReturnCode.COMMAND_FAIL
 
         # Wait a minimum elapsed time to the signal to be received
         time.sleep(0.2)
