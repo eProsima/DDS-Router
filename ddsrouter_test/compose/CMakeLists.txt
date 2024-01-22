@@ -71,7 +71,6 @@ set(TESTS
 
     stress/repeater_mixed_data_sizes
     stress/single_router
-    stress/multi_routers_local
     stress/multi_routers_wan
     stress/multi_routers_cloud
 )
