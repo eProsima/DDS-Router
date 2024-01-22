@@ -241,23 +241,12 @@ def check_transient(data):
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
     """
-<<<<<<< HEAD
     msg_pattern = re.compile(r'HelloWorld\s+(\d+)')
 
     for idx, line in enumerate(data):
         match = msg_pattern.search(line)
 
         if not match:
-=======
-    # Convert every line into just the number
-
-    numbers_received = [
-       int(re.search(r'\d+', re.search(r'HelloWorld\s+(\d+)', line).group()).group())
-       for line in data]
-    # NOTE: idx starts in 0 and messages start in 1
-    for idx, number in enumerate(numbers_received):
-        if (idx + 1) != int(number):
->>>>>>> c87f12cd (Stress tests using advanced config example)
             log.logger.warn(
                 f'Message received in position {idx + 1} is not valid')
             return False
