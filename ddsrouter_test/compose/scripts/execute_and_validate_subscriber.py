@@ -242,7 +242,6 @@ def check_transient(data):
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
     """
-    # Convert every line into just the number
     msg_pattern = re.compile(r'HelloWorld\s+(\d+)')
 
     for idx, line in enumerate(data):
