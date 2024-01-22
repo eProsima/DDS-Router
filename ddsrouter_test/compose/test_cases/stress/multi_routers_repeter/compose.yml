@@ -100,6 +100,17 @@ services:
     command: ddsrouter -c /config.yaml --timeout 12
 
  # SUBSCRIBERS
+  subscriber_reliable:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_reliable
+    depends_on:
+      - ddsrouter_2
+    networks:
+      - edge_2_net
+    volumes:
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --allow-duplicates -1 --delay 1 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
+
   subscriber_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: subscriber_1
@@ -134,19 +145,17 @@ services:
       - ../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_3"
 
-  subscriber_reliable:
+  # PUBLISHERS
+  publisher_reliable:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: subscriber_reliable
+    container_name: publisher_reliable
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_1
     networks:
-      - edge_2_net
+      - edge_1_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --allow-duplicates -1 --delay 1 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
-
-
-  # # PUBLISHERS
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 3 --args "--interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1"
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -258,17 +267,6 @@ services:
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_3
-
-  publisher_reliable:
-    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: publisher_reliable
-    depends_on:
-      - ddsrouter_1
-    networks:
-      - edge_1_net
-    volumes:
-      - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 3 --args "--samples 10 --wait 1 --interval 100 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable"
 
 networks:
   edge_1_net:
