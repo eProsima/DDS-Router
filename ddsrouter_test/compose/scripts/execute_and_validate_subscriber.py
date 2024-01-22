@@ -136,14 +136,15 @@ def _subscriber_parse_output(stdout, stderr):
     :return: List of received messages
     """
 
-    msgs_regex = re.compile(r'^Message\sHelloWorld\s+\d+\sRECEIVED$')
+    msgs_regex_basic = re.compile(r'^Message\sHelloWorld\s+\d+\sRECEIVED$')
+    msgs_regex_adv = re.compile(r'Sample received: HelloWorld\s+\d+\s+\(\d+ Bytes\)')
     match_regex = re.compile(r'^Subscriber matched \[.+\].$')
     unmatch_regex = re.compile(r'^Subscriber unmatched \[.+\].$')
 
     filtered_data = {'messages': [], 'matches': 0, 'unmatches': 0}
 
     for line in stdout.splitlines():
-        if msgs_regex.match(line):
+        if msgs_regex_basic.match(line) or msgs_regex_adv.match(line):
             filtered_data['messages'].append(line)
 
         elif match_regex.match(line):
@@ -242,17 +243,21 @@ def check_transient(data):
     :return: True if transient has been fulfilled, false in case on error
     """
     # Convert every line into just the number
-    ini_str_size = len('Message HelloWorld  ')
-    end_str_size = len(' RECEIVED')
-    numbers_received = [
-        line[ini_str_size:-end_str_size]
-        for line in data]
+    msg_pattern = re.compile(r'HelloWorld\s+(\d+)')
 
-    # NOTE: idx starts in 0 and messages start in 1
-    for idx, number in enumerate(numbers_received):
-        if (idx + 1) != int(number):
+    for idx, line in enumerate(data):
+        match = msg_pattern.search(line)
+
+        if not match:
             log.logger.warn(
-                f'Message received in position {idx+1} is {number}')
+                f'Message received in position {idx + 1} is not valid')
+            return False
+
+        message_id = int(match.group(1))
+
+        if idx + 1 != message_id:
+            log.logger.warn(
+                f'Message received in position {idx + 1} is {message_id}')
             return False
 
     log.logger.debug('All messages received and in correct order.')
