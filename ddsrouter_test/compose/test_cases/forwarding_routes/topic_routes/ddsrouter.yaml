@@ -25,7 +25,7 @@ routes:
 
 topic-routes:
   - name: topic1
-    type: HelloWorld
+    type: AdvancedConfiguration
     routes:
       - src: Local_80
         dst:
