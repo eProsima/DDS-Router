@@ -163,6 +163,7 @@ int main(
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
 
         // Monitoring Topics
+        #ifdef MONITOR_ENABLED
         {
             ddspipe::core::Monitor::get_instance().clear_consumers();
 
@@ -172,6 +173,7 @@ int main(
             static ddspipe::core::StdoutMonitorConsumer stdout_consumer(router_configuration.advanced_options.monitor);
             ddspipe::core::Monitor::get_instance().register_consumer(&stdout_consumer);
         }
+        #endif // if MONITOR_ENABLED
 
         // Create DDS Router
         core::DdsRouter router(router_configuration);
