@@ -93,15 +93,7 @@ void YamlReader::fill(
     // Get optional monitor tag
     if (YamlReader::is_tag_present(yml, MONITOR_TAG))
     {
-        const auto monitor_yml = get_value_in_tag(yml, MONITOR_TAG);
-
-        if (YamlReader::is_tag_present(monitor_yml, MONITOR_TOPICS_TAG))
-        {
-            object.topics_monitor = YamlReader::get<core::MonitorTopicsConfiguration>(
-                monitor_yml,
-                MONITOR_TOPICS_TAG,
-                version);
-        }
+        object.monitor = YamlReader::get<core::MonitorConfiguration>(yml, MONITOR_TAG, version);
     }
 }
 

@@ -166,11 +166,11 @@ int main(
         {
             ddspipe::core::Monitor::get_instance().clear_consumers();
 
-            static ddspipe::core::DdsMonitorConsumer consumer(router_configuration.advanced_options.topics_monitor.topic_name);
-            ddspipe::core::Monitor::get_instance().register_consumer(&consumer);
+            static ddspipe::core::DdsMonitorConsumer dds_consumer(router_configuration.advanced_options.monitor);
+            ddspipe::core::Monitor::get_instance().register_consumer(&dds_consumer);
 
-            static ddspipe::core::StdoutMonitorConsumer consumer2;
-            ddspipe::core::Monitor::get_instance().register_consumer(&consumer2);
+            static ddspipe::core::StdoutMonitorConsumer stdout_consumer(router_configuration.advanced_options.monitor);
+            ddspipe::core::Monitor::get_instance().register_consumer(&stdout_consumer);
         }
 
         // Create DDS Router
