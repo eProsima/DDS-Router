@@ -29,6 +29,9 @@
 #include <cpp_utils/utils.hpp>
 
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
+#include <ddspipe_core/monitoring/Monitor.hpp>
+#include <ddspipe_core/monitoring/DdsMonitorConsumer.hpp>
+#include <ddspipe_core/monitoring/StdoutMonitorConsumer.hpp>
 
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
@@ -158,6 +161,17 @@ int main(
 
         // Load XML profiles
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
+
+        // Monitoring Topics
+        {
+            ddspipe::core::Monitor::get_instance().clear_consumers();
+
+            static ddspipe::core::DdsMonitorConsumer consumer(router_configuration.advanced_options.topics_monitor.topic_name);
+            ddspipe::core::Monitor::get_instance().register_consumer(&consumer);
+
+            static ddspipe::core::StdoutMonitorConsumer consumer2;
+            ddspipe::core::Monitor::get_instance().register_consumer(&consumer2);
+        }
 
         // Create DDS Router
         core::DdsRouter router(router_configuration);
