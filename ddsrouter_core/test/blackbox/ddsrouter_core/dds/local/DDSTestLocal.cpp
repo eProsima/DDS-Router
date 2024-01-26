@@ -379,7 +379,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynamic_discovery)
 {
-        #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
+    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
     test::test_local_communication<HelloWorld>(
         test::dds_test_simple_configuration(true, true),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
