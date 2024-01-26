@@ -2,44 +2,28 @@
 
 .. _release_notes:
 
-.. include:: forthcoming_version.rst
+.. .. include:: forthcoming_version.rst
 
 ##############
-Version v2.0.0
+Version v2.1.0
 ##############
 
-This release adds new **Requirements**:
+The next release will include the following **Features**:
 
-* `DDS Pipe <https://github.com/eProsima/DDS-Pipe>`_ project.
+* :ref:`Forwarding Routes <user_manual_configuration_forwarding_routes>`.
+* :ref:`Remove Unused Entities <user_manual_configuration_remove_unused_entities>`.
+* :ref:`Manual Topics <user_manual_configuration_manual_topics>`.
+* :ref:`Max Transmission Rate <user_manual_configuration_max_tx_rate>`.
+* :ref:`Max Reception Rate <user_manual_configuration_max_rx_rate>`.
+* :ref:`Downsampling <user_manual_configuration_downsampling>`.
+* :ref:`Discovery Trigger <user_manual_configuration_discovery_trigger>`.
+* Rename the `max-depth` under the `specs` tag to `history-depth`.
+* Set `app_id` and `app_metadata` attributes in *eProsima DDS Router* participants.
+* Support both Fast CDR v1 and v2.
 
-This release has the following **Features**:
+The next release will include the following **Bugfixes**:
 
-* Main functionality has been moved to new repository `DDS Pipe <https://github.com/eProsima/DDS-Pipe>`_ to reuse it in other projects.
-* :ref:`XML Participant <user_manual_participants_xml>`
-* Support for `DDS Security <https://fast-dds.docs.eprosima.com/en/v2.10.1/fastdds/security/security.html>`_.
-
-This release includes the following **Internal Implementation Features**:
-
-* Support :ref:`Interface Whitelisting <user_manual_configuration_interface_whitelist>`.
-* Support :ref:`Custom Transport Descriptors <user_manual_configuration_custom_transport_descriptors>` (UDP or Shared Memory only) for Simple Participants.
-* Support :ref:`Ignore Participant Flags <user_manual_configuration_ignore_participant_flags>` for Simple Participants.
-* Add tests for Dynamic Types to ROS 2.
-* New ``CommonParticipant`` class for a Fast DDS Participant wrapper.
-* New ``XmlParticipant`` class for a Fast DDS Participant in which the participant is created following a profile name loaded by XML configuration.
-* New ``CommonReader`` class for a Fast DDS Data Reader wrapper.
-* New ``SimpleReader`` class for a Fast DDS Data Reader that implements abstract ``CommonReader``.
-* New ``SpecificQoSReader`` class for a Fast DDS Data Reader with specific QoS policies.
-* New ``CommonWriter`` class for a Fast DDS Data Writer wrapper.
-* New ``SimpleWriter`` class for a Fast DDS Data Writer that implements abstract ``CommonWriter``.
-* New ``QoSSpecificWriter`` class for a Fast DDS Data Writer with specific QoS policies.
-* New ``MultiWriter`` class for a Fast DDS Data Writer collection that contains multiple ``QoSSpecificWriter``.
-
-This release includes the following **Bugfixes**:
-
-* Add TSAN fixes.
-* Include missing DLLs.
-* Resolve Windows warnings.
-* Restore default DomainParticipantQoS after creating and enabling ``DynTypesParticipant``.
+* Save the instance handle data for keyed topics.
 
 This release includes the following **Dependencies Update**:
 
@@ -52,29 +36,30 @@ This release includes the following **Dependencies Update**:
         - New Version
     *   - Foonathan Memory Vendor
         - `eProsima/foonathan_memory_vendor <https://github.com/eProsima/foonathan_memory_vendor>`_
-        - `v1.3.0 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.0>`_
+        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
         - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
     *   - Fast CDR
         - `eProsima/Fast-CDR <https://github.com/eProsima/Fast-CDR>`_
-        - `v1.0.27 <https://github.com/eProsima/Fast-CDR/releases/tag/v1.0.27>`_
         - `v1.1.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v1.1.0>`_
+        - `v2.1.2 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.1.2>`_
     *   - Fast DDS
         - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`_
-        - `v2.10.1 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.10.1>`_
         - `v2.11.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.11.0>`_
+        - `v2.13.1 <https://github.com/eProsima/Fast-DDS/releases/tag/v2.13.1>`_
     *   - Dev Utils
         - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
-        - `v0.3.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.3.0>`_
         - `v0.4.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.4.0>`_
+        - `v0.5.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.5.0>`_
     *   - DDS Pipe
         - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
-        - `v0.1.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.1.0>`_
         - `v0.2.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.2.0>`_
+        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`__
 
 #################
 Previous Versions
 #################
 
+.. include:: previous_versions/v2.0.0.rst
 .. include:: previous_versions/v1.2.0.rst
 .. include:: previous_versions/v1.1.0.rst
 .. include:: previous_versions/v1.0.0.rst
