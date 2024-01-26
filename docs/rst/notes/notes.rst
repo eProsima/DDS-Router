@@ -19,6 +19,7 @@ The next release will include the following **Features**:
 * :ref:`Discovery Trigger <user_manual_configuration_discovery_trigger>`.
 * Rename the `max-depth` under the `specs` tag to `history-depth`.
 * Set `app_id` and `app_metadata` attributes in *eProsima DDS Router* participants.
+* Support both Fast CDR v1 and v2.
 
 The next release will include the following **Bugfixes**:
 
