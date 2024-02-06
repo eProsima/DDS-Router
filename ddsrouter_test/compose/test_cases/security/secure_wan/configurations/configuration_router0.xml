@@ -10,6 +10,7 @@
     </transport_descriptors>
 
     <participant profile_name="secure_router_local_0">
+        <domainId>0</domainId>
         <rtps>
             <propertiesPolicy>
                 <properties>
@@ -22,15 +23,15 @@
                     <!-- Configure DDS:Auth:PKI-DH plugin -->
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
+                        <value>file:///certs/main_ca_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_certificate</name>
-                        <value>file:///certs/routerlocal0cert.pem</value>
+                        <value>file:///certs/router_local0_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.private_key</name>
-                        <value>file:///certs/routerlocal0key.pem</value>
+                        <value>file:///certs/router_local0_key.pem</value>
                     </property>
 
                     <!-- Activate DDS:Access:Permissions plugin -->
@@ -41,7 +42,7 @@
                     <!-- Configure DDS:Access:Permissions plugin -->
                     <property>
                         <name>dds.sec.access.builtin.Access-Permissions.permissions_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
+                        <value>file:///certs/main_ca_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.access.builtin.Access-Permissions.governance</name>
@@ -76,15 +77,15 @@
                     <!-- Configure DDS:Auth:PKI-DH plugin -->
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
+                        <value>file:///certs/main_ca_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.identity_certificate</name>
-                        <value>file:///certs/servercert.pem</value>
+                        <value>file:///certs/server_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.auth.builtin.PKI-DH.private_key</name>
-                        <value>file:///certs/serverkey.pem</value>
+                        <value>file:///certs/server_key.pem</value>
                     </property>
 
                     <!-- Activate DDS:Access:Permissions plugin -->
@@ -95,7 +96,7 @@
                     <!-- Configure DDS:Access:Permissions plugin -->
                     <property>
                         <name>dds.sec.access.builtin.Access-Permissions.permissions_ca</name>
-                        <value>file:///certs/maincacert.pem</value>
+                        <value>file:///certs/main_ca_cert.pem</value>
                     </property>
                     <property>
                         <name>dds.sec.access.builtin.Access-Permissions.governance</name>

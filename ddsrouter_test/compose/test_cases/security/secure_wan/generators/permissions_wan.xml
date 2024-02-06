@@ -17,12 +17,14 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -44,12 +46,14 @@
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </publish>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
