@@ -30,8 +30,8 @@
 
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
 #include <ddspipe_core/monitoring/Monitor.hpp>
-#include <ddspipe_core/monitoring/DdsMonitorConsumer.hpp>
-#include <ddspipe_core/monitoring/StdoutMonitorConsumer.hpp>
+#include <ddspipe_core/monitoring/producers/StatusMonitorProducer.hpp>
+#include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
 
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
@@ -163,17 +163,23 @@ int main(
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
 
         // Monitoring Topics
-        #ifdef MONITOR_ENABLED
         {
-            ddspipe::core::Monitor::get_instance().clear_consumers();
+            static ddspipe::core::Monitor monitor;
 
-            static ddspipe::core::DdsMonitorConsumer dds_consumer(router_configuration.advanced_options.monitor);
-            ddspipe::core::Monitor::get_instance().register_consumer(&dds_consumer);
+            if (router_configuration.advanced_options.monitor.status.enabled)
+            {
+                auto status_producer = ddspipe::core::StatusMonitorProducer::get_instance();
+                status_producer->init(router_configuration.advanced_options.monitor.status);
+                monitor.register_producer(status_producer);
+            }
 
-            static ddspipe::core::StdoutMonitorConsumer stdout_consumer(router_configuration.advanced_options.monitor);
-            ddspipe::core::Monitor::get_instance().register_consumer(&stdout_consumer);
+            if (router_configuration.advanced_options.monitor.topics.enabled)
+            {
+                auto topics_producer = ddspipe::core::TopicsMonitorProducer::get_instance();
+                topics_producer->init(router_configuration.advanced_options.monitor.topics);
+                monitor.register_producer(topics_producer);
+            }
         }
-        #endif // if MONITOR_ENABLED
 
         // Create DDS Router
         core::DdsRouter router(router_configuration);

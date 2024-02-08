@@ -27,7 +27,7 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
-#include <ddspipe_core/configuration/MonitorTopicsConfiguration.hpp>
+#include <ddspipe_core/configuration/MonitorConfiguration.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
