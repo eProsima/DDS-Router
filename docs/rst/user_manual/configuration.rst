@@ -493,6 +493,57 @@ The type of the logs published is defined as follows:
         publish-type: false
       stdout: true
 
+.. _user_manual_configuration_specs_monitor:
+
+Monitor
+-------
+
+``specs`` supports a ``monitor`` **optional** tag to publish inside information from the |ddsrouter|.
+In particular, the |ddsrouter| can monitor the frequency of the messages it receives and the number of messages lost.
+The monitor can be configured to publish this information on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+If the monitor is not enabled, the |ddsrouter| will not collect or publish any tracking data.
+
+.. note::
+
+    After publishing the data, the |ddsrouter| will reset the counters.
+
+The type of the data published is defined as follows:
+
+**Monitoring Topics**
+
+.. code-block:: idl
+
+    struct DdsTopicData
+    {
+        string participant_id;
+        unsigned long msgs_lost;
+        unsigned long msgs_received;
+        double frequency;
+    };
+
+    struct DdsTopic
+    {
+        string name;
+        string data_type_name;
+        sequence<DdsTopicData> data;
+    };
+
+    struct MonitoringTopics
+    {
+        sequence<DdsTopic> topics;
+    };
+
+**Example of usage**
+
+.. code-block:: yaml
+
+    monitor:
+      topics:
+        enable: true
+        domain: 11
+        period: 1000
+        topic-name: "DdsRouterTopicInformation"
+
 Participant Configuration
 =========================
 
@@ -947,6 +998,13 @@ A complete example of all the configurations described on this page can be found
             topic-name: "DdsRouterLogs"
             publish-type: false
         stdout: true
+        
+      monitor:
+        topics:
+          enable: true
+          domain: 11
+          period: 1000
+          topic-name: "DdsRouterTopicStatistics"
 
     # XML configurations to load
     xml:
