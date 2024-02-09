@@ -498,18 +498,20 @@ The type of the logs published is defined as follows:
 Monitor
 -------
 
-``specs`` supports a ``monitor`` **optional** tag to publish inside information from the |ddsrouter|.
-In particular, the |ddsrouter| can monitor the frequency of the messages it receives and the number of messages lost.
-The monitor can be configured to publish this information on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
-If the monitor is not enabled, the |ddsrouter| will not collect or publish any tracking data.
+``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
+The monitor can be configured to publish this data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
 
 .. note::
 
-    After publishing the data, the |ddsrouter| will reset the counters.
+    The data published is relative to each period.
+    The |ddsrouter| will reset its tracked data after publishing it.
 
+
+In particular, the |ddsrouter| will track the number of messages lost, received, and the frequency of each topic.
 The type of the data published is defined as follows:
 
-**Monitoring Topics**
+**MonitoringTopics.idl**
 
 .. code-block:: idl
 
@@ -542,7 +544,7 @@ The type of the data published is defined as follows:
         enable: true
         domain: 11
         period: 1000
-        topic-name: "DdsRouterTopicInformation"
+        topic-name: "DdsRouterTopicData"
 
 Participant Configuration
 =========================
