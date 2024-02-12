@@ -526,7 +526,10 @@ The type of the data published is defined as follows:
     struct DdsTopic
     {
         string name;
-        string data_type_name;
+        string type_name;
+        boolean type_discovered;
+        boolean type_mismatch;
+        boolean qos_mismatch;
         sequence<DdsTopicData> data;
     };
 
@@ -542,7 +545,7 @@ The type of the data published is defined as follows:
     monitor:
       topics:
         enable: true
-        domain: 11
+        domain: 10
         period: 1000
         topic-name: "DdsRouterTopicData"
 
@@ -1004,7 +1007,7 @@ A complete example of all the configurations described on this page can be found
       monitor:
         topics:
           enable: true
-          domain: 11
+          domain: 10
           period: 1000
           topic-name: "DdsRouterTopicStatistics"
 
