@@ -166,13 +166,6 @@ int main(
         {
             static ddspipe::core::Monitor monitor;
 
-            if (router_configuration.advanced_options.monitor.status.enabled)
-            {
-                auto status_producer = ddspipe::core::StatusMonitorProducer::get_instance();
-                status_producer->init(router_configuration.advanced_options.monitor.status);
-                monitor.register_producer(status_producer);
-            }
-
             if (router_configuration.advanced_options.monitor.topics.enabled)
             {
                 auto topics_producer = ddspipe::core::TopicsMonitorProducer::get_instance();
