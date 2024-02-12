@@ -1,0 +1,18 @@
+version: v4.0
+
+participants:
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Local_81
+    kind: local
+    domain: 81
+
+specs:
+  monitor:
+    topics:
+      enable: true
+      domain: 82
+      period: 1000
+      topic-name: "DdsRouterTopicData"
