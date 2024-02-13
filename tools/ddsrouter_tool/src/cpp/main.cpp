@@ -162,18 +162,6 @@ int main(
         // Load XML profiles
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
 
-        // Monitoring Topics
-        {
-            static ddspipe::core::Monitor monitor;
-
-            if (router_configuration.advanced_options.monitor.topics.enabled)
-            {
-                auto topics_producer = ddspipe::core::TopicsMonitorProducer::get_instance();
-                topics_producer->init(router_configuration.advanced_options.monitor.topics);
-                monitor.register_producer(topics_producer);
-            }
-        }
-
         // Create DDS Router
         core::DdsRouter router(router_configuration);
 
@@ -245,6 +233,17 @@ int main(
 
             periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback,
                             commandline_args.reload_time);
+        }
+
+        // Monitoring
+        ddspipe::core::Monitor monitor;
+
+        if (router_configuration.advanced_options.monitor.topics.enabled)
+        {
+            // Register the Topics Monitor Producer
+            auto topics_producer = ddspipe::core::TopicsMonitorProducer::get_instance();
+            topics_producer->init(router_configuration.advanced_options.monitor.topics);
+            monitor.register_producer(topics_producer);
         }
 
         // Start Router
