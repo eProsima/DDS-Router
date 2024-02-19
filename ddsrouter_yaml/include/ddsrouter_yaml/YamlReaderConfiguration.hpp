@@ -19,6 +19,7 @@
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
+#include <ddsrouter_yaml/CommandlineArgsRouter.hpp>
 #include <ddsrouter_yaml/library/library_dll.h>
 
 namespace eprosima {
@@ -35,10 +36,12 @@ class DDSROUTER_YAML_DllAPI YamlReaderConfiguration
 public:
 
     static ddsrouter::core::DdsRouterConfiguration load_ddsrouter_configuration(
-            const Yaml& yml);
+            const Yaml& yml,
+            const CommandlineArgsRouter* args = nullptr);
 
     static ddsrouter::core::DdsRouterConfiguration load_ddsrouter_configuration_from_file(
-            const std::string& file_path);
+            const std::string& file_path,
+            const CommandlineArgsRouter* args = nullptr);
 
 protected:
 

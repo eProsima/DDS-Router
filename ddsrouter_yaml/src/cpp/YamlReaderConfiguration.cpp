@@ -27,7 +27,8 @@ namespace yaml {
 
 core::DdsRouterConfiguration
 YamlReaderConfiguration::load_ddsrouter_configuration(
-        const Yaml& yml)
+        const Yaml& yml,
+        const CommandlineArgsRouter* args /*= nullptr*/)
 {
     try
     {
@@ -73,6 +74,12 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         core::DdsRouterConfiguration router_configuration =
                 ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, version);
 
+        if (args != nullptr)
+        {
+            router_configuration.ddspipe_configuration.log_configuration.set(args->log_verbosity);
+            router_configuration.ddspipe_configuration.log_configuration.set(args->log_filter);
+        }
+
         return router_configuration;
     }
     catch (const std::exception& e)
@@ -84,7 +91,8 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
 
 core::DdsRouterConfiguration
 YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
-        const std::string& file_path)
+        const std::string& file_path,
+        const CommandlineArgsRouter* args /*= nullptr*/)
 {
     Yaml yml;
 
@@ -107,7 +115,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
                       "> :\n " << "yaml node is null.");
     }
 
-    return YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+    return YamlReaderConfiguration::load_ddsrouter_configuration(yml, args);
 }
 
 ddspipe::yaml::YamlReaderVersion YamlReaderConfiguration::default_yaml_version()
