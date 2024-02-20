@@ -29,6 +29,8 @@
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
+#include <ddspipe_core/logging/DdsLogConsumer.hpp>
+
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
@@ -90,7 +92,6 @@ int main(
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
 
-
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
@@ -132,9 +133,13 @@ int main(
             // Activate log with verbosity, as this will avoid running log thread with not desired kind
             eprosima::utils::Log::SetVerbosity(router_configuration.ddspipe_configuration.log_configuration.verbosity);
 
-            eprosima::utils::LogConfiguration log_config = router_configuration.ddspipe_configuration.log_configuration;
+            const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
+
             eprosima::utils::Log::RegisterConsumer(
-                std::make_unique<eprosima::utils::CustomStdLogConsumer>(&log_config));
+                std::make_unique<eprosima::utils::CustomStdLogConsumer>(&log_configuration));
+
+            eprosima::utils::Log::RegisterConsumer(
+                std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(log_configuration));
 
             // NOTE:
             // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
