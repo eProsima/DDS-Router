@@ -77,6 +77,13 @@ void YamlReader::fill(
                       utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
+
+    /////
+    // Get optional Log Configuration
+    if (YamlReader::is_tag_present(yml, LOG_CONFIGURATION_TAG))
+    {
+        object.log_configuration = YamlReader::get<utils::LogConfiguration>(yml, LOG_CONFIGURATION_TAG, version);
+    }
 }
 
 template <>
@@ -264,6 +271,7 @@ void YamlReader::fill(
      */
     object.ddspipe_configuration.remove_unused_entities = object.advanced_options.remove_unused_entities;
     object.ddspipe_configuration.discovery_trigger = object.advanced_options.discovery_trigger;
+    object.ddspipe_configuration.log_configuration = object.advanced_options.log_configuration;
 
     /////
     // Get optional xml configuration

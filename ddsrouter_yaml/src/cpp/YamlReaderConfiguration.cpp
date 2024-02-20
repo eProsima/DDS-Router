@@ -74,6 +74,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         core::DdsRouterConfiguration router_configuration =
                 ddspipe::yaml::YamlReader::get<core::DdsRouterConfiguration>(yml, version);
 
+
         if (args != nullptr)
         {
             router_configuration.ddspipe_configuration.log_configuration.set(args->log_verbosity);

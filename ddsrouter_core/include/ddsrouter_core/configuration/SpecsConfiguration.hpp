@@ -18,6 +18,7 @@
 #include <set>
 
 #include <cpp_utils/Formatter.hpp>
+#include <cpp_utils/logging/LogConfiguration.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
@@ -70,6 +71,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
 
     //! The type of the entities whose discovery triggers the discovery callbacks.
     ddspipe::core::DiscoveryTrigger discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
+
+    //! Configuration of the CustomStdLogConsumer.
+    utils::LogConfiguration log_configuration;
 };
 
 } /* namespace core */
