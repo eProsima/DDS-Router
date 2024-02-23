@@ -23,6 +23,7 @@
 #include <ddspipe_yaml/Yaml.hpp>
 #include <ddspipe_yaml/YamlManager.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/YamlValidator.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
@@ -56,7 +57,7 @@ void YamlReader::fill(
     // Optional Topic QoS
     if (is_tag_present(yml, SPECS_QOS_TAG))
     {
-        fill<core::types::TopicQoS>(object.topic_qos, get_value_in_tag(yml, SPECS_QOS_TAG), version);
+        object.topic_qos = YamlReader::get<core::types::TopicQoS>(yml, SPECS_QOS_TAG, version);
         core::types::TopicQoS::default_topic_qos.set_value(object.topic_qos);
     }
 
@@ -77,6 +78,32 @@ void YamlReader::fill(
                       utils::Formatter() << "The discovery-trigger " << discovery_trigger << " is not valid.");
         }
     }
+}
+
+template <>
+bool YamlValidator::validate<ddsrouter::core::SpecsConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion& /* version */)
+{
+    const std::set<TagType> tags{
+        NUMBER_THREADS_TAG,
+        REMOVE_UNUSED_ENTITIES_TAG,
+        SPECS_QOS_TAG,
+        DISCOVERY_TRIGGER_TAG};
+
+    return YamlValidator::validate_tags(yml, tags);
+}
+
+template <>
+ddsrouter::core::SpecsConfiguration YamlReader::get<ddsrouter::core::SpecsConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion version)
+{
+    YamlValidator::validate<ddsrouter::core::SpecsConfiguration>(yml, version);
+
+    ddsrouter::core::SpecsConfiguration object;
+    fill<ddsrouter::core::SpecsConfiguration>(object, yml, version);
+    return object;
 }
 
 template <>
@@ -174,21 +201,14 @@ void YamlReader::fill(
     // Get optional routes
     if (YamlReader::is_tag_present(yml, ROUTES_TAG))
     {
-        YamlReader::fill<core::RoutesConfiguration>(
-            object.routes,
-            YamlReader::get_value_in_tag(yml, ROUTES_TAG),
-            version);
+        object.routes = YamlReader::get<core::RoutesConfiguration>(yml, ROUTES_TAG, version);
     }
 
     /////
     // Get optional topic routes
     if (YamlReader::is_tag_present(yml, TOPIC_ROUTES_TAG))
     {
-        // get list, and parse each element as above
-        YamlReader::fill<core::TopicRoutesConfiguration>(
-            object.topic_routes,
-            YamlReader::get_value_in_tag(yml, TOPIC_ROUTES_TAG),
-            version);
+        object.topic_routes = YamlReader::get<core::TopicRoutesConfiguration>(yml, TOPIC_ROUTES_TAG, version);
     }
 
     /////
@@ -234,6 +254,7 @@ void YamlReader::fill(
     {
         ddsrouter::core::types::ParticipantKind kind =
                 YamlReader::get<ddsrouter::core::types::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
+
         object.participants_configurations.insert(
                     {
                         kind,
@@ -246,10 +267,9 @@ void YamlReader::fill(
     // Get optional specs configuration
     if (YamlReader::is_tag_present(yml, SPECS_TAG))
     {
-        YamlReader::fill<ddsrouter::core::SpecsConfiguration>(
-            object.advanced_options,
-            YamlReader::get_value_in_tag(yml, SPECS_TAG),
-            version);
+        object.advanced_options = get<ddsrouter::core::SpecsConfiguration>(YamlReader::get_value_in_tag(yml,
+                        SPECS_TAG),
+                        version);
     }
 
     // DDS Pipe Configuration
@@ -269,11 +289,29 @@ void YamlReader::fill(
     // Get optional xml configuration
     if (YamlReader::is_tag_present(yml, XML_TAG))
     {
-        YamlReader::fill<participants::XmlHandlerConfiguration>(
-            object.xml_configuration,
-            YamlReader::get_value_in_tag(yml, XML_TAG),
-            version);
+        object.xml_configuration = YamlReader::get<participants::XmlHandlerConfiguration>(yml, XML_TAG, version);
     }
+}
+
+template <>
+DDSPIPE_YAML_DllAPI
+bool YamlValidator::validate<ddsrouter::core::DdsRouterConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion& /* version */)
+{
+    const std::set<TagType> tags{
+        VERSION_TAG,
+        COLLECTION_PARTICIPANTS_TAG,
+        XML_TAG,
+        ALLOWLIST_TAG,
+        BLOCKLIST_TAG,
+        BUILTIN_TAG,
+        ROUTES_TAG,
+        TOPIC_ROUTES_TAG,
+        TOPICS_TAG,
+        SPECS_TAG};
+
+    return YamlValidator::validate_tags(yml, tags);
 }
 
 template <>
@@ -281,6 +319,8 @@ ddsrouter::core::DdsRouterConfiguration YamlReader::get<ddsrouter::core::DdsRout
         const Yaml& yml,
         const YamlReaderVersion version)
 {
+    YamlValidator::validate<ddsrouter::core::DdsRouterConfiguration>(yml, version);
+
     ddsrouter::core::DdsRouterConfiguration object;
     fill<ddsrouter::core::DdsRouterConfiguration>(object, yml, version);
     return object;
