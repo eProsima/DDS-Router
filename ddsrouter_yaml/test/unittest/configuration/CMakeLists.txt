@@ -65,6 +65,7 @@ set(TEST_NAME YamlGetConfigurationDdsRouterTest)
 
 set(TEST_SOURCES
         YamlGetConfigurationDdsRouterTest.cpp
+        ${PROJECT_SOURCE_DIR}/src/cpp/CommandlineArgsRouter.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReaderConfiguration.cpp
         ${PROJECT_SOURCE_DIR}/src/cpp/YamlReader_configuration.cpp
     )
@@ -72,6 +73,7 @@ set(TEST_SOURCES
 set(TEST_LIST
         get_ddsrouter_configuration_trivial
         get_ddsrouter_configuration_ros_case
+        router_parse_correct_log_config_yaml_vs_commandline
     )
 
 set(TEST_EXTRA_LIBRARIES

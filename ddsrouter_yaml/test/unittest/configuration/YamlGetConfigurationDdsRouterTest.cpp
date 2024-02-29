@@ -27,9 +27,11 @@
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
+#include <ddsrouter_yaml/CommandlineArgsRouter.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 
 using namespace eprosima;
+using namespace eprosima::ddsrouter::yaml;
 
 /**
  * Test load a whole DDS Router Configuration from yaml node.
@@ -141,6 +143,66 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
         ASSERT_EQ(participant.first, ddsrouter::core::types::ParticipantKind::simple);
     }
 }
+
+/**
+ * Check DdsRouterConfiguration structure creation.
+ *
+ * CASES:
+ *  Check if chooses correctly log configuration when parsing from terminal and from YAML.
+ *  In this case, it checks that:
+ *    - The error filter is the one configured through the YAML
+ *    - The warning filter is the one configured through the Command-Line
+ *    - The info filter is the default (DDSROUTER)
+ */
+TEST(YamlGetConfigurationDdsRouterTest, router_parse_correct_log_config_yaml_vs_commandline)
+{
+    CommandlineArgsRouter commandline_args;
+
+    // Setting CommandLine arguments as if configured from CommandLine
+    commandline_args.log_filter[eprosima::utils::VerbosityKind::Warning].set_value("DDSROUTER|DDSPIPE|DEBUG");
+
+    const char* yml_str =
+            R"(
+            version: v4.0
+            specs:
+              logging:
+                verbosity: info
+                filter:
+                  error: "DEBUG"
+                  warning: "DDSROUTER"
+            participants:
+              - name: "P1"
+                kind: "local"
+                domain: 0
+              - name: "P2"
+                kind: "local"
+                domain: 1
+              - name: "P3"
+                kind: "simple"
+                domain: 2
+        )";
+
+    Yaml yml = YAML::Load(yml_str);
+
+    // Load configuration from YAML
+    ddsrouter::core::DdsRouterConfiguration configuration =
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml, &commandline_args);
+
+    utils::Formatter error_msg;
+
+    ASSERT_TRUE(configuration.ddspipe_configuration.log_configuration.is_valid(error_msg));
+    ASSERT_EQ(configuration.ddspipe_configuration.log_configuration.verbosity.get_value(), utils::VerbosityKind::Info);
+    ASSERT_EQ(
+        configuration.ddspipe_configuration.log_configuration.filter[utils::VerbosityKind::Error].get_value(),
+        "DEBUG");
+    ASSERT_EQ(
+        configuration.ddspipe_configuration.log_configuration.filter[utils::VerbosityKind::Warning].get_value(),
+        "DDSROUTER|DDSPIPE|DEBUG");
+    ASSERT_EQ(
+        configuration.ddspipe_configuration.log_configuration.filter[utils::VerbosityKind::Info].get_value(),
+        "DDSROUTER");
+}
+
 
 int main(
         int argc,
