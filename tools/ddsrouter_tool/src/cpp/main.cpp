@@ -24,7 +24,6 @@
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/logging/StdLogConsumer.hpp>
-#include <cpp_utils/logging/LogConfiguration.hpp>
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
@@ -127,13 +126,13 @@ int main(
 
         // Debug
         {
+            const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
+
             // Remove every consumer
             eprosima::utils::Log::ClearConsumers();
 
             // Activate log with verbosity, as this will avoid running log thread with not desired kind
-            eprosima::utils::Log::SetVerbosity(router_configuration.ddspipe_configuration.log_configuration.verbosity);
-
-            const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
+            eprosima::utils::Log::SetVerbosity(log_configuration.verbosity);
 
             // Stdout Log Consumer
             if (log_configuration.stdout_enable)
@@ -146,7 +145,7 @@ int main(
             if (log_configuration.publish.enable)
             {
                 eprosima::utils::Log::RegisterConsumer(
-                    std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(log_configuration));
+                    std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(&log_configuration));
             }
 
             // NOTE:

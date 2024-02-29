@@ -20,7 +20,7 @@
 #include <cpp_utils/Formatter.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
-#include <ddspipe_core/configuration/DdsLogConfiguration.hpp>
+#include <ddspipe_core/configuration/DdsPipeLogConfiguration.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
@@ -72,8 +72,8 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
     //! The type of the entities whose discovery triggers the discovery callbacks.
     ddspipe::core::DiscoveryTrigger discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
 
-    //! Configuration of the DdsLogConsumer.
-    ddspipe::core::DdsLogConfiguration log_configuration;
+    //! Configuration of the StdLogConsumer and the DdsLogConsumer.
+    ddspipe::core::DdsPipeLogConfiguration log_configuration;
 };
 
 } /* namespace core */
