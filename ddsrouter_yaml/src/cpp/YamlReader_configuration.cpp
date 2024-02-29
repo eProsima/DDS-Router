@@ -82,7 +82,7 @@ void YamlReader::fill(
     // Get optional Log Configuration
     if (YamlReader::is_tag_present(yml, LOG_CONFIGURATION_TAG))
     {
-        object.log_configuration = YamlReader::get<ddspipe::core::DdsPipeLogConfiguration>(yml, LOG_CONFIGURATION_TAG, version);
+        object.log_configuration = YamlReader::get<ddspipe::core::DdsLogConfiguration>(yml, LOG_CONFIGURATION_TAG, version);
     }
 }
 

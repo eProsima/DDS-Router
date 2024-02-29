@@ -23,7 +23,7 @@
 #include <cpp_utils/event/SignalEventHandler.hpp>
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
-#include <cpp_utils/logging/CustomStdLogConsumer.hpp>
+#include <cpp_utils/logging/StdLogConsumer.hpp>
 #include <cpp_utils/logging/LogConfiguration.hpp>
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
@@ -135,11 +135,19 @@ int main(
 
             const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
 
-            eprosima::utils::Log::RegisterConsumer(
-                std::make_unique<eprosima::utils::CustomStdLogConsumer>(&log_configuration));
+            // Stdout Log Consumer
+            if (log_configuration.stdout_enable)
+            {
+                eprosima::utils::Log::RegisterConsumer(
+                    std::make_unique<eprosima::utils::StdLogConsumer>(&log_configuration));
+            }
 
-            eprosima::utils::Log::RegisterConsumer(
-                std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(log_configuration));
+            // DDS Log Consumer
+            if (log_configuration.publish.enable)
+            {
+                eprosima::utils::Log::RegisterConsumer(
+                    std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(log_configuration));
+            }
 
             // NOTE:
             // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
