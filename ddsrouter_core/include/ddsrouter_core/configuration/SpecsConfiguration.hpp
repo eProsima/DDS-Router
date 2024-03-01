@@ -72,7 +72,7 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
     //! The type of the entities whose discovery triggers the discovery callbacks.
     ddspipe::core::DiscoveryTrigger discovery_trigger = ddspipe::core::DiscoveryTrigger::READER;
 
-    //! Configuration of the StdLogConsumer and the DdsLogConsumer.
+    //! Configuration of the DDS Pipe's Log consumers.
     ddspipe::core::DdsPipeLogConfiguration log_configuration;
 };
 
