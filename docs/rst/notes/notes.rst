@@ -2,7 +2,7 @@
 
 .. _release_notes:
 
-.. .. include:: forthcoming_version.rst
+.. include:: forthcoming_version.rst
 
 ##############
 Version v2.1.0
