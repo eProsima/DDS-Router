@@ -444,6 +444,54 @@ By default, the filter allows all errors to be displayed, while selectively perm
 
     For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
 
+By default, the logs will be printed in the standard output.
+To publish the logs, under the tag ``publish``, set ``enable: true`` and set a ``domain`` and a ``topic-name``.
+The type of the logs published is defined as follows:
+
+**LogEntry.idl**
+
+.. code-block:: idl
+
+    const long UNDEFINED = 0x10000000;
+    const long SAMPLE_LOST = 0x10000001;
+    const long TOPIC_MISMATCH_TYPE = 0x10000002;
+    const long TOPIC_MISMATCH_QOS = 0x10000003;
+
+    enum Kind {
+      Info,
+      Warning,
+      Error
+    };
+
+    struct LogEntry {
+      @key long event;
+      Kind kind;
+      string category;
+      string message;
+      string timestamp;
+    };
+
+.. note::
+
+    The type of the logs can be published by setting ``publish-type: true``.
+
+**Example of usage**
+
+.. code-block:: yaml
+
+    logging:
+      verbosity: info
+      filter:
+        error: "DDSPIPE|DDSROUTER"
+        warning: "DDSPIPE|DDSROUTER"
+        info: "DDSROUTER"
+      publish:
+        enable: true
+        domain: 84
+        topic-name: "DdsRouterLogs"
+        publish-type: false
+      stdout: true
+
 Participant Configuration
 =========================
 
@@ -879,17 +927,25 @@ A complete example of all the configurations described on this page can be found
       threads: 10
       remove-unused-entities: false
       discovery-trigger: reader
+
       qos:
         history-depth: 1000
         max-tx-rate: 0
         max-rx-rate: 20
         downsampling: 3
+
       logging:
         verbosity: info
         filter:
           error: "DDSPIPE|DDSROUTER"
           warning: "DDSPIPE|DDSROUTER"
           info: "DDSROUTER"
+        publish:
+            enable: true
+            domain: 84
+            topic-name: "DdsRouterLogs"
+            publish-type: false
+        stdout: true
 
     # XML configurations to load
     xml:
