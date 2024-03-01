@@ -174,12 +174,6 @@ TEST(YamlGetConfigurationDdsRouterTest, router_parse_correct_log_config_yaml_vs_
               - name: "P1"
                 kind: "local"
                 domain: 0
-              - name: "P2"
-                kind: "local"
-                domain: 1
-              - name: "P3"
-                kind: "simple"
-                domain: 2
         )";
 
     Yaml yml = YAML::Load(yml_str);
@@ -202,7 +196,6 @@ TEST(YamlGetConfigurationDdsRouterTest, router_parse_correct_log_config_yaml_vs_
         configuration.ddspipe_configuration.log_configuration.filter[utils::VerbosityKind::Info].get_value(),
         "DDSROUTER");
 }
-
 
 int main(
         int argc,
