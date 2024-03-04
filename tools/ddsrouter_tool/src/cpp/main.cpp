@@ -30,8 +30,20 @@
 
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
 #include <ddspipe_core/monitoring/Monitor.hpp>
+#include <ddspipe_core/monitoring/consumers/DdsMonitorConsumer.hpp>
+#include <ddspipe_core/monitoring/consumers/StdoutMonitorConsumer.hpp>
 #include <ddspipe_core/monitoring/producers/StatusMonitorProducer.hpp>
 #include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
+
+#if FASTRTPS_VERSION_MAJOR < 2 || (FASTRTPS_VERSION_MAJOR == 2 && FASTRTPS_VERSION_MINOR < 13)
+    #include <ddspipe_core/types/monitoring/topics/v1/MonitoringTopics.h>
+    #include <ddspipe_core/types/monitoring/topics/v1/MonitoringTopicsPubSubTypes.h>
+    #include <ddspipe_core/types/monitoring/topics/v1/MonitoringTopicsTypeObject.h>
+#else
+    #include <ddspipe_core/types/monitoring/topics/v2/MonitoringTopics.h>
+    #include <ddspipe_core/types/monitoring/topics/v2/MonitoringTopicsPubSubTypes.h>
+    #include <ddspipe_core/types/monitoring/topics/v2/MonitoringTopicsTypeObject.h>
+#endif // if FASTRTPS_VERSION_MAJOR < 2 || (FASTRTPS_VERSION_MAJOR == 2 && FASTRTPS_VERSION_MINOR < 13)
 
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
@@ -238,11 +250,23 @@ int main(
         // Monitoring
         ddspipe::core::Monitor monitor;
 
-        if (router_configuration.advanced_options.monitor.topics.enabled)
+        if (router_configuration.advanced_options.monitor.producers["topics"].enabled)
         {
             // Register the Topics Monitor Producer
             auto topics_producer = ddspipe::core::TopicsMonitorProducer::get_instance();
-            topics_producer->init(router_configuration.advanced_options.monitor.topics);
+            topics_producer->init(router_configuration.advanced_options.monitor.producers["topics"]);
+
+            // Register the type object
+            registerMonitoringTopicsTypes();
+
+            // Register the type
+            fastdds::dds::TypeSupport type(new MonitoringTopicsPubSubType());
+
+            // Register the consumers
+            topics_producer->register_consumer(std::make_unique<ddspipe::core::StdoutMonitorConsumer<MonitoringTopics>>());
+            topics_producer->register_consumer(std::make_unique<ddspipe::core::DdsMonitorConsumer<MonitoringTopics>>(
+                    router_configuration.advanced_options.monitor.consumers["topics"], type));
+
             monitor.register_producer(topics_producer);
         }
 
