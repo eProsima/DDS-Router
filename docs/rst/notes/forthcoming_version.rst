@@ -6,6 +6,6 @@
 Forthcoming Version
 ###################
 
-This release will include the following **DDS Router tool configuration features**:
+This release will include the following **Configuration features**:
 
 * New configuration option ``logging`` to configure the :ref:`Logs <router_specs_logging>`.

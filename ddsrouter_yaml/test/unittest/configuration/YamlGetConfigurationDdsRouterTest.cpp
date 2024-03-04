@@ -154,7 +154,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
  *    - The warning filter is the one configured through the Command-Line
  *    - The info filter is the default (DDSROUTER)
  */
-TEST(YamlGetConfigurationDdsRouterTest, router_parse_correct_log_config_yaml_vs_commandline)
+TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_yaml_vs_commandline)
 {
     CommandlineArgsRouter commandline_args;
 

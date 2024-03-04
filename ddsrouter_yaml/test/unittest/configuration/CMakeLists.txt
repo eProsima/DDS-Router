@@ -73,7 +73,7 @@ set(TEST_SOURCES
 set(TEST_LIST
         get_ddsrouter_configuration_trivial
         get_ddsrouter_configuration_ros_case
-        router_parse_correct_log_config_yaml_vs_commandline
+        get_ddsrouter_configuration_yaml_vs_commandline
     )
 
 set(TEST_EXTRA_LIBRARIES
