@@ -1,4 +1,5 @@
 .. include:: ../exports/alias.include
+.. include:: ../exports/roles.include
 
 .. _user_manual_configuration:
 
@@ -396,7 +397,7 @@ Logging
 Under the ``logging`` tag, users can configure the type of logs to display and filter the logs based on their content and category.
 When configuring the verbosity to ``info``, all types of logs, including informational messages, warnings, and errors, will be displayed.
 Conversely, setting it to ``warning`` will only show warnings and errors, while choosing ``error`` will exclusively display errors.
-By default, the filter allows all errors to be displayed, while selectively permitting warning messages from "DDSPIPE|DDSROUTER" and informational messages from the "DDSROUTER" category.
+By default, the filter allows all errors to be displayed, while selectively permitting warning messages from ``DDSPIPE|DDSROUTER`` and informational messages from the ``DDSROUTER`` category.
 
 .. code-block:: yaml
 
@@ -433,12 +434,14 @@ By default, the filter allows all errors to be displayed, while selectively perm
         - ``filter``
         - Regex string as filter.
         - String
-        - ``DDSROUTER`` / ``DDSPIPE|DDSROUTER`` / ``""``
-        - Regex category or content
+        - info : ``DDSROUTER`` |br|
+          warning : ``DDSPIPE|DDSROUTER`` |br|
+          error: ``""``
+        - Regex string
 
 .. note::
 
-    Please note that for the logs to function properly, the -DLOG_INFO=ON compilation flag is required.
+    For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
 
 Participant Configuration
 =========================
