@@ -17,7 +17,7 @@
 #include <cpp_utils/time/time_utils.hpp>
 
 #include <ddspipe_core/configuration/CommandlineArgs.hpp>
-#include <ddspipe_core/library/library_dll.h>
+#include <ddsrouter_yaml/library/library_dll.h>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -26,7 +26,7 @@ namespace yaml {
 /*
  * Struct to parse the executable arguments
  */
-struct CommandlineArgsRouter: public ddspipe::core::CommandlineArgs
+struct DDSROUTER_YAML_DllAPI CommandlineArgsRouter: public ddspipe::core::CommandlineArgs
 {
 
     /////////////////////////
