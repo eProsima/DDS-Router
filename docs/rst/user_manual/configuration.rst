@@ -444,7 +444,8 @@ By default, the filter allows all errors to be displayed, while selectively perm
 
     For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
 
-By default, the logs will be printed in the standard output.
+The |ddsrouter| prints the logs by default (warnings and errors in the standard error and infos in the standard output).
+The |ddsrouter|, however, can also publish the logs in a DDS topic.
 To publish the logs, under the tag ``publish``, set ``enable: true`` and set a ``domain`` and a ``topic-name``.
 The type of the logs published is defined as follows:
 
