@@ -262,7 +262,8 @@ ProcessReturnCode parse_arguments(
                     break;
 
                 case optionIndex::LOG_VERBOSITY:
-                    commandline_args.log_verbosity = eprosima::fastdds::dds::Log::Kind(static_cast<int>(from_string_LogKind(opt.arg)));
+                    commandline_args.log_verbosity =
+                            eprosima::fastdds::dds::Log::Kind(static_cast<int>(from_string_LogKind(opt.arg)));
                     break;
 
                 case optionIndex::UNKNOWN_OPT:

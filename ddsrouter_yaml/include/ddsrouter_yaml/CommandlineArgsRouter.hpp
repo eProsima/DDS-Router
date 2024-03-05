@@ -26,7 +26,7 @@ namespace yaml {
 /*
  * Struct to parse the executable arguments
  */
-struct DDSROUTER_YAML_DllAPI CommandlineArgsRouter: public ddspipe::core::CommandlineArgs
+struct DDSROUTER_YAML_DllAPI CommandlineArgsRouter : public ddspipe::core::CommandlineArgs
 {
 
     /////////////////////////

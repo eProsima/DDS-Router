@@ -121,7 +121,8 @@ int main(
 
         // Load DDS Router Configuration
         core::DdsRouterConfiguration router_configuration =
-                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path, &commandline_args);
+                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path,
+                        &commandline_args);
 
         // Debug
         {
@@ -165,7 +166,8 @@ int main(
                     try
                     {
                         core::DdsRouterConfiguration router_configuration =
-                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path);
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+                            commandline_args.file_path);
                         router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
@@ -177,7 +179,8 @@ int main(
 
         // Creating FileWatcher event handler
         std::unique_ptr<eprosima::utils::event::FileWatcherHandler> file_watcher_handler =
-                std::make_unique<eprosima::utils::event::FileWatcherHandler>(filewatcher_callback, commandline_args.file_path);
+                std::make_unique<eprosima::utils::event::FileWatcherHandler>(filewatcher_callback,
+                        commandline_args.file_path);
 
         /////
         // Periodic Handler for reload configuration in periodic time
@@ -195,18 +198,21 @@ int main(
                     {
                         logUser(
                             DDSROUTER_EXECUTION,
-                            "Periodic Timer raised. Reloading configuration from file " << commandline_args.file_path << ".");
+                            "Periodic Timer raised. Reloading configuration from file " << commandline_args.file_path <<
+                        ".");
 
                         try
                         {
                             core::DdsRouterConfiguration router_configuration =
-                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path);
+                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+                                commandline_args.file_path);
                             router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)
                         {
                             logWarning(DDSROUTER_EXECUTION,
-                                    "Error reloading configuration file " << commandline_args.file_path << " with error: " << e.what());
+                                    "Error reloading configuration file " << commandline_args.file_path << " with error: " <<
+                            e.what());
                         }
                     };
 
