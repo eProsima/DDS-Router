@@ -279,5 +279,8 @@ int main(
     // Force print every log before closing
     eprosima::utils::Log::Flush();
 
+    // Delete the consumers before closing
+    eprosima::utils::Log::ClearConsumers();
+
     return static_cast<int>(ui::ProcessReturnCode::success);
 }
