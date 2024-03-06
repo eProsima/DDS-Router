@@ -24,6 +24,7 @@
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
 #include <cpp_utils/logging/CustomStdLogConsumer.hpp>
+#include <cpp_utils/logging/LogConfiguration.hpp>
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
@@ -33,6 +34,7 @@
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
+#include <ddsrouter_yaml/CommandlineArgsRouter.hpp>
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
 
 #include "user_interface/constants.hpp"
@@ -46,22 +48,12 @@ int main(
         int argc,
         char** argv)
 {
-    // Configuration File path
-    std::string file_path = "";
-
-    // Reload time
-    eprosima::utils::Duration_ms reload_time = 0;
-
-    // Maximum timeout
-    eprosima::utils::Duration_ms timeout = 0;
-
-    // Debug options
-    std::string log_filter = "(DDSROUTER|DDSPIPE)";
-    eprosima::fastdds::dds::Log::Kind log_verbosity = eprosima::fastdds::dds::Log::Kind::Warning;
+    // Initialize CommandlineArgs
+    eprosima::ddsrouter::yaml::CommandlineArgsRouter commandline_args;
 
     // Parse arguments
     ui::ProcessReturnCode arg_parse_result =
-            ui::parse_arguments(argc, argv, file_path, reload_time, timeout, log_filter, log_verbosity);
+            ui::parse_arguments(argc, argv, commandline_args);
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
@@ -77,45 +69,27 @@ int main(
     }
 
     // Check file is in args, else get the default file
-    if (file_path == "")
+    if (commandline_args.file_path == "")
     {
-        file_path = ui::DEFAULT_CONFIGURATION_FILE_NAME;
+        commandline_args.file_path = ui::DEFAULT_CONFIGURATION_FILE_NAME;
 
         logUser(
             DDSROUTER_EXECUTION,
-            "Not configuration file given, using default file " << file_path << ".");
+            "Not configuration file given, using default file " << commandline_args.file_path << ".");
     }
 
     // Check file exists and it is readable
     // NOTE: this check is redundant with option parse arg check
-    if (!is_file_accessible(file_path.c_str(), eprosima::utils::FileAccessMode::read))
+    if (!is_file_accessible(commandline_args.file_path.c_str(), eprosima::utils::FileAccessMode::read))
     {
         logError(
             DDSROUTER_ARGS,
-            "File '" << file_path << "' does not exist or it is not accessible.");
+            "File '" << commandline_args.file_path << "' does not exist or it is not accessible.");
         return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
 
-    // Debug
-    {
-        // Remove every consumer
-        eprosima::utils::Log::ClearConsumers();
-
-        // Activate log with verbosity, as this will avoid running log thread with not desired kind
-        eprosima::utils::Log::SetVerbosity(log_verbosity);
-
-        eprosima::utils::Log::RegisterConsumer(
-            std::make_unique<eprosima::utils::CustomStdLogConsumer>(log_filter, log_verbosity));
-
-        // NOTE:
-        // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
-        // in non debug or with LOG_NO_INFO=ON.
-        // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
-        // Change it when Log Module is independent and with more extensive API.
-        // eprosima::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-    }
 
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
@@ -132,14 +106,14 @@ int main(
             std::make_unique<eprosima::utils::event::SignalEventHandler<eprosima::utils::event::Signal::sigterm>>());    // Add SIGTERM
 
         // If it must be a maximum time, register a periodic handler to finish handlers
-        if (timeout > 0)
+        if (commandline_args.timeout > 0)
         {
             close_handler.register_event_handler<eprosima::utils::event::PeriodicEventHandler>(
                 std::make_unique<eprosima::utils::event::PeriodicEventHandler>(
                     []()
                     {
                         /* Do nothing */ },
-                    timeout));
+                    commandline_args.timeout));
         }
 
         /////
@@ -147,7 +121,28 @@ int main(
 
         // Load DDS Router Configuration
         core::DdsRouterConfiguration router_configuration =
-                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path,
+                        &commandline_args);
+
+        // Debug
+        {
+            // Remove every consumer
+            eprosima::utils::Log::ClearConsumers();
+
+            // Activate log with verbosity, as this will avoid running log thread with not desired kind
+            eprosima::utils::Log::SetVerbosity(router_configuration.ddspipe_configuration.log_configuration.verbosity);
+
+            eprosima::utils::LogConfiguration log_config = router_configuration.ddspipe_configuration.log_configuration;
+            eprosima::utils::Log::RegisterConsumer(
+                std::make_unique<eprosima::utils::CustomStdLogConsumer>(&log_config));
+
+            // NOTE:
+            // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
+            // in non debug or with LOG_NO_INFO=ON.
+            // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
+            // Change it when Log Module is independent and with more extensive API.
+            // eprosima::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
+        }
 
         // Load XML profiles
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
@@ -161,7 +156,7 @@ int main(
         // Callback will reload configuration and pass it to DdsRouter
         // WARNING: it is needed to pass file_path, as FileWatcher only retrieves file_name
         std::function<void(std::string)> filewatcher_callback =
-                [&router, file_path]
+                [&router, commandline_args]
                     (std::string file_name)
                 {
                     logUser(
@@ -171,7 +166,8 @@ int main(
                     try
                     {
                         core::DdsRouterConfiguration router_configuration =
-                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                                yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+                            commandline_args.file_path);
                         router.reload_configuration(router_configuration);
                     }
                     catch (const std::exception& e)
@@ -183,7 +179,8 @@ int main(
 
         // Creating FileWatcher event handler
         std::unique_ptr<eprosima::utils::event::FileWatcherHandler> file_watcher_handler =
-                std::make_unique<eprosima::utils::event::FileWatcherHandler>(filewatcher_callback, file_path);
+                std::make_unique<eprosima::utils::event::FileWatcherHandler>(filewatcher_callback,
+                        commandline_args.file_path);
 
         /////
         // Periodic Handler for reload configuration in periodic time
@@ -192,32 +189,35 @@ int main(
         std::unique_ptr<eprosima::utils::event::PeriodicEventHandler> periodic_handler;
 
         // If reload time is higher than 0, create a periodic event to reload configuration
-        if (reload_time > 0)
+        if (commandline_args.reload_time > 0)
         {
             // Callback will reload configuration and pass it to DdsRouter
             std::function<void()> periodic_callback =
-                    [&router, file_path]
+                    [&router, commandline_args]
                         ()
                     {
                         logUser(
                             DDSROUTER_EXECUTION,
-                            "Periodic Timer raised. Reloading configuration from file " << file_path << ".");
+                            "Periodic Timer raised. Reloading configuration from file " << commandline_args.file_path <<
+                                ".");
 
                         try
                         {
                             core::DdsRouterConfiguration router_configuration =
-                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(file_path);
+                                    yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+                                commandline_args.file_path);
                             router.reload_configuration(router_configuration);
                         }
                         catch (const std::exception& e)
                         {
                             logWarning(DDSROUTER_EXECUTION,
-                                    "Error reloading configuration file " << file_path << " with error: " << e.what());
+                                    "Error reloading configuration file " << commandline_args.file_path << " with error: " <<
+                                    e.what());
                         }
                     };
 
             periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback,
-                            reload_time);
+                            commandline_args.reload_time);
         }
 
         // Start Router
@@ -249,7 +249,7 @@ int main(
     catch (const eprosima::utils::ConfigurationException& e)
     {
         logError(DDSROUTER_ERROR,
-                "Error Loading DDS Router Configuration from file " << file_path <<
+                "Error Loading DDS Router Configuration from file " << commandline_args.file_path <<
                 ". Error message:\n " <<
                 e.what());
         return static_cast<int>(ui::ProcessReturnCode::execution_failed);
