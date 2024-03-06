@@ -199,7 +199,7 @@ int main(
                         logUser(
                             DDSROUTER_EXECUTION,
                             "Periodic Timer raised. Reloading configuration from file " << commandline_args.file_path <<
-                        ".");
+                                ".");
 
                         try
                         {
@@ -212,7 +212,7 @@ int main(
                         {
                             logWarning(DDSROUTER_EXECUTION,
                                     "Error reloading configuration file " << commandline_args.file_path << " with error: " <<
-                            e.what());
+                                    e.what());
                         }
                     };
 
