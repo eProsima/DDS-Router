@@ -1,4 +1,5 @@
 .. include:: ../exports/alias.include
+.. include:: ../exports/roles.include
 
 .. _user_manual_configuration:
 
@@ -386,6 +387,62 @@ QoS
 .. note::
 
     The :ref:`Topic QoS <user_manual_configuration_topic_qos>` configured in ``specs`` can be overwritten by the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Manual Topics <user_manual_configuration_manual_topics>`.
+
+.. _router_specs_logging:
+
+Logging
+-------
+
+``specs`` supports a ``logging`` **optional** tag to configure the |ddsrouter| logs.
+Under the ``logging`` tag, users can configure the type of logs to display and filter the logs based on their content and category.
+When configuring the verbosity to ``info``, all types of logs, including informational messages, warnings, and errors, will be displayed.
+Conversely, setting it to ``warning`` will only show warnings and errors, while choosing ``error`` will exclusively display errors.
+By default, the filter allows all errors to be displayed, while selectively permitting warning messages from ``DDSPIPE|DDSROUTER`` and informational messages from the ``DDSROUTER`` category.
+
+.. code-block:: yaml
+
+    logging:
+      verbosity: info
+      filter:
+        error: "DDSPIPE|DDSROUTER"
+        warning: "DDSPIPE|DDSROUTER"
+        info: "DDSROUTER"
+
+.. note::
+
+    Configuring the logs via the Command-Line is still active and takes precedence over YAML configuration when both methods are used simultaneously.
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Logging
+        - Yaml tag
+        - Description
+        - Data type
+        - Default value
+        - Possible values
+
+    *   - Verbosity
+        - ``verbosity``
+        - Show messages of equal |br|
+          or higher importance.
+        - *enum*
+        - ``warning``
+        - ``info`` / ``warning`` / ``error``
+
+    *   - Filter
+        - ``filter``
+        - Regex to filter the category  |br|
+          or message of the logs.
+        - *string*
+        - info : ``DDSROUTER`` |br|
+          warning : ``DDSPIPE|DDSROUTER`` |br|
+          error : ``""``
+        - Regex string
+
+.. note::
+
+    For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
 
 Participant Configuration
 =========================
@@ -827,6 +884,12 @@ A complete example of all the configurations described on this page can be found
         max-tx-rate: 0
         max-rx-rate: 20
         downsampling: 3
+      logging:
+        verbosity: info
+        filter:
+          error: "DDSPIPE|DDSROUTER"
+          warning: "DDSPIPE|DDSROUTER"
+          info: "DDSROUTER"
 
     # XML configurations to load
     xml:
