@@ -23,11 +23,12 @@
 #include <cpp_utils/event/SignalEventHandler.hpp>
 #include <cpp_utils/exception/ConfigurationException.hpp>
 #include <cpp_utils/exception/InitializationException.hpp>
-#include <cpp_utils/logging/CustomStdLogConsumer.hpp>
-#include <cpp_utils/logging/LogConfiguration.hpp>
+#include <cpp_utils/logging/StdLogConsumer.hpp>
 #include <cpp_utils/ReturnCode.hpp>
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
+
+#include <ddspipe_core/logging/DdsLogConsumer.hpp>
 
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
@@ -90,7 +91,6 @@ int main(
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
 
-
     // Encapsulating execution in block to erase all memory correctly before closing process
     try
     {
@@ -126,15 +126,27 @@ int main(
 
         // Debug
         {
+            const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
+
             // Remove every consumer
             eprosima::utils::Log::ClearConsumers();
 
             // Activate log with verbosity, as this will avoid running log thread with not desired kind
-            eprosima::utils::Log::SetVerbosity(router_configuration.ddspipe_configuration.log_configuration.verbosity);
+            eprosima::utils::Log::SetVerbosity(log_configuration.verbosity);
 
-            eprosima::utils::LogConfiguration log_config = router_configuration.ddspipe_configuration.log_configuration;
-            eprosima::utils::Log::RegisterConsumer(
-                std::make_unique<eprosima::utils::CustomStdLogConsumer>(&log_config));
+            // Stdout Log Consumer
+            if (log_configuration.stdout_enable)
+            {
+                eprosima::utils::Log::RegisterConsumer(
+                    std::make_unique<eprosima::utils::StdLogConsumer>(&log_configuration));
+            }
+
+            // DDS Log Consumer
+            if (log_configuration.publish.enable)
+            {
+                eprosima::utils::Log::RegisterConsumer(
+                    std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(&log_configuration));
+            }
 
             // NOTE:
             // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
@@ -266,6 +278,9 @@ int main(
 
     // Force print every log before closing
     eprosima::utils::Log::Flush();
+
+    // Delete the consumers before closing
+    eprosima::utils::Log::ClearConsumers();
 
     return static_cast<int>(ui::ProcessReturnCode::success);
 }
