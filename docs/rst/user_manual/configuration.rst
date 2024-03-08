@@ -520,7 +520,7 @@ The type of the data published is defined as follows:
         string participant_id;
         unsigned long msgs_lost;
         unsigned long msgs_received;
-        double frequency;
+        double msg_rx_rate;
     };
 
     struct DdsTopic
@@ -1003,7 +1003,7 @@ A complete example of all the configurations described on this page can be found
             topic-name: "DdsRouterLogs"
             publish-type: false
         stdout: true
-        
+
       monitor:
         topics:
           enable: true
