@@ -146,7 +146,6 @@ def _subscriber_parse_output(stdout, stderr):
     for line in stdout.splitlines():
         if msgs_regex_basic.match(line) or msgs_regex_adv.match(line):
             filtered_data['messages'].append(line)
-
         elif match_regex.match(line):
             filtered_data['matches'] += 1
 

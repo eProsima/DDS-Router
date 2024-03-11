@@ -1,0 +1,19 @@
+#############################
+# CHANGE DDS DOMAIN EXAMPLE #
+#############################
+
+# Yaml configuration file version
+version: v4.0
+
+participants:
+
+  - name: d105
+    kind: local
+    domain: 105
+
+  - name: ClientWAN_2
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud
+        port: 21800
+        transport: udp

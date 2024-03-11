@@ -182,7 +182,7 @@ if __name__ == '__main__':
         parse_output_function=_publisher_parse_output,
         validate_output_function=validate_func,
         parse_retcode_function=_publisher_get_retcode_validate(),
-        timeout_as_error=False)
+        timeout_as_error=True)
 
     log.logger.info(f'Publisher validator exited with code {ret_code}')
 
