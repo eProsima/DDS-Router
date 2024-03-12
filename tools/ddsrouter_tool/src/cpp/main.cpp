@@ -237,7 +237,7 @@ int main(
 
         if (router_configuration.advanced_options.monitor.producers["topics"].enabled)
         {
-            monitor.monitorize_topics();
+            monitor.monitor_topics();
         }
 
         // Start Router
