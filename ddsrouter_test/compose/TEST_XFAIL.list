@@ -1,4 +1,4 @@
-tool.application.ddsrouter.compose.discovery_server.tcp
+tool.application.ddsrouter.compose.discovery_server_tcp
 tool.application.ddsrouter.compose.rpc_ros2_services_cloud
 tool.application.ddsrouter.compose.rpc_ros2_services_correct_target
 tool.application.ddsrouter.compose.rpc_ros2_services_repeater
