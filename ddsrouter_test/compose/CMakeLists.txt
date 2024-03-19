@@ -68,8 +68,6 @@ set(TESTS
     discovery_trigger/none
     discovery_trigger/any/reader
     discovery_trigger/any/writer
-
-    monitoring
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

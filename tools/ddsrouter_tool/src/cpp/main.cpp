@@ -30,6 +30,7 @@
 
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
 #include <ddspipe_core/monitoring/Monitor.hpp>
+#include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
@@ -232,10 +233,11 @@ int main(
                             commandline_args.reload_time);
         }
 
-        // Monitoring
-        ddspipe::core::Monitor monitor{router_configuration.advanced_options.monitor};
+        // Monitor
+        auto monitor_configuration = router_configuration.advanced_options.monitor_configuration;
+        ddspipe::core::Monitor monitor{monitor_configuration};
 
-        if (router_configuration.advanced_options.monitor.producers["topics"].enabled)
+        if (monitor_configuration.producers[ddspipe::core::TOPICS_MONITOR_PRODUCER_ID].enabled)
         {
             monitor.monitor_topics();
         }

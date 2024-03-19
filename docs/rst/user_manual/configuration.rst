@@ -499,7 +499,7 @@ Monitor
 -------
 
 ``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
-The monitor can be configured to publish this data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+The monitor publishes (and logs) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
 If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
 
 .. note::
@@ -545,8 +545,8 @@ The type of the data published is defined as follows:
     monitor:
       topics:
         enable: true
-        domain: 10
         period: 1000
+        domain: 10
         topic-name: "DdsRouterTopicData"
 
 Participant Configuration
@@ -1007,8 +1007,8 @@ A complete example of all the configurations described on this page can be found
       monitor:
         topics:
           enable: true
-          domain: 10
           period: 1000
+          domain: 10
           topic-name: "DdsRouterTopicStatistics"
 
     # XML configurations to load
