@@ -499,7 +499,7 @@ Monitor
 -------
 
 ``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
-If the monitor is enabled, it publishes (and logs) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+If the monitor is enabled, it publishes (and logs under the ``MONITOR_DATA`` :ref:`log filter <router_specs_logging>`) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
 If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
 
 .. note::
