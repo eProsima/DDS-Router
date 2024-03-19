@@ -22,6 +22,7 @@
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
 #include <ddspipe_core/configuration/DdsPipeLogConfiguration.hpp>
 #include <ddspipe_core/configuration/IConfiguration.hpp>
+#include <ddspipe_core/configuration/MonitorConfiguration.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/library/library_dll.h>
@@ -74,6 +75,9 @@ struct SpecsConfiguration : public ddspipe::core::IConfiguration
 
     //! Configuration of the DDS Pipe's Log consumers.
     ddspipe::core::DdsPipeLogConfiguration log_configuration;
+
+    //! Configuration of the DDS Pipe's Monitor.
+    ddspipe::core::MonitorConfiguration monitor_configuration{};
 };
 
 } /* namespace core */

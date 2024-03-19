@@ -493,6 +493,62 @@ The type of the logs published is defined as follows:
         publish-type: false
       stdout: true
 
+.. _user_manual_configuration_specs_monitor:
+
+Monitor
+-------
+
+``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
+If the monitor is enabled, it publishes (and logs under the ``MONITOR_DATA`` :ref:`log filter <router_specs_logging>`) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
+
+.. note::
+
+    The data published is relative to each period.
+    The |ddsrouter| will reset its tracked data after publishing it.
+
+
+In particular, the |ddsrouter| will track the number of messages lost, received, and the message reception rate [Hz] of each topic.
+The type of the data published is defined as follows:
+
+**MonitoringTopics.idl**
+
+.. code-block:: idl
+
+    struct DdsTopicData
+    {
+        string participant_id;
+        unsigned long msgs_lost;
+        unsigned long msgs_received;
+        double msg_rx_rate;
+    };
+
+    struct DdsTopic
+    {
+        string name;
+        string type_name;
+        boolean type_discovered;
+        boolean type_mismatch;
+        boolean qos_mismatch;
+        sequence<DdsTopicData> data;
+    };
+
+    struct MonitoringTopics
+    {
+        sequence<DdsTopic> topics;
+    };
+
+**Example of usage**
+
+.. code-block:: yaml
+
+    monitor:
+      topics:
+        enable: true
+        period: 1000
+        domain: 10
+        topic-name: "DdsRouterTopicData"
+
 Participant Configuration
 =========================
 
@@ -947,6 +1003,13 @@ A complete example of all the configurations described on this page can be found
             topic-name: "DdsRouterLogs"
             publish-type: false
         stdout: true
+
+      monitor:
+        topics:
+          enable: true
+          period: 1000
+          domain: 10
+          topic-name: "DdsRouterTopicStatistics"
 
     # XML configurations to load
     xml:

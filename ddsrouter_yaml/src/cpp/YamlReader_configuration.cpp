@@ -25,6 +25,7 @@
 #include <ddspipe_yaml/YamlReader.hpp>
 
 #include <ddspipe_core/configuration/DdsPipeConfiguration.hpp>
+#include <ddspipe_core/configuration/MonitorConfiguration.hpp>
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
@@ -84,6 +85,13 @@ void YamlReader::fill(
     {
         object.log_configuration = YamlReader::get<ddspipe::core::DdsPipeLogConfiguration>(yml, LOG_CONFIGURATION_TAG,
                         version);
+    }
+
+    /////
+    // Get optional monitor tag
+    if (YamlReader::is_tag_present(yml, MONITOR_TAG))
+    {
+        object.monitor_configuration = YamlReader::get<core::MonitorConfiguration>(yml, MONITOR_TAG, version);
     }
 }
 
