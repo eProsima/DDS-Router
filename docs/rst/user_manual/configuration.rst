@@ -499,7 +499,7 @@ Monitor
 -------
 
 ``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
-The monitor publishes (and logs) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
+If the monitor is enabled, it publishes (and logs) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
 If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
 
 .. note::
@@ -508,7 +508,7 @@ If the monitor is not enabled, the |ddsrouter| will not collect or publish any d
     The |ddsrouter| will reset its tracked data after publishing it.
 
 
-In particular, the |ddsrouter| will track the number of messages lost, received, and the frequency of each topic.
+In particular, the |ddsrouter| will track the number of messages lost, received, and the message reception rate [Hz] of each topic.
 The type of the data published is defined as follows:
 
 **MonitoringTopics.idl**
