@@ -29,8 +29,6 @@
 #include <cpp_utils/utils.hpp>
 
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
-#include <ddspipe_core/monitoring/Monitor.hpp>
-#include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
 #include <ddspipe_participants/xml/XmlHandler.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
@@ -231,15 +229,6 @@ int main(
 
             periodic_handler = std::make_unique<eprosima::utils::event::PeriodicEventHandler>(periodic_callback,
                             commandline_args.reload_time);
-        }
-
-        // Monitor
-        auto monitor_configuration = router_configuration.advanced_options.monitor_configuration;
-        ddspipe::core::Monitor monitor{monitor_configuration};
-
-        if (monitor_configuration.producers[ddspipe::core::TOPICS_MONITOR_PRODUCER_ID].enabled)
-        {
-            monitor.monitor_topics();
         }
 
         // Start Router

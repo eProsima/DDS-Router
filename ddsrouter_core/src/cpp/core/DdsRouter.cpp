@@ -24,6 +24,7 @@
 #include <ddspipe_core/core/DdsPipe.hpp>
 #include <ddspipe_core/dynamic/AllowedTopicList.hpp>
 #include <ddspipe_core/efficiency/payload/FastPayloadPool.hpp>
+#include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
 #include <ddspipe_core/types/dds/TopicQoS.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
@@ -62,6 +63,15 @@ DdsRouter::DdsRouter(
                         payload_pool_,
                         participants_database_,
                         thread_pool_));
+
+    // Monitor
+    auto monitor_configuration = configuration_.advanced_options.monitor_configuration;
+    monitor_ = std::make_unique<ddspipe::core::Monitor>(monitor_configuration);
+
+    if (monitor_configuration.producers[ddspipe::core::TOPICS_MONITOR_PRODUCER_ID].enabled)
+    {
+        monitor_->monitor_topics();
+    }
 
     logDebug(DDSROUTER, "DDS Router created.");
 }
