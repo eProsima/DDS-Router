@@ -6,7 +6,7 @@ package_name = 'ddsrouter_yaml_validator'
 
 setup(
     name=package_name,
-    version='2.1.0',
+    version='2.2.0',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
