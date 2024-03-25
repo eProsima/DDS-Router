@@ -1,5 +1,5 @@
 # Test description:
-#   This test checks the Discovery Server functionality, by creating a Router Discovery Server blocking every topic.
+#   This test checks the TCP Discovery Server functionality, by creating a Router Discovery Server blocking every topic.
 #   The edge routers must discover each other via Discovery Server and transmit data from one another.
 #
 # Test architecture:
@@ -70,7 +70,7 @@ services:
     networks:
       - edge_1_net
     volumes:
-      - ../../scripts:/scripts
+      - ../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --args "--domain 1 --samples 20"
 
   ddsrouter_edge_2:
@@ -93,7 +93,7 @@ services:
     networks:
       - edge_2_net
     volumes:
-      - ../../scripts:/scripts
+      - ../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --args "--domain 2 --samples 20"
 
 networks:

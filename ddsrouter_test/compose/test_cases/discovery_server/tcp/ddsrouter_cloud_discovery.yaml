@@ -1,0 +1,12 @@
+version: v4.0
+
+participants:
+
+  - name: Cloud_Discovery_Server_Participant
+    kind: wan-ds
+    discovery-server-guid:
+      id: 0
+    listening-addresses:
+      - ip: 127.0.0.1
+        port: 11666
+        transport: tcp
