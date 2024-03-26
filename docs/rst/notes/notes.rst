@@ -10,12 +10,12 @@ Version v2.2.0
 
 This release includes the following **Features**:
 
-* Publish the :ref:`Logs <router_specs_logging>`.
-* :ref:`Monitor <user_manual_configuration_specs_monitor>`.
+* Publish the :ref:`Logs <router_specs_logging>` in a DDS topic.
+* New :ref:`Monitor <user_manual_configuration_specs_monitor>` module.
 
 This release includes the following **Configuration features**:
 
-* New configuration option ``logging`` to configure the :ref:`Logs <router_specs_logging>`.
+* New ``logging`` configuration option to configure the DDS Router :ref:`internal logs <router_specs_logging>`.
 
 This release includes the following **Dependencies Update**:
 
