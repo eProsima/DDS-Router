@@ -18,9 +18,11 @@ set(TESTS
     repeater_tcp
     tcp
     udp
-    discovery_server
     dds_rtps
     dds
+
+    discovery_server/udp
+    discovery_server/tcp
 
     rpc/ros2_services_cloud
     rpc/ros2_services_repeater
