@@ -44,7 +44,7 @@ This release includes the following **Dependencies Update**:
         - `v0.6.0 <https://github.com/eProsima/dev-utils/releases/tag/v0.6.0>`_
     *   - DDS Pipe
         - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
-        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`_
+        - `v0.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.3.0>`__
         - `v0.4.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v0.4.0>`__
 
 #################
