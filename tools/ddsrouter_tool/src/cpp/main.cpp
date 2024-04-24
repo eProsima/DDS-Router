@@ -46,6 +46,8 @@
 using namespace eprosima;
 using namespace eprosima::ddsrouter;
 
+int exit(const ui::ProcessReturnCode& code);
+
 int main(
         int argc,
         char** argv)
@@ -59,15 +61,15 @@ int main(
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
-        return static_cast<int>(ui::ProcessReturnCode::success);
+        return exit(ui::ProcessReturnCode::success);
     }
     else if (arg_parse_result == ui::ProcessReturnCode::version_argument)
     {
-        return static_cast<int>(ui::ProcessReturnCode::success);
+        return exit(ui::ProcessReturnCode::success);
     }
     else if (arg_parse_result != ui::ProcessReturnCode::success)
     {
-        return static_cast<int>(arg_parse_result);
+        return exit(arg_parse_result);
     }
 
     // Check file is in args, else get the default file
@@ -87,7 +89,8 @@ int main(
         logError(
             DDSROUTER_ARGS,
             "File '" << commandline_args.file_path << "' does not exist or it is not accessible.");
-        return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
+
+        return exit(ui::ProcessReturnCode::required_argument_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
@@ -274,23 +277,27 @@ int main(
                 "Error Loading DDS Router Configuration from file " << commandline_args.file_path <<
                 ". Error message:\n " <<
                 e.what());
-        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
+
+        return exit(ui::ProcessReturnCode::execution_failed);
     }
     catch (const eprosima::utils::InitializationException& e)
     {
         logError(DDSROUTER_ERROR,
                 "Error Initializing DDS Router. Error message:\n " <<
                 e.what());
-        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
+
+        return exit(ui::ProcessReturnCode::execution_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router Tool execution correctly.");
 
-    // Force print every log before closing
-    eprosima::utils::Log::Flush();
+    return exit(ui::ProcessReturnCode::success);
+}
 
+int exit(const ui::ProcessReturnCode& code)
+{
     // Delete the consumers before closing
     eprosima::utils::Log::ClearConsumers();
 
-    return static_cast<int>(ui::ProcessReturnCode::success);
+    return static_cast<int>(code);
 }
