@@ -4,7 +4,7 @@ Version v0.4.0
 
 This release includes the following **features**:
 
-* New :ref:`yaml_validator`, a simple tool to assert the correctness of DDS Router configuration files.
+* New *Yaml Validator*, a simple tool to assert the correctness of DDS Router configuration files.
 * New :ref:`user_manual_user_interface_version_argument` to show the current version of DDS Router.
 
 This release includes the following **improvementes**:

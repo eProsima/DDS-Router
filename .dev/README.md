@@ -34,8 +34,6 @@ The modules contained in this repository are the following:
 * **ddsrouter_docs** (hosted in directory `docs`)
   This package contains the user documentation built with sphinx.
 
-* **ddsrouter_yaml_validator** This is an application used for validating DDS Router `yaml` configuration files.
-
 This is the dependency graph of the packages:
 
 ```sh
