@@ -68,8 +68,6 @@ environment are provided below. These installation instructions are a summarized
 * [CMake](https://cmake.org/), [g++](https://gcc.gnu.org/), [pip](https://pypi.org/project/pip/), [wget](https://www.gnu.org/software/wget/) and [git](https://git-scm.com/)
 * [Colcon](https://colcon.readthedocs.io/en/released/) [optional, not required for CMake-only installation]
 * [Gtest](https://github.com/google/googletest) [for test only]
-* [PyYAML](https://pyyaml.org/) [for YAML Validator only]
-* [jsonschema](https://python-jsonschema.readthedocs.io/) [for YAML Validator only]
 
 #### CMake, g++, pip, wget and git
 
@@ -97,28 +95,6 @@ If this fails due to an Environment Error, add the `--user` flag to the `pip3` i
 compile tests. It is possible to activate them with the opportune [CMake options](https://colcon.readthedocs.io/en/released/reference/verb/build.html#cmake-options) when calling [colcon](https://colcon.readthedocs.io/en/released/) or
 [CMake](https://cmake.org/). For a detailed description of the Gtest installation process, please refer to the
 [Gtest Installation Guide](https://github.com/google/googletest).
-
-#### PyYAML
-
-[PyYAML](https://pyyaml.org/) is a YAML parser and emitter for Python.
-It is used by the DDS-Router YAML Validator for loading the content of configuration files.
-Install `pyyaml` by executing the following command:
-
-```bash
-pip3 install -U pyyaml
-```
-
-#### jsonschema
-
-[jsonschema](https://python-jsonschema.readthedocs.io/) is an implementation of the JSON Schema specification for
-Python.
-It is used by the DDS-Router YAML Validator for performing validation of configuration files against a given JSON
-schema.
-Install `jsonschema` by executing the following command:
-
-```bash
-pip3 install -U jsonschema
-```
 
 ### Dependencies
 
@@ -189,7 +165,6 @@ These packages are:
 * `ddsrouter_yaml`: library to configure a DDS Router from a YAML.
 * `ddsrouter_tool`: application to execute a DDS Router from a YAML configuration file.
 * `ddsrouter_docs`: package to generate the DDS Router documentation using sphinx.
-* `ddsrouter_yaml_validator`: application to validate DDS Router YAML configuration files.
 
 > *NOTE:* Those packages could be installed and use independently (according with each package dependency).
   In order to compile only a package and its dependencies, use the colcon argument `--packages-up-to <package>`.
@@ -207,18 +182,6 @@ source <install-path>/setup.bash
 
 # Execute DDS Router
 ./<install-path>/ddsrouter_tool/bin/ddsrouter
-```
-
-### Validate a configuration file
-
-To validate a *DDS Router* YAML configuration file, execute the following commands:
-
-```bash
-# Source installation
-source <install-path>/setup.bash
-
-# Validate a DDS Router configuration file
-ddsrouter_yaml_validator --config-file ddsrouter-config.yaml
 ```
 
 ### Testing

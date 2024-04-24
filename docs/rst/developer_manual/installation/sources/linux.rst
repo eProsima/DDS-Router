@@ -47,8 +47,6 @@ installed in the system:
 * :ref:`cmake_gcc_pip_wget_git_sl`
 * :ref:`colcon_install` [optional]
 * :ref:`gtest_sl` [for test only]
-* :ref:`py_yaml` [for YAML Validator only]
-* :ref:`json_schema` [for YAML Validator only]
 
 
 .. _cmake_gcc_pip_wget_git_sl:
@@ -103,40 +101,6 @@ Use the following command to download the code:
 .. code-block:: bash
 
     git clone --branch release-1.11.0 https://github.com/google/googletest src/googletest-distribution
-
-
-.. _py_yaml:
-
-PyYAML
-^^^^^^
-
-`PyYAML <https://pyyaml.org/>`_ is a YAML parser and emitter for Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for loading the content of configuration files.
-
-Install ``pyyaml`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U pyyaml
-
-
-.. _json_schema:
-
-jsonschema
-^^^^^^^^^^
-
-`jsonschema <https://python-jsonschema.readthedocs.io/>`_ is an implementation of the JSON Schema specification for
-Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for performing validation of configuration files against a given
-JSON schema.
-
-Install ``jsonschema`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U jsonschema
 
 .. _dependencies:
 
