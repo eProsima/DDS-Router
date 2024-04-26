@@ -38,6 +38,20 @@ namespace ddspipe {
 namespace yaml {
 
 template <>
+bool YamlValidator::validate<core::MonitorConfiguration>(
+        const Yaml& yml,
+        const YamlReaderVersion& /* version */)
+{
+    // The method is rewritten to provide a specific validation of the DDS Router's MonitorConfiguration:
+    // i.e. the DDS Router's MonitorConfiguration doesn't have a status.
+    static const std::set<TagType> tags{
+        MONITOR_DOMAIN_TAG,
+        MONITOR_TOPICS_TAG};
+
+    return YamlValidator::validate_tags(yml, tags);
+}
+
+template <>
 void YamlReader::fill(
         ddsrouter::core::SpecsConfiguration& object,
         const Yaml& yml,
