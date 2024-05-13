@@ -1,7 +1,7 @@
 ARG docker_image_base
 FROM $docker_image_base
 
-LABEL author=javierparis@eprosima.com
+LABEL author=raul@eprosima.com
 
 # Avoid interactuation with installation of some package that needs the locale.
 ENV TZ=Europe/Madrid

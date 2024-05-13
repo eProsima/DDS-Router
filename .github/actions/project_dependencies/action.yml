@@ -11,6 +11,13 @@ inputs:
     description: Specify cmake_build_type option to download specific artifact
     required: true
 
+  custom_version_build:
+    description: >
+      Use the custom version build from eProsima-CI.
+      If set to false, the workflow will run the tests for Fast DDS v2 and v3.
+    required: true
+    default: 'custom'
+
   dependencies_artifact_postfix:
     description: Specify artifact postfix in case it wants to use a manual one
     required: false
@@ -47,7 +54,7 @@ runs:
     - name: Download dependencies artifact
       uses: eProsima/eProsima-CI/multiplatform/download_dependency@v0
       with:
-        artifact_name: built_ddspipe_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
+        artifact_name: built_ddspipe_${{ inputs.custom_version_build }}_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
         workflow_source: build_ddspipe.yml
         workflow_source_repository: eProsima/eProsima-CI
         target_workspace: ${{ inputs.target_workspace }}

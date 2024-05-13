@@ -1,43 +1,48 @@
-name: ddsrouter-docker-tests
+name: docker-reusable-workflow
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
+
       fastcdr_branch:
         description: 'Branch or tag of Fast CDR repository (https://github.com/eProsima/Fast-CDR)'
         required: true
         default: 'master'
+        type: string
+
       fastdds_branch:
         description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
         required: true
         default: 'master'
-      devutils_branch:
-        description: 'Branch or tag of dev-utils repository (https://github.com/eProsima/dev-utils)'
-        required: true
-        default: 'main'
+        type: string
+
       ddspipe_branch:
         description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
         required: true
         default: 'main'
+        type: string
+
       ddsrouter_branch:
         description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
         required: true
         default: 'main'
+        type: string
+
+      custom_version_build:
+        description: >
+          Version of Fast DDS build from eProsima-CI.
+        required: true
+        type: string
+
       dependencies_artifact_postfix:
         description: 'Postfix name to add to artifact name to download dependencies. This is use to download a specific artifact version from eProsima-CI.'
         required: true
         default: '_nightly'
-  pull_request:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 0 * * *'
+        type: string
 
 env:
   code_packages_names: 'ddsrouter_test'
   docs_packages_names: ''
-  default_dependencies_artifact_postfix: '_nightly'
 
 jobs:
   docker-test:
@@ -45,11 +50,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      DEFAULT_FASTCDR_BRANCH: 'master'
-      DEFAULT_FASTDDS_BRANCH: 'master'
-      DEFAULT_DEVUTILS_BRANCH: 'main'
-      DEFAULT_DDSPIPE_BRANCH: 'main'
-      DEFAULT_DDSROUTER_BRANCH: 'main'
       DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
       DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "vulcanexus:ci"
 
@@ -59,24 +59,6 @@ jobs:
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
           path: ${{ github.workspace }}/src
-
-      # Echo Env Var to debug workflow
-      - name: Echo env variables
-        run: |
-          echo "--- Input Variables ---"
-          echo "github.event.inputs.fastcdr_branch: ${{ github.event.inputs.fastcdr_branch }}"
-          echo "github.event.inputs.fastdds_branch: ${{ github.event.inputs.fastdds_branch }}"
-          echo "github.event.inputs.devutils_branch: ${{ github.event.inputs.devutils_branch }}"
-          echo "github.event.inputs.ddspipe_branch: ${{ github.event.inputs.ddspipe_branch }}"
-          echo "github.event.inputs.ddsrouter_branch: ${{ github.event.inputs.ddsrouter_branch }}"
-          echo "--- Github Environment Variables ---"
-          echo "github.head_ref: ${{ github.head_ref }}"
-          echo "--- Environment Variables ---"
-          echo "DEFAULT_FASTCDR_BRANCH: ${{ env.DEFAULT_FASTCDR_BRANCH }}"
-          echo "DEFAULT_FASTDDS_BRANCH: ${{ env.DEFAULT_FASTDDS_BRANCH }}"
-          echo "DEFAULT_DEVUTILS_BRANCH: ${{ env.DEFAULT_DEVUTILS_BRANCH }}"
-          echo "DEFAULT_DDSPIPE_BRANCH: ${{ env.DEFAULT_DDSPIPE_BRANCH }}"
-          echo "DEFAULT_DDSROUTER_BRANCH: ${{ env.DEFAULT_DDSROUTER_BRANCH }}"
 
       # Build Vulcanexus Docker image
       - name: Build custom Vulcanexus Docker image
@@ -94,14 +76,12 @@ jobs:
           cd ./src/.github/docker/ddsrouter
           docker build \
             --no-cache \
-            --build-arg fastcdr_branch=${{ github.event.inputs.fastcdr_branch || env.DEFAULT_FASTCDR_BRANCH }} \
-            --build-arg fastdds_branch=${{ github.event.inputs.fastdds_branch || env.DEFAULT_FASTDDS_BRANCH }} \
-            --build-arg devutils_branch=${{ github.event.inputs.devutils_branch || env.DEFAULT_DEVUTILS_BRANCH }} \
-            --build-arg ddspipe_branch=${{ github.event.inputs.ddspipe_branch || env.DEFAULT_DDSPIPE_BRANCH }} \
-            --build-arg ddsrouter_branch=${{ github.event.inputs.ddsrouter_branch || github.head_ref || env.DEFAULT_DDSROUTER_BRANCH }} \
+            --build-arg fastcdr_branch=${{ inputs.fastcdr_branch }} \
+            --build-arg fastdds_branch=${{ inputs.fastdds_branch }} \
+            --build-arg ddspipe_branch=${{ inputs.ddspipe_branch }} \
+            --build-arg ddsrouter_branch=${{ inputs.ddsrouter_branch }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
-          echo "DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}"
 
       # Check Docker images exist
       - name: Check if Docker images exist
@@ -114,7 +94,8 @@ jobs:
         with:
           os: ubuntu-22.04
           cmake_build_type: "Release"
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile docker tests

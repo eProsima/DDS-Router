@@ -1,58 +1,21 @@
- # Main CI
-# This is executed:
-#  - every PullRequest (new or update)
-#  - every merge in main
-#  - every night (05:00)
-#
-# These jobs that require to install eprosima libraries uses the artifact generated for eprosima-CI nightly
-# so they do not have to compile the whole project. This saves huge amount of time.
-#
-# JOBS:
-#
-#   - multiplatform-tests
-#     - [ ubuntu-22.04 | ubuntu-20.04 | windows-2019 | windows-2022 ]
-#     - [ Debug | Release ]
-#     - execute tests in different versions of ubuntu with different build types
-#
-#   - asan
-#     - ubuntu-22.04
-#     - execute tests with ASAN flag
-#
-#   - tsan
-#     - ubuntu-22.04
-#     - execute tests with TSAN flag
-#
-#   - clang
-#     - ubuntu-22.04
-#     - execute clang-tidy check
-#
-#   - coverage
-#     - ubuntu-22.04
-#     - execute test with coverage flag and upload results
-#
-#   - flaky
-#     - ubuntu-22.04
-#     - execute flaky tests
-#
-#   - docs
-#     - ubuntu-22.04
-#     - execute docs compile and tests
-#
-#   - uncrustify
-#     - ubuntu-22.04
-#     - test uncrustify
-#
-#   - python-linter
-#     - ubuntu-22.04
-#     - test python linter
-#
-
-name: ddsrouter-tests
+# Tests to run with workflow-dispatch, pull-request and push events
+name: test
 
 on:
-
   workflow_dispatch:
     inputs:
+
+      custom_version_build:
+        description: >
+          Use the custom version build from eProsima-CI.
+          If set to false, the workflow will run the tests for Fast DDS v2 and v3.
+        required: true
+        type: choice
+        default: 'custom'
+        options:
+          - custom
+          - v2
+          - v3
 
       dependencies_artifact_postfix:
         description: 'Postfix name to add to artifact name to download dependencies. This is use to download a specific artifact version from eProsima-CI.'
@@ -63,269 +26,25 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 5 * * *'
-
-env:
-  code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
-  docs_packages_names: 'ddsrouter_docs'
-  default_dependencies_artifact_postfix: '_nightly'
 
 jobs:
 
+  reusable_tests:
+    name: reusable_tests
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      custom_version_build: ${{ inputs.custom_version_build || 'v2' }}
+      dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}
+    secrets: inherit
 
-#####################################################################
-# TEST
-
-  multiplatform-tests:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        cmake_build_type:
-          - Release
-          - Debug
-        os:
-          - ubuntu-20.04
-          - ubuntu-22.04
-          - windows-2019
-          - windows-2022
-
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ${{ matrix.os }}
-          cmake_build_type: ${{ matrix.cmake_build_type }}
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
-          workspace_dependencies: ${{ github.workspace }}/install
-          ctest_args: --label-exclude "xfail"
-          colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
-
-      - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@main
-        if: success() || failure()
-        with:
-          name: "Report: ${{ matrix.os }} | ${{ matrix.cmake_build_type }} "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
-          working-directory: 'src'
-          path-replace-backslashes: 'true'
-          list-tests: 'failed'
-
-#####################################################################
-# ASAN
-
-  asan:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ubuntu-22.04
-          cmake_build_type: Release
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@main
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          workspace_dependencies: ${{ github.workspace }}/install
-
-      - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@main
-        if: success() || failure()
-        with:
-          name: "Report: ASAN "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
-          working-directory: 'src'
-          list-tests: 'failed'
-
-#####################################################################
-# TSAN
-
-  tsan:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ubuntu-22.04
-          cmake_build_type: Release
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@main
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          workspace_dependencies: ${{ github.workspace }}/install
-
-      - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@main
-        if: success() || failure()
-        with:
-          name: "Report: TSAN "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
-          working-directory: 'src'
-          list-tests: 'failed'
-
-#####################################################################
-# CLANG
-
-  clang:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ubuntu-22.04
-          cmake_build_type: Release
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        uses: eProsima/eProsima-CI/multiplatform/clang_build_test@v0
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          workspace_dependencies: ${{ github.workspace }}/install
-
-
-#####################################################################
-# COVERAGE
-
-  coverage:
-    runs-on: ubuntu-22.04
-    environment:
-      name: codecov
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ubuntu-22.04
-          cmake_build_type: Release
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@main
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          workspace_dependencies: ${{ github.workspace }}/install
-          codecov_token: ${{ secrets.CODECOV_TOKEN }}
-          codecov_fix_file_path: ${{ github.workspace }}/src/codecov.yml
-
-
-#####################################################################
-# FLAKY
-
-  flaky:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
-        with:
-          path: ${{ github.workspace }}/src
-
-      - name: Download dependencies and install requirements
-        uses: ./src/.github/actions/project_dependencies
-        with:
-          os: ubuntu-22.04
-          cmake_build_type: Release
-          dependencies_artifact_postfix: ${{ github.event.inputs.dependencies_artifact_postfix || env.default_dependencies_artifact_postfix }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Compile and run tests
-        id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
-        with:
-          packages_names: ${{ env.code_packages_names }}
-          workspace_dependencies: ${{ github.workspace }}/install
-          ctest_args: --label-regex "xfail"
-
-      - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@main
-        if: success() || failure()
-        with:
-          name: "Report: Flaky "
-          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
-          working-directory: 'src'
-          fail-on-empty: 'false'
-          list-tests: 'failed'
-
-#####################################################################
-# DOCUMENTATION TEST
-
-  docs:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Build and test documentation
-        uses: eProsima/eProsima-CI/ubuntu/sphinx_docs@main
-        with:
-          checkout_path: "${{ github.workspace }}/src/ddsrouter"
-          path_to_requirements: "${{ github.workspace }}/src/ddsrouter/docs/requirements.txt"
-          docs_subpackage_name: ${{ env.docs_packages_names }}
-          secret_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-#####################################################################
-# UNCRUSTIFY
-
-  uncrustify:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Uncrustify
-        uses: eProsima/eProsima-CI/ubuntu/uncrustify@v0
-
-
-#####################################################################
-# PYTHON LINTER
-
-  python-linter:
-    runs-on: ubuntu-22.04
-    steps:
-
-      - name: Python Linter
-        uses: eProsima/eProsima-CI/ubuntu/python_linter@v0
+  reusable_docker_tests:
+    name: reusable_docker_tests
+    uses: ./.github/workflows/docker-reusable-workflow.yml
+    with:
+      fastcdr_branch: 'master'
+      fastdds_branch: '2.x'
+      ddspipe_branch: 'main'
+      ddsrouter_branch: ${{ inputs.ddsrouter_branch || github.head_ref }}
+      custom_version_build: ${{ inputs.custom_version_build || 'v2' }}
+      dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}
+    secrets: inherit
