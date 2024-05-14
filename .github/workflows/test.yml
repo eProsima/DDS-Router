@@ -17,6 +17,12 @@ on:
         default: 'master'
         type: string
 
+      dev_utils_branch:
+        description: 'Branch or tag of eProsima/dev-utils repository (https://github.com/eProsima/dev-utils)'
+        required: true
+        default: 'main'
+        type: string
+
       ddspipe_branch:
         description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
         required: true
@@ -65,9 +71,10 @@ jobs:
     name: reusable_docker_tests
     uses: ./.github/workflows/docker-reusable-workflow.yml
     with:
-      fastcdr_branch: 'master'
-      fastdds_branch: '2.x'
-      ddspipe_branch: 'main'
+      fastcdr_branch: ${{ inputs.fastcdr_branch || '2.x' }}
+      fastdds_branch: ${{ inputs.fastdds_branch || '2.x' }}
+      dev_utils_branch: ${{ inputs.dev_utils_branch || 'main' }}
+      ddspipe_branch: ${{ inputs.ddspipe_branch || 'main' }}
       ddsrouter_branch: ${{ inputs.ddsrouter_branch || github.head_ref }}
       custom_version_build: ${{ inputs.custom_version_build || 'v2' }}
       dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}

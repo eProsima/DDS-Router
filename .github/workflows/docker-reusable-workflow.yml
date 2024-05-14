@@ -16,6 +16,12 @@ on:
         default: 'master'
         type: string
 
+      dev_utils_branch:
+        description: 'Branch or tag of eProsima/dev-utils repository (https://github.com/eProsima/dev-utils)'
+        required: true
+        default: 'main'
+        type: string
+
       ddspipe_branch:
         description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
         required: true
@@ -78,6 +84,7 @@ jobs:
             --no-cache \
             --build-arg fastcdr_branch=${{ inputs.fastcdr_branch }} \
             --build-arg fastdds_branch=${{ inputs.fastdds_branch }} \
+            --build-arg dev_utils_branch=${{ inputs.dev_utils_branch }} \
             --build-arg ddspipe_branch=${{ inputs.ddspipe_branch }} \
             --build-arg ddsrouter_branch=${{ inputs.ddsrouter_branch }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
