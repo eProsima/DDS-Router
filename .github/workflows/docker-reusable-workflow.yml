@@ -64,7 +64,7 @@ jobs:
       - name: Sync repository
         uses: eProsima/eProsima-CI/external/checkout@v0
         with:
-          path: ${{ github.workspace }}/src
+          path: src
 
       # Build Vulcanexus Docker image
       - name: Build custom Vulcanexus Docker image
@@ -111,8 +111,8 @@ jobs:
           workspace: ${{ github.workspace }}
           colcon_build_args: --packages-up-to ddsrouter_test
           cmake_args: -DBUILD_COMPOSE_TESTS=ON -DCMAKE_BUILD_TYPE=Release
-          workspace_dependencies: ${{ github.workspace }}/install
-          colcon_meta_file: ${{ github.workspace }}/src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          workspace_dependencies: install
+          colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
 
       # Run ddsrouter_test compose tests
       - name: Run flaky tests
@@ -120,7 +120,7 @@ jobs:
         run: |
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
           export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
-          source ${{ github.workspace }}/install/setup.bash
+          source install/setup.bash
           colcon test \
             --packages-select ddsrouter_test \
             --event-handlers console_direct+ \
@@ -133,7 +133,7 @@ jobs:
         run: |
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
           export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
-          source ${{ github.workspace }}/install/setup.bash
+          source install/setup.bash
           colcon test \
             --packages-select ddsrouter_test \
             --event-handlers console_direct+ \
