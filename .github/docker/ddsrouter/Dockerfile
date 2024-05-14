@@ -42,7 +42,7 @@ RUN pip3 install \
 WORKDIR /ddsrouter
 
 
-ARG fastcdr_branch=master
+ARG fastcdr_branch=2.x
 ARG fastdds_branch=2.x
 ARG devutils_branch=main
 ARG ddspipe_branch=main
