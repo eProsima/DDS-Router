@@ -29,7 +29,7 @@ jobs:
     name: reusable_docker_tests_v2
     uses: ./.github/workflows/docker-reusable-workflow.yml
     with:
-      fastcdr_branch: 'master'
+      fastcdr_branch: '2.x'
       fastdds_branch: '2.x'
       ddspipe_branch: 'main'
       ddsrouter_branch: 'main'

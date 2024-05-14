@@ -5,6 +5,30 @@ on:
   workflow_dispatch:
     inputs:
 
+      fastcdr_branch:
+        description: 'Branch or tag of Fast CDR repository (https://github.com/eProsima/Fast-CDR)'
+        required: true
+        default: 'master'
+        type: string
+
+      fastdds_branch:
+        description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
+        required: true
+        default: 'master'
+        type: string
+
+      ddspipe_branch:
+        description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
+        required: true
+        default: 'main'
+        type: string
+
+      ddsrouter_branch:
+        description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
+        required: true
+        default: 'main'
+        type: string
+
       custom_version_build:
         description: >
           Use the custom version build from eProsima-CI.
