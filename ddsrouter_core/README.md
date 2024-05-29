@@ -38,7 +38,7 @@ router.stop();
 
 ## Dependencies
 
-* `fastrtps`
+* `fastdds`
 * `cpp_utils`
 
 ---

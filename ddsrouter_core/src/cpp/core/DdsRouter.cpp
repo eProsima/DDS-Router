@@ -124,7 +124,7 @@ utils::ReturnCode DdsRouter::reload_configuration(
 utils::ReturnCode DdsRouter::start() noexcept
 {
     utils::ReturnCode ret = ddspipe_->enable();
-    if (ret == utils::ReturnCode::RETCODE_OK)
+    if (ret == utils::ReturnCode::OK)
     {
         logInfo(DDSROUTER, "Starting DDS Router.");
     }
@@ -135,7 +135,7 @@ utils::ReturnCode DdsRouter::start() noexcept
 utils::ReturnCode DdsRouter::stop() noexcept
 {
     utils::ReturnCode ret = ddspipe_->disable();
-    if (ret == utils::ReturnCode::RETCODE_OK)
+    if (ret == utils::ReturnCode::OK)
     {
         logInfo(DDSROUTER, "Stopping DDS Router.");
     }
