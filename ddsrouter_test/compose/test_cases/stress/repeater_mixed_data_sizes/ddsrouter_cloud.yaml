@@ -1,0 +1,19 @@
+version: v4.0
+
+participants:
+
+  - name: Cloud_Participant
+    kind: wan
+    repeater: true
+    listening-addresses:
+      - domain: ddsrouter_cloud.edge_cloud
+        port: 11666
+        transport: udp
+
+specs:
+  remove-unused-entities: false
+
+  logging:
+    verbosity: warning
+    filter:
+      warning: ""

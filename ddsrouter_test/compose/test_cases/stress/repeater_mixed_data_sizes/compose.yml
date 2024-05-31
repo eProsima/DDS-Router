@@ -1,0 +1,398 @@
+# Test description:
+#   This test stresses a router with a repeater participant by connecting to it 14 different edge routers
+#   and publishing messages of different sizes (1B, 12B, 123B, 1.23KB, 12.3KB, 123KB, 1.23MB) in the same topic.
+#
+# Test architecture:
+#
+# ┌────────────┐  ┌─────────────────┐                            ┌─────────────────┐  ┌─────────────┐
+# │publisher_01├─►│ddsrouter_edge_01├────────┐          ┌────────┤ddsrouter_edge_11├─►│subscriber_11│
+# └────────────┘  └─────────────────┘        │          │        └─────────────────┘  └─────────────┘
+#                                            │          │
+# ┌────────────┐  ┌─────────────────┐        │          │        ┌─────────────────┐  ┌─────────────┐
+# │publisher_02├─►│ddsrouter_edge_02├──────┐ │          │ ┌──────┤ddsrouter_edge_12├─►│subscriber_12│
+# └────────────┘  └─────────────────┘      │ │          │ │      └─────────────────┘  └─────────────┘
+#                                          │ │          │ │
+# ┌────────────┐  ┌─────────────────┐      │ │          │ │      ┌─────────────────┐  ┌─────────────┐
+# │publisher_03├─►│ddsrouter_edge_03├────┐ │ │          │ │ ┌────┤ddsrouter_edge_13├─►│subscriber_13│
+# └────────────┘  └─────────────────┘    │ │ │          │ │ │    └─────────────────┘  └─────────────┘
+#                                        ▼ ▼ ▼          ▼ ▼ ▼
+# ┌────────────┐  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐  ┌─────────────┐
+# │publisher_04├─►│ddsrouter_edge_04├───►│ddsrouter_repeater│◄───┤ddsrouter_edge_14├─►│subscriber_14│
+# └────────────┘  └─────────────────┘    └──────────────────┘    └─────────────────┘  └─────────────┘
+#                                        ▲ ▲ ▲          ▲ ▲ ▲
+# ┌────────────┐  ┌─────────────────┐    │ │ │          │ │ │    ┌─────────────────┐  ┌─────────────┐
+# │publisher_05├─►│ddsrouter_edge_05├────┘ │ │          │ │ └────┤ddsrouter_edge_15├─►│subscriber_15│
+# └────────────┘  └─────────────────┘      │ │          │ │      └─────────────────┘  └─────────────┘
+#                                          │ │          │ │
+# ┌────────────┐  ┌─────────────────┐      │ │          │ │      ┌─────────────────┐  ┌─────────────┐
+# │publisher_06├─►│ddsrouter_edge_06├──────┘ │          │ └──────┤ddsrouter_edge_16├─►│subscriber_16│
+# └────────────┘  └─────────────────┘        │          │        └─────────────────┘  └─────────────┘
+#                                            │          │
+# ┌────────────┐  ┌─────────────────┐        │          │        ┌─────────────────┐  ┌─────────────┐
+# │publisher_07├─►│ddsrouter_edge_07├────────┘          └────────┤ddsrouter_edge_17├─►│subscriber_17│
+# └────────────┘  └─────────────────┘                            └─────────────────┘  └─────────────┘
+
+services:
+  ddsrouter_cloud:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_cloud
+    networks:
+      cloud_net:
+        aliases:
+          - ddsrouter_cloud.edge_cloud
+    volumes:
+      - ./ddsrouter_cloud.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  # PUBLISHER 1
+
+  ddsrouter_edge_01:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_01
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_01_net
+    volumes:
+      - ./ddsrouter_edge_01.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_01:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_01
+    depends_on:
+      - ddsrouter_edge_01
+    networks:
+      - edge_01_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 101 -t topic_0 -m 1 --transport udp -r
+
+  # SUBSCRIBER 1
+
+  ddsrouter_edge_11:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_11
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_11_net
+    volumes:
+      - ./ddsrouter_edge_11.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_11:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_11
+    depends_on:
+      - ddsrouter_edge_11
+    networks:
+      - edge_11_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 111 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 2
+
+  ddsrouter_edge_02:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_02
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_02_net
+    volumes:
+      - ./ddsrouter_edge_02.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_02:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_02
+    depends_on:
+      - ddsrouter_edge_02
+    networks:
+      - edge_02_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 102 -t topic_0 -m 12 --transport udp -r
+
+  # SUBSCRIBER 2
+
+  ddsrouter_edge_12:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_12
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_12_net
+    volumes:
+      - ./ddsrouter_edge_12.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_12:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_12
+    depends_on:
+      - ddsrouter_edge_12
+    networks:
+      - edge_12_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 112 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 3
+
+  ddsrouter_edge_03:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_03
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_03_net
+    volumes:
+      - ./ddsrouter_edge_03.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_03:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_03
+    depends_on:
+      - ddsrouter_edge_03
+    networks:
+      - edge_03_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 103 -t topic_0 -m 123 --transport udp -r
+
+  # SUBSCRIBER 3
+
+  ddsrouter_edge_13:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_13
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_13_net
+    volumes:
+      - ./ddsrouter_edge_13.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_13:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_13
+    depends_on:
+      - ddsrouter_edge_13
+    networks:
+      - edge_13_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 113 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 4
+
+  ddsrouter_edge_04:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_04
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_04_net
+    volumes:
+      - ./ddsrouter_edge_04.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_04:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_04
+    depends_on:
+      - ddsrouter_edge_04
+    networks:
+      - edge_04_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 104 -t topic_0 -m 1234 --transport udp -r
+
+  # SUBSCRIBER 4
+
+  ddsrouter_edge_14:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_14
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_14_net
+    volumes:
+      - ./ddsrouter_edge_14.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_14:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_14
+    depends_on:
+      - ddsrouter_edge_14
+    networks:
+      - edge_14_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 114 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 5
+
+  ddsrouter_edge_05:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_05
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_05_net
+    volumes:
+      - ./ddsrouter_edge_05.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_05:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_05
+    depends_on:
+      - ddsrouter_edge_05
+    networks:
+      - edge_05_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 105 -t topic_0 -m 12345 --transport udp -r
+
+  # SUBSCRIBER 5
+
+  ddsrouter_edge_15:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_15
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_15_net
+    volumes:
+      - ./ddsrouter_edge_15.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_15:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_15
+    depends_on:
+      - ddsrouter_edge_15
+    networks:
+      - edge_15_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 115 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 6
+
+  ddsrouter_edge_06:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_06
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_06_net
+    volumes:
+      - ./ddsrouter_edge_06.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_06:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_06
+    depends_on:
+      - ddsrouter_edge_06
+    networks:
+      - edge_06_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 106 -t topic_0 -m 123456 --transport udp -r
+
+  # SUBSCRIBER 6
+
+  ddsrouter_edge_16:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_16
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_16_net
+    volumes:
+      - ./ddsrouter_edge_16.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_16:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_16
+    depends_on:
+      - ddsrouter_edge_16
+    networks:
+      - edge_16_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 116 --topic topic_0 --transport udp -r"
+
+  # PUBLISHER 7
+
+  ddsrouter_edge_07:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_07
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_07_net
+    volumes:
+      - ./ddsrouter_edge_07.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  publisher_07:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_07
+    depends_on:
+      - ddsrouter_edge_07
+    networks:
+      - edge_07_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher -i 100 -s 80 -d 106 -t topic_0 -m 1234567 --transport udp -r
+
+  # SUBSCRIBER 7
+
+  ddsrouter_edge_17:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_17
+    depends_on:
+      - ddsrouter_cloud
+    networks:
+      - cloud_net
+      - edge_17_net
+    volumes:
+      - ./ddsrouter_edge_17.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml  --timeout 30
+
+  subscriber_17:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_17
+    depends_on:
+      - ddsrouter_edge_17
+    networks:
+      - edge_17_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 117 --topic topic_0 --transport udp -r"
+
+networks:
+  edge_01_net:
+  edge_11_net:
+  edge_02_net:
+  edge_12_net:
+  edge_03_net:
+  edge_13_net:
+  edge_04_net:
+  edge_14_net:
+  edge_05_net:
+  edge_15_net:
+  edge_06_net:
+  edge_16_net:
+  edge_07_net:
+  edge_17_net:
+  cloud_net:

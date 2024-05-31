@@ -1,0 +1,22 @@
+version: v4.0
+
+participants:
+
+  - name: Simple_Participant
+    kind: local
+    domain: 105
+
+  - name: Edge_3_Participant
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: udp
+
+specs:
+  remove-unused-entities: true
+
+  logging:
+    verbosity: warning
+    filter:
+      warning: "DDSPIPE|DDSROUTER"
