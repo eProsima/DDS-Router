@@ -4,33 +4,57 @@
 #
 # Test architecture:
 #
-# ┌────────────┐  ┌─────────────────┐                            ┌─────────────────┐  ┌─────────────┐
-# │publisher_01├─►│ddsrouter_edge_01├────────┐          ┌────────┤ddsrouter_edge_11├─►│subscriber_11│
-# └────────────┘  └─────────────────┘        │          │        └─────────────────┘  └─────────────┘
-#                                            │          │
-# ┌────────────┐  ┌─────────────────┐        │          │        ┌─────────────────┐  ┌─────────────┐
-# │publisher_02├─►│ddsrouter_edge_02├──────┐ │          │ ┌──────┤ddsrouter_edge_12├─►│subscriber_12│
-# └────────────┘  └─────────────────┘      │ │          │ │      └─────────────────┘  └─────────────┘
-#                                          │ │          │ │
-# ┌────────────┐  ┌─────────────────┐      │ │          │ │      ┌─────────────────┐  ┌─────────────┐
-# │publisher_03├─►│ddsrouter_edge_03├────┐ │ │          │ │ ┌────┤ddsrouter_edge_13├─►│subscriber_13│
-# └────────────┘  └─────────────────┘    │ │ │          │ │ │    └─────────────────┘  └─────────────┘
-#                                        ▼ ▼ ▼          ▼ ▼ ▼
-# ┌────────────┐  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐  ┌─────────────┐
-# │publisher_04├─►│ddsrouter_edge_04├───►│ddsrouter_repeater│◄───┤ddsrouter_edge_14├─►│subscriber_14│
-# └────────────┘  └─────────────────┘    └──────────────────┘    └─────────────────┘  └─────────────┘
-#                                        ▲ ▲ ▲          ▲ ▲ ▲
-# ┌────────────┐  ┌─────────────────┐    │ │ │          │ │ │    ┌─────────────────┐  ┌─────────────┐
-# │publisher_05├─►│ddsrouter_edge_05├────┘ │ │          │ │ └────┤ddsrouter_edge_15├─►│subscriber_15│
-# └────────────┘  └─────────────────┘      │ │          │ │      └─────────────────┘  └─────────────┘
-#                                          │ │          │ │
-# ┌────────────┐  ┌─────────────────┐      │ │          │ │      ┌─────────────────┐  ┌─────────────┐
-# │publisher_06├─►│ddsrouter_edge_06├──────┘ │          │ └──────┤ddsrouter_edge_16├─►│subscriber_16│
-# └────────────┘  └─────────────────┘        │          │        └─────────────────┘  └─────────────┘
-#                                            │          │
-# ┌────────────┐  ┌─────────────────┐        │          │        ┌─────────────────┐  ┌─────────────┐
-# │publisher_07├─►│ddsrouter_edge_07├────────┘          └────────┤ddsrouter_edge_17├─►│subscriber_17│
-# └────────────┘  └─────────────────┘                            └─────────────────┘  └─────────────┘
+#                  ┌────────────────────────────────────────────────────────────────────┐
+#                  │                                                 cloud_net          │
+# ┌────────────────┼─────────────────────┐                        ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_01_net  │                        │  edge_11_net        │ ┌─────────────┐ │
+# │ │publisher_01│ │ ┌─────────────────┐ │                        │ ┌─────────────────┐ │ │subscriber_11│ │
+# │ │size: 1B    ├─┼─►ddsrouter_edge_01├─┼───────┐        ┌───────┼─┤ddsrouter_edge_11├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │       │        │       │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘       │        │       └─────────────────────┼─────────────────┘
+#                  │                             │        │                             │
+# ┌────────────────┼─────────────────────┐       │        │       ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_02_net  │       │        │       │  edge_12_net        │ ┌─────────────┐ │
+# │ │publisher_02│ │ ┌─────────────────┐ │       │        │       │ ┌─────────────────┐ │ │subscriber_12│ │
+# │ │size: 12B   ├─┼─►ddsrouter_edge_02├─┼─────┐ │        │ ┌─────┼─┤ddsrouter_edge_12├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │     │ │        │ │     │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘     │ │        │ │     └─────────────────────┼─────────────────┘
+#                  │                           │ │        │ │                           │
+# ┌────────────────┼─────────────────────┐     │ │        │ │     ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_03_net  │     │ │        │ │     │  edge_13_net        │ ┌─────────────┐ │
+# │ │publisher_03│ │ ┌─────────────────┐ │     │ │        │ │     │ ┌─────────────────┐ │ │subscriber_13│ │
+# │ │size: 123B  ├─┼─►ddsrouter_edge_03├─┼───┐ │ │        │ │ ┌───┼─┤ddsrouter_edge_13├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │   │ │ │        │ │ │   │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘   │ │ │        │ │ │   └─────────────────────┼─────────────────┘
+#                  │                         │ │ │        │ │ │                         │
+# ┌────────────────┼─────────────────────┐   │ │ │        │ │ │   ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_04_net  │   │ │ │        │ │ │   │  edge_14_net        │ ┌─────────────┐ │
+# │ │publisher_04│ │ ┌─────────────────┐ │  ┌▼─▼─▼────────▼─▼─▼┐  │ ┌─────────────────┐ │ │subscriber_14│ │
+# │ │size: 1.23KB├─┼─►ddsrouter_edge_04├─┼──►ddsrouter_repeater◄──┼─┤ddsrouter_edge_14├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │  └▲─▲─▲────────▲─▲─▲┘  │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘   │ │ │        │ │ │   └─────────────────────┼─────────────────┘
+#                  │                         │ │ │        │ │ │                         │
+# ┌────────────────┼─────────────────────┐   │ │ │        │ │ │   ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_05_net  │   │ │ │        │ │ │   │  edge_15_net        │ ┌─────────────┐ │
+# │ │publisher_05│ │ ┌─────────────────┐ │   │ │ │        │ │ │   │ ┌─────────────────┐ │ │subscriber_15│ │
+# │ │size: 12.3KB├─┼─►ddsrouter_edge_05├─┼───┘ │ │        │ │ └───┼─┤ddsrouter_edge_15├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │     │ │        │ │     │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘     │ │        │ │     └─────────────────────┼─────────────────┘
+#                  │                           │ │        │ │                           │
+# ┌────────────────┼─────────────────────┐     │ │        │ │     ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_06_net  │     │ │        │ │     │  edge_16_net        │ ┌─────────────┐ │
+# │ │publisher_06│ │ ┌─────────────────┐ │     │ │        │ │     │ ┌─────────────────┐ │ │subscriber_16│ │
+# │ │size: 123KBB├─┼─►ddsrouter_edge_06├─┼─────┘ │        │ └─────┼─┤ddsrouter_edge_16├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │       │        │       │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘       │        │       └─────────────────────┼─────────────────┘
+#                  │                             │        │                             │
+# ┌────────────────┼─────────────────────┐       │        │       ┌─────────────────────┼─────────────────┐
+# │ ┌────────────┐ │        edge_07_net  │       │        │       │  edge_17_net        │ ┌─────────────┐ │
+# │ │publisher_07│ │ ┌─────────────────┐ │       │        │       │ ┌─────────────────┐ │ │subscriber_17│ │
+# │ │size: 1.23MB├─┼─►ddsrouter_edge_07├─┼───────┘        └───────┼─┤ddsrouter_edge_17├─┼─►samples: 150 │ │
+# │ └────────────┘ │ └─────────────────┘ │                        │ └─────────────────┘ │ └─────────────┘ │
+# └────────────────┼─────────────────────┘                        └─────────────────────┼─────────────────┘
+#                  └────────────────────────────────────────────────────────────────────┘
 
 services:
   ddsrouter_cloud:
@@ -89,8 +113,8 @@ services:
     networks:
       - edge_11_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 111 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 111 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 2
 
@@ -137,8 +161,8 @@ services:
     networks:
       - edge_12_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 112 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 112 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 3
 
@@ -185,8 +209,8 @@ services:
     networks:
       - edge_13_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 113 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 113 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 4
 
@@ -233,8 +257,8 @@ services:
     networks:
       - edge_14_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 114 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 114 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 5
 
@@ -281,8 +305,8 @@ services:
     networks:
       - edge_15_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 115 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 115 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 6
 
@@ -329,8 +353,8 @@ services:
     networks:
       - edge_16_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 116 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 116 --topic topic_0 --transport udp -r"
 
   # PUBLISHER 7
 
@@ -377,8 +401,8 @@ services:
     networks:
       - edge_17_net
     volumes:
-      - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 100 --timeout 30 --args "--samples 100 --domain 117 --topic topic_0 --transport udp -r"
+      - ../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 150 --timeout 30 --args "--samples 150 --domain 117 --topic topic_0 --transport udp -r"
 
 networks:
   edge_01_net:
