@@ -31,6 +31,7 @@ jobs:
     with:
       fastcdr_branch: '2.x'
       fastdds_branch: '2.x'
+      dev_utils_branch: '0.x'
       ddspipe_branch: 'main'
       ddsrouter_branch: 'main'
       custom_version_build: 'v2'
