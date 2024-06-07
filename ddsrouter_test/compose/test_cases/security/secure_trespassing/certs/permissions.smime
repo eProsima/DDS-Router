@@ -1,17 +1,17 @@
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----D27090B4B0F22E568C39D90528CE110E"
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----28C7DF6E64E1A5156D5059552C346336"
 
 This is an S/MIME signed message
 
-------D27090B4B0F22E568C39D90528CE110E
+------28C7DF6E64E1A5156D5059552C346336
 Content-Type: text/plain
 
 <?xml version="1.0" encoding="utf-8"?>
 <dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.omg.org/spec/DDS-Security/20170801/omg_shared_ca_permissions.xsd">
     <permissions>
 
-        <grant name="LocalPermissions">
-            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocal,O=eProsima,ST=MA,C=ES</subject_name>
+        <grant name="LocalPub1Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalPub1,O=eProsima,ST=MA,C=ES</subject_name>
             <validity>
                 <not_before>2013-06-01T13:00:00</not_before>
                 <not_after>2038-06-01T13:00:00</not_after>
@@ -25,12 +25,183 @@ Content-Type: text/plain
                 </domains>
                 <publish>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_1</topic>
                     </topics>
                 </publish>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalPub3Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalPub3,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <publish>
+                    <topics>
+                        <topic>topic_3</topic>
+                    </topics>
+                </publish>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalPub4Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalPub4,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <publish>
+                    <topics>
+                        <topic>topic_4</topic>
+                    </topics>
+                </publish>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalPub5Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalPub5,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <publish>
+                    <topics>
+                        <topic>topic_5</topic>
+                    </topics>
+                </publish>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalSub0Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalSub0,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
                 <subscribe>
                     <topics>
-                        <topic>*</topic>
+                        <topic>topic_0</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalSub2Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalSub2,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <subscribe>
+                    <topics>
+                        <topic>topic_2</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalSub3Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalSub3,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <subscribe>
+                    <topics>
+                        <topic>topic_3</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalSub4Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalSub4,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <subscribe>
+                    <topics>
+                        <topic>topic_4</topic>
+                    </topics>
+                </subscribe>
+            </allow_rule>
+            <default>DENY</default>
+        </grant>
+
+        <grant name="LocalSub5Permissions">
+            <subject_name>emailAddress=routertest@eprosima.com,CN=BackdoorTestLocalSub5,O=eProsima,ST=MA,C=ES</subject_name>
+            <validity>
+                <not_before>2013-06-01T13:00:00</not_before>
+                <not_after>2038-06-01T13:00:00</not_after>
+            </validity>
+            <allow_rule>
+                <domains>
+                    <id_range>
+                        <min>0</min>
+                        <max>230</max>
+                    </id_range>
+                </domains>
+                <subscribe>
+                    <topics>
+                        <topic>topic_5</topic>
                     </topics>
                 </subscribe>
             </allow_rule>
@@ -71,34 +242,35 @@ Content-Type: text/plain
     </permissions>
 </dds>
 
-------D27090B4B0F22E568C39D90528CE110E
+------28C7DF6E64E1A5156D5059552C346336
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
 
-MIIETAYJKoZIhvcNAQcCoIIEPTCCBDkCAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggIYMIICFDCCAbkCFGqiCfpBO3v89gJhbZAUaiEs1DE/MAoGCCqG
+MIIETQYJKoZIhvcNAQcCoIIEPjCCBDoCAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggIYMIICFDCCAbkCFGTUDiPS4GUP9Mg3FP/BOgIoUSC/MAoGCCqG
 SM49BAMCMIGLMQswCQYDVQQGEwJFUzELMAkGA1UECAwCTUExFDASBgNVBAcMC1Ry
 ZXMgQ2FudG9zMREwDwYDVQQKDAhlUHJvc2ltYTEeMBwGA1UEAwwVZVByb3NpbWEg
 TWFpbiBUZXN0IENBMSYwJAYJKoZIhvcNAQkBFhdyb3V0ZXJ0ZXN0QGVwcm9zaW1h
-LmNvbTAeFw0yMzA2MDIwOTU4MjBaFw0zMzA1MzAwOTU4MjBaMIGLMQswCQYDVQQG
+LmNvbTAeFw0yMzEyMjcwOTA1MjVaFw0zMzEyMjQwOTA1MjVaMIGLMQswCQYDVQQG
 EwJFUzELMAkGA1UECAwCTUExFDASBgNVBAcMC1RyZXMgQ2FudG9zMREwDwYDVQQK
 DAhlUHJvc2ltYTEeMBwGA1UEAwwVZVByb3NpbWEgTWFpbiBUZXN0IENBMSYwJAYJ
 KoZIhvcNAQkBFhdyb3V0ZXJ0ZXN0QGVwcm9zaW1hLmNvbTBZMBMGByqGSM49AgEG
-CCqGSM49AwEHA0IABNVvuUzIgB5GXCORo9ZxjBVhTzo74tx7Fih5VBn9x3eAtX36
-Itb13clUnphVtEz5k+kbyoJ6gGUId6uILtWIdq4wCgYIKoZIzj0EAwIDSQAwRgIh
-AMUOVkBmifN3BNbl7AMmt+vkyvupEzFhFA4FxREBvkmXAiEArtUf6e2ztPFbyfLY
-rwkeJ+eT8nYy8oSlXZsADrDtR6YxggH4MIIB9AIBATCBpDCBizELMAkGA1UEBhMC
+CCqGSM49AwEHA0IABNu/RD4PHyN36hkCZF1RWNas0C/zIr59kzjkjq8kHvH9oV3y
+JU7Ud5dV0sadulW02LYzjgH1/QbZOGGnRJ5Q6aAwCgYIKoZIzj0EAwIDSQAwRgIh
+ALcHE4aNOv3WmGceNdLvXZwFIKqq6jVzhSe4zcxNAZOMAiEA8U6s0L51e2L8J8AL
+8SHzwmv8EhqftegrDCGonMv9JtMxggH5MIIB9QIBATCBpDCBizELMAkGA1UEBhMC
 RVMxCzAJBgNVBAgMAk1BMRQwEgYDVQQHDAtUcmVzIENhbnRvczERMA8GA1UECgwI
 ZVByb3NpbWExHjAcBgNVBAMMFWVQcm9zaW1hIE1haW4gVGVzdCBDQTEmMCQGCSqG
-SIb3DQEJARYXcm91dGVydGVzdEBlcHJvc2ltYS5jb20CFGqiCfpBO3v89gJhbZAU
-aiEs1DE/MA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDYwMjA5NTgyMFowLwYJKoZIhvcNAQkEMSIE
-IDEJOHtcbHkKp6c63+jwATWZ65Fm5fYz0d3ZZHXpk9+2MHkGCSqGSIb3DQEJDzFs
+SIb3DQEJARYXcm91dGVydGVzdEBlcHJvc2ltYS5jb20CFGTUDiPS4GUP9Mg3FP/B
+OgIoUSC/MA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTIyNzA5MDUyNVowLwYJKoZIhvcNAQkEMSIE
+ILE8iLREVqrW2Y1GnTfgGBvzs2qMmPvky+kzN8qksq3LMHkGCSqGSIb3DQEJDzFs
 MGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZI
 hvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0G
-CCqGSIb3DQMCAgEoMAoGCCqGSM49BAMCBEYwRAIgA4hex3dHuJryGcGP6gGCIB6Q
-6+6AuCbDqY8mroa+O6cCICvFS5el1Stv956C7pZmHVyDSzNlvcE6hekYelYfXpnz
+CCqGSIb3DQMCAgEoMAoGCCqGSM49BAMCBEcwRQIhAN1goiblsO2Jh3BEs713BYe0
+N1XjFT9+dv9aS7+z/ZZ/AiBdBGpPKmuJDh5kPi0f6Ta+PG2pO1K5E1QbB21YR+XS
+mQ==
 
-------D27090B4B0F22E568C39D90528CE110E--
+------28C7DF6E64E1A5156D5059552C346336--
 
