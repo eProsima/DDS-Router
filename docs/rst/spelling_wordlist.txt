@@ -27,7 +27,6 @@ gMock
 Gtest
 guid
 IPv
-jsonschema
 kubernetes
 localhost
 metatraffic
@@ -41,7 +40,6 @@ Requiredness
 runtime
 scalable
 utils
-validator
 Vulcanexus
 wget
 yaml
