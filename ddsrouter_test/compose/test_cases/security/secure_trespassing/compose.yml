@@ -147,7 +147,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_1  --domain 0
 
   publisher_sec_3:
@@ -161,7 +161,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_3  --domain 0
 
   publisher_sec_4:
@@ -175,7 +175,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_4  --domain 0
 
   publisher_sec_5:
@@ -189,7 +189,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_5  --domain 0
 
   subscriber_sec_0:
@@ -204,7 +204,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local --domain 0"
 
   subscriber_sec_2:
@@ -219,7 +219,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 12 --args "--topic topic_2 -x secure_local --domain 0"
 
   subscriber_sec_3:
@@ -234,7 +234,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_3 -x secure_local --domain 0"
 
   subscriber_sec_4:
@@ -249,7 +249,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_4 -x secure_local --domain 0"
 
   subscriber_sec_5:
@@ -264,7 +264,7 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 15 --timeout 12 --args "--samples 15 --topic topic_5 -x secure_local --domain 0"
 
 

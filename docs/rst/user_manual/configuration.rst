@@ -81,7 +81,7 @@ Under the **optional** tag ``raw``, an XML configuration (with the same format a
 
       raw: |
           <?xml version="1.0" encoding="UTF-8" ?>
-          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+          <profiles xmlns="http://www.eprosima.com">
               <participant profile_name="custom_participant_configuration">
                   <domainId>1</domainId>
                   <rtps></rtps>
@@ -1021,7 +1021,7 @@ A complete example of all the configurations described on this page can be found
       # Load text as Fast DDS XML configuration
       raw: |
           <?xml version="1.0" encoding="UTF-8" ?>
-          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+          <profiles xmlns="http://www.eprosima.com">
               <participant profile_name="custom_participant_configuration">
                   <domainId>1</domainId>
                   <rtps></rtps>
