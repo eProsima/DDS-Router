@@ -31,9 +31,9 @@ services:
       - ./ddsrouter.yaml:/config.yaml
       - ./configurations/domain2_configuration.xml:/domain2_configuration.xml
       - ./configurations/domain3_configuration.xml:/domain3_configuration.xml
-      - ./configurations/DEFAULT_FASTRTPS_PROFILES.xml:/ddsrouter/DEFAULT_FASTRTPS_PROFILES.xml
+      - ./configurations/DEFAULT_FASTDDS_PROFILES.xml:/ddsrouter/DEFAULT_FASTDDS_PROFILES.xml
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/domain3_configuration.xml
+      - FASTDDS_DEFAULT_PROFILES_FILE=/domain3_configuration.xml
     command: ddsrouter -c /config.yaml --timeout 8
 
 

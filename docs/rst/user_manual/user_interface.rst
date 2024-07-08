@@ -16,8 +16,8 @@ User Interface
 Source Dependency Libraries
 ---------------------------
 
-|eddsrouter| depends on |fastdds| ``fastrtps`` and ``fastcdr`` libraries.
-In order to correctly execute the Router, make sure that ``fastrtps`` and ``fastcdr`` are properly sourced.
+|eddsrouter| depends on |fastdds| ``fastdds`` and ``fastcdr`` libraries.
+In order to correctly execute the Router, make sure that ``fastdds`` and ``fastcdr`` are properly sourced.
 
 .. code-block:: bash
 
@@ -267,7 +267,7 @@ Every log entry has several parts:
     or compiled with CMake option ``LOG_INFO=ON``.
 
     If Fast DDS has been compiled in debug mode, it will print the logs of the DDS Router and Fast DDS mixed.
-    In order to skip Fast DDS logs, compile ``fastrtps`` library with CMake option ``-DLOG_NO_INFO=ON``
+    In order to skip Fast DDS logs, compile ``fastdds`` library with CMake option ``-DLOG_NO_INFO=ON``
     or ``CMAKE_BUILD_TYPE`` different to ``Debug``, or use the argument ``
 
 

@@ -111,11 +111,7 @@ DdsRouterConfiguration dds_test_simple_configuration(
  * The transient_local option changes the test behavior to verify that the communication is transient_local and all old data is sent
  * to Late Joiners.
  */
-#if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-template <class MsgStruct>
-#else
 template <class MsgStruct, class MsgStructType>
-#endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 void test_local_communication(
         DdsRouterConfiguration ddsrouter_configuration,
         uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
@@ -135,9 +131,7 @@ void test_local_communication(
     // Create a message with size specified by repeating the same string
     MsgStruct msg;
 
-    #if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
     MsgStructType type;
-    #endif // if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
 
     std::string msg_str;
 
@@ -149,20 +143,12 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    TestPublisher<MsgStruct> publisher(msg.isKeyDefined());
-    #else
     TestPublisher<MsgStruct> publisher(type.m_isGetKeyDefined);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    TestSubscriber<MsgStruct> subscriber(msg.isKeyDefined(), transient_local);
-    #else
     TestSubscriber<MsgStruct> subscriber(type.m_isGetKeyDefined, transient_local);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
@@ -226,14 +212,8 @@ void test_local_communication(
  */
 TEST(DDSTestLocal, end_to_end_local_communication)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration());
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration());
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-
 }
 
 /**
@@ -242,13 +222,8 @@ TEST(DDSTestLocal, end_to_end_local_communication)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration());
-    #else
     test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
         test::dds_test_simple_configuration());
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -258,24 +233,14 @@ TEST(DDSTestLocal, end_to_end_local_communication_keyed)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(true));
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(true));
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorldKeyed>(
-        test::dds_test_simple_configuration(true));
-    #else
     test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
         test::dds_test_simple_configuration(true));
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -287,17 +252,10 @@ TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keye
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        1000,       // wait for 1000 samples received
-        0);         // send it without waiting from one sample to the other
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         1000,       // wait for 1000 samples received
         0);         // send it without waiting from one sample to the other
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -309,19 +267,11 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_frequency)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_size)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        test::DEFAULT_SAMPLES_TO_RECEIVE,
-        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        10000);     // 500K message size
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         10000);     // 500K message size
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -335,19 +285,11 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_size)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        500,
-        1,
-        1000);     // 50K message size
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         500,
         1,
         1000);     // 50K message size
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -356,21 +298,12 @@ TEST(DDSTestLocal, end_to_end_local_communication_high_throughput)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
 {
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(),
-        test::DEFAULT_SAMPLES_TO_RECEIVE,
-        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        test::DEFAULT_MESSAGE_SIZE,
-        true);
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         test::DEFAULT_MESSAGE_SIZE,
         true);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 /**
@@ -379,21 +312,12 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local)
  */
 TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynamic_discovery)
 {
-        #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    test::test_local_communication<HelloWorld>(
-        test::dds_test_simple_configuration(true, true),
-        test::DEFAULT_SAMPLES_TO_RECEIVE,
-        test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
-        test::DEFAULT_MESSAGE_SIZE,
-        true);
-    #else
     test::test_local_communication<HelloWorld, HelloWorldPubSubType>(
         test::dds_test_simple_configuration(true, true),
         test::DEFAULT_SAMPLES_TO_RECEIVE,
         test::DEFAULT_MILLISECONDS_PUBLISH_LOOP,
         test::DEFAULT_MESSAGE_SIZE,
         true);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 }
 
 int main(
