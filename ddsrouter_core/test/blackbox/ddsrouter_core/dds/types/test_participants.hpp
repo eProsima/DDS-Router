@@ -27,6 +27,8 @@
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
+#include <fastdds/dds/common/InstanceHandle.hpp>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/publisher/DataWriter.hpp>
@@ -40,20 +42,12 @@
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
-#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
-#include <fastrtps/attributes/ParticipantAttributes.h>
-#include <fastrtps/attributes/PublisherAttributes.h>
-#include <fastrtps/attributes/SubscriberAttributes.h>
-#include <fastrtps/xmlparser/XMLProfileManager.h>
-#include <fastdds/dds/common/InstanceHandle.hpp>
+#include <fastdds/rtps/attributes/RTPSParticipantAttributes.hpp>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.hpp>
 
-#if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    #include "v1/HelloWorld/HelloWorldPubSubTypes.h"
-    #include "v1/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
-#else
-    #include "v2/HelloWorld/HelloWorldPubSubTypes.h"
-    #include "v2/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
-#endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
+#include "HelloWorld/HelloWorldPubSubTypes.hpp"
+#include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.hpp"
+
 
 namespace test {
 
@@ -147,7 +141,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
-                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastdds::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         wqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
@@ -169,7 +163,7 @@ public:
     }
 
     //! Dispose instance
-    eprosima::fastrtps::types::ReturnCode_t dispose_key(
+    eprosima::fastdds::dds::ReturnCode_t dispose_key(
             MsgStruct msg);
 
     void wait_discovery(
@@ -254,7 +248,7 @@ bool TestPublisher<HelloWorldKeyed>::publish(
 }
 
 template <>
-eprosima::fastrtps::types::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
+eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
         HelloWorldKeyed msg)
 {
     hello_.id(msg.id());
@@ -355,7 +349,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataReaderQos rqos =  eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
         rqos.endpoint().history_memory_policy =
-                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastdds::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         rqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         if (reliable_)
         {
@@ -438,7 +432,7 @@ private:
                 eprosima::fastdds::dds::DataReader* reader) override
         {
             eprosima::fastdds::dds::SampleInfo info;
-            while (reader->take_next_sample(&msg_received, &info) == ReturnCode_t::RETCODE_OK)
+            while (reader->take_next_sample(&msg_received, &info) == eprosima::fastdds::dds::RETCODE_OK)
             {
                 if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
                 {

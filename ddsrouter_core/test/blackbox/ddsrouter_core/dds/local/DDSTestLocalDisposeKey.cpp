@@ -99,9 +99,7 @@ void test_local_communication_key_dispose(
     // Create a message with size specified by repeating the same string
     HelloWorldKeyed msg;
 
-    #if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
     HelloWorldKeyedPubSubType type;
-    #endif // if FASTRTPS_VERSION_MAJOR >= 2 && FASTRTPS_VERSION_MINOR >= 13
 
     std::string msg_str;
 
@@ -114,20 +112,12 @@ void test_local_communication_key_dispose(
     msg.id(666);
 
     // Create DDS Publisher in domain 0
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    TestPublisher<HelloWorldKeyed> publisher(msg.isKeyDefined());
-    #else
     TestPublisher<HelloWorldKeyed> publisher(type.m_isGetKeyDefined);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    #if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    TestSubscriber<HelloWorldKeyed> subscriber(msg.isKeyDefined());
-    #else
     TestSubscriber<HelloWorldKeyed> subscriber(type.m_isGetKeyDefined);
-    #endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
 
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
@@ -152,7 +142,7 @@ void test_local_communication_key_dispose(
     }
 
     // All samples received, now dispose key from publisher and check that subscriber has receive it
-    ASSERT_TRUE(publisher.dispose_key(msg) == ReturnCode_t::RETCODE_OK);
+    ASSERT_TRUE(publisher.dispose_key(msg) == fastdds::dds::RETCODE_OK);
     std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
     samples_received.store(0);
 
@@ -170,7 +160,7 @@ void test_local_communication_key_dispose(
     }
 
     // All samples received, now dispose key from publisher and check that subscriber has receive it
-    ASSERT_TRUE(publisher.dispose_key(msg) == ReturnCode_t::RETCODE_OK);
+    ASSERT_TRUE(publisher.dispose_key(msg) == fastdds::dds::RETCODE_OK);
     std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
 
     ASSERT_EQ(2u, subscriber.n_disposed());
