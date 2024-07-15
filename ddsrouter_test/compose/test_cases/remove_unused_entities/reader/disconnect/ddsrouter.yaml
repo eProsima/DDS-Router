@@ -12,3 +12,4 @@ participants:
 
 specs:
   remove-unused-entities: true
+  discovery-trigger: reader
