@@ -27,7 +27,7 @@ The following packages will be installed:
 
 - ``foonathan_memory_vendor``, an STL compatible C++ memory allocation library.
 - ``fastcdr``, a C++ library that serializes according to the standard CDR serialization mechanism.
-- ``fastrtps``, the core library of eProsima Fast DDS library.
+- ``fastdds``, the core library of eProsima Fast DDS library.
 - ``cmake_utils``, an eProsima utils library for CMake.
 - ``cpp_utils``, an eProsima utils library for C++.
 
@@ -459,7 +459,7 @@ However, when running an instance of a |ddsrouter| compiled using CMake, it must
 the packages have been installed. This can be done by opening the *Edit system environment variables* control panel and
 adding to the ``PATH`` the |ddsrouter|, *Fast DDS* and *Fast CDR* installation directories:
 
-*   *Fast DDS*: C:\\Program Files\\fastrtps
+*   *Fast DDS*: C:\\Program Files\\fastdds
 *   *Fast CDR*: C:\\Program Files\\fastcdr
 *   |ddsrouter|: C:\\Program Files\\ddsrouter
 
