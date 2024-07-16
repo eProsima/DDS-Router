@@ -18,16 +18,8 @@
 #include <iostream>
 #include <condition_variable>
 
-#include <gtest/gtest.h>
-
-#include <cpp_utils/testing/gtest_aux.hpp>
-#include <cpp_utils/Log.hpp>
-
-#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
-
-#include <ddsrouter_core/core/DdsRouter.hpp>
-
 #include <fastdds/dds/common/InstanceHandle.hpp>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 #include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
@@ -45,8 +37,17 @@
 #include <fastdds/rtps/attributes/RTPSParticipantAttributes.hpp>
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.hpp>
 
+#include <cpp_utils/testing/gtest_aux.hpp>
+#include <cpp_utils/Log.hpp>
+
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+
+#include <ddsrouter_core/core/DdsRouter.hpp>
+
 #include "HelloWorld/HelloWorldPubSubTypes.hpp"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.hpp"
+
+#include <gtest/gtest.h>
 
 
 namespace test {
@@ -154,7 +155,7 @@ public:
     }
 
     //! Publish a sample
-    bool publish(
+    eprosima::fastdds::dds::ReturnCode_t publish(
             MsgStruct msg)
     {
         hello_.index(msg.index());
@@ -238,7 +239,7 @@ private:
 };
 
 template <>
-bool TestPublisher<HelloWorldKeyed>::publish(
+eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
         HelloWorldKeyed msg)
 {
     hello_.index(msg.index());

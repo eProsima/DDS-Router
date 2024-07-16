@@ -15,17 +15,19 @@
 #include <atomic>
 #include <thread>
 
-#include <cpp_utils/testing/gtest_aux.hpp>
-#include <gtest/gtest.h>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 
-#include <cpp_utils/testing/LogChecker.hpp>
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
 #include <test_participants.hpp>
+
+#include <gtest/gtest.h>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -132,7 +134,7 @@ void test_local_communication_key_dispose(
     while (samples_received.load() < samples_to_receive)
     {
         msg.index(++samples_sent);
-        ASSERT_TRUE(publisher.publish(msg)) << samples_sent;
+        ASSERT_EQ(publisher.publish(msg), fastdds::dds::RETCODE_OK) << samples_sent;
 
         // If time is 0 do not wait
         if (time_between_samples > 0)
@@ -150,7 +152,7 @@ void test_local_communication_key_dispose(
     while (samples_received.load() < samples_to_receive)
     {
         msg.index(++samples_sent);
-        ASSERT_TRUE(publisher.publish(msg)) << samples_sent;
+        ASSERT_EQ(publisher.publish(msg), fastdds::dds::RETCODE_OK) << samples_sent;
 
         // If time is 0 do not wait
         if (time_between_samples > 0)

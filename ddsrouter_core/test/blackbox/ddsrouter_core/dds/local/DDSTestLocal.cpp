@@ -15,17 +15,19 @@
 #include <atomic>
 #include <thread>
 
-#include <cpp_utils/testing/gtest_aux.hpp>
-#include <gtest/gtest.h>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 
-#include <cpp_utils/testing/LogChecker.hpp>
 #include <cpp_utils/Log.hpp>
+#include <cpp_utils/testing/gtest_aux.hpp>
+#include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
 #include <test_participants.hpp>
+
+#include <gtest/gtest.h>
 
 using namespace eprosima;
 using namespace eprosima::ddspipe;
@@ -163,7 +165,7 @@ void test_local_communication(
         for (samples_sent = 0; samples_sent < samples_to_receive; samples_sent++)
         {
             msg.index(samples_sent);
-            ASSERT_TRUE(publisher.publish(msg));
+            ASSERT_EQ(publisher.publish(msg), eprosima::fastdds::dds::RETCODE_OK);
 
             // If time is 0 do not wait
             if (time_between_samples > 0)
