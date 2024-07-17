@@ -35,9 +35,7 @@ RUN pip3 install \
         colcon-mixin \
         lxml \
         vcstool \
-        GitPython \
-        pyyaml \
-        jsonschema
+        GitPython
 
 WORKDIR /ddsrouter
 

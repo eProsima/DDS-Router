@@ -17,7 +17,7 @@
 
   <buildtool_depend>cmake</buildtool_depend>
 
-  <depend>fastrtps</depend>
+  <depend>fastdds</depend>
   <depend>ddsrouter_core</depend>
   <depend>ddspipe_yaml</depend>
   <depend>cmake_utils</depend>

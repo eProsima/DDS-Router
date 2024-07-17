@@ -1,6 +1,0 @@
-struct HelloWorldKeyed
-{
-	@Key long id;
-    unsigned long index;
-	string message;
-};

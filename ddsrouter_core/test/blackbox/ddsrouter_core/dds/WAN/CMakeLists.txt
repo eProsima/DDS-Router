@@ -19,23 +19,14 @@
 set(TEST_NAME
     DDSTestWAN)
 
-# Determine Fast DDS version
-if ("${fastrtps_VERSION}" VERSION_LESS 2.13)
-    set(DDS_TYPES_VERSION "v1")
-else()
-    set(DDS_TYPES_VERSION "v2")
-endif()
-
 set(TEST_SOURCES
-DDSTestWAN.cpp
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorld/HelloWorld.cxx
-    $<$<STREQUAL:${DDS_TYPES_VERSION},v2>:${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorld/HelloWorldv1.cxx>
-    $<$<STREQUAL:${DDS_TYPES_VERSION},v2>:${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorld/HelloWorldCdrAux.ipp>
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorld/HelloWorldPubSubTypes.cxx
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorldKeyed/HelloWorldKeyed.cxx
-    $<$<STREQUAL:${DDS_TYPES_VERSION},v2>:${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorldKeyed/HelloWorldKeyedv1.cxx>
-    $<$<STREQUAL:${DDS_TYPES_VERSION},v2>:${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorldKeyed/HelloWorldKeyedCdrAux.ipp>
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx)
+    DDSTestWAN.cpp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldPubSubTypes.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldCdrAux.ipp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldTypeObjectSupport.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedCdrAux.ipp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedTypeObjectSupport.cxx)
 
 set(TEST_LIST
     end_to_end_discovery_server_WAN_communication_UDPv4
@@ -70,7 +61,7 @@ set(TEST_NEEDED_SOURCES
     )
 
 set(TEST_EXTRA_HEADERS
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/${DDS_TYPES_VERSION}/HelloWorld
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
 
 add_blackbox_executable(

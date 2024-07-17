@@ -27,7 +27,7 @@ The following packages will be installed:
 
 - ``foonathan_memory_vendor``, an STL compatible C++ memory allocation library.
 - ``fastcdr``, a C++ library that serializes according to the standard CDR serialization mechanism.
-- ``fastrtps``, the core library of eProsima Fast DDS library.
+- ``fastdds``, the core library of eProsima Fast DDS library.
 - ``cmake_utils``, an eProsima utils library for CMake.
 - ``cpp_utils``, an eProsima utils library for C++.
 
@@ -50,8 +50,6 @@ installed in the system:
 * :ref:`windows_sources_cmake_pip3_wget_git`
 * :ref:`windows_sources_colcon_install` [optional]
 * :ref:`windows_sources_gtest` [for test only]
-* :ref:`windows_py_yaml` [for YAML Validator only]
-* :ref:`windows_json_schema` [for YAML Validator only]
 
 .. _windows_sources_visual_studio:
 
@@ -126,40 +124,6 @@ Run the following commands on your workspace to install Gtest.
 or refer to the
 `Gtest Installation Guide <https://github.com/google/googletest>`_ for a detailed description of the Gtest installation
 process.
-
-
-.. _windows_py_yaml:
-
-PyYAML
-^^^^^^
-
-`PyYAML <https://pyyaml.org/>`_ is a YAML parser and emitter for Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for loading the content of configuration files.
-
-Install ``pyyaml`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U pyyaml
-
-
-.. _windows_json_schema:
-
-jsonschema
-^^^^^^^^^^
-
-`jsonschema <https://python-jsonschema.readthedocs.io/>`_ is an implementation of the JSON Schema specification for
-Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for performing validation of configuration files against a given
-JSON schema.
-
-Install ``jsonschema`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U jsonschema
 
 .. _windows_sources_dependencies:
 
@@ -459,7 +423,7 @@ However, when running an instance of a |ddsrouter| compiled using CMake, it must
 the packages have been installed. This can be done by opening the *Edit system environment variables* control panel and
 adding to the ``PATH`` the |ddsrouter|, *Fast DDS* and *Fast CDR* installation directories:
 
-*   *Fast DDS*: C:\\Program Files\\fastrtps
+*   *Fast DDS*: C:\\Program Files\\fastdds
 *   *Fast CDR*: C:\\Program Files\\fastcdr
 *   |ddsrouter|: C:\\Program Files\\ddsrouter
 
