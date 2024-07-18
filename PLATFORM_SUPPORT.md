@@ -31,10 +31,10 @@ Community members may provide assistance with these platforms.
 
 ## Platforms
 
-|Architecture|Ubuntu Focal (20.04)|Ubuntu Jammy (22.04)|Windows 10 (VS2019)|Windows 10 (VS2022)|Debian Buster (10)|
-|------------|--------------------|--------------------|-------------------|-------------------|------------------|
-|amd64       |Tier 1              |Tier 1              |Tier 1             |Tier 1             |Tier 3            |
-|arm64       |Tier 3              |                    |                   |                   |Tier 3            |
+|Architecture|Ubuntu Focal (20.04)|Ubuntu Jammy (22.04)|Ubuntu Noble (24.04)|Windows 10 (VS2019)|Windows 10 (VS2022)|Debian Buster (10)|
+|------------|--------------------|--------------------|--------------------|-------------------|-------------------|------------------|
+|amd64       |                    |Tier 1              |Tier 1              |Tier 1             |Tier 1             |Tier 3            |
+|arm64       |Tier 3              |                    |                    |                   |                   |Tier 3            |
 
 ## Compilers
 
