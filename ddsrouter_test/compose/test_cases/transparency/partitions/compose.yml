@@ -34,7 +34,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --partitions "A"
+    command: build/fastdds/examples/cpp/configuration/configuration publisher --interval 100 --samples 110 --domain 0 --partitions "A"
 
   subscriber_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -45,7 +45,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 0 --samples 20 --partitions bbb"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --args "--domain 0 --samples 20 --partitions bbb"
 
   # DOMAIN 1
   publisher_1_0:
@@ -55,7 +55,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --partitions "bbb;ccc"
+    command: build/fastdds/examples/cpp/configuration/configuration publisher --interval 100 --samples 110 --domain 1 --partitions "bbb;ccc"
 
   publisher_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -64,7 +64,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --topic NonPartitionTopic
+    command: build/fastdds/examples/cpp/configuration/configuration publisher --interval 100 --samples 110 --domain 1 --topic NonPartitionTopic
 
   # DOMAIN 2
   subscriber_2_0:
@@ -76,7 +76,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions A"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions A"
 
   subscriber_2_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -87,7 +87,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 2 --samples 20 --partitions bbb"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 2 --samples 20 --partitions bbb"
 
   subscriber_2_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -98,7 +98,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions ccc"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partitions ccc"
 
   # DOMAIN 3
   subscriber_3_0:
@@ -110,7 +110,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 3 --samples 20 --partitions *"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 3 --samples 20 --partitions *"
 
   subscriber_3_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -121,7 +121,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --debug --samples 20 --timeout 12 --args "--domain 3 --samples 20 --topic NonPartitionTopic"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds/examples/cpp/configuration/configuration --debug --samples 20 --timeout 12 --args "--domain 3 --samples 20 --topic NonPartitionTopic"
 
 networks:
   std_net:
