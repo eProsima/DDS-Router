@@ -42,7 +42,6 @@
 #              │          │ │          └────────────────┘ │ │          │ │          │
 #              │topic_3   │ │                             │ │topic_3   │ │topic_3   │
 #              └──────────┘ └─────────────────────────────┘ └──────────┘ └──────────┘
-
 # ┌──────────┐ ┌──────────┐                                 ┌──────────┐ ┌──────────┐
 # │publisher │ │subscriber│                                 │subscriber│ │publisher │
 # │          │ │          │                                 │          │ │          │
@@ -54,6 +53,18 @@
 # │          │ │          │                                 │          │ │          │
 # │topic_5   │ │topic_5   │                                 │topic_5   │ │topic_5   │
 # └──────────┘ └──────────┘                                 └──────────┘ └──────────┘
+#
+# Test expected behavior:
+#   1. The secure subscriber_sec_0 receives 15 samples from the insecure publisher_0.
+#   2. The insecure subscriber_1 receives 15 samples from the secure publisher_sec_1.
+#   3. The insecure subscriber_2 receives 15 samples from the insecure publisher_2.
+#   4. The secure subscriber_sec_2 doesn't receive any samples from the insecure publisher_2.
+#   5. The secure subscriber_sec_3 receives 15 samples from the secure publisher_sec_3.
+#   6. The insecure subscriber_3 doesn't receive any samples from the secure publisher_sec_3.
+#   7. The insecure subscriber_4 receives 15 samples together from the secure publisher_sec_4 and from the insecure publisher_4.
+#   8. The secure subscriber_sec_4 receives 15 samples from the secure publisher_sec_4.
+#   9. The insecure subscriber_5 receives 15 samples from the insecure publisher_5.
+#  10. The secure subscriber_sec_5 receives 15 samples together from the secure publisher_sec_5 and from the insecure publisher_5.
 
 services:
 

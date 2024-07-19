@@ -3,6 +3,8 @@
 #   security and one without it, the router can be used as a security backdoor: it
 #   can communicate a publisher with security to a subscriber without security and
 #   a publisher without security to a subscriber with security.
+#   The test configures both participants through XML to force the DDS Router to use
+#   Fast-DDS's DDS layer.
 #
 # Test architecture:
 #
@@ -21,6 +23,10 @@
 # │          │                         │          │
 # │topic_0   │                         │topic_1   │
 # └──────────┘                         └──────────┘
+#
+# Test expected behavior:
+#   1. The non-secure subscriber receives 15 samples from the secure publisher.
+#   2. The secure subscriber receives 15 samples from the non-secure publisher.
 
 services:
 

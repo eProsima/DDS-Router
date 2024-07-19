@@ -39,6 +39,11 @@
 # │             └──────────┘ │
 # │                          │
 # └──────────────────────────┘
+#
+# Test expected behavior:
+#   1. The secure subscriber in edge_0_net receives 15 samples from the secure publisher in edge_1_net.
+#   2. The secure subscriber in edge_1_net receives 15 samples from the secure publisher in edge_0_net.
+#   3. The non-secure subscriber in edge_2_net doesn't receive any samples.
 
 services:
 
