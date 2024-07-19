@@ -1,29 +1,49 @@
 # Test description:
-#   This test checks simple communication (simple discovery and UDP) with ownership
-# TODO
+#   This test checks that the router 0 and the router 1 communicate,
+#   but that the router 2 doesn't communicate with either of them.
+#
+#   The routers are:
+#     0. A server router configured with security.
+#     1. A client router configured with security.
+#     2. A router configured without security.
 #
 # Test architecture:
-#   Publishers are created with different ownerships so only one should be the one that Readers read.
-#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
-#   Readers must read without duplicities even when there are multiple writers. However it is possible
-#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
-#    message received could be duplicated.
 #
-# NOTE: Other Participants could be implemented with different security levels
-#   e.g. non authorized because of different CA
+# ┌──────────────────────────┐
+# │                          │
+# │  edge_0_net ┌──────────┐ │
+# │             │publisher │ │
+# │ ┌─────────┐ │          │ │
+# │ │ddsrouter│ │topic_0   │ │
+# │ │         │ └──────────┘ │
+# │ │server   │              │
+# │ │         │ ┌──────────┐ │   ┌──────────────────────────┐
+# │ │sec      │ │subscriber│ ◄───┤                          │
+# │ └─────────┘ │          │ │   │  edge_1_net ┌──────────┐ │
+# │             │topic_1   │ ├───►             │publisher │ │
+# │             └──────────┘ │   │ ┌─────────┐ │          │ │
+# │                          │   │ │ddsrouter│ │topic_1   │ │
+# └──────────────────────────┘   │ │         │ └──────────┘ │
+#                                │ │client   │              │
+# ┌──────────────────────────┐   │ │         │ ┌──────────┐ │
+# │                          │   │ │sec      │ │subscriber│ │
+# │  edge_2_net ┌──────────┐ │   │ └─────────┘ │          │ │
+# │             │publisher │ │   │             │topic_0   │ │
+# │ ┌─────────┐ │          │ │   │             └──────────┘ │
+# │ │ddsrouter│ │topic_0   │ │   │                          │
+# │ │         │ └──────────┘ │   └──────────────────────────┘
+# │ │no sec   │ ┌──────────┐ │
+# │ └─────────┘ │subscriber│ │
+# │             │          │ │
+# │             │topic_1   │ │
+# │             └──────────┘ │
+# │                          │
+# └──────────────────────────┘
 #
-# Secure Domain Server LAN 0
-# publisher_0
-# subscriber_1
-#
-# Secure Domain Client LAN 1
-# subscriber_0
-# publisher_1
-#
-# Non Authenticated Domain LAN 2
-# publisher_0
-# subscriber_1
-#
+# Test expected behavior:
+#   1. The secure subscriber in edge_0_net receives 15 samples from the secure publisher in edge_1_net.
+#   2. The secure subscriber in edge_1_net receives 15 samples from the secure publisher in edge_0_net.
+#   3. The non-secure subscriber in edge_2_net doesn't receive any samples.
 
 services:
 
@@ -50,7 +70,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_0 --topic topic_0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub0 --topic topic_0
 
   subscriber_sec_1_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -63,8 +83,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local0.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_1 -x secure_local_0"
-
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_1 -x secure_local_sub0"
 
   # LAN 1
   ddsrouter_client_secure_1:
@@ -90,7 +109,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local_sub1"
 
   publisher_sec_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -102,8 +121,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/configuration_local1.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_1 --topic topic_1
-
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub1 --topic topic_1
 
   # LAN 2
   ddsrouter_non_authenticated_2:

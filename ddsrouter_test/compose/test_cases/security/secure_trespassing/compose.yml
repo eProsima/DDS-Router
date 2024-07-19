@@ -1,31 +1,70 @@
 # Test description:
-#   This test checks simple communication (simple discovery and UDP) with ownership
-# TODO
+#   This test checks that the DDS Router can communicate a publisher without security
+#   with a subscriber with security and a publisher with security with a subscriber
+#   without security.
+#
+#   The test has three parts:
+#     1. In topics 0 & 1, the scenario is the same as in the backdoor test.
+#     2. In topics 2 & 3, the participant without security doesn't communicate with the
+#        participant with security since the router doesn't have permissions for topics 2 & 3.
+#     3. In topics 4 & 5, one of the participants without security communicates with one of
+#        the participants with security; making one of the participants receive the data twice.
+#
+# NOTE:
+#   The logged warnings and errors when running the tests are expected. Fast-DDS logs warnings
+#   and errors when a participant without permissions tries to connect. Four sets of logs
+#   should be reported: failed to create reader & writer for participants on topics 2 & 3,
+#   failed to create writer on topic 4, and failed to create reader on topic 5.
 #
 # Test architecture:
-#   Publishers are created with different ownerships so only one should be the one that Readers read.
-#   Builtin topics and subscriber delay are used so internal writers are created before readers start to receive.
-#   Readers must read without duplicities even when there are multiple writers. However it is possible
-#    that first info from a writer that is not the stronget arrives before the one expected. Then the first
-#    message received could be duplicated.
 #
-#   Domain 0       <->  Router  <->      Secure Domain 0
-# publisher_0            --->             subscriber_0
+#  DOMAIN INSECURE                                          DOMAIN SECURE
+#  ┌──────────┐                                             ┌──────────┐
+#  │publisher │                                             │subscriber│
+#  │          │                                             │          │
+#  │topic_0   │                                             │topic_0   │
+#  └──────────┘                                             └──────────┘
 #
-# subscriber_1           <---             publisher_1
+#              ┌──────────┐                                              ┌──────────┐
+#              │subscriber│                                              │publisher │
+#              │          │                                              │          │
+#              │topic_1   │                                              │topic_1   │
+#              └──────────┘                                              └──────────┘
+#                           ┌─────────────────────────────┐
+# ┌──────────┐ ┌──────────┐ │     router                  │ ┌──────────┐
+# │publisher │ │subscriber│ │ ┌──────┐ ┌────────────────┐ │ │subscriber│
+# │          │ │          │ │ │no_sec│ │sec             │ │ │          │
+# │topic_2   │ │topic_2   │ │ │      │ │                │ │ │topic_2   │
+# └──────────┘ └──────────┘ │ │local │ │xml             │ │ └──────────┘
+#                           │ └──────┘ │                │ │
+#              ┌──────────┐ │          │allow-pub:0,1,5 │ │ ┌──────────┐ ┌──────────┐
+#              │subscriber│ │          │allow-sub:0,1,4 │ │ │subscriber│ │publisher │
+#              │          │ │          └────────────────┘ │ │          │ │          │
+#              │topic_3   │ │                             │ │topic_3   │ │topic_3   │
+#              └──────────┘ └─────────────────────────────┘ └──────────┘ └──────────┘
+# ┌──────────┐ ┌──────────┐                                 ┌──────────┐ ┌──────────┐
+# │publisher │ │subscriber│                                 │subscriber│ │publisher │
+# │          │ │          │                                 │          │ │          │
+# │topic_4   │ │topic_4   │                                 │topic_4   │ │topic_4   │
+# └──────────┘ └──────────┘                                 └──────────┘ └──────────┘
 #
-# publisher_2            -x->             subscriber_2
-# subscriber_2
+# ┌──────────┐ ┌──────────┐                                 ┌──────────┐ ┌──────────┐
+# │publisher │ │subscriber│                                 │subscriber│ │publisher │
+# │          │ │          │                                 │          │ │          │
+# │topic_5   │ │topic_5   │                                 │topic_5   │ │topic_5   │
+# └──────────┘ └──────────┘                                 └──────────┘ └──────────┘
 #
-# subscriber_3           <-x-             publisher_3
-#                                         subscriber_3
-#
-# publisher_4            -x->             subscriber_4
-# subscriber_4           <---             publisher_4
-#
-# publisher_5            --->             subscriber_5
-# subscriber_5           <-x-             publisher_5
-#
+# Test expected behavior:
+#   1. The secure subscriber_sec_0 receives 15 samples from the insecure publisher_0.
+#   2. The insecure subscriber_1 receives 15 samples from the secure publisher_sec_1.
+#   3. The insecure subscriber_2 receives 15 samples from the insecure publisher_2.
+#   4. The secure subscriber_sec_2 doesn't receive any samples from the insecure publisher_2.
+#   5. The secure subscriber_sec_3 receives 15 samples from the secure publisher_sec_3.
+#   6. The insecure subscriber_3 doesn't receive any samples from the secure publisher_sec_3.
+#   7. The insecure subscriber_4 receives 15 samples together from the secure publisher_sec_4 and from the insecure publisher_4.
+#   8. The secure subscriber_sec_4 receives 15 samples from the secure publisher_sec_4.
+#   9. The insecure subscriber_5 receives 15 samples from the insecure publisher_5.
+#  10. The secure subscriber_sec_5 receives 15 samples together from the secure publisher_sec_5 and from the insecure publisher_5.
 
 services:
 
@@ -148,7 +187,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_1  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub1 --topic topic_1  --domain 0
 
   publisher_sec_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -162,7 +201,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_3  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub3 --topic topic_3  --domain 0
 
   publisher_sec_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -176,7 +215,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_4  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub4 --topic topic_4  --domain 0
 
   publisher_sec_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -190,7 +229,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local --topic topic_5  --domain 0
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub5 --topic topic_5  --domain 0
 
   subscriber_sec_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -205,7 +244,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_0 -x secure_local_sub0 --domain 0"
 
   subscriber_sec_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -220,7 +259,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 12 --args "--topic topic_2 -x secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 0 --timeout 12 --args "--topic topic_2 -x secure_local_sub2 --domain 0"
 
   subscriber_sec_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -235,7 +274,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_3 -x secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_3 -x secure_local_sub3 --domain 0"
 
   subscriber_sec_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -250,7 +289,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_4 -x secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 12 --args "--samples 15 --topic topic_4 -x secure_local_sub4 --domain 0"
 
   subscriber_sec_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -265,7 +304,7 @@ services:
       - ./certs:/certs
     environment:
       - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 15 --timeout 12 --args "--samples 15 --topic topic_5 -x secure_local --domain 0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --allow-duplicates -1 --samples 15 --timeout 12 --args "--samples 15 --topic topic_5 -x secure_local_sub5 --domain 0"
 
 
   # TODO change -x for -x when fixed
