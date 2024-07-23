@@ -3,9 +3,9 @@
 #   If we set up 1 repeater router, 2 routers with 2 participants each (1 wan participant
 #   comunicating through wan with the repeater router and a local participant
 #   comunicating with local network), 12 best-effort publishers
-#   sending large messages to 3 best-effort subscribers on 3 different topics
-#   and 1 reliable publisher sending messages to a reliable subscriber,
-#   the test checks if all the messages are forwarded from the reliable publisher
+#   sending large messages (100kB, 200kB, 300kB, 400kB) to 3 best-effort subscribers
+#   on 3 different topics and 1 reliable publisher sending messages to a reliable subscriber,
+#   at 10Hz.The test checks if all the messages are forwarded from the reliable publisher
 #   to the reliable subscriber.
 #
 # Test architecture:
@@ -52,11 +52,6 @@
 # │ └──────────────────┘         │ │                              │
 # └──────────────────────────────┘ └──────────────────────────────┘
 
-
-
-
-
-
 services:
 
   # ROUTERS
@@ -75,9 +70,9 @@ services:
       - ./ddsrouter_cloud.yaml:/config.yaml
     command: ddsrouter -c /config.yaml --timeout 12
 
-  ddsrouter_1:
+  ddsrouter_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: ddsrouter_1
+    container_name: ddsrouter_edge_1
     depends_on:
       - ddsrouter_cloud
     networks:
@@ -87,9 +82,9 @@ services:
       - ./ddsrouter1.yaml:/config.yaml
     command: ddsrouter -c /config.yaml --timeout 12
 
-  ddsrouter_2:
+  ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
-    container_name: ddsrouter_2
+    container_name: ddsrouter_edge_2
     depends_on:
       - ddsrouter_cloud
     networks:
@@ -104,7 +99,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: subscriber_reliable
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_edge_2
     networks:
       - edge_2_net
     volumes:
@@ -115,7 +110,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: subscriber_1
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_edge_2
     networks:
       - edge_2_net
     volumes:
@@ -126,7 +121,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: subscriber_2
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_edge_2
     networks:
       - edge_2_net
     volumes:
@@ -138,7 +133,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: subscriber_3
     depends_on:
-      - ddsrouter_2
+      - ddsrouter_edge_2
     networks:
       - edge_2_net
     volumes:
@@ -150,7 +145,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_reliable
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     volumes:
@@ -161,7 +156,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_1
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     # volumes:
@@ -173,7 +168,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_2
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_1
@@ -182,7 +177,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_3
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_1
@@ -191,7 +186,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_4
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_1
@@ -200,7 +195,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_5
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_2
@@ -209,7 +204,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_6
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_2
@@ -218,7 +213,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_7
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_2
@@ -227,7 +222,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_8
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_2
@@ -236,7 +231,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_9
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_3
@@ -245,7 +240,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_10
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_3
@@ -254,7 +249,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_11
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_3
@@ -263,7 +258,7 @@ services:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_12
     depends_on:
-      - ddsrouter_1
+      - ddsrouter_edge_1
     networks:
       - edge_1_net
     command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_3

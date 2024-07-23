@@ -1,10 +1,11 @@
 # Test description:
 #   This test simulates a busy network:
-#   If we set up a router with 2 participants, 12 best-effort publishers
-#   sending large messages to 3 best-effort subscribers on 3 different topics
-#   and 1 reliable publisher sending messages to a reliable subscriber,
-#   the test checks if all the messages are forwarded from the reliable publisher
-#   to the reliable subscriber.
+#   A router is set up with 2 participants, 12 best-effort publishers
+#   sending large messages (100kB, 200kB, 300kB, 400kB) to 3 best-effort
+#   subscribers on 3 different topics and 1 reliable publisher sending
+#   messages to a reliable subscriber, at 10Hz. The test checks if all
+#   the messages are forwarded from the reliable publisher to the reliable
+#   subscriber.
 #
 # Test architecture:
 #  ┌───────────────────────┐           ┌────────────────────────┐
@@ -36,12 +37,6 @@
 #  │ └──────────────────┘  │           │                        │
 #  │                       │           └────────────────────────┘
 #  └───────────────────────┘
-
-
-
-
-
-
 
 services:
 
@@ -101,7 +96,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 3 --args "--interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 1 --args "--interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1"
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
