@@ -94,9 +94,7 @@ services:
     container_name: publisher_reliable
     networks:
       - std_net
-    volumes:
-      - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 1 --args "--interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1"
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}

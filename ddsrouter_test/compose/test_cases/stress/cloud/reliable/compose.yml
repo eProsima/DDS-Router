@@ -108,7 +108,7 @@ services:
     networks:
       - edge_2_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
 
   subscriber_1:
@@ -119,7 +119,7 @@ services:
     networks:
       - edge_2_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_1"
 
   subscriber_2:
@@ -130,7 +130,7 @@ services:
     networks:
       - edge_2_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_2"
 
 
@@ -142,7 +142,7 @@ services:
     networks:
       - edge_2_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_3"
 
   # PUBLISHERS
@@ -153,9 +153,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    volumes:
-      - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 10 --delay 3 --args "--interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1"
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
