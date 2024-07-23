@@ -72,7 +72,7 @@ set(TESTS
     stress/cloud/reliable
     stress/repeater/mixed_data_sizes
     stress/repeater/reliable
-    stress/simple
+    stress/simple/reliable
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

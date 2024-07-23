@@ -58,8 +58,8 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --delay 1 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --delay 1 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
 
   subscriber_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -67,7 +67,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_1"
 
   subscriber_2:
@@ -76,7 +76,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_2"
 
   subscriber_3:
@@ -85,7 +85,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_3"
 
   # PUBLISHERS

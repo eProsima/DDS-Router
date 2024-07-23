@@ -84,7 +84,7 @@ services:
       - cloud_edge_net
       - edge_1_net
     volumes:
-      - ./ddsrouter1.yaml:/config.yaml
+      - ./ddsrouter_edge_1.yaml:/config.yaml
     command: ddsrouter -c /config.yaml --timeout 15
 
   ddsrouter_edge_2:
@@ -96,7 +96,7 @@ services:
       - cloud_edge_net
       - edge_2_net
     volumes:
-      - ./ddsrouter2.yaml:/config.yaml
+      - ./ddsrouter_edge_2.yaml:/config.yaml
     command: ddsrouter -c /config.yaml --timeout 15
 
  # SUBSCRIBERS
