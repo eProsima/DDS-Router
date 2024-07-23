@@ -1,0 +1,11 @@
+version: v4.0
+
+participants:
+
+  - name: Local_103
+    kind: local
+    domain: 103
+
+  - name: Local_105
+    kind: local
+    domain: 105

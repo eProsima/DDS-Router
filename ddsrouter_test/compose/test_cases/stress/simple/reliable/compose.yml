@@ -1,0 +1,187 @@
+# Test description:
+#   This test simulates a busy network:
+#   A router is set up with 2 participants, 12 best-effort publishers
+#   sending large messages (100kB, 200kB, 300kB, 400kB) to 3 best-effort
+#   subscribers on 3 different topics and 1 reliable publisher sending
+#   messages to a reliable subscriber, at 10Hz. The test checks if all
+#   the messages are forwarded from the reliable publisher to the reliable
+#   subscriber.
+#
+# Test architecture:
+#  ┌───────────────────────┐           ┌────────────────────────┐
+#  │  Domain 103           │           │            Domain  105 │
+#  │ ┌──────────────────┐  │           │                        │
+#  │ │ publisher_1      │ ┌┼───────────┼┐ ┌───────────────────┐ │
+#  │ │ ...              │ ││           ││ │ subscriber_1      │ │
+#  │ │ publisher_4      ├─►│           │┼─► (local)           │ │
+#  │ │ (local)          │ ││           ││ └───────────────────┘ │
+#  │ └──────────────────┘ ││           ││                       │
+#  │                      ││           ││ ┌───────────────────┐ │
+#  │ ┌──────────────────┐ ││           ││ │ subscriber_2      │ │
+#  │ │ publisher_5      │ ││           │┼─► (local)           │ │
+#  │ │ ...              │ ││           ││ └───────────────────┘ │
+#  │ │ publisher_8      ├─►│ ddsrouter ││                       │
+#  │ │ (local)          │ ││           ││ ┌───────────────────┐ │
+#  │ └──────────────────┘ ││  (local)  ││ │ subscriber_3      │ │
+#  │                      ││           │┼─► (local)           │ │
+#  │ ┌──────────────────┐ ││           ││ └───────────────────┘ │
+#  │ │ publisher_9      │ ││           ││                       │
+#  │ │ ...              │ ││           ││ ┌───────────────────┐ │
+#  │ │ publisher_12     ├─►│           ││ │subscriber_reliable│ │
+#  │ │ (local)          │ ││           │┼─► (local)           │ │
+#  │ └──────────────────┘ ││           ││ └───────────────────┘ │
+#  │                      ││           ││                       │
+#  │ ┌──────────────────┐ ││           ││                       │
+#  │ │publisher_reliable├─►│           ││                       │
+#  │ │ (local)          │ └┼───────────┼┘                       │
+#  │ └──────────────────┘  │           │                        │
+#  │                       │           └────────────────────────┘
+#  └───────────────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 15
+
+
+ # SUBSCRIBERS
+  subscriber_reliable:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_reliable
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --delay 1 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
+
+  subscriber_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_1"
+
+  subscriber_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_2"
+
+  subscriber_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_3
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_3"
+
+  # PUBLISHERS
+  publisher_reliable:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_reliable
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1
+
+  publisher_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_1
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_1
+
+  publisher_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_2
+    networks:
+     - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_1
+
+  publisher_3:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_3
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_1
+
+  publisher_4:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_4
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_1
+
+  publisher_5:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_5
+    networks:
+     - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_2
+
+  publisher_6:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_6
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_2
+
+  publisher_7:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_7
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_2
+
+  publisher_8:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_8
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_2
+
+  publisher_9:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_9
+    networks:
+     - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_3
+
+  publisher_10:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_10
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_3
+
+  publisher_11:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_11
+    networks:
+     - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_3
+
+  publisher_12:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_12
+    networks:
+      - std_net
+    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_3
+
+
+networks:
+  std_net:
+  default:
+    driver: none
