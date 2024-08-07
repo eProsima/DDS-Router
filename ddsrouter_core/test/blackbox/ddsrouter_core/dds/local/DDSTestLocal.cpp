@@ -145,12 +145,12 @@ void test_local_communication(
     msg.message(msg_str);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<MsgStruct> publisher(type.m_isGetKeyDefined);
+    TestPublisher<MsgStruct> publisher(type.is_compute_key_provided);
 
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<MsgStruct> subscriber(type.m_isGetKeyDefined, transient_local);
+    TestSubscriber<MsgStruct> subscriber(type.is_compute_key_provided, transient_local);
 
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 
