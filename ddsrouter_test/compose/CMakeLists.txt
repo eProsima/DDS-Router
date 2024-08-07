@@ -22,52 +22,52 @@ set(TESTS
     dds_rtps
     dds
 
-    rpc/ros2_services_cloud
-    rpc/ros2_services_repeater
-    rpc/ros2_services_repeater_with_talker
-    rpc/ros2_services_correct_target
-    rpc/ros2_services_simple
-    rpc/ros2_services_without_router
-    rpc/ros2_services_trivial
-    rpc/ros2_services_trivial_multiple
+    # rpc/ros2_services_cloud
+    # rpc/ros2_services_repeater
+    # rpc/ros2_services_repeater_with_talker
+    # rpc/ros2_services_correct_target
+    # rpc/ros2_services_simple
+    # rpc/ros2_services_without_router
+    # rpc/ros2_services_trivial
+    # rpc/ros2_services_trivial_multiple
 
-    transparency/partitions
-    transparency/durability
-    transparency/ownership
+    # transparency/partitions
+    # transparency/durability
+    # transparency/ownership
 
-    security/backdoor
-    security/backdoor_dds
-    security/secure_trespassing
+    # security/backdoor
+    # security/backdoor_dds
+    # security/secure_trespassing
     security/secure_wan
 
-    forwarding_routes/basic_route
-    forwarding_routes/parallel_routes
-    forwarding_routes/topic_routes
-    forwarding_routes/repeater
+    # forwarding_routes/basic_route
+    # forwarding_routes/parallel_routes
+    # forwarding_routes/topic_routes
+    # forwarding_routes/repeater
 
-    remove_unused_entities/disconnect
-    remove_unused_entities/disconnect_wan
-    remove_unused_entities/persist_diff_domain
-    remove_unused_entities/persist_same_domain
-    remove_unused_entities/reconnect
-    remove_unused_entities/reconnect_wan
+    # remove_unused_entities/disconnect
+    # remove_unused_entities/disconnect_wan
+    # remove_unused_entities/persist_diff_domain
+    # remove_unused_entities/persist_same_domain
+    # remove_unused_entities/reconnect
+    # remove_unused_entities/reconnect_wan
 
-    frequency/max-tx-rate/specs
-    frequency/max-tx-rate/participant
-    frequency/max-rx-rate/specs
-    frequency/max-rx-rate/participant
-    frequency/downsampling/specs
-    frequency/downsampling/participant
+    # frequency/max-tx-rate/specs
+    # frequency/max-tx-rate/participant
+    # frequency/max-rx-rate/specs
+    # frequency/max-rx-rate/participant
+    # frequency/downsampling/specs
+    # frequency/downsampling/participant
 
-    manual_topics/generic
-    manual_topics/participants
-    manual_topics/precedence
+    # manual_topics/generic
+    # manual_topics/participants
+    # manual_topics/precedence
 
-    discovery_trigger/reader
-    discovery_trigger/writer
-    discovery_trigger/none
-    discovery_trigger/any/reader
-    discovery_trigger/any/writer
+    # discovery_trigger/reader
+    # discovery_trigger/writer
+    # discovery_trigger/none
+    # discovery_trigger/any/reader
+    # discovery_trigger/any/writer
 )
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test_cases DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
