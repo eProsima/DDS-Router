@@ -38,7 +38,7 @@ services:
     container_name: publisher_0_t0
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 80 --domain 80 --topic topic_0
+    command: install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration publisher --interval 100 --samples 80 --domain 80 --name topic_0
 
   # DOMAIN 1
   publisher_1_t1:
@@ -46,7 +46,7 @@ services:
     container_name: publisher_1_t1
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 50 --samples 160 --domain 81 --topic topic_1
+    command: install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration publisher --interval 50 --samples 160 --domain 81 --name topic_1
 
   # DOMAIN 2
   subscriber_2_t0:
@@ -56,7 +56,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --topic topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --name topic_0"
 
   # DOMAIN 3
   subscriber_3_t1:
@@ -66,7 +66,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 83 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 83 --name topic_1"
 
 networks:
   std_net:

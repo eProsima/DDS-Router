@@ -74,7 +74,7 @@ def parse_options():
         help='Print test debugging info.'
     )
     parser.add_argument(
-        '--transient',
+        '--transient-local',
         action='store_true',
         help='Transient Local Subscriber, so it must receive data from 0.'
     )
@@ -136,8 +136,8 @@ def _subscriber_parse_output(stdout, stderr):
     :return: List of received messages
     """
 
-    msgs_regex_basic = re.compile(r'^Message\sHelloWorld\s+\d+\sRECEIVED$')
-    msgs_regex_adv = re.compile(r'Sample received: HelloWorld\s+\d+\s+\(\d+ Bytes\)')
+    msgs_regex_basic = re.compile(r"Sample: 'Configuration' with index: '\d+' \(\d+ Bytes\) RECEIVED")
+    msgs_regex_adv = re.compile(r'Sample received: Configuration\s+\d+\s+\(\d+ Bytes\)')
     match_regex = re.compile(r'^Subscriber matched \[.+\].$')
     unmatch_regex = re.compile(r'^Subscriber unmatched \[.+\].$')
 
@@ -172,6 +172,15 @@ def _subscriber_validate(
         transient,
         n_matches,
         n_unmatches):
+
+    print("Starting _subscriber_validate")
+    print(f"stdout_parsed: {stdout_parsed}")
+    print(f"stderr_parsed: {stderr_parsed}")
+    print(f"samples: {samples}")
+    print(f"duplicates_allow: {duplicates_allow}")
+    print(f"transient_local: {transient}")
+    print(f"n_matches: {n_matches}")
+    print(f"n_unmatches: {n_unmatches}")
 
     # Check default validator
     ret_code = validation.validate_default(stdout_parsed['messages'], stderr_parsed)
@@ -241,7 +250,7 @@ def check_transient(data):
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
     """
-    msg_pattern = re.compile(r'HelloWorld\s+(\d+)')
+    msg_pattern = re.compile(r'Configuration\s+(\d+)')
 
     for idx, line in enumerate(data):
         match = msg_pattern.search(line)
@@ -273,6 +282,8 @@ if __name__ == '__main__':
 
     command = _subscriber_command(args)
 
+    print(f"Command: {command}")
+
     timeout_as_error = args.samples is not None and args.samples > 0
 
     validate_func = (lambda stdout_parsed, stderr_parsed: (
@@ -281,7 +292,7 @@ if __name__ == '__main__':
             stderr_parsed=stderr_parsed,
             samples=args.samples,
             duplicates_allow=args.allow_duplicates,
-            transient=args.transient,
+            transient=args.transient_local,
             n_matches=args.n_matches,
             n_unmatches=args.n_unmatches
             )))

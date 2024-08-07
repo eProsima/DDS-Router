@@ -114,12 +114,12 @@ void test_local_communication_key_dispose(
     msg.id(666);
 
     // Create DDS Publisher in domain 0
-    TestPublisher<HelloWorldKeyed> publisher(type.m_isGetKeyDefined);
+    TestPublisher<HelloWorldKeyed> publisher(type.is_compute_key_provided);
 
     ASSERT_TRUE(publisher.init(0));
 
     // Create DDS Subscriber in domain 1
-    TestSubscriber<HelloWorldKeyed> subscriber(type.m_isGetKeyDefined);
+    TestSubscriber<HelloWorldKeyed> subscriber(type.is_compute_key_provided);
 
     ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
 

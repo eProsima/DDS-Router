@@ -121,9 +121,10 @@ void serialize_key(
         eprosima::fastcdr::Cdr& scdr,
         const HelloWorldKeyed& data)
 {
+
     static_cast<void>(scdr);
     static_cast<void>(data);
-                            scdr << data.id();
+                        scdr << data.id();
 
 
 

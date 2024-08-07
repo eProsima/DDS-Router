@@ -39,7 +39,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-matches 1 --delay 4 --timeout 8 --args "--samples 80 --domain 80"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --n-matches 1 --delay 4 --timeout 8 --args "--samples 80 --domain 80"
 
   # DOMAIN 1
   subscriber_1_t0:
@@ -49,7 +49,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-matches 0 --n-unmatches 0 --timeout 3 --args "--domain 81"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --n-matches 0 --n-unmatches 0 --timeout 3 --args "--domain 81"
 
 networks:
   std_net:
