@@ -62,7 +62,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample publisher -i 100 -s 110 -d 1
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 110 -d 1
 
   sub_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -73,7 +73,7 @@ services:
       - edge_1_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --args "--domain 1 --samples 20"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 1 --samples 20"
 
   ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - edge_2_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 20 --timeout 12 --args "--domain 2 --samples 20"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 2 --samples 20"
 
 networks:
   edge_1_net:

@@ -136,15 +136,14 @@ def _subscriber_parse_output(stdout, stderr):
     :return: List of received messages
     """
 
-    msgs_regex_basic = re.compile(r"Sample: 'Configuration' with index: '\d+' \(\d+ Bytes\) RECEIVED")
-    msgs_regex_adv = re.compile(r'Sample received: Configuration\s+\d+\s+\(\d+ Bytes\)')
-    match_regex = re.compile(r'^Subscriber matched \[.+\].$')
-    unmatch_regex = re.compile(r'^Subscriber unmatched \[.+\].$')
+    msgs_regex = re.compile(r"Sample: 'Configuration' with index: '\d+' \(\d+ Bytes\) RECEIVED")
+    match_regex = re.compile(r'^Subscriber matched.$')
+    unmatch_regex = re.compile(r'^Subscriber unmatched.$')
 
     filtered_data = {'messages': [], 'matches': 0, 'unmatches': 0}
 
     for line in stdout.splitlines():
-        if msgs_regex_basic.match(line) or msgs_regex_adv.match(line):
+        if msgs_regex.match(line):
             filtered_data['messages'].append(line)
 
         elif match_regex.match(line):
@@ -173,15 +172,6 @@ def _subscriber_validate(
         transient,
         n_matches,
         n_unmatches):
-
-    print("Starting _subscriber_validate")
-    print(f"stdout_parsed: {stdout_parsed}")
-    print(f"stderr_parsed: {stderr_parsed}")
-    print(f"samples: {samples}")
-    print(f"duplicates_allow: {duplicates_allow}")
-    print(f"transient_local: {transient}")
-    print(f"n_matches: {n_matches}")
-    print(f"n_unmatches: {n_unmatches}")
 
     # Check default validator
     ret_code = validation.validate_default(stdout_parsed['messages'], stderr_parsed)
@@ -251,7 +241,7 @@ def check_transient(data):
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
     """
-    msg_pattern = re.compile(r'Configuration\s+(\d+)')
+    msg_pattern = re.compile(r"'Configuration' with index: '(\d+)'")
 
     for idx, line in enumerate(data):
         match = msg_pattern.search(line)
@@ -282,8 +272,6 @@ if __name__ == '__main__':
         log.activate_debug()
 
     command = _subscriber_command(args)
-
-    print(f"Command: {command}")
 
     timeout_as_error = args.samples is not None and args.samples > 0
 

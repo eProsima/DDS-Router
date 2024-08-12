@@ -33,7 +33,7 @@ services:
     container_name: publisher_0
     networks:
       - std_net
-    command: install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration publisher --interval 100 --samples 80 --domain 80 --name topic_0
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 80 --domain 80 --name topic_0
 
   # DOMAIN 1
   subscriber_1:
@@ -43,7 +43,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 81 --name topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 81 --name topic_0"
 
   # DOMAIN 2
   subscriber_2:
@@ -53,7 +53,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --name topic_0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 8 --min-time 4 --args "--samples 20 --domain 82 --name topic_0"
 
 networks:
   std_net:
