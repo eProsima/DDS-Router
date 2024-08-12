@@ -60,7 +60,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration publisher --samples 110 --domain 80 --name topic0 --interval 100
+    command: build/fastdds_configuration_example/configuration publisher --samples 110 --domain 80 --name topic0 --interval 100
 
 
   # DOMAIN 81
@@ -71,7 +71,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 3 --args "--samples 20 --domain 81 --name topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 3 --args "--samples 20 --domain 81 --name topic0"
 
   subscriber_t0_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -80,7 +80,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/fastdds/share/fastdds/examples/cpp/configuration/bin/configuration --samples 20 --timeout 6 --delay 4 --args "--samples 20 --domain 81 --name topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 6 --delay 4 --args "--samples 20 --domain 81 --name topic0"
 
 networks:
   std_net:

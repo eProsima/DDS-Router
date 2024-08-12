@@ -110,8 +110,8 @@ def _publisher_parse_output(stdout, stderr):
     :param data: Process stdout
     :return: List of subscribers who have matched and unmatched
     """
-    match_regex = re.compile(r'^Publisher matched \[.+\].$')
-    unmatch_regex = re.compile(r'^Publisher unmatched \[.+\].$')
+    match_regex = re.compile(r'^Publisher matched.$')
+    unmatch_regex = re.compile(r'^Publisher unmatched.$')
 
     filtered_data = {'matches': 0, 'unmatches': 0}
 

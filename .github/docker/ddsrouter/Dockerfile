@@ -62,8 +62,7 @@ RUN mkdir src && \
     cd src/dev-utils && git checkout ${devutils_branch} && cd ../.. && \
     cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../.. && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
-    cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
-    cp -r src/fastdds/examples/cpp/dds/AdvancedConfigurationExample src/. && \
+    cp -r src/fastdds/examples/cpp/configuration src/. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON -DSECURITY=ON
 
 COPY run.bash /root/run.bash
