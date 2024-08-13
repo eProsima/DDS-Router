@@ -103,7 +103,6 @@ discovery_server_participant_configuration(
     {
         conf.connection_addresses.insert(
             participants::types::DiscoveryServerConnectionAddress(
-                core::types::GuidPrefix((this_server_id_is_1 ? 0u : 1u)),
             {
                 participants::types::Address(
                     (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
