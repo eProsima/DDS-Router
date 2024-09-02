@@ -87,6 +87,8 @@ DdsRouterConfiguration dds_test_simple_configuration(
         conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
         conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
                     topic_keyed));
+
+        conf.ddspipe_configuration.discovery_trigger = core::DiscoveryTrigger::NONE;
     }
 
     // Two simple participants
