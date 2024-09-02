@@ -22,6 +22,7 @@
 #include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
