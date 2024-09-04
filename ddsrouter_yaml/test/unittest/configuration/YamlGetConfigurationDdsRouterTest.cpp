@@ -41,7 +41,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
 {
     const char* yml_str =
             R"(
-            version: v4.0
+            version: v5.0
             participants:
               - name: "P1"
                 kind: "echo"
@@ -88,7 +88,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_ros_case)
 {
     const char* yml_str =
             R"(
-            version: v4.0
+            version: v5.0
             builtin-topics:
               - name: "rt/chatter"
                 type: "std_msgs::msg::dds_::String_"
@@ -163,7 +163,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_yaml_vs_comm
 
     const char* yml_str =
             R"(
-            version: v4.0
+            version: v5.0
             specs:
               logging:
                 verbosity: info

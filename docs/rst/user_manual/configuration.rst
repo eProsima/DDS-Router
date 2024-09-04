@@ -977,7 +977,7 @@ A complete example of all the configurations described on this page can be found
 .. code-block:: yaml
 
     # Version Latest
-    version: v4.0
+    version: v5.0
 
     # Specifications
     specs:

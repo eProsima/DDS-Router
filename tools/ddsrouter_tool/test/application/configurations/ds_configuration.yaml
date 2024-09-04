@@ -3,7 +3,7 @@
 # 1 WAN Participant with connection address
 # 2 topics, one with key and one without
 
-version: v4.0
+version: v5.0
 
 builtin-topics:
   - name: "rt/chatter"
