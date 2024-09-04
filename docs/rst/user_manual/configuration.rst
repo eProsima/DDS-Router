@@ -35,17 +35,17 @@ This value allows users to keep using the same YAML file with an old configurati
             - *v2.2.0*
 
 
-**The current configuration version is v4.0**.
+**The current configuration version is v5.0**.
 This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when the tag ``version`` is not set is *v4.0*.
+    The current default version when the tag ``version`` is not set is *v5.0*.
 
 .. warning::
 
     **Deprecation warning**.
-    Update to version `v4.0` since previous `v3.1` is no longer supported.
+    Version `v4.0` is deprecated and will be removed in a future release, please update to version `v5.0`.
 
 .. _user_manual_configuration_load_xml:
 
