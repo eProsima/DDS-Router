@@ -8,12 +8,8 @@ participants:
 
   - name: Edge_1_DS_Participant
     kind: wan-ds
-    discovery-server-guid:
-      id: 1
     connection-addresses:
-      - discovery-server-guid:
-          id: 0
-        addresses:
+      - addresses:
           - domain: ddsrouter_cloud
             port: 11666
             transport: udp
