@@ -20,20 +20,14 @@ participants:
 
   - name: local-ds
     kind: local-discovery-server
-    discovery-server-guid:
-      id: 0
     listening-addresses:
       - ip: "127.0.0.1"
         port: 11666
 
   - name: wan
     kind: wan-ds
-    discovery-server-guid:
-      id: 1
     connection-addresses:
-      - discovery-server-guid:
-          id: 2
-        addresses:
+      - addresses:
         - ip: "127.0.0.1"
           port: 11667
           transport: tcp

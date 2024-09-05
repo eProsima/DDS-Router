@@ -741,7 +741,8 @@ For more information, check section :ref:`user_manual_wan_configuration_nat_trav
 Discovery Server GuidPrefix
 ---------------------------
 
-A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
+In |fastdds| versions previous to *v3.0.0*, a :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
+Although this parameter is no longer mandatory, it is still possible to set it so that a Discovery Server client from an older release may still stablish connection with a Discovery Server server from the newer ones.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
 
 
@@ -840,21 +841,17 @@ Discovery Server Connection Addresses
 -------------------------------------
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
-``connection-addresses`` is the *key* for an array in which each element has a GuidPrefix referencing the Discovery
-Server to connect with; and a tag ``addresses`` configuring the addresses of such Discovery Server.
+``connection-addresses`` is the *key* for an array in which each element has a tag ``addresses`` configuring the
+addresses of such Discovery Server.
 Each element inside ``addresses`` must follow the configuration for :ref:`user_manual_configuration_network_address`.
 
 .. code-block:: yaml
 
     connection-addresses:
-      - discovery-server-guid:
-          guid: 44.53.0d.5f.45.50.52.4f.53.49.4d.41
-        addresses:
+      - addresses:
           - ip: 127.0.0.1
             port: 11666
-      - discovery-server-guid:
-          id: 4
-        addresses:
+      - addresses:
           - ip: 2001:4860:4860::8888
             port: 11667
             transport: tcp
@@ -1113,10 +1110,7 @@ A complete example of all the configurations described on this page can be found
             transport: tcp              # Transport = TCP
 
         connection-addresses:
-          - discovery-server-guid:
-              id: 2
-              ros-discovery-server: true
-            addresses:
+          - addresses:
               - domain: "localhost"
                 port: 22000
 
@@ -1133,9 +1127,7 @@ A complete example of all the configurations described on this page can be found
           id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
         connection-addresses:           # WAN Discovery Server Connection Addresses
-          - discovery-server-guid:
-              id: 4                     # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-            addresses:
+          - addresses:
               - ip: 8.8.8.8             # IP = 8.8.8.8
                 port: 11666             # Port = 11666
                 transport: udp          # Transport = UDP
