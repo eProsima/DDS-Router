@@ -109,7 +109,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 15 --args "--samples 10 --domain 105 --topic LargeDataTopic_reliable --reliable"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 15 --args "--samples 10 --domain 105 --name LargeDataTopic_reliable --reliable"
 
   subscriber_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -120,7 +120,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_1"
 
   subscriber_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -131,7 +131,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_2"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_2"
 
 
   subscriber_3:
@@ -143,7 +143,7 @@ services:
       - edge_2_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --topic LargeDataTopic_3"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_3"
 
   # PUBLISHERS
   publisher_reliable:
@@ -153,7 +153,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --topic LargeDataTopic_reliable --reliable --wait 1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --name LargeDataTopic_reliable --reliable --wait 1
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -162,7 +162,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_1
 
   publisher_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -171,7 +171,7 @@ services:
       - ddsrouter_edge_1
     networks:
      - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_1
 
   publisher_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -180,7 +180,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_1
 
   publisher_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -189,7 +189,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_1
 
   publisher_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -198,7 +198,7 @@ services:
       - ddsrouter_edge_1
     networks:
      - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_2
 
   publisher_6:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -207,7 +207,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_2
 
   publisher_7:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -216,7 +216,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_2
 
   publisher_8:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -225,7 +225,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_2
 
   publisher_9:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -234,7 +234,7 @@ services:
       - ddsrouter_edge_1
     networks:
      - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --topic LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_3
 
   publisher_10:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -243,7 +243,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --topic LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_3
 
   publisher_11:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -252,7 +252,7 @@ services:
       - ddsrouter_edge_1
     networks:
      - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --topic LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_3
 
   publisher_12:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -261,7 +261,7 @@ services:
       - ddsrouter_edge_1
     networks:
       - edge_1_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --topic LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_3
 
 
 networks:
