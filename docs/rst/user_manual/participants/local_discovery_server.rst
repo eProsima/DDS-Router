@@ -53,8 +53,7 @@ Configure a Local Discovery Server setting the GuidPrefix used for ROS 2 deploym
 (``44.53.02.5f.45.50.52.4f.53.49.4d.41``).
 It listens for clients in *localhost* in ports ``11600`` in ``UDP`` and ``11601`` in ``TCP``.
 This example connects the local Discovery Server Participant with a remote Discovery Server listening in IPv6 address
-``2001:4860:4860::8888`` and port ``11666`` and configured with ``01.0f.04.00.00.00.00.00.00.00.ca.fe``
-Discovery Server GuidPrefix.
+``2001:4860:4860::8888`` and port ``11666``.
 
 .. code-block:: yaml
 
@@ -74,8 +73,6 @@ Discovery Server GuidPrefix.
           transport: tcp                              # Use TCP transport
 
       connection-addresses:                           # External Discovery Server Listening Addresses
-        - discovery-server-guid:
-            id: 4                                     # External Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-          addresses:
+        - addresses:
             - ip: 2001:4860:4860::8888                # Use UDP by default
               port: 11666

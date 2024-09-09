@@ -111,14 +111,14 @@ using namespace eprosima;
 
 /**
  * Do not set Yaml version and get default configuration
- * (currently default is v4.0)
+ * (currently default is v5.0)
  *
  * CASES:
- * - trivial configuration of v4.0
+ * - trivial configuration of v5.0
  */
 TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
 {
-    // trivial configuration of v4.0
+    // trivial configuration of v5.0
     {
         const char* yml_configuration =
                 R"(
@@ -146,7 +146,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
  *
  * CASES:
  * - not existing version
- * - get wrongly defined yaml with default version (v4.0)
+ * - get wrongly defined yaml with default version (v5.0)
  */
 TEST(YamlReaderConfigurationTest, version_negative_cases)
 {
@@ -200,7 +200,7 @@ TEST(YamlReaderConfigurationTest, number_of_threads)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -237,7 +237,7 @@ TEST(YamlReaderConfigurationTest, remove_unused_entities)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -274,7 +274,7 @@ TEST(YamlReaderConfigurationTest, discovery_trigger)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -326,7 +326,7 @@ TEST(YamlReaderConfigurationTest, valid_routes)
 {
     const char* yml_configuration =
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -362,7 +362,7 @@ TEST(YamlReaderConfigurationTest, invalid_routes)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -395,7 +395,7 @@ TEST(YamlReaderConfigurationTest, history_depth)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -435,7 +435,7 @@ TEST(YamlReaderConfigurationTest, max_tx_rate)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -475,7 +475,7 @@ TEST(YamlReaderConfigurationTest, max_rx_rate)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
@@ -515,7 +515,7 @@ TEST(YamlReaderConfigurationTest, downsampling)
     const char* yml_configuration =
             // trivial configuration
             R"(
-        version: v4.0
+        version: v5.0
         participants:
           - name: "P1"
             kind: "echo"
