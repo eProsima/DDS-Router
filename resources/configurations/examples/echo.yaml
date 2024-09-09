@@ -46,7 +46,7 @@ participants:
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to print the received
 # messages in stdout. Information regarding discovery events is also printed to stdout.
 
-# 0: Use YAML configuration version v4.0
+# 0: Use YAML configuration version v5.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 

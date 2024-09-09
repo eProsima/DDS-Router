@@ -111,14 +111,14 @@ using namespace eprosima;
 
 /**
  * Do not set Yaml version and get default configuration
- * (currently default is v4.0)
+ * (currently default is v5.0)
  *
  * CASES:
- * - trivial configuration of v4.0
+ * - trivial configuration of v5.0
  */
 TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
 {
-    // trivial configuration of v4.0
+    // trivial configuration of v5.0
     {
         const char* yml_configuration =
                 R"(
@@ -146,7 +146,7 @@ TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_no_version)
  *
  * CASES:
  * - not existing version
- * - get wrongly defined yaml with default version (v4.0)
+ * - get wrongly defined yaml with default version (v5.0)
  */
 TEST(YamlReaderConfigurationTest, version_negative_cases)
 {
