@@ -51,6 +51,11 @@ runs:
       with:
         packages: jsonschema pytest pywin32
 
+    - name: Install setuptools
+      uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
+      with:
+        packages: setuptools
+
     - name: Install yaml cpp dependency
       uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
       with:
