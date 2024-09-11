@@ -40,6 +40,11 @@ runs:
   using: composite
   steps:
 
+    - name: Setup Python version
+      uses: eProsima/eProsima-CI/external/setup-python@v0
+      with:
+        python-version: '3.11'
+
     - name: Install Fast DDS dependencies
       uses: eProsima/eProsima-CI/multiplatform/install_fastdds_dependencies@v0
       with:
