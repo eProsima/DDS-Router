@@ -54,7 +54,7 @@ runs:
     - name: Download dependencies artifact
       uses: eProsima/eProsima-CI/multiplatform/download_dependency@v0
       with:
-        artifact_name: built_ddspipe_${{ inputs.custom_version_build }}_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
+        artifact_name: build_ddspipe_${{ inputs.custom_version_build }}_${{ inputs.os }}_${{ inputs.cmake_build_type }}${{ inputs.dependencies_artifact_postfix }}
         workflow_source: build_ddspipe.yml
         workflow_source_repository: eProsima/eProsima-CI
         target_workspace: ${{ inputs.target_workspace }}
