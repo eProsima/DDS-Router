@@ -45,6 +45,12 @@ runs:
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
+    - name: Install Python dependencies
+      uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
+      if: runner.os == 'Windows'
+      with:
+        packages: jsonschema
+
     - name: Install yaml cpp dependency
       uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
       with:
