@@ -96,6 +96,12 @@ if(WIN32)
 
     string(REPLACE ";" "\\;" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
 
+else()
+
+    # yaml-cpp changed its behavior in 0.8.0 (distributed in Ubuntu-24), so that the target changed from yaml-cpp to yaml-cpp::yaml-cpp .
+    # Instead of using each of these names depending on the OS, we simply remove it since it's actually not required.
+    string(REPLACE "$<TARGET_FILE_DIR:yaml-cpp>;" "" TEST_ENVIRONMENT "${TEST_ENVIRONMENT}")
+
 endif(WIN32)
 
 # populate the tests
