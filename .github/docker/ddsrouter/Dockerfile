@@ -43,8 +43,8 @@ WORKDIR /ddsrouter
 
 
 ARG fastcdr_branch=2.x
-ARG fastdds_branch=2.x
-ARG devutils_branch=0.x
+ARG fastdds_branch=3.x
+ARG devutils_branch=main
 ARG ddspipe_branch=main
 ARG ddsrouter_branch=main
 
@@ -55,17 +55,14 @@ RUN echo "fastcdr branch: <${fastcdr_branch}>" && \
     echo "ddsrouter branch: <${ddsrouter_branch}>"
 
 RUN mkdir src && \
-    wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos
-
-RUN vcs import src < ddsrouter.repos && \
+    wget https://raw.githubusercontent.com/eProsima/DDS-Router/${ddsrouter_branch}/ddsrouter.repos && \
+    vcs import src < ddsrouter.repos && \
     cd src/fastcdr && git checkout ${fastcdr_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
     cd src/dev-utils && git checkout ${devutils_branch} && cd ../.. && \
-    cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../..
-
-RUN cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../..
-
-RUN cp -r src/fastdds/examples/cpp/configuration src/. && \
+    cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../.. && \
+    cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
+    cp -r src/fastdds/examples/cpp/configuration src/. && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON -DSECURITY=ON
 
 COPY run.bash /root/run.bash

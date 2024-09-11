@@ -17,7 +17,7 @@ on:
         default: 'master'
         type: string
 
-      dev_utils_branch:
+      devutils_branch:
         description: 'Branch or tag of eProsima/dev-utils repository (https://github.com/eProsima/dev-utils)'
         required: true
         default: 'main'
@@ -74,7 +74,7 @@ jobs:
     with:
       fastcdr_branch: ${{ inputs.fastcdr_branch || '2.x' }}
       fastdds_branch: ${{ inputs.fastdds_branch || '3.x' }}
-      dev_utils_branch: ${{ inputs.dev_utils_branch || '1.x' }}
+      devutils_branch: ${{ inputs.devutils_branch || '1.x' }}
       ddspipe_branch: ${{ inputs.ddspipe_branch || '1.x' }}
       ddsrouter_branch: ${{ inputs.ddsrouter_branch || github.head_ref || github.ref_name }}
       custom_version_build: ${{ inputs.custom_version_build || 'v3' }}
