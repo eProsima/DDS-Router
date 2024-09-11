@@ -76,6 +76,7 @@ jobs:
       fastdds_branch: ${{ inputs.fastdds_branch || '3.x' }}
       dev_utils_branch: ${{ inputs.dev_utils_branch || '1.x' }}
       ddspipe_branch: ${{ inputs.ddspipe_branch || '1.x' }}
+      ddsrouter_branch: ${{ inputs.ddsrouter_branch || github.head_ref || github.ref_name }}
       custom_version_build: ${{ inputs.custom_version_build || 'v3' }}
       dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}
       ref: ${{ github.ref }}

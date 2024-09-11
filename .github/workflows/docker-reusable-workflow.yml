@@ -28,6 +28,12 @@ on:
         default: 'main'
         type: string
 
+      ddsrouter_branch:
+        description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
+        required: true
+        default: 'main'
+        type: string
+
       custom_version_build:
         description: >
           Version of Fast DDS build from eProsima-CI.
@@ -88,7 +94,7 @@ jobs:
             --build-arg fastdds_branch=${{ inputs.fastdds_branch }} \
             --build-arg dev_utils_branch=${{ inputs.dev_utils_branch }} \
             --build-arg ddspipe_branch=${{ inputs.ddspipe_branch }} \
-            --build-arg ddsrouter_branch=${{ inputs.ref }} \
+            --build-arg ddsrouter_branch=${{ inputs.ddsrouter_branch }} \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }} \
             -f Dockerfile .
 
