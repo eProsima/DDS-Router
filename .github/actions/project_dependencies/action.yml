@@ -49,7 +49,7 @@ runs:
       uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
       if: runner.os == 'Windows'
       with:
-        packages: jsonschema
+        packages: jsonschema pytest pywin32
 
     - name: Install yaml cpp dependency
       uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
