@@ -35,17 +35,17 @@ This value allows users to keep using the same YAML file with an old configurati
             - *v2.2.0*
 
 
-**The current configuration version is v4.0**.
+**The current configuration version is v5.0**.
 This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when the tag ``version`` is not set is *v4.0*.
+    The current default version when the tag ``version`` is not set is *v5.0*.
 
 .. warning::
 
     **Deprecation warning**.
-    Update to version `v4.0` since previous `v3.1` is no longer supported.
+    Version `v4.0` is deprecated and will be removed in a future release, please update to version `v5.0`.
 
 .. _user_manual_configuration_load_xml:
 
@@ -81,7 +81,7 @@ Under the **optional** tag ``raw``, an XML configuration (with the same format a
 
       raw: |
           <?xml version="1.0" encoding="UTF-8" ?>
-          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+          <profiles xmlns="http://www.eprosima.com">
               <participant profile_name="custom_participant_configuration">
                   <domainId>1</domainId>
                   <rtps></rtps>
@@ -741,7 +741,8 @@ For more information, check section :ref:`user_manual_wan_configuration_nat_trav
 Discovery Server GuidPrefix
 ---------------------------
 
-A :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
+In |fastdds| versions previous to *v3.0.0*, a :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
+Although this parameter is no longer mandatory, it is still possible to set it so that a Discovery Server client from an older release may still stablish connection with a Discovery Server server from the newer ones.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
 
 
@@ -840,21 +841,17 @@ Discovery Server Connection Addresses
 -------------------------------------
 
 Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
-``connection-addresses`` is the *key* for an array in which each element has a GuidPrefix referencing the Discovery
-Server to connect with; and a tag ``addresses`` configuring the addresses of such Discovery Server.
+``connection-addresses`` is the *key* for an array in which each element has a tag ``addresses`` configuring the
+addresses of such Discovery Server.
 Each element inside ``addresses`` must follow the configuration for :ref:`user_manual_configuration_network_address`.
 
 .. code-block:: yaml
 
     connection-addresses:
-      - discovery-server-guid:
-          guid: 44.53.0d.5f.45.50.52.4f.53.49.4d.41
-        addresses:
+      - addresses:
           - ip: 127.0.0.1
             port: 11666
-      - discovery-server-guid:
-          id: 4
-        addresses:
+      - addresses:
           - ip: 2001:4860:4860::8888
             port: 11667
             transport: tcp
@@ -977,7 +974,7 @@ A complete example of all the configurations described on this page can be found
 .. code-block:: yaml
 
     # Version Latest
-    version: v4.0
+    version: v5.0
 
     # Specifications
     specs:
@@ -1021,7 +1018,7 @@ A complete example of all the configurations described on this page can be found
       # Load text as Fast DDS XML configuration
       raw: |
           <?xml version="1.0" encoding="UTF-8" ?>
-          <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+          <profiles xmlns="http://www.eprosima.com">
               <participant profile_name="custom_participant_configuration">
                   <domainId>1</domainId>
                   <rtps></rtps>
@@ -1113,10 +1110,7 @@ A complete example of all the configurations described on this page can be found
             transport: tcp              # Transport = TCP
 
         connection-addresses:
-          - discovery-server-guid:
-              id: 2
-              ros-discovery-server: true
-            addresses:
+          - addresses:
               - domain: "localhost"
                 port: 22000
 
@@ -1133,9 +1127,7 @@ A complete example of all the configurations described on this page can be found
           id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
         connection-addresses:           # WAN Discovery Server Connection Addresses
-          - discovery-server-guid:
-              id: 4                     # External WAN Discovery Server id => GuidPrefix = 01.0f.04.00.00.00.00.00.00.00.ca.fe
-            addresses:
+          - addresses:
               - ip: 8.8.8.8             # IP = 8.8.8.8
                 port: 11666             # Port = 11666
                 transport: udp          # Transport = UDP

@@ -90,7 +90,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Check result
         ASSERT_EQ(result.connection_addresses.size(), 1u);
         ASSERT_EQ(result.connection_addresses.begin()->addresses().size(), 1u);
-        ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
         ASSERT_EQ(address, *result.connection_addresses.begin()->addresses().begin());
     }
 
@@ -140,7 +139,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Check result
         ASSERT_EQ(result.connection_addresses.size(), 1u);
         ASSERT_EQ(addresses.size(), result.connection_addresses.begin()->addresses().size());
-        ASSERT_EQ(connection_guid, result.connection_addresses.begin()->discovery_server_guid_prefix());
         // Check every address is inside connection addresses of the configuration
         for (ddspipe::participants::types::Address address : addresses)
         {
@@ -204,9 +202,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         // Check that every connection has a correct number of addresses and a guid given
         for (ddspipe::participants::types::DiscoveryServerConnectionAddress connection : result.connection_addresses)
         {
-            ASSERT_NE(
-                std::find(connection_guids.begin(), connection_guids.end(), connection.discovery_server_guid_prefix())
-                , connection_guids.end());
             ASSERT_EQ(connection.addresses().size(), 1u);
         }
     }
@@ -237,41 +232,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Add connection wrongly
         yml_connection_addresses["address1"] = yml_connection_address;
-
-        yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
-        yml["participant"] = yml_participant;
-
-        // Get configuration object from yaml
-        ASSERT_THROW(
-            ddspipe::participants::DiscoveryServerParticipantConfiguration result =
-            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
-            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
-            eprosima::utils::ConfigurationException);
-    }
-
-    // incorrect guid format
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
-        Yaml yml_address;
-
-        // Add required fields
-        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
-        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
-
-        // Add address
-        ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
-        ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-        yml_addresses.push_back(yml_address);
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Do not add guid server
-        // Add incorrect connection wrongly
-        yml_connection_addresses.push_back(yml_connection_address);
 
         yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
         yml["participant"] = yml_participant;

@@ -18,15 +18,9 @@
 #include <iostream>
 #include <condition_variable>
 
-#include <gtest/gtest.h>
-
-#include <cpp_utils/testing/gtest_aux.hpp>
-#include <cpp_utils/Log.hpp>
-
-#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
-
-#include <ddsrouter_core/core/DdsRouter.hpp>
-
+#include <fastdds/dds/common/InstanceHandle.hpp>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
+#include <fastdds/dds/core/detail/DDSReturnCode.hpp>
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/publisher/DataWriter.hpp>
@@ -40,20 +34,21 @@
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
-#include <fastdds/rtps/transport/UDPv4TransportDescriptor.h>
-#include <fastrtps/attributes/ParticipantAttributes.h>
-#include <fastrtps/attributes/PublisherAttributes.h>
-#include <fastrtps/attributes/SubscriberAttributes.h>
-#include <fastrtps/xmlparser/XMLProfileManager.h>
-#include <fastdds/dds/common/InstanceHandle.hpp>
+#include <fastdds/rtps/attributes/RTPSParticipantAttributes.hpp>
+#include <fastdds/rtps/transport/UDPv4TransportDescriptor.hpp>
 
-#if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
-    #include "v1/HelloWorld/HelloWorldPubSubTypes.h"
-    #include "v1/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
-#else
-    #include "v2/HelloWorld/HelloWorldPubSubTypes.h"
-    #include "v2/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.h"
-#endif // if FASTRTPS_VERSION_MAJOR <= 2 && FASTRTPS_VERSION_MINOR < 13
+#include <cpp_utils/testing/gtest_aux.hpp>
+#include <cpp_utils/Log.hpp>
+
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+
+#include <ddsrouter_core/core/DdsRouter.hpp>
+
+#include "HelloWorld/HelloWorldPubSubTypes.hpp"
+#include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.hpp"
+
+#include <gtest/gtest.h>
+
 
 namespace test {
 
@@ -82,18 +77,7 @@ public:
     {
         if (participant_ != nullptr)
         {
-            if (publisher_ != nullptr)
-            {
-                if (writer_ != nullptr)
-                {
-                    publisher_->delete_datawriter(writer_);
-                }
-                participant_->delete_publisher(publisher_);
-            }
-            if (topic_ != nullptr)
-            {
-                participant_->delete_topic(topic_);
-            }
+            participant_->delete_contained_entities();
             eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->delete_participant(participant_);
         }
     }
@@ -147,7 +131,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataWriterQos wqos =  eprosima::fastdds::dds::DATAWRITER_QOS_DEFAULT;
         wqos.endpoint().history_memory_policy =
-                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastdds::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         wqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
 
@@ -160,7 +144,7 @@ public:
     }
 
     //! Publish a sample
-    bool publish(
+    eprosima::fastdds::dds::ReturnCode_t publish(
             MsgStruct msg)
     {
         hello_.index(msg.index());
@@ -169,7 +153,7 @@ public:
     }
 
     //! Dispose instance
-    eprosima::fastrtps::types::ReturnCode_t dispose_key(
+    eprosima::fastdds::dds::ReturnCode_t dispose_key(
             MsgStruct msg);
 
     void wait_discovery(
@@ -244,7 +228,7 @@ private:
 };
 
 template <>
-bool TestPublisher<HelloWorldKeyed>::publish(
+eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
         HelloWorldKeyed msg)
 {
     hello_.index(msg.index());
@@ -254,7 +238,7 @@ bool TestPublisher<HelloWorldKeyed>::publish(
 }
 
 template <>
-eprosima::fastrtps::types::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
+eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
         HelloWorldKeyed msg)
 {
     hello_.id(msg.id());
@@ -286,18 +270,7 @@ public:
     {
         if (participant_ != nullptr)
         {
-            if (topic_ != nullptr)
-            {
-                participant_->delete_topic(topic_);
-            }
-            if (subscriber_ != nullptr)
-            {
-                if (reader_ != nullptr)
-                {
-                    subscriber_->delete_datareader(reader_);
-                }
-                participant_->delete_subscriber(subscriber_);
-            }
+            participant_->delete_contained_entities();
             eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->delete_participant(participant_);
         }
     }
@@ -355,7 +328,7 @@ public:
         // Set memory management policy so it uses realloc
         eprosima::fastdds::dds::DataReaderQos rqos =  eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
         rqos.endpoint().history_memory_policy =
-                eprosima::fastrtps::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
+                eprosima::fastdds::rtps::MemoryManagementPolicy_t::PREALLOCATED_WITH_REALLOC_MEMORY_MODE;
         rqos.history().kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         if (reliable_)
         {
@@ -438,7 +411,7 @@ private:
                 eprosima::fastdds::dds::DataReader* reader) override
         {
             eprosima::fastdds::dds::SampleInfo info;
-            while (reader->take_next_sample(&msg_received, &info) == ReturnCode_t::RETCODE_OK)
+            while (reader->take_next_sample(&msg_received, &info) == eprosima::fastdds::dds::RETCODE_OK)
             {
                 if (info.instance_state == eprosima::fastdds::dds::ALIVE_INSTANCE_STATE)
                 {

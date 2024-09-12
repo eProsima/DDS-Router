@@ -72,19 +72,4 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_negativ
             "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
             eprosima::utils::ConfigurationException);
     }
-
-    // no discovery server guid prefix
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
-        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        yml["participant"] = yml_participant;
-
-        // Read Yaml
-        ASSERT_THROW(
-            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
-            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
-            eprosima::utils::ConfigurationException);
-    }
 }

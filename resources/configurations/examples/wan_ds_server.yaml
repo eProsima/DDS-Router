@@ -4,7 +4,7 @@
 
 ##################################
 # CONFIGURATION VERSION
-version: v4.0                                                     # 0
+version: v5.0                                                     # 0
 
 ##################################
 # ALLOWED TOPICS
@@ -34,13 +34,11 @@ participants:
 
   - name: WANServer                                               # 6
     kind: wan-discovery-server                                    # 7
-    discovery-server-guid:
-      id: 1                                                       # 8
-    listening-addresses:                                          # 9
-      - ip: 1.1.1.1                                               # 10
-        port: 11666                                               # 11
-        external-port: 11777                                      # 12
-        transport: tcp                                            # 13
+    listening-addresses:                                          # 8
+      - ip: 1.1.1.1                                               # 9
+        port: 11666                                               # 10
+        external-port: 11777                                      # 11
+        transport: tcp                                            # 12
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -53,7 +51,7 @@ participants:
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
 
-# 0: Use YAML configuration version v4.0
+# 0: Use YAML configuration version v5.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
@@ -71,21 +69,18 @@ participants:
 # 7: Kind of WANServer: <wan-discovery-server>.
 # WAN communication with another DDS Router via Discovery Server.
 
-# 8: Set this Discovery Server GuidPrefix to <01.0f.01.00.00.00.00.00.00.00.ca.fe> for WANServer.
-# This GuidPrefix is needed in order from a remote DDS Router to connect with this one.
-
-# 9: Add the interfaces where this Participant will listen in WAN.
+# 8: Add the interfaces where this Participant will listen in WAN.
 # Add as many listening-addresses as needed.
 
-# 10: Listen in public IP (1.1.1.1) for remote traffic.
+# 9: Listen in public IP (1.1.1.1) for remote traffic.
 # This IP must be set to the public IP of the host where this DDS Router will run.
 
-# 11: Listening port is 11666.
+# 10: Listening port is 11666.
 # Remember that if the host is under a NAT, this port is the one that the host will open, but not the one
 # used as public in the router.
 
-# 12: External port is 11777.
+# 11: External port is 11777.
 # This port is used in case the host is under a NAT. This is the public port accessible from any external point
 # in the network, and should be forwarded from the network router to the "port" value.
 
-# 13: It uses TCP. UDP transport is used by default if not set. Could be set to "udp" or "tcp".
+# 12: It uses TCP. UDP transport is used by default if not set. Could be set to "udp" or "tcp".

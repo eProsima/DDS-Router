@@ -22,7 +22,7 @@ find_package(PythonInterp 3 REQUIRED)
 set(TEST_CONFIGURATIONS
     simple_configuration
     ds_configuration
-    complex_configuration_v3
+    complex_configuration
     wan_configuration
 )
 

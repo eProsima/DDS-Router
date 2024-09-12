@@ -48,7 +48,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 --domain 0 --topic topic_0
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 90 --domain 0 --name topic_0
 
   subscriber_local_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -59,7 +59,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --domain 0 --topic topic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 15 --timeout 6 --args "--samples 15 --domain 0 --name topic_1"
 
   # DOMAIN SECURE
   publisher_sec_1:
@@ -73,8 +73,8 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 90 -x secure_local_pub --topic topic_1  --domain 0
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 90 --profile-participant secure_local_pub --name topic_1  --domain 0
 
   subscriber_sec_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -88,8 +88,8 @@ services:
       - ./configurations:/configurations
       - ./certs:/certs
     environment:
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 15 --timeout 6 --args "--samples 15 --topic topic_0 -x secure_local_sub --domain 0"
+      - FASTDDS_DEFAULT_PROFILES_FILE=/configurations/secure_configuration.xml
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 15 --timeout 6 --args "--samples 15 --name topic_0 --profile-participant secure_local_sub --domain 0"
 
 networks:
   std_net:

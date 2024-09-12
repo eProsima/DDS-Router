@@ -1,4 +1,4 @@
-version: v4.0 # Required
+version: v5.0 # Required
 
 threads: 32 # Optional
 

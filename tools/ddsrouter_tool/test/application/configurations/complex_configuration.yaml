@@ -6,7 +6,7 @@
 # 1 Initial Peers repeater Participant with connection and listening addresses
 # 2 topics, one with key and one without
 
-version: v4.0
+version: v5.0
 
 builtin-topics:
   - name: "rt/chatter"
@@ -36,7 +36,7 @@ specs:
 xml:
   raw: |
     <?xml version="1.0" encoding="UTF-8" ?>
-    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles" >
+    <profiles xmlns="http://www.eprosima.com">
         <participant profile_name="test_xml_ddsrouter_tool">
             <domainId>16</domainId>
             <rtps></rtps>
@@ -55,21 +55,14 @@ participants:
 
   - name: local-ds
     kind: local-discovery-server
-    discovery-server-guid:
-      id: 0
-
     listening-addresses:
       - ip: "127.0.0.1"
         port: 11666
 
   - name: wan
     kind: wan-ds
-    discovery-server-guid:
-      id: 1
     connection-addresses:
-      - discovery-server-guid:
-          id: 2
-        addresses:
+      - addresses:
         - ip: "127.0.0.1"
           port: 11667
           external-port: 11678

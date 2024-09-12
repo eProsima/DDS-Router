@@ -35,7 +35,7 @@ services:
     container_name: publisher_t0
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 0 --topic topic0
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 0 --name topic0
 
   subscriber_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -44,7 +44,7 @@ services:
       - std_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --transient --delay 2 --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 50 --timeout 11 --args "--samples 50 --domain 0 --topic topic1 --reliable --transient"
+    command: python3 /scripts/execute_and_validate_subscriber.py --transient-local --delay 2 --exe build/fastdds_configuration_example/configuration --samples 50 --timeout 11 --args "--samples 50 --domain 0 --name topic1 --reliable --transient-local --keep-all"
 
   # DOMAIN 1
   subscriber_t0:
@@ -54,14 +54,14 @@ services:
       - std_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 20 --timeout 12 --args "--samples 20 --domain 1 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--samples 20 --domain 1 --name topic0"
 
   publisher_t1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_t1
     networks:
       - std_net
-    command: install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample publisher --interval 100 --samples 110 --domain 1 --reliable --transient --topic topic1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 1 --reliable --transient-local --keep-all --name topic1
 
 networks:
   std_net:

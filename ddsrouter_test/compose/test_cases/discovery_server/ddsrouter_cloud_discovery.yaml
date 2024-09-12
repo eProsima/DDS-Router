@@ -1,11 +1,9 @@
-version: v4.0
+version: v5.0
 
 participants:
 
   - name: Cloud_Discovery_Server_Participant
     kind: wan-ds
-    discovery-server-guid:
-      id: 0
     listening-addresses:
       - domain: ddsrouter_cloud
         port: 11666

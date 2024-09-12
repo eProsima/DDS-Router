@@ -74,7 +74,7 @@ def parse_options():
         help='Print test debugging info.'
     )
     parser.add_argument(
-        '--transient',
+        '--transient-local',
         action='store_true',
         help='Transient Local Subscriber, so it must receive data from 0.'
     )
@@ -136,15 +136,14 @@ def _subscriber_parse_output(stdout, stderr):
     :return: List of received messages
     """
 
-    msgs_regex_basic = re.compile(r'^Message\sHelloWorld\s+\d+\sRECEIVED$')
-    msgs_regex_adv = re.compile(r'Sample received: HelloWorld\s+\d+\s+\(\d+ Bytes\)')
-    match_regex = re.compile(r'^Subscriber matched \[.+\].$')
-    unmatch_regex = re.compile(r'^Subscriber unmatched \[.+\].$')
+    msgs_regex = re.compile(r"Sample: 'Configuration' with index: '\d+' \(\d+ Bytes\) RECEIVED")
+    match_regex = re.compile(r'^Subscriber matched.$')
+    unmatch_regex = re.compile(r'^Subscriber unmatched.$')
 
     filtered_data = {'messages': [], 'matches': 0, 'unmatches': 0}
 
     for line in stdout.splitlines():
-        if msgs_regex_basic.match(line) or msgs_regex_adv.match(line):
+        if msgs_regex.match(line):
             filtered_data['messages'].append(line)
         elif match_regex.match(line):
             filtered_data['matches'] += 1
@@ -241,7 +240,7 @@ def check_transient(data):
     :param data: List of strings
     :return: True if transient has been fulfilled, false in case on error
     """
-    msg_pattern = re.compile(r'HelloWorld\s+(\d+)')
+    msg_pattern = re.compile(r"'Configuration' with index: '(\d+)'")
 
     for idx, line in enumerate(data):
         match = msg_pattern.search(line)
@@ -281,7 +280,7 @@ if __name__ == '__main__':
             stderr_parsed=stderr_parsed,
             samples=args.samples,
             duplicates_allow=args.allow_duplicates,
-            transient=args.transient,
+            transient=args.transient_local,
             n_matches=args.n_matches,
             n_unmatches=args.n_unmatches
             )))
