@@ -40,26 +40,15 @@ runs:
   using: composite
   steps:
 
-    - name: Setup Python version
-      uses: eProsima/eProsima-CI/external/setup-python@v0
-      with:
-        python-version: '3.11'
-
     - name: Install Fast DDS dependencies
       uses: eProsima/eProsima-CI/multiplatform/install_fastdds_dependencies@v0
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
-    - name: Install Python dependencies
-      uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
-      if: runner.os == 'Windows'
-      with:
-        packages: pytest pywin32
-
-    - name: Install setuptools and jsonschema
+    - name: Install jsonschema
       uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
       with:
-        packages: setuptools jsonschema
+        packages: jsonschema
 
     - name: Install yaml cpp dependency
       uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0

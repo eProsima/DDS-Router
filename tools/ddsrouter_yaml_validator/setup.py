@@ -15,7 +15,7 @@ setup(
         ('share/' + package_name, [package_name + '/ddsrouter_config_schema.json']),
         ('share/' + package_name, [package_name + '/full_example.yaml'])
     ],
-    install_requires=[],
+    install_requires=['setuptools'],
     zip_safe=True,
     maintainer='eprosima',
     maintainer_email='juanlopez@eprosima.com',
