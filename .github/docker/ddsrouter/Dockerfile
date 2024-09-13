@@ -43,8 +43,8 @@ WORKDIR /ddsrouter
 
 
 ARG fastcdr_branch=2.x
-ARG fastdds_branch=2.x
-ARG devutils_branch=0.x
+ARG fastdds_branch=3.x
+ARG devutils_branch=main
 ARG ddspipe_branch=main
 ARG ddsrouter_branch=main
 
