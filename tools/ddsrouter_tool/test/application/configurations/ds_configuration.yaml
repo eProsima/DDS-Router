@@ -27,7 +27,6 @@ participants:
   - name: wan
     kind: wan-ds
     connection-addresses:
-      - addresses:
-        - ip: "127.0.0.1"
-          port: 11667
-          transport: tcp
+      - ip: "127.0.0.1"
+        port: 11667
+        transport: tcp

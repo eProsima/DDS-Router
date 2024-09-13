@@ -61,7 +61,7 @@ std::shared_ptr<ParticipantConfiguration> random_participant_configuration(
             c->id = id;
             c->domain = random_domain(seed);
             c->discovery_server_guid_prefix = random_guid_prefix(seed);
-            c->connection_addresses = {random_connection_address(seed)};
+            c->connection_addresses = {random_address(seed)};
             return c;
         }
 

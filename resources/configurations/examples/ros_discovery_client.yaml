@@ -36,9 +36,8 @@ participants:
       ros-discovery-server: true                                  # 7
       id: 2                                                       # 8
     connection-addresses:                                         # 9
-      - addresses:
-          - domain: localhost                                     # 10
-            port: 11888                                           # 11
+      - domain: localhost                                         # 10
+        port: 11888                                               # 11
                                                                   # 12
 
 ##################################

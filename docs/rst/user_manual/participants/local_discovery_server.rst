@@ -39,7 +39,7 @@ The Local Discovery Server Participant allows users to configure the standard at
   :ref:`Listening Addresses <user_manual_configuration_listening_addresses>` configuration section.
 * To configure the Discovery Server connection addresses to connect to other Discovery Servers,
   check the
-  :ref:`Discovery Server Connection Addresses <user_manual_configuration_discovery_server_connection_addresses>` configuration section.
+  :ref:`Connection Addresses <user_manual_configuration_connection_addresses>` configuration section.
 
 .. note::
 
@@ -73,6 +73,5 @@ This example connects the local Discovery Server Participant with a remote Disco
           transport: tcp                              # Use TCP transport
 
       connection-addresses:                           # External Discovery Server Listening Addresses
-        - addresses:
-            - ip: 2001:4860:4860::8888                # Use UDP by default
-              port: 11666
+        - ip: 2001:4860:4860::8888                    # Use UDP by default
+          port: 11666

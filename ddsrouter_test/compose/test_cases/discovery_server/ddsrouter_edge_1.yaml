@@ -9,7 +9,6 @@ participants:
   - name: Edge_1_DS_Participant
     kind: wan-ds
     connection-addresses:
-      - addresses:
-          - domain: ddsrouter_cloud
-            port: 11666
-            transport: udp
+      - domain: ddsrouter_cloud
+        port: 11666
+        transport: udp
