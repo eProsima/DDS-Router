@@ -42,7 +42,7 @@ The WAN Discovery Server Participant allows users to configure the standard attr
   :ref:`Listening Addresses <user_manual_configuration_listening_addresses>` configuration section.
 * To configure the Discovery Server connection addresses to connect to other Discovery Servers,
   check the
-  :ref:`Discovery Server Connection Addresses <user_manual_configuration_discovery_server_connection_addresses>` configuration section.
+  :ref:`Connection Addresses <user_manual_configuration_connection_addresses>` configuration section.
 
 .. note::
 
@@ -79,7 +79,6 @@ using ``UDP`` transport.
           port: 11600
 
       connection-addresses:                       # Another WAN Participant Listening Addresses
-        - addresses:
-            - ip: 2001:4860:4860::8888
-              port: 11666
-              transport: udp                      # Use UDP transport
+        - ip: 2001:4860:4860::8888
+          port: 11666
+          transport: udp                          # Use UDP transport

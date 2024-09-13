@@ -35,9 +35,8 @@ participants:
   - name: WANClient                                               # 6
     kind: wan-ds                                                  # 7
     connection-addresses:                                         # 8
-      - addresses:                                                # 9
-          - ip: 1.1.1.1
-            port: 11666
+      - ip: 1.1.1.1                                               # 9
+        port: 11666
     listening-addresses:                                          # 10
       - ip: 2.2.2.2                                               # 11
         port: 11670                                               # 12

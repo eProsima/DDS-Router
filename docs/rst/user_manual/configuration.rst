@@ -444,7 +444,7 @@ By default, the filter allows all errors to be displayed, while selectively perm
 
     For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
 
-The |ddsrouter| prints the logs by default (warnings and errors in the standard error and infos in the standard output).
+The |ddsrouter| prints the logs by default (warnings and errors in the standard error and info traces in the standard output).
 The |ddsrouter|, however, can also publish the logs in a DDS topic.
 To publish the logs, under the tag ``publish``, set ``enable: true`` and set a ``domain`` and a ``topic-name``.
 The type of the logs published is defined as follows:
@@ -742,7 +742,7 @@ Discovery Server GuidPrefix
 ---------------------------
 
 In |fastdds| versions previous to *v3.0.0*, a :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
-Although this parameter is no longer mandatory, it is still possible to set it so that a Discovery Server client from an older release may still stablish connection with a Discovery Server server from the newer ones.
+Although this parameter is no longer mandatory, it is still possible to set it so that a Discovery Server client from an older release may still establish connection with a Discovery Server server from the newer ones.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
 
 
@@ -817,47 +817,25 @@ listen for remote Participants.
         transport: tcp
 
 
-.. _user_manual_configuration_initial_peers_connection_addresses:
+.. _user_manual_configuration_connection_addresses:
 
-Initial Peers Connection Addresses
-----------------------------------
+Connection Addresses
+--------------------
 
-Tag ``connection-addresses`` configure a connection with one or multiple remote WAN Participants.
-``connection-addresses`` is *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
+Tag ``connection-addresses`` configures a connection with one or multiple remote WAN Participants (:ref:`WAN participant <user_manual_participants_wan>` case) or Discovery Servers (:ref:`Discovery Server participant <user_manual_participants_discovery_server_wan>` case).
+``connection-addresses`` is the *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
 
 .. code-block:: yaml
 
     connection-addresses:
       - ip: 127.0.0.1
         port: 11666
+      - ip: 2001:4860:4860::8888
+        port: 11667
+        transport: tcp
       - ip: 2001:4860:4860::8844
         port: 11668
         transport: tcp
-
-
-.. _user_manual_configuration_discovery_server_connection_addresses:
-
-Discovery Server Connection Addresses
--------------------------------------
-
-Tag ``connection-addresses`` configure a connection with one or multiple remote Discovery Servers.
-``connection-addresses`` is the *key* for an array in which each element has a tag ``addresses`` configuring the
-addresses of such Discovery Server.
-Each element inside ``addresses`` must follow the configuration for :ref:`user_manual_configuration_network_address`.
-
-.. code-block:: yaml
-
-    connection-addresses:
-      - addresses:
-          - ip: 127.0.0.1
-            port: 11666
-      - addresses:
-          - ip: 2001:4860:4860::8888
-            port: 11667
-            transport: tcp
-          - ip: 2001:4860:4860::8844
-            port: 11668
-            transport: tcp
 
 
 .. _user_manual_configuration_profile:
@@ -1110,9 +1088,8 @@ A complete example of all the configurations described on this page can be found
             transport: tcp              # Transport = TCP
 
         connection-addresses:
-          - addresses:
-              - domain: "localhost"
-                port: 22000
+          - domain: "localhost"
+            port: 22000
 
     ####################
 
@@ -1127,10 +1104,9 @@ A complete example of all the configurations described on this page can be found
           id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
 
         connection-addresses:           # WAN Discovery Server Connection Addresses
-          - addresses:
-              - ip: 8.8.8.8             # IP = 8.8.8.8
-                port: 11666             # Port = 11666
-                transport: udp          # Transport = UDP
+          - ip: 8.8.8.8                 # IP = 8.8.8.8
+            port: 11666                 # Port = 11666
+            transport: udp              # Transport = UDP
 
 
     ####################

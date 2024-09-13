@@ -41,7 +41,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
 {
     ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::discovery_server;
     ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
-    ddspipe::core::types::GuidPrefix guid_prefix = ddspipe::core::testing::random_guid_prefix();
 
     // 1 address
     {
@@ -53,7 +52,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add address
         ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
@@ -83,7 +81,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add addresses
         std::vector<ddspipe::participants::types::Address> addresses;
@@ -129,7 +126,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add address badly
         Yaml yml_listening_addresses;
@@ -158,7 +154,6 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_listeni
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add incorrect address
         Yaml yml_listening_addresses;

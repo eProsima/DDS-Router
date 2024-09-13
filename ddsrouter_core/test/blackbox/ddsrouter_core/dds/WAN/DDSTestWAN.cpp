@@ -102,16 +102,12 @@ discovery_server_participant_configuration(
     if (is_client(wan_kind))
     {
         conf.connection_addresses.insert(
-            participants::types::DiscoveryServerConnectionAddress(
-            {
-                participants::types::Address(
-                    (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
-                    11666 + (this_server_id_is_1 ? 0u : 1u),
-                    11666 + (this_server_id_is_1 ? 0u : 1u),
-                    ip_version,
-                    transport_protocol)
-            }
-                )
+            participants::types::Address(
+                (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1"),
+                11666 + (this_server_id_is_1 ? 0u : 1u),
+                11666 + (this_server_id_is_1 ? 0u : 1u),
+                ip_version,
+                transport_protocol)
             );
     }
 

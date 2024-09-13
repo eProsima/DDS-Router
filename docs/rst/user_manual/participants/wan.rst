@@ -42,7 +42,7 @@ be located by other remote Participants):
   :ref:`Listening Addresses <user_manual_configuration_listening_addresses>` configuration section.
 * To configure the connection addresses to connect with other Wan Participants,
   check the
-  :ref:`Initial Peers Connection Addresses <user_manual_configuration_initial_peers_connection_addresses>` configuration section.
+  :ref:`Connection Addresses <user_manual_configuration_connection_addresses>` configuration section.
 
 .. note::
 

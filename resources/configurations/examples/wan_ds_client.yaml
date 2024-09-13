@@ -35,10 +35,9 @@ participants:
   - name: WANClient                                               # 6
     kind: wan-discovery-server                                    # 7
     connection-addresses:                                         # 8
-      - addresses:                                                # 9
-          - ip: 1.1.1.1
-            port: 11777
-            transport: tcp
+      - ip: 1.1.1.1                                               # 9
+        port: 11777
+        transport: tcp
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -72,6 +71,6 @@ participants:
 # 8: Add the addresses where to reach the remote DDS Routers that will connect to.
 # Add as many connection-addresses as needed.
 
-# 9: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11666 over UDP transport (default).
+# 9: Connect to a Discovery Server in IP <1.1.1.1> listening in port 11777 over TCP transport.
 # This is the same configuration that must be set in the DDS Router that works as a Server in its listening-addresses.
 # Add every other address where trying to reach this same remote WAN Discovery Server.

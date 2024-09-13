@@ -37,46 +37,32 @@ using namespace eprosima;
  *
  * POSITIVE CASES:
  * - 1 address
- * - 1 connection N addresses
- * - N connections 1 addresses
+ * - N addresses
  *
  * NEGATIVE CASES:
  * - not list format
- * - incorrect guid format
- * - not list of addresses
  * - incorrect address format
  */
 TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connection_addresses)
 {
     ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::discovery_server;
     ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
-    ddspipe::core::types::GuidPrefix guid_prefix = ddspipe::core::testing::random_guid_prefix();
 
     // 1 address
     {
         Yaml yml;
         Yaml yml_participant;
         Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
         Yaml yml_address;
 
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add address
         ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
         ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-        yml_addresses.push_back(yml_address);
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Add server guid
-        ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix();
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
-
-        yml_connection_addresses.push_back(yml_connection_address);
+        yml_connection_addresses.push_back(yml_address);
 
         yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
         yml["participant"] = yml_participant;
@@ -89,22 +75,18 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
 
         // Check result
         ASSERT_EQ(result.connection_addresses.size(), 1u);
-        ASSERT_EQ(result.connection_addresses.begin()->addresses().size(), 1u);
-        ASSERT_EQ(address, *result.connection_addresses.begin()->addresses().begin());
+        ASSERT_EQ(address, *result.connection_addresses.begin());
     }
 
-    // 1 connection N addresses
+    // N addresses
     {
         Yaml yml;
         Yaml yml_participant;
         Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
 
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add addresses
         std::vector<ddspipe::participants::types::Address> addresses;
@@ -117,15 +99,8 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
             // Add it to yaml
             Yaml yml_address;
             ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-            yml_addresses.push_back(yml_address);
+            yml_connection_addresses.push_back(yml_address);
         }
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Add server guid
-        ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix();
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
-
-        yml_connection_addresses.push_back(yml_connection_address);
 
         yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
         yml["participant"] = yml_participant;
@@ -137,72 +112,16 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
                         ddspipe::yaml::YamlReaderVersion::LATEST);
 
         // Check result
-        ASSERT_EQ(result.connection_addresses.size(), 1u);
-        ASSERT_EQ(addresses.size(), result.connection_addresses.begin()->addresses().size());
+        ASSERT_EQ(addresses.size(), result.connection_addresses.size()) << yml;
         // Check every address is inside connection addresses of the configuration
         for (ddspipe::participants::types::Address address : addresses)
         {
-            // ATTENTION: this previous declaration is needed as listening_addresses() does not return a reference
+            // ATTENTION: this previous declaration is needed as connection_addresses() does not return a reference
             std::set<ddspipe::participants::types::Address> addresses_result =
-                    result.connection_addresses.begin()->addresses();
+                    result.connection_addresses;
             ASSERT_NE(
                 addresses_result.find(address),
                 addresses_result.end());
-        }
-    }
-
-    // N connections 1 address
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        Yaml yml_connection_addresses;
-
-        // Add required fields
-        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
-        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
-
-        std::vector<ddspipe::core::types::GuidPrefix> connection_guids;
-
-        // Add connections
-        for (uint32_t i = 0; i < ddsrouter::yaml::testing::TEST_ITERATIONS; i++)
-        {
-            Yaml yml_connection_address;
-            Yaml yml_addresses;
-
-            // Add address
-            ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address(i);
-
-            // Add it to yaml
-            Yaml yml_address;
-            ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-            yml_addresses.push_back(yml_address);
-            yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-            // Add server guid
-            ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix(i);
-            connection_guids.push_back(connection_guid);
-            ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
-
-            yml_connection_addresses.push_back(yml_connection_address);
-        }
-
-
-        yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
-        yml["participant"] = yml_participant;
-
-        // Get configuration object from yaml
-        ddspipe::participants::DiscoveryServerParticipantConfiguration result =
-                ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
-                        "participant",
-                        ddspipe::yaml::YamlReaderVersion::LATEST);
-
-        // Check result
-        ASSERT_EQ(connection_guids.size(), result.connection_addresses.size());
-        // Check that every connection has a correct number of addresses and a guid given
-        for (ddspipe::participants::types::DiscoveryServerConnectionAddress connection : result.connection_addresses)
-        {
-            ASSERT_EQ(connection.addresses().size(), 1u);
         }
     }
 
@@ -211,67 +130,18 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         Yaml yml;
         Yaml yml_participant;
         Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
         Yaml yml_address;
 
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
         // Add address
         ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
         ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-        yml_addresses.push_back(yml_address);
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Add server guid
-        ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix();
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
 
         // Add connection wrongly
-        yml_connection_addresses["address1"] = yml_connection_address;
-
-        yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
-        yml["participant"] = yml_participant;
-
-        // Get configuration object from yaml
-        ASSERT_THROW(
-            ddspipe::participants::DiscoveryServerParticipantConfiguration result =
-            ddspipe::yaml::YamlReader::get<ddspipe::participants::DiscoveryServerParticipantConfiguration>(yml,
-            "participant", ddspipe::yaml::YamlReaderVersion::LATEST),
-            eprosima::utils::ConfigurationException);
-    }
-
-    // not list of addresses
-    {
-        Yaml yml;
-        Yaml yml_participant;
-        Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
-        Yaml yml_address;
-
-        // Add required fields
-        ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
-        ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
-
-        // Add address
-        ddspipe::participants::types::Address address = ddspipe::participants::testing::random_address();
-        ddspipe::yaml::testing::address_to_yaml(yml_address, address);
-        // Add address wrongly
-        yml_addresses["address1"] = yml_address;
-
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Add server guid
-        ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix();
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
-
-        // Add connection
-        yml_connection_addresses.push_back(yml_connection_address);
+        yml_connection_addresses["address1"] = yml_address;
 
         yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
         yml["participant"] = yml_participant;
@@ -289,26 +159,14 @@ TEST(YamlGetDiscoveryServerParticipantConfigurationTest, get_participant_connect
         Yaml yml;
         Yaml yml_participant;
         Yaml yml_connection_addresses;
-        Yaml yml_connection_address;
-        Yaml yml_addresses;
         Yaml yml_address;
 
         // Add required fields
         ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
         ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_participant, guid_prefix);
 
-        // Add empty address
-        yml_addresses.push_back(yml_address);
-        yml_connection_address[ddspipe::yaml::COLLECTION_ADDRESSES_TAG] = yml_addresses;
-
-        // Add server guid
-        ddspipe::core::types::GuidPrefix connection_guid = ddspipe::core::testing::random_guid_prefix();
-        ddspipe::yaml::testing::discovery_server_guid_prefix_to_yaml(yml_connection_address, connection_guid);
-
-        // Add connection wrongly
-        yml_connection_addresses.push_back(yml_connection_address);
-
+        // Add connection wrongly (empty yaml = incorrect address)
+        yml_connection_addresses.push_back(yml_address);
         yml_participant[ddspipe::yaml::CONNECTION_ADDRESSES_TAG] = yml_connection_addresses;
         yml["participant"] = yml_participant;
 
