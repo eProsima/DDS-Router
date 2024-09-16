@@ -32,7 +32,7 @@ This value allows users to keep using the same YAML file with an old configurati
 
         *   - version 4.0
             - ``v4.0``
-            - *v2.2.0*
+            - *v3.0.0*
 
 
 **The current configuration version is v5.0**.
@@ -472,10 +472,6 @@ The type of the logs published is defined as follows:
       string timestamp;
     };
 
-.. note::
-
-    The type of the logs can be published by setting ``publish-type: true``.
-
 **Example of usage**
 
 .. code-block:: yaml
@@ -490,7 +486,6 @@ The type of the logs published is defined as follows:
         enable: true
         domain: 84
         topic-name: "DdsRouterLogs"
-        publish-type: false
       stdout: true
 
 .. _user_manual_configuration_specs_monitor:
@@ -976,7 +971,6 @@ A complete example of all the configurations described on this page can be found
             enable: true
             domain: 84
             topic-name: "DdsRouterLogs"
-            publish-type: false
         stdout: true
 
       monitor:
