@@ -472,10 +472,6 @@ The type of the logs published is defined as follows:
       string timestamp;
     };
 
-.. note::
-
-    The type of the logs can be published by setting ``publish-type: true``.
-
 **Example of usage**
 
 .. code-block:: yaml
@@ -490,7 +486,6 @@ The type of the logs published is defined as follows:
         enable: true
         domain: 84
         topic-name: "DdsRouterLogs"
-        publish-type: false
       stdout: true
 
 .. _user_manual_configuration_specs_monitor:
@@ -976,7 +971,6 @@ A complete example of all the configurations described on this page can be found
             enable: true
             domain: 84
             topic-name: "DdsRouterLogs"
-            publish-type: false
         stdout: true
 
       monitor:
