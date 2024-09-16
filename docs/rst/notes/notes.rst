@@ -14,15 +14,6 @@ This release includes the following **Features**:
 * Remove ``publish-type`` tag from :ref:`user_manual_configuration_specs_monitor` configuration.
 * Remove ``DiscoveryServerConnectionAdress``.
 
-This release includes the following **CI improvements**:
-
-* Upgrade to Ubuntu Noble (24.04).
-* Remove Ubuntu Focal (20.04) from the CI.
-* Limit permissions and include missing certificates in security tests.
-* Add stress tests.
-* Add support for builds with both Fast DDS v2 and v3.
-* Reduce the list of flaky Docker tests.
-
 This release includes the following **Bugfixes**:
 
 * Reset cache changes before returning them to the pool.
@@ -31,6 +22,14 @@ This release includes the following **Configuration features**:
 
 * Change the default value of :ref:`user_manual_user_interface_log_filter_argument` to ``DDSROUTER``.
 * Change the default value of :ref:`user_manual_user_interface_log_verbosity_argument` to ``error``.
+
+This release includes the following **CI improvements**:
+
+* Upgrade to Ubuntu Noble (24.04).
+* Remove Ubuntu Focal (20.04) from the CI.
+* Limit permissions and include missing certificates in security tests.
+* Add stress tests.
+* Reduce the list of flaky Docker tests.
 
 This release includes the following **Dependencies Update**:
 
