@@ -47,6 +47,7 @@ jobs:
       fastdds_branch: '3.x'
       devutils_branch: '1.x'
       ddspipe_branch: '1.x'
+      ddsrouter_branch: '3.x'
       custom_version_build: 'v3'
       dependencies_artifact_postfix: '_nightly'
       ref: 'main'
