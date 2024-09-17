@@ -87,8 +87,9 @@ void DdsRouter::init_participants_()
                           << "Failed to create creating Participant " << participant_config.second->id);
         }
 
-        logInfo(DDSROUTER, "Participant created with id: " << new_participant->id()
-                                                           << " and kind " << participant_config.first << ".");
+        EPROSIMA_LOG_INFO(DDSROUTER, "Participant created with id: " << new_participant->id()
+                                                                     << " and kind " << participant_config.first <<
+                ".");
 
         // Add this participant to the database. If it is repeated it will cause an exception
         try
@@ -126,7 +127,7 @@ utils::ReturnCode DdsRouter::start() noexcept
     utils::ReturnCode ret = ddspipe_->enable();
     if (ret == utils::ReturnCode::RETCODE_OK)
     {
-        logInfo(DDSROUTER, "Starting DDS Router.");
+        EPROSIMA_LOG_INFO(DDSROUTER, "Starting DDS Router.");
     }
 
     return ret;
@@ -137,7 +138,7 @@ utils::ReturnCode DdsRouter::stop() noexcept
     utils::ReturnCode ret = ddspipe_->disable();
     if (ret == utils::ReturnCode::RETCODE_OK)
     {
-        logInfo(DDSROUTER, "Stopping DDS Router.");
+        EPROSIMA_LOG_INFO(DDSROUTER, "Stopping DDS Router.");
     }
 
     return ret;

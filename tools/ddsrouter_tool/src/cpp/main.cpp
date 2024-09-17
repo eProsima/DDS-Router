@@ -84,7 +84,7 @@ int main(
     // NOTE: this check is redundant with option parse arg check
     if (!is_file_accessible(commandline_args.file_path.c_str(), eprosima::utils::FileAccessMode::read))
     {
-        logError(
+        EPROSIMA_LOG_ERROR(
             DDSROUTER_ARGS,
             "File '" << commandline_args.file_path << "' does not exist or it is not accessible.");
         return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
@@ -185,7 +185,7 @@ int main(
                     }
                     catch (const std::exception& e)
                     {
-                        logWarning(DDSROUTER_EXECUTION,
+                        EPROSIMA_LOG_WARNING(DDSROUTER_EXECUTION,
                                 "Error reloading configuration file " << file_name << " with error: " << e.what());
                     }
                 };
@@ -223,7 +223,7 @@ int main(
                         }
                         catch (const std::exception& e)
                         {
-                            logWarning(DDSROUTER_EXECUTION,
+                            EPROSIMA_LOG_WARNING(DDSROUTER_EXECUTION,
                                     "Error reloading configuration file " << commandline_args.file_path << " with error: " <<
                                     e.what());
                         }
@@ -270,7 +270,7 @@ int main(
     }
     catch (const eprosima::utils::ConfigurationException& e)
     {
-        logError(DDSROUTER_ERROR,
+        EPROSIMA_LOG_ERROR(DDSROUTER_ERROR,
                 "Error Loading DDS Router Configuration from file " << commandline_args.file_path <<
                 ". Error message:\n " <<
                 e.what());
@@ -278,7 +278,7 @@ int main(
     }
     catch (const eprosima::utils::InitializationException& e)
     {
-        logError(DDSROUTER_ERROR,
+        EPROSIMA_LOG_ERROR(DDSROUTER_ERROR,
                 "Error Initializing DDS Router. Error message:\n " <<
                 e.what());
         return static_cast<int>(ui::ProcessReturnCode::execution_failed);
