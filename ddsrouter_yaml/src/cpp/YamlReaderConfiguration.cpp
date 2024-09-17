@@ -58,7 +58,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                     break;
 
                 case ddspipe::yaml::YamlReaderVersion::V_4_0:
-                    logWarning(DDSROUTER_YAML,
+                    EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
                             "The yaml configuration version " << version <<
                             " is deprecated and will be removed in a future release. Please update to v5.0.");
                     break;
@@ -68,13 +68,13 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         {
             // Get default version
             version = default_yaml_version();
-            logWarning(DDSROUTER_YAML,
+            EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
                     "No version of yaml configuration given. Using version " << version << " by default. " <<
                     "Add " << ddspipe::yaml::VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
                     "in future releases.");
         }
 
-        logInfo(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
+        EPROSIMA_LOG_INFO(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
 
         // Load DDS Router Configuration
         core::DdsRouterConfiguration router_configuration =

@@ -116,7 +116,7 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
                     PARTICIPANT_KIND_TAG,
                     version);
 
-    logInfo(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
+    EPROSIMA_LOG_INFO(DDSROUTER_YAML_CONFIGURATION, "Loading Participant of kind " << kind << ".");
 
     switch (kind)
     {
