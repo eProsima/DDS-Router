@@ -115,6 +115,8 @@ jobs:
           workspace_dependencies: install
           ctest_args: --label-exclude "xfail"
           colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+          test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ matrix.os }}_${{ matrix.cmake_build_type }}
+
 
       - name: Test Report
         uses: eProsima/eProsima-CI/external/test-reporter@main
@@ -150,10 +152,15 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/asan_build_test@main
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: install
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xasan"
+          test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
+
 
       - name: Test Report
         uses: eProsima/eProsima-CI/external/test-reporter@main
@@ -188,10 +195,19 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/tsan_build_test@main
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        env:
+          # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
+          # These issues were fixed in GCC 12 so we upgrade to that version.
+          CC: gcc-12
+          CXX: g++-12
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: install
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xtsan"
+          test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
         uses: eProsima/eProsima-CI/external/test-reporter@main
@@ -262,6 +278,7 @@ jobs:
           workspace_dependencies: install
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
           codecov_fix_file_path: src/codecov.yml
+          test_report_artifact: test_report_coverage${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
 
 #####################################################################
