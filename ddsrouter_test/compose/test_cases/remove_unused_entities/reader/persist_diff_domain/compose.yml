@@ -1,0 +1,113 @@
+# Test description:
+#   Check that the removal of unused entities is compatible with multiple subscribers in different domains.
+#   Check that tracks do not get deleted when the participant who created them disconnects.
+#
+# Test architecture:
+#
+# 1. Check that the first subscriber receives the data sent by the publisher.
+#
+# ┌───────────────────┐            ┌────────────────────┐
+# │  Domain 80        │            │   Domain 81        │
+# │ ┌──────────────┐ ┌┼────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter ││ │subscriber_1_t0│ │
+# │ │             ─┼─┼┤►          ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)   ││ │(local)        │ │
+# │ └──────────────┘ └┼────────────┼┘ └───────────────┘ │
+# │                   │            │                    │
+# └───────────────────┘            └────────────────────┘
+#
+# 2. Check that the second subscriber receives the data sent by the publisher.
+#
+# ┌───────────────────┐            ┌────────────────────┐
+# │  Domain 80        │            │   Domain 81        │
+# │ ┌──────────────┐ ┌┼────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter ││ │subscriber_1_t0│ │
+# │ │             ─┼─┼┤►          ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)│  ││ │(local)        │ │
+# │ └──────────────┘ └┼─────────┼──┼┘ └───────────────┘ │
+# │                   │         │  │                    │
+# └───────────────────┘         │  └────────────────────┘
+#                               │
+#                               │  ┌────────────────────┐
+#                               │  │   Domain 82        │
+#                               │  │  ┌───────────────┐ │
+#                               │  │  │subscriber_2_t0│ │
+#                               └──┼──┤►              │ │
+#                                  │  │(local)        │ │
+#                                  │  └───────────────┘ │
+#                                  │                    │
+#                                  └────────────────────┘
+#
+# 3. Check that the second subscriber keeps receiving the data sent by the publisher.
+#
+# ┌───────────────────┐            ┌────────────────────┐
+# │  Domain 80        │            │   Domain 82        │
+# │ ┌──────────────┐ ┌┼────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter ││ │subscriber_2_t0│ │
+# │ │             ─┼─┼┤►          ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)   ││ │(local)        │ │
+# │ └──────────────┘ └┼────────────┼┘ └───────────────┘ │
+# │                   │            │                    │
+# └───────────────────┘            └────────────────────┘
+#
+# 4. Check that when the subscriber disconnects the track gets deleted.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │  Domain 82         │
+# │ ┌──────────────┐ ┌┼─────────────┼┐                   │
+# │ │publisher_0_t0│ ││  ddsrouter  ││                   │
+# │ │              │ ││             ││                   │
+# │ │(local)       │ ││  (local)    ││                   │
+# │ └──────────────┘ └┼─────────────┼┘                   │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+
+  # DOMAIN 80
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_publisher.py --exe build/fastdds_configuration_example/configuration --n-unmatches 1 --timeout 11 --args "--samples 110 --domain 80 --name topic0 --interval 100"
+
+  # DOMAIN 81
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 40 --timeout 6 --args "--samples 40 --domain 81 --name topic0"
+
+
+  # DOMAIN 82
+  subscriber_2_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 40 --timeout 8 --delay 2 --args "--samples 40 --domain 82 --name topic0"
+
+networks:
+  std_net:
+  default:
+    driver: none
