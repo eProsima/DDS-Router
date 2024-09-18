@@ -59,7 +59,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: build/fastdds_configuration_example/configuration publisher --samples 110 --domain 80 --name topic0 --interval 100
 
 
@@ -70,7 +70,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 3 --args "--samples 20 --domain 81 --name topic0"
 
   subscriber_t0_2:
@@ -79,7 +79,7 @@ services:
     networks:
       - std_net
     volumes:
-      - ../../../scripts:/scripts
+      - ../../../../scripts:/scripts
     command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 6 --delay 4 --args "--samples 20 --domain 81 --name topic0"
 
 networks:

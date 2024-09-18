@@ -80,7 +80,7 @@ services:
       - edge_0_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --timeout 4 --args "--samples 40 --domain 80 --topic topic0 --interval 100"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe build/fastdds_configuration_example/configuration --timeout 4 --args "--samples 40 --domain 80 --name topic0 --interval 100"
 
   # DOMAIN 81
   ddsrouter_edge_1:
@@ -105,7 +105,7 @@ services:
       - edge_1_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --samples 10 --timeout 8 --args "--domain 81 --samples 10 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 8 --args "--domain 81 --samples 10 --name topic0"
 
   # Subscriber to verify the track has been deleted
   subscriber_2:
@@ -117,7 +117,7 @@ services:
       - edge_1_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/AdvancedConfigurationExample/examples/cpp/dds/AdvancedConfigurationExample/AdvancedConfigurationExample --n-unmatches 1 --timeout 8 --args "--domain 81 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --n-unmatches 1 --timeout 8 --args "--domain 81 --name topic0"
 
 networks:
   edge_0_net:

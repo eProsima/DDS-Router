@@ -85,7 +85,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --timeout 5 --args "--samples 50 --domain 80 --topic topic0 --interval 100"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --timeout 5 --args "--samples 50 --domain 80 --name topic0 --interval 100"
 
   # DOMAIN 81
   publisher_1_t0:
@@ -97,7 +97,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --timeout 5 --delay 4 --args "--samples 50 --domain 81 --topic topic0 --interval 100"
+    command: python3 /scripts/execute_and_validate_publisher.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --timeout 5 --delay 4 --args "--samples 50 --domain 81 --name topic0 --interval 100"
 
   # DOMAIN 82
   subscriber_2_t0:
@@ -109,7 +109,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 51 --allow-duplicates -1 --timeout 11 --args "--samples 51 --domain 82 --topic topic0"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe install/BasicConfigurationExample/examples/cpp/dds/BasicConfigurationExample/BasicConfigurationExample --samples 51 --allow-duplicates -1 --timeout 11 --args "--samples 51 --domain 82 --name topic0"
 
 networks:
   std_net:
