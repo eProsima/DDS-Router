@@ -37,13 +37,6 @@
 #include <fastdds/rtps/attributes/RTPSParticipantAttributes.hpp>
 #include <fastdds/rtps/transport/UDPv4TransportDescriptor.hpp>
 
-#include <cpp_utils/testing/gtest_aux.hpp>
-#include <cpp_utils/Log.hpp>
-
-#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
-
-#include <ddsrouter_core/core/DdsRouter.hpp>
-
 #include "HelloWorld/HelloWorldPubSubTypes.hpp"
 #include "HelloWorldKeyed/HelloWorldKeyedPubSubTypes.hpp"
 

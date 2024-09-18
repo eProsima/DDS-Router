@@ -32,9 +32,9 @@
 
 #include <ddspipe_core/interface/IParticipant.hpp>
 #include <ddspipe_participants/participant/auxiliar/EchoParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/DiscoveryServerParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
+#include <ddspipe_participants/participant/dds/SimpleParticipant.hpp>
+#include <ddspipe_participants/participant/dds/DiscoveryServerParticipant.hpp>
+#include <ddspipe_participants/participant/dds/InitialPeersParticipant.hpp>
 #include <ddspipe_participants/participant/dds/XmlParticipant.hpp>
 
 #include <ddspipe_participants/testing/random_values.hpp>
@@ -61,11 +61,11 @@ public:
  * It provides public access to the protected member 'configuration_' from its base class
  * ddspipe::participants::SimpleParticipant.
  */
-class SimpleTestClass : public ddspipe::participants::rtps::SimpleParticipant
+class SimpleTestClass : public ddspipe::participants::dds::SimpleParticipant
 {
 public:
 
-    using ddspipe::participants::rtps::SimpleParticipant::configuration_;  // Make protected member accessible
+    using ddspipe::participants::dds::SimpleParticipant::configuration_;  // Make protected member accessible
 };
 
 /**
@@ -73,11 +73,11 @@ public:
  * It provides public access to the protected member 'configuration_' from its base class
  * ddspipe::participants::DiscoveryServerParticipant.
  */
-class DiscoveryServerTestClass : public ddspipe::participants::rtps::DiscoveryServerParticipant
+class DiscoveryServerTestClass : public ddspipe::participants::dds::DiscoveryServerParticipant
 {
 public:
 
-    using ddspipe::participants::rtps::DiscoveryServerParticipant::configuration_;  // Make protected member accessible
+    using ddspipe::participants::dds::DiscoveryServerParticipant::configuration_;  // Make protected member accessible
 };
 
 /**
@@ -85,11 +85,11 @@ public:
  * It provides public access to the protected member 'configuration_' from its base class
  * ddspipe::participants::InitialPeersParticipant.
  */
-class InitialPeersTestClass : public ddspipe::participants::rtps::InitialPeersParticipant
+class InitialPeersTestClass : public ddspipe::participants::dds::InitialPeersParticipant
 {
 public:
 
-    using ddspipe::participants::rtps::InitialPeersParticipant::configuration_;  // Make protected member accessible
+    using ddspipe::participants::dds::InitialPeersParticipant::configuration_;  // Make protected member accessible
 };
 
 /**
