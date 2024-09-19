@@ -21,8 +21,11 @@ setup(
     maintainer_email='juanlopez@eprosima.com',
     description='Tool used for validating DDS-Router configuration files',
     license='Apache License, Version 2.0',
-    tests_require=['pytest'],
-    test_suite='tests',
+    extras_require={
+        'test': [
+            'pytest',  # Add your testing dependencies here
+        ],
+    },
     entry_points={
         'console_scripts': [
             'ddsrouter_yaml_validator = ddsrouter_yaml_validator.ddsrouter_yaml_validator:main',
