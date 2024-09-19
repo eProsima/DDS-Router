@@ -692,7 +692,7 @@ An Address is defined by:
 
 * *IP*: IP of the host (public IP in case of WAN communication).
 * *Port*: Port where the Participant is listening.
-* *External Port*: Public port accessible for external entities (only for TCP).
+* *External Port*: Public port accessible for external entities (only for TCP listening-addresses).
 * *Transport Protocol*: ``UDP`` or ``TCP``.
   If it is not set, it would be chosen by default depending on the Participant Kind.
 * *IP version*: ``v4`` or ``v6``.
@@ -724,10 +724,12 @@ External Port
 -------------
 
 External port is used to configure a Server (Discovery Server or Initial Peers) that runs under a NAT and uses
-TCP transport.
+TCP transport. It is not needed for LAN cases.
 This value could be set in a TCP listening address to differentiate the public and the internal port.
 **In case this value is not set, the external port is considered to be the same as the internal one.**
 If both ports coincide, external and internal port in the network router port forwarding rules must coincide.
+Client's port must match the server's external port unless server's external port is not set, in which case it
+should match the server's port.
 For more information, check section :ref:`user_manual_wan_configuration_nat_traversal_port_forwarding_external_port`.
 
 
