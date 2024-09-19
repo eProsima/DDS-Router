@@ -50,8 +50,6 @@ installed in the system:
 * :ref:`windows_sources_cmake_pip3_wget_git`
 * :ref:`windows_sources_colcon_install` [optional]
 * :ref:`windows_sources_gtest` [for test only]
-* :ref:`windows_py_yaml` [for YAML Validator only]
-* :ref:`windows_json_schema` [for YAML Validator only]
 
 .. _windows_sources_visual_studio:
 
@@ -126,40 +124,6 @@ Run the following commands on your workspace to install Gtest.
 or refer to the
 `Gtest Installation Guide <https://github.com/google/googletest>`_ for a detailed description of the Gtest installation
 process.
-
-
-.. _windows_py_yaml:
-
-PyYAML
-^^^^^^
-
-`PyYAML <https://pyyaml.org/>`_ is a YAML parser and emitter for Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for loading the content of configuration files.
-
-Install ``pyyaml`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U pyyaml
-
-
-.. _windows_json_schema:
-
-jsonschema
-^^^^^^^^^^
-
-`jsonschema <https://python-jsonschema.readthedocs.io/>`_ is an implementation of the JSON Schema specification for
-Python.
-
-It is used by the DDS-Router :ref:`yaml_validator` for performing validation of configuration files against a given
-JSON schema.
-
-Install ``jsonschema`` by executing the following command:
-
-.. code-block:: bash
-
-    pip3 install -U jsonschema
 
 .. _windows_sources_dependencies:
 

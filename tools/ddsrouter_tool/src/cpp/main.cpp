@@ -28,6 +28,7 @@
 #include <cpp_utils/time/time_utils.hpp>
 #include <cpp_utils/utils.hpp>
 
+#include <ddspipe_core/configuration/DdsPipeLogConfiguration.hpp>
 #include <ddspipe_core/logging/DdsLogConsumer.hpp>
 #include <ddspipe_core/monitoring/Monitor.hpp>
 #include <ddspipe_core/monitoring/producers/TopicsMonitorProducer.hpp>
@@ -46,6 +47,9 @@
 using namespace eprosima;
 using namespace eprosima::ddsrouter;
 
+int exit(const ui::ProcessReturnCode& code);
+void register_log_consumers(const ddspipe::core::DdsPipeLogConfiguration& configuration);
+
 int main(
         int argc,
         char** argv)
@@ -59,15 +63,15 @@ int main(
 
     if (arg_parse_result == ui::ProcessReturnCode::help_argument)
     {
-        return static_cast<int>(ui::ProcessReturnCode::success);
+        return exit(ui::ProcessReturnCode::success);
     }
     else if (arg_parse_result == ui::ProcessReturnCode::version_argument)
     {
-        return static_cast<int>(ui::ProcessReturnCode::success);
+        return exit(ui::ProcessReturnCode::success);
     }
     else if (arg_parse_result != ui::ProcessReturnCode::success)
     {
-        return static_cast<int>(arg_parse_result);
+        return exit(arg_parse_result);
     }
 
     // Check file is in args, else get the default file
@@ -87,7 +91,8 @@ int main(
         EPROSIMA_LOG_ERROR(
             DDSROUTER_ARGS,
             "File '" << commandline_args.file_path << "' does not exist or it is not accessible.");
-        return static_cast<int>(ui::ProcessReturnCode::required_argument_failed);
+
+        return exit(ui::ProcessReturnCode::required_argument_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Starting DDS Router Tool execution.");
@@ -117,6 +122,12 @@ int main(
                     commandline_args.timeout));
         }
 
+        // Register the LogConsumers with the CommandLine configuration to log the YAML configuration errors.
+        ddspipe::core::DdsPipeLogConfiguration log_configuration;
+        log_configuration.set(utils::VerbosityKind::Warning);
+
+        register_log_consumers(log_configuration);
+
         /////
         // DDS Router Initialization
 
@@ -125,37 +136,8 @@ int main(
                 yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(commandline_args.file_path,
                         &commandline_args);
 
-        // Debug
-        {
-            const auto log_configuration = router_configuration.ddspipe_configuration.log_configuration;
-
-            // Remove every consumer
-            eprosima::utils::Log::ClearConsumers();
-
-            // Activate log with verbosity, as this will avoid running log thread with not desired kind
-            eprosima::utils::Log::SetVerbosity(log_configuration.verbosity);
-
-            // Stdout Log Consumer
-            if (log_configuration.stdout_enable)
-            {
-                eprosima::utils::Log::RegisterConsumer(
-                    std::make_unique<eprosima::utils::StdLogConsumer>(&log_configuration));
-            }
-
-            // DDS Log Consumer
-            if (log_configuration.publish.enable)
-            {
-                eprosima::utils::Log::RegisterConsumer(
-                    std::make_unique<eprosima::ddspipe::core::DdsLogConsumer>(&log_configuration));
-            }
-
-            // NOTE:
-            // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
-            // in non debug or with LOG_NO_INFO=ON.
-            // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
-            // Change it when Log Module is independent and with more extensive API.
-            // eprosima::utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
-        }
+        // Register the LogConsumers with their actual configuration
+        register_log_consumers(router_configuration.ddspipe_configuration.log_configuration);
 
         // Load XML profiles
         ddspipe::participants::XmlHandler::load_xml(router_configuration.xml_configuration);
@@ -274,23 +256,57 @@ int main(
                 "Error Loading DDS Router Configuration from file " << commandline_args.file_path <<
                 ". Error message:\n " <<
                 e.what());
-        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
+
+        return exit(ui::ProcessReturnCode::execution_failed);
     }
     catch (const eprosima::utils::InitializationException& e)
     {
         EPROSIMA_LOG_ERROR(DDSROUTER_ERROR,
                 "Error Initializing DDS Router. Error message:\n " <<
                 e.what());
-        return static_cast<int>(ui::ProcessReturnCode::execution_failed);
+
+        return exit(ui::ProcessReturnCode::execution_failed);
     }
 
     logUser(DDSROUTER_EXECUTION, "Finishing DDS Router Tool execution correctly.");
 
-    // Force print every log before closing
-    eprosima::utils::Log::Flush();
+    return exit(ui::ProcessReturnCode::success);
+}
 
+int exit(const ui::ProcessReturnCode& code)
+{
     // Delete the consumers before closing
     eprosima::utils::Log::ClearConsumers();
 
-    return static_cast<int>(ui::ProcessReturnCode::success);
+    return static_cast<int>(code);
+}
+
+void register_log_consumers(const ddspipe::core::DdsPipeLogConfiguration& configuration)
+{
+    // Remove every consumer
+    utils::Log::ClearConsumers();
+
+    // Activate log with verbosity, as this will avoid running log thread with not desired kind
+    utils::Log::SetVerbosity(configuration.verbosity);
+
+    // Stdout Log Consumer
+    if (configuration.stdout_enable)
+    {
+        utils::Log::RegisterConsumer(
+            std::make_unique<utils::StdLogConsumer>(&configuration));
+    }
+
+    // DDS Log Consumer
+    if (configuration.publish.enable)
+    {
+        utils::Log::RegisterConsumer(
+            std::make_unique<ddspipe::core::DdsLogConsumer>(&configuration));
+    }
+
+    // NOTE:
+    // It will not filter any log, so Fast DDS logs will be visible unless Fast DDS is compiled
+    // in non debug or with LOG_NO_INFO=ON.
+    // This is the easiest way to allow to see Warnings and Errors from Fast DDS.
+    // Change it when Log Module is independent and with more extensive API.
+    // utils::Log::SetCategoryFilter(std::regex("(DDSROUTER)"));
 }
