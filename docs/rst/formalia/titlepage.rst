@@ -23,6 +23,14 @@ such as mesh networks in which nodes are deployed in different private local net
 without any centralized network node, or cloud-based networks where there is a data processing cloud and
 multiple geographically distributed edge devices.
 
+##################
+Commercial support
+##################
+
+Looking for commercial support? Write us to info@eprosima.com
+
+Find more about us at `eProsima's webpage <https://eprosima.com/>`_.
+
 ########
 Overview
 ########
@@ -48,17 +56,6 @@ Following are some of the key features of *eProsima DDS Router*:
 .. _fig_entities_diagram:
 
 .. figure:: /rst/figures/ddsrouter_cloud.png
-
-###############################
-Contacts and Commercial support
-###############################
-
-Find more about us at `eProsima's webpage <https://eprosima.com/>`_.
-
-Support available at:
-
-* Email: support@eprosima.com
-* Phone: +34 91 804 34 48
 
 #################################
 Contributing to the documentation
