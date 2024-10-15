@@ -32,7 +32,7 @@ This release includes the following **Dependencies Update**:
     *   - Dev Utils
         - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
         - `v1.0.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.0.0>`_
-        - `v1.1.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.1.0>`_
+        - `v1.1.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.1.0>`__
     *   - DDS Pipe
         - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
         - `v1.0.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.0.0>`__
