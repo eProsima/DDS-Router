@@ -1,8 +1,6 @@
-.. raw:: html
-
-  <h1>
-    eProsima DDS Router Documentation
-  </h1>
+#################################
+eProsima DDS Router Documentation
+#################################
 
 .. image:: /rst/figures/logo.png
   :height: 100px
