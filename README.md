@@ -41,6 +41,11 @@ Following are some of the key features of *eProsima DDS Router*:
 
 ![eProsima DDS Router overall architecture](docs/rst/figures/ddsrouter_cloud_white_background.png)
 
+## Commercial support
+
+Looking for commercial support? Write us to info@eprosima.com
+
+Find more about us at [eProsima’s webpage](https://eprosima.com/).
 
 ## Documentation
 
@@ -230,7 +235,3 @@ can be run with the following command:
 ```bash
 colcon test --packages-select-regex ddsrouter --event-handler=console_direct+
 ```
-
-## Getting Help
-
-If you need support you can reach us by mail at `support@eProsima.com` or by phone at `+34 91 804 34 48`.
