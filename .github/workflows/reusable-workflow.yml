@@ -309,6 +309,7 @@ jobs:
         with:
           packages_names: ${{ env.code_packages_names }}
           workspace_dependencies: install
+          cmake_args: -DBUILD_TESTS=ON
           ctest_args: --label-regex "xfail"
 
       - name: Test Report
