@@ -143,7 +143,7 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
         default:
             // Non recheable code
             throw eprosima::utils::ConfigurationException(
-                      utils::Formatter() << "Unkown or non valid Participant kind: " << kind << ".");
+                      utils::Formatter() << "Unknown or non valid Participant kind: " << kind << ".");
     }
 }
 

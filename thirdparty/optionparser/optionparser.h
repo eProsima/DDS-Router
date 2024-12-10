@@ -574,7 +574,7 @@ public:
     }
 
     /**
-     * @brief Returns true iff this is the first element of the linked list.
+     * @brief Returns true if this is the first element of the linked list.
      *
      * The first element in the linked list is the first option on the command line
      * that has the respective Descriptor::index value.
@@ -587,7 +587,7 @@ public:
     }
 
     /**
-     * @brief Returns true iff this is the last element of the linked list.
+     * @brief Returns true if this is the last element of the linked list.
      *
      * The last element in the linked list is the last option on the command line
      * that has the respective Descriptor::index value.
@@ -1453,7 +1453,7 @@ private:
     /**
      * @internal
      * @brief This is the core function that does all the parsing.
-     * @retval false iff an unrecoverable error occurred.
+     * @retval false if an unrecoverable error occurred.
      */
     static bool workhorse(
             bool gnu,
@@ -1467,7 +1467,7 @@ private:
 
     /**
      * @internal
-     * @brief Returns true iff @c st1 is a prefix of @c st2 and
+     * @brief Returns true if @c st1 is a prefix of @c st2 and
      * in case @c st2 is longer than @c st1, then
      * the first additional character is '='.
      *
@@ -1497,7 +1497,7 @@ private:
      * @internal
      * @brief Like streq() but handles abbreviations.
      *
-     * Returns true iff @c st1 and @c st2 have a common
+     * Returns true if @c st1 and @c st2 have a common
      * prefix with the following properties:
      * @li (if min > 0) its length is at least @c min characters or the same length as @c st1 (whichever is smaller).
      * @li (if min <= 0) its length is the same as that of @c st1
@@ -1534,7 +1534,7 @@ private:
 
     /**
      * @internal
-     * @brief Returns true iff character @c ch is contained in the string @c st.
+     * @brief Returns true if character @c ch is contained in the string @c st.
      *
      * Returns @c true for @c ch==0 .
      */
@@ -1581,7 +1581,7 @@ struct Parser::Action
      * options if they have a Descriptor whose Descriptor::check_arg does not return
      * @ref ARG_ILLEGAL.
      *
-     * Returns @c false iff a fatal error has occured and the parse should be aborted.
+     * Returns @c false if a fatal error has occured and the parse should be aborted.
      */
     virtual bool perform(
             Option&)
@@ -1595,7 +1595,7 @@ struct Parser::Action
      * @param args pointer to the first remaining non-option argument (if numargs > 0).
      *
      * @return
-     * @c false iff a fatal error has occurred.
+     * @c false if a fatal error has occurred.
      */
     virtual bool finished(
             int numargs,

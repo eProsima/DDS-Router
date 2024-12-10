@@ -35,7 +35,7 @@ find_package(cmake_utils REQUIRED)
 # - Set installation paths
 configure_project()
 
-# Call explictly project
+# Call explicitly project
 project(
     ${MODULE_NAME}
     VERSION
