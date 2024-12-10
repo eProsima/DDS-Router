@@ -35,7 +35,7 @@ find_package(cmake_utils REQUIRED)
 # - Set installation paths
 configure_project()
 
-# Call explictly project
+# Call explicitly project
 project(
     ${MODULE_NAME}
     VERSION
@@ -57,7 +57,7 @@ if(BUILD_COMPOSE_TESTS)
     add_subdirectory(compose)
 endif()
 # NOTE: this is done explicitly and not by a CMake macro (compile_test) as other packages
-# because it does not feel like reusable, so adding it to cmake_utils does not seems appropiate.
+# because it does not feel like reusable, so adding it to cmake_utils does not seems appropriate.
 
 ###############################################################################
 # Packaging

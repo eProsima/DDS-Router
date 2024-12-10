@@ -134,7 +134,7 @@ public:
         return *this;
     }
 
-    // Const memeber varibles don't let me implent moves nicely, if moves are really wanted std::unique_ptr should be used and move that.
+    // Const member variables don't let me implement moves nicely, if moves are really wanted std::unique_ptr should be used and move that.
     FileWatch<T>(
             FileWatch<T>&&) = delete;
     FileWatch<T>& operator =(
