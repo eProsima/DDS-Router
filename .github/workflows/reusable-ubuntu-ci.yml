@@ -1,0 +1,325 @@
+# Reusable workflow to run the following jobs:
+#
+#   - multiplatform-tests
+#     - [ ubuntu-22.04 | ubuntu-24.04 ]
+#     - [ Debug | Release ]
+#     - execute tests in different versions of ubuntu with different build types
+#
+#   - asan
+#     - ubuntu-22.04
+#     - execute tests with ASAN flag
+#
+#   - tsan
+#     - ubuntu-22.04
+#     - execute tests with TSAN flag
+#
+#   - clang
+#     - ubuntu-22.04
+#     - execute clang-tidy check
+#
+#   - coverage
+#     - ubuntu-22.04
+#     - execute test with coverage flag and upload results
+#
+#   - flaky
+#     - ubuntu-22.04
+#     - execute flaky tests
+#
+#   - docs
+#     - ubuntu-22.04
+#     - execute docs compile and tests
+#
+#   - uncrustify
+#     - ubuntu-22.04
+#     - test uncrustify
+#
+#   - python-linter
+#     - ubuntu-22.04
+#     - test python linter
+#
+
+name: ubuntu-ci
+
+on:
+
+  workflow_call:
+    inputs:
+
+      custom_version_build:
+        description: >
+          Version of Fast DDS build from eProsima-CI.
+        required: true
+        type: string
+
+      dependencies_artifact_postfix:
+        description: >
+          Postfix name to add to artifact name to download dependencies.
+          This is use to download a specific artifact version from eProsima-CI.
+        required: true
+        default: '_nightly'
+        type: string
+
+      ref:
+        description: >
+          The branch or tag name to checkout.
+        required: true
+        type: string
+        default: 'main'
+
+env:
+  code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
+  docs_packages_names: 'ddsrouter_docs'
+
+jobs:
+
+#####################################################################
+# TEST
+
+  multiplatform-tests:
+    name: ${{ matrix.os }}-ci
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+          - ubuntu-24.04
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      os: ${{ matrix.os }}
+      custom_version_build: ${{ inputs.custom_version_build || 'v3' }}
+      dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}
+      ref: ${{ inputs.ref }}
+    secrets: inherit
+
+#####################################################################
+# ASAN
+
+  asan:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
+        uses: eProsima/eProsima-CI/external/checkout@v0
+        with:
+          path: src
+          ref: ${{ inputs.ref }}
+
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DASAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xasan"
+          test_report_artifact: test_report_asan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
+
+
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        if: success() || failure()
+        with:
+          name: "Report: ASAN "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
+          list-tests: 'failed'
+
+#####################################################################
+# TSAN
+
+  tsan:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
+        uses: eProsima/eProsima-CI/external/checkout@v0
+        with:
+          path: src
+          ref: ${{ inputs.ref }}
+
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        env:
+          # GCC 11.3 (Ubuntu Jammy default) produces several false positives regarding timed synchronization protocols
+          # These issues were fixed in GCC 12 so we upgrade to that version.
+          CC: gcc-12
+          CXX: g++-12
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+          cmake_build_type: Debug
+          cmake_args: -DBUILD_TESTS=ON -DTSAN_BUILD=ON
+          ctest_args: --label-exclude "xfail|xtsan"
+          test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
+
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        if: success() || failure()
+        with:
+          name: "Report: TSAN "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
+          list-tests: 'failed'
+
+#####################################################################
+# CLANG
+
+  clang:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
+        uses: eProsima/eProsima-CI/external/checkout@v0
+        with:
+          path: src
+          ref: ${{ inputs.ref }}
+
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        uses: eProsima/eProsima-CI/multiplatform/clang_build_test@v0
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+
+
+#####################################################################
+# COVERAGE
+
+  coverage:
+    runs-on: ubuntu-22.04
+    environment:
+      name: codecov
+    steps:
+
+      - name: Sync repository
+        uses: eProsima/eProsima-CI/external/checkout@v0
+        with:
+          path: src
+          ref: ${{ inputs.ref }}
+
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        uses: eProsima/eProsima-CI/ubuntu/coverage_build_test_upload@v0
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
+          codecov_fix_file_path: src/codecov.yml
+          test_report_artifact: test_report_coverage${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
+
+
+#####################################################################
+# FLAKY
+
+  flaky:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Sync repository
+        uses: eProsima/eProsima-CI/external/checkout@v0
+        with:
+          path: src
+          ref: ${{ inputs.ref }}
+
+      - name: Download dependencies and install requirements
+        uses: ./src/.github/actions/project_dependencies
+        with:
+          os: ubuntu-22.04
+          cmake_build_type: Release
+          custom_version_build: ${{ inputs.custom_version_build }}
+          dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile and run tests
+        id: compile_and_test
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        with:
+          packages_names: ${{ env.code_packages_names }}
+          workspace_dependencies: install
+          cmake_args: -DBUILD_TESTS=ON
+          ctest_args: --label-regex "xfail"
+          test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
+
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        if: success() || failure()
+        with:
+          name: "Report: Flaky "
+          path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
+          working-directory: 'src'
+          fail-on-empty: 'false'
+          list-tests: 'failed'
+
+#####################################################################
+# DOCUMENTATION TEST
+
+  docs:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Build and test documentation
+        uses: eProsima/eProsima-CI/ubuntu/sphinx_docs@v0
+        with:
+          checkout_path: "src/ddsrouter"
+          path_to_requirements: "src/ddsrouter/docs/requirements.txt"
+          docs_subpackage_name: ${{ env.docs_packages_names }}
+          secret_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_test_report_artifact: false
+          upload_artifact: false
+
+
+#####################################################################
+# UNCRUSTIFY
+
+  uncrustify:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Uncrustify
+        uses: eProsima/eProsima-CI/ubuntu/uncrustify@v0
+
+
+#####################################################################
+# PYTHON LINTER
+
+  python-linter:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Python Linter
+        uses: eProsima/eProsima-CI/ubuntu/python_linter@v0
