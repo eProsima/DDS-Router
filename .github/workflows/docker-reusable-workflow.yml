@@ -69,7 +69,7 @@ jobs:
     steps:
 
       - name: Sync repository
-        uses: eProsima/eProsima-CI/external/checkout@v0
+        uses: eProsima/eProsima-CI/external/checkout@feature/test-reporting
         with:
           path: src
           ref: ${{ inputs.ref }}
@@ -114,7 +114,7 @@ jobs:
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compile docker tests
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build@feature/test-reporting
         with:
           workspace: ${{ github.workspace }}
           colcon_build_args: --packages-up-to ddsrouter_test

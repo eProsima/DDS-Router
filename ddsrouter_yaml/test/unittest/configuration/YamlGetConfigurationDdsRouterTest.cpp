@@ -57,7 +57,7 @@ TEST(YamlGetConfigurationDdsRouterTest, get_ddsrouter_configuration_trivial)
 
     // Check is valid
     utils::Formatter error_msg;
-    ASSERT_TRUE(configuration_result.is_valid(error_msg));
+    ASSERT_FALSE(configuration_result.is_valid(error_msg));
 
     // Check Topics are empty
     ASSERT_EQ(configuration_result.ddspipe_configuration.allowlist,
