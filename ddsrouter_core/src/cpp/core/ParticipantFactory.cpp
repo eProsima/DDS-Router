@@ -31,9 +31,9 @@
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
 #include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
 #include <ddspipe_participants/participant/auxiliar/EchoParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/DiscoveryServerParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/InitialPeersParticipant.hpp>
-#include <ddspipe_participants/participant/rtps/SimpleParticipant.hpp>
+#include <ddspipe_participants/participant/dds/DiscoveryServerParticipant.hpp>
+#include <ddspipe_participants/participant/dds/InitialPeersParticipant.hpp>
+#include <ddspipe_participants/participant/dds/SimpleParticipant.hpp>
 #include <ddspipe_participants/participant/dds/XmlParticipant.hpp>
 
 #include <ddsrouter_core/types/ParticipantKind.hpp>
@@ -104,7 +104,7 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
         case types::ParticipantKind::simple:
             return generic_create_participant_with_init<
                 ddspipe::participants::SimpleParticipantConfiguration,
-                ddspipe::participants::rtps::SimpleParticipant>
+                ddspipe::participants::dds::SimpleParticipant>
                    (
                 kind,
                 participant_configuration,
@@ -115,7 +115,7 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
         case types::ParticipantKind::discovery_server:
             return generic_create_participant_with_init<
                 ddspipe::participants::DiscoveryServerParticipantConfiguration,
-                ddspipe::participants::rtps::DiscoveryServerParticipant>
+                ddspipe::participants::dds::DiscoveryServerParticipant>
                    (
                 kind,
                 participant_configuration,
@@ -126,7 +126,7 @@ std::shared_ptr<ddspipe::core::IParticipant> ParticipantFactory::create_particip
         case types::ParticipantKind::initial_peers:
             return generic_create_participant_with_init<
                 ddspipe::participants::InitialPeersParticipantConfiguration,
-                ddspipe::participants::rtps::InitialPeersParticipant>
+                ddspipe::participants::dds::InitialPeersParticipant>
                    (
                 kind,
                 participant_configuration,
