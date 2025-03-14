@@ -61,6 +61,7 @@ set(TEST_SOURCES
 set(TEST_LIST
         get_participant
         get_participant_negative
+        get_easy_mode_ip
     )
 
 set(TEST_EXTRA_LIBRARIES

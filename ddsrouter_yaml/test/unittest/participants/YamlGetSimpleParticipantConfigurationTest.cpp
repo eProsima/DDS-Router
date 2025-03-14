@@ -133,6 +133,35 @@ TEST(YamlGetSimpleParticipantConfigurationTest, get_participant_negative)
     }
 }
 
+TEST(YamlGetSimpleParticipantConfigurationTest, get_easy_mode_ip)
+{
+    ddsrouter::core::types::ParticipantKind kind = ddsrouter::core::types::ParticipantKind::simple;
+    ddspipe::core::types::ParticipantId id = ddspipe::core::testing::random_participant_id();
+    ddspipe::core::types::DomainId domain;
+    ddspipe::participants::types::IpType easy_mode_ip = "127.0.0.1";
+
+    // Create a configuration with this kind and this id
+    Yaml yml;
+    Yaml yml_participant;
+
+
+    ddspipe::yaml::testing::participantid_to_yaml(yml_participant, id);
+    ddsrouter::yaml::testing::participantkind_to_yaml(yml_participant, kind);
+    ddspipe::yaml::testing::domain_to_yaml(yml_participant, domain);
+    ddspipe::yaml::testing::easy_mode_ip_to_yaml(yml_participant, easy_mode_ip);
+
+    yml["participant"] = yml_participant;
+
+    // Read Yaml
+    ddspipe::participants::SimpleParticipantConfiguration result =
+            ddspipe::yaml::YamlReader::get<ddspipe::participants::SimpleParticipantConfiguration>(yml,
+                    "participant",
+                    ddspipe::yaml::YamlReaderVersion::LATEST);
+
+    // Check result
+    ASSERT_EQ(easy_mode_ip, result.easy_mode_ip);
+}
+
 int main(
         int argc,
         char** argv)
