@@ -4,10 +4,6 @@
 
 ##################################
 # CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
-# CONFIGURATION VERSION
 xml:                                                              # 1
   files:
     - "./xml_configuration.xml"                                   # 2
@@ -26,10 +22,7 @@ xml:                                                              # 1
 
 allowlist:
   - name: HelloWorldTopic                                         # 4
-    type: HelloWorld                                              # 4
   - name: rt/chatter                                              # 5
-    type: std_msgs::msg::dds_::String_
-
 ##################################
 # PARTICIPANTS
 participants:

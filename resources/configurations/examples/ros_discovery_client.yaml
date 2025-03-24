@@ -3,10 +3,6 @@
 #######################################
 
 ##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes
 

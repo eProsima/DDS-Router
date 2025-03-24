@@ -11,11 +11,8 @@ version: v5.0                                                     # 0
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  - name: HelloWorldTopic                                         # 1
-    type: HelloWorld                                              # 1
+  - name: HelloWorldTopic                                         # 1                                             
   - name: rt/chatter                                              # 2
-    type: std_msgs::msg::dds_::String_
-
 ##################################
 # PARTICIPANTS
 participants:

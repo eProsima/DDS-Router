@@ -1,7 +1,5 @@
 # local-ddsrouter.yaml
 
-version: v5.0
-
 allowlist:
   - name: rt/chatter
     type: std_msgs::msg::dds_::String_

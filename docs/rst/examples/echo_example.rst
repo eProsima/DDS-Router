@@ -13,7 +13,7 @@ as well as information regarding discovery events.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 5-39
+    :lines: 5-33
 
 Configuration
 =============
@@ -23,13 +23,12 @@ Allowed Topics
 
 This section lists the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
-and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
+Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
 ``SimpleParticipant`` to ``EchoParticipant``, that will print the message in ``stdout``.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 13-17
+    :lines: 9-11
 
 
 Simple Participant
@@ -39,7 +38,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 27-29
+    :lines: 21-23
 
 
 Echo Participant
@@ -50,7 +49,7 @@ See :ref:`Echo Participant Configuration <user_manual_participants_echo_configur
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 35-39
+    :lines: 29-33
 
 
 Execute example
@@ -71,7 +70,7 @@ Execute a Fast DDS HelloWorld example:
 
 .. code-block:: bash
 
-    ./DDSHelloWorldExample publisher
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/hello_world/bin/hello_world publisher
 
 Execute |ddsrouter| with this configuration file (available in
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/echo.yaml``).

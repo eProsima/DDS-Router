@@ -12,7 +12,7 @@ In the following snippet we see a yaml file to configure a DDS Router to create 
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 5-40
+    :lines: 5-37
 
 Configuration
 =============
@@ -22,13 +22,12 @@ Allowed Topics
 
 In this section are the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
-and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
+ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
 one domain to the other, allowing different DDS domains to interact to each other.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 13-15
+    :lines: 9-11
 
 
 Simple Participant
@@ -38,7 +37,7 @@ This Participant is configured by a name, a kind and the Domain Id, in this case
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 25-27
+    :lines: 21-23
 
 
 Discovery Server Participant
@@ -49,7 +48,7 @@ Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 33-40
+    :lines: 29-36
 
 
 Execute example

@@ -97,7 +97,7 @@ Now, with the configuration files ready, launching a |ddsrouter| instance is as 
 
 .. code-block:: bash
 
-    ddsrouter -c config-file.yaml
+    ddsrouter -c config-file.yaml #Replace "config-file.yaml" with the path to the server or client configuration file.
 
 After setting up both routers, communication between the two ShapesDemo instances should have been established so the
 square shape is now visible in the subscriber's panel.
