@@ -646,6 +646,26 @@ However, a user may desire to force the use of one of the two, which can be acco
 
     Participants configured with ``transport: shm`` will only communicate with applications using Shared Memory Transport exclusively (with disabled UDP transport).
 
+.. _user_manual_configuration_easy_mode:
+
+ROS 2 Easy Mode Configuration
+-----------------------------
+
+DDS Router allows configuring the address of a remote discovery server when using
+:ref:`Simple Participants <user_manual_participants_simple>` with
+`ROS 2 Easy Mode <https://docs.vulcanexus.org/en/latest/rst/enhancements/easy_mode/easy_mode.html>`__
+through the ``ros2-easy-mode`` tag:
+
+.. code-block:: yaml
+
+    ros2-easy-mode: "2.2.2.2"       # Remote discovery server address
+
+.. warning::
+    This configuration is incompatible with the ``transports`` tag.
+    Setting ``ros2-easy-mode`` other than ``transports: builtin``
+    will prevent Easy Mode from being configured.
+
+    For now, only IPv4 addresses are supported.
 
 .. _user_manual_configuration_interface_whitelist:
 
@@ -1059,6 +1079,18 @@ A complete example of all the configurations described on this page can be found
         qos:
 
           max-rx-rate: 15                 # Max Reception Rate = 15
+
+    ####################
+
+    # Simple DDS Participant configured with ROS 2 Easy Mode
+
+      - name: Participant1              # Participant Name = Participant1
+
+        kind: simple                     # Participant Kind = local (= simple)
+
+        domain: 7                       # DomainId = 7
+
+        ros2-easy-mode: "2.2.2.2"        # Remote discovery server address
 
     ####################
 
