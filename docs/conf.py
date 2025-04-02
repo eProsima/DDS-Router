@@ -100,7 +100,8 @@ def download_json():
     (https://github.com/eProsima/all-docs).
     :return: dictionary.
     """
-    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/json/eprosima-furo.json'
+    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/json/'\
+          'eprosima-furo.json'
     ret = dict()
     try:
         req = requests.get(url, allow_redirects=True, timeout=10)
@@ -120,27 +121,9 @@ def download_json():
     return ret
 
 
-def retrieve_custom_sidebar(root_dir):
-    """
-    Generate the custom sidebar, downloading necessary custom files.
-    Custom files are hosted in the eProsima GitHub repository with the index of all eProsima product documentation
-    (https://github.com/eProsima/all-docs).
-    :return: Custom sidebars if the file was downloaded and generated successfully.
-        Readthedocs default ones if not.
-    """
-    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_templates/sidebar/commercial-support.html'
-    url_img = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/eprosima-logo-white.png'
-    ret = {
-        '**': [
-            'sidebar/brand.html',
-            'sidebar/search.html',
-            'sidebar/scroll-start.html',
-            'sidebar/navigation.html',
-            'sidebar/ethical-ads.html',
-            'sidebar/scroll-end.html',
-            'sidebar/variant-selector.html',
-        ]
-    }
+def retrieve_sidebar_html(root_dir):
+    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_templates/sidebar/'\
+          'commercial-support.html'
     if not os.path.isfile(
         '{}/_templates/sidebar/commercial-support.html'.format(root_dir)
     ):
@@ -151,13 +134,13 @@ def retrieve_custom_sidebar(root_dir):
                 'Failed to download the HTML with the eProsima commecial support button.'
                 'Request Error: {}'.format(e)
             )
-            return ret
+            return False
         if req.status_code != 200:
             print(
                 'Failed to download the HTML with the eProsima commercial support button.'
                 'Return code: {}'.format(req.status_code)
             )
-            return ret
+            return False
         os.makedirs(
             os.path.dirname('{}/_templates/sidebar/'.format(root_dir)),
             exist_ok=True,
@@ -171,8 +154,14 @@ def retrieve_custom_sidebar(root_dir):
                 f.write(content)
             except OSError:
                 print('Failed to create the file: {}'.format(html_path))
-                return ret
+                return False
 
+    return True
+
+
+def retrieve_sidebar_image(root_dir):
+    url_img = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/'\
+              'eprosima-logo-white.png'
     if not os.path.isfile('{}/_static/eprosima-logo-white.png'.format(root_dir)):
         try:
             req = requests.get(url_img, allow_redirects=True, timeout=10)
@@ -181,20 +170,50 @@ def retrieve_custom_sidebar(root_dir):
                 'Failed to download the image for the eProsima commecial support button.'
                 'Request Error: {}'.format(e)
             )
-            return ret
+            return False
         if req.status_code != 200:
             print(
                 'Failed to download the image for the eProsima commercial support button.'
                 'Return code: {}'.format(req.status_code)
             )
-            return ret
+            return False
         img_path = '{}/_static/eprosima-logo-white.png'.format(root_dir)
         with open(img_path, 'wb') as f:
             try:
                 f.write(req.content)
             except OSError:
                 print('Failed to create the file: {}'.format(img_path))
-                return ret
+                return False
+
+    return True
+
+
+def retrieve_custom_sidebar(root_dir):
+    """
+    Generate the custom sidebar, downloading necessary custom files.
+    Custom files are hosted in the eProsima GitHub repository with the index of all eProsima
+    product documentation (https://github.com/eProsima/all-docs).
+    :return: Custom sidebars if the file was downloaded and generated successfully.
+        Readthedocs default ones if not.
+    """
+    ret = {
+        '**': [
+            'sidebar/brand.html',
+            'sidebar/search.html',
+            'sidebar/scroll-start.html',
+            'sidebar/navigation.html',
+            'sidebar/ethical-ads.html',
+            'sidebar/scroll-end.html',
+            'sidebar/variant-selector.html',
+        ]
+    }
+
+    if not retrieve_sidebar_html(root_dir):
+        return ret
+
+    if not retrieve_sidebar_image(root_dir):
+        return ret
+
     ret = {
         '**': [
             'sidebar/brand.html',
@@ -222,7 +241,8 @@ def download_css(html_css_dir):
     :return: True if the file was downloaded and generated successfully.
         False if not.
     """
-    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/css/eprosima-furo.css'
+    url = 'https://raw.githubusercontent.com/eProsima/all-docs/master/source/_static/css/'\
+          'eprosima-furo.css'
     try:
         req = requests.get(url, allow_redirects=True, timeout=10)
     except requests.RequestException as e:
