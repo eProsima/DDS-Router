@@ -22,7 +22,7 @@ The steps to run |ddsrouter| in a Docker container are explained below.
 
     .. code-block:: bash
 
-        load ubuntu-ddsrouter:<version>.tar
+        docker load -i ubuntu-ddsrouter\ <version>.tar
 
     where ``version`` is the downloaded version of |ddsrouter|.
 
