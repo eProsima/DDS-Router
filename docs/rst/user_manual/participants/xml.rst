@@ -61,20 +61,20 @@ Notice that not setting such QoS will not affect the correct functionality of th
 
 * ``ignore_local_endpoints`` avoid local matching for this participant's endpoints:
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <participant profile_name="ignore_local_endpoints_domainparticipant_xml_profile">
-            <rtps>
-                <propertiesPolicy>
-                    <properties>
-                        <property>
-                            <name>fastdds.ignore_local_endpoints</name>
-                            <value>true</value>
-                        </property>
-                    </properties>
-                </propertiesPolicy>
-            </rtps>
-        </participant>
+      <participant profile_name="ignore_local_endpoints_domainparticipant_xml_profile">
+          <rtps>
+              <propertiesPolicy>
+                  <properties>
+                      <property>
+                          <name>fastdds.ignore_local_endpoints</name>
+                          <value>true</value>
+                      </property>
+                  </properties>
+              </propertiesPolicy>
+          </rtps>
+      </participant>
 
 
 Configuration Example

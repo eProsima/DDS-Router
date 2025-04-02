@@ -8,11 +8,6 @@ User Interface
 
 |eddsrouter| is a user application executed from the command line and configured through a YAML configuration file.
 
-.. contents::
-    :local:
-    :backlinks: none
-    :depth: 1
-
 Source Dependency Libraries
 ---------------------------
 

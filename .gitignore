@@ -56,7 +56,9 @@ log/
 .vscode
 
 ### Documentation ###
-docs/rst/_static/css/online_eprosima_rtd_theme.css
+docs/rst/_static/css/eprosima-furo.css
+docs/rst/_static/eprosima-logo-white.png
+docs/rst/_templates/sidebar/
 
 
 ### Python ###

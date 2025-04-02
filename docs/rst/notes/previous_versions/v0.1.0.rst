@@ -19,9 +19,9 @@ This release includes the following **User Interface features**:
 * Application run-time debug logs.
 * Error handling:
 
-    * Error log and exit program when reading configuration fails.
-    * Error log and exit program when initializing Participants fails.
-    * Error log and continuing execution when execution error occurs.
+  * Error log and exit program when reading configuration fails.
+  * Error log and exit program when initializing Participants fails.
+  * Error log and continuing execution when execution error occurs.
 
 
 This release includes the following **Configuration features**:
@@ -31,10 +31,10 @@ This release includes the following **Configuration features**:
 * Support for block topic filters.
 * Different Participant configurations:
 
-    * Domain Id.
-    * Discovery Server GuidPrefix.
-    * Listening addresses.
-    * Connection addresses.
+  * Domain Id.
+  * Discovery Server GuidPrefix.
+  * Listening addresses.
+  * Connection addresses.
 
 
 This release includes the following **Routing features**:

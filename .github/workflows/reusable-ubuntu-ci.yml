@@ -290,7 +290,7 @@ jobs:
 # DOCUMENTATION TEST
 
   docs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Build and test documentation
         uses: eProsima/eProsima-CI/ubuntu/sphinx_docs@v0
