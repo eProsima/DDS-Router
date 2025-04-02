@@ -11,11 +11,6 @@ DDS Router :term:`Participant` is a |ddsrouter| entity that works as an interfac
 the core of the router.
 Participants are the main elements inside the |ddsrouter| functionality.
 
-.. contents::
-    :local:
-    :backlinks: none
-    :depth: 2
-
 .. _user_manual_participant_participant:
 
 Participant

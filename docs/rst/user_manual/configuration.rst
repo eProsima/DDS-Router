@@ -10,11 +10,6 @@ Configuration
 A |ddsrouter| is configured by a *.yaml* configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering and :term:`Participants <Participant>` configurations.
 
-.. contents::
-    :local:
-    :backlinks: none
-    :depth: 2
-
 Configuration version
 =====================
 

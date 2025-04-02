@@ -3,11 +3,6 @@
 WAN communication over TCP
 ==========================
 
-.. contents::
-    :depth: 2
-    :local:
-    :backlinks: none
-
 This tutorial covers the first steps in setting up a WAN DDS communication over TCP.
 More specifically, we will run a DDS Subscriber on a machine deployed on a local ``network A`` and a DDS Publisher on a machine deployed on a local ``network B``.
 Both DDS entities will communicate over the Internet by means of the DDS Router.

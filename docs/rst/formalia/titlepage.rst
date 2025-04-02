@@ -35,21 +35,21 @@ Overview
 
 Following are some of the key features of *eProsima DDS Router*:
 
-  1. **WAN communication over TCP**: it supports WAN over TCP communication to establish DDS communications over the
-     Internet.
-  2. **Distributed nature**: the user may deploy intermediate *DDS Router* nodes to discover new entities that enter and
-     leave the network dynamically.
-  3. **Efficient data routing**: *DDS Router* avoids data introspection achieving a zero-copy system in data
-     forwarding.
-  4. **Easy deployment**: it is based on an easily configurable modular system for users with no knowledge of computer
-     networks.
-  5. **Topic allowlisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
-     topic specified by the user.
-  6. **Dynamic topic discovery**: the user does not need to fully specify over which topics to communicate (i.e. provide
-     concrete topic names and types). The discovery of topics matching the allowlisting rules automatically triggers the
-     creation of all entities required for communication.
-  7. **Quality of Service preservation**: DDS Router uses the QoS set in the user's DDS network and keeps the
-     reliability and durability of the communication for each topic. These QoS are also manually configurable.
+1. **WAN communication over TCP**: it supports WAN over TCP communication to establish DDS communications over the
+   Internet.
+2. **Distributed nature**: the user may deploy intermediate *DDS Router* nodes to discover new entities that enter and
+   leave the network dynamically.
+3. **Efficient data routing**: *DDS Router* avoids data introspection achieving a zero-copy system in data
+   forwarding.
+4. **Easy deployment**: it is based on an easily configurable modular system for users with no knowledge of computer
+   networks.
+5. **Topic allowlisting**: it is possible to configure a *DDS Router* to forward just the user data belonging to a
+   topic specified by the user.
+6. **Dynamic topic discovery**: the user does not need to fully specify over which topics to communicate (i.e. provide
+   concrete topic names and types). The discovery of topics matching the allowlisting rules automatically triggers the
+   creation of all entities required for communication.
+7. **Quality of Service preservation**: DDS Router uses the QoS set in the user's DDS network and keeps the
+   reliability and durability of the communication for each topic. These QoS are also manually configurable.
 
 .. _fig_entities_diagram:
 
