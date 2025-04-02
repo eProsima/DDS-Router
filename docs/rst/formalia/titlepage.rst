@@ -2,7 +2,7 @@
 eProsima DDS Router Documentation
 #################################
 
-.. image:: /rst/figures/logo.png
+.. image:: /rst/_static/eprosima-logo.svg
   :height: 100px
   :width: 100px
   :align: left
