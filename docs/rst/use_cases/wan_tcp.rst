@@ -168,9 +168,9 @@ Running Fast DDS Publisher
 
 1.  Run the Fast DDS Publisher executing the following commands:
 
-    .. tabs::
+    .. tab-set::
 
-        .. tab:: WAN
+        .. tab-item:: WAN
 
             .. code-block:: bash
 
@@ -178,7 +178,7 @@ Running Fast DDS Publisher
                 ./dds/BasicConfigurationExample/bin/BasicConfigurationExample publisher \
                     --interval 1000 --transport udp
 
-        .. tab:: LAN
+        .. tab-item:: LAN
 
             .. code-block:: bash
 
@@ -209,14 +209,14 @@ Configure the DDS Router Net B
 
 The DDS Router Net B configuration file is quite similar to the DDS Router Net A configuration file, as can be seen below:
 
-.. tabs::
+.. tab-set::
 
-    .. tab:: WAN
+    .. tab-item:: WAN
 
         .. literalinclude:: /resources/use_cases/wan_tcp/dds_router_net_B_wan.yaml
             :language: yaml
 
-    .. tab:: LAN
+    .. tab-item:: LAN
 
         .. literalinclude:: /resources/use_cases/wan_tcp/dds_router_net_B_lan.yaml
             :language: yaml

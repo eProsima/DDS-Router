@@ -279,10 +279,11 @@ project_binary_docs_dir = os.path.abspath("{}/docs".format(project_binary_dir))
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.todo", "sphinx_tabs.tabs"]
-
-sphinx_tabs_disable_css_loading = False
-sphinx_tabs_disable_tab_closing = True
+extensions = [
+    "sphinx.ext.todo",
+    "sphinx_design",
+    "sphinx_tabs.tabs",
+]
 
 try:
     import sphinxcontrib.spelling  # noqa: F401
