@@ -1,7 +1,5 @@
 # client-ddsrouter.yaml
 
-version: v5.0
-
 allowlist:
   - name: Square
 

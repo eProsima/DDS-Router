@@ -13,7 +13,7 @@ Both DDS entities will communicate over the Internet by means of the DDS Router.
 
     This tutorial is intended for WAN communication.
     However, if there is only access to a LAN communication, it is possible to follow the tutorial by changing the DDS Domain Id so DDS entities in LAN A use default Domain (``0``) and those in LAN B use DDS Domain ``1``.
-    This way the DDS entities are logically isolated and will not discovery other entities out of their DDS Domain.
+    This way the DDS entities are logically isolated and will not discover other entities out of their DDS Domain.
 
 The image below describes the scenario presented in this tutorial.
 
@@ -23,8 +23,8 @@ The image below describes the scenario presented in this tutorial.
 Several key elements can be observed in it:
 
 1.  **Fast DDS Subscriber** and **Fast DDS Publisher**.
-    The application used for this tutorial is the *BasicHelloWorldExample*.
-    The *BasicHelloWorldExample* is a Fast DDS application that implements a subscriber and a publisher, to which a configuration of basic DDS and QoS parameters such as DDS domain, transport, communication reliability, among others, can be applied.
+    The application used for this tutorial is the *Configuration Example*.
+    The *Configuration Example* is a Fast DDS application that implements a subscriber and a publisher, to which a configuration of basic DDS and QoS parameters such as DDS domain, transport, communication reliability, among others, can be applied.
 
 1.  **DDS Router**.
     *eProsima DDS Router* is an end-user software application that enables the connection of distributed DDS networks.
@@ -61,7 +61,7 @@ You have two options:
     If you follow this option, you will need to install:
 
     *   `Fast DDS <https://fast-dds.docs.eprosima.com/en/latest/installation/binaries/binaries_linux.html>`_
-    *   `Fast DDS BasicHelloWorldExample <https://github.com/eProsima/Fast-DDS/tree/master/examples/cpp/dds/BasicConfigurationExample>`_
+    *   `Fast DDS Configuration Example <https://github.com/eProsima/Fast-DDS/tree/master/examples/cpp/configuration>`_
     *   :ref:`DDS Router <installation_manual_linux>`
 
 2.  Use the `Fast DDS Suite <https://fast-dds.docs.eprosima.com/en/latest/docker/fastdds_suite/fast_dds_suite.html>`_.
@@ -99,7 +99,7 @@ Running Fast DDS Subscriber
     .. code-block:: bash
 
         goToExamples
-        ./dds/BasicConfigurationExample/bin/BasicConfigurationExample subscriber --transport udp
+        ./configuration/bin/configuration subscriber --transport udp
 
 
 Running DDS Router Net A
@@ -170,7 +170,7 @@ Running Fast DDS Publisher
             .. code-block:: bash
 
                 goToExamples
-                ./dds/BasicConfigurationExample/bin/BasicConfigurationExample publisher \
+                ./configuration/bin/configuration publisher \
                     --interval 1000 --transport udp
 
         .. tab-item:: LAN
@@ -178,7 +178,7 @@ Running Fast DDS Publisher
             .. code-block:: bash
 
                 goToExamples
-                ./dds/BasicConfigurationExample/bin/BasicConfigurationExample publisher \
+                ./configuration/bin/configuration publisher \
                     --interval 1000 --transport udp --domain 1
 
             .. note::

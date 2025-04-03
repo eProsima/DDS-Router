@@ -90,26 +90,17 @@ Below is the list with all the available Participant Kinds.
         - ``domain``
         - Simple DDS DomainParticipant.
 
-    *   - :ref:`user_manual_participants_local_discovery_server`
+    *   - :ref:`user_manual_participants_discovery_server`
         - ``discovery-server`` |br|
           ``local-ds`` |br|
-          ``ds``
-        - ``guid`` |br|
-          ``listening-addresses`` |br|
-          ``connection-addresses`` |br|
-          ``tls``
-        - Discovery Server DDS DomainParticipant |br|
-          for local communication.
-
-    *   - :ref:`user_manual_participants_discovery_server_wan`
-        - ``wan-discovery-server`` |br|
+          ``ds`` |br|
+          ``wan-discovery-server`` |br|
           ``wan-ds``
         - ``guid`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses`` |br|
           ``tls``
         - Discovery Server DDS DomainParticipant |br|
-          for WAN communication.
 
     *   - :ref:`user_manual_participants_wan`
         - ``wan`` |br|
@@ -137,7 +128,6 @@ Below is the list with all the available Participant Kinds.
 
     echo
     simple
-    local_discovery_server
-    wan_discovery_server
+    discovery_server
     wan
     xml

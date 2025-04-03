@@ -1,10 +1,6 @@
 #######################################
 # WAN DISCOVERY SERVER SERVER EXAMPLE #
-#######################################
-
-##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
+#######################################                                                  # 0
 
 ##################################
 # ALLOWED TOPICS
@@ -12,9 +8,7 @@ version: v5.0                                                     # 0
 
 allowlist:
   - name: HelloWorldTopic                                         # 1
-    type: HelloWorld                                              # 1
   - name: rt/chatter                                              # 2
-    type: std_msgs::msg::dds_::String_
 
 ##################################
 # PARTICIPANTS

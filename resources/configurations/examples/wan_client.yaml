@@ -3,18 +3,12 @@
 ######################
 
 ##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
 # ALLOWED TOPICS
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
   - name: HelloWorldTopic                                         # 1
-    type: HelloWorld                                              # 1
   - name: rt/chatter                                              # 2
-    type: std_msgs::msg::dds_::String_
 
 ##################################
 # PARTICIPANTS
@@ -40,7 +34,7 @@ participants:
         transport: udp
     listening-addresses:                                          # 9
       - ip: 2.2.2.2
-        port: 11777
+        port: 11670
         transport: udp
 
 ##################################

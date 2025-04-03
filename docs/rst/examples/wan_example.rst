@@ -12,7 +12,7 @@ In the following snippet we see a yaml file to configure a DDS Router to create 
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 5-40
+    :lines: 5-34
 
 Configuration
 =============
@@ -22,14 +22,12 @@ Allowed Topics
 
 In this section are the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
-and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
+Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
 one domain to the other, allowing different DDS domains to interact to each other.
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 13-17
-
+    :lines: 9-11
 
 Simple Participant
 ------------------
@@ -38,7 +36,7 @@ This Participant is configured by a name, a kind and the Domain Id, in this case
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 27-29
+    :lines: 21-23
 
 
 WAN Participant Server
@@ -52,7 +50,7 @@ this Participant will work as TCP Server).
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
-    :lines: 35-40
+    :lines: 29-34
 
 WAN Participant Client
 ----------------------
@@ -62,7 +60,7 @@ In order to create a WAN Participant Client, check the configuration file
 
 .. literalinclude:: ../../resources/examples/wan_client.yaml
     :language: yaml
-    :lines: 35-44
+    :lines: 29-37
 
 
 Execute example

@@ -11,7 +11,7 @@ The following YAML configuration file configures a DDS Router to create two
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
-    :lines: 5-37
+    :lines: 5-31
 
 Configuration
 =============
@@ -21,13 +21,12 @@ Allowed Topics
 
 This section lists the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
-and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
+Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
 one domain to the other, allowing different DDS domains to interact with each other.
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
-    :lines: 13-17
+    :lines: 9-11
 
 
 Simple Participant Domain 0
@@ -37,7 +36,7 @@ This Participant is configured with a name, a kind, and a Domain Id, which is ``
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
-    :lines: 27-29
+    :lines: 21-23
 
 
 Simple Participant Domain 1
@@ -47,7 +46,7 @@ This Participant is configured with a name, a kind, and a Domain Id, which is ``
 
 .. literalinclude:: ../../resources/examples/change_domain_allowlist.yaml
     :language: yaml
-    :lines: 35-37
+    :lines: 29-31
 
 
 Execute example
@@ -56,12 +55,30 @@ Execute example
 Please refer to section :ref:`User Interface <user_manual_user_interface>` for a detailed explanation on how to execute the
 |ddsrouter|.
 
-.. todo:
+Execute with Fast DDS Configuration Example
+-------------------------------------------
 
-    Add link when BasicConfiguration Example is added to Fast DDS (if it happens)
+Execute a |fastdds| ``configuration`` example  *publisher* in domain ``0``:
 
-    Execute with Fast DDS HelloWorld Example
-    ----------------------------------------
+.. code-block:: bash
+
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 0 --name HelloWorldTopic
+
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``1``:
+
+.. code-block:: bash
+
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 1 --name HelloWorldTopic
+
+Execute the |ddsrouter| with this configuration file (available in
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/change_domain_allowlist.yaml``).
+Once the |ddsrouter| is running, messages from *publisher* in domain 0 will be forwarded by the Router
+to the *subscriber* in domain 1 that will print them in ``stdout``.
+
+There is also available an example without ``allowlist`` (available in
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/change_domain.yaml``).
+In this case, the topics of the DDS network are dynamically discovered by the DDS Router.
+Since there is no allowlist, the data from all the topics found are forwarded.
 
 Execute with ROS 2 demo nodes
 -----------------------------

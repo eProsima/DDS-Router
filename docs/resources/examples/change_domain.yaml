@@ -2,9 +2,6 @@
 # CHANGE DDS DOMAIN EXAMPLE #
 #############################
 
-# Yaml configuration file version
-version: v5.0
-
 # DDS Router participants
 participants:
 

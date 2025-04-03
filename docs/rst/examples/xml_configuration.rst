@@ -13,7 +13,7 @@ It generates a bridge between two different domains (``0`` & ``1``).
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 5-41
+    :lines: 5-37
 
 Configuration
 =============
@@ -29,7 +29,7 @@ For more information check :ref:`following section <user_manual_configuration_lo
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 11-21
+    :lines: 7-17
 
 
 Simple Participant Domain 0
@@ -39,7 +39,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 31-33
+    :lines: 27-29
 
 
 XML Participant Domain 1
@@ -50,7 +50,7 @@ As the XML loaded in this same YAML file configures profile ``custom_participant
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 39-41
+    :lines: 35-37
 
 
 Execute example
@@ -59,20 +59,20 @@ Execute example
 Please refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the
 |ddsrouter|.
 
-Execute with Fast DDS Basic Configuration Example
--------------------------------------------------
+Execute with Fast DDS Configuration Example
+-------------------------------------------
 
-Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``0``:
-
-.. code-block:: bash
-
-    ./BasicConfigurationExample publisher --domain 0
-
-Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``1``:
+Execute a |fastdds| ``configuration`` example  *publisher* in domain ``0``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample subscriber --domain 1
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 0
+
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``1``:
+
+.. code-block:: bash
+
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 1
 
 Execute |ddsrouter| with this configuration file (available in ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/xml.yaml``).
 Once the |ddsrouter| is running, messages from *publisher* in domain 0 will be forwarded by the Router to the *subscriber* in domain 1, that will print them in ``stdout``.

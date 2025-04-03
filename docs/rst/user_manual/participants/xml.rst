@@ -10,7 +10,7 @@ This type of :term:`Participant` refers to a :term:`DomainParticipant` that uses
 
 |fastdds| supports XML to fully configure a DomainParticipant.
 Using XML configuration, users have whole access to the full configuration of a DDS DomainParticipant.
-Check the following `documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/domainparticipant.html>` for further information on how to configure a DDS DomainParticipant with XML.
+Check the following `documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/domainparticipant.html>`_ for further information on how to configure a DDS DomainParticipant with XML.
 For further information regarding how to load XML configuration files to the |ddsrouter|, check the :ref:`user_manual_configuration_load_xml` section.
 
 .. note::

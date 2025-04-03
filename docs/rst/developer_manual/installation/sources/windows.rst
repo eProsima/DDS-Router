@@ -96,6 +96,9 @@ Install the ROS 2 development tools (colcon_ and vcstool_) by executing the foll
     If this fails due to an Environment Error, add the :code:`--user` flag to the :code:`pip3` installation command.
 
 
+Once installed, add the path to the executables to the :code:`PATH` from the
+*Edit the system environment variables* control panel.
+
 .. _windows_sources_gtest:
 
 Gtest
@@ -218,7 +221,7 @@ for Windows:
 
    git clone --branch yaml-cpp-0.7.0 https://github.com/jbeder/yaml-cpp
    cmake -DCMAKE_INSTALL_PREFIX='C:\Program Files\yamlcpp' -B build\yamlcpp yaml-cpp
-   cmake --build build\yamlcpp --target install    # If building in Debug mode, add --config Debug
+   cmake --build build\yamlcpp --config Release --target install   # If building in Debug mode, add --config Debug
 
 .. _windows_sources_eprosima_dependencies:
 
@@ -230,7 +233,7 @@ this library when building the |ddsrouter| application by using the command:
 
 .. code-block:: bash
 
-    source <fastdds-installation-path>/install/setup.bash
+    <fastdds-installation-path>\install\setup.bat
 
 In other case, just download *Fast DDS* project from sources and build it together with |ddsrouter| using colcon
 as it is explained in section :ref:`windows_sources_colcon_installation`.
@@ -255,7 +258,7 @@ Colcon installation
         cd <path\to\user\workspace>\DDS-Router
         mkdir src
         wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
-        vcs import src < ddsrouter.repos
+        vcs import src --input ddsrouter.repos
 
     .. note::
 
@@ -269,6 +272,12 @@ Colcon installation
     .. code-block:: bash
 
         colcon build
+
+    .. warning::
+
+        If the build fails because it can't find the path to `yaml-cpp`, try running the command with the following option:
+        `:code: --cmake-args -DCMAKE_PREFIX_PATH="C:\Program Files\yamlcpp\share\cmake\yaml-cpp"`.
+        This tells CMake where to find the `yaml-cpp` configuration files.
 
 .. note::
 
@@ -301,7 +310,7 @@ Local installation
         mkdir <path\to\user\workspace>\DDS-Router\build
         cd <path\to\user\workspace>\DDS-Router
         wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
-        vcs import src < ddsrouter.repos
+        vcs import src --input ddsrouter.repos
 
 #.  Compile all dependencies using CMake_.
 
@@ -443,10 +452,10 @@ There are two possibilities:
 
   .. code-block:: bash
 
-      setup.bat
+      <path\to\user\workspace>\DDS-Router\install\setup.bat
 
 * Add the sourcing of the colcon overlay permanently, by opening the
-  *Edit the system environment variables* control panel, and adding :code:`~/Fast-DDS/install/setup.bat`
+  *Edit the system environment variables* control panel, and adding :code:`<path\to\user\workspace>\DDS-Router\install\setup.bat`
   to the :code:`PATH`.
 
 However, when running an instance of a |ddsrouter| compiled using CMake, it must be linked with its dependencies where

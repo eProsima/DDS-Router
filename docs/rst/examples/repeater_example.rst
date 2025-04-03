@@ -27,8 +27,7 @@ Allowed Topics
 
 This section lists the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` with datatype ``HelloWorld``,
-and ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
+Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
 one domain to the other, allowing different DDS domains to interact with each other.
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
@@ -66,23 +65,13 @@ Execute example
 Please refer to this :ref:`section <user_manual_user_interface>` for a detailed explanation on how to execute the
 |ddsrouter|.
 
-.. todo:
-
-    Add link when BasicConfiguration Example is added to Fast DDS (if it happens)
-
-    Execute with Fast DDS HelloWorld Example
-    ----------------------------------------
-
-Execute with ROS 2 demo nodes
------------------------------
-
-In order to run this example, there must be three different hosts located in different local networks:
+In order to run these examples, there must be three different hosts located in different local networks:
 
 * host *H*:sub:`A` with private IP ``192.168.1.2`` connected to network router *R*:sub:`A` with public IP ``1.1.1.1``.
 * host *H*:sub:`B` with private IP ``192.168.2.2`` connected to network router *R*:sub:`B` with public IP ``2.2.2.2``.
 * host *H*:sub:`C` with private IP ``192.168.2.3`` connected to network router *R*:sub:`C` with public IP ``3.3.3.3``.
 
-This example could be run in localhost or with two hosts in the same LAN, but it will not use the WAN
+These examples could be run in localhost or with two hosts in the same LAN, but it will not use the WAN
 communication features of the |ddsrouter|.
 
 Host *H*:sub:`A`
@@ -105,6 +94,9 @@ Execute |ddsrouter| using file
 Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`.
 **In this example the port forwarding is not required, as the Repeater will allow the communication through it,
 and TCP protocol is being used.**.
+
+Execute with ROS 2 demo nodes
+-----------------------------
 
 Both clients can execute ROS 2 demo nodes, which will publish and subscribe in topic ``rt/chatter``.
 Execute a ``talker`` in one of them and a ``listener`` in the other.
@@ -132,4 +124,38 @@ the *listener* in *H*:sub:`C` will start receiving and printing data from the *t
 
     If *H*:sub:`B` can access *H*:sub:`C` due to port forwarding or because both are under the same network,
     the ``listener`` will receive duplicated messages, as one of them will arrive from *H*:sub:`B` and the other
+    from *H*:sub:`A`.
+
+Execute with Fast DDS HelloWorld Example
+----------------------------------------
+
+Both clients can create *Fast DDS* endpoints , which will publish and subscribe in topic ``HelloWorldTopic``.
+Execute a ``publisher`` in one of them and a ``subscriber`` in the other.
+It is recommended to use different domains in each endpoint, so in case both endpoints are accessible
+(under same network) no loop is created.
+In order to do so, change the YAML configuration files to use different domains.
+
+Execute a |fastdds| ``configuration`` example  *publisher* in domain ``0``:
+
+.. code-block:: bash
+
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 0 --name HelloWorldTopic
+
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``1``:
+
+.. code-block:: bash
+
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 1 --name HelloWorldTopic
+
+Result
+------
+
+After executing the three |ddsrouter| applications in hosts, and *publisher* and *subscriber* applications,
+the *subscriber* in *H*:sub:`C` will start receiving and printing data from the *publisher* in *H*:sub:`B`.
+**You are communicating DDS via WAN**.
+
+.. note::
+
+    If *H*:sub:`B` can access *H*:sub:`C` due to port forwarding or because both are under the same network,
+    the ``subscriber`` will receive duplicated messages, as one of them will arrive from *H*:sub:`B` and the other
     from *H*:sub:`A`.

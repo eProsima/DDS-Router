@@ -16,7 +16,7 @@ It then establishes a generic forwarding route between them, and a topic forward
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 5-69
+    :lines: 5-65
 
 Configuration
 =============
@@ -28,7 +28,7 @@ These participants are configured with a name, a kind (``local``), and a domain 
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 9-27
+    :lines: 5-23
 
 
 Generic Forwarding Routes
@@ -39,14 +39,14 @@ This route is configured so that ``SimpleParticipant_1`` subscribes to the data 
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 34-40
+    :lines: 30-36
 
 This route is configured so that ``SimpleParticipant_1`` does not publish the data it receives.
 Thus, a subscriber in domain ``0`` would not receive the data published in domain ``1``.
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 42-45
+    :lines: 38-41
 
 
 Topic Forwarding Routes
@@ -56,7 +56,7 @@ We define the topic forwarding routes under the tag ``topic-routes`` by declarin
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 48-55
+    :lines: 44-51
 
 .. note::
 
@@ -73,13 +73,13 @@ This route is configured so that ``SimpleParticipant_0`` will subscribe to the d
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 57-63
+    :lines: 53-59
 
 This route is configured so that ``SimpleParticipant_0`` does not forward the data it receives.
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 65-69
+    :lines: 61-65
 
 
 Execute example
@@ -88,7 +88,7 @@ Execute example
 Please refer to the :ref:`User Interface <user_manual_user_interface>` section for a detailed explanation on how to execute the
 |ddsrouter|.
 
-Execute with Fast DDS Basic Configuration Example
+Execute with Fast DDS Configuration Example
 -------------------------------------------------
 
 To check that the generic forwarding routes are working we are going to execute two examples.
@@ -98,17 +98,17 @@ In the second one, we will set up a *publisher* in domain ``1``, a *subscriber* 
 Publish in domain 0 and subscribe in domain 1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``0``:
+Execute a |fastdds| ``configuration`` example *publisher* in domain ``0``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample publisher --domain 0
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 0
 
-Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``1``:
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``1``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample subscriber --domain 1
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 1
 
 Execute the |ddsrouter| with the configuration file available at ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/forwarding_routes.yaml``.
 Once the |ddsrouter| is running, messages from the *publisher* in domain ``0`` will be forwarded by the |ddsrouter| to the *subscriber* in domain ``1``, that will print them in ``stdout``.
@@ -116,17 +116,17 @@ Once the |ddsrouter| is running, messages from the *publisher* in domain ``0`` w
 Publish in domain 1 and subscribe in domain 0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``1``:
+Execute a |fastdds| ``configuration`` example *publisher* in domain ``1``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample publisher --domain 1
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 1
 
-Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``0``:
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``0``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample subscriber --domain 0
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 0
 
 Execute the |ddsrouter| with this configuration file (available in ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/forwarding_routes.yaml``).
 Once the |ddsrouter| is running, nothing should happen, since there are no generic forwarding routes from domain ``1`` to domain ``0``.
@@ -142,17 +142,17 @@ In the second one, we will set up a *publisher* in domain ``0``, a *subscriber* 
 Publish in domain 1 and subscribe in domain 0
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``1`` on topic ``Circle``:
+Execute a |fastdds| ``configuration`` example *publisher* in domain ``1`` on topic ``Circle``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample publisher --domain 1 --topic Circle
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 1 --name Circle
 
-Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``0`` on topic ``Circle``:
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``0`` on topic ``Circle``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample subscriber --domain 0 --topic Circle
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 0 --name Circle
 
 Execute the |ddsrouter| with the configuration file available at ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/forwarding_routes.yaml``.
 Once the |ddsrouter| is running, messages from the *publisher* in domain ``1`` on topic ``Circle`` will be forwarded by the |ddsrouter| to the *subscriber* in domain ``0``, that will print them in ``stdout``.
@@ -160,17 +160,17 @@ Once the |ddsrouter| is running, messages from the *publisher* in domain ``1`` o
 Publish in domain 0 and subscribe in domain 1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Execute a |fastdds| ``BasicConfigurationExample`` *publisher* in domain ``0`` on topic ``Circle``:
+Execute a |fastdds| ``configuration`` example *publisher* in domain ``0`` on topic ``Circle``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample publisher --domain 0 --topic Circle
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration publisher --domain 0 --name Circle
 
-Execute a |fastdds| ``BasicConfigurationExample`` *subscriber* in domain ``1`` on topic ``Circle``:
+Execute a |fastdds| ``configuration`` example *subscriber* in domain ``1`` on topic ``Circle``:
 
 .. code-block:: bash
 
-    ./BasicConfigurationExample subscriber --domain 1 --topic Circle
+    ./<path/to/fastdds_installation>/share/fastdds/examples/cpp/configuration/bin/configuration subscriber --domain 1 --name Circle
 
 Execute the |ddsrouter| with this configuration file (available in ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/forwarding_routes.yaml``).
 Once the |ddsrouter| is running, nothing should happen, since there are no topic forwarding routes on topic ``Circle`` from domain ``0`` to domain ``1``.
