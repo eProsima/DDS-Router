@@ -832,7 +832,7 @@ listen for remote Participants.
 Connection Addresses
 --------------------
 
-Tag ``connection-addresses`` configures a connection with one or multiple remote WAN Participants (:ref:`WAN participant <user_manual_participants_wan>` case) or Discovery Servers (:ref:`Discovery Server participant <user_manual_participants_discovery_server_wan>` case).
+Tag ``connection-addresses`` configures a connection with one or multiple remote WAN Participants (:ref:`WAN participant <user_manual_participants_wan>` case) or Discovery Servers (:ref:`Discovery Server participant <user_manual_participants_discovery_server>` case).
 ``connection-addresses`` is the *key* for an array of :ref:`Network Addresses <user_manual_configuration_network_address>`.
 
 .. code-block:: yaml

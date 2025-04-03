@@ -8,7 +8,7 @@ ROS2 Discovery Server Example
 
 In the following snippet we see a yaml file to configure a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in domain ``0`` and a
-:ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` with ROS 2 configuration.
+:ref:`Local Discovery Server <user_manual_participants_discovery_server>` with ROS 2 configuration.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
@@ -48,7 +48,7 @@ Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 29-36
+    :lines: 29-34
 
 
 Execute example
