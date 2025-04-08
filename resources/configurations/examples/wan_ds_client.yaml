@@ -3,18 +3,12 @@
 #######################################
 
 ##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
 # ALLOWED TOPICS
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
   - name: HelloWorldTopic                                         # 1
-    type: HelloWorld                                              # 1
   - name: rt/chatter                                              # 2
-    type: std_msgs::msg::dds_::String_
 
 ##################################
 # PARTICIPANTS
@@ -36,9 +30,11 @@ participants:
     kind: wan-discovery-server                                    # 7
     connection-addresses:                                         # 8
       - ip: 1.1.1.1                                               # 9
-        port: 11777
-        transport: tcp
-
+        port: 11666
+    listening-addresses:                                          # 10
+      - ip: 2.2.2.2                                               # 11
+        port: 11670                                               # 12
+        transport: udp                                            # 13
 ##################################
 # CONFIGURATION DESCRIPTION
 

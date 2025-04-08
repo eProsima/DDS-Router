@@ -3,10 +3,6 @@
 #######################################
 
 ##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes
 
@@ -32,13 +28,11 @@ participants:
 
   - name: ClientROS2                                              # 5
     kind: local-discovery-server                                  # 6
-    discovery-server-guid:
-      ros-discovery-server: true                                  # 7
-      id: 2                                                       # 8
-    connection-addresses:                                         # 9
-      - domain: localhost                                         # 10
-        port: 11888                                               # 11
-                                                                  # 12
+
+    connection-addresses:                                         # 7
+      - domain: localhost                                         # 8
+        port: 11888                                               # 9
+                                                                  # 10
 
 ##################################
 # CONFIGURATION DESCRIPTION

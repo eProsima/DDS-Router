@@ -80,7 +80,7 @@ Two different deployments will be used for this example, each in a different |k8
 
 * A :ref:`WAN Participant <user_manual_participants_wan>` that receives the messages coming from our LAN through the
   aforementioned UDP communication channel.
-* A :ref:`Local Discovery Server <user_manual_participants_local_discovery_server>` (local DS) that propagates them to a
+* A :ref:`Local Discovery Server <user_manual_participants_discovery_server>` (local DS) that propagates them to a
   ROS 2 listener node hosted in a different |k8s| pod.
 
 The choice of a Local Discovery Server instead of a Simple Participant to communicate with the listener has to do with
