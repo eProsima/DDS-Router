@@ -67,7 +67,7 @@ def _talker_command(args):
     """
     command = [
         'python3',
-        '/opt/ros/humble/lib/demo_nodes_py/talker']
+        '/opt/ros/jazzy/lib/demo_nodes_py/talker']
 
     return command
 
