@@ -1,5 +1,6 @@
 allowlist
 allowlisting
+Asan
 Asio
 blackbox
 blocklist
@@ -22,6 +23,7 @@ fastcdr
 fastdds
 fastrtps
 Foonathan
+Furo
 github
 gMock
 Gtest
@@ -40,6 +42,7 @@ Redistributable
 Requiredness
 runtime
 scalable
+Tsan
 utils
 validator
 Vulcanexus
