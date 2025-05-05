@@ -9,16 +9,20 @@ Version v3.2.0
 ##############
 
 This release includes the following **features**:
+
 * Support ROS2 Easy Mode.
 
 This release includes the following **Documentation Updates**:
+
 * Add new Furo theme to the Documentation.
 * Refactor the DDS Router Documentation.
 
 This release includes the following **fixes**:
+
 * Fix several typos.
 
 This release includes the following *ci management updates*:
+
 * Fix Flaky test action.
 * Restructure GitHub Actions.
 * Fix Asan/Tsan CI.
