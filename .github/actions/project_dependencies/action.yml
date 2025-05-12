@@ -45,6 +45,11 @@ runs:
       with:
         cmake_build_type: ${{ inputs.cmake_build_type }}
 
+    - name: Install jsonschema
+      uses: eProsima/eProsima-CI/multiplatform/install_python_packages@v0
+      with:
+        packages: jsonschema
+
     - name: Install yaml cpp dependency
       uses: eProsima/eProsima-CI/multiplatform/install_yamlcpp@v0
       with:
