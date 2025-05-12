@@ -50,11 +50,11 @@ def get_version(version_file='VERSION'):
         with open(version_file, 'r') as f:
             for line in f:
                 if re.search('VERSION_MAJOR', line):
-                    version['major'] = line.split()[1][:-1]
+                    version['major'] = line.split()[1]
                 if re.search('VERSION_MINOR', line):
-                    version['minor'] = line.split()[1][:-1]
+                    version['minor'] = line.split()[1]
                 if re.search('VERSION_PATCH', line):
-                    version['patch'] = line.split()[1][:-1]
+                    version['patch'] = line.split()[1]
                 if 'major' in version and 'minor' in version and 'patch' in version:
                     break
     except EnvironmentError:
@@ -350,11 +350,10 @@ author = 'eProsima'
 # The short X.Y version.
 versions = get_version('{}/VERSION'.format(script_path))
 if versions is None:
-    versions = get_version(os.path.abspath('{}/../VERSION'.format(script_path)))
+    versions = get_version('{}/../VERSION'.format(script_path))
 if versions is None:
     versions = get_version_from_cmakelists(
-        os.path.abspath('{}/CMakeLists.txt'.format(script_path))
-    )
+        '{}/CMakeLists.txt'.format(script_path))
 
 version = '{}.{}'.format(versions['major'], versions['minor'])
 # The full version, including alpha/beta/rc tags.
