@@ -22,6 +22,7 @@
 #include <cpp_utils/testing/LogChecker.hpp>
 
 #include <ddspipe_core/types/topic/filter/WildcardDdsFilterTopic.hpp>
+#include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
@@ -50,7 +51,8 @@ constexpr const uint32_t DEFAULT_MESSAGE_SIZE = 1; // x50 bytes
  */
 DdsRouterConfiguration dds_test_simple_configuration(
         bool disable_dynamic_discovery = false,
-        bool transient_local_readers = false)
+        bool transient_local_readers = false,
+        bool keyed = false)
 {
     DdsRouterConfiguration conf;
 
@@ -79,13 +81,24 @@ DdsRouterConfiguration dds_test_simple_configuration(
         topic.type_name = "HelloWorld";
         topic.topic_qos = qos;
 
-        core::types::DdsTopic topic_keyed(topic);
-        topic_keyed.type_name = "HelloWorldKeyed";
-        topic_keyed.topic_qos.keyed = true;
+        // DDS Participants cannot have two topics with the same name.
+        // Since this test does not require two distinct topics, we can simply avoid inserting
+        // the other topic if it isn't needed.
+        if (!keyed)
+        {
+            conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
+        }
+        else
+        {
+            core::types::DdsTopic topic_keyed(topic);
+            topic_keyed.type_name = "HelloWorldKeyed";
+            topic_keyed.topic_qos.keyed = true;
 
-        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
-        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
-                    topic_keyed));
+            conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
+                        topic_keyed));
+        }
+
+        conf.ddspipe_configuration.discovery_trigger = core::DiscoveryTrigger::NONE;
     }
 
     // Two simple participants
@@ -225,7 +238,7 @@ TEST(DDSTestLocal, end_to_end_local_communication)
 TEST(DDSTestLocal, end_to_end_local_communication_keyed)
 {
     test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
-        test::dds_test_simple_configuration());
+        test::dds_test_simple_configuration(false, false, true));
 }
 
 /**
@@ -242,7 +255,7 @@ TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery)
 TEST(DDSTestLocal, end_to_end_local_communication_disable_dynamic_discovery_keyed)
 {
     test::test_local_communication<HelloWorldKeyed, HelloWorldKeyedPubSubType>(
-        test::dds_test_simple_configuration(true));
+        test::dds_test_simple_configuration(true,false,true));
 }
 
 /**
