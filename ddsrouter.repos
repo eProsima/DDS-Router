@@ -18,8 +18,8 @@ repositories:
     ddspipe:
         type: git
         url: https://github.com/eProsima/DDS-Pipe.git
-        version: main
+        version: 0.x
     ddsrouter:
         type: git
         url: https://github.com/eProsima/DDS-Router.git
-        version: main
+        version: 2.x
