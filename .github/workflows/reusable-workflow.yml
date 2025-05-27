@@ -76,7 +76,7 @@ jobs:
 
       - name: Compile and run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@main
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
         with:
           packages_names: ${{ env.code_packages_names }}
           cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
@@ -87,7 +87,7 @@ jobs:
 
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@main
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
         if: success() || failure()
         with:
           name: "Report: ${{ inputs.os }} | ${{ matrix.cmake_build_type }} "
