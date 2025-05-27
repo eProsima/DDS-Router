@@ -151,7 +151,7 @@ jobs:
         uses: ./src/.github/actions/project_dependencies
         with:
           os: ubuntu-22.04
-          cmake_build_type: Release
+          cmake_build_type: Debug
           custom_version_build: ${{ inputs.custom_version_build }}
           dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
