@@ -8,31 +8,31 @@ on:
       fastcdr_branch:
         description: 'Branch or tag of Fast CDR repository (https://github.com/eProsima/Fast-CDR)'
         required: true
-        default: 'master'
+        default: '2.x'
         type: string
 
       fastdds_branch:
         description: 'Branch or tag of Fast DDS repository (https://github.com/eProsima/Fast-DDS)'
         required: true
-        default: 'master'
+        default: '2.x'
         type: string
 
       dev_utils_branch:
         description: 'Branch or tag of eProsima/dev-utils repository (https://github.com/eProsima/dev-utils)'
         required: true
-        default: 'main'
+        default: '0.x'
         type: string
 
       ddspipe_branch:
         description: 'Branch or tag of DDS Pipe repository (https://github.com/eProsima/DDS-Pipe)'
         required: true
-        default: 'main'
+        default: '0.x'
         type: string
 
       ddsrouter_branch:
         description: 'Branch or tag of DDS Router repository (https://github.com/eProsima/DDS-Router)'
         required: true
-        default: 'main'
+        default: '2.x'
         type: string
 
       custom_version_build:
@@ -73,8 +73,8 @@ jobs:
     with:
       fastcdr_branch: ${{ inputs.fastcdr_branch || '2.x' }}
       fastdds_branch: ${{ inputs.fastdds_branch || '2.x' }}
-      dev_utils_branch: ${{ inputs.dev_utils_branch || 'main' }}
-      ddspipe_branch: ${{ inputs.ddspipe_branch || 'main' }}
+      dev_utils_branch: ${{ inputs.dev_utils_branch || '0.x' }}
+      ddspipe_branch: ${{ inputs.ddspipe_branch || '0.x' }}
       ddsrouter_branch: ${{ inputs.ddsrouter_branch || github.head_ref || github.ref_name }}
       custom_version_build: ${{ inputs.custom_version_build || 'v2' }}
       dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix || '_nightly' }}

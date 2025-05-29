@@ -45,8 +45,8 @@ WORKDIR /ddsrouter
 ARG fastcdr_branch=2.x
 ARG fastdds_branch=2.x
 ARG devutils_branch=0.x
-ARG ddspipe_branch=main
-ARG ddsrouter_branch=main
+ARG ddspipe_branch=0.x
+ARG ddsrouter_branch=2.x
 
 RUN echo "fastcdr branch: <${fastcdr_branch}>" && \
     echo "fastdds branch: <${fastdds_branch}>" && \

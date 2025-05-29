@@ -26,6 +26,7 @@ github
 gMock
 Gtest
 guid
+infos
 IPv
 jsonschema
 kubernetes
