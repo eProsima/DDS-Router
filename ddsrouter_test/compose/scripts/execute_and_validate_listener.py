@@ -16,6 +16,8 @@ import argparse
 
 import log
 
+import os
+
 import validation
 
 DESCRIPTION = """Script to validate listeners output"""
@@ -72,7 +74,7 @@ def _listener_command(args):
     """
     command = [
         'python3',
-        '/opt/ros/jazzy/lib/demo_nodes_py/listener']
+        f'/opt/ros/{os.environ["ROS_DISTRO"]}/lib/demo_nodes_py/listener']
 
     return command
 

@@ -16,6 +16,8 @@ import argparse
 
 import log
 
+import os
+
 import validation
 
 DESCRIPTION = """Script to validate talkers output"""
@@ -67,7 +69,7 @@ def _talker_command(args):
     """
     command = [
         'python3',
-        '/opt/ros/jazzy/lib/demo_nodes_py/talker']
+        f'/opt/ros/{os.environ["ROS_DISTRO"]}/lib/demo_nodes_py/talker']
 
     return command
 
