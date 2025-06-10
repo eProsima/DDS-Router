@@ -72,7 +72,7 @@ jobs:
           cd ./src/.github/docker/vulcanexus
           docker build \
             --no-cache \
-            --build-arg docker_image_base=eprosima/vulcanexus:humble-core \
+            --build-arg docker_image_base=eprosima/vulcanexus:jazzy-core \
             -t ${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }} \
             -f Dockerfile .
 
