@@ -61,7 +61,7 @@ prompt = no
 #default_keyfile = privkey.pem
 distinguished_name= req_distinguished_name
 #attributes = req_attributes
-#x509_extensions = v3_ca # The extentions to add to the self signed cert
+x509_extensions = root_ca_extensions # The extentions to add to the self signed cert
 string_mask = utf8only
 
 [ req_distinguished_name ]
@@ -71,3 +71,6 @@ localityName = Tres Cantos
 organizationName = eProsima
 commonName = eProsima Main Test CA
 emailAddress = routertest@eprosima.com
+
+[ root_ca_extensions ]
+basicConstraints = CA:true
