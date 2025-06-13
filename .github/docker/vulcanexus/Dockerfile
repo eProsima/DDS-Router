@@ -10,7 +10,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Avoids using interactions during building
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Use a bash shell so it is possigle to run things like `source` (required for colcon builds)
+# Use a bash shell so it is possible to run things like `source` (required for colcon builds)
 SHELL ["/bin/bash", "-c"]
 
 ARG docker_image_base
