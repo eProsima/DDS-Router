@@ -24,7 +24,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 12
+    command: ddsrouter -c /config.yaml --timeout 20
 
   # DOMAIN 0
   publisher_0_0:
@@ -34,7 +34,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 0 --partition "A"
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 0 --partition "A" --keep-last 20 --reliable
 
   subscriber_0_0:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -45,7 +45,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 0 --samples 20 --partition bbb"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 0 --samples 20 --partition bbb --keep-all --reliable"
 
   # DOMAIN 1
   publisher_1_0:
@@ -55,7 +55,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 1 --partition "bbb;ccc"
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 1 --partition "bbb;ccc" --keep-last 20 --reliable
 
   publisher_1_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -64,7 +64,7 @@ services:
       - ddsrouter
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 1 --name NonPartitionTopic
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 110 --domain 1 --name NonPartitionTopic --keep-last 20 --reliable
 
   # DOMAIN 2
   subscriber_2_0:
@@ -76,7 +76,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partition A"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 2 --samples 20 --partition A --keep-all --reliable"
 
   subscriber_2_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -87,7 +87,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 2 --samples 20 --partition bbb"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --allow-duplicates -1 --args "--domain 2 --samples 20 --partition bbb --keep-all --reliable"
 
   subscriber_2_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -98,7 +98,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 2 --samples 20 --partition ccc"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 2 --samples 20 --partition ccc --keep-all --reliable"
 
   # DOMAIN 3
   subscriber_3_0:
@@ -110,7 +110,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --allow-duplicates -1 --args "--domain 3 --samples 20 --partition *"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --allow-duplicates -1 --args "--domain 3 --samples 20 --partition * --keep-all --reliable"
 
   subscriber_3_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -121,7 +121,7 @@ services:
       - std_net
     volumes:
       - ../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 12 --args "--domain 3 --samples 20 --name NonPartitionTopic"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 3 --samples 20 --name NonPartitionTopic --keep-all --reliable"
 
 networks:
   std_net:

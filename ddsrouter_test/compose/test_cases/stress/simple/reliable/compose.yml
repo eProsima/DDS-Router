@@ -48,7 +48,7 @@ services:
       - std_net
     volumes:
       - ./ddsrouter.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 15
+    command: ddsrouter -c /config.yaml --timeout 20
 
 
  # SUBSCRIBERS
@@ -59,7 +59,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 15 --delay 1 --args "--samples 10 --domain 105 --name LargeDataTopic_reliable --reliable"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 20 --delay 1 --args "--samples 10 --domain 105 --name LargeDataTopic_reliable --reliable --transient-local --keep-all"
 
   subscriber_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -68,7 +68,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_1"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 20 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_1 --keep-last 10"
 
   subscriber_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -77,7 +77,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_2"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 20 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_2 --keep-last 10"
 
   subscriber_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -86,7 +86,7 @@ services:
       - std_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 10 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_3"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 20 --allow-duplicates -1 --args "--samples 10 --domain 105 --name LargeDataTopic_3 --keep-last 10"
 
   # PUBLISHERS
   publisher_reliable:
@@ -94,7 +94,7 @@ services:
     container_name: publisher_reliable
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --name LargeDataTopic_reliable --reliable --wait 1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 10 --msg-size 1 --domain 103 --name LargeDataTopic_reliable --reliable --transient-local --keep-all --wait 1
 
   publisher_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -108,77 +108,77 @@ services:
     container_name: publisher_2
     networks:
      - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_1 --keep-last 10
 
   publisher_3:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_3
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_1 --keep-last 10
 
   publisher_4:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_4
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_1
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_1 --keep-last 10
 
   publisher_5:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_5
     networks:
      - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_2 --keep-last 10
 
   publisher_6:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_6
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_2 --keep-last 10
 
   publisher_7:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_7
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_2 --keep-last 10
 
   publisher_8:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_8
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_2
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_2 --keep-last 10
 
   publisher_9:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_9
     networks:
      - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 100000 --domain 103 --name LargeDataTopic_3 --keep-last 10
 
   publisher_10:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_10
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 200000 --domain 103 --name LargeDataTopic_3 --keep-last 10
 
   publisher_11:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_11
     networks:
      - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 300000 --domain 103 --name LargeDataTopic_3 --keep-last 10
 
   publisher_12:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
     container_name: publisher_12
     networks:
       - std_net
-    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_3
+    command: build/fastdds_configuration_example/configuration publisher --interval 100 --samples 100 --msg-size 400000 --domain 103 --name LargeDataTopic_3 --keep-last 10
 
 
 networks:
