@@ -16,12 +16,6 @@ SHELL ["/bin/bash", "-c"]
 ARG docker_image_base
 RUN echo "Docker Base image used: ${docker_image_base}"
 
-# TODO: Remove once external issue is solved
-# Update ROS 2 keys (not updated in the base image as of June 2025)
-RUN rm /etc/apt/sources.list.d/ros2-latest.list && \
-    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
 # Install message interface and demo nodes required packages
 RUN source "/opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash" && \
         apt-get update && \
