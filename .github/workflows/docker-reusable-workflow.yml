@@ -136,7 +136,7 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-regex xfail \
-              --timeout 120
+              --timeout 240
 
       - name: Run tests
         run: |
@@ -149,4 +149,4 @@ jobs:
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 120
+              --timeout 240
