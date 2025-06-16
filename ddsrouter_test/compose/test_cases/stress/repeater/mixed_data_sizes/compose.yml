@@ -377,7 +377,7 @@ services:
       - ddsrouter_edge_07
     networks:
       - edge_07_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 106 --name topic_0 -m 1234567 --transport UDPv4 -r --keep-last 5 --wait 1
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 107 --name topic_0 -m 1234567 --transport UDPv4 -r --keep-last 5 --wait 1
 
   # SUBSCRIBER 7
 
