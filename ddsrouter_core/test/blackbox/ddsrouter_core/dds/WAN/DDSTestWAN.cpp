@@ -128,6 +128,13 @@ discovery_server_participant_configuration(
             );
     }
 
+    // Localhost translation is never accomplished in DS with Fast DDS 2.x due to fixed GUIDs.
+    // TCPv6 suffers from this issue as it will not be able to make any connection. A whitelist is needed to enforce
+    // localhost connections.
+    // This issue is fixed in Fast DDS 3.x with machine_id based translations and non-fixed GUIDs DS's.
+    participants::types::WhitelistType lo_wl = (ip_version == participants::types::IpVersion::v4 ? "127.0.0.1" : "::1");
+    conf.whitelist.insert(lo_wl);
+
     conf.id = core::types::ParticipantId("WanDsParticipant_" + std::to_string((this_server_id_is_1 ? 1 : 0)));
 
     conf.discovery_server_guid_prefix = core::types::GuidPrefix((this_server_id_is_1 ? 1u : 0u));
