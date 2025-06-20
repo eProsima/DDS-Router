@@ -66,7 +66,7 @@ services:
           - ddsrouter_cloud.edge_cloud
     volumes:
       - ./ddsrouter_cloud.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   # PUBLISHER 1
 
@@ -80,7 +80,7 @@ services:
       - edge_01_net
     volumes:
       - ./ddsrouter_edge_01.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_01:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -89,7 +89,7 @@ services:
       - ddsrouter_edge_01
     networks:
       - edge_01_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 101 --name topic_0 -m 1 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 101 --name topic_0 -m 1 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 1
 
@@ -103,7 +103,7 @@ services:
       - edge_11_net
     volumes:
       - ./ddsrouter_edge_11.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_11:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -114,7 +114,7 @@ services:
       - edge_11_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 111 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 111 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 2
 
@@ -128,7 +128,7 @@ services:
       - edge_02_net
     volumes:
       - ./ddsrouter_edge_02.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_02:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -137,7 +137,7 @@ services:
       - ddsrouter_edge_02
     networks:
       - edge_02_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 102 --name topic_0 -m 12 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 102 --name topic_0 -m 12 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 2
 
@@ -151,7 +151,7 @@ services:
       - edge_12_net
     volumes:
       - ./ddsrouter_edge_12.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_12:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -162,7 +162,7 @@ services:
       - edge_12_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 112 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 112 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 3
 
@@ -176,7 +176,7 @@ services:
       - edge_03_net
     volumes:
       - ./ddsrouter_edge_03.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_03:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -185,7 +185,7 @@ services:
       - ddsrouter_edge_03
     networks:
       - edge_03_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 103 --name topic_0 -m 123 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 103 --name topic_0 -m 123 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 3
 
@@ -199,7 +199,7 @@ services:
       - edge_13_net
     volumes:
       - ./ddsrouter_edge_13.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_13:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -210,7 +210,7 @@ services:
       - edge_13_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 113 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 113 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 4
 
@@ -224,7 +224,7 @@ services:
       - edge_04_net
     volumes:
       - ./ddsrouter_edge_04.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_04:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -233,7 +233,7 @@ services:
       - ddsrouter_edge_04
     networks:
       - edge_04_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 104 --name topic_0 -m 1234 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 104 --name topic_0 -m 1234 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 4
 
@@ -247,7 +247,7 @@ services:
       - edge_14_net
     volumes:
       - ./ddsrouter_edge_14.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_14:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -258,7 +258,7 @@ services:
       - edge_14_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 114 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 114 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 5
 
@@ -272,7 +272,7 @@ services:
       - edge_05_net
     volumes:
       - ./ddsrouter_edge_05.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_05:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -281,7 +281,7 @@ services:
       - ddsrouter_edge_05
     networks:
       - edge_05_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 105 --name topic_0 -m 12345 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 105 --name topic_0 -m 12345 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 5
 
@@ -295,7 +295,7 @@ services:
       - edge_15_net
     volumes:
       - ./ddsrouter_edge_15.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_15:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -306,7 +306,7 @@ services:
       - edge_15_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 115 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 115 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 6
 
@@ -320,7 +320,7 @@ services:
       - edge_06_net
     volumes:
       - ./ddsrouter_edge_06.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_06:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -329,7 +329,7 @@ services:
       - ddsrouter_edge_06
     networks:
       - edge_06_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 106 --name topic_0 -m 123456 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 106 --name topic_0 -m 123456 --transport UDPv4 -r --keep-last 21 --wait 1
 
   # SUBSCRIBER 6
 
@@ -343,7 +343,7 @@ services:
       - edge_16_net
     volumes:
       - ./ddsrouter_edge_16.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_16:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -354,7 +354,7 @@ services:
       - edge_16_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 116 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 116 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
   # PUBLISHER 7
 
@@ -368,7 +368,7 @@ services:
       - edge_07_net
     volumes:
       - ./ddsrouter_edge_07.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   publisher_07:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -377,7 +377,7 @@ services:
       - ddsrouter_edge_07
     networks:
       - edge_07_net
-    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 106 --name topic_0 -m 1234567 --transport UDPv4 -r
+    command: build/fastdds_configuration_example/configuration publisher -i 100 -s 80 -d 107 --name topic_0 -m 1234567 --transport UDPv4 -r --keep-last 5 --wait 1
 
   # SUBSCRIBER 7
 
@@ -391,7 +391,7 @@ services:
       - edge_17_net
     volumes:
       - ./ddsrouter_edge_17.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml  --timeout 30
+    command: ddsrouter -c /config.yaml  --timeout 60
 
   subscriber_17:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -402,7 +402,7 @@ services:
       - edge_17_net
     volumes:
       - ../../../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 30 --args "--samples 150 --domain 117 --name topic_0 --transport UDPv4 -r"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 150 --timeout 60 --args "--samples 150 --domain 117 --name topic_0 --transport UDPv4 -r --keep-last 21"
 
 networks:
   edge_01_net:

@@ -120,8 +120,7 @@ main ()
     echo "${TEST_NAME} exited with code ${EXIT_CODE}"
 
     # Clean containers and networks before exiting and do not prompt for confirmation
-    docker container prune --force
-    docker network prune --force
+    docker compose -f ${COMPOSE_FILE} down --remove-orphans --timeout 20
 
     exit ${EXIT_CODE}
 }
