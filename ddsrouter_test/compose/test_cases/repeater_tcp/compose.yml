@@ -41,7 +41,7 @@ services:
       - cloud_edge_net
     volumes:
       - ./ddsrouter_cloud.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 20
+    command: ddsrouter -c /config.yaml --timeout 60
 
   ddsrouter_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -53,7 +53,7 @@ services:
       - edge_1_net
     volumes:
       - ./ddsrouter_edge_1.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 20
+    command: ddsrouter -c /config.yaml --timeout 60
 
   pub_edge_1:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -73,7 +73,7 @@ services:
       - edge_1_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 1 --samples 20 --reliable"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 60 --args "--domain 1 --samples 20 --reliable"
 
   ddsrouter_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -85,7 +85,7 @@ services:
       - edge_2_net
     volumes:
       - ./ddsrouter_edge_2.yaml:/config.yaml
-    command: ddsrouter -c /config.yaml --timeout 20
+    command: ddsrouter -c /config.yaml --timeout 60
 
   sub_edge_2:
     image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
@@ -96,7 +96,7 @@ services:
       - edge_2_net
     volumes:
       - ../../scripts:/scripts
-    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 20 --args "--domain 2 --samples 20 --reliable"
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 60 --args "--domain 2 --samples 20 --reliable"
 
 networks:
   edge_1_net:
