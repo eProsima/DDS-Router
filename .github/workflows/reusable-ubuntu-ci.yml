@@ -126,13 +126,14 @@ jobs:
 
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
         if: success() || failure()
         with:
           name: "Report: ASAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # TSAN
@@ -173,13 +174,14 @@ jobs:
           test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
         if: success() || failure()
         with:
           name: "Report: TSAN "
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # CLANG
@@ -277,7 +279,7 @@ jobs:
           test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
         if: success() || failure()
         with:
           name: "Report: Flaky "
@@ -285,6 +287,7 @@ jobs:
           working-directory: 'src'
           fail-on-empty: 'false'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # DOCUMENTATION TEST
