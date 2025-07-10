@@ -133,6 +133,7 @@ jobs:
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # TSAN
@@ -180,6 +181,7 @@ jobs:
           path: "${{ steps.compile_and_test.outputs.ctest_results_path }}*.xml"
           working-directory: 'src'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # CLANG
@@ -285,6 +287,7 @@ jobs:
           working-directory: 'src'
           fail-on-empty: 'false'
           list-tests: 'failed'
+          list-suites: 'failed'
 
 #####################################################################
 # DOCUMENTATION TEST
