@@ -128,7 +128,7 @@ TEST(ParticipantFactoryTest, create_echo_participant)
 
         ASSERT_TRUE(echo_participant) << "Failed to create Echo Participant";
 
-        ASSERT_EQ(echo_participant->configuration_->app_id, "DDS_ROUTER_FAIL");
+        ASSERT_EQ(echo_participant->configuration_->app_id, "DDS_ROUTER");
         ASSERT_EQ(echo_participant->configuration_->app_metadata, "");
     }
 }

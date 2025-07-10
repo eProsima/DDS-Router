@@ -126,7 +126,7 @@ jobs:
 
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
         if: success() || failure()
         with:
           name: "Report: ASAN "
@@ -174,7 +174,7 @@ jobs:
           test_report_artifact: test_report_tsan${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
         if: success() || failure()
         with:
           name: "Report: TSAN "
@@ -279,7 +279,7 @@ jobs:
           test_report_artifact: test_report_flaky${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}
 
       - name: Test Report
-        uses: eProsima/eProsima-CI/external/test-reporter@feature/upgrade-test-reporter
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
         if: success() || failure()
         with:
           name: "Report: Flaky "
