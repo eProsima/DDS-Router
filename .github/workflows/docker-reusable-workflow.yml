@@ -143,10 +143,23 @@ jobs:
           export DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE }}
           export DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE=${{ env.DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE }}
           source install/setup.bash
+          mkdir ${{ github.workspace }}/test_results
           colcon test \
             --packages-select ddsrouter_test \
             --event-handlers console_direct+ \
             --return-code-on-test-failure \
             --ctest-args \
               --label-exclude xfail \
-              --timeout 240
+              --timeout 240 \
+              --output-junit ${{ github.workspace }}/test_results/ddsrouter_test_test_results.xml
+
+      - name: Test Report
+        uses: eProsima/eProsima-CI/external/test-reporter@v0
+        if: success() || failure()
+        with:
+          name: "Report: Docker Tests"
+          path: "${{ github.workspace }}/test_results/*.xml"
+          working-directory: 'src'
+          path-replace-backslashes: 'true'
+          list-tests: 'failed'
+          list-suites: 'failed'
