@@ -3,10 +3,6 @@
 ###########################
 
 ##################################
-# CONFIGURATION VERSION
-version: v5.0                                                     # 0
-
-##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes
 
@@ -45,8 +41,6 @@ participants:
 # to another DDS Router (this configuration is independent of the remote Participant being repeater or not).
 # The other direction of communication is also possible; receive messages at the WAN Participant and locally
 # publish them in domain 0.
-
-# 0: Use YAML configuration version v5.0
 
 # 1: Allow ROS 2 specific Topic Name <rt/chatter> with type <std_msgs::msg::dds_::String_>.
 # Insert new topics in order to route them.

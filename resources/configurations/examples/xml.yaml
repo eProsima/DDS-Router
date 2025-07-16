@@ -3,7 +3,7 @@
 ######################
 
 ##################################
-# CONFIGURATION VERSION
+# XML CONFIGURATION
 xml:                                                              # 1
   files:
     - "./xml_configuration.xml"                                   # 2
@@ -50,8 +50,6 @@ participants:
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
 # to DDS Domain 1.
 # The communication is in both directions.
-
-# 0: Use YAML configuration version v5.0
 
 # 1: Configure how to load XML configurations.
 

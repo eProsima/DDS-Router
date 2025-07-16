@@ -1,6 +1,6 @@
 ########################################
 # CHANGE DOMAIN WITH ALLOWLIST EXAMPLE #
-########################################                                                          # 0
+########################################
 
 ##################################
 # ALLOWED TOPICS
@@ -36,8 +36,6 @@ participants:
 
 # This configuration example configures a DDS Router to listen to every message published in two different domains
 # and transmit those messages through the other domain.
-
-# 0: Use YAML configuration version v5.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 

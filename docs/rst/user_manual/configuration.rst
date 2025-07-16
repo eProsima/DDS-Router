@@ -683,7 +683,7 @@ See `Interface Whitelist <https://fast-dds.docs.eprosima.com/en/latest/fastdds/t
 Repeater Participant
 --------------------
 
-The optional tag ``repeater`` configures a :ref:`WAN Participant <user_manual_participants_wan>` as a *Repeater* point.
+The optional tag ``repeater`` configures a :ref:`WAN <user_manual_participants_wan>` or :ref:`XML <user_manual_participants_xml>` Participant as a *Repeater* point.
 This means that this Participant will forward all the information received from its Readers to its Writers.
 
 Check the :ref:`use_case_repeater` use case to see how the ``repeater`` Participant attribute is used.
