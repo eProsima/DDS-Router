@@ -44,8 +44,6 @@ participants:
 # Server specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
 
-# 0: Use YAML configuration version v5.0
-
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
 # 2: Insert new topics in order to route them.

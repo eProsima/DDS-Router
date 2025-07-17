@@ -22,11 +22,8 @@ Use case
 ========
 
 Use this Participant to fully configure a DomainParticipant, its discovery methods, transport options, DDS QoS, etc.
-The main use case for this Participant is using **DDS Security**, which requires XML configuration from the user's side.
-
-.. TODO
-
-    Add link to security documentation
+The main use case for this Participant is using **DDS Security** (see `Security <https://fast-dds.docs.eprosima.com/en/stable/fastdds/security/security.html>`_),
+which requires XML configuration from the user's side.
 
 .. warning::
 
@@ -76,6 +73,12 @@ Notice that not setting such QoS will not affect the correct functionality of th
           </rtps>
       </participant>
 
+
+Repeater
+--------
+
+This Participant allows a tag ``repeater`` to be used as a Repeater server.
+Please refer to section :ref:`use_case_repeater` for more information.
 
 Configuration Example
 =====================

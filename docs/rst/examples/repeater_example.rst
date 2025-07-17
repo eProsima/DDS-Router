@@ -6,21 +6,12 @@
 Repeater Example
 ################
 
-A |ddsrouter| could work as a :term:`TURN` **Repeater** to forward messages by the same Participant.
+A |ddsrouter| could work as a **Repeater** to forward messages by the same Participant.
 If you are interested in understanding the use case of a Repeater please refer to the following
 section :ref:`use_case_repeater`.
 
 Configuration
 =============
-
-Version
--------
-
-The version attribute is required, as the :code:`repeater` tag is only supported from v4.0 configuration version.
-
-.. literalinclude:: ../../resources/examples/repeater_server.yaml
-    :language: yaml
-    :lines: 7-7
 
 Allowed Topics
 --------------
@@ -32,19 +23,20 @@ one domain to the other, allowing different DDS domains to interact with each ot
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml
-    :lines: 13-17
+    :lines: 9-11
 
 
 Repeater Participant
 --------------------
 
 The **Repeater Participant** is the one that will be used to forward messages by the same Participant.
-It must be a :code:`WAN` Participant and be configured as so with
-:ref:`WAN configuration <user_manual_wan_configuration>`.
+It must be a :ref:`WAN <user_manual_participants_wan>` Participant,
+configured with :ref:`WAN configuration <user_manual_wan_configuration>`,
+or an :ref:`XML <user_manual_participants_xml>` Participant.
 
 .. literalinclude:: ../../resources/examples/repeater_server.yaml
     :language: yaml
-    :lines: 27-33
+    :lines: 21-27
 
 
 Client Participants
@@ -56,7 +48,7 @@ or similar configuration to communicate across it.
 
 .. literalinclude:: ../../resources/examples/repeater_client.yaml
     :language: yaml
-    :lines: 33-38
+    :lines: 29-34
 
 
 Execute example

@@ -1,6 +1,6 @@
 ######################
 # FORWARDING ROUTES  #
-######################                                                 # 0
+######################
 
 ##############
 # PARTICIPANTS
@@ -71,8 +71,6 @@ topic-routes:                                                     # 11
 # HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
 # to DDS Domain 1.
 # The communication is in both directions.
-
-# 0: Use YAML configuration version v5.0
 
 # 1: List the internal participants of the router.
 

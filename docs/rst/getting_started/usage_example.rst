@@ -55,7 +55,7 @@ Let us first add only the ``Square`` topic:
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
-    :lines: 5-6
+    :lines: 3-4
 
 Apart from selecting on which topics we wish to send/receive data, we must configure as well the participants that will
 ultimately perform communication. Each router instance will contain a :ref:`simple <user_manual_participants_simple>`
@@ -69,7 +69,7 @@ The only configuration required for simple participants is the DDS ``domain`` id
 
 .. literalinclude:: ../../resources/getting_started/client-ddsrouter.yaml
     :language: yaml
-    :lines: 10-12
+    :lines: 8-10
 
 If launching the two routers in the same LAN, set a different ``domain`` id in one of the two configuration files (same
 as the one previously set for ShapesDemo).

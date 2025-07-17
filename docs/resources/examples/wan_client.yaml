@@ -1,6 +1,6 @@
 ######################
 # WAN CLIENT EXAMPLE #
-######################                                                   # 0
+######################
 
 ##################################
 # ALLOWED TOPICS
@@ -46,8 +46,6 @@ participants:
 # publish them in domain 1.
 # Client specifies which DDS Router starts the communication with the other, and after communication has been
 # established, both routers behave in the same way.
-
-# 0: Use YAML configuration version v5.0
 
 # 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
 
