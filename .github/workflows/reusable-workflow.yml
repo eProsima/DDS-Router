@@ -39,7 +39,7 @@ on:
         type: string
 
 env:
-  code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
+  code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool ddsrouter_yaml_validator'
   docs_packages_names: 'ddsrouter_docs'
 
 jobs:
