@@ -6,7 +6,7 @@
 Repeater Example
 ################
 
-A |ddsrouter| could work as a :term:`TURN` **Repeater** to forward messages by the same Participant.
+A |ddsrouter| could work as a **Repeater** to forward messages by the same Participant.
 If you are interested in understanding the use case of a Repeater please refer to the following
 section :ref:`use_case_repeater`.
 

@@ -52,7 +52,7 @@ be located by other remote Participants):
 Repeater
 --------
 
-This Participant allows a tag ``repeater`` to be used as a :term:`TURN` server.
+This Participant allows a tag ``repeater`` to be used as a Repeater server.
 Please refer to section :ref:`use_case_repeater` for more information.
 
 WAN Configuration

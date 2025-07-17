@@ -77,7 +77,7 @@ Notice that not setting such QoS will not affect the correct functionality of th
 Repeater
 --------
 
-This Participant allows a tag ``repeater`` to be used as a :term:`TURN` server.
+This Participant allows a tag ``repeater`` to be used as a Repeater server.
 Please refer to section :ref:`use_case_repeater` for more information.
 
 Configuration Example

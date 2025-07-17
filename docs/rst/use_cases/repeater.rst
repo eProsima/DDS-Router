@@ -6,13 +6,13 @@
 Repeater DDS Router
 ###################
 
-A |ddsrouter| could work as a :term:`TURN` **Repeater**.
+A |ddsrouter| could work as a **Repeater** Server.
 This means that a |ddsrouter| can be used to repeat messages between networks.
 
 Use case
 ========
 
-The use of a :term:`TURN` Server is very useful in the following scenarios:
+The use of a Repeater Server is very useful in the following scenarios:
 
 - **NAT Traversal**: If the edge devices are under different NATs, they cannot access each other if no
   ports are opened in their respective internet access points.
