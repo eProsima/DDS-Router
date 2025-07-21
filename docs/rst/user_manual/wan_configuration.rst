@@ -40,17 +40,19 @@ Most network routers support a graphical interface where port forwarding could b
 External port
 ^^^^^^^^^^^^^
 
-In order to configure the |ddsrouter| to connect under a NAT, two ports must be taken into account.
-The internal port (a.k.a. ``port``) is the one that the host of the |ddsrouter| will use to open a socket and
-to receive information.
+In order to configure a |ddsrouter| Server that runs under a NAT and uses TCP transport, two ports must be
+taken into account. The internal port (a.k.a. ``port``) is the one that the host of the |ddsrouter| will use
+to open a socket and to receive information.
 The external port (:code:`external-port`) references the public port meant for other entities to be able
 to locate this |ddsrouter|.
 Setting the external port is useful so the network router port forwarding could redirect from a public port
 to a different value of internal host port.
+Client's port must match the server's external port unless server's external port is not set, in which case it
+should match the server's port.
 
 .. note::
 
-    External port configuration is not mandatory. If not set the internal and the external port must coincide
+    External port configuration is not mandatory. If not set, the internal and the external port must coincide
     in the network router port forwarding rules.
 
 .. warning::
