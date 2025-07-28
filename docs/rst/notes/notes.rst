@@ -21,11 +21,11 @@ This release includes the following **Documentation Updates**:
 This release includes the following *ci management updates*:
 
 * Regenerate security certificates & Upgrade testing Vulcanexus image to Jazzy
-* Use 'debug' binaries for tsan tests
+* Use 'debug' binaries for `tsan` tests
 * Use different Vulcanexus images for each Fast DDS version
 * Modify QoS of tests to reduce flakiness
 * Remove deprecated windows-2019 runner
-* Bump setuptools in /docs in the pip group across 1 directory
+* Bump `setuptools`` in /docs in the pip group across 1 directory
 * Add test report to docker tests
 
 
