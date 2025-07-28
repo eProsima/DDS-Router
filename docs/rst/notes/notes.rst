@@ -10,7 +10,8 @@ Version v3.3.0
 
 This release includes the following **features**:
 
-* Added support repeater feature in `DDS` (`XML`) participants
+* Support :ref:`repeater <use_case_repeater>` feature in :ref:`XML <user_manual_participants_xml>` participants.
+* Support writer-side `SQL-like <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/contentFilteredTopic/defaultFilter.html#the-default-sql-like-filter>`_ content filtering in :ref:`XML <user_manual_participants_xml>` participants.
 
 This release includes the following **Documentation Updates**:
 
@@ -38,23 +39,23 @@ This release includes the following **Dependencies Update**:
         - Old Version
         - New Version
     *   - Foonathan Memory Vendor
-        - `eProsima/foonathan_memory_vendor <https://github.com/eProsima/foonathan_memory_vendor>`_
-        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
-        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`_
+        - `eProsima/foonathan_memory_vendor <https://github.com/eProsima/foonathan_memory_vendor>`__
+        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`__
+        - `v1.3.1 <https://github.com/eProsima/foonathan_memory_vendor/releases/tag/v1.3.1>`__
     *   - Fast CDR
-        - `eProsima/Fast-CDR <https://github.com/eProsima/Fast-CDR>`_
-        - `v2.3.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0>`_
-        - `v2.3.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0>`_
+        - `eProsima/Fast-CDR <https://github.com/eProsima/Fast-CDR>`__
+        - `v2.3.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0>`__
+        - `v2.3.0 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.0>`__
     *   - Fast DDS
-        - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`_
-        - `v3.2.2 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.2.2>`_
-        - `v3.3.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.3.0>`_
+        - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`__
+        - `v3.2.2 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.2.2>`__
+        - `v3.3.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.3.0>`__
     *   - Dev Utils
-        - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
+        - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`__
         - `v1.2.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.2.0>`__
-        - `v1.3.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.3.0>`_
+        - `v1.3.0 <https://github.com/eProsima/dev-utils/releases/tag/v1.3.0>`__
     *   - DDS Pipe
-        - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`_
+        - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe.git>`__
         - `v1.2.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.2.0>`__
         - `v1.3.0 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.3.0>`__
 
