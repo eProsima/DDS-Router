@@ -10,8 +10,8 @@ Version v3.3.0
 
 This release includes the following **features**:
 
-* Support :ref:`repeater <use_case_repeater>` feature in :ref:`XML <user_manual_participants_xml>` participants.
-* Support writer-side `SQL-like <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/contentFilteredTopic/defaultFilter.html#the-default-sql-like-filter>`_ content filtering in :ref:`XML <user_manual_participants_xml>` participants.
+* Support  repeater feature in XML participants.
+* Support writer-side SQL-like content filtering in XML participants.
 
 This release includes the following **Documentation Updates**:
 
