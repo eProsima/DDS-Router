@@ -154,7 +154,8 @@ public:
 
     //! Publish a sample with parameters
     eprosima::fastdds::dds::ReturnCode_t publish_with_params(
-        MsgStruct msg, eprosima::fastdds::rtps::WriteParams params)
+            MsgStruct msg,
+            eprosima::fastdds::rtps::WriteParams params)
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
@@ -228,7 +229,6 @@ private:
                 discovered = info.current_count;
             }
         }
-
 
     private:
 

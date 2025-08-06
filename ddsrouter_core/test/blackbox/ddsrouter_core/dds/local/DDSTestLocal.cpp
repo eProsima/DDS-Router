@@ -83,7 +83,8 @@ DdsRouterConfiguration dds_test_simple_configuration(
         topic_keyed.type_name = "HelloWorldKeyed";
         topic_keyed.topic_qos.keyed = true;
 
-        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(topic));
+        conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
+                    topic));
         conf.ddspipe_configuration.builtin_topics.insert(utils::Heritable<core::types::DdsTopic>::make_heritable(
                     topic_keyed));
     }
@@ -239,7 +240,9 @@ void test_original_writer_forwarding(
     sent_msg.index(samples_sent);
     ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
     // Watiting for the message to be received
-    while(samples_received.load() < 1){};
+    while (samples_received.load() < 1)
+    {
+    }
     ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     // CASE 2: Send message with original_writer_param set to unknown, should be set to other value
@@ -248,7 +251,9 @@ void test_original_writer_forwarding(
     params.original_writer_guid(eprosima::fastdds::rtps::GUID_t::unknown());
     ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
     // Watiting for the message to be received
-    while(samples_received.load() < 2){};
+    while (samples_received.load() < 2)
+    {
+    }
     ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     // CASE 3: Send message with original_writer_param set to some value, value must be kept
@@ -258,12 +263,13 @@ void test_original_writer_forwarding(
     params_with_og_writer.original_writer_guid(guid);
     ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
     // Watiting for the message to be received
-    while(samples_received.load() < 2){};
+    while (samples_received.load() < 2)
+    {
+    }
     ASSERT_EQ(subscriber.original_writer_guid(), guid);
 
     router.stop();
 }
-
 
 } /* namespace test */
 
