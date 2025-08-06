@@ -206,6 +206,65 @@ void test_local_communication(
     router.stop();
 }
 
+template <class MsgStruct, class MsgStructType>
+void test_original_writer_forwarding(
+        DdsRouterConfiguration ddsrouter_configuration)
+{
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
+
+    uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
+    std::atomic<uint32_t> samples_to_receive(1);
+
+    MsgStruct sent_msg;
+    MsgStruct recv_msg;
+    MsgStructType type;
+    std::string msg_str;
+    msg_str += "Testing DdsRouter Blackbox Local Communication ...";
+    sent_msg.message(msg_str);
+    // Create DDS Publisher in domain 0
+    TestPublisher<MsgStruct> publisher(type.is_compute_key_provided);
+
+    ASSERT_TRUE(publisher.init(0));
+
+    // Create DDS Subscriber in domain 1
+    TestSubscriber<MsgStruct> subscriber(type.is_compute_key_provided);
+    ASSERT_TRUE(subscriber.init(1, &recv_msg, &samples_received));
+
+    // Create DdsRouter entity
+    DdsRouter router(ddsrouter_configuration);
+    router.start();
+
+    // CASE 1: Send message without original_writer_param, should be set to writers guid
+    sent_msg.index(samples_sent);
+    ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
+    // Watiting for the message to be received
+    while(samples_received.load() < 1){};
+    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
+
+    // CASE 2: Send message with original_writer_param set to unknown, should be set to other value
+    sent_msg.index(samples_sent);
+    eprosima::fastdds::rtps::WriteParams params;
+    params.original_writer_guid(eprosima::fastdds::rtps::GUID_t::unknown());
+    ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
+    // Watiting for the message to be received
+    while(samples_received.load() < 2){};
+    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
+
+    // CASE 3: Send message with original_writer_param set to some value, value must be kept
+    sent_msg.index(samples_sent);
+    eprosima::fastdds::rtps::WriteParams params_with_og_writer;
+    eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
+    params_with_og_writer.original_writer_guid(guid);
+    ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
+    // Watiting for the message to be received
+    while(samples_received.load() < 2){};
+    ASSERT_EQ(subscriber.original_writer_guid(), guid);
+
+    router.stop();
+}
+
+
 } /* namespace test */
 
 /**
@@ -321,6 +380,19 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynami
         test::DEFAULT_MESSAGE_SIZE,
         true);
 }
+
+
+/**
+ * Test original writer forwarding in HelloWorld topic between two DDS participants created in different domains,
+ * by using a router with two Simple Participants at each domain.
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding)
+{
+    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration());
+}
+
+
 
 int main(
         int argc,
