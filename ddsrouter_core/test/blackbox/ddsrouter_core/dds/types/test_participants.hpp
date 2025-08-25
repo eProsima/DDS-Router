@@ -152,6 +152,18 @@ public:
         return writer_->write(&hello_);
     }
 
+    //! Publish a sample with parameters
+    eprosima::fastdds::dds::ReturnCode_t publish_with_params(
+            MsgStruct msg,
+            eprosima::fastdds::rtps::WriteParams params)
+    {
+        hello_.index(msg.index());
+        hello_.message(msg.message());
+
+
+        return writer_->write(&hello_, params);
+    }
+
     //! Dispose instance
     eprosima::fastdds::dds::ReturnCode_t dispose_key(
             MsgStruct msg);
@@ -160,6 +172,11 @@ public:
             uint32_t n_subscribers = 1)
     {
         listener_.wait_discovery(n_subscribers);
+    }
+
+    eprosima::fastdds::rtps::GUID_t original_writer_guid() const
+    {
+        return writer_->guid();
     }
 
 private:
@@ -357,6 +374,11 @@ public:
         return listener_.n_key_disposed;
     }
 
+    eprosima::fastdds::rtps::GUID_t original_writer_guid() const
+    {
+        return listener_.original_writer_guid;
+    }
+
 private:
 
     eprosima::fastdds::dds::DomainParticipant* participant_;
@@ -424,6 +446,8 @@ private:
                 {
                     n_key_disposed++;
                 }
+
+                original_writer_guid = info.original_writer_info.original_writer_guid();
             }
         }
 
@@ -444,6 +468,9 @@ private:
 
         //! Placeholder where received data is stored
         MsgStruct msg_received;
+
+        //! Placeholder where original writer GUID is stored
+        eprosima::fastdds::rtps::GUID_t original_writer_guid;
 
         std::atomic<std::uint32_t> n_key_disposed;
 
