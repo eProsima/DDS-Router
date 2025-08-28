@@ -242,18 +242,7 @@ void test_original_writer_forwarding(
     }
     ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
-    // CASE 2: Send message with original_writer_param set to unknown, should be set to other value
-    sent_msg.index(++samples_sent);
-    eprosima::fastdds::rtps::WriteParams params;
-    params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
-    ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
-    // Waiting for the message to be received
-    while (samples_received.load() < 2)
-    {
-    }
-    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
-
-    // CASE 3: Send message with original_writer_param set to some value, value must be kept
+    // CASE 2: Send message with original_writer_param set to some value, value must be kept
     sent_msg.index(++samples_sent);
     eprosima::fastdds::rtps::WriteParams params_with_og_writer;
     eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
@@ -264,6 +253,17 @@ void test_original_writer_forwarding(
     {
     }
     ASSERT_EQ(subscriber.original_writer_guid(), guid);
+
+    // CASE 3: Send message with original_writer_param set to unknown, should be set to other value
+    sent_msg.index(++samples_sent);
+    eprosima::fastdds::rtps::WriteParams params;
+    params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
+    ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
+    // Waiting for the message to be received
+    while (samples_received.load() < 2)
+    {
+    }
+    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     router.stop();
 }
