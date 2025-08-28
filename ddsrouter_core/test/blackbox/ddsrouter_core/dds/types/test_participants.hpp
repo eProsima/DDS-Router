@@ -160,7 +160,6 @@ public:
         hello_.index(msg.index());
         hello_.message(msg.message());
 
-
         return writer_->write(&hello_, params);
     }
 

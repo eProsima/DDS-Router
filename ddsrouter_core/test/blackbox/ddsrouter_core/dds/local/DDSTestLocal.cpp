@@ -206,7 +206,6 @@ void test_local_communication(
     router.stop();
 }
 
-
 template <class MsgStruct, class MsgStructType>
 void test_original_writer_forwarding(
         DdsRouterConfiguration ddsrouter_configuration)
@@ -215,7 +214,6 @@ void test_original_writer_forwarding(
 
     uint32_t samples_sent = 0;
     std::atomic<uint32_t> samples_received(0);
-    std::atomic<uint32_t> samples_to_receive(1);
 
     MsgStruct sent_msg;
     MsgStructType type;
@@ -266,7 +264,6 @@ void test_original_writer_forwarding(
     {
     }
     ASSERT_EQ(subscriber.original_writer_guid(), guid);
-
 
     router.stop();
 }
