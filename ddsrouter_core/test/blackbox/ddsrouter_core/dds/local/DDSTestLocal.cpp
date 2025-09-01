@@ -249,7 +249,7 @@ void test_original_writer_forwarding(
     params_with_og_writer.original_writer_info().original_writer_guid(guid);
     ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
     // Waiting for the message to be received
-    while (samples_received.load() < 3)
+    while (samples_received.load() < 2)
     {
     }
     ASSERT_EQ(subscriber.original_writer_guid(), guid);
@@ -260,7 +260,7 @@ void test_original_writer_forwarding(
     params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
     ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
     // Waiting for the message to be received
-    while (samples_received.load() < 2)
+    while (samples_received.load() < 3)
     {
     }
     ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
