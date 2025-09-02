@@ -159,7 +159,6 @@ public:
     {
         hello_.index(msg.index());
         hello_.message(msg.message());
-
         return writer_->write(&hello_, params);
     }
 
@@ -373,9 +372,11 @@ public:
         return listener_.n_key_disposed;
     }
 
-    eprosima::fastdds::rtps::GUID_t original_writer_guid() const
+    eprosima::fastdds::rtps::GUID_t original_writer_guid()
     {
-        return listener_.original_writer_guid;
+        std::lock_guard<std::mutex> lock(listener_.original_writer_guid_mtx);
+        eprosima::fastdds::rtps::GUID_t guid = listener_.original_writer_guid;
+        return guid;
     }
 
 private:
@@ -446,7 +447,10 @@ private:
                     n_key_disposed++;
                 }
 
-                original_writer_guid = info.original_writer_info.original_writer_guid();
+                {
+                    std::lock_guard<std::mutex> lock(original_writer_guid_mtx);
+                    original_writer_guid = info.original_writer_info.original_writer_guid();
+                }
             }
         }
 
@@ -470,6 +474,9 @@ private:
 
         //! Placeholder where original writer GUID is stored
         eprosima::fastdds::rtps::GUID_t original_writer_guid;
+
+        //! Protects original_writer_guid
+        std::mutex original_writer_guid_mtx;
 
         std::atomic<std::uint32_t> n_key_disposed;
 
