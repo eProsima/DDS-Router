@@ -37,7 +37,8 @@ set(TEST_LIST
     end_to_end_local_communication_high_size
     end_to_end_local_communication_high_throughput
     end_to_end_local_communication_transient_local
-    end_to_end_local_communication_transient_local_disable_dynamic_discovery)
+    end_to_end_local_communication_transient_local_disable_dynamic_discovery,
+    end_to_end_local_communication_original_writer_forwarding)
 
 set(TEST_NEEDED_SOURCES
     )
