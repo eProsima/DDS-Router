@@ -45,12 +45,18 @@ set(TESTS
     forwarding_routes/topic_routes
     forwarding_routes/repeater
 
-    remove_unused_entities/disconnect
-    remove_unused_entities/disconnect_wan
-    remove_unused_entities/persist_diff_domain
-    remove_unused_entities/persist_same_domain
-    remove_unused_entities/reconnect
-    remove_unused_entities/reconnect_wan
+    remove_unused_entities/reader/disconnect
+    remove_unused_entities/reader/disconnect_wan
+    remove_unused_entities/reader/persist_diff_domain
+    remove_unused_entities/reader/persist_same_domain
+    remove_unused_entities/reader/reconnect
+    remove_unused_entities/reader/reconnect_wan
+    remove_unused_entities/writer/disconnect
+    remove_unused_entities/writer/disconnect_wan
+    remove_unused_entities/writer/persist_diff_domain
+    remove_unused_entities/writer/persist_same_domain
+    remove_unused_entities/writer/reconnect
+    remove_unused_entities/writer/reconnect_wan
 
     frequency/max-tx-rate/specs
     frequency/max-tx-rate/participant

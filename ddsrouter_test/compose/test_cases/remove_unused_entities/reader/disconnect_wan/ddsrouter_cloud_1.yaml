@@ -1,0 +1,21 @@
+version: v5.0
+
+participants:
+
+  - name: Cloud_Participant_0
+    kind: wan
+    listening-addresses:
+      - domain: ddsrouter_cloud_1
+        port: 31666
+        transport: udp
+
+  - name: Cloud_Participant_1
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud_0
+        port: 21666
+        transport: udp
+
+specs:
+  remove-unused-entities: true
+  discovery-trigger: reader

@@ -1,0 +1,69 @@
+# Test description:
+#   This test checks that tracks get deleted when their last subscriber disconnects.
+#
+# Test architecture:
+#
+# 1. Check that the subscriber receives the data sent by the publisher.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │ ┌──────────────┐ ┌┼─────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter  ││ │subscriber_1_t0│ │
+# │ │            ──┼─┼┤►           ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)    ││ │(local)        │ │
+# │ └──────────────┘ └┼─────────────┼┘ └───────────────┘ │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+#
+# 2. Check that when the subscriber disconnects the track gets deleted.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │ ┌──────────────┐ ┌┼─────────────┼┐                   │
+# │ │publisher_0_t0│ ││  ddsrouter  ││                   │
+# │ │              │ ││             ││                   │
+# │ │(local)       │ ││  (local)    ││                   │
+# │ └──────────────┘ └┼─────────────┼┘                   │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 10
+
+
+  # DOMAIN 80
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_publisher.py --exe build/fastdds_configuration_example/configuration --n-unmatches 1 --timeout 8 --args "--samples 80 --domain 80 --name topic0 --interval 100"
+
+
+  # DOMAIN 81
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 4 --args "--samples 20 --domain 81 --name topic0"
+
+
+networks:
+  std_net:
+  default:
+    driver: none
