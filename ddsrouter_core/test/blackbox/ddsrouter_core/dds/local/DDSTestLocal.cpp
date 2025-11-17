@@ -208,7 +208,7 @@ void test_local_communication(
 
 template <class MsgStruct, class MsgStructType>
 void test_original_writer_forwarding(
-        DdsRouterConfiguration ddsrouter_configuration)
+        DdsRouterConfiguration ddsrouter_configuration, int case_number)
 {
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
@@ -234,36 +234,45 @@ void test_original_writer_forwarding(
     router.start();
 
     // CASE 1: Send message without original_writer_param, should be set to writers guid
-    sent_msg.index(++samples_sent);
-    ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
-    // Watiting for the message to be received
-    while (samples_received.load() < 1)
+    if (case_number == 1)
     {
+        sent_msg.index(++samples_sent);
+        ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
+        // Watiting for the message to be received
+        while (samples_received.load() < 1)
+        {
+        }
+        ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
     }
-    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     // CASE 2: Send message with original_writer_param set to some value, value must be kept
-    sent_msg.index(++samples_sent);
-    eprosima::fastdds::rtps::WriteParams params_with_og_writer;
-    eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
-    params_with_og_writer.original_writer_info().original_writer_guid(guid);
-    ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
-    // Waiting for the message to be received
-    while (samples_received.load() < 2)
+    if (case_number == 2)
     {
+        sent_msg.index(++samples_sent);
+        eprosima::fastdds::rtps::WriteParams params_with_og_writer;
+        eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
+        params_with_og_writer.original_writer_info().original_writer_guid(guid);
+        ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
+        // Waiting for the message to be received
+        while (samples_received.load() < 1)
+        {
+        }
+        ASSERT_EQ(subscriber.original_writer_guid(), guid);
     }
-    ASSERT_EQ(subscriber.original_writer_guid(), guid);
 
     // CASE 3: Send message with original_writer_param set to unknown, should be set to other value
-    sent_msg.index(++samples_sent);
-    eprosima::fastdds::rtps::WriteParams params;
-    params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
-    ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
-    // Waiting for the message to be received
-    while (samples_received.load() < 3)
+    if (case_number == 3)
     {
+        sent_msg.index(++samples_sent);
+        eprosima::fastdds::rtps::WriteParams params;
+        params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
+        ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
+        // Waiting for the message to be received
+        while (samples_received.load() < 1)
+        {
+        }
+        ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
     }
-    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     router.stop();
 }
@@ -391,7 +400,11 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynami
 TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding)
 {
     test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
-        test::dds_test_simple_configuration());
+        test::dds_test_simple_configuration(), 1);
+    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration(), 2);
+    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration(), 3);
 }
 
 int main(
