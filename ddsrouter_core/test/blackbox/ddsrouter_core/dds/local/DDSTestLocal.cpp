@@ -208,7 +208,8 @@ void test_local_communication(
 
 template <class MsgStruct, class MsgStructType>
 void test_original_writer_forwarding(
-        DdsRouterConfiguration ddsrouter_configuration, int case_number)
+        DdsRouterConfiguration ddsrouter_configuration,
+        int case_number)
 {
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
