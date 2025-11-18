@@ -206,10 +206,13 @@ void test_local_communication(
     router.stop();
 }
 
+/**
+ * This test checks that, when the original writer parameter is not set by a writer,
+ * the router still sets it to the original writer's GUID when forwarding the message.
+ */
 template <class MsgStruct, class MsgStructType>
-void test_original_writer_forwarding(
-        DdsRouterConfiguration ddsrouter_configuration,
-        int case_number)
+void test_original_writer_forwarding_unset(
+        DdsRouterConfiguration ddsrouter_configuration)
 {
     INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
 
@@ -234,46 +237,105 @@ void test_original_writer_forwarding(
     DdsRouter router(ddsrouter_configuration);
     router.start();
 
-    // CASE 1: Send message without original_writer_param, should be set to writers guid
-    if (case_number == 1)
-    {
-        sent_msg.index(++samples_sent);
-        ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
-        // Watiting for the message to be received
-        while (samples_received.load() < 1)
-        {
-        }
-        ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
-    }
+    // CASE: Send message without original_writer_param, it should be set to the original writers guid
+    // in the router either way
+    sent_msg.index(++samples_sent);
+    ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
+    // Watiting for the message to be received
+    while (samples_received.load() < 1);
 
-    // CASE 2: Send message with original_writer_param set to some value, value must be kept
-    if (case_number == 2)
-    {
-        sent_msg.index(++samples_sent);
-        eprosima::fastdds::rtps::WriteParams params_with_og_writer;
-        eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
-        params_with_og_writer.original_writer_info().original_writer_guid(guid);
-        ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
-        // Waiting for the message to be received
-        while (samples_received.load() < 1)
-        {
-        }
-        ASSERT_EQ(subscriber.original_writer_guid(), guid);
-    }
+    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
-    // CASE 3: Send message with original_writer_param set to unknown, should be set to other value
-    if (case_number == 3)
+    router.stop();
+}
+
+/**
+ * This test checks that, when the original writer parameter is populated by a writer and
+ * is not equal to unknown, the router keeps that value when forwarding the message.
+ */
+template <class MsgStruct, class MsgStructType>
+void test_original_writer_forwarding_populated(
+        DdsRouterConfiguration ddsrouter_configuration)
+{
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
+
+    uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
+
+    MsgStruct sent_msg;
+    MsgStructType type;
+    std::string msg_str;
+    msg_str += "Testing DdsRouter Blackbox Local Communication ...";
+    sent_msg.message(msg_str);
+    // Create DDS Publisher in domain 0
+    TestPublisher<MsgStruct> publisher(type.is_compute_key_provided);
+
+    ASSERT_TRUE(publisher.init(0));
+
+    // Create DDS Subscriber in domain 1
+    TestSubscriber<MsgStruct> subscriber(type.is_compute_key_provided, true);
+    ASSERT_TRUE(subscriber.init(1, &sent_msg, &samples_received));
+
+    // Create DdsRouter entity
+    DdsRouter router(ddsrouter_configuration);
+    router.start();
+
+    // CASE: Send message with original_writer_param set to some value distinct to unknown, value must be kept
+    sent_msg.index(++samples_sent);
+    eprosima::fastdds::rtps::WriteParams params_with_og_writer;
+    eprosima::fastdds::rtps::GUID_t guid({}, 0x12345678);
+    params_with_og_writer.original_writer_info().original_writer_guid(guid);
+    ASSERT_EQ(publisher.publish_with_params(sent_msg, params_with_og_writer), eprosima::fastdds::dds::RETCODE_OK);
+    // Waiting for the message to be received
+    while (samples_received.load() < 1)
     {
-        sent_msg.index(++samples_sent);
-        eprosima::fastdds::rtps::WriteParams params;
-        params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
-        ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
-        // Waiting for the message to be received
-        while (samples_received.load() < 1)
-        {
-        }
-        ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
     }
+    ASSERT_EQ(subscriber.original_writer_guid(), guid);
+
+    router.stop();
+}
+
+/**
+ * This test checks that, when the original writer parameter is populated by a writer and
+ * is equal to unknown, the router populates it with the original writer's GUID when forwarding the message.
+ */
+template <class MsgStruct, class MsgStructType>
+void test_original_writer_forwarding_unknown(
+        DdsRouterConfiguration ddsrouter_configuration)
+{
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
+
+    uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
+
+    MsgStruct sent_msg;
+    MsgStructType type;
+    std::string msg_str;
+    msg_str += "Testing DdsRouter Blackbox Local Communication ...";
+    sent_msg.message(msg_str);
+    // Create DDS Publisher in domain 0
+    TestPublisher<MsgStruct> publisher(type.is_compute_key_provided);
+
+    ASSERT_TRUE(publisher.init(0));
+
+    // Create DDS Subscriber in domain 1
+    TestSubscriber<MsgStruct> subscriber(type.is_compute_key_provided, true);
+    ASSERT_TRUE(subscriber.init(1, &sent_msg, &samples_received));
+
+    // Create DdsRouter entity
+    DdsRouter router(ddsrouter_configuration);
+    router.start();
+
+    // CASE: Send message with original_writer_param set to unknown, should be set to other value
+    sent_msg.index(++samples_sent);
+    eprosima::fastdds::rtps::WriteParams params;
+    params.original_writer_info(eprosima::fastdds::rtps::OriginalWriterInfo::unknown());
+    ASSERT_EQ(publisher.publish_with_params(sent_msg, params), eprosima::fastdds::dds::RETCODE_OK);
+    // Waiting for the message to be received
+    while (samples_received.load() < 1)
+    {
+    }
+    ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
     router.stop();
 }
@@ -395,17 +457,33 @@ TEST(DDSTestLocal, end_to_end_local_communication_transient_local_disable_dynami
 }
 
 /**
- * Test original writer forwarding in HelloWorld topic between two DDS participants created in different domains,
- * by using a router with two Simple Participants at each domain.
+ * This test checks that, when the original writer parameter is not set by a writer,
+ * the router still sets it to the original writer's GUID when forwarding the message.
  */
-TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding)
+TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding_unset)
 {
-    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
-        test::dds_test_simple_configuration(), 1);
-    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
-        test::dds_test_simple_configuration(), 2);
-    test::test_original_writer_forwarding<HelloWorld, HelloWorldPubSubType>(
-        test::dds_test_simple_configuration(), 3);
+    test::test_original_writer_forwarding_unset<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration());
+}
+
+/**
+ * This test checks that, when the original writer parameter is populated by a writer and
+ * is not equal to unknown, the router keeps that value when forwarding the message.
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding_populated)
+{
+    test::test_original_writer_forwarding_populated<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration());
+}
+
+/**
+ * This test checks that, when the original writer parameter is populated by a writer and
+ * is equal to unknown, the router populates it with the original writer's GUID when forwarding the message.
+ */
+TEST(DDSTestLocal, end_to_end_local_communication_original_writer_forwarding_unknown)
+{
+    test::test_original_writer_forwarding_unknown<HelloWorld, HelloWorldPubSubType>(
+        test::dds_test_simple_configuration());
 }
 
 int main(
