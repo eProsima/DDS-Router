@@ -242,7 +242,9 @@ void test_original_writer_forwarding_unset(
     sent_msg.index(++samples_sent);
     ASSERT_EQ(publisher.publish(sent_msg), eprosima::fastdds::dds::RETCODE_OK);
     // Watiting for the message to be received
-    while (samples_received.load() < 1);
+    while (samples_received.load() < 1)
+    {
+    }
 
     ASSERT_EQ(subscriber.original_writer_guid(), publisher.original_writer_guid());
 
