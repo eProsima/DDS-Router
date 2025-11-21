@@ -10,7 +10,7 @@ Version v3.4.0
 
 This release includes the following **features**:
 
-* Add blackbox tests for original writer forwarding in DDS Pipe
+* Add blackbox tests for `original_writer_info` forwarding in DDS Pipe
 
 This release includes the following **Dependencies Update**:
 
