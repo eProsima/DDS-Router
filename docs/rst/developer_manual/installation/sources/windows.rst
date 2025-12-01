@@ -180,7 +180,7 @@ asynchronous model.
 TinyXML2 is a simple, small and efficient C++ XML parser.
 They can be downloaded directly from the links below:
 
-* `Asio <https://github.com/ros2/choco-packages/releases/download/2020-02-24/asio.1.12.1.nupkg>`_
+* `Asio <https://www.nuget.org/api/v2/package/asio-cppp-latest/1.24.0>`_
 * `TinyXML2 <https://github.com/ros2/choco-packages/releases/download/2020-02-24/tinyxml2.6.0.0.nupkg>`_
 
 After downloading these packages, open an administrative shell with *PowerShell* and execute the following command:
