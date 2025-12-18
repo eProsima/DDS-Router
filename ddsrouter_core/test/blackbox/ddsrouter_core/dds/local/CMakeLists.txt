@@ -74,7 +74,8 @@ set(TEST_SOURCES
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedTypeObjectSupport.cxx)
 
 set(TEST_LIST
-    end_to_end_local_communication_key_dispose)
+    end_to_end_local_communication_key_dispose,
+    end_to_end_local_communication_key_dispose_without_payload)
 
 set(TEST_NEEDED_SOURCES
     )

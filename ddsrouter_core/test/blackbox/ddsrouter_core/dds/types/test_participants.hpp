@@ -55,6 +55,22 @@ namespace test {
 constexpr const char* TOPIC_NAME = "DDS-Router-Test";
 
 /**
+ * Type support used to simulate payloads of zero size
+ */
+class HelloWorldKeyedZeroSizePayloadPubSubType: public HelloWorldKeyedPubSubType
+{
+    using DataRepresentationId_t = eprosima::fastdds::dds::DataRepresentationId_t;
+
+    uint32_t calculate_serialized_size(
+        const void* const data,
+        DataRepresentationId_t data_representation) override
+    {
+        return 0;
+    }
+
+};
+
+/**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
@@ -64,12 +80,14 @@ class TestPublisher
 public:
 
     TestPublisher(
-            bool keyed = false)
+            bool keyed = false,
+            bool zero_size = false)
         : participant_(nullptr)
         , publisher_(nullptr)
         , topic_(nullptr)
         , writer_(nullptr)
         , keyed_(keyed)
+        , zero_size_(zero_size)
     {
     }
 
@@ -102,7 +120,14 @@ public:
         eprosima::fastdds::dds::TypeSupport type;
         if (keyed_)
         {
-            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            if(zero_size_)
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedZeroSizePayloadPubSubType());
+            }
+            else
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            }
         }
         else
         {
@@ -191,6 +216,8 @@ private:
 
     bool keyed_;
 
+    bool zero_size_;
+
     class PubListener : public eprosima::fastdds::dds::DataWriterListener
     {
     public:
@@ -271,13 +298,15 @@ public:
 
     TestSubscriber(
             bool keyed = false,
-            bool reliable = false)
+            bool reliable = false,
+            bool zero_size = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
         , reliable_ (reliable)
+        , zero_size_(zero_size)
     {
     }
 
@@ -314,7 +343,14 @@ public:
         eprosima::fastdds::dds::TypeSupport type;
         if (keyed_)
         {
-            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            if(zero_size_)
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedZeroSizePayloadPubSubType());
+            }
+            else
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            }
         }
         else
         {
@@ -390,6 +426,8 @@ private:
     eprosima::fastdds::dds::DataReader* reader_;
 
     bool keyed_;
+
+    bool zero_size_;
 
     bool reliable_;
 

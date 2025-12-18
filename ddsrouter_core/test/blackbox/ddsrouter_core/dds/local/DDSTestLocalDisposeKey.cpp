@@ -170,6 +170,101 @@ void test_local_communication_key_dispose(
     router.stop();
 }
 
+
+/**
+ * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
+ * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
+ *
+ * The reliable option changes the test behavior to verify that the communication is reliable and all old data is sent
+ * to Late Joiners.
+ *
+ * However, in this test the disposed key messages are sent without payload.
+ */
+void test_local_communication_key_dispose_without_payload(
+        DdsRouterConfiguration ddsrouter_configuration,
+        uint32_t samples_to_receive = DEFAULT_SAMPLES_TO_RECEIVE,
+        uint32_t time_between_samples = DEFAULT_MILLISECONDS_PUBLISH_LOOP,
+        uint32_t msg_size = DEFAULT_MESSAGE_SIZE)
+{
+    // Check there are no warnings/errors
+    // TODO: Change threshold to \c Log::Kind::Warning once middleware warnings are solved
+    // eprosima::ddsrouter::test::TestLogHandler test_log_handler(utils::Log::Kind::Error);
+    INSTANTIATE_LOG_TESTER(eprosima::utils::Log::Kind::Error, 0, 0);
+
+    uint32_t samples_sent = 0;
+    std::atomic<uint32_t> samples_received(0);
+
+    // Create a message with size specified by repeating the same string
+    HelloWorldKeyed msg;
+    HelloWorldKeyedZeroSizePayloadPubSubType type;
+
+    std::string msg_str;
+
+    // Add this string as many times as the msg size requires
+    for (uint32_t i = 0; i < msg_size; i++)
+    {
+        msg_str += "Testing DdsRouter Blackbox Local Communication ...";
+    }
+    msg.message(msg_str);
+    msg.id(666);
+
+    // Create DDS Publisher in domain 0
+    TestPublisher<HelloWorldKeyed> publisher(type.is_compute_key_provided);
+
+    ASSERT_TRUE(publisher.init(0));
+
+    // Create DDS Subscriber in domain 1
+    TestSubscriber<HelloWorldKeyed> subscriber(type.is_compute_key_provided);
+
+    ASSERT_TRUE(subscriber.init(1, &msg, &samples_received));
+
+    // Create DdsRouter entity
+    // The DDS Router does not start here in order to test a reliable communication
+    DdsRouter router(ddsrouter_configuration);
+
+    // Start DDS Router
+    router.start();
+
+    // Start publishing
+    while (samples_received.load() < samples_to_receive)
+    {
+        msg.index(++samples_sent);
+        ASSERT_EQ(publisher.publish(msg), fastdds::dds::RETCODE_OK) << samples_sent;
+
+        // If time is 0 do not wait
+        if (time_between_samples > 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+        }
+    }
+
+    // All samples received, now dispose key from publisher and check that subscriber has receive it
+    ASSERT_TRUE(publisher.dispose_key(msg) == fastdds::dds::RETCODE_OK);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
+    samples_received.store(0);
+
+    // Keep publishing
+    while (samples_received.load() < samples_to_receive)
+    {
+        msg.index(++samples_sent);
+        ASSERT_EQ(publisher.publish(msg), fastdds::dds::RETCODE_OK) << samples_sent;
+
+        // If time is 0 do not wait
+        if (time_between_samples > 0)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(time_between_samples));
+        }
+    }
+
+    // All samples received, now dispose key from publisher and check that subscriber has receive it
+    ASSERT_TRUE(publisher.dispose_key(msg) == fastdds::dds::RETCODE_OK);
+    std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
+
+    ASSERT_EQ(2u, subscriber.n_disposed());
+
+    router.stop();
+}
+
 } /* namespace test */
 
 /**
@@ -178,6 +273,12 @@ void test_local_communication_key_dispose(
 TEST(DDSTestLocalDisposeKey, end_to_end_local_communication_key_dispose)
 {
     test::test_local_communication_key_dispose(
+        test::dds_test_simple_configuration());
+}
+
+TEST(DDSTestLocalDisposeKey, end_to_end_local_communication_key_dispose_without_payload)
+{
+    test::test_local_communication_key_dispose_without_payload(
         test::dds_test_simple_configuration());
 }
 
