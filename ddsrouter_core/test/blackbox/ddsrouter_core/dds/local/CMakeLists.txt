@@ -58,14 +58,14 @@ add_blackbox_executable(
     "${TEST_EXTRA_HEADERS}")
 
 ##############################
-# DDS Test local Dispose Key #
+# DDS Test local Instances   #
 ##############################
 
 set(TEST_NAME
-    DDSTestLocalDisposeKey)
+    DDSTestLocalInstances)
 
 set(TEST_SOURCES
-    DDSTestLocalDisposeKey.cpp
+    DDSTestLocalInstances.cpp
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldPubSubTypes.cxx
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldCdrAux.ipp
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldTypeObjectSupport.cxx
@@ -75,7 +75,13 @@ set(TEST_SOURCES
 
 set(TEST_LIST
     end_to_end_local_communication_key_dispose,
-    end_to_end_local_communication_key_dispose_without_payload)
+    end_to_end_local_communication_key_dispose_without_payload,
+    end_to_end_local_communication_unregister_dispose,
+    end_to_end_local_communication_unregister_dispose_zero_payload,
+    end_to_end_local_communication_unregister,
+    end_to_end_local_communication_unregister_zero_payload,
+    end_to_end_local_communication_not_alive_no_writers_triggered_by_writer_lease_duration,
+    end_to_end_local_communication_not_alive_no_writers_triggered_by_dead_writer)
 
 set(TEST_NEEDED_SOURCES
     )
@@ -90,3 +96,4 @@ add_blackbox_executable(
     "${TEST_LIST}"
     "${TEST_NEEDED_SOURCES}"
     "${TEST_EXTRA_HEADERS}")
+
