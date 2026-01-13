@@ -30,7 +30,7 @@
 #     - execute docs compile and tests
 #
 #   - uncrustify
-#     - ubuntu-22.04
+#     - ubuntu-24.04
 #     - test uncrustify
 #
 #   - python-linter
@@ -310,7 +310,7 @@ jobs:
 # UNCRUSTIFY
 
   uncrustify:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
 
       - name: Uncrustify
