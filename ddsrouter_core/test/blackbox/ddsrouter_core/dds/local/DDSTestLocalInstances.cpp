@@ -77,6 +77,13 @@ DdsRouterConfiguration dds_test_simple_configuration()
     return conf;
 }
 
+/**
+ * @brief Creates a configuration for a DDS Router with two XML participants at domains
+ * 0 and 1 respectively. XML participants are DDS participants, thus they allow more
+ * advanced QoS configuration through XML profiles.
+ *
+ * @return DdsRouterConfiguration
+ */
 DdsRouterConfiguration dds_test_dds_participants_config()
 {
     DdsRouterConfiguration conf;
@@ -126,6 +133,7 @@ DdsRouterConfiguration dds_test_dds_participants_config()
 
     return conf;
 }
+
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
  * This is accomplished by using a DDS Router instance with a Simple Participant deployed at each domain.
@@ -525,7 +533,7 @@ void test_local_communication_unregister(
     ASSERT_TRUE(publisher.unregister_key(msg) == fastdds::dds::RETCODE_OK);
     std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
 
-    // TODO: Add comment here
+    // Expectation: exactly one NOT_ALIVE_NO_WRITERS event was received as a consequence of the unregister
     ASSERT_EQ(1u, subscriber.n_key_no_writers());
 
     router.stop();
@@ -600,7 +608,7 @@ void test_local_communication_unregister_zero_payload(
     ASSERT_TRUE(publisher.unregister_key(msg) == fastdds::dds::RETCODE_OK);
     std::this_thread::sleep_for(std::chrono::milliseconds(DEFAULT_SUBSCRIBER_MESSAGE_RECEPTION));
 
-    // TODO: Add comment here
+    // Expectation: exactly one NOT_ALIVE_NO_WRITERS event was received as a consequence of the unregister
     ASSERT_EQ(1u, subscriber.n_key_no_writers());
 
     router.stop();

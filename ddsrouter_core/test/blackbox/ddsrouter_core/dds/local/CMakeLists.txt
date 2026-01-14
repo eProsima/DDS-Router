@@ -96,4 +96,3 @@ add_blackbox_executable(
     "${TEST_LIST}"
     "${TEST_NEEDED_SOURCES}"
     "${TEST_EXTRA_HEADERS}")
-
