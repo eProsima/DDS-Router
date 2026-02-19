@@ -76,7 +76,7 @@ class HelloWorldKeyedZeroSizePayloadPubSubType : public HelloWorldKeyedPubSubTyp
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
-template <class MsgStruct>
+template<class MsgStruct>
 class TestPublisher
 {
 public:
@@ -340,7 +340,7 @@ private:
     listener_;
 };
 
-template <>
+template<>
 eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
         HelloWorldKeyed msg)
 {
@@ -350,7 +350,7 @@ eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
     return writer_->write(&hello_);
 }
 
-template <>
+template<>
 eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
         HelloWorldKeyed msg)
 {
@@ -358,7 +358,7 @@ eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key
     return writer_->dispose(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
 }
 
-template <>
+template<>
 eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::unregister_key(
         HelloWorldKeyed msg)
 {
@@ -370,7 +370,7 @@ eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::unregister_
  * Class used to group into a single working unit a Subscriber with a DataReader, its listener, and a TypeSupport member
  * corresponding to the HelloWorld datatype
  */
-template <class MsgStruct>
+template<class MsgStruct>
 class TestSubscriber
 {
 public:

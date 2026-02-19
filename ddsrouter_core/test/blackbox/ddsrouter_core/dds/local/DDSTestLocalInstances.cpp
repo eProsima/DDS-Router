@@ -96,22 +96,22 @@ DdsRouterConfiguration dds_test_dds_participants_config()
 
     // Create XML string with default QoS profile
     std::string xml_config =
-        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
-        "<dds xmlns=\"http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles\">"
-        "    <profiles>"
-        "        <participant profile_name=\"participant_domain_0\">"
-        "            <domainId>0</domainId>"
-        "        </participant>"
-        "        <participant profile_name=\"participant_domain_1\">"
-        "            <domainId>1</domainId>"
-        "        </participant>"
-        "    </profiles>"
-        "</dds>";
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+            "<dds xmlns=\"http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles\">"
+            "    <profiles>"
+            "        <participant profile_name=\"participant_domain_0\">"
+            "            <domainId>0</domainId>"
+            "        </participant>"
+            "        <participant profile_name=\"participant_domain_1\">"
+            "            <domainId>1</domainId>"
+            "        </participant>"
+            "    </profiles>"
+            "</dds>";
 
     // Load XML configuration into Fast DDS
     using namespace eprosima::fastdds::dds;
     if (RETCODE_OK != DomainParticipantFactory::get_instance()->load_XML_profiles_string(
-        xml_config.c_str(), xml_config.length()))
+                xml_config.c_str(), xml_config.length()))
     {
         throw std::runtime_error("Failed to load XML profiles");
     }
@@ -226,7 +226,6 @@ void test_local_communication_key_dispose(
 
     router.stop();
 }
-
 
 /**
  * Test communication between two DDS Participants hosted in the same device, but which are at different DDS domains.
@@ -652,8 +651,10 @@ void test_local_communication_lease_duration_triggers_not_alive_no_writers(
 
     eprosima::fastdds::dds::DomainParticipantQos pqos = eprosima::fastdds::dds::DomainParticipantQos();
     // Lowering lease duration to trigger not alive no writers faster in the subscriber
-    pqos.wire_protocol().builtin.discovery_config.leaseDuration = Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds);
-    pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod = Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds-1);
+    pqos.wire_protocol().builtin.discovery_config.leaseDuration = Duration_t(pub_lease_duration_seconds,
+                    pub_lease_duration_nanoseconds);
+    pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod =
+            Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds - 1);
     eprosima::fastdds::dds::DataWriterQos wqos = eprosima::fastdds::dds::DataWriterQos();
     // Necessary to receive only an unregister and not a dispose, forcing transition to not_alive_no_writers
     wqos.writer_data_lifecycle().autodispose_unregistered_instances = false;
@@ -731,8 +732,10 @@ void test_local_communication_dead_writer_triggers_not_alive_no_writers(
 
         eprosima::fastdds::dds::DomainParticipantQos pqos = eprosima::fastdds::dds::DomainParticipantQos();
         // Lowering lease duration to trigger not alive no writers faster in the subscriber
-        pqos.wire_protocol().builtin.discovery_config.leaseDuration = Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds);
-        pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod = Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds-1);
+        pqos.wire_protocol().builtin.discovery_config.leaseDuration = Duration_t(pub_lease_duration_seconds,
+                        pub_lease_duration_nanoseconds);
+        pqos.wire_protocol().builtin.discovery_config.leaseDuration_announcementperiod =
+                Duration_t(pub_lease_duration_seconds, pub_lease_duration_nanoseconds - 1);
         eprosima::fastdds::dds::DataWriterQos wqos = eprosima::fastdds::dds::DataWriterQos();
         // Necessary to receive only an unregister and not a dispose, forcing transition to not_alive_no_writers
         wqos.writer_data_lifecycle().autodispose_unregistered_instances = false;
@@ -816,7 +819,7 @@ TEST(DDSTestLocalInstances, end_to_end_local_communication_not_alive_no_writers_
     // Router lease duration is default
     int writer_lease_duration_ns = 500000000; //  0.5 seconds
     test::test_local_communication_dead_writer_triggers_not_alive_no_writers(
-         test::dds_test_dds_participants_config(), writer_lease_duration_ns);
+        test::dds_test_dds_participants_config(), writer_lease_duration_ns);
 }
 
 int main(
