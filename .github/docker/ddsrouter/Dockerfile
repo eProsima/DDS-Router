@@ -63,6 +63,7 @@ RUN mkdir src && \
     cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../.. && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cp -r src/fastdds/examples/cpp/configuration src/. && \
+    sed -i 's/cmake_minimum_required(VERSION 3.28)/cmake_minimum_required(VERSION 3.20)/' src/configuration/CMakeLists.txt && \
     colcon build --event-handlers console_direct+ --cmake-args -DLOG_INFO=ON -DSECURITY=ON
 
 COPY run.bash /root/run.bash
