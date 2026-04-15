@@ -19,6 +19,9 @@
                     <topics>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -41,6 +44,9 @@
                     <topics>
                         <topic>topic_3</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -63,6 +69,9 @@
                     <topics>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -85,6 +94,9 @@
                     <topics>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -107,6 +119,9 @@
                     <topics>
                         <topic>topic_0</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -129,6 +144,9 @@
                     <topics>
                         <topic>topic_2</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -151,6 +169,9 @@
                     <topics>
                         <topic>topic_3</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -173,6 +194,9 @@
                     <topics>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -195,6 +219,9 @@
                     <topics>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -219,6 +246,9 @@
                         <topic>topic_1</topic>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
                 <subscribe>
                     <topics>
@@ -226,6 +256,9 @@
                         <topic>topic_1</topic>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>

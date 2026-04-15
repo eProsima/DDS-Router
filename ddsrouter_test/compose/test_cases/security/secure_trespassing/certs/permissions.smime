@@ -1,9 +1,9 @@
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----6A38EB93F004FA55536368249CAC15F7"
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg="sha-256"; boundary="----3FC652EB35E3C59F12F12F6E06F2B07D"
 
 This is an S/MIME signed message
 
-------6A38EB93F004FA55536368249CAC15F7
+------3FC652EB35E3C59F12F12F6E06F2B07D
 Content-Type: text/plain
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -27,6 +27,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -49,6 +52,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_3</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -71,6 +77,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -93,6 +102,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
             </allow_rule>
             <default>DENY</default>
@@ -115,6 +127,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_0</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -137,6 +152,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_2</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -159,6 +177,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_3</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -181,6 +202,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -203,6 +227,9 @@ Content-Type: text/plain
                     <topics>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -227,6 +254,9 @@ Content-Type: text/plain
                         <topic>topic_1</topic>
                         <topic>topic_5</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
                 <subscribe>
                     <topics>
@@ -234,6 +264,9 @@ Content-Type: text/plain
                         <topic>topic_1</topic>
                         <topic>topic_4</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -242,36 +275,36 @@ Content-Type: text/plain
     </permissions>
 </dds>
 
-------6A38EB93F004FA55536368249CAC15F7
+------3FC652EB35E3C59F12F12F6E06F2B07D
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
 
-MIIEhAYJKoZIhvcNAQcCoIIEdTCCBHECAQExDzANBglghkgBZQMEAgEFADALBgkq
-hkiG9w0BBwGgggJOMIICSjCCAe+gAwIBAgIUDhWYNes8sM/mYnmAckpVP4zoDkEw
+MIIEgwYJKoZIhvcNAQcCoIIEdDCCBHACAQExDzANBglghkgBZQMEAgEFADALBgkq
+hkiG9w0BBwGgggJOMIICSjCCAe+gAwIBAgIUekFU9kToSJNk6E93OQOIarWmZX8w
 CgYIKoZIzj0EAwIwgYsxCzAJBgNVBAYTAkVTMQswCQYDVQQIDAJNQTEUMBIGA1UE
 BwwLVHJlcyBDYW50b3MxETAPBgNVBAoMCGVQcm9zaW1hMR4wHAYDVQQDDBVlUHJv
 c2ltYSBNYWluIFRlc3QgQ0ExJjAkBgkqhkiG9w0BCQEWF3JvdXRlcnRlc3RAZXBy
-b3NpbWEuY29tMB4XDTI1MDMyNDEwMzMxM1oXDTM1MDMyMjEwMzMxM1owgYsxCzAJ
+b3NpbWEuY29tMB4XDTI2MDQxNDEzNDgyMVoXDTM2MDQxMTEzNDgyMVowgYsxCzAJ
 BgNVBAYTAkVTMQswCQYDVQQIDAJNQTEUMBIGA1UEBwwLVHJlcyBDYW50b3MxETAP
 BgNVBAoMCGVQcm9zaW1hMR4wHAYDVQQDDBVlUHJvc2ltYSBNYWluIFRlc3QgQ0Ex
 JjAkBgkqhkiG9w0BCQEWF3JvdXRlcnRlc3RAZXByb3NpbWEuY29tMFkwEwYHKoZI
-zj0CAQYIKoZIzj0DAQcDQgAEQ3gEBMf28qaYgQn36E/2ELE+4Ji6RijMVPL4ZF5w
-HfDaa4/mOJZFeZhvuuxMHCw+D8EJtmICe6u8htnFJ/FjcaMvMC0wDAYDVR0TBAUw
-AwEB/zAdBgNVHQ4EFgQUfrqOdVIQworNRmBgbIYhBLvlKb8wCgYIKoZIzj0EAwID
-SQAwRgIhANUS/ajuS+hQ8qYdw/8+OCQ/2H2TO+bvN2ZR8AcgKjdsAiEAoPQ9XVMq
-MS2fojp8yRh/dGIIW/H1R23LW5v8z5s+QBgxggH6MIIB9gIBATCBpDCBizELMAkG
+zj0CAQYIKoZIzj0DAQcDQgAErW3pEjhOw/mpo5nYzQSWrIpgoC45+HF8iT5vx3d+
+0Eh68kljBR1euQcw9iaTEX9uCv7/4wFFi6E7UZScLUN2q6MvMC0wDAYDVR0TBAUw
+AwEB/zAdBgNVHQ4EFgQU19uptWx+8Qz5cLkLy2WXAjUqeGgwCgYIKoZIzj0EAwID
+SQAwRgIhAP/FZTQQH/fkAmtUuUGZkEHdWU+0feEAmIdlMAJ2CepLAiEA+VNSAHYR
+t9gXf+vwadKdi9dGVgn9Snb81BrTdfe146oxggH5MIIB9QIBATCBpDCBizELMAkG
 A1UEBhMCRVMxCzAJBgNVBAgMAk1BMRQwEgYDVQQHDAtUcmVzIENhbnRvczERMA8G
 A1UECgwIZVByb3NpbWExHjAcBgNVBAMMFWVQcm9zaW1hIE1haW4gVGVzdCBDQTEm
-MCQGCSqGSIb3DQEJARYXcm91dGVydGVzdEBlcHJvc2ltYS5jb20CFA4VmDXrPLDP
-5mJ5gHJKVT+M6A5BMA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzELBgkq
-hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyNDEwMzMxM1owLwYJKoZIhvcN
-AQkEMSIEILE8iLREVqrW2Y1GnTfgGBvzs2qMmPvky+kzN8qksq3LMHkGCSqGSIb3
+MCQGCSqGSIb3DQEJARYXcm91dGVydGVzdEBlcHJvc2ltYS5jb20CFHpBVPZE6EiT
+ZOhPdzkDiGq1pmV/MA0GCWCGSAFlAwQCAQUAoIHkMBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQxNDEzNDgyMVowLwYJKoZIhvcN
+AQkEMSIEIJdbbVnEnNImWxz4L8BoCJ1196os5iFYjbHZQDoHw+FWMHkGCSqGSIb3
 DQEJDzFsMGowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIw
 CgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcGBSsO
-AwIHMA0GCCqGSIb3DQMCAgEoMAoGCCqGSM49BAMCBEgwRgIhAO/q0PpBv1/PHzE7
-cgFaDvfGe/qY+EOhIeQsyvhit9ROAiEA8XZCBvOPiPk2d2Wik6IUUeiz50Fuvkfz
-Y9AF28CKMCQ=
+AwIHMA0GCCqGSIb3DQMCAgEoMAoGCCqGSM49BAMCBEcwRQIhAKqXGzTINHoyalkf
+QpC0lvHSpZinQnG72wcQWqoSM7iMAiAxL89a2BWSjCPbVFM11V0xCWu8vQHGd9O4
+eyUwskgKuQ==
 
-------6A38EB93F004FA55536368249CAC15F7--
+------3FC652EB35E3C59F12F12F6E06F2B07D--
 

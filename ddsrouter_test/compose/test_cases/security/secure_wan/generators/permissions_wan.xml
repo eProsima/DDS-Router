@@ -20,12 +20,18 @@
                         <topic>topic_0</topic>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
                 <subscribe>
                     <topics>
                         <topic>topic_0</topic>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
@@ -49,12 +55,18 @@
                         <topic>topic_0</topic>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </publish>
                 <subscribe>
                     <topics>
                         <topic>topic_0</topic>
                         <topic>topic_1</topic>
                     </topics>
+                    <partitions>
+                        <partition>*</partition>
+                    </partitions>
                 </subscribe>
             </allow_rule>
             <default>DENY</default>
