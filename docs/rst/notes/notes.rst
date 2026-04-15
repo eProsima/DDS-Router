@@ -15,11 +15,12 @@ This release includes the following **documentation updates**:
 This release includes the following **bugfixes**:
 
 * Fix original_writer flaky test
+* Add partition rules to security permissions tests and temporarily patch CMake version to 3.20
 
 This release includes the following **CI improvements**:
 
-* Upgrade Linters CI runner image to `ubuntu-24.04`
-* Update foonathan version to 1.4.1
+* Upgrade `Linters CI` runner image to `ubuntu-24.04`
+* Update `foonathan` version to 1.4.1
 
 This release includes the following **Dependencies Update**:
 
@@ -40,7 +41,7 @@ This release includes the following **Dependencies Update**:
         - `v2.3.5 <https://github.com/eProsima/Fast-CDR/releases/tag/v2.3.5>`_
     *   - Fast DDS
         - `eProsima/Fast-DDS <https://github.com/eProsima/Fast-DDS>`_
-        - `v3.5.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.5.0>`_
+        - `v3.4.1 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.4.1>`_
         - `v3.6.0 <https://github.com/eProsima/Fast-DDS/releases/tag/v3.6.0>`_
     *   - Dev Utils
         - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`_
