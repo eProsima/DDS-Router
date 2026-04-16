@@ -41,6 +41,8 @@
 #include <cpp_utils/Log.hpp>
 
 #include <ddspipe_participants/configuration/SimpleParticipantConfiguration.hpp>
+#include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
+
 
 #include <ddsrouter_core/core/DdsRouter.hpp>
 
@@ -55,21 +57,39 @@ namespace test {
 constexpr const char* TOPIC_NAME = "DDS-Router-Test";
 
 /**
+ * Type support used to simulate payloads of zero size
+ */
+class HelloWorldKeyedZeroSizePayloadPubSubType : public HelloWorldKeyedPubSubType
+{
+    using DataRepresentationId_t = eprosima::fastdds::dds::DataRepresentationId_t;
+
+    uint32_t calculate_serialized_size(
+            const void* const data,
+            DataRepresentationId_t data_representation) override
+    {
+        return 0;
+    }
+
+};
+
+/**
  * Class used to group into a single working unit a Publisher with a DataWriter and a TypeSupport member corresponding
  * to the HelloWorld datatype
  */
-template <class MsgStruct>
+template<class MsgStruct>
 class TestPublisher
 {
 public:
 
     TestPublisher(
-            bool keyed = false)
+            bool keyed = false,
+            bool zero_size = false)
         : participant_(nullptr)
         , publisher_(nullptr)
         , topic_(nullptr)
         , writer_(nullptr)
         , keyed_(keyed)
+        , zero_size_(zero_size)
     {
     }
 
@@ -102,7 +122,14 @@ public:
         eprosima::fastdds::dds::TypeSupport type;
         if (keyed_)
         {
-            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            if (zero_size_)
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedZeroSizePayloadPubSubType());
+            }
+            else
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            }
         }
         else
         {
@@ -143,6 +170,71 @@ public:
         return true;
     }
 
+    //! Initialize the publisher
+    bool init_with_custom_qos(
+            uint32_t domain,
+            eprosima::fastdds::dds::DomainParticipantQos pqos,
+            eprosima::fastdds::dds::DataWriterQos wqos,
+            eprosima::fastdds::dds::PublisherQos pubqos,
+            eprosima::fastdds::dds::TopicQos tqos)
+    {
+        // CREATE THE PARTICIPANT
+        participant_ =
+                eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->create_participant(domain, pqos);
+
+        if (participant_ == nullptr)
+        {
+            return false;
+        }
+
+        // REGISTER THE TYPE
+        eprosima::fastdds::dds::TypeSupport type;
+        if (keyed_)
+        {
+            if (zero_size_)
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedZeroSizePayloadPubSubType());
+            }
+            else
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            }
+        }
+        else
+        {
+            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldPubSubType());
+        }
+        type.register_type(participant_);
+
+        // CREATE THE PUBLISHER
+        publisher_ = participant_->create_publisher(pubqos, nullptr);
+
+        if (publisher_ == nullptr)
+        {
+            return false;
+        }
+
+        // CREATE THE TOPIC
+        std::string type_name = keyed_ ? "HelloWorldKeyed" : "HelloWorld";
+        topic_ = participant_->create_topic(TOPIC_NAME, type_name, tqos);
+
+        if (topic_ == nullptr)
+        {
+            return false;
+        }
+
+        // CREATE THE WRITER
+        // Set memory management policy so it uses realloc
+        writer_ = publisher_->create_datawriter(topic_, wqos, &listener_);
+
+        if (writer_ == nullptr)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     //! Publish a sample
     eprosima::fastdds::dds::ReturnCode_t publish(
             MsgStruct msg)
@@ -164,6 +256,10 @@ public:
 
     //! Dispose instance
     eprosima::fastdds::dds::ReturnCode_t dispose_key(
+            MsgStruct msg);
+
+    //! Unregister instance
+    eprosima::fastdds::dds::ReturnCode_t unregister_key(
             MsgStruct msg);
 
     void wait_discovery(
@@ -190,6 +286,8 @@ private:
     eprosima::fastdds::dds::DataWriter* writer_;
 
     bool keyed_;
+
+    bool zero_size_;
 
     class PubListener : public eprosima::fastdds::dds::DataWriterListener
     {
@@ -242,7 +340,7 @@ private:
     listener_;
 };
 
-template <>
+template<>
 eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
         HelloWorldKeyed msg)
 {
@@ -252,7 +350,7 @@ eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::publish(
     return writer_->write(&hello_);
 }
 
-template <>
+template<>
 eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key(
         HelloWorldKeyed msg)
 {
@@ -260,24 +358,34 @@ eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::dispose_key
     return writer_->dispose(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
 }
 
+template<>
+eprosima::fastdds::dds::ReturnCode_t TestPublisher<HelloWorldKeyed>::unregister_key(
+        HelloWorldKeyed msg)
+{
+    hello_.id(msg.id());
+    return writer_->unregister_instance(&hello_, eprosima::fastdds::dds::HANDLE_NIL);
+}
+
 /**
  * Class used to group into a single working unit a Subscriber with a DataReader, its listener, and a TypeSupport member
  * corresponding to the HelloWorld datatype
  */
-template <class MsgStruct>
+template<class MsgStruct>
 class TestSubscriber
 {
 public:
 
     TestSubscriber(
             bool keyed = false,
-            bool reliable = false)
+            bool reliable = false,
+            bool zero_size = false)
         : participant_(nullptr)
         , subscriber_(nullptr)
         , topic_(nullptr)
         , reader_(nullptr)
         , keyed_(keyed)
         , reliable_ (reliable)
+        , zero_size_(zero_size)
     {
     }
 
@@ -314,7 +422,14 @@ public:
         eprosima::fastdds::dds::TypeSupport type;
         if (keyed_)
         {
-            type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            if (zero_size_)
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedZeroSizePayloadPubSubType());
+            }
+            else
+            {
+                type = eprosima::fastdds::dds::TypeSupport(new HelloWorldKeyedPubSubType());
+            }
         }
         else
         {
@@ -372,6 +487,11 @@ public:
         return listener_.n_key_disposed;
     }
 
+    uint32_t n_key_no_writers() const
+    {
+        return listener_.n_key_no_writers;
+    }
+
     eprosima::fastdds::rtps::GUID_t original_writer_guid()
     {
         std::lock_guard<std::mutex> lock(listener_.original_writer_guid_mtx);
@@ -390,6 +510,8 @@ private:
     eprosima::fastdds::dds::DataReader* reader_;
 
     bool keyed_;
+
+    bool zero_size_;
 
     bool reliable_;
 
@@ -413,6 +535,7 @@ private:
             msg_should_receive = msg_should_receive_arg;
             samples_received = samples_received_arg;
             n_key_disposed = 0;
+            n_key_no_writers = 0;
         }
 
         void wait_discovery(
@@ -446,6 +569,10 @@ private:
                 {
                     n_key_disposed++;
                 }
+                else if (info.instance_state == eprosima::fastdds::dds::NOT_ALIVE_NO_WRITERS_INSTANCE_STATE)
+                {
+                    n_key_no_writers++;
+                }
 
                 {
                     std::lock_guard<std::mutex> lock(original_writer_guid_mtx);
@@ -478,7 +605,11 @@ private:
         //! Protects original_writer_guid
         std::mutex original_writer_guid_mtx;
 
+        //! Number of keys disposed
         std::atomic<std::uint32_t> n_key_disposed;
+
+        //! Number of keys no writers
+        std::atomic<std::uint32_t> n_key_no_writers;
 
         //! Reference to the sample sent by the publisher
         MsgStruct* msg_should_receive;
