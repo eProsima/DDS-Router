@@ -74,6 +74,56 @@ Notice that not setting such QoS will not affect the correct functionality of th
       </participant>
 
 
+.. _user_manual_participants_xml_topic_profiles:
+
+Topic-name endpoint profile lookup
+-----------------------------------
+When the XML Participant creates a DataWriter or DataReader for a topic, it looks for a loaded XML profile
+whose name matches the topic name.
+If a matching profile is found, the endpoint is configured using that profile's QoS, giving the user full
+control over fields such as history, memory policy, transport, etc.
+If no matching profile exists, the endpoint falls back to default QoS with values derived from the YAML configuration.
+
+By default, when a matching XML profile is found, the YAML QoS configuration is ignored for that endpoint.
+This behaviour can be changed by setting the xml-override tag to true in the participant configuration.
+When enabled, the YAML QoS values (durability, reliability, ownership, history) will override those from the XML profile.
+
+.. note::
+
+    Certain QoS are always enforced by the |ddsrouter| regardless of the XML profile or the ``xml-override`` setting:
+    deadline on DataWriters (set to minimum so it matches any reader),
+    ``autodispose_unregistered_instances`` on DataWriters (set to ``false`` to preserve dispose/unregister forwarding semantics),
+    and ``expects_inline_qos`` on DataReaders for keyed topics.
+
+The following example loads a profile named ``my_topic`` that will be automatically applied when creating
+endpoints for a topic of that name:
+
+
+**YAML**
+
+.. code-block:: yaml
+
+    - name: xml_participant
+      kind: xml
+      xml-override: true
+
+
+**XML**
+
+.. code-block:: xml
+
+    <dds>
+        <profiles>
+            <data_writer profile_name="my_topic">
+                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+            </data_writer>
+            <data_reader profile_name="my_topic">
+                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+            </data_reader>
+        </profiles>
+    </dds>
+
+
 Repeater
 --------
 

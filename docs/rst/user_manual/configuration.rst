@@ -90,6 +90,15 @@ Under the **optional** tag ``raw``, an XML configuration (with the same format a
     These QoS should be configured by the user explicitly.
     Check :ref:`user_manual_participants_xml_profiles`.
 
+Endpoint profiles
+-----------------
+
+Profiles named after a topic are automatically applied to :term:`DataWriter` and :term:`DataReader` endpoints
+when they are created for that topic by an :ref:`XML Participant <user_manual_participants_xml>`.
+By default, when a matching profile is found, the YAML QoS configuration is ignored for that endpoint (XML takes priority).
+This behaviour can be changed via the xml-override tag on the participant.
+For more details, see :ref:`user_manual_participants_xml_topic_profiles`.
+
 Topics Configuration
 ====================
 
