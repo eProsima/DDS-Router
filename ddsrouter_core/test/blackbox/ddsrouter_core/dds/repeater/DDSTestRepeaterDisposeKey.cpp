@@ -72,7 +72,7 @@ DdsRouterConfiguration xml_repeater_dispose_configuration()
         utils::Heritable<core::types::WildcardDdsFilterTopic>::make_heritable(topic));
 
     // -- Create the participants ---------------------------------------------
-    
+
     // Simple participant in domain 0 (publisher side)
     {
         auto part = std::make_shared<participants::SimpleParticipantConfiguration>();
@@ -147,7 +147,7 @@ void test_xml_repeater_key_dispose(
     }
 
     // -- Dispose the keyed publisher -----------------------------------------
-    
+
     // The dispose is routed to the XML repeater participant's writer,
     // whose RepeaterDataFilter prefilter is evaluated with a null user_write_data.
     // >>> Without the fix the router segfaults at this point. <<<
