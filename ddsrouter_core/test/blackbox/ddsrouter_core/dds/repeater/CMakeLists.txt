@@ -36,7 +36,6 @@ set(TEST_NEEDED_SOURCES
     )
 
 set(TEST_EXTRA_HEADERS
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
 
 add_blackbox_executable(
@@ -70,7 +69,6 @@ set(TEST_NEEDED_SOURCES
     )
 
 set(TEST_EXTRA_HEADERS
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
 
 add_blackbox_executable(
