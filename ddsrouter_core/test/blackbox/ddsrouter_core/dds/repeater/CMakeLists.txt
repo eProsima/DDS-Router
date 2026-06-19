@@ -36,7 +36,39 @@ set(TEST_NEEDED_SOURCES
     )
 
 set(TEST_EXTRA_HEADERS
-    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
+
+add_blackbox_executable(
+    "${TEST_NAME}"
+    "${TEST_SOURCES}"
+    "${TEST_LIST}"
+    "${TEST_NEEDED_SOURCES}"
+    "${TEST_EXTRA_HEADERS}")
+
+#################################
+# DDS Test Repeater Dispose Key #
+#################################
+
+set(TEST_NAME
+    DDSTestRepeaterDisposeKey)
+
+set(TEST_SOURCES
+    DDSTestRepeaterDisposeKey.cpp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldPubSubTypes.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldCdrAux.ipp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorld/HelloWorldTypeObjectSupport.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedPubSubTypes.cxx
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedCdrAux.ipp
+    ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types/HelloWorldKeyed/HelloWorldKeyedTypeObjectSupport.cxx)
+
+set(TEST_LIST
+        end_to_end_xml_repeater_key_dispose
+    )
+
+set(TEST_NEEDED_SOURCES
+    )
+
+set(TEST_EXTRA_HEADERS
     ${PROJECT_SOURCE_DIR}/test/blackbox/ddsrouter_core/dds/types)
 
 add_blackbox_executable(
