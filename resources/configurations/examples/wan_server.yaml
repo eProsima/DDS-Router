@@ -26,12 +26,12 @@ participants:
 # WAN SERVER
 # This participant will subscribe to topics in allowlist using Initial Peers Discovery protocol awaiting connections.
 
-  - name: WanParticipant                                          # 6
+  - name: WanServer                                               # 6
     kind: wan                                                     # 7
-    listening-addresses:
-      - ip: 1.1.1.1                                               # 8
-        port: 11666                                               # 9
-        transport: udp                                            # 10
+    listening-addresses:                                          # 8
+      - ip: 1.1.1.1                                               # 9
+        port: 11666                                               # 10
+        transport: udp                                            # 11
 
 ##################################
 # CONFIGURATION DESCRIPTION
@@ -55,14 +55,17 @@ participants:
 
 # 5: SimpleParticipant will use DDS Domain ID <0>.
 
-# 6: New Participant with name <WanParticipant>.
+# 6: New Participant with name <WanServer>.
 
 # 7: Kind of WANClient: <wan>.
 # InitialPeers discovery to discover and communicate with another WAN DDS Router.
 
-# 8: Listen in public IP (1.1.1.1) for remote traffic.
+# 8: Add the interfaces where this Participant will listen in WAN.
+# Add as many listening-addresses as needed.
+
+# 9: Listen in public IP (1.1.1.1) for remote traffic.
 # This IP must be set to the public IP of the host where this DDS Router will run.
 
-# 9: Listening port is 11666.
+# 10: Listening port is 11666.
 
-# 10: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
+# 11: It uses UDP transport by default if not set. Could be set to "udp" or "tcp".
