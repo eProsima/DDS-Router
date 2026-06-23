@@ -75,9 +75,10 @@ participants:
         port: 11668
         transport: tcp
       - ip: "0.0.0.0"
+        port: 11669
     listening-addresses:
       - ip: "127.0.0.1"
-        port: 11669
+        port: 11670
 
   - name: XML-DDS
     kind: xml
