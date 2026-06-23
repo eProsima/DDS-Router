@@ -31,30 +31,30 @@ std::string schema_path = "./ddsrouter_config_schema.json";
 
 // Vectors with the valid and invalid YAML files
 std::vector<std::string> valid_files = []()
-{
-    std::vector<std::string> files;
-    for (const auto& entry : std::filesystem::directory_iterator("./valid_config_files_router/"))
-    {
-        if (entry.path().extension() == ".yaml")
         {
-            files.push_back(entry.path().generic_string());
-        }
-    }
-    return files;
-}();
+            std::vector<std::string> files;
+            for (const auto& entry : std::filesystem::directory_iterator("./valid_config_files_router/"))
+            {
+                if (entry.path().extension() == ".yaml")
+                {
+                    files.push_back(entry.path().generic_string());
+                }
+            }
+            return files;
+        }();
 
 std::vector<std::string> invalid_files = []()
-{
-    std::vector<std::string> files;
-    for (const auto& entry : std::filesystem::directory_iterator("./invalid_config_files_router/"))
-    {
-        if (entry.path().extension() == ".yaml")
         {
-            files.push_back(entry.path().generic_string());
-        }
-    }
-    return files;
-}();
+            std::vector<std::string> files;
+            for (const auto& entry : std::filesystem::directory_iterator("./invalid_config_files_router/"))
+            {
+                if (entry.path().extension() == ".yaml")
+                {
+                    files.push_back(entry.path().generic_string());
+                }
+            }
+            return files;
+        }();
 } // namespace test
 
 /**
