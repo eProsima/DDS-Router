@@ -16,10 +16,12 @@
 #include <ddspipe_yaml/Yaml.hpp>
 #include <ddspipe_yaml/YamlManager.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/YamlValidator.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
+#include <ddsrouter_yaml/DdsRouterConfigSchema.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,6 +32,15 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         const Yaml& yml,
         const CommandlineArgsRouter* args /*= nullptr*/)
 {
+    // Ensure the Yaml is valid
+    ddspipe::yaml::YamlValidator validator = ddspipe::yaml::YamlValidator(
+        ddspipe::yaml::YamlValidator::from_string(DDSROUTER_CONFIG_SCHEMA));
+    if (!validator.validate_YAML(yml))
+    {
+        throw eprosima::utils::ConfigurationException(
+                  utils::Formatter() << "Error, the provided yaml file is not a valid ddsrouter configuration.\n");
+    }
+
     try
     {
         ddspipe::yaml::YamlReaderVersion version;

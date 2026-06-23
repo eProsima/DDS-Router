@@ -75,6 +75,22 @@ compile_test_library(
 )
 
 ###############################################################################
+# Resources
+###############################################################################
+file(READ "${PROJECT_SOURCE_DIR}/../resources/configurations/ddsrouter_config_schema.json"
+    DDSROUTER_CONFIG_SCHEMA_CONTENT)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/include/ddsrouter_yaml/DdsRouterConfigSchema.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/ddsrouter_yaml/DdsRouterConfigSchema.hpp"
+    @ONLY
+)
+
+target_include_directories(${MODULE_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+)
+
+###############################################################################
 # Packaging
 ###############################################################################
 # Install package
