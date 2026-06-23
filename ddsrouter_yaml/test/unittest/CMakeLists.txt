@@ -19,3 +19,4 @@
 # TODO uncomment when new API applied
 add_subdirectory(configuration)
 add_subdirectory(participants)
+add_subdirectory(ddsrouter_yaml_validator)

@@ -1,0 +1,194 @@
+# Specifications
+specs:
+  threads: 10
+  remove-unused-entities: false
+  discovery-trigger: reader
+
+  qos:
+    history-depth: 1000
+    max-tx-rate: 0
+    max-rx-rate: 20
+    downsampling: 3
+
+  logging:
+    verbosity: info
+    filter:
+      error: "DDSPIPE|DDSROUTER"
+      warning: "DDSPIPE|DDSROUTER"
+      info: "DDSROUTER"
+    publish:
+        enable: true
+        domain: 84
+        topic-name: "DdsRouterLogs"
+    stdout: true
+
+  monitor:
+    topics:
+      enable: true
+      period: 1000
+      domain: 10
+      topic-name: "DdsRouterTopicStatistics"
+
+# XML configurations to load
+xml:
+
+  # Load this file as Fast DDS XML configuration
+  files:
+      - "./xml_configuration.xml"
+
+  # Load text as Fast DDS XML configuration
+  raw: |
+      <?xml version="1.0" encoding="UTF-8" ?>
+      <profiles xmlns="http://www.eprosima.com">
+          <participant profile_name="custom_participant_configuration">
+              <domainId>1</domainId>
+              <rtps></rtps>
+          </participant>
+      </profiles>
+
+# Relay topic rt/chatter and type std_msgs::msg::dds_::String_
+# Relay topic HelloWorldTopic and type HelloWorld
+
+builtin-topics:
+
+  - name: rt/chatter
+    type: std_msgs::msg::dds_::String_
+
+  - name: HelloWorldTopic
+    type: HelloWorld
+
+# Manually configure Topic QoS for a set of participants on a topic
+
+topics:
+
+  - name: "temperature/*"
+    type: "temperature/types/*"
+    qos:
+      max-tx-rate: 15
+      downsampling: 2
+    participants:
+      - Participant0
+      - Participant1
+
+# Do not allow ROS2 services
+
+blocklist:
+  - name: "rr/*"
+  - name: "rq/*"
+
+
+participants:
+
+####################
+
+# Simple DDS Participant in domain 3
+
+  - name: Participant0              # Participant Name = Participant0
+
+    kind: local                     # Participant Kind = local (= simple)
+
+    domain: 3                       # DomainId = 3
+
+    qos:
+
+      max-rx-rate: 0                  # Max Reception Rate = 0 (unlimited)
+
+      downsampling: 1                 # Downsampling = 1
+
+####################
+
+# Simple DDS Participant in domain 7
+
+  - name: Participant1              # Participant Name = Participant1
+
+    kind: local                     # Participant Kind = local (= simple)
+
+    domain: 7                       # DomainId = 7
+
+    qos:
+
+      max-rx-rate: 15                 # Max Reception Rate = 15
+
+####################
+
+# Simple DDS Participant configured with ROS 2 Easy Mode
+
+  - name: Participant1              # Participant Name = Participant1
+
+    kind: simple                     # Participant Kind = local (= simple)
+
+    domain: 7                       # DomainId = 7
+
+    ros2-easy-mode: "2.2.2.2"        # Remote discovery server address
+
+####################
+
+# Discovery Server DDS Participant with ROS GuidPrefix so a local ROS 2 Client could connect to it
+# This Discovery Server will listen in ports 11600 and 11601 in localhost
+
+  - name: ServerROS2                # Participant Name = ServerROS2
+
+    kind: local-discovery-server    # Participant Kind = local-discovery-server
+
+    discovery-server-guid:
+      id: 1
+      ros-discovery-server: true    # ROS Discovery Server id => GuidPrefix = 44.53.01.5f.45.50.52.4f.53.49.4d.41
+
+    listening-addresses:            # Local Discovery Server Listening Addresses
+      - ip: 127.0.0.1               # IP = localhost ; Transport = UDP (by default)
+        port: 11600                 # Port = 11600
+      - ip: 127.0.0.1               # IP = localhost
+        port: 11601                 # Port = 11601
+        external-port: 11602        # External Port = 11602
+        transport: tcp              # Transport = TCP
+
+    connection-addresses:
+      - domain: "localhost"
+        port: 22000
+
+####################
+
+# Participant that will communicate with a DDS Router in a different LAN.
+# This Participant will work as the remote DDS Router Client, so it sets the connection address of the remote one.
+
+  - name: Wan                       # Participant Name = Wan
+
+    kind: wan-ds                     # Participant Kind = Discovery Server WAN
+
+    discovery-server-guid:
+      id: 2                         # Internal WAN Discovery Server id => GuidPrefix = 01.0f.02.00.00.00.00.00.00.00.ca.fe
+
+    connection-addresses:           # WAN Discovery Server Connection Addresses
+      - ip: 8.8.8.8                 # IP = 8.8.8.8
+        port: 11666                 # Port = 11666
+        transport: udp              # Transport = UDP
+
+
+####################
+
+# Participant that will use a user set configuration via QoS Profile.
+
+  - name: xml_participant                       # Participant Name = xml_participant
+
+    kind: xml
+
+    profile: custom_participant_configuration   # Configure participant with this profile
+
+# Custom generic forwarding route.
+
+routes:
+
+  - src: Participant0
+    dst:
+      - Participant1
+
+# Custom topic forwarding route.
+
+topic-routes:
+
+  - name: HelloWorld
+    type: HelloWorld
+    routes:
+      - src: Participant1
+        dst:
+          - Participant0
