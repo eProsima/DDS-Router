@@ -14,4 +14,5 @@
 
 #pragma once
 
-static const char* DDSROUTER_CONFIG_SCHEMA = R"json(@DDSROUTER_CONFIG_SCHEMA_CONTENT@)json";
+static const char* DDSROUTER_CONFIG_SCHEMA =
+@DDSROUTER_CONFIG_SCHEMA_CHUNKS@;
