@@ -62,7 +62,7 @@ std::vector<std::string> invalid_files = []()
  */
 TEST(YamlValidatorDdsRouterTest, validation_passed)
 {
-    YamlValidator validator = YamlValidator(YamlValidator::from_file(test::schema_path));
+    YamlValidator validator = YamlValidator(YamlValidator::InputType::FROM_FILE, test::schema_path);
 
     // valid files
     {
@@ -80,7 +80,7 @@ TEST(YamlValidatorDdsRouterTest, validation_passed)
  */
 TEST(YamlValidatorDdsRouterTest, validation_failed)
 {
-    YamlValidator validator = YamlValidator(YamlValidator::from_file(test::schema_path));
+    YamlValidator validator = YamlValidator(YamlValidator::InputType::FROM_FILE, test::schema_path);
 
     // invalid files
     {
