@@ -17,12 +17,13 @@ ARG docker_image_base
 RUN echo "Docker Base image used: ${docker_image_base}"
 
 # Install message interface and demo nodes required packages
-RUN source "/opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash" && \
-        apt-get update && \
-        apt-get install -y \
-            ros-$VULCANEXUS_DISTRO-example-interfaces \
-            ros-$VULCANEXUS_DISTRO-demo-nodes-cpp \
-            ros-$VULCANEXUS_DISTRO-demo-nodes-py
+RUN source "/opt/vulcanexus/$VULCANEXUS_DISTRO/setup.bash" 
+      # && \
+      #  apt-get update && \
+      #  apt-get install -y \
+      #      ros-$VULCANEXUS_DISTRO-example-interfaces \
+      #      ros-$VULCANEXUS_DISTRO-demo-nodes-cpp \
+      #      ros-$VULCANEXUS_DISTRO-demo-nodes-py
 
 # Copy and use run.bash as entrypoint
 COPY run.bash /root/run.bash

@@ -65,7 +65,7 @@ jobs:
     env:
       DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE: "ddsrouter:ci"
       DDSROUTER_COMPOSE_TEST_ROS2_DOCKER_IMAGE: "vulcanexus:ci"
-      VULCANEXUS_IMAGE: ${{ startsWith(inputs.fastdds_branch, '2.') && 'eprosima/vulcanexus:humble-core' || 'eprosima/vulcanexus:jazzy-core' }}
+      VULCANEXUS_IMAGE: ${{ startsWith(inputs.fastdds_branch, '2.') && 'eprosima/vulcanexus:humble-desktop' || 'eprosima/vulcanexus:jazzy-desktop' }}
 
     steps:
 
