@@ -95,8 +95,11 @@ Endpoint profiles
 
 Profiles named after a topic are automatically applied to :term:`DataWriter` and :term:`DataReader` endpoints
 when they are created for that topic by an :ref:`XML Participant <user_manual_participants_xml>`.
-By default, when a matching profile is found, the YAML QoS configuration is ignored for that endpoint (XML takes priority).
-This behaviour can be changed via the xml-override tag on the participant.
+A specific profile can also be selected per topic via the ``endpoint-profile-name`` tag, instead of relying
+on the topic name.
+By default, QoS fields explicitly set in the YAML configuration override the matching XML profile's values
+(``endpoint-qos-mode: xml-overridable``); this can be changed to ``xml-standalone`` on the participant so the
+XML profile is applied verbatim.
 For more details, see :ref:`user_manual_participants_xml_topic_profiles`.
 
 Topics Configuration
