@@ -39,7 +39,7 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
     if (!validator.validate_YAML(yml))
     {
         throw eprosima::utils::ConfigurationException(
-                  utils::Formatter() << "Error, the provided yaml file is not a valid ddsrouter configuration.\n");
+                  utils::Formatter() << "Error, the provided yaml file is not a valid ddsrouter configuration.");
     }
 
     try
@@ -61,19 +61,27 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                 case ddspipe::yaml::YamlReaderVersion::V_2_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_1:
-                default:
-
                     throw eprosima::utils::ConfigurationException(
                               utils::Formatter()
                                   << "The yaml configuration version " << version
-                                  << " is no longer supported. Please update to v5.0.");
+                                  << " is no longer supported. Please update to "
+                                  << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
 
                 case ddspipe::yaml::YamlReaderVersion::V_4_0:
                     EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
                             "The yaml configuration version "
                             << version
-                            << " is deprecated and will be removed in a future release. Please update to v5.0.");
+                            << " is deprecated and will be removed in a future release. "
+                            << "Please update to " << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
+                    break;
+
+                default:
+                    throw eprosima::utils::ConfigurationException(
+                              utils::Formatter()
+                                  << "The yaml configuration version " << version
+                                  << " is unknown and not supported. Please update to "
+                                  << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
             }
         }

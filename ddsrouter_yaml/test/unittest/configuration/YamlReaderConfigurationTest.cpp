@@ -25,89 +25,242 @@
 using namespace eprosima;
 
 /**
- * Test load a whole DDS Router Configuration from yaml node for v1.0 of yaml.
+ * Test errors loading a whole DDS Router Configuration from yaml files.
  *
  * CASES:
- * - trivial configuration
+ * - Non-existent file
+ * - Empty file
  */
-// TEST(YamlReaderConfigurationTest, ddsrouter_configuration_v1_not_supported)
-// {
-//     std::vector<const char*> yml_configurations =
-//     {
-//         // trivial configuration
-//         R"(
-//         version: v1.0
-//         participant1:
-//           type: "echo"
-//         participant2:
-//           type: "echo"
-//         )",
-//     };
+TEST(YamlReaderConfigurationTest, error_loading_yaml)
+{
+    // Non-existent file
+    {
+        try
+        {
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
+                "./non_existent_file.yaml");
+            FAIL() << "Expected eprosima::utils::ConfigurationException with "
+                   << "'Error loading DDS Router configuration from yaml'.\n";
+        }
+        catch (const utils::ConfigurationException& e)
+        {
+            EXPECT_NE(std::string(e.what()).find("Error loading DDSRouter configuration from file: <"),
+                    std::string::npos)
+                << "Failed for non-existent file.\nActual message: " << e.what();
+        }
+        catch (const std::exception& e)
+        {
+            FAIL() << "Expected eprosima::utils::ConfigurationException but "
+                   << "caught a different exception when loading non-existent file.\n"
+                   << "Actual message: " << e.what();
+        }
+    }
 
-//     for (const char* yml_configuration : yml_configurations)
-//     {
-//         Yaml yml = YAML::Load(yml_configuration);
-
-//         // Load configuration
-//         ASSERT_THROW(
-//             ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml),
-//             utils::ConfigurationException);
-//     }
-// }
+    // Empty file
+    {
+        try
+        {
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration_from_file("./empty_file.yaml");
+            FAIL() << "Expected eprosima::utils::ConfigurationException with "
+                   << "'Error loading DDS Router configuration from yaml'.\n";
+        }
+        catch (const utils::ConfigurationException& e)
+        {
+            EXPECT_NE(std::string(e.what()).find("Error loading DDSRouter configuration from file: <"),
+                    std::string::npos)
+                << "Failed for empty file.\nActual message: " << e.what();
+            EXPECT_NE(std::string(e.what()).find("yaml node is null"), std::string::npos)
+                << "Failed for empty file.\nActual message: " << e.what();
+        }
+        catch (const std::exception& e)
+        {
+            FAIL() << "Expected eprosima::utils::ConfigurationException but "
+                   << "caught a different exception when loading empty file.\n"
+                   << "Actual message: " << e.what();
+        }
+    }
+}
 
 /**
- * Test load a whole DDS Router Configuration from yaml node for v2.0 of yaml.
+ * Test load a whole DDS Router Configuration from yaml node for invalid versions of yaml.
  *
  * CASES:
- * - trivial configuration
- * - ROS common configuration
+ * - V_1_0
+ * - V_2_0
+ * - V_3_0
+ * - V_3_1
  */
-// TEST(YamlReaderConfigurationTest, get_ddsrouter_configuration_v2)
-// {
-//     std::vector<const char*> yml_configurations =
-//     {
-//         // trivial configuration
-//         R"(
-//         version: v2.0
-//         participants:
-//           - name: "P1"
-//             kind: "echo"
-//           - name: "P2"
-//             kind: "echo"
-//         )",
+TEST(YamlReaderConfigurationTest, configuration_version_not_supported)
+{
+    std::vector<const char*> yml_versions =
+    {
+        "v1.0",
+        "v2.0",
+        "v3.0",
+        "v3.1"
+    };
 
-//         // ROS common configuration
-//         R"(
-//         version: v2.0
-//         builtin:
-//           - name: "rt/chatter"
-//             type: "std_msgs::msg::dds_::String_"
-//         participants:
-//           - name: "P1"
-//             kind: "local"
-//             domain: 0
-//           - name: "P2"
-//             kind: "local"
-//             domain: 1
-//           - name: "P3"
-//             kind: "simple"
-//             domain: 2
-//         )",
-//     };
+    const char* yml_trivial_config =
+    {
+        // trivial configuration
+        "version: %s\n"
+        "participants:\n"
+        "  - name: EchoParticipant\n"
+        "    kind: echo\n"
+        "  - name: SimpleParticipant\n"
+        "    kind: local\n"
+    };
 
-//     for (const char* yml_configuration : yml_configurations)
-//     {
-//         Yaml yml = YAML::Load(yml_configuration);
+    for (const char* yml_version : yml_versions)
+    {
+        std::string st = yml_trivial_config;
+        st.replace(st.find("%s"), 2, yml_version);
+        Yaml yml = YAML::Load(st);
 
-//         // Load configuration
-//         ddsrouter::core::DdsRouterConfiguration configuration_result =
-//                 ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+        // Load configuration
+        try
+        {
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+            FAIL() << "Expected eprosima::utils::ConfigurationException with "
+                   << "'The yaml configuration version ... is no longer supported. Please update to ...'.\n";
+        }
+        catch (const utils::ConfigurationException& e)
+        {
+            EXPECT_NE(std::string(e.what()).find("is no longer supported. Please update to"), std::string::npos)
+                << "Failed for file:\n'" << st << "'\nActual message: " << e.what();
+        }
+        catch (const std::exception& e)
+        {
+            FAIL() << "Expected eprosima::utils::ConfigurationException but "
+                   << "caught a different exception for file:\n'"
+                   << st << "'\n"
+                   << "Actual message: " << e.what();
+        }
+    }
+}
 
-//         // Check is valid
-//         utils::Formatter error_msg;
-//         ASSERT_TRUE(configuration_result.is_valid(error_msg)) << error_msg;
-//     }
-// }
+/**
+ * Test load a whole DDS Router Configuration from yaml node for deprecated versions of yaml.
+ *
+ * CASES:
+ * - V_4_0
+ */
+TEST(YamlReaderConfigurationTest, configuration_version_deprecated)
+{
+    std::vector<const char*> yml_versions =
+    {
+        "v4.0"
+    };
+
+    const char* yml_trivial_config =
+    {
+        // trivial configuration
+        "version: %s\n"
+        "participants:\n"
+        "  - name: EchoParticipant\n"
+        "    kind: echo\n"
+        "  - name: SimpleParticipant\n"
+        "    kind: local\n"
+    };
+
+    for (const char* yml_version : yml_versions)
+    {
+        std::string st = yml_trivial_config;
+        st.replace(st.find("%s"), 2, yml_version);
+        Yaml yml = YAML::Load(st);
+
+        // Ensure warning is thrown
+        eprosima::fastdds::dds::Log::SetVerbosity(eprosima::fastdds::dds::Log::Kind::Warning); // set verbosity to warning
+        testing::internal::CaptureStderr();
+
+        ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+
+        eprosima::fastdds::dds::Log::Flush();
+        std::string output = testing::internal::GetCapturedStderr();
+        ASSERT_NE(output.find("The yaml configuration version"), std::string::npos) // the string is different from not found
+            << "Failed for file:\n'" << st << "'\n";
+        ASSERT_NE(output.find("is deprecated and will be removed in a future release. Please update"),
+                std::string::npos)
+            << "Failed for file:\n'" << st << "'\n";
+
+        eprosima::fastdds::dds::Log::SetVerbosity(eprosima::fastdds::dds::Log::Kind::Error); // restore verbosity
+    }
+}
+
+
+/**
+ * Test load a whole DDS Router Configuration from yaml that is not a valid router configuration.
+ *
+ * CASES:
+ * - Duplicated route for the same participant
+ * - Duplicated topic-route for the same topic
+ */
+TEST(YamlReaderConfigurationTest, valid_yaml_invalid_config)
+{
+    std::vector<std::string> yml_configs =
+    {
+        "participants:\n"
+        "  - name: P1\n"
+        "    kind: echo\n"
+        "  - name: P2\n"
+        "    kind: echo\n"
+        "  - name: P3\n"
+        "    kind: echo\n"
+        "routes:\n"         // Duplicated route for the same participant
+        "  - src: P1\n"
+        "    dst:\n"
+        "      - P2\n"
+        "  - src: P1\n"
+        "    dst:\n"
+        "      - P3\n",
+
+        "participants:\n"
+        "  - name: P1\n"
+        "    kind: echo\n"
+        "  - name: P2\n"
+        "    kind: echo\n"
+        "  - name: P3\n"
+        "    kind: echo\n"
+        "topic-routes:\n"           // Duplicated topic-route for the same topic
+        "  - name: HelloWorld\n"
+        "    type: HelloWorld\n"
+        "    routes:\n"
+        "      - src: P1\n"
+        "        dst:\n"
+        "          - P2\n"
+        "  - name: HelloWorld\n"
+        "    type: HelloWorld\n"
+        "    routes:\n"
+        "      - src: P2\n"
+        "        dst:\n"
+        "          - P3\n"
+    };
+
+    for (const std::string& st : yml_configs)
+    {
+        Yaml yml = YAML::Load(st);
+
+        try
+        {
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(yml);
+            FAIL() << "Expected eprosima::utils::ConfigurationException with "
+                   << "'Error loading DDS Router configuration from yaml'.\n";
+        }
+        catch (const utils::ConfigurationException& e)
+        {
+            std::cout << "Error message: " << e.what() << std::endl;
+            EXPECT_NE(std::string(e.what()).find("Error loading DDS Router configuration from yaml"), std::string::npos)
+                << "Failed for file:\n'" << st << "'\nActual message: " << e.what();
+        }
+        catch (const std::exception& e)
+        {
+            FAIL() << "Expected eprosima::utils::ConfigurationException but "
+                   << "caught a different exception for file:\n'"
+                   << st << "'\n"
+                   << "Actual message: " << e.what();
+        }
+    }
+}
 
 /**
  * Do not set Yaml version and get default configuration
