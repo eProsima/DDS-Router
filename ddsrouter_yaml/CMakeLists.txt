@@ -77,6 +77,9 @@ compile_test_library(
 ###############################################################################
 # Resources
 ###############################################################################
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/../resources/configurations/ddsrouter_config_schema.json")
+
 file(READ "${PROJECT_SOURCE_DIR}/../resources/configurations/ddsrouter_config_schema.json"
     DDSROUTER_CONFIG_SCHEMA_CONTENT)
 

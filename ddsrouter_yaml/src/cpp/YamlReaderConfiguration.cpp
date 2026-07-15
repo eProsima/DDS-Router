@@ -69,19 +69,16 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                     break;
 
                 case ddspipe::yaml::YamlReaderVersion::V_4_0:
-                    EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
-                            "The yaml configuration version "
-                            << version
-                            << " is deprecated and will be removed in a future release. "
+                    EPROSIMA_LOG_WARNING(DDSROUTER_YAML, "The yaml configuration version "
+                            << version << " is deprecated and will be removed in a future release. "
                             << "Please update to " << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
 
                 default:
-                    throw eprosima::utils::ConfigurationException(
-                              utils::Formatter()
-                                  << "The yaml configuration version " << version
-                                  << " is unknown and not supported. Please update to "
-                                  << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
+                    // Defensive fallback. With mandatory schema validation enabled, it is not necessary.
+                    throw eprosima::utils::ConfigurationException(utils::Formatter()
+                                  << "The yaml configuration version " << version  << " is unknown and not supported."
+                                  << "Please update to " << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
             }
         }

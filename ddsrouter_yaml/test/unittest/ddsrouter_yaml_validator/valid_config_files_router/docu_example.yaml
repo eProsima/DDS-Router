@@ -113,11 +113,11 @@ participants:
 
 # Simple DDS Participant configured with ROS 2 Easy Mode
 
-  - name: Participant1              # Participant Name = Participant1
+  - name: Participant2               # Participant Name = Participant2
 
     kind: simple                     # Participant Kind = local (= simple)
 
-    domain: 7                       # DomainId = 7
+    domain: 7                        # DomainId = 7
 
     ros2-easy-mode: "2.2.2.2"        # Remote discovery server address
 
