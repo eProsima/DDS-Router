@@ -33,9 +33,8 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         const CommandlineArgsRouter* args /*= nullptr*/)
 {
     // Ensure the Yaml is valid
-    ddspipe::yaml::YamlValidator validator = ddspipe::yaml::YamlValidator(
-        ddspipe::yaml::YamlValidator::InputType::FROM_STRING,
-        DDSROUTER_CONFIG_SCHEMA);
+    ddspipe::yaml::YamlValidator validator;
+    validator.set_schema(ddspipe::yaml::YamlValidator::InputType::FROM_STRING, DDSROUTER_CONFIG_SCHEMA);
     if (!validator.validate_YAML(yml))
     {
         throw eprosima::utils::ConfigurationException(

@@ -30,31 +30,42 @@ namespace test {
 std::string schema_path = "./ddsrouter_config_schema.json";
 
 // Vectors with the valid and invalid YAML files
-std::vector<std::string> valid_files = []()
-        {
-            std::vector<std::string> files;
-            for (const auto& entry : std::filesystem::directory_iterator("./valid_config_files_router/"))
-            {
-                if (entry.path().extension() == ".yaml")
-                {
-                    files.push_back(entry.path().generic_string());
-                }
-            }
-            return files;
-        }();
+std::vector<std::string> valid_files = {
+    "./valid_config_files_router/docu_example.yaml",
+    // Config files copied automatically from DDS-Router/docs/resources/getting_started
+    "./valid_config_files_router/client-ddsrouter.yaml",
+    "./valid_config_files_router/server-ddsrouter.yaml",
+    // Config files copied automatically from DDS-Router/resources/configurations/examples
+    "./valid_config_files_router/change_domain_allowlist.yaml",
+    "./valid_config_files_router/change_domain.yaml",
+    "./valid_config_files_router/echo.yaml",
+    "./valid_config_files_router/forwarding_routes.yaml",
+    "./valid_config_files_router/repeater_client.yaml",
+    "./valid_config_files_router/repeater_server.yaml",
+    "./valid_config_files_router/ros_discovery_client.yaml",
+    "./valid_config_files_router/ros_discovery_server.yaml",
+    "./valid_config_files_router/wan_client.yaml",
+    "./valid_config_files_router/wan_ds_client.yaml",
+    "./valid_config_files_router/wan_ds_server.yaml",
+    "./valid_config_files_router/wan_server.yaml",
+    "./valid_config_files_router/xml.yaml",
+};
 
-std::vector<std::string> invalid_files = []()
-        {
-            std::vector<std::string> files;
-            for (const auto& entry : std::filesystem::directory_iterator("./invalid_config_files_router/"))
-            {
-                if (entry.path().extension() == ".yaml")
-                {
-                    files.push_back(entry.path().generic_string());
-                }
-            }
-            return files;
-        }();
+std::vector<std::string> invalid_files = {
+    "./invalid_config_files_router/address_no_ip_nor_domain.yaml",
+    "./invalid_config_files_router/address_no_port.yaml",
+    "./invalid_config_files_router/builtin_topic_no_name.yaml",
+    "./invalid_config_files_router/builtin_topic_no_type.yaml",
+    "./invalid_config_files_router/ds_participant_no_discovery_server_guid.yaml",
+    "./invalid_config_files_router/ds_participant_no_listening_nor_connection_addresses.yaml",
+    "./invalid_config_files_router/filter_topic_no_name.yaml",
+    "./invalid_config_files_router/initial_peers_no_addresses.yaml",
+    "./invalid_config_files_router/invalid_version.yaml",
+    "./invalid_config_files_router/no_participant_kind.yaml",
+    "./invalid_config_files_router/no_participant_name.yaml",
+    "./invalid_config_files_router/tls_ca_no_private_key_provided_cert.yaml",
+    "./invalid_config_files_router/tls_no_ca.yaml"
+};
 } // namespace test
 
 /**
@@ -62,7 +73,8 @@ std::vector<std::string> invalid_files = []()
  */
 TEST(YamlValidatorDdsRouterTest, validation_passed)
 {
-    YamlValidator validator = YamlValidator(YamlValidator::InputType::FROM_FILE, test::schema_path);
+    YamlValidator validator;
+    validator.set_schema(YamlValidator::InputType::FROM_FILE, test::schema_path);
 
     // valid files
     {
@@ -80,7 +92,8 @@ TEST(YamlValidatorDdsRouterTest, validation_passed)
  */
 TEST(YamlValidatorDdsRouterTest, validation_failed)
 {
-    YamlValidator validator = YamlValidator(YamlValidator::InputType::FROM_FILE, test::schema_path);
+    YamlValidator validator;
+    validator.set_schema(YamlValidator::InputType::FROM_FILE, test::schema_path);
 
     // invalid files
     {
