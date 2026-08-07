@@ -26,7 +26,7 @@ participants:
 # INITIAL PEERS CLIENT
 # This participant will subscribe to topics in allowlist using Initial Peers Discovery protocol connecting to remote.
 
-  - name: WanParticipant                                          # 6
+  - name: WanClient                                               # 6
     kind: wan                                                     # 7
     connection-addresses:                                         # 8
       - ip: 1.1.1.1
@@ -59,7 +59,7 @@ participants:
 
 # 5: SimpleParticipant will use DDS Domain ID <1>.
 
-# 6: New Participant with name <WanParticipant>.
+# 6: New Participant with name <WanClient>.
 
 # 7: Kind of WANClient: <wan>.
 # InitialPeers discovery to discover and communicate with another Initial Peers participant.

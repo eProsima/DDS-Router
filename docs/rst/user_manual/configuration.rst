@@ -705,8 +705,8 @@ Network Address
 Network Addresses are elements that can be configured for specific Participants.
 An Address is defined by:
 
-* *IP*: IP of the host (public IP in case of WAN communication).
-* *Port*: Port where the Participant is listening.
+* *IP*: IP of the host (public IP in case of WAN communication). This field is mandatory if ``domain`` is not specified.
+* *Port*: Port where the Participant is listening. This field is mandatory.
 * *External Port*: Public port accessible for external entities (only for TCP listening-addresses).
 * *Transport Protocol*: ``UDP`` or ``TCP``.
   If it is not set, it would be chosen by default depending on the Participant Kind.
@@ -1078,11 +1078,11 @@ A complete example of all the configurations described on this page can be found
 
     # Simple DDS Participant configured with ROS 2 Easy Mode
 
-      - name: Participant1              # Participant Name = Participant1
+      - name: Participant2               # Participant Name = Participant2
 
         kind: simple                     # Participant Kind = local (= simple)
 
-        domain: 7                       # DomainId = 7
+        domain: 7                        # DomainId = 7
 
         ros2-easy-mode: "2.2.2.2"        # Remote discovery server address
 

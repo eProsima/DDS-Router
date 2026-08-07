@@ -1,3 +1,5 @@
+version: v4.1
+
 allowlist:
   - name: HelloWorldTopic
     type: HelloWorld

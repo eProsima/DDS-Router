@@ -23,7 +23,13 @@ import os
 import pathlib
 import re
 import requests
+import shutil
 
+shutil.copytree(
+    os.path.join(os.path.dirname(__file__), '..', 'resources', 'configurations', 'examples'),
+    os.path.join(os.path.dirname(__file__), 'resources', 'examples'),
+    dirs_exist_ok=True
+)
 
 PROJECT_NAME = 'DDS Router'
 COMPRESS_PROJECT_NAME = 'ddsrouter'

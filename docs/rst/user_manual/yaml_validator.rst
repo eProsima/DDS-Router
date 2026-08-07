@@ -7,6 +7,12 @@
 YAML Validator
 ##############
 
+.. warning::
+
+    **DEPRECATED**
+
+    This standalone YAML Validator tool is deprecated.
+
 Configuration files used to launch a DDS-Router instance need to follow a specific structure, which is extensively
 described along section :ref:`user_manual_configuration`. The *YAML Validator tool* has been developed for the sole
 purpose of validating user-defined configuration files in an easy manner.

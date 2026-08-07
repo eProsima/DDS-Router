@@ -44,8 +44,6 @@ installed in the system:
 * :ref:`windows_sources_cmake_pip3_wget_git`
 * :ref:`windows_sources_colcon_install` [optional]
 * :ref:`windows_sources_gtest` [for test only]
-* :ref:`windows_py_yaml` [for YAML Validator only]
-* :ref:`windows_json_schema` [for YAML Validator only]
 
 .. _windows_sources_visual_studio:
 

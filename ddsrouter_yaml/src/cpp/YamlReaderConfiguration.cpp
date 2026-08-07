@@ -16,10 +16,12 @@
 #include <ddspipe_yaml/Yaml.hpp>
 #include <ddspipe_yaml/YamlManager.hpp>
 #include <ddspipe_yaml/YamlReader.hpp>
+#include <ddspipe_yaml/YamlValidator.hpp>
 
 #include <ddsrouter_core/configuration/DdsRouterConfiguration.hpp>
 
 #include <ddsrouter_yaml/YamlReaderConfiguration.hpp>
+#include <ddsrouter_yaml/DdsRouterConfigSchema.hpp>
 
 namespace eprosima {
 namespace ddsrouter {
@@ -30,6 +32,15 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
         const Yaml& yml,
         const CommandlineArgsRouter* args /*= nullptr*/)
 {
+    // Ensure the Yaml is valid
+    ddspipe::yaml::YamlValidator validator;
+    validator.set_schema(ddspipe::yaml::YamlValidator::InputType::FROM_STRING, DDSROUTER_CONFIG_SCHEMA);
+    if (!validator.validate_YAML(yml))
+    {
+        throw eprosima::utils::ConfigurationException(
+                  utils::Formatter() << "Error, the provided yaml file is not a valid ddsrouter configuration.");
+    }
+
     try
     {
         ddspipe::yaml::YamlReaderVersion version;
@@ -49,18 +60,24 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
                 case ddspipe::yaml::YamlReaderVersion::V_2_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_0:
                 case ddspipe::yaml::YamlReaderVersion::V_3_1:
-                default:
-
                     throw eprosima::utils::ConfigurationException(
-                              utils::Formatter() <<
-                                  "The yaml configuration version " << version <<
-                                  " is no longer supported. Please update to v5.0.");
+                              utils::Formatter()
+                                  << "The yaml configuration version " << version
+                                  << " is no longer supported. Please update to "
+                                  << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
 
                 case ddspipe::yaml::YamlReaderVersion::V_4_0:
-                    EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
-                            "The yaml configuration version " << version <<
-                            " is deprecated and will be removed in a future release. Please update to v5.0.");
+                    EPROSIMA_LOG_WARNING(DDSROUTER_YAML, "The yaml configuration version "
+                            << version << " is deprecated and will be removed in a future release. "
+                            << "Please update to " << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
+                    break;
+
+                default:
+                    // Defensive fallback. With mandatory schema validation enabled, it is not necessary.
+                    throw eprosima::utils::ConfigurationException(utils::Formatter()
+                                  << "The yaml configuration version " << version  << " is unknown and not supported."
+                                  << "Please update to " << ddspipe::yaml::YamlReaderVersion::LATEST << ".");
                     break;
             }
         }
@@ -69,9 +86,11 @@ YamlReaderConfiguration::load_ddsrouter_configuration(
             // Get default version
             version = default_yaml_version();
             EPROSIMA_LOG_WARNING(DDSROUTER_YAML,
-                    "No version of yaml configuration given. Using version " << version << " by default. " <<
-                    "Add " << ddspipe::yaml::VERSION_TAG << " tag to your configuration in order to not break compatibility " <<
-                    "in future releases.");
+                    "No version of yaml configuration given. Using version "
+                    << version << " by default. "
+                    << "Add " << ddspipe::yaml::VERSION_TAG
+                    << " tag to your configuration in order to not break compatibility "
+                    << "in future releases.");
         }
 
         EPROSIMA_LOG_INFO(DDSROUTER_YAML, "Loading DDSRouter configuration with version: " << version << ".");
@@ -111,15 +130,15 @@ YamlReaderConfiguration::load_ddsrouter_configuration_from_file(
     catch (const std::exception& e)
     {
         throw eprosima::utils::ConfigurationException(
-                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
-                      "> :\n " << e.what());
+                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path
+                                     << "> :\n " << e.what());
     }
 
     if (yml.IsNull())
     {
         throw eprosima::utils::ConfigurationException(
-                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path <<
-                      "> :\n " << "yaml node is null.");
+                  utils::Formatter() << "Error loading DDSRouter configuration from file: <" << file_path
+                                     << "> :\n " << "yaml node is null.");
     }
 
     return YamlReaderConfiguration::load_ddsrouter_configuration(yml, args);

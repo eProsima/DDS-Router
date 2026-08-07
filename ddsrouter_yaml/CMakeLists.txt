@@ -75,6 +75,37 @@ compile_test_library(
 )
 
 ###############################################################################
+# Resources
+###############################################################################
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/../resources/configurations/ddsrouter_config_schema.json")
+
+file(READ "${PROJECT_SOURCE_DIR}/../resources/configurations/ddsrouter_config_schema.json"
+    DDSROUTER_CONFIG_SCHEMA_CONTENT)
+
+# Split into <=16000-char chunks to work around MSVC C2026 string literal size limit.
+# Adjacent string literals are concatenated by the compiler.
+string(LENGTH "${DDSROUTER_CONFIG_SCHEMA_CONTENT}" _schema_len)
+set(_chunk_size 16000)
+set(DDSROUTER_CONFIG_SCHEMA_CHUNKS "")
+set(_offset 0)
+while(_offset LESS _schema_len)
+    string(SUBSTRING "${DDSROUTER_CONFIG_SCHEMA_CONTENT}" ${_offset} ${_chunk_size} _chunk)
+    string(APPEND DDSROUTER_CONFIG_SCHEMA_CHUNKS "    R\"json(${_chunk})json\"\n")
+    math(EXPR _offset "${_offset} + ${_chunk_size}")
+endwhile()
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/include/ddsrouter_yaml/DdsRouterConfigSchema.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/ddsrouter_yaml/DdsRouterConfigSchema.hpp"
+    @ONLY
+)
+
+target_include_directories(${MODULE_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+)
+
+###############################################################################
 # Packaging
 ###############################################################################
 # Install package

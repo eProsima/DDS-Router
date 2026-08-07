@@ -34,7 +34,7 @@ namespace eprosima {
 namespace ddspipe {
 namespace yaml {
 
-template <>
+template<>
 void YamlReader::fill(
         ddsrouter::core::SpecsConfiguration& object,
         const Yaml& yml,
@@ -95,7 +95,7 @@ void YamlReader::fill(
     }
 }
 
-template <>
+template<>
 ddsrouter::core::types::ParticipantKind YamlReader::get(
         const Yaml& yml,
         const YamlReaderVersion /* version */)
@@ -105,7 +105,7 @@ ddsrouter::core::types::ParticipantKind YamlReader::get(
                    *ddsrouter::core::types::ParticipantKindBuilder::get_instance());
 }
 
-template <>
+template<>
 std::shared_ptr<participants::ParticipantConfiguration>
 YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
         const Yaml& yml,
@@ -141,13 +141,13 @@ YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(
                 YamlReader::get<participants::XmlParticipantConfiguration>(yml, version));
 
         default:
-            // Non recheable code
+            // Non reachable code
             throw eprosima::utils::ConfigurationException(
                       utils::Formatter() << "Unknown or non valid Participant kind: " << kind << ".");
     }
 }
 
-template <>
+template<>
 void YamlReader::fill(
         core::DdsPipeConfiguration& object,
         const Yaml& yml,
@@ -216,7 +216,7 @@ void YamlReader::fill(
     }
 }
 
-template <>
+template<>
 core::DdsPipeConfiguration YamlReader::get<core::DdsPipeConfiguration>(
         const Yaml& yml,
         const YamlReaderVersion version)
@@ -226,7 +226,7 @@ core::DdsPipeConfiguration YamlReader::get<core::DdsPipeConfiguration>(
     return object;
 }
 
-template <>
+template<>
 void YamlReader::fill(
         ddsrouter::core::DdsRouterConfiguration& object,
         const Yaml& yml,
@@ -241,9 +241,9 @@ void YamlReader::fill(
     if (!participants_configurations_yml.IsSequence())
     {
         throw eprosima::utils::ConfigurationException(
-                  utils::Formatter() <<
-                      "Participant configurations must be specified in an array under tag: " <<
-                      COLLECTION_PARTICIPANTS_TAG);
+                  utils::Formatter()
+                      << "Participant configurations must be specified in an array under tag: "
+                      << COLLECTION_PARTICIPANTS_TAG);
     }
 
     for (auto conf : participants_configurations_yml)
@@ -251,10 +251,10 @@ void YamlReader::fill(
         ddsrouter::core::types::ParticipantKind kind =
                 YamlReader::get<ddsrouter::core::types::ParticipantKind>(conf, PARTICIPANT_KIND_TAG, version);
         object.participants_configurations.insert(
-                    {
-                        kind,
-                        YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(conf, version)
-                    }
+            {
+                kind,
+                YamlReader::get<std::shared_ptr<participants::ParticipantConfiguration>>(conf, version)
+            }
             );
     }
 
@@ -293,7 +293,7 @@ void YamlReader::fill(
     }
 }
 
-template <>
+template<>
 ddsrouter::core::DdsRouterConfiguration YamlReader::get<ddsrouter::core::DdsRouterConfiguration>(
         const Yaml& yml,
         const YamlReaderVersion version)

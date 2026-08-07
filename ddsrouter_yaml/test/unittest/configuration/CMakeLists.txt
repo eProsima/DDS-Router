@@ -25,8 +25,10 @@ set(TEST_SOURCES
     )
 
 set(TEST_LIST
-        # ddsrouter_configuration_v1_not_supported
-        # get_ddsrouter_configuration_v2
+        error_loading_yaml
+        configuration_version_not_supported
+        configuration_version_deprecated
+        valid_yaml_invalid_config
         get_ddsrouter_configuration_no_version
         version_negative_cases
         number_of_threads
@@ -51,11 +53,17 @@ set(TEST_EXTRA_LIBRARIES
         ddsrouter_core
     )
 
+file(GLOB_RECURSE TEST_NEEDED_SOURCES
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    "empty_file.yaml"
+)
+
 add_unittest_executable(
     "${TEST_NAME}"
     "${TEST_SOURCES}"
     "${TEST_LIST}"
-    "${TEST_EXTRA_LIBRARIES}")
+    "${TEST_EXTRA_LIBRARIES}"
+    "${TEST_NEEDED_SOURCES}")
 
 #####################################
 # Yaml DdsRouter Configuration Test #

@@ -41,8 +41,6 @@ installed in the system:
 * :ref:`cmake_gcc_pip_wget_git_sl`
 * :ref:`colcon_install` [optional]
 * :ref:`gtest_sl` [for test only]
-* :ref:`py_yaml` [for YAML Validator only]
-* :ref:`json_schema` [for YAML Validator only]
 
 
 .. _cmake_gcc_pip_wget_git_sl:
