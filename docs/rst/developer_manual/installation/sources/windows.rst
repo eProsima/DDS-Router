@@ -255,7 +255,7 @@ Colcon installation
         mkdir <path\to\user\workspace>\DDS-Router
         cd <path\to\user\workspace>\DDS-Router
         mkdir src
-        wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+        wget https://raw.githubusercontent.com/eProsima/DDS-Router/v3.5.3/ddsrouter.repos
         vcs import src --input ddsrouter.repos
 
     .. note::
@@ -307,7 +307,7 @@ Local installation
         mkdir <path\to\user\workspace>\DDS-Router\src
         mkdir <path\to\user\workspace>\DDS-Router\build
         cd <path\to\user\workspace>\DDS-Router
-        wget https://raw.githubusercontent.com/eProsima/DDS-Router/main/ddsrouter.repos
+        wget https://raw.githubusercontent.com/eProsima/DDS-Router/v3.5.3/ddsrouter.repos
         vcs import src --input ddsrouter.repos
 
 #.  Compile all dependencies using CMake_.
