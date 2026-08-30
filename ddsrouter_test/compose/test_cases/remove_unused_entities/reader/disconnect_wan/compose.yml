@@ -1,0 +1,114 @@
+# Test description:
+#   This test checks that the removal of unused entities frees up bandwidth
+#   over a WAN connection when there aren't any subscribers. To achieve it, the
+#   test sets up four routers, a subscriber, and a publisher. It then checks
+#   that the subscriber receives the data from the publisher, and then it stops
+#   the connection and checks if the tracks have been destroyed.
+#
+# Test architecture:
+#
+# ┌─────────────────────────────────────────┐
+# │  cloud_edge_net                         │
+# │ ┌─────────────────┐ ┌─────────────────┐ │
+# │ │ddsrouter_cloud_0│ │ddsrouter_cloud_1│ │
+# │ │                ─┼─┤►                │ │
+# │ │(wan + wan)      │ │(wan + wan)      │ │
+# │ └──────────────▲──┘ └──────────────┬──┘ │
+# │                │                   │    │
+# │ ┌──────────────┼──┐ ┌──────────────┼──┐ │
+# │ │  Domain 80   │  │ │  Domain 81   │  │ │
+# │ │              │  │ │              │  │ │
+# │ │  edge_0_net  │  │ │  edge_1_net  │  │ │
+# │ │ ┌────────────┴┐ │ │ ┌────────────▼┐ │ │
+# │ │ │ddsrouter_0  │ │ │ │ddsrouter_1  │ │ │
+# │ │ │             │ │ │ │             │ │ │
+# │ │ │(local + wan)│ │ │ │(local + wan)│ │ │
+# │ │ └──────────▲──┘ │ │ └──────────┬──┘ │ │
+# │ │            │    │ │            │    │ │
+# └─┼────────────┼────┼─┼────────────┼────┼─┘
+#   │            │    │ │            │    │
+#   │ ┌──────────┴──┐ │ │ ┌──────────▼──┐ │
+#   │ │publisher_t0 │ │ │ │subscriber_t0│ │
+#   │ │             │ │ │ │             │ │
+#   │ │(local)      │ │ │ │(local)      │ │
+#   │ └─────────────┘ │ │ └─────────────┘ │
+#   │                 │ │                 │
+#   └─────────────────┘ └─────────────────┘
+
+services:
+
+  # CLOUD
+  ddsrouter_cloud_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_cloud_0
+    networks:
+      - cloud_edge_net
+    volumes:
+      - ./ddsrouter_cloud_0.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  ddsrouter_cloud_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_cloud_1
+    depends_on:
+      - ddsrouter_cloud_0
+    networks:
+      - cloud_edge_net
+    volumes:
+      - ./ddsrouter_cloud_1.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  # DOMAIN 80
+  ddsrouter_edge_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_0
+    depends_on:
+      - ddsrouter_cloud_0
+    networks:
+      - cloud_edge_net
+      - edge_0_net
+    volumes:
+      - ./ddsrouter_edge_0.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  publisher_0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0
+    depends_on:
+      - ddsrouter_edge_0
+    networks:
+      - edge_0_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_publisher.py --exe build/fastdds_configuration_example/configuration --n-unmatches 1 --timeout 8 --args "--samples 80 --domain 80 --interval 100"
+
+  # DOMAIN 81
+  ddsrouter_edge_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter_edge_1
+    depends_on:
+      - ddsrouter_cloud_1
+    networks:
+      - cloud_edge_net
+      - edge_1_net
+    volumes:
+      - ./ddsrouter_edge_1.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 8
+
+  subscriber_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1
+    depends_on:
+      - ddsrouter_edge_1
+    networks:
+      - edge_1_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 8 --args "--samples 20 --domain 81"
+
+networks:
+  edge_0_net:
+  edge_1_net:
+  cloud_edge_net:
+  default:
+    driver: none
