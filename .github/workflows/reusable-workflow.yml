@@ -41,6 +41,9 @@ on:
 env:
   code_packages_names: 'ddsrouter_core ddsrouter_yaml ddsrouter_tool'
   docs_packages_names: 'ddsrouter_docs'
+  # Number of times ctest runs each test, all of which must pass. Raised above 1 to catch flaky
+  # tests: a single green run says little for a test that fails intermittently.
+  TEST_ITERATIONS: '10'
 
 jobs:
 
@@ -74,14 +77,26 @@ jobs:
           dependencies_artifact_postfix: ${{ inputs.dependencies_artifact_postfix }}
           secret_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Compile and run tests
+      # NOTE: build and test are separate steps, rather than the combined colcon_build_test action,
+      # so that the tests can be repeated without paying for a rebuild each time. ctest repeats every
+      # test up to TEST_ITERATIONS times and requires all of the runs to pass, which is what surfaces
+      # flaky tests instead of hiding them; --repeat until-pass would do the opposite.
+      - name: Compile
+        uses: eProsima/eProsima-CI/multiplatform/colcon_build@v0
+        with:
+          colcon_build_args: '--packages-up-to ${{ env.code_packages_names }}'
+          cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
+          cmake_build_type: ${{ matrix.cmake_build_type }}
+          workspace_dependencies: install
+          colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
+
+      - name: Run tests
         id: compile_and_test
-        uses: eProsima/eProsima-CI/multiplatform/colcon_build_test@v0
+        uses: eProsima/eProsima-CI/multiplatform/colcon_test@v0
         with:
           packages_names: ${{ env.code_packages_names }}
-          cmake_args: -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
           workspace_dependencies: install
-          ctest_args: --label-exclude "xfail"
+          ctest_args: --label-exclude "xfail" --repeat until-fail:${{ env.TEST_ITERATIONS }}
           colcon_meta_file: src/.github/workflows/configurations/${{ runner.os }}/colcon.meta
           test_report_artifact: test_report${{ inputs.dependencies_artifact_postfix }}_${{ inputs.custom_version_build }}_${{ inputs.os }}_${{ matrix.cmake_build_type }}
 
