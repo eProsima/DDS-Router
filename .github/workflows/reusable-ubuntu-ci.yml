@@ -322,6 +322,7 @@ jobs:
 # PYTHON LINTER
 
   python-linter:
+    if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'conflicts') }}
     runs-on: ubuntu-22.04
     steps:
 
