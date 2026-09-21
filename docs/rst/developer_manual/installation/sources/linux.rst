@@ -307,14 +307,14 @@ Local installation
             cd ~/DDS-Router
             mkdir build/cmake_utils
             cd build/cmake_utils
-            cmake ~/DDS-Router/src/dev-utils/cmake_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake ~/DDS-Router/src/dev_utils/cmake_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
             # C++ Utils
             cd ~/DDS-Router
             mkdir build/cpp_utils
             cd build/cpp_utils
-            cmake ~/DDS-Router/src/dev-utils/cpp_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
+            cmake ~/DDS-Router/src/dev_utils/cpp_utils -DCMAKE_INSTALL_PREFIX=~/DDS-Router/install -DCMAKE_PREFIX_PATH=~/DDS-Router/install
             cmake --build . --target install
 
     * `DDS Pipe <https://github.com/eProsima/DDS-Pipe>`_

@@ -351,7 +351,7 @@ Local installation
             cd <path\to\user\workspace>\DDS-Router
             mkdir build\cmake_utils
             cd build\cmake_utils
-            cmake <path\to\user\workspace>\DDS-Router\src\dev-utils\cmake_utils -DCMAKE_INSTALL_PREFIX=<path\to\user\workspace>\DDS-Router\install ^
+            cmake <path\to\user\workspace>\DDS-Router\src\dev_utils\cmake_utils -DCMAKE_INSTALL_PREFIX=<path\to\user\workspace>\DDS-Router\install ^
                 -DCMAKE_PREFIX_PATH=<path\to\user\workspace>\DDS-Router\install
             cmake --build . --config Release --target install
 
@@ -359,7 +359,7 @@ Local installation
             cd <path\to\user\workspace>\DDS-Router
             mkdir build\cpp_utils
             cd build\cpp_utils
-            cmake <path\to\user\workspace>\DDS-Router\src\dev-utils\cpp_utils -DCMAKE_INSTALL_PREFIX=<path\to\user\workspace>\DDS-Router\install ^
+            cmake <path\to\user\workspace>\DDS-Router\src\dev_utils\cpp_utils -DCMAKE_INSTALL_PREFIX=<path\to\user\workspace>\DDS-Router\install ^
                 -DCMAKE_PREFIX_PATH=<path\to\user\workspace>\DDS-Router\install
             cmake --build . --config Release --target install
 
