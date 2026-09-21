@@ -1,5 +1,10 @@
 # eProsima DDS Router
 
+> [!WARNING]
+> **The `2.x` branch has reached its End-of-Life (EOL).**
+> This version of *eProsima DDS Router* is no longer maintained and will receive no further releases, bugfixes or security updates.
+> Please migrate to the [latest release](https://github.com/eProsima/DDS-Router/releases/latest), which is still compatible with *eProsima Fast DDS* v2.
+
 <a href="http://www.eprosima.com"><img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSd0PDlVz1U_7MgdTe0FRIWD0Jc9_YH-gGi0ZpLkr-qgCI6ZEoJZ5GBqQ" align="left" hspace="8" vspace="2" width="100" height="100" ></a>
 
 [![License](https://img.shields.io/github/license/eProsima/DDS-Router.svg)](https://opensource.org/licenses/Apache-2.0)
