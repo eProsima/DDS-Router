@@ -59,7 +59,7 @@ RUN mkdir src && \
     vcs import src < ddsrouter.repos && \
     cd src/fastcdr && git checkout ${fastcdr_branch} && cd ../.. && \
     cd src/fastdds && git checkout ${fastdds_branch} && cd ../.. && \
-    cd src/dev-utils && git checkout ${devutils_branch} && cd ../.. && \
+    cd src/dev_utils && git checkout ${devutils_branch} && cd ../.. && \
     cd src/ddspipe && git checkout ${ddspipe_branch} && cd ../.. && \
     cd src/ddsrouter && git checkout ${ddsrouter_branch} && cd ../.. && \
     cp -r src/fastdds/examples/cpp/dds/BasicConfigurationExample src/. && \
