@@ -3,7 +3,7 @@
 > [!WARNING]
 > **The `2.x` branch has reached its End-of-Life (EOL).**
 > This version of *eProsima DDS Router* is no longer maintained and will receive no further releases, bugfixes or security updates.
-> Please migrate to the [latest release](https://github.com/eProsima/DDS-Router/releases/latest), which is still compatible with *eProsima Fast DDS* v2.
+> Please migrate to the [latest release](https://github.com/eProsima/DDS-Router/releases/latest), which is still compatible with applications running with *eProsima Fast DDS* v2.
 
 [![License](https://img.shields.io/github/license/eProsima/DDS-Router.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Releases](https://img.shields.io/github/v/release/eProsima/DDS-Router?sort=semver)](https://github.com/eProsima/DDS-Router/releases)
