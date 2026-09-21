@@ -3,6 +3,7 @@ allowlisting
 Asio
 blackbox
 blocklist
+bugfixes
 Chocolatey
 CMake
 colcon

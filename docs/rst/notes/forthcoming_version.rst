@@ -1,6 +1,6 @@
 .. add orphan tag when new info added to this file
 
-.. :orphan:
+:orphan:
 
 ###################
 Forthcoming Version
