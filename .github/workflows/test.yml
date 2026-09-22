@@ -38,13 +38,12 @@ on:
       custom_version_build:
         description: >
           Use the custom version build from eProsima-CI.
-          If set to false, the workflow will run the tests for Fast DDS v2 and v3.
+          If set to false, the workflow will run the tests for Fast DDS v3.
         required: true
         type: choice
         default: 'custom'
         options:
           - custom
-          - v2
           - v3
 
       dependencies_artifact_postfix:
