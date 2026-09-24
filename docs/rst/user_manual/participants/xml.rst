@@ -74,6 +74,72 @@ Notice that not setting such QoS will not affect the correct functionality of th
       </participant>
 
 
+.. _user_manual_participants_xml_topic_profiles:
+
+Topic-name endpoint profile lookup
+-----------------------------------
+When the XML Participant creates a DataWriter or DataReader for a topic, it looks for a loaded XML ``data_writer``
+or ``data_reader`` profile to configure that endpoint.
+By default, the |ddsrouter| looks for a profile **whose name matches the topic name**.
+If a matching profile is found, the endpoint is configured using that profile's QoS, giving the user
+control over fields such as history, memory policy, transport, etc.
+If no matching profile exists, the endpoint falls back to default QoS with values derived from the YAML configuration.
+
+.. note::
+
+    Certain QoS are always enforced by the |ddsrouter| regardless of the XML profile:
+    deadline on DataWriters (set to minimum so it matches any reader),
+    ``autodispose_unregistered_instances`` on DataWriters (set to ``false`` to preserve dispose/unregister forwarding semantics),
+    and ``expects_inline_qos`` on DataReaders for keyed topics.
+
+The following example loads a profile named ``my_topic`` that will be automatically applied when creating
+endpoints for a topic of that name:
+
+.. code-block:: xml
+
+    <dds>
+        <profiles>
+            <data_writer profile_name="my_topic">
+                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+            </data_writer>
+            <data_reader profile_name="my_topic">
+                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+            </data_reader>
+        </profiles>
+    </dds>
+
+Selecting a profile explicitly
+"""""""""""""""""""""""""""""""
+
+Instead of relying on the topic name, a specific profile can be selected for a topic with the
+``endpoint-profile-name`` tag under that topic's QoS configuration.
+When set, the |ddsrouter| looks up the XML profile with that name instead of the topic name:
+
+.. code-block:: yaml
+
+    topics:
+      - name: "rt/chatter"
+        qos:
+          endpoint-profile-name: "my_reader_profile"
+
+Overriding profile QoS from the YAML configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+
+When a matching XML profile is applied, the QoS fields explicitly set by the user in the YAML
+configuration take precedence over the values in the XML profile.
+This behavior is controlled by the ``endpoint-qos-mode`` participant tag, which accepts two values:
+
+* ``xml-overridable`` *(default)*: the XML profile is applied first, and any QoS field explicitly set in
+  the YAML configuration overrides the corresponding value from the profile.
+* ``xml-standalone``: the XML profile is applied verbatim; YAML QoS does not override it.
+
+.. code-block:: yaml
+
+    - name: xml_participant
+      kind: xml
+      endpoint-qos-mode: xml-standalone
+
+
 Repeater
 --------
 
