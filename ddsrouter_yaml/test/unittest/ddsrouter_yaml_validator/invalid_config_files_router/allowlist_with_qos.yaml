@@ -1,0 +1,17 @@
+version: v5.0
+
+allowlist:
+  - name: HelloWorldTopic
+    type: HelloWorld
+    qos:
+      reliability: true
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo

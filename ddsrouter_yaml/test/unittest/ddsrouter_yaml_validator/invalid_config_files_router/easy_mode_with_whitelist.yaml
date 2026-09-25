@@ -1,0 +1,13 @@
+version: v5.0
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+    ros2-easy-mode: "2.2.2.2"
+    whitelist-interfaces:
+      - "127.0.0.1"
+
+  - name: EchoParticipant
+    kind: echo

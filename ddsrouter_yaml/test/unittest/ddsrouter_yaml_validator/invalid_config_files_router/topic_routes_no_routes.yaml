@@ -1,0 +1,15 @@
+version: v5.0
+
+topic-routes:
+  - name: HelloWorldTopic
+    type: HelloWorld
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo
