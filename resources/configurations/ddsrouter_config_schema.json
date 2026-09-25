@@ -106,7 +106,7 @@
             "properties":{
                 "threads":{
                     "type":"integer",
-                    "minimum": 0
+                    "minimum": 1
                 },
                 "remove-unused-entities":{
                     "type":"boolean"
@@ -184,7 +184,24 @@
                     },
                     "required": [
                         "enable"
-                    ]
+                    ],
+                    "if":{
+                        "properties":{
+                            "enable":{
+                                "const":true
+                            }
+                        }
+                    },
+                    "then":{
+                        "properties":{
+                            "topic-name":{
+                                "pattern":"^\\S(.*\\S)?$"
+                            }
+                        },
+                        "required":[
+                            "topic-name"
+                        ]
+                    }
                 },
                 "stdout":{
                     "type":"boolean"
@@ -221,9 +238,6 @@
                 "domain":{
                     "$ref":"#/definitions/DdsDomain"
                 },
-                "status":{
-                    "$ref":"#/definitions/MonitorProducerConfig"
-                },
                 "topics":{
                     "$ref":"#/definitions/MonitorProducerConfig"
                 }
@@ -251,6 +265,23 @@
             "required":[
                 "enable"
             ],
+            "if":{
+                "properties":{
+                    "enable":{
+                        "const":true
+                    }
+                }
+            },
+            "then":{
+                "properties":{
+                    "topic-name":{
+                        "pattern":"^\\S(.*\\S)?$"
+                    }
+                },
+                "required":[
+                    "topic-name"
+                ]
+            },
             "title": "MonitorProducerConfig"
         },
         "TopicFilter":{
@@ -261,12 +292,6 @@
                     "type":"string"
                 },
                 "type":{
-                    "type":"string"
-                },
-                "qos":{
-                    "$ref":"#/definitions/QOS"
-                },
-                "filter":{
                     "type":"string"
                 }
             },
@@ -330,7 +355,8 @@
             },
             "required":[
                 "name",
-                "type"
+                "type",
+                "routes"
             ],
             "title":"TopicRouteConfig"
         },
@@ -346,9 +372,6 @@
                 },
                 "qos":{
                     "$ref":"#/definitions/QOS"
-                },
-                "filter":{
-                    "type":"string"
                 },
                 "participants":{
                     "type":"array",
@@ -600,6 +623,27 @@
                                         }
                                     }
                                 }
+                            },
+                            {
+                                "if":{
+                                    "required":[
+                                        "ros2-easy-mode"
+                                    ]
+                                },
+                                "then":{
+                                    "properties":{
+                                        "transport":{
+                                            "enum":[
+                                                "builtin"
+                                            ]
+                                        },
+                                        "whitelist-interfaces":{
+                                            "not":{
+
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         ]
                     }
@@ -645,6 +689,21 @@
                                         }
                                     },
                                     "verbose":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "ros2-easy-mode":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "transport":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "ignore-participant-flags":{
                                         "not":{
 
                                         }
@@ -706,6 +765,21 @@
                                         }
                                     },
                                     "verbose":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "ros2-easy-mode":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "transport":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "ignore-participant-flags":{
                                         "not":{
 
                                         }
@@ -837,7 +911,8 @@
                 },
                 "id":{
                     "type":"integer",
-                    "minimum": 0
+                    "minimum": 0,
+                    "maximum": 255
                 },
                 "ros-discovery-server":{
                     "type":"boolean"
@@ -883,81 +958,6 @@
                     "type":"string"
                 }
             },
-            "required":[
-                "ca"
-            ],
-            "allOf":[
-                {
-                    "if":{
-                        "properties":{
-                            "password":{
-                                "type":"string"
-                            }
-                        },
-                        "required":[
-                            "password"
-                        ]
-                    },
-                    "then":{
-                        "required":[
-                            "private_key",
-                            "cert"
-                        ]
-                    }
-                },
-                {
-                    "if":{
-                        "properties":{
-                            "private_key":{
-                                "not":{
-                                    "pattern":"^$"
-                                }
-                            }
-                        },
-                        "required":[
-                            "private_key"
-                        ]
-                    },
-                    "then":{
-                        "properties":{
-                            "private_key":{
-                                "not":{
-                                    "pattern":"^\\s*$"
-                                }
-                            }
-                        },
-                        "required":[
-                            "password",
-                            "cert"
-                        ]
-                    }
-                },
-                {
-                    "if":{
-                        "properties":{
-                            "cert":{
-                                "type":"string"
-                            }
-                        },
-                        "required":[
-                            "cert"
-                        ]
-                    },
-                    "then":{
-                        "properties":{
-                            "cert":{
-                                "not":{
-                                    "pattern":"^\\s*$"
-                                }
-                            }
-                        },
-                        "required":[
-                            "password",
-                            "private_key"
-                        ]
-                    }
-                }
-            ],
             "title":"TLS"
         },
         "Address":{

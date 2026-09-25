@@ -1,0 +1,18 @@
+version: v5.0
+
+specs:
+  logging:
+    publish:
+      enable: true
+      domain: 84
+      topic-name: "  "
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo

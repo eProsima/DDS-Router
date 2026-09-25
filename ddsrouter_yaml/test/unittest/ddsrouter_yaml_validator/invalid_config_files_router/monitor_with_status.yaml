@@ -1,0 +1,19 @@
+version: v5.0
+
+specs:
+  monitor:
+    domain: 10
+    status:
+      enable: true
+      period: 1000
+      topic-name: DdsRouterStatus
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo
