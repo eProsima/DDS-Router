@@ -75,9 +75,8 @@ You can access the documentation online, which is hosted on [Read the Docs](http
 
 * [Introduction](https://eprosima-dds-router.readthedocs.io/en/latest/rst/formalia/titlepage.html)
 * [Getting Started](https://eprosima-dds-router.readthedocs.io/en/latest/rst/getting_started/project_overview.html)
-* [Installation Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html)
+* [Installation Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/installation/linux.html)
 * [User Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/user_manual/user_interface.html)
 * [Examples](https://eprosima-dds-router.readthedocs.io/en/latest/rst/examples/echo_example.html)
 * [Use Cases](https://eprosima-dds-router.readthedocs.io/en/latest/rst/use_cases/ros_cloud.html)
-* [Developer Manual](https://eprosima-dds-router.readthedocs.io/en/latest/rst/developer_manual/installation/sources/linux.html)
 * [Release Notes](https://eprosima-dds-router.readthedocs.io/en/latest/rst/notes/notes.html)
