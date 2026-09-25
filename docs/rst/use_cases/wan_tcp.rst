@@ -62,7 +62,7 @@ You have two options:
 
     *   `Fast DDS <https://fast-dds.docs.eprosima.com/en/latest/installation/binaries/binaries_linux.html>`_
     *   `Fast DDS Configuration Example <https://github.com/eProsima/Fast-DDS/tree/master/examples/cpp/configuration>`_
-    *   :ref:`DDS Router <installation_manual_linux>`
+    *   :ref:`DDS Router <installation_sources_linux>`
 
 2.  Use the `Fast DDS Suite <https://fast-dds.docs.eprosima.com/en/latest/docker/fastdds_suite/fast_dds_suite.html>`_.
     This is a publicly available Docker image that contains all the software needed for this tutorial.
