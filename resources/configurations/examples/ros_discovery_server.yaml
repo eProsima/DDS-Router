@@ -2,6 +2,8 @@
 # ROS DISCOVERY SERVER EXAMPLE #
 ################################
 
+version: v5.0
+
 ##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes topic
@@ -51,22 +53,20 @@ participants:
 # LAN UDP communication with default simple multicast discovery.
 # Remember that every ROS 2 Node relays the middleware communication to DDS, as a standard Participant.
 
+# 4: SimpleROS2 will use DDS Domain ID <0>.
+
 # 5: New Participant with name <ServerROS2>.
 
 # 6: Kind of ServerROS2: <local-discovery-server>.
 # This kind of Participant uses Discovery Server as discovery protocol.
 
-# 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41> for ServerROS2.
+# 7: Add the interfaces where this Discovery Server will listen for client discovery traffic.
 
-# 8: Set this Discovery Server GuidPrefix to <44.53.01.5f.45.50.52.4f.53.49.4d.41> for ServerROS2.
+# 8: Listen in localhost (translated as IP 127.0.0.1) for remote discovery traffic.
+# This address must be set to the IP of the host where this DDS Router will run.
 
-# 9: Add the interfaces where this Discovery Server will listen for client discovery traffic.
+# 9: Listen in port 11888.
 
-# 10: Listen in IP localhost(127.0.0.1) for remote discovery traffic
-# This IP must be set to the IP of the host where this DDS Router will run.
-
-# 11: Listen in port 11888
-
-# 12: This configuration is equal to create a Discovery Server with Fast DDS CLI using command:
-# $> fastdds discovery --server-id 1 --ip-address 127.0.0.1 --port 11888
+# 10: This configuration is equal to create a Discovery Server with Fast DDS CLI using command:
+# $> fastdds discovery --udp-address 127.0.0.1 --udp-port 11888
 # Add every other address where this Discovery Server will listen.

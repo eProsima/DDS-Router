@@ -13,7 +13,7 @@ It generates a bridge between two different domains (``0`` & ``1``).
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 5-37
+    :lines: 5-46
 
 Configuration
 =============
@@ -29,7 +29,7 @@ For more information check :ref:`following section <user_manual_configuration_lo
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 7-17
+    :lines: 9-19
 
 
 Simple Participant Domain 0
@@ -39,7 +39,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 27-29
+    :lines: 36-38
 
 
 XML Participant Domain 1
@@ -50,7 +50,7 @@ As the XML loaded in this same YAML file configures profile ``custom_participant
 
 .. literalinclude:: ../../resources/examples/xml.yaml
     :language: yaml
-    :lines: 35-37
+    :lines: 44-46
 
 
 Execute example

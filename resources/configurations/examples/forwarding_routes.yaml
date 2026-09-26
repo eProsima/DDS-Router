@@ -2,6 +2,8 @@
 # FORWARDING ROUTES  #
 ######################
 
+version: v5.0
+
 ##############
 # PARTICIPANTS
 participants:                                                     # 1
@@ -67,10 +69,9 @@ topic-routes:                                                     # 11
 ##################################
 # CONFIGURATION DESCRIPTION
 
-# This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
-# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# to DDS Domain 1.
-# The communication is in both directions.
+# This configuration example configures a DDS Router with two participants in domains 0 and 1, and custom forwarding
+# routes: generic routes that only forward data from domain 0 to domain 1, and topic routes that only forward data
+# on topic Circle from domain 1 to domain 0.
 
 # 1: List the internal participants of the router.
 
@@ -89,18 +90,18 @@ topic-routes:                                                     # 11
 
 # 8: SimpleParticipant_0 will forward messages to SimpleParticipant_1.
 
-# 10: New forwarding route for SimpleParticipant_0.
+# 10: New forwarding route for SimpleParticipant_1.
 # Since it doesn't have a dst tag, it will not forward messages to any participant.
 
 # 11: List the topic forwarding routes between the router's internal participants.
 
 # 12: New topic forwarding route for topic Circle.
 
-# 13: The type of the topic Circle for this topic forwarding route to apply must be ShapeType.
+# 13: The type of the topic Circle for this topic forwarding route to apply must be Configuration.
 
 # 14: List the topic forwarding route for topic Circle.
 
-# 15: New topic forwarding route for SimpleParticipant_0 on topic Circle.
+# 15: New topic forwarding route for SimpleParticipant_1 on topic Circle.
 
 # 16: List the participants SimpleParticipant_1 will forward messages to on topic Circle.
 

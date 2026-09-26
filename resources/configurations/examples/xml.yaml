@@ -2,11 +2,13 @@
 # XML EXAMPLE        #
 ######################
 
+version: v5.0
+
 ##################################
 # XML CONFIGURATION
 xml:                                                              # 1
-  files:
-    - "./xml_configuration.xml"                                   # 2
+  # files:                                                       # 2
+  #   - "./xml_configuration.xml"
   raw: |                                                          # 3
     <?xml version="1.0" encoding="UTF-8" ?>
     <profiles xmlns="http://www.eprosima.com">
@@ -18,10 +20,10 @@ xml:                                                              # 1
 
 ##################################
 # ALLOWED TOPICS
-# Allowing FastDDS and ROS2 HelloWorld demo examples topics
+# Allowing Fast DDS configuration example and ROS2 demo nodes topics
 
 allowlist:
-  - name: HelloWorldTopic                                         # 4
+  - name: configuration_topic                                     # 4
   - name: rt/chatter                                              # 5
 ##################################
 # PARTICIPANTS
@@ -36,8 +38,8 @@ participants:
     domain: 0                                                     # 8
 
 ##################################
-# WAN SERVER
-# This participant will subscribe to topics in allowlist and connect to clients through Initial Peers.
+# XML PARTICIPANT
+# This participant will be configured with the XML profile loaded above.
 
   - name: XMLParticipant                                          # 9
     kind: xml                                                     # 10
@@ -47,17 +49,17 @@ participants:
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
-# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to transmit these messages
-# to DDS Domain 1.
+# configuration_topic (from Fast DDS configuration example) and rt/chatter from ROS2 demo_nodes, and to transmit
+# these messages to DDS Domain 1.
 # The communication is in both directions.
 
 # 1: Configure how to load XML configurations.
 
-# 2: Load profiles from every xml file in list.
+# 2: Uncomment to load profiles from every xml file in list.
 
 # 3: Read the next string as XML and load profiles from it.
 
-# 4: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+# 4: Allow DDS Topic Name <configuration_topic>.
 
 # 5: Insert new topics in order to route them.
 
