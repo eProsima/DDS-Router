@@ -43,6 +43,10 @@ be located by other remote Participants):
 * To configure the connection addresses to connect with other Wan Participants,
   check the
   :ref:`Connection Addresses <user_manual_configuration_connection_addresses>` configuration section.
+* It also accepts the :ref:`domain <user_manual_configuration_domain_id>` (by default ``0``, and it must be the same
+  in the WAN Participants that communicate with each other),
+  :ref:`whitelist-interfaces <user_manual_configuration_interface_whitelist>` and
+  :ref:`qos <user_manual_configuration_participant_topic_qos>` tags.
 
 .. note::
 
@@ -78,10 +82,11 @@ using ``TCP`` transport.
       kind: wan
 
       listening-addresses:                        # WAN Participant Listening Addresses
-        - ip: 82.0.0.1                            # Use UDP by default
+        - ip: 82.0.0.1
           port: 11600
+          transport: tcp                          # Use TCP transport
 
       connection-addresses:                       # Another WAN Participant Listening Addresses
         - ip: 2001:4860:4860::8888
           port: 11666
-          transport: tcp                          # Use UDP transport
+          transport: tcp                          # Use TCP transport
