@@ -49,7 +49,7 @@ Prerequisites
 Hardware requirements
 ^^^^^^^^^^^^^^^^^^^^^^
 
-This tutorial will require two machines (*Deploymen Net A* and *Deploymen Net B*) deployed on different networks (*LAN A* and *LAN B*).
+This tutorial will require two machines (*Deployment Net A* and *Deployment Net B*) deployed on different networks (*LAN A* and *LAN B*).
 It is possible to simulate the scenario by deploying everything needed on the same machine and two virtual networks but let's focus on the case of a real deployment.
 
 Software requirements
@@ -72,7 +72,7 @@ You have two options:
 
     .. code-block:: bash
 
-        $ docker load -i ubuntu-fastdds-suite:<FastDDS-Version>.tar
+        $ docker load -i "ubuntu-fastdds-suite_<FastDDS-Version>.tar"
 
     You can run this Docker container as follows
 
@@ -99,7 +99,7 @@ Running Fast DDS Subscriber
     .. code-block:: bash
 
         goToExamples
-        ./configuration/bin/configuration subscriber --transport udp
+        ./configuration/bin/configuration subscriber --transport UDPv4
 
 
 Running DDS Router Net A
@@ -171,7 +171,7 @@ Running Fast DDS Publisher
 
                 goToExamples
                 ./configuration/bin/configuration publisher \
-                    --interval 1000 --transport udp
+                    --interval 1000 --transport UDPv4
 
         .. tab-item:: LAN
 
@@ -179,7 +179,7 @@ Running Fast DDS Publisher
 
                 goToExamples
                 ./configuration/bin/configuration publisher \
-                    --interval 1000 --transport udp --domain 1
+                    --interval 1000 --transport UDPv4 --domain 1
 
             .. note::
 
@@ -247,8 +247,8 @@ If all the steps in this tutorial have been followed, the Fast DDS Subscriber on
 
 .. code-block:: bash
 
-    Message HelloWorld  10 RECEIVED
-    Message HelloWorld  11 RECEIVED
-    Message HelloWorld  12 RECEIVED
-    Message HelloWorld  13 RECEIVED
-    Message HelloWorld  14 RECEIVED
+    Sample: 'Configuration' with index: '10' (10 Bytes) RECEIVED
+    Sample: 'Configuration' with index: '11' (10 Bytes) RECEIVED
+    Sample: 'Configuration' with index: '12' (10 Bytes) RECEIVED
+    Sample: 'Configuration' with index: '13' (10 Bytes) RECEIVED
+    Sample: 'Configuration' with index: '14' (10 Bytes) RECEIVED

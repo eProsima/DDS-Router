@@ -61,10 +61,10 @@ To launch the local router, execute:
 
 Talker
 ------
-This example will make use of *ROS 2 galactic* with ``demo-nodes-cpp`` package installed. If not already present in your
-system, you may choose any of the available options to `install ROS galactic <https://docs.ros.org/en/galactic/Installation.html>`_,
+This example will make use of *ROS 2 Jazzy* with ``demo-nodes-cpp`` package installed. If not already present in your
+system, you may choose any of the available options to `install ROS 2 Jazzy <https://docs.ros.org/en/jazzy/Installation.html>`_,
 or even consider directly using a distributed `Docker image <https://hub.docker.com/_/ros>`_. Just make sure the
-resulting environment is prepared to utilize |efastdds| as middleware (see `Working with eProsima Fast DDS <https://docs.ros.org/en/galactic/Installation/DDS-Implementations/Working-with-eProsima-Fast-DDS.html>`_).
+resulting environment is prepared to utilize |efastdds| as middleware (see `Working with eProsima Fast DDS <https://docs.ros.org/en/jazzy/Installation/RMW-Implementations/DDS-Implementations/Working-with-eProsima-Fast-DDS.html>`_).
 
 Once *ROS 2* is installed, start publishing messages in DDS domain ``0`` by executing:
 
@@ -134,7 +134,7 @@ following settings:
 Listener deployment
 -------------------
 A suitable Docker image must also be provided in the context of the cluster in order to use *ROS 2*. We will use
-``ros:galactic`` as basis for this image, install ``demo-nodes-cpp``, and include a parser that will allow us to specify
+``ros:jazzy`` as basis for this image, install ``demo-nodes-cpp``, and include a parser that will allow us to specify
 the port and IP address of the local DS. This can be achieved by using the following Dockerfile and entrypoint:
 
 .. literalinclude:: ../../resources/use_cases/ros_cloud/Dockerfile_listener
@@ -143,7 +143,7 @@ the port and IP address of the local DS. This can be achieved by using the follo
 .. literalinclude:: ../../resources/use_cases/ros_cloud/run.bash
     :language: bash
 
-Now, assuming the name of the built image is ``ros2-demo-nodes:galactic``, the listener pod can be deployed by providing
+Now, assuming the name of the built image is ``ros2-demo-nodes:jazzy``, the listener pod can be deployed by providing
 the following configuration:
 
 .. literalinclude:: ../../resources/use_cases/ros_cloud/listener.yaml

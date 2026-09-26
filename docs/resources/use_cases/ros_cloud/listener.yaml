@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: ros2-galactic-listener
+  name: ros2-jazzy-listener
   labels:
-    app: ros2-galactic-listener
+    app: ros2-jazzy-listener
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ros2-galactic-listener
+      app: ros2-jazzy-listener
   template:
     metadata:
       labels:
-        app: ros2-galactic-listener
+        app: ros2-jazzy-listener
     spec:
       containers:
         - name: ros2-demo-nodes
-          image: ros2-demo-nodes:galactic
+          image: ros2-demo-nodes:jazzy
           args:
             - listener
             - 192.168.1.11
