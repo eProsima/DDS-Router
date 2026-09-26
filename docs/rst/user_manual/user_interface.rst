@@ -11,12 +11,13 @@ User Interface
 Source Dependency Libraries
 ---------------------------
 
-|eddsrouter| depends on |fastdds| ``fastdds`` and ``fastcdr`` libraries.
-In order to correctly execute the Router, make sure that ``fastdds`` and ``fastcdr`` are properly sourced.
+|eddsrouter| depends on |fastdds| ``fastdds`` and ``fastcdr`` libraries, as well as on the eProsima ``cpp_utils`` and
+*DDS Pipe* libraries.
+In order to correctly execute the Router, make sure that the installation containing them is properly sourced.
 
 .. code-block:: bash
 
-    source <path-to-fastdds-installation>/install/setup.bash
+    source <path-to-installation>/install/setup.bash
 
 .. note::
 
@@ -60,7 +61,13 @@ The |ddsrouter| application supports several input arguments:
     *   - :ref:`user_manual_user_interface_reload_time_argument`
         - ``-r``
         - ``--reload-time``
-        - Unsigned Integer
+        - Integer
+        - ``0``
+
+    *   - :ref:`user_manual_user_interface_timeout_argument`
+        - ``-t``
+        - ``--timeout``
+        - Integer
         - ``0``
 
     *   - :ref:`user_manual_user_interface_debug_argument`
@@ -73,7 +80,7 @@ The |ddsrouter| application supports several input arguments:
         -
         - ``--log-verbosity``
         - ``info`` ``warning`` ``error``
-        - ``warning``
+        - ``error``
 
     *   - :ref:`user_manual_user_interface_log_filter_argument`
         -
@@ -97,18 +104,18 @@ It shows the usage information of the application.
     General options:
 
     Application help and information.
-    -h --help           Print this help message.
-    -v --version        Print version, branch and commit hash.
+      -h --help           Print this help message.
+      -v --version        Print version and commit hash.
 
     Application parameters
-    -c --config-path    Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
-    -r --reload-time    Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). Value 0 does not reload file. [Default: 0].
-    -t --timeout        Set a maximum time in seconds for the Router to run. Value 0 does not set maximum. [Default: 0].
+      -c --config-path    Path to the Configuration File (yaml format) [Default: ./DDS_ROUTER_CONFIGURATION.yaml].
+      -r --reload-time    Time period in seconds to reload configuration file. This is needed when FileWatcher functionality is not available (e.g. config file is a symbolic link). Value 0 does not reload file. [Default: 0].
+      -t --timeout        Set a maximum time in seconds for the Router to run. Value 0 does not set maximum. [Default: 0].
 
-    Debug options
-    -d --debug          Set log verbosity to Info (Using this option with --log-filter and/or --log-verbosity will head to undefined behaviour).
-        --log-filter     Set a Regex Filter to filter by category the info and warning log entries. [Default = "DDSROUTER"].
-        --log-verbosity  Set a Log Verbosity Level higher or equal the one given. (Values accepted: "info","warning","error" no Case Sensitive) [Default = "warning"].
+    Debug parameters
+      -d --debug          Set log verbosity to Info (Using this option with --log-filter and/or --log-verbosity will lead to undefined behaviour).
+         --log-filter     Set a Regex Filter to filter by category or message the log entries. [Default = "DDSROUTER"].
+         --log-verbosity  Set a Log Verbosity Level higher or equal the one given. (Values accepted: "info","warning","error") [Default = "error"].
 
 .. _user_manual_user_interface_version_argument:
 
@@ -132,6 +139,7 @@ Reload Time Argument
 ^^^^^^^^^^^^^^^^^^^^
 
 Set the :ref:`user_manual_user_interface_reload_timer` in **seconds**.
+Values lower than or equal to ``0`` do not set any reload timer.
 
 .. _user_manual_user_interface_timeout_argument:
 
@@ -141,7 +149,7 @@ Timeout Argument
 This argument allow to set a maximum time while the application will be running.
 Setting this argument will set the number of seconds the application will run until it is killed.
 While the application is waiting for timeout, it is still possible to kill it via signal.
-Default value ``0`` means that the application will run forever (until kill via signal).
+Default value ``0`` (or any negative value) means that the application will run forever (until kill via signal).
 
 .. _user_manual_user_interface_debug_argument:
 
@@ -164,16 +172,19 @@ Log Verbosity Argument
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Set the verbosity level so only log messages with equal or higher importance level are shown.
+The value is case sensitive, and it takes precedence over the ``verbosity`` set in the
+:ref:`configuration file <router_specs_logging>`.
+By default, only ``error`` messages are shown.
 
 .. _user_manual_user_interface_log_filter_argument:
 
 Log Filter Argument
 ^^^^^^^^^^^^^^^^^^^
 
-Set a regex string as filter.
-Only log messages with a category that matches this regex will be printed
-(``ERROR`` messages will be always shown unless :ref:`user_manual_user_interface_log_verbosity_argument` is
-set to ``ERROR``).
+Set a regex string as filter for every severity level, including ``ERROR`` messages.
+Only log messages whose category or message matches this regex will be printed.
+It takes precedence over the ``filter`` set in the :ref:`configuration file <router_specs_logging>`.
+By default, ``WARNING`` and ``INFO`` messages are filtered with ``DDSROUTER``, and ``ERROR`` messages are not filtered.
 
 
 .. _user_manual_user_interface_configuration_file:
@@ -191,6 +202,7 @@ If no configuration file is provided as argument, the |ddsrouter| will attempt t
 ``DDS_ROUTER_CONFIGURATION.yaml`` that must be in the same directory where the application is executed.
 If no configuration file is passed as argument, and the default configuration file does not exist
 in the current directory, the application will fail.
+The configuration file is validated before it is loaded, as explained in :ref:`user_manual_configuration_validation`.
 
 
 .. _user_manual_user_interface_reload_topics:
@@ -263,7 +275,8 @@ Every log entry has several parts:
 
     If Fast DDS has been compiled in debug mode, it will print the logs of the DDS Router and Fast DDS mixed.
     In order to skip Fast DDS logs, compile ``fastdds`` library with CMake option ``-DLOG_NO_INFO=ON``
-    or ``CMAKE_BUILD_TYPE`` different to ``Debug``, or use the argument ``
+    or ``CMAKE_BUILD_TYPE`` different to ``Debug``, or use the argument
+    :ref:`--log-filter <user_manual_user_interface_log_filter_argument>`.
 
 
 .. _user_manual_user_interface_close_application:
