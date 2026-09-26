@@ -1,4 +1,4 @@
-.. |FastDDSDocs| replace:: `Fast DDS Documentation <https://fast-dds.docs.eprosima.com/en/v2.3.0/>`__
+.. |FastDDSDocs| replace:: `Fast DDS Documentation <https://fast-dds.docs.eprosima.com/en/latest/>`__
 .. |DDSSpecification| replace:: `DDS specification <https://www.omg.org/spec/DDS/1.4/About-DDS/>`__
 
 .. |ddsrouter| replace:: *DDS Router*
