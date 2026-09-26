@@ -9,6 +9,43 @@ Configuration
 
 A |ddsrouter| is configured by a *.yaml* configuration file.
 This *.yaml* file contains all the information regarding the |ddsrouter| configuration, such as topics filtering and :term:`Participants <Participant>` configurations.
+The tags accepted at the top level of the file are arranged as follows, and the sections below follow this order:
+
+.. code-block:: yaml
+
+    version: v5.0             # Configuration version
+
+    xml: ...                  # Fast DDS XML configurations to load
+
+    builtin-topics: ...       # Topics created at start-up
+    allowlist: ...            # Topics whose data is forwarded
+    blocklist: ...            # Topics whose data is not forwarded
+    topics: ...               # Topic QoS of specific topics
+
+    specs: ...                # General settings of the DDS Router
+
+    participants: ...         # DDS Router Participants (required)
+
+    routes: ...               # Generic forwarding routes
+    topic-routes: ...         # Forwarding routes of specific topics
+
+.. _user_manual_configuration_validation:
+
+Configuration validation
+========================
+
+.. warning::
+
+    The configuration file is validated against a schema every time it is loaded, including the
+    :ref:`reloads <user_manual_user_interface_reload_topics>` triggered while the |ddsrouter| is running, and only the
+    tags documented in this page are accepted.
+    An unknown, misspelled or misplaced tag, or a value of the wrong type, is an error: the |ddsrouter| reports that
+    the file is not a valid configuration and does not start (on a reload, it keeps its previous configuration).
+    Configuration files written for earlier versions may therefore need to be updated.
+
+The schema is embedded in the |ddsrouter|, and a copy is installed in
+``<install-path>/ddsrouter_tool/share/resources/configurations/ddsrouter_config_schema.json`` for reference.
+Boolean values must be written in lowercase (``true`` / ``false``), and numeric values must not be quoted.
 
 Configuration version
 =====================
@@ -35,12 +72,13 @@ This is the configuration version that is described along this page.
 
 .. note::
 
-    The current default version when the tag ``version`` is not set is *v5.0*.
+    The current default version when the tag ``version`` is not set is *v5.0*, and a warning is logged.
 
 .. warning::
 
     **Deprecation warning**.
     Version `v4.0` is deprecated and will be removed in a future release, please update to version `v5.0`.
+    Versions `v1.0` to `v3.1` are no longer supported.
 
 .. _user_manual_configuration_load_xml:
 
@@ -55,12 +93,14 @@ Check the `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/
 Another way of loading these XML configurations is using the |ddsrouter| yaml configuration.
 The YAML Configuration supports a ``xml`` **optional** tag that contains certain options to load Fast DDS XML configurations.
 XML configurations are then used to configure an :ref:`XML Participant <user_manual_participants_xml>`.
+When the ``xml`` tag is present, it must contain at least one of ``files`` and ``raw``; it may contain both.
 
 
 Load XML Files
 --------------
 
 Under the **optional** tag ``files``, a list can be set with the names of files to load XML from.
+The list must contain at least one entry.
 
 Raw XML
 -------
@@ -132,10 +172,15 @@ The |ddsrouter| automatically detects the topics that are being used in a DDS Ne
 The |ddsrouter| then creates internal DDS :term:`Writers<DataWriter>` and :term:`Readers<DataReader>` for each participant in each topic, and forwards the data published on each topic.
 The |ddsrouter| allows filtering DDS :term:`Topics<Topic>` to allow users to configure the DDS :term:`Topics<Topic>` that must be forwarded.
 These data filtering rules can be configured under the ``allowlist`` and ``blocklist`` tags.
-If the ``allowlist`` and ``blocklist`` are not configured, the |ddsrouter| will forward all the data published on the topics it discovers.
+If the ``allowlist`` and ``blocklist`` are not configured (or the ``allowlist`` is empty), the |ddsrouter| will forward all the data published on the topics it discovers.
 If both the ``allowlist`` and ``blocklist`` are configured and a topic appears in both of them, the ``blocklist`` has priority and the topic will be blocked.
+A ROS 2 service is only forwarded if both its request (``rq/``) and reply (``rr/``) topics are allowed.
 
 Topics are determined by the tags ``name`` (required) and ``type``, both of which accept wildcard characters.
+No other tags are accepted in the ``allowlist`` and ``blocklist`` entries.
+
+The ``allowlist`` and ``blocklist`` are the only part of the configuration that is applied again when the configuration
+file is :ref:`reloaded <user_manual_user_interface_reload_topics>` while the |ddsrouter| is running.
 
 .. note::
 
@@ -177,60 +222,73 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - Yaml tag
         - Data type
         - Default value
+        - Possible values
         - QoS set
 
     *   - Reliability
         - ``reliability``
         - *bool*
         - ``false``
+        - ``true`` / ``false``
         - ``RELIABLE`` / ``BEST_EFFORT``
 
     *   - Durability
         - ``durability``
         - *bool*
         - ``false``
+        - ``true`` / ``false``
         - ``TRANSIENT_LOCAL`` / ``VOLATILE``
 
     *   - Ownership
         - ``ownership``
         - *bool*
         - ``false``
+        - ``true`` / ``false``
         - ``EXCLUSIVE_OWNERSHIP_QOS`` / ``SHARED_OWNERSHIP_QOS``
 
     *   - Partitions
         - ``partitions``
         - *bool*
         - ``false``
+        - ``true`` / ``false``
         - Topic with / without partitions
 
     *   - Key
         - ``keyed``
         - *bool*
         - ``false``
+        - ``true`` / ``false``
         - Topic with / without `key <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/typeSupport/typeSupport.html#data-types-with-a-key>`_
 
     *   - History Depth
         - ``history-depth``
         - *unsigned integer*
         - ``5000``
+        - Greater than |br|
+          or equal to ``0``
         - :ref:`user_manual_configuration_history_depth`
 
     *   - Max Transmission Rate
         - ``max-tx-rate``
         - *float*
         - ``0`` (unlimited)
+        - Greater than |br|
+          or equal to ``0``
         - :ref:`user_manual_configuration_max_tx_rate`
 
     *   - Max Reception Rate
         - ``max-rx-rate``
         - *float*
         - ``0`` (unlimited)
+        - Greater than |br|
+          or equal to ``0``
         - :ref:`user_manual_configuration_max_rx_rate`
 
     *   - Downsampling
         - ``downsampling``
         - *unsigned integer*
         - ``1``
+        - Greater than ``0``
         - :ref:`user_manual_configuration_downsampling`
 
 .. warning::
@@ -247,6 +305,7 @@ The ``history-depth`` tag configures the history depth of the Fast DDS internal 
 By default, the depth of every RTPS History instance is :code:`5000`, which sets a constraint on the maximum number of samples a |ddsrouter| instance can deliver to late joiner Readers configured with ``TRANSIENT_LOCAL`` `DurabilityQosPolicyKind <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/core/policy/standardQosPolicies.html#durabilityqospolicykind>`_.
 Its value should be decreased when the sample size and/or number of created endpoints (increasing with the number of topics and |ddsrouter| participants) are big enough to cause memory exhaustion issues.
 If enough memory is available, however, the ``history-depth`` could be increased to deliver a greater number of samples to late joiners.
+A ``history-depth`` of ``0`` means that the histories are not limited (``KEEP_ALL``), which could lead to memory exhaustion in long executions (a warning is logged when it is set in the :ref:`Specs QoS <user_manual_configuration_specs_topic_qos>`).
 
 .. _user_manual_configuration_max_tx_rate:
 
@@ -308,7 +367,27 @@ Specs Configuration
 ===================
 
 The YAML Configuration supports a ``specs`` **optional** tag that contains certain options related with the overall configuration of the DDS Router instance to run.
-The values available to configure are:
+The tags accepted under ``specs`` are arranged as follows, and the sections below follow this order:
+
+.. code-block:: yaml
+
+    specs:
+
+      threads: ...                  # Size of the internal thread pool
+      remove-unused-entities: ...   # Remove internal entities that are no longer used
+      discovery-trigger: ...        # External entities that trigger the creation of internal ones
+
+      qos: ...                      # Default Topic QoS
+
+      logging:                      # Logs of the DDS Router
+        verbosity: ...
+        filter: ...
+        stdout: ...
+        publish: ...
+
+      monitor:                      # Publication of internal data
+        domain: ...
+        topics: ...
 
 .. _thread_configuration:
 
@@ -321,6 +400,7 @@ This ThreadPool allows to limit the number of threads spawned by the application
 This improves the performance of the data transmission between Participants.
 
 This value should be set by each user depending on each system's characteristics.
+It only accepts integers greater than ``0``.
 In case this value is not set, the default number of threads used is :code:`12`.
 
 .. _user_manual_configuration_remove_unused_entities:
@@ -353,7 +433,7 @@ Discovery Trigger
 -----------------
 
 ``specs`` supports a ``discovery-trigger`` **optional** value that configures what type of external entity triggers the creation/removal of entities in the |ddsrouter|.
-The possible values for the ``discovery-trigger`` are:
+The possible values for the ``discovery-trigger`` are listed below (they are not case sensitive); by default, it is set to ``reader``:
 
 .. list-table::
     :header-rows: 1
@@ -447,13 +527,51 @@ By default, the filter allows all errors to be displayed, while selectively perm
           error : ``""``
         - Regex string
 
+    *   - Standard output
+        - ``stdout``
+        - Print the logs in the |br|
+          standard output and error.
+        - *bool*
+        - ``true``
+        - ``true`` / ``false``
+
 .. note::
 
-    For the logs to function properly, the ``-DLOG_INFO=ON`` compilation flag is required.
+    Info-level logs are only available when the |ddsrouter| is compiled with the ``-DLOG_INFO=ON`` flag
+    (set by default in ``Debug`` builds, see :ref:`cmake_options`).
 
 The |ddsrouter| prints the logs by default (warnings and errors in the standard error and info traces in the standard output).
-The |ddsrouter|, however, can also publish the logs in a DDS topic.
-To publish the logs, under the tag ``publish``, set ``enable: true`` and set a ``domain`` and a ``topic-name``.
+The |ddsrouter|, however, can also publish the logs in a DDS topic, configured under the tag ``publish``:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Yaml tag
+        - Description
+        - Data type
+        - Default value
+        - Possible values
+
+    *   - ``enable``
+        - Publish the logs (**required**).
+        - *bool*
+        -
+        - ``true`` / ``false``
+
+    *   - ``domain``
+        - DDS Domain to publish the logs in.
+        - *integer*
+        - ``0``
+        - ``0`` to ``232``
+
+    *   - ``topic-name``
+        - Topic to publish the logs in |br|
+          (**required** if ``enable`` is ``true``).
+        - *string*
+        -
+        - Non-empty string, without |br|
+          leading or trailing spaces
+
 The type of the logs published is defined as follows:
 
 **LogEntry.idl**
@@ -503,6 +621,47 @@ Monitor
 ``specs`` supports a ``monitor`` **optional** tag to publish internal data from the |ddsrouter|.
 If the monitor is enabled, it publishes (and logs under the ``MONITOR_DATA`` :ref:`log filter <router_specs_logging>`) the *DDS Router's* internal data on a ``domain``, under a ``topic-name``, once every ``period`` (in milliseconds).
 If the monitor is not enabled, the |ddsrouter| will not collect or publish any data.
+
+The data of the topics is configured under the tag ``topics``, which accepts the following tags:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Yaml tag
+        - Description
+        - Data type
+        - Default value
+        - Possible values
+
+    *   - ``enable``
+        - Publish the data of the topics (**required**).
+        - *bool*
+        -
+        - ``true`` / ``false``
+
+    *   - ``period``
+        - Publication period in milliseconds.
+        - *float*
+        - ``1000``
+        - Greater than ``0``
+
+    *   - ``domain``
+        - DDS Domain to publish the data in. |br|
+          It takes precedence over the ``domain`` |br|
+          set directly under ``monitor``.
+        - *integer*
+        - ``0``
+        - ``0`` to ``232``
+
+    *   - ``topic-name``
+        - Topic to publish the data in |br|
+          (**required** if ``enable`` is ``true``).
+        - *string*
+        -
+        - Non-empty string, without |br|
+          leading or trailing spaces
+
+The ``domain`` tag can also be set directly under ``monitor`` (by default ``0``).
 
 .. note::
 
@@ -560,7 +719,35 @@ There can be any number of Participants, and Participant kinds can be repeated.
 
 Each Participant has its specific configuration.
 Please, refer to :ref:`user_manual_participant_participant_kinds` in order to see each of the
-:term:`Participant Kinds<Participant Kind>` requirements.
+:term:`Participant Kinds<Participant Kind>` requirements, as each kind only accepts a subset of the following tags.
+The tags of a Participant are arranged as follows, and the sections below follow this order:
+
+.. code-block:: yaml
+
+    participants:
+
+      - name: ...                     # Participant Name (required)
+        kind: ...                     # Participant Kind (required)
+
+        domain: ...                   # DDS Domain Id
+        ignore-participant-flags: ... # Discovery traffic filters
+        transport: ...                # Transport descriptors
+        ros2-easy-mode: ...           # ROS 2 Easy Mode remote discovery server
+        whitelist-interfaces: ...     # Network interfaces allowed
+        repeater: ...                 # Repeater Participant
+
+        discovery-server-guid: ...    # Discovery Server GuidPrefix
+        listening-addresses: ...      # Network addresses to listen in
+        connection-addresses: ...     # Network addresses to connect to
+        tls: ...                      # TLS configuration (see WAN Configuration)
+
+        profile: ...                  # XML profile of an XML Participant
+        endpoint-qos-mode: ...        # QoS precedence of an XML Participant
+
+        qos: ...                      # Topic QoS of the Participant
+
+The tags specific to the :ref:`Echo Participant <user_manual_participants_echo>` (``discovery``, ``data`` and
+``verbose``) are described in its own section, and the ``tls`` tag in :ref:`user_manual_wan_configuration`.
 
 .. warning::
 
@@ -587,14 +774,14 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 
     ################
 
-      - name: my_custom_part   # Participant Name = my_custom_part
-        kind: simple           # Participant Kind = echo
+      - name: my_participant   # Participant Name = my_custom_part
+        kind: simple           # Participant Kind = simple
         domain: 1              # DomainId = 1
 
 The first Participant `Participant0` has Participant Name *Participant0* and is configured to be of the *simple*
 Participant Kind, and to communicate locally in domain 0.
-The second Participant has Participant Name *simple* and it is configured to be of the *simple* kind and to communicate
-locally with domain 1.
+The second Participant has Participant Name *my_participant* and it is configured to be of the *simple* kind and to
+communicate locally with domain 1.
 
 .. _user_manual_configuration_domain_id:
 
@@ -602,7 +789,10 @@ Domain Id
 ---------
 
 Tag ``domain`` configures the :term:`Domain Id` of a specific Participant.
-Be aware that some Participants (e.g. Discovery Servers) do not need a Domain Id configuration.
+It accepts an integer between ``0`` and ``232``, and by default it is set to ``0``.
+It is not accepted by Echo, XML and Discovery Server Participants.
+Discovery Server Participants do not need it, since the discovery through a Discovery Server does not take the
+Domain Id into account: they connect to remote Discovery Server clients and servers regardless of their Domain Id.
 
 .. code-block:: yaml
 
@@ -668,9 +858,9 @@ through the ``ros2-easy-mode`` tag:
     ros2-easy-mode: "2.2.2.2"       # Remote discovery server address
 
 .. warning::
-    This configuration is incompatible with the ``transports`` tag.
-    Setting ``ros2-easy-mode`` other than ``transports: builtin``
-    will prevent Easy Mode from being configured.
+    Easy Mode configures its own transports on top of the ones set by the |ddsrouter|.
+    Therefore, ``ros2-easy-mode`` is incompatible with the ``transport`` tag (other than ``transport: builtin``) and
+    with the ``whitelist-interfaces`` tag, and such configurations are rejected.
 
     For now, only IPv4 addresses are supported.
 
@@ -679,7 +869,9 @@ through the ``ros2-easy-mode`` tag:
 Interface Whitelist
 -------------------
 
-Optional tag ``whitelist-interfaces`` allows to limit the network interfaces used by UDP and TCP transport.
+Optional tag ``whitelist-interfaces`` allows to limit the network interfaces used by UDP and TCP transport in
+:ref:`Simple <user_manual_participants_simple>`, :ref:`Discovery Server <user_manual_participants_discovery_server>`
+and :ref:`WAN <user_manual_participants_wan>` Participants.
 This may be useful to only allow communication within the host (note: same can be done with :ref:`user_manual_configuration_ignore_participant_flags`), or in the WAN scenario one may choose to only communicate through the Ethernet or WiFi interface (when both available).
 Example:
 
@@ -704,10 +896,6 @@ Check the :ref:`use_case_repeater` use case to see how the ``repeater`` Particip
 
     repeater: true
 
-.. note::
-
-    This tag is only supported in configuration versions above v2.0.
-
 
 .. _user_manual_configuration_network_address:
 
@@ -720,8 +908,9 @@ An Address is defined by:
 * *IP*: IP of the host (public IP in case of WAN communication). This field is mandatory if ``domain`` is not specified.
 * *Port*: Port where the Participant is listening. This field is mandatory.
 * *External Port*: Public port accessible for external entities (only for TCP listening-addresses).
-* *Transport Protocol*: ``UDP`` or ``TCP``.
-  If it is not set, it would be chosen by default depending on the Participant Kind.
+  For UDP addresses, it must be equal to the *Port*.
+* *Transport Protocol*: ``udp`` or ``tcp``.
+  If it is not set, ``udp`` is used.
 * *IP version*: ``v4`` or ``v6``.
   If it is not set, it would be chosen depending on the *IP* string format.
 * *Domain Name*: Domain's unique name to ask the DNS server for the related IP.
@@ -768,6 +957,7 @@ Discovery Server GuidPrefix
 In |fastdds| versions previous to *v3.0.0*, a :term:`Discovery Server` requires a DDS :term:`GuidPrefix` in order for other Participants to connect to it.
 Although this parameter is no longer mandatory, it is still possible to set it so that a Discovery Server client from an older release may still establish connection with a Discovery Server server from the newer ones.
 Under the ``discovery-server-guid`` tag, there are several possibilities for configuring a GuidPrefix.
+At least one of the ``guid`` and ``id`` tags must be set.
 
 
 Discovery Server GuidPrefix by string
@@ -788,7 +978,7 @@ Discovery Server GuidPrefix by Id
 
 Using tag ``id``, the GuidPrefix will be calculated arbitrarily using a default |ddsrouter| GuidPrefix.
 This default GuidPrefix is ``01.0f.<id>.00.00.00.00.00.00.00.ca.fe``.
-Default value for ``id`` is ``0``.
+It accepts an integer between ``0`` and ``255``.
 This entry is ignored if ``guid`` is specified.
 
 .. code-block:: yaml
@@ -796,23 +986,17 @@ This entry is ignored if ``guid`` is specified.
     discovery-server-guid:
       id: 13                                  # GuidPrefix = 01.0f.0d.00.00.00.00.00.00.00.ca.fe
 
-.. note::
-
-    In the current version of the |ddsrouter| only ids in the range 0 to 256 are allowed.
-    In future releases it would be implemented to allow a wider range of ids.
-
 
 ROS Discovery Server GuidPrefix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There is a specific GuidPrefix for ROS 2 executions which can be used with Fast DDS CLI and
 ROS 2 ``ROS_DISCOVERY_SERVER`` environment variable
-(`<https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/ros2/discovery_server/ros2_discovery_server.html>`__).
+(`<https://fast-dds.docs.eprosima.com/en/latest/fastdds/ros2/discovery_server/ros2_discovery_server.html>`__).
 
 The ROS 2 Discovery Server GuidPrefix is set by default to ``44.53.<id>.5f.45.50.52.4f.53.49.4d.41`` where ``<id>``
 is the specific id of the Server.
-This GuidPrefix also allows an ``id``` value to specify which id is used in the GuidPrefix.
-The default value for ``id`` is ``0``.
+The ``id`` tag specifies which id is used in the GuidPrefix, and it is required unless a ``guid`` is set.
 
 .. code-block:: yaml
 
@@ -882,6 +1066,7 @@ QoS
 ---
 
 Participants support a ``qos`` **optional** tag to manually configure their :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+It is not accepted by Echo and XML Participants.
 
 .. note::
 
@@ -933,6 +1118,7 @@ Consider the following example with three participants: ``Participant0``, ``Part
 .. warning::
 
     A repeater participant with a route defined must add itself to its route's destinations.
+    Any other participant cannot be listed in its own route's destinations.
 
 
 Topic Routes
@@ -940,6 +1126,7 @@ Topic Routes
 
 Besides the generic routes just described, custom routes can also be configured for a specific topic (determined by a ``name`` and ``type`` pair).
 To configure a custom set of forwarding routes for a specific topic, use the tag ``topic-routes``.
+Each entry requires the ``name``, ``type`` and ``routes`` tags, and only one entry can be defined per topic.
 
 .. warning::
 
@@ -974,6 +1161,9 @@ General Example
 A complete example of all the configurations described on this page can be found below.
 
 .. code-block:: yaml
+
+    # Configuration version
+    version: v5.0
 
     # Specifications
     specs:
