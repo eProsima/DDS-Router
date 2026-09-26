@@ -43,6 +43,8 @@ Configuration
 
 The XML Participant allows setting a profile name for the internal DomainParticipant of the |ddsrouter|.
 Such profile name will be used as the QoS profile when creating the internal DomainParticipant.
+The :term:`Domain Id` is also taken from this profile, so the ``domain`` tag is not accepted, and neither is the
+``qos`` tag.
 
 
 .. _user_manual_participants_xml_profiles:

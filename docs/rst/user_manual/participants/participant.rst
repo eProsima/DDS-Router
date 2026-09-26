@@ -26,7 +26,7 @@ predefined :term:`Participant Kind` that specifies the internal general function
 Participant Name
 ----------------
 
-It is an alphanumeric string that uniquely identifies a Participant in a |ddsrouter| execution.
+It is a string that uniquely identifies a Participant in a |ddsrouter| execution.
 
 .. _user_manual_participant_participant_kind:
 
@@ -59,7 +59,7 @@ Below are some examples on how to configure a Participant:
 
     - name: participant_1  # New Participant with Name = 'participant_1'
       kind: simple         # 'participant_1' will be created of kind 'simple'
-      extra_configuration: ...
+      domain: 0            # Configuration specific to the kind 'simple'
 
 .. _user_manual_participant_participant_kinds:
 
@@ -87,38 +87,54 @@ Below is the list with all the available Participant Kinds.
     *   - :ref:`user_manual_participants_simple`
         - ``simple`` |br|
           ``local``
-        - ``domain``
+        - ``domain`` |br|
+          ``ignore-participant-flags`` |br|
+          ``transport`` |br|
+          ``ros2-easy-mode`` |br|
+          ``whitelist-interfaces`` |br|
+          ``qos``
         - Simple DDS DomainParticipant.
 
     *   - :ref:`user_manual_participants_discovery_server`
         - ``discovery-server`` |br|
           ``local-ds`` |br|
           ``ds`` |br|
+          ``local-discovery-server`` |br|
           ``wan-discovery-server`` |br|
           ``wan-ds``
-        - ``guid`` |br|
+        - ``discovery-server-guid`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses`` |br|
-          ``tls``
+          ``tls`` |br|
+          ``whitelist-interfaces`` |br|
+          ``qos``
         - Discovery Server DDS DomainParticipant |br|
 
     *   - :ref:`user_manual_participants_wan`
         - ``wan`` |br|
           ``router`` |br|
           ``initial-peers``
-        - ``guid`` |br|
+        - ``domain`` |br|
           ``listening-addresses`` |br|
           ``connection-addresses`` |br|
-          ``tls``
+          ``tls`` |br|
+          ``whitelist-interfaces`` |br|
+          ``repeater`` |br|
+          ``qos``
         - Initial Peers DDS DomainParticipant |br|
           for WAN communication.
 
     *   - :ref:`user_manual_participants_xml`
         - ``xml`` |br|
           ``XML`` |br|
-        - ``profile``
+        - ``profile`` |br|
+          ``repeater`` |br|
+          ``endpoint-qos-mode``
         - XML DDS DomainParticipant |br|
           for custom configuration.
+
+Besides ``name`` and ``kind``, a Participant only accepts the tags listed for its kind
+(see :ref:`user_manual_configuration_validation`).
 
 ..
     This toctree is needed so participants files are linked from somewhere. It is hidden so it is not be visible.

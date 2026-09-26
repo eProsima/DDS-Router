@@ -104,8 +104,10 @@ TLS
 ===
 
 |eddsrouter| also supports `TLS over TCP <https://fast-dds.docs.eprosima.com/en/latest/fastdds/transport/tcp/tls.html>`_,
-and its configuration can be set per participant for types WAN Discovery Server and WAN. The following is a list of the
-accepted entries under the ``tls`` tag:
+and its configuration can be set per participant for Discovery Server and WAN Participants.
+A Participant with a TCP listening address acts as a TLS server, while a Participant with only TCP connection
+addresses acts as a TLS client.
+The following is a list of the accepted entries under the ``tls`` tag:
 
 .. list-table::
     :header-rows: 1
