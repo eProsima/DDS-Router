@@ -48,14 +48,14 @@ DDS nomenclature
         DDS element that subscribes to a specific Topic.
         It belongs to one and only one Participant, and it is uniquely identified by a Guid.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/subscriber/subscriber.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/subscriber/subscriber.html>`__
         for further information.
 
     DataWriter
         DDS entity that publishes data in a specific Topic.
         It belongs to one and only one Participant, and it is uniquely identified by a Guid.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/publisher/dataWriter/dataWriter.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/publisher/dataWriter/dataWriter.html>`__
         for further information.
 
     Discovery Server
@@ -63,15 +63,16 @@ DDS nomenclature
         Server that filters and distribute the discovery information.
         This is highly recommended in networks where multicast is not available (e.g. WAN).
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/discovery_server.html>`__
         for further information.
 
     Domain Id
         The Domain Id is a virtual partition for DDS networks.
         Only DomainParticipants with the same Domain Id would be able to communicate to each other.
+        The |ddsrouter| accepts Domain Ids from ``0`` to ``232``.
         DomainParticipants  in different Domains will not even discover each other.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1//fastdds/dds_layer/domain/domain.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/domain/domain.html>`__
         for further information.
 
     DomainParticipant
@@ -79,7 +80,7 @@ DDS nomenclature
         Every DomainParticipant is linked to a single domain from its creation, and cannot change such domain.
         It also acts as a factory for Publisher, Subscriber and Topic.
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/domain/domainParticipant/domainParticipant.html>`__
         for further information.
 
     Endpoint
@@ -107,5 +108,5 @@ DDS nomenclature
         DDS isolation abstraction to encapsulate subscriptions and publications.
         Each Topic is uniquely identified by a topic name and a topic type name (name of the data type it transmits).
 
-        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/dds_layer/topic/topic.html>`__
+        See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/dds_layer/topic/topic.html>`__
         for further information.

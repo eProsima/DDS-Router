@@ -47,7 +47,7 @@ This way, both DDS networks will behave as if they belonged to the same LAN.
 
 Another important feature is that WAN communications are not limited to a single pair of |ddsrouter|.
 The WAN communication may be performed using the
-`eProsima Discovery Server discovery mechanism <https://fast-dds.docs.eprosima.com/en/v2.4.1/fastdds/discovery/discovery_server.html#discovery-server>`__
+`eProsima Discovery Server discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/discovery_server.html#discovery-server>`__
 (dynamic discovery over non-multicast networks).
 Thus, any DDS Router connected to the same Discovery Servers will work as a standard DDS node, publishing
 and subscribing on the shared DDS topics.
@@ -71,7 +71,7 @@ The whole application has been thought to be user-friendly, following a user-ori
   changed in runtime by just changing the *YAML* configuration file
   (see section :ref:`user_manual_user_interface_reload_topics`
   for more details about re-configuring a running |ddsrouter|).
-* **STOP**: To stop the |ddsrouter| just send a `^C` signal to the process, and it will gracefully close the whole
+* **STOP**: To stop the |ddsrouter| just send a ``^C`` signal to the process, and it will gracefully close the whole
   application
   (see section :ref:`user_manual_user_interface_close_application` for more details on how to close the application).
 
@@ -93,11 +93,7 @@ These are most common use cases so far:
         - :ref:`examples_change_domain_example`
 
     *   - Communicating ROS 2 Discovery Server executions
-        - :ref:`examples_tos_discovery_server_example`
+        - :ref:`examples_ros_discovery_server_example`
 
     *   - WAN Communication
         - :ref:`examples_wan_example`
-
-.. todo:
-
-    Add links to examples
