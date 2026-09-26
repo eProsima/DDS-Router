@@ -13,7 +13,7 @@ as well as information regarding discovery events.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 5-33
+    :lines: 5-35
 
 Configuration
 =============
@@ -23,12 +23,12 @@ Allowed Topics
 
 This section lists the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
-Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
+Topic ``hello_world_topic`` (from the *Fast DDS* ``hello_world`` example) and ROS 2 topic ``rt/chatter`` will be forwarded from
 ``SimpleParticipant`` to ``EchoParticipant``, that will print the message in ``stdout``.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 9-11
+    :lines: 11-13
 
 
 Simple Participant
@@ -38,7 +38,7 @@ This Participant is configured with a name, a kind and the Domain Id, which is `
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 21-23
+    :lines: 23-25
 
 
 Echo Participant
@@ -49,7 +49,7 @@ See :ref:`Echo Participant Configuration <user_manual_participants_echo_configur
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
-    :lines: 29-33
+    :lines: 31-35
 
 
 Execute example
@@ -78,11 +78,10 @@ The expected output from the DDS Router, printed by the ``Echo Participant`` is:
 
 .. code-block:: console
 
-    New endpoint discovered: Endpoint{01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3;writer;DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
-    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 01 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
-    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 02 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
+    New endpoint discovered: Endpoint{01.0f.92.94.d9.98.7e.6b.00.00.00.00|0.0.1.3;writer;Topic{hello_world_topic;HelloWorld;TopicQoS{durability(Fuzzy{Level(SET) TRANSIENT_LOCAL});reliability(Fuzzy{Level(SET) RELIABLE});ownership(Fuzzy{Level(SET) SHARED});depth(Fuzzy{Level(DEFAULT) 5000});max_tx_rate(Fuzzy{Level(DEFAULT) 0});max_rx_rate(Fuzzy{Level(DEFAULT) 0});downsampling(Fuzzy{Level(DEFAULT) 1})}(payload::rtps::v0)};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;SimpleParticipant}.
+    In Endpoint: 01.0f.92.94.d9.98.7e.6b.00.00.00.00|0.0.1.3 from Participant: SimpleParticipant in topic: hello_world_topic payload received: Payload{00 01 00 00 01 00 00 00 0c 00 00 00 48 65 6c 6c 6f 20 77 6f 72 6c 64 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
+    In Endpoint: 01.0f.92.94.d9.98.7e.6b.00.00.00.00|0.0.1.3 from Participant: SimpleParticipant in topic: hello_world_topic payload received: Payload{00 01 00 00 02 00 00 00 0c 00 00 00 48 65 6c 6c 6f 20 77 6f 72 6c 64 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
     ...
-    In Endpoint: 01.0f.b8.d9.81.30.3d.a7.01.00.00.00|0.0.1.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{HelloWorldTopic;HelloWorld;Fuzzy{Level(20) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(5000)}}} payload received: Payload{00 01 00 00 0a 00 00 00 0b 00 00 00 48 65 6c 6c 6f 57 6f 72 6c 64 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
 
 Execute with ROS 2 demo nodes
 -----------------------------
@@ -95,14 +94,5 @@ Execute a ROS 2 ``demo_nodes_cpp`` *talker* in default domain ``0``:
 
 Execute |ddsrouter| with this configuration file (available in
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/echo.yaml``).
-The expected output from the DDS Router, printed by the ``Echo Participant`` is:
-
-.. code-block:: console
-
-    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.1.3;writer;DdsTopic{ros_discovery_info;rmw_dds_common::msg::dds_::ParticipantEntitiesInfo_;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
-    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.2.4;reader;DdsTopic{ros_discovery_info;rmw_dds_common::msg::dds_::ParticipantEntitiesInfo_;Fuzzy{Level(20) TopicQoS{TRANSIENT_LOCAL;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
-    ...
-    New endpoint discovered: Endpoint{01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3;writer;DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(20) TopicQoS{VOLATILE;RELIABLE;SHARED;depth(5000)}}};SpecificEndpointQoS{Partitions{};OwnershipStrength{0}};Active;ParticipantId{SimpleParticipant}}.
-    In Endpoint: 01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(0) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(1000)}}} payload received: Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 31 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
-    In Endpoint: 01.0f.b8.d9.b6.3a.7d.95.01.00.00.00|0.0.12.3 from Participant: ParticipantId{SimpleParticipant} in topic: DdsTopic{rt/chatter;std_msgs::msg::dds_::String_;Fuzzy{Level(0) TopicQoS{VOLATILE;BEST_EFFORT;SHARED;depth(1000)}}} payload received: Payload{00 01 00 00 0f 00 00 00 48 65 6c 6c 6f 20 57 6f 72 6c 64 3a 20 32 00 00} with specific qos: SpecificEndpointQoS{Partitions{};OwnershipStrength{0}}.
-    ...
+The ``Echo Participant`` prints the discovery and data traces of topic ``rt/chatter`` (and the other ROS 2 internal topics
+discovered), with the same format as in the previous example.

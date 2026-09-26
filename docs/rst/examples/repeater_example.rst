@@ -1,6 +1,6 @@
 .. include:: ../exports/alias.include
 
-.. _example_repeater:
+.. _examples_repeater_example:
 
 ################
 Repeater Example
@@ -61,7 +61,7 @@ In order to run these examples, there must be three different hosts located in d
 
 * host *H*:sub:`A` with private IP ``192.168.1.2`` connected to network router *R*:sub:`A` with public IP ``1.1.1.1``.
 * host *H*:sub:`B` with private IP ``192.168.2.2`` connected to network router *R*:sub:`B` with public IP ``2.2.2.2``.
-* host *H*:sub:`C` with private IP ``192.168.2.3`` connected to network router *R*:sub:`C` with public IP ``3.3.3.3``.
+* host *H*:sub:`C` with private IP ``192.168.3.2`` connected to network router *R*:sub:`C` with public IP ``3.3.3.3``.
 
 These examples could be run in localhost or with two hosts in the same LAN, but it will not use the WAN
 communication features of the |ddsrouter|.
@@ -72,8 +72,8 @@ Host *H*:sub:`A`
 This host runs the |ddsrouter| Repeater Server, which will receive data from both edges and redirect the messages
 between them.
 Execute |ddsrouter| using file
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater.yaml``.
-Remember to change the IP and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_server.yaml``.
+Remember to change the address and port on the configuration file to the actual public IP of *R*:sub:`A`, and be sure that
 the port forwarding rules are configured in *R*:sub:`A` so *H*:sub:`A` is accessible from the outside.
 
 
@@ -82,8 +82,8 @@ Hosts *H*:sub:`B` and *H*:sub:`C`
 
 These hosts run the |ddsrouter| WAN Clients, which will connect to the previously launched Repeater Server.
 Execute |ddsrouter| using file
-``<path/to/ddsrouter_tool>/share/resources/configurations/examples/wan_client.yaml``.
-Remember to change the IPs and ports on the configuration file to the actual public IPs of *R*:sub:`A` and *R*:sub:`B`.
+``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_client.yaml``.
+Remember to change the address and port on the configuration file to the actual public IP of *R*:sub:`A`.
 **In this example the port forwarding is not required, as the Repeater will allow the communication through it,
 and TCP protocol is being used.**.
 

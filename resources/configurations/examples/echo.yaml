@@ -2,12 +2,14 @@
 # ECHO EXAMPLE #
 ################
 
+version: v5.0
+
 ##################################
 # ALLOWED TOPICS
 # Allowing FastDDS and ROS2 HelloWorld demo examples topics
 
 allowlist:
-  - name: HelloWorldTopic                                             # 1
+  - name: hello_world_topic                                           # 1
   - name: rt/chatter                                                  # 2
 
 ##################################
@@ -37,10 +39,10 @@ participants:
 # CONFIGURATION DESCRIPTION
 
 # This configuration example configures a DDS Router to listen to every message published in domain 0 in topics
-# HelloWorldTopic (from Fast DDS HelloWorld) and rt/chatter from ROS2 demo_nodes, and to print the received
+# hello_world_topic (from Fast DDS hello_world example) and rt/chatter from ROS2 demo_nodes, and to print the received
 # messages in stdout. Information regarding discovery events is also printed to stdout.
 
-# 1: Allow DDS Topic Name <HelloWorldTopic> with type <HelloWorld>.
+# 1: Allow DDS Topic Name <hello_world_topic>.
 
 # 2: Insert new topics in order to route them.
 

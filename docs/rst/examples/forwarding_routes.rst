@@ -16,7 +16,7 @@ It then establishes a generic forwarding route between them, and a topic forward
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 5-65
+    :lines: 5-67
 
 Configuration
 =============
@@ -28,7 +28,7 @@ These participants are configured with a name, a kind (``local``), and a domain 
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 5-23
+    :lines: 7-25
 
 
 Generic Forwarding Routes
@@ -39,14 +39,14 @@ This route is configured so that ``SimpleParticipant_1`` subscribes to the data 
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 30-36
+    :lines: 32-38
 
 This route is configured so that ``SimpleParticipant_1`` does not publish the data it receives.
 Thus, a subscriber in domain ``0`` would not receive the data published in domain ``1``.
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 38-41
+    :lines: 40-43
 
 
 Topic Forwarding Routes
@@ -56,7 +56,7 @@ We define the topic forwarding routes under the tag ``topic-routes`` by declarin
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 44-51
+    :lines: 46-53
 
 .. note::
 
@@ -67,19 +67,19 @@ Then, we declare the route for each participant.
 
 .. warning::
 
-    When there is not a topic forwarding route for a specific topic, the generic forwarding route will be completely ignored and the topic forwarding route will be used instead.
+    When there is a topic forwarding route for a specific topic, the generic forwarding route will be completely ignored and the topic forwarding route will be used instead.
 
 This route is configured so that ``SimpleParticipant_0`` will subscribe to the data published by ``SimpleParticipant_1``.
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 53-59
+    :lines: 55-61
 
 This route is configured so that ``SimpleParticipant_0`` does not forward the data it receives.
 
 .. literalinclude:: ../../resources/examples/forwarding_routes.yaml
     :language: yaml
-    :lines: 61-65
+    :lines: 63-67
 
 
 Execute example
@@ -132,8 +132,8 @@ Execute the |ddsrouter| with this configuration file (available in ``<path/to/dd
 Once the |ddsrouter| is running, nothing should happen, since there are no generic forwarding routes from domain ``1`` to domain ``0``.
 
 
-Execute with Fast DDS Basic Configuration Example on topic Circle
------------------------------------------------------------------
+Execute with Fast DDS Configuration Example on topic Circle
+-----------------------------------------------------------
 
 To check that the topic forwarding routes are working we are going to execute two examples.
 In the first one, we will set up a *publisher* in domain ``1``, a *subscriber* in domain ``0``, and check that the subscriber receives the publications on topic ``Circle``.
