@@ -70,7 +70,7 @@ const option::Descriptor usage[] = {
         "version",
         Arg::None,
         "  -v \t--version\t  \t" \
-        "Print version, branch and commit hash." \
+        "Print version and commit hash." \
     },
 
     ////////////////////
@@ -127,8 +127,8 @@ const option::Descriptor usage[] = {
         "debug",
         Arg::None,
         "  -d \t--debug\t  \t" \
-        "Set log verbosity to Info \t" \
-        "(Using this option with --log-filter and/or --log-verbosity will head to undefined behaviour)."
+        "Set log verbosity to Info " \
+        "(Using this option with --log-filter and/or --log-verbosity will lead to undefined behaviour)."
     },
 
     {
@@ -138,7 +138,7 @@ const option::Descriptor usage[] = {
         "log-filter",
         Arg::String,
         "  \t--log-filter\t  \t" \
-        "Set a Regex Filter to filter by category the info and warning log entries. " \
+        "Set a Regex Filter to filter by category or message the log entries. " \
         "[Default = \"DDSROUTER\"]. "
     },
 
@@ -150,8 +150,8 @@ const option::Descriptor usage[] = {
         Arg::Log_Kind_Correct_Argument,
         "  \t--log-verbosity\t  \t" \
         "Set a Log Verbosity Level higher or equal the one given. " \
-        "(Values accepted: \"info\",\"warning\",\"error\" no Case Sensitive) " \
-        "[Default = \"warning\"]. "
+        "(Values accepted: \"info\",\"warning\",\"error\") " \
+        "[Default = \"error\"]. "
     },
 
     {
@@ -164,8 +164,8 @@ const option::Descriptor usage[] = {
 
 void print_version()
 {
-    std::cout << "DDS Router " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH <<
-        std::endl;
+    std::cout << "DDS Router " << DDSROUTER_CORE_VERSION_STRING << "\ncommit hash: " << DDSROUTER_CORE_COMMIT_HASH
+              << std::endl;
 }
 
 ProcessReturnCode parse_arguments(
