@@ -60,6 +60,8 @@ The Echo Participant accepts three different **optional** parameters:
 - ``data``: Whether to echo information regarding user data reception. Defaults to **false**.
 - ``verbose``: Display detailed information about the user data received (if ``data`` set to ``true``). Defaults to **false**.
 
+No other tags (such as ``domain`` or ``qos``) are accepted by the Echo Participant.
+
 Configuration Example
 =====================
 

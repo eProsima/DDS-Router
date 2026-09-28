@@ -1,0 +1,55 @@
+# Boundary cases of the schema rules that must remain valid
+
+version: v5.0
+
+specs:
+  logging:
+    publish:
+      enable: false               # Disabled publishers do not require a topic-name
+  monitor:
+    topics:
+      enable: false
+
+
+participants:
+
+  # Easy Mode is compatible with the builtin transport
+  - name: EasyModeParticipant
+    kind: local
+    domain: 0
+    ros2-easy-mode: "2.2.2.2"
+    transport: builtin
+
+  # Discovery Server participants apply whitelist-interfaces, and the GUID id accepts up to 255
+  - name: DiscoveryServerParticipant
+    kind: discovery-server
+    discovery-server-guid:
+      id: 255
+    listening-addresses:
+    - ip: 127.0.0.1
+      port: 11667
+      transport: udp
+    whitelist-interfaces:
+      - "127.0.0.1"
+
+  # TLS server without CA and with an unencrypted private key (no password)
+  - name: TlsServerParticipant
+    kind: wan
+    listening-addresses:
+    - ip: 127.0.0.1
+      port: 11668
+      transport: tcp
+    tls:
+      private_key: ddsrouter.key
+      cert: ddsrouter.crt
+      dh_params: dh_params.pem
+
+  # TLS client without CA, which is allowed when the server is not verified
+  - name: TlsClientParticipant
+    kind: wan
+    connection-addresses:
+    - ip: 127.0.0.1
+      port: 11669
+      transport: tcp
+    tls:
+      peer_verification: false

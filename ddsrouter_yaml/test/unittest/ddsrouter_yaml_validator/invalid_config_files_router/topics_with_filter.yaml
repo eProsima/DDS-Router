@@ -1,0 +1,16 @@
+version: v5.0
+
+topics:
+  - name: HelloWorldTopic
+    type: HelloWorld
+    filter: "index > 10"
+
+
+participants:
+
+  - name: SimpleParticipant
+    kind: local
+    domain: 0
+
+  - name: EchoParticipant
+    kind: echo

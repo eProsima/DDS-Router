@@ -32,6 +32,7 @@ std::string schema_path = "./ddsrouter_config_schema.json";
 // Vectors with the valid and invalid YAML files
 std::vector<std::string> valid_files = {
     "./valid_config_files_router/docu_example.yaml",
+    "./valid_config_files_router/schema_rules.yaml",
     // Config files copied automatically from DDS-Router/docs/resources/getting_started
     "./valid_config_files_router/client-ddsrouter.yaml",
     "./valid_config_files_router/server-ddsrouter.yaml",
@@ -54,17 +55,23 @@ std::vector<std::string> valid_files = {
 std::vector<std::string> invalid_files = {
     "./invalid_config_files_router/address_no_ip_nor_domain.yaml",
     "./invalid_config_files_router/address_no_port.yaml",
+    "./invalid_config_files_router/allowlist_with_qos.yaml",
     "./invalid_config_files_router/builtin_topic_no_name.yaml",
     "./invalid_config_files_router/builtin_topic_no_type.yaml",
-    "./invalid_config_files_router/ds_participant_no_discovery_server_guid.yaml",
+    "./invalid_config_files_router/ds_guid_id_out_of_range.yaml",
     "./invalid_config_files_router/ds_participant_no_listening_nor_connection_addresses.yaml",
+    "./invalid_config_files_router/ds_with_transport.yaml",
+    "./invalid_config_files_router/easy_mode_with_whitelist.yaml",
     "./invalid_config_files_router/filter_topic_no_name.yaml",
     "./invalid_config_files_router/initial_peers_no_addresses.yaml",
     "./invalid_config_files_router/invalid_version.yaml",
+    "./invalid_config_files_router/log_publish_blank_topic_name.yaml",
+    "./invalid_config_files_router/monitor_with_status.yaml",
     "./invalid_config_files_router/no_participant_kind.yaml",
     "./invalid_config_files_router/no_participant_name.yaml",
-    "./invalid_config_files_router/tls_ca_no_private_key_provided_cert.yaml",
-    "./invalid_config_files_router/tls_no_ca.yaml"
+    "./invalid_config_files_router/specs_threads_zero.yaml",
+    "./invalid_config_files_router/topic_routes_no_routes.yaml",
+    "./invalid_config_files_router/topics_with_filter.yaml"
 };
 } // namespace test
 

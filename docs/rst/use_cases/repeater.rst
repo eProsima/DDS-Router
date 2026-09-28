@@ -35,4 +35,4 @@ There could be more Participants in this |ddsrouter| and topic filtering is also
 The Repeater Participant works as any other Participant,
 with the particularity that it is able to resend the data it receives.
 
-In order to see an example of this configuration, access to the following example :ref:`example_repeater`.
+In order to see an example of this configuration, access to the following example :ref:`examples_repeater_example`.

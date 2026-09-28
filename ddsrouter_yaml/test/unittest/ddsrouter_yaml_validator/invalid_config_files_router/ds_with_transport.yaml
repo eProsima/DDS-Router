@@ -1,0 +1,16 @@
+version: v5.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: discovery_participant
+    kind: discovery-server
+    discovery-server-guid:
+      id: 0
+    listening-addresses:
+    - ip: 127.0.0.1
+      port: 11667
+      transport: udp
+    transport: udp

@@ -1,6 +1,6 @@
 .. include:: ../exports/alias.include
 
-.. _examples_tos_discovery_server_example:
+.. _examples_ros_discovery_server_example:
 
 #############################
 ROS2 Discovery Server Example
@@ -8,11 +8,12 @@ ROS2 Discovery Server Example
 
 In the following snippet we see a yaml file to configure a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in domain ``0`` and a
-:ref:`Local Discovery Server <user_manual_participants_discovery_server>` with ROS 2 configuration.
+:ref:`Local Discovery Server <user_manual_participants_discovery_server>` that ROS 2 nodes can use as Discovery Server
+(through the ``ROS_DISCOVERY_SERVER`` environment variable).
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 5-37
+    :lines: 5-36
 
 Configuration
 =============
@@ -27,7 +28,7 @@ one domain to the other, allowing different DDS domains to interact to each othe
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 9-11
+    :lines: 11-13
 
 
 Simple Participant
@@ -37,7 +38,7 @@ This Participant is configured by a name, a kind and the Domain Id, in this case
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 21-23
+    :lines: 23-25
 
 
 Discovery Server Participant
@@ -48,7 +49,7 @@ Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
-    :lines: 29-34
+    :lines: 31-36
 
 
 Execute example
