@@ -1,0 +1,88 @@
+# Test description:
+#   Check that tracks get rebuilt when a subscriber disconnects and reconnects.
+#
+# Test architecture:
+#
+# 1. Check that the subscriber receives the data sent by the publisher.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │ ┌──────────────┐ ┌┼─────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter  ││ │subscriber_t0_1│ │
+# │ │            ──┼─┼┤►           ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)    ││ │(local)        │ │
+# │ └──────────────┘ └┼─────────────┼┘ └───────────────┘ │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+#
+# 2. Disconnect the subscriber.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │ ┌──────────────┐ ┌┼─────────────┼┐                   │
+# │ │publisher_0_t0│ ││  ddsrouter  ││                   │
+# │ │              │ ││             ││                   │
+# │ │(local)       │ ││  (local)    ││                   │
+# │ └──────────────┘ └┼─────────────┼┘                   │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+#
+# 3. Check that when the subscriber is reactivated, it receives the data sent by the publisher.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │ ┌──────────────┐ ┌┼─────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter  ││ │subscriber_t0_2│ │
+# │ │            ──┼─┼┤►           ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)    ││ │(local)        │ │
+# │ └──────────────┘ └┼─────────────┼┘ └───────────────┘ │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 12
+
+
+  # DOMAIN 80
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: build/fastdds_configuration_example/configuration publisher --samples 110 --domain 80 --name topic0 --interval 100
+
+
+  # DOMAIN 81
+  subscriber_t0_1:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t0_1
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 3 --args "--samples 20 --domain 81 --name topic0"
+
+  subscriber_t0_2:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_t0_2
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 20 --timeout 6 --delay 4 --args "--samples 20 --domain 81 --name topic0"
+
+networks:
+  std_net:
+  default:
+    driver: none

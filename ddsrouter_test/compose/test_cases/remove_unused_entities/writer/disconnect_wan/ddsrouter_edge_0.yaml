@@ -1,0 +1,18 @@
+version: v5.0
+
+participants:
+
+  - name: Local_80
+    kind: local
+    domain: 80
+
+  - name: Edge_Participant
+    kind: wan
+    connection-addresses:
+      - domain: ddsrouter_cloud_0
+        port: 11666
+        transport: udp
+
+specs:
+  remove-unused-entities: true
+  discovery-trigger: writer
