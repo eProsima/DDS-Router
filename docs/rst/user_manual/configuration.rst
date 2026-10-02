@@ -85,7 +85,7 @@ Under the **optional** tag ``raw``, an XML configuration (with the same format a
 
 .. note::
 
-    The |ddsrouter| does not modify any XML configuration in a :ref:`user_manual_participants_xml`.
+    The |ddsrouter| does not modify the DomainParticipant XML configuration of a :ref:`user_manual_participants_xml`.
     However, there are some QoS that can affect performance.
     These QoS should be configured by the user explicitly.
     Check :ref:`user_manual_participants_xml_profiles`.
@@ -93,13 +93,10 @@ Under the **optional** tag ``raw``, an XML configuration (with the same format a
 Endpoint profiles
 -----------------
 
-Profiles named after a topic are automatically applied to :term:`DataWriter` and :term:`DataReader` endpoints
-when they are created for that topic by an :ref:`XML Participant <user_manual_participants_xml>`.
-A specific profile can also be selected per topic via the ``endpoint-profile-name`` tag, instead of relying
-on the topic name.
-By default, QoS fields explicitly set in the YAML configuration override the matching XML profile's values
-(``endpoint-qos-mode: xml-overridable``); this can be changed to ``xml-standalone`` on the participant so the
-XML profile is applied verbatim.
+Loaded ``data_writer`` and ``data_reader`` profiles are also applied to the :term:`DataWriter` and :term:`DataReader` endpoints that an :ref:`XML Participant <user_manual_participants_xml>` creates.
+By default, the profile applied to an endpoint is the one whose name matches the topic name.
+A different profile can be selected with the ``endpoint-profile-name`` tag of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+When a profile is applied, only ``durability``, ``reliability``, ``ownership`` and ``history-depth`` override the values from the profile, and only if they are explicitly set in the YAML configuration.
 For more details, see :ref:`user_manual_participants_xml_topic_profiles`.
 
 Topics Configuration
@@ -232,6 +229,12 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - *unsigned integer*
         - ``1``
         - :ref:`user_manual_configuration_downsampling`
+
+    *   - Endpoint Profile Name
+        - ``endpoint-profile-name``
+        - *string*
+        - Topic name
+        - :ref:`user_manual_participants_xml_topic_profiles`
 
 .. warning::
 
@@ -1021,6 +1024,12 @@ A complete example of all the configurations described on this page can be found
                   <domainId>1</domainId>
                   <rtps></rtps>
               </participant>
+              <data_writer profile_name="custom_endpoint_profile">
+                  <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+              </data_writer>
+              <data_reader profile_name="custom_endpoint_profile">
+                  <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+              </data_reader>
           </profiles>
 
     # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
@@ -1046,6 +1055,13 @@ A complete example of all the configurations described on this page can be found
         participants:
           - Participant0
           - Participant1
+
+      - name: HelloWorldTopic
+        type: HelloWorld
+        qos:
+          endpoint-profile-name: "custom_endpoint_profile"
+        participants:
+          - xml_participant
 
     # Do not allow ROS2 services
 

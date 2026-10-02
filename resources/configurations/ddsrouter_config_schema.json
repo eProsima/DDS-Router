@@ -160,6 +160,9 @@
                 "downsampling":{
                     "type":"integer",
                     "minimum": 1
+                },
+                "endpoint-profile-name":{
+                    "type":"string"
                 }
             },
             "title": "QOS"

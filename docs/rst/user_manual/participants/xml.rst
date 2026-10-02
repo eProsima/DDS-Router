@@ -76,68 +76,73 @@ Notice that not setting such QoS will not affect the correct functionality of th
 
 .. _user_manual_participants_xml_topic_profiles:
 
-Topic-name endpoint profile lookup
------------------------------------
-When the XML Participant creates a DataWriter or DataReader for a topic, it looks for a loaded XML ``data_writer``
-or ``data_reader`` profile to configure that endpoint.
+Endpoint profiles
+-----------------
+
+When the XML Participant creates a :term:`DataWriter` or :term:`DataReader` for a topic, it looks for a loaded XML ``data_writer`` or ``data_reader`` profile to configure that endpoint.
 By default, the |ddsrouter| looks for a profile **whose name matches the topic name**.
-If a matching profile is found, the endpoint is configured using that profile's QoS, giving the user
-control over fields such as history, memory policy, transport, etc.
-If no matching profile exists, the endpoint falls back to default QoS with values derived from the YAML configuration.
+If a matching profile is found, the endpoint is configured using that profile's QoS, giving the user control over fields such as history, memory policy, transport, etc.
+If no matching profile exists, the endpoint falls back to default QoS with values derived from the YAML configuration and from discovery.
+
+.. note::
+
+    Endpoint profiles are only applied by XML Participants.
+    The endpoints of any other Participant kind ignore them, even if a profile whose name matches the topic name is loaded.
 
 .. note::
 
     Certain QoS are always enforced by the |ddsrouter| regardless of the XML profile:
-    deadline on DataWriters (set to minimum so it matches any reader),
+    ``deadline`` on DataWriters (set to the minimum value so it matches any DataReader),
     ``autodispose_unregistered_instances`` on DataWriters (set to ``false`` to preserve dispose/unregister forwarding semantics),
     and ``expects_inline_qos`` on DataReaders for keyed topics.
 
-The following example loads a profile named ``my_topic`` that will be automatically applied when creating
-endpoints for a topic of that name:
+The following example loads a ``data_writer`` and a ``data_reader`` profile named ``my_topic`` that will be automatically applied when creating endpoints for a topic of that name:
 
 .. code-block:: xml
 
-    <dds>
-        <profiles>
-            <data_writer profile_name="my_topic">
-                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
-            </data_writer>
-            <data_reader profile_name="my_topic">
-                <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
-            </data_reader>
-        </profiles>
-    </dds>
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <profiles xmlns="http://www.eprosima.com">
+        <data_writer profile_name="my_topic">
+            <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+        </data_writer>
+        <data_reader profile_name="my_topic">
+            <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+        </data_reader>
+    </profiles>
 
 Selecting a profile explicitly
-"""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""
 
-Instead of relying on the topic name, a specific profile can be selected for a topic with the
-``endpoint-profile-name`` tag under that topic's QoS configuration.
-When set, the |ddsrouter| looks up the XML profile with that name instead of the topic name:
+Instead of relying on the topic name, a specific profile can be selected for a topic with the ``endpoint-profile-name`` tag of the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+When set, the |ddsrouter| looks up the ``data_writer`` and ``data_reader`` profiles with that name instead of the topic name:
 
 .. code-block:: yaml
 
     topics:
       - name: "rt/chatter"
         qos:
-          endpoint-profile-name: "my_reader_profile"
+          endpoint-profile-name: "chatter_profile"
+        participants:
+          - xml_participant
+
+As any other Topic QoS, ``endpoint-profile-name`` can be set in the :ref:`Manual Topics <user_manual_configuration_manual_topics>`, the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`, with the same precedence among them.
+Since XML profiles are loaded for the whole |ddsrouter| process, this is the way to apply different profiles to the same topic in different XML Participants.
+If no profile with that name is loaded, the |ddsrouter| does not look for a profile named after the topic; the endpoint falls back to default QoS instead.
 
 Overriding profile QoS from the YAML configuration
-"""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
-When a matching XML profile is applied, the QoS fields explicitly set by the user in the YAML
-configuration take precedence over the values in the XML profile.
-This behavior is controlled by the ``endpoint-qos-mode`` participant tag, which accepts two values:
+When a matching XML profile is applied, the following :ref:`Topic QoS <user_manual_configuration_topic_qos>` override the corresponding values from the profile, but only if they are explicitly set in the YAML configuration (in the Manual Topics, the Participant Topic QoS or the Specs Topic QoS):
+``durability``, ``reliability``, ``ownership`` and ``history-depth``.
+Every other field keeps the value from the XML profile.
 
-* ``xml-overridable`` *(default)*: the XML profile is applied first, and any QoS field explicitly set in
-  the YAML configuration overrides the corresponding value from the profile.
-* ``xml-standalone``: the XML profile is applied verbatim; YAML QoS does not override it.
+QoS values that the |ddsrouter| learns from remote endpoints during discovery never override the XML profile.
+Fields that are set neither in the XML profile nor in the YAML configuration therefore take the |fastdds| default values (e.g. ``KEEP_LAST`` history with depth ``1``), instead of being adapted to the discovered endpoints.
 
-.. code-block:: yaml
+.. warning::
 
-    - name: xml_participant
-      kind: xml
-      endpoint-qos-mode: xml-standalone
+    Setting ``history-depth`` in the Specs Topic QoS overrides the history of every matching XML profile, even when it is set to its default value of ``5000``.
+    Likewise, if the remote DataWriters use ``EXCLUSIVE_OWNERSHIP_QOS``, set ``ownership`` either in the XML profile or in the YAML configuration, otherwise the DataReaders of the XML Participant will not match them.
 
 
 Repeater
