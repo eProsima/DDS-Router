@@ -28,18 +28,18 @@ Several key elements can be observed in it:
 
 1.  **DDS Router**.
     *eProsima DDS Router* is an end-user software application that enables the connection of distributed DDS networks.
-    That is, DDS entities such as publishers and subscriber deployed in one geographic location and using a dedicated local network will be able to communicate with other DDS entities deployed in different geographic areas on their own dedicated local networks as if they were all on the same network through the use of *DDS Router*.
+    That is, DDS entities such as publishers and subscribers deployed in one geographic location and using a dedicated local network will be able to communicate with other DDS entities deployed in different geographic areas on their own dedicated local networks as if they were all on the same network through the use of *DDS Router*.
 
     This example presents two routers that enable Internet communication:
 
     *   *DDS Router Net A*.
         This is the DDS Router that is deployed on *LAN A* and configured as TCP client.
-        This way it is possible for the robot to communicate out-of-the-box with an external DDS Router configured as TCP server.
+        This way it is possible for a robot to communicate out-of-the-box with an external DDS Router configured as TCP server.
     *   *DDS Router Net B*.
         It plays the server role in the communication.
         It will expose a public network address to which client DDS Routers connect to establish communication.
 
-    It is important to mention that there is no correlation between DDS Publisher and Subscriber and TCP client and server.
+    There is no correlation between DDS Publisher and Subscriber and TCP client and server.
     That is, the functionality of the DDS entity is independent of its behavior in TCP communication.
     Thus, although one DDS Router acts as a TCP client and another as a TCP server, both share information in both directions of communication.
 
@@ -113,7 +113,7 @@ Let's create first the DDS Router configuration file. It will look like the one 
 .. literalinclude:: /resources/use_cases/wan_tcp/dds_router_net_A.yaml
     :language: yaml
 
-Next, it is briefly explained the most relevant aspects of this configuration file.
+The most relevant aspects of this configuration file are briefly explained below.
 
 The ``participants`` are the interfaces of the DDS Router to communicate with other networks.
 In this case, we have two participants:
@@ -133,7 +133,7 @@ In this case, we have two participants:
 .. note::
 
     In this case, the DDS Router will forward all topics found in the LAN A DDS network.
-    However, it is important to mention that the DDS topics relayed by the DDS Router can be filtered by configuring the ``allowlist`` and ``blocklist``.
+    However, the DDS topics relayed by the DDS Router can be filtered by configuring the ``allowlist`` and ``blocklist``.
     If this is the case please refer to the :ref:`Topic filtering documentation <topic_filtering>` for information on how to do this.
 
 To finish this step, run the DDS Router with the configuration file created as an argument.
@@ -224,8 +224,7 @@ The DDS Router Net B configuration file is quite similar to the DDS Router Net A
 In this case there are also two participants, two communication interfaces for the DDS Router.
 The first one communicates the DDS Router with any DDS entity, while the second one enables to establish a communication channel with another DDS Router.
 
-Even so there are some differences in the second participant that are worth mentioning.
-This participant sets a listening address (``listening-addresses``), rather than a connection address.
+The second participant sets a listening address (``listening-addresses``), rather than a connection address.
 This is because it is the participant that waits for incoming communications since it has this network address exposed and accessible from the Internet.
 
 To finish, run the DDS Router Net B with the above configuration.

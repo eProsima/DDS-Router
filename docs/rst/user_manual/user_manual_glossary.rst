@@ -60,7 +60,7 @@ DDS nomenclature
 
     Discovery Server
         Discovery Server Discovery Protocol is a Fast DDS feature that enables a new Discovery mechanism based on a
-        Server that filters and distribute the discovery information.
+        Server that filters and distributes the discovery information.
         This is highly recommended in networks where multicast is not available (e.g. WAN).
 
         See `Fast DDS documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/discovery_server.html>`__
@@ -84,7 +84,7 @@ DDS nomenclature
         for further information.
 
     Endpoint
-        DDS element that publish or subscribes in a specific Topic. Endpoint kinds are *DataWriter* or *DataReader*.
+        DDS element that publishes or subscribes in a specific Topic. Endpoint kinds are *DataWriter* or *DataReader*.
 
     Guid
         Global Unique Identifier.

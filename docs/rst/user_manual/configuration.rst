@@ -774,7 +774,7 @@ i.e. the data must reach the |ddsrouter| and this will forward the data.
 
     ################
 
-      - name: my_participant   # Participant Name = my_custom_part
+      - name: my_participant   # Participant Name = my_participant
         kind: simple           # Participant Kind = simple
         domain: 1              # DomainId = 1
 

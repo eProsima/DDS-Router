@@ -21,7 +21,7 @@ the Internet to a specific host.
 
 .. note::
 
-    NAT Traversal communication only affects to IPv4 communication.
+    NAT Traversal communication only affects IPv4 communication.
     Using IPv6 would not create NAT under network routers so every device could be accessed externally.
     Thus, configurations explained in this section do not apply to IPv6 deployments.
 
@@ -120,7 +120,7 @@ The following is a list of the accepted entries under the ``tls`` tag:
     *   - ``ca``
         - Mandatory for TLS clients if |br|
           ``peer_verification`` is active.
-        - Path to the CA (Certification- Authority) file.
+        - Path to the CA (Certification-Authority) file.
         - ``ca.crt``
 
     *   - ``password``
@@ -156,7 +156,7 @@ The following is a list of the accepted entries under the ``tls`` tag:
 .. note::
 
     Although in principle only required for TLS clients (with peer verification),
-    the CA (Certification- Authority) file may also be provided
+    the CA (Certification-Authority) file may also be provided
     for TLS servers when willing to connect them to other participants configured as servers.
 
 Examples

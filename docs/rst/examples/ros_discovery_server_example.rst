@@ -24,7 +24,7 @@ Allowed Topics
 In this section are the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
 ROS 2 topic ``rt/chatter`` with datatype ``std_msgs::msg::dds_::String_`` will be forwarded from
-one domain to the other, allowing different DDS domains to interact to each other.
+one domain to the other, allowing different DDS domains to interact with each other.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml
     :language: yaml
@@ -44,7 +44,7 @@ This Participant is configured by a name, a kind and the Domain Id, in this case
 Discovery Server Participant
 ----------------------------
 
-This Participant is configured by a name, a kind and a listening addresses where
+This Participant is configured by a name, a kind and the listening addresses where
 Discovery Server will expect metatraffic data from clients.
 
 .. literalinclude:: ../../resources/examples/ros_discovery_server.yaml

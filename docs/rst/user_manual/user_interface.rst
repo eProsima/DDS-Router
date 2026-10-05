@@ -146,8 +146,7 @@ Values lower than or equal to ``0`` do not set any reload timer.
 Timeout Argument
 ^^^^^^^^^^^^^^^^
 
-This argument allow to set a maximum time while the application will be running.
-Setting this argument will set the number of seconds the application will run until it is killed.
+This argument sets the maximum number of seconds the application will run until it is killed.
 While the application is waiting for timeout, it is still possible to kill it via signal.
 Default value ``0`` (or any negative value) means that the application will run forever (until kill via signal).
 
@@ -226,7 +225,7 @@ File Watcher
 ^^^^^^^^^^^^
 
 A File Watcher is a process that runs in the background and tracks changes in the |ddsrouter| configuration file.
-Every time the file is changed, the OS sends a notification, and the File Watcher listens such notification
+Every time the file is changed, the OS sends a notification, and the File Watcher listens for such notification
 and interacts with the |ddsrouter| in order to reload the topics.
 This event occurs every time the configuration file is saved.
 
@@ -251,7 +250,7 @@ Log
 Log module of |ddsrouter| uses the |fastdds| logging module.
 This log has 3 severity levels: ``INFO``, ``WARNING`` and ``ERROR``.
 Every log has also a category associated.
-This is how a log looks like:
+This is an example of a log entry:
 
 .. code::
 

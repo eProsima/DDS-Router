@@ -83,7 +83,7 @@ Gtest
 
 Gtest_ is a unit testing library for C++.
 By default, |ddsrouter| does not compile tests.
-It is possible to activate them with the opportune
+It is possible to activate them with the appropriate
 `CMake options <https://colcon.readthedocs.io/en/released/reference/verb/build.html#cmake-options>`_
 when calling colcon_ or CMake_.
 For more details, please refer to the :ref:`cmake_options` section.
@@ -158,14 +158,14 @@ For example, on Ubuntu use the command:
 eProsima dependencies
 ^^^^^^^^^^^^^^^^^^^^^
 
-If it already exists in the system an installation of *Fast DDS* library with version ``3.0.0`` or greater, just source
+If an installation of *Fast DDS* library with version ``3.0.0`` or greater already exists in the system, just source
 this library when building the |ddsrouter| application by using the command:
 
 .. code-block:: bash
 
     source <fastdds-installation-path>/install/setup.bash
 
-In other case, just download *Fast DDS* project from sources and build it together with |ddsrouter| using colcon
+Otherwise, just download *Fast DDS* project from sources and build it together with |ddsrouter| using colcon
 as it is explained in section :ref:`colcon_installation`.
 
 

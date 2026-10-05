@@ -14,15 +14,15 @@ and remote topics indistinctly.
 
 |ddsrouter| is an application that internally runs :term:`Participants <Participant>`, which are an abstraction of
 DDS :term:`DomainParticipants <DomainParticipant>`.
-Each one of these Participants is an communication interface, a "door" to a specific DDS network configuration.
+Each one of these Participants is a communication interface, a "door" to a specific DDS network configuration.
 These Participants allow the application to connect to different DDS networks at the same time.
 Every time one of these Participants receives a message from the DDS network to which they are connected,
 they will forward the data and the source of this message through the other Participants.
-The |ddsrouter| configuration and the topics in which it operates depends on the initial
+The |ddsrouter| configuration and the topics in which it operates depend on the initial
 :ref:`DDS Router configuration <user_manual_configuration>`.
 
 The following schema represents a |ddsrouter| local use case.
-This scenario presents different DDS networks that are isolated one to each other due to the Transport Protocol
+This scenario presents different DDS networks that are isolated from each other due to the Transport Protocol
 (UDP, TCP, etc.), the Discovery Protocol (Simple, Discovery Server, etc.) or the DDS :term:`Domain Id` used
 by each DDS entity.
 Configuring the |ddsrouter| to have 4 different Participants, each of them configured for one isolated DDS network,
@@ -30,7 +30,7 @@ will create internally 4 Participants.
 All the data that arrives to one of the Participants will be forwarded through the others, allowing all the machines
 to connect to each other independently of their different configurations.
 This data transmission will be accomplished without copying the data, as all participants will share the pointer
-to the allocated data, successfully achieving a **zero-copy** communication mechanism.
+to the allocated data, achieving a **zero-copy** communication mechanism.
 
 .. figure:: /rst/figures/ddsrouter_overview.png
 
@@ -51,7 +51,7 @@ The WAN communication may be performed using the
 (dynamic discovery over non-multicast networks).
 Thus, any DDS Router connected to the same Discovery Servers will work as a standard DDS node, publishing
 and subscribing on the shared DDS topics.
-This create an unlimited and highly scalable decentralized and distributed DDS network.
+This creates a scalable, decentralized and distributed DDS network.
 
 .. figure:: /rst/figures/ddsrouter_overview_wan.png
 
@@ -60,8 +60,7 @@ Usage Description
 =================
 
 The |ddsrouter| is a terminal (non-graphical) application that creates the DDS bridge as long as it is running.
-The configuration in *YAML* format is very intuitive and human-readable.
-The whole application has been thought to be user-friendly, following a user-oriented design.
+It is configured through a human-readable *YAML* file.
 
 * **RUN**: In order to run a |ddsrouter| application, just a *YAML* configuration file is required with the specific
   configurations (see section :ref:`DDS Router Configuration <user_manual_configuration>` to check how to configure a DDS Router
@@ -81,7 +80,7 @@ Common Use Cases
 
 The different cases where the |ddsrouter| could be applied are very varied, and would increase as new Participant Kinds
 will be added in future releases.
-These are most common use cases so far:
+These are the most common use cases so far:
 
 .. list-table::
     :header-rows: 1

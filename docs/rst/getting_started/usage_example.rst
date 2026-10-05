@@ -6,8 +6,7 @@
 Example of usage
 ################
 
-This example will serve as a hands-on tutorial, aimed at introducing some of the key concepts and features that
-|eddsrouter| has to offer.
+This hands-on tutorial introduces some of the main concepts and features of |eddsrouter|.
 
 Two disjoint DDS networks will be bridged by a pair of routers to connect the endpoints
 hosted at each of the networks. In particular, two `ShapesDemo <https://www.eprosima.com/index.php/products-all/eprosima-shapes-demo>`_
@@ -59,7 +58,7 @@ Let us first add only the ``Square`` topic:
 
 Apart from selecting on which topics we wish to send/receive data, we must configure as well the participants that will
 ultimately perform communication. Each router instance will contain a :ref:`simple <user_manual_participants_simple>`
-and a :ref:`WAN <user_manual_participants_wan>` participants. In brief, the simple participants will be in charge of
+and a :ref:`WAN <user_manual_participants_wan>` participant. In brief, the simple participants will be in charge of
 locally communicating with the corresponding ShapesDemo application, while the WAN participants will be the ones
 bridging the connection between the two DDS networks.
 
@@ -121,6 +120,5 @@ frozen), while the circle should.
 
 .. figure:: /rst/figures/shapesdemo_circle.png
 
-Please feel free to explore sections :ref:`Examples <examples_echo_example>` and :ref:`Use Cases <ros_cloud>` for more
-information on how to configure and set up a router, as well as to discover multiple scenarios where |ddsrouter| may
-serve as a useful tool.
+See sections :ref:`Examples <examples_echo_example>` and :ref:`Use Cases <ros_cloud>` for more information on how
+to configure and set up a router, and for other scenarios where |ddsrouter| can be used.
