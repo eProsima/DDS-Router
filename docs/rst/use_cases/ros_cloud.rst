@@ -21,7 +21,7 @@ The local instance of |ddsrouter| (local router) only requires to have a
 :ref:`WAN Participant <user_manual_participants_wan>` that will play the client role in the discovery process of remote
 participants (see :term:`Initial Peers discovery mechanism <Initial Peers>`).
 
-After having acknowledged each other’s existence through `Simple DDS discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_
+After having acknowledged each other's existence through `Simple DDS discovery mechanism <https://fast-dds.docs.eprosima.com/en/latest/fastdds/discovery/simple.html>`_
 (multicast communication), the local participant will start receiving messages published by the ROS 2 talker node, and
 will then forward them to the WAN participant. Following, these messages will be sent to another participant hosted on a
 |k8s| cluster to which it connects via WAN communication over UDP/IP.

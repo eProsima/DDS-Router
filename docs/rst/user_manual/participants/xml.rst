@@ -9,7 +9,6 @@ XML Participant
 This type of :term:`Participant` refers to a :term:`DomainParticipant` that uses QoS profiles loaded from XML files to be configured.
 
 |fastdds| supports XML to fully configure a DomainParticipant.
-Using XML configuration, users have whole access to the full configuration of a DDS DomainParticipant.
 Check the following `documentation <https://fast-dds.docs.eprosima.com/en/latest/fastdds/xml_configuration/domainparticipant.html>`_ for further information on how to configure a DDS DomainParticipant with XML.
 For further information regarding how to load XML configuration files to the |ddsrouter|, check the :ref:`user_manual_configuration_load_xml` section.
 
@@ -55,7 +54,7 @@ Create a Fast DDS XML Participant profile
 The whole DomainParticipant configuration settings must be configured via XML, |ddsrouter| will not configure any attribute or QoS for it.
 To configure the profile, check the :ref:`Profile <user_manual_configuration_profile>` configuration section.
 
-However, there are specific QoS that will affect the performance of the |ddsrouter| and that are advisable for the user to set them.
+However, there are specific QoS that will affect the performance of the |ddsrouter| and that the user is advised to set.
 Notice that not setting such QoS will not affect the correct functionality of the application, but may affect its performance.
 
 * ``ignore_local_endpoints`` avoid local matching for this participant's endpoints:

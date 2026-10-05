@@ -23,7 +23,7 @@ Allowed Topics
 In this section are the :term:`Topics <Topic>` that the DDS Router will route from
 one Participant to the other.
 Topic ``HelloWorldTopic`` and ROS 2 topic ``rt/chatter`` will be forwarded from
-one domain to the other, allowing different DDS domains to interact to each other.
+one domain to the other, allowing different DDS domains to interact with each other.
 
 .. literalinclude:: ../../resources/examples/wan_server.yaml
     :language: yaml
@@ -44,7 +44,7 @@ WAN Participant Server
 
 This Participant is configured with a name, a kind and the listening addresses where
 it will expect data from other remote WAN Participant Clients.
-This Participant act as a Server only to receive the discovery data from other WAN Participants.
+This Participant acts as a Server only to receive the discovery data from other WAN Participants.
 Once the connection has been established, the communication will be symmetrical (except in TCP case, in which case
 this Participant will work as TCP Server).
 

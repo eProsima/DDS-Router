@@ -8,8 +8,8 @@ Echo Example
 
 The following YAML configuration file configures a DDS Router to create a
 :ref:`Simple Participant <user_manual_participants_simple>` in :term:`Domain Id` ``0`` and an
-:ref:`Echo Participant <user_manual_participants_echo>` that will print in ``stdout`` every message get in Domain ``0``,
-as well as information regarding discovery events.
+:ref:`Echo Participant <user_manual_participants_echo>` that will print in ``stdout``
+every message received in Domain ``0``, as well as information regarding discovery events.
 
 .. literalinclude:: ../../resources/examples/echo.yaml
     :language: yaml
@@ -60,7 +60,7 @@ For a detailed explanation on how to execute the |ddsrouter|, refer to this :ref
 .. note::
 
     Internal entities for a specific topic are only created once a data receiver (Reader/Subscriber) is discovered.
-    Hence, for these example to work, either substitute ``allowlist`` for :ref:`builtin-topics <topic_filtering>` in the
+    Hence, for this example to work, either substitute ``allowlist`` for :ref:`builtin-topics <topic_filtering>` in the
     configuration file, or launch a subscriber/listener in the same domain (``0``).
 
 Execute with Fast DDS HelloWorld Example

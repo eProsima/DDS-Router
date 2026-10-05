@@ -34,7 +34,7 @@ The steps to run |ddsrouter| in a Docker container are explained below.
     :ref:`Examples <examples_echo_example>` section, into the ``/<dds_router_ws>/DDS_ROUTER_CONFIGURATION.yaml`` file,
     where ``dds_router_ws`` is the path of the configuration file.
     To make this accessible from the Docker container we will create a shared volume containing just
-    this file. This is explained in next point.
+    this file. This is explained in the next point.
 
     |br|
 
@@ -49,8 +49,8 @@ The steps to run |ddsrouter| in a Docker container are explained below.
             ubuntu-fastdds-suite:<fastdds-version> \
             ddsrouter --config-path /root/DDS_ROUTER_CONFIGURATION.yaml
 
-    It is important to mention that both the path to the configuration file hosted in the local machine and the one
-    created in the Docker container must be absolute paths in order to share just one single file as a shared volume.
+    Both the path to the configuration file hosted in the local machine and the one created in the Docker container
+    must be absolute paths in order to share just one single file as a shared volume.
 
     After executing the previous command you should be able to see the initialization traces from the |ddsrouter|
     running in the Docker container.

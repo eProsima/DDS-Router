@@ -85,7 +85,7 @@ Execute |ddsrouter| using file
 ``<path/to/ddsrouter_tool>/share/resources/configurations/examples/repeater_client.yaml``.
 Remember to change the address and port on the configuration file to the actual public IP of *R*:sub:`A`.
 **In this example the port forwarding is not required, as the Repeater will allow the communication through it,
-and TCP protocol is being used.**.
+and TCP protocol is being used.**
 
 Execute with ROS 2 demo nodes
 -----------------------------
@@ -121,7 +121,7 @@ the *listener* in *H*:sub:`C` will start receiving and printing data from the *t
 Execute with Fast DDS HelloWorld Example
 ----------------------------------------
 
-Both clients can create *Fast DDS* endpoints , which will publish and subscribe in topic ``HelloWorldTopic``.
+Both clients can create *Fast DDS* endpoints, which will publish and subscribe in topic ``HelloWorldTopic``.
 Execute a ``publisher`` in one of them and a ``subscriber`` in the other.
 It is recommended to use different domains in each endpoint, so in case both endpoints are accessible
 (under same network) no loop is created.

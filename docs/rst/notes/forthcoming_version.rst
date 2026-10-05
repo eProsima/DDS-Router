@@ -23,7 +23,7 @@ This release includes the following **improvements**:
   within ``allowlist`` and ``blocklist``, ``filter`` within ``topics``, ``status`` within ``specs: monitor``, and
   ``transport``, ``ignore-participant-flags`` and ``ros2-easy-mode`` in Discovery Server and WAN Participants.
 * Report as configuration errors, when validating the configuration file, some configurations that were accepted
-  before but rejected while parsing (i.e. ``specs: threads`` equal to ``0``).
+  before but rejected while parsing (e.g. ``specs: threads`` equal to ``0``).
 * Accept TLS configurations without ``ca`` or ``password`` tags, matching the TLS validation performed at runtime.
 
 This release includes the following **bugfixes**:
