@@ -44,6 +44,12 @@ xml:
               <domainId>1</domainId>
               <rtps></rtps>
           </participant>
+          <data_writer profile_name="custom_endpoint_profile">
+              <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+          </data_writer>
+          <data_reader profile_name="custom_endpoint_profile">
+              <historyMemoryPolicy>DYNAMIC</historyMemoryPolicy>
+          </data_reader>
       </profiles>
 
 # Relay topic rt/chatter and type std_msgs::msg::dds_::String_
@@ -69,6 +75,13 @@ topics:
     participants:
       - Participant0
       - Participant1
+
+  - name: HelloWorldTopic
+    type: HelloWorld
+    qos:
+      endpoint-profile-name: "custom_endpoint_profile"
+    participants:
+      - xml_participant
 
 # Do not allow ROS2 services
 
