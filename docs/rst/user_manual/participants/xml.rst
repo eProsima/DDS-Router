@@ -125,7 +125,7 @@ When set, the |ddsrouter| looks up the ``data_writer`` and ``data_reader`` profi
         participants:
           - xml_participant
 
-As any other Topic QoS, ``endpoint-profile-name`` can be set in the :ref:`Manual Topics <user_manual_configuration_manual_topics>`, the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`, with the same precedence among them.
+Like any other Topic QoS, ``endpoint-profile-name`` can be set in the :ref:`Manual Topics <user_manual_configuration_manual_topics>`, the :ref:`Participant Topic QoS <user_manual_configuration_participant_topic_qos>` and the :ref:`Specs Topic QoS <user_manual_configuration_specs_topic_qos>`, with the same precedence among them.
 Since XML profiles are loaded for the whole |ddsrouter| process, this is the way to apply different profiles to the same topic in different XML Participants.
 If no profile with that name is loaded, the |ddsrouter| does not look for a profile named after the topic; the endpoint falls back to default QoS instead.
 

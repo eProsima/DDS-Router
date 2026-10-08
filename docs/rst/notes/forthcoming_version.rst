@@ -17,7 +17,7 @@ This release includes the following **new features**:
   take precedence over the profile.
   For more details, see :ref:`user_manual_participants_xml_topic_profiles`.
 
-This release includes the following **documentation updates**:
+Next release will include the following **documentation updates**:
 
 * Document endpoint profiles for the :ref:`XML Participant <user_manual_participants_xml>`,
   including QoS fields always enforced by the *DDS Router* regardless of the profile.
