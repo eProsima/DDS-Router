@@ -471,6 +471,8 @@ html_favicon = 'rst/_static/css/imgs/eProsima.ico'
 # so a file named 'default.css' will overwrite the builtin 'default.css'.
 html_static_path = ['rst/_static']
 
+html_js_files = ['js/sidebar_scroll.js']
+
 # html_context = {}
 
 # Add any extra paths that contain custom files (such as robots.txt or
