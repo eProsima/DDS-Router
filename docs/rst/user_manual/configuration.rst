@@ -292,6 +292,7 @@ For more information on topics, please read the `Fast DDS Topic <https://fast-dd
         - ``endpoint-profile-name``
         - *string*
         - Topic name
+        - XML profile name
         - :ref:`user_manual_participants_xml_topic_profiles`
 
 .. warning::
@@ -745,7 +746,6 @@ The tags of a Participant are arranged as follows, and the sections below follow
         tls: ...                      # TLS configuration (see WAN Configuration)
 
         profile: ...                  # XML profile of an XML Participant
-        endpoint-qos-mode: ...        # QoS precedence of an XML Participant
 
         qos: ...                      # Topic QoS of the Participant
 

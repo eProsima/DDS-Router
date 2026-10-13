@@ -128,8 +128,7 @@ Below is the list with all the available Participant Kinds.
         - ``xml`` |br|
           ``XML`` |br|
         - ``profile`` |br|
-          ``repeater`` |br|
-          ``endpoint-qos-mode``
+          ``repeater``
         - XML DDS DomainParticipant |br|
           for custom configuration.
 
