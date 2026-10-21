@@ -5,8 +5,18 @@
 .. include:: forthcoming_version.rst
 
 ##############
-Version v3.5.3
+Version v3.5.4
 ##############
+
+This release includes the following **features**:
+
+* Support endpoint profiles in the XML Participant: loaded ``data_writer``/``data_reader`` XML profiles matching the topic name are applied automatically, and a specific one can be selected with the new ``endpoint-profile-name`` Topic QoS tag
+
+This release includes the following **improvements**:
+
+* Run the Uncrustify workflow only in PRs
+* Run the Python Linters workflow only in PRs
+* Remove the nightly CI jobs targeting the End-of-Life 2.x branch
 
 This release includes the following **Dependencies Update**:
 
@@ -32,16 +42,17 @@ This release includes the following **Dependencies Update**:
     *   - Dev Utils
         - `eProsima/dev-utils <https://github.com/eProsima/dev-utils>`__
         - `v1.5.3 <https://github.com/eProsima/dev-utils/releases/tag/v1.5.3>`__
-        - `v1.5.3 <https://github.com/eProsima/dev-utils/releases/tag/v1.5.3>`__
+        - `v1.5.4 <https://github.com/eProsima/dev-utils/releases/tag/v1.5.4>`__
     *   - DDS Pipe
         - `eProsima/DDS-Pipe <https://github.com/eProsima/DDS-Pipe>`__
-        - `v1.5.2 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.5.2>`__
         - `v1.5.3 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.5.3>`__
+        - `v1.5.4 <https://github.com/eProsima/DDS-Pipe/releases/tag/v1.5.4>`__
 
 #################
 Previous Versions
 #################
 
+.. include:: previous_versions/v3.5.3.rst
 .. include:: previous_versions/v3.5.2.rst
 .. include:: previous_versions/v3.5.1.rst
 .. include:: previous_versions/v3.5.0.rst
