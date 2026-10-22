@@ -64,7 +64,7 @@ This value allows users to keep using the same YAML file with an old configurati
 
         *   - version 4.0
             - ``v4.0``
-            - *v3.5.3*
+            - *v3.5.4*
 
 
 **The current configuration version is v5.0**.
