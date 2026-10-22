@@ -21,10 +21,11 @@
    :numbered: 5
    :hidden:
 
-   Windows </rst/installation/windows.rst>
-   Linux </rst/installation/linux.rst>
-   Docker Image </rst/installation/docker.rst>
-   Vulcanexus Cloud </rst/installation/vulcanexus.rst>
+   /rst/installation/linux
+   /rst/installation/windows
+   /rst/installation/docker
+   /rst/installation/vulcanexus
+   /rst/installation/cmake_options
 
 
 .. _index_getting_started:
@@ -51,7 +52,6 @@
    Participant </rst/user_manual/participants/participant>
    /rst/user_manual/configuration
    /rst/user_manual/wan_configuration
-   /rst/user_manual/yaml_validator
    /rst/user_manual/user_manual_glossary
 
 
@@ -83,19 +83,6 @@
    /rst/use_cases/wan_tcp
    /rst/use_cases/ros_cloud
    /rst/use_cases/repeater
-
-
-.. _index_developer_manual:
-
-.. toctree::
-   :caption: Developer Manual
-   :maxdepth: 2
-   :numbered: 5
-   :hidden:
-
-   /rst/developer_manual/installation/sources/linux
-   /rst/developer_manual/installation/sources/windows
-   /rst/developer_manual/installation/configuration/cmake_options
 
 
 .. _index_notes:

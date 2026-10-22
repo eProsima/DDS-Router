@@ -22,7 +22,7 @@ For data reception messages, the traces show the following information:
 
 These logs contain the :term:`Participant Name` of the participant that has originally received the message, and the
 :term:`Topic` where this message has been received.
-Additionally, extra information such as the data :term:`Payload` (in hexadecimal format) and source :term:`Endpoint` :term:`Guid` is displayed in verbose mode:
+Extra information such as the data :term:`Payload` (in hexadecimal format) and source :term:`Endpoint` :term:`Guid` is displayed in verbose mode:
 
 .. code-block:: bash
 
@@ -59,6 +59,8 @@ The Echo Participant accepts three different **optional** parameters:
 - ``discovery``: Whether to echo information regarding discovery events. Defaults to **true**.
 - ``data``: Whether to echo information regarding user data reception. Defaults to **false**.
 - ``verbose``: Display detailed information about the user data received (if ``data`` set to ``true``). Defaults to **false**.
+
+No other tags (such as ``domain`` or ``qos``) are accepted by the Echo Participant.
 
 Configuration Example
 =====================

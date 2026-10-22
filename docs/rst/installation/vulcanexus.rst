@@ -7,17 +7,12 @@
 Vulcanexus Cloud
 ################
 
-Vulcanexus CLOUD scales and integrates ROS 2 networks located in geographically spaced environments, and enables the deployment of ROS 2 entities in the cloud/edge.
+Vulcanexus Cloud scales and integrates ROS 2 networks located in geographically spaced environments, and enables the deployment of ROS 2 entities in the cloud/edge.
+It includes |ddsrouter|, which is currently only available in the *Vulcanexus* **Jazzy** distribution.
 
 *Vulcanexus* offers the possibility of running from a containerized environment by providing a Docker image which contains *Vulcanexus*'s Desktop installation.
 This Docker image can be found in `Vulcanexus's Downloads <https://vulcanexus.org/download>`_.
-To run it, first install Docker:
-
-.. code-block:: bash
-
-    sudo apt install docker.io
-
-And then load the image with:
+Load the image with:
 
 .. code-block:: bash
 
@@ -62,4 +57,6 @@ The output should be:
 
     /opt/vulcanexus/jazzy
 
-For more information about using DDS Router from *Vulcanexus* installation, please refer to the `Vulcanexus Cloud Tutorials <https://docs.vulcanexus.org/en/latest/rst/tutorials/cloud/cloud_tutorials.html>`_.
+Within the sourced environment, |ddsrouter| is run with the ``ddsrouter`` command (see :ref:`user_manual_user_interface`).
+For more information about using |ddsrouter| from *Vulcanexus* installation, please refer to
+the `Vulcanexus Cloud Tutorials <https://docs.vulcanexus.org/en/latest/rst/tutorials/cloud/cloud_tutorials.html>`_.

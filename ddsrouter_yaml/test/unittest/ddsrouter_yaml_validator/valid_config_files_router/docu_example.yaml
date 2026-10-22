@@ -1,3 +1,6 @@
+# Configuration version
+version: v5.0
+
 # Specifications
 specs:
   threads: 10

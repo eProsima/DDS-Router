@@ -2,6 +2,8 @@
 # ROS DISCOVERY SERVER CLIENT EXAMPLE #
 #######################################
 
+version: v5.0
+
 ##################################
 # ALLOWED TOPICS
 # Allowing ROS2 HelloWorld demo_nodes
@@ -58,17 +60,13 @@ participants:
 # 6: Kind of ClientROS2: <local-discovery-server>.
 # If not listening address are set for this Participant, it acts as SuperClient of Discovery Server Discovery Protocol.
 
-# 7: Use the default Discovery Server ROS 2 GuidPrefix <44.53. <id> .5f.45.50.52.4f.53.49.4d.41>.
+# 7: Add the addresses where this Client will try to reach a Discovery Server.
 
-# 8: Set this Discovery Server GuidPrefix to <44.53.02.5f.45.50.52.4f.53.49.4d.41>.
+# 8: Connect to a Discovery Server in localhost. This domain will be translated as IP 127.0.0.1.
 
-# 9: Add the addresses where this Client will try to reach a Discovery Server.
+# 9: Discovery Server listening port is 11888.
 
-# 10: Connect to a Discovery Server in IP localhost listening. This domain will be translated as ip: "127.0.0.1"
-
-# 11: Discovery Server listening port is 11888.
-
-# 12: This is the same configuration as the result using Fast DDS environment variable:
+# 10: This is the same configuration as the result using Fast DDS environment variable:
 # $> export ROS_DISCOVERY_SERVER=";127.0.0.1:11888"
 # Add every other address where trying to reach this same remote Discovery Server,
 # or add every other Discovery Server connection required.

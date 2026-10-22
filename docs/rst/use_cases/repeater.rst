@@ -17,7 +17,7 @@ The use of a Repeater Server is very useful in the following scenarios:
 - **NAT Traversal**: If the edge devices are under different NATs, they cannot access each other if no
   ports are opened in their respective internet access points.
 - **Unreachable Network**: If edge devices work under different networks (e.g. using different transport protocols,
-  connected in different private networks, etc.) cannot reach each other.
+  connected in different private networks, etc.) they cannot reach each other.
 
 The following figure exemplifies these use cases.
 When the communication between edge routers is not possible, a Repeater can be set in the middle to forward data
@@ -35,4 +35,4 @@ There could be more Participants in this |ddsrouter| and topic filtering is also
 The Repeater Participant works as any other Participant,
 with the particularity that it is able to resend the data it receives.
 
-In order to see an example of this configuration, access to the following example :ref:`example_repeater`.
+In order to see an example of this configuration, access to the following example :ref:`examples_repeater_example`.

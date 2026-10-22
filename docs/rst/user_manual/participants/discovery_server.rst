@@ -55,6 +55,12 @@ The Discovery Server Participant allows users to configure the standard attribut
 * To configure the Discovery Server connection addresses to connect to other Discovery Servers,
   check the
   :ref:`Connection Addresses <user_manual_configuration_connection_addresses>` configuration section.
+* To configure TLS over TCP, check the :ref:`WAN Configuration <user_manual_wan_configuration>` section.
+* It also accepts the :ref:`whitelist-interfaces <user_manual_configuration_interface_whitelist>` and
+  :ref:`qos <user_manual_configuration_participant_topic_qos>` tags.
+
+The ``domain`` and ``repeater`` tags are not accepted: the discovery through a Discovery Server does not take the
+:term:`Domain Id` into account (see :ref:`user_manual_configuration_domain_id`).
 
 .. note::
 
@@ -74,7 +80,7 @@ This example connects the local Discovery Server Participant with a remote Disco
 
 .. code-block:: yaml
 
-    - name: discovery_server_participant        # Participant Name = local_discovery_server_participant
+    - name: discovery_server_participant        # Participant Name = discovery_server_participant
 
       kind: discovery-server
 
@@ -104,7 +110,7 @@ This example connects the local Discovery Server Participant with a remote Disco
 
 .. code-block:: yaml
 
-    - name: discovery_server_participant        # Participant Name = local_discovery_server_participant
+    - name: discovery_server_participant        # Participant Name = discovery_server_participant
 
       kind: discovery-server
 
@@ -134,7 +140,7 @@ This example connects the local Discovery Server Participant with a remote Disco
 
 .. code-block:: yaml
 
-    - name: discovery_server_participant        # Participant Name = local_discovery_server_participant
+    - name: discovery_server_participant        # Participant Name = discovery_server_participant
 
       kind: discovery-server
 
