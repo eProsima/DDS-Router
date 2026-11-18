@@ -1,0 +1,11 @@
+version: v5.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: xml_participant
+    kind: xml
+    profile: custom_participant_configuration
+    endpoint-qos-mode: xml-only

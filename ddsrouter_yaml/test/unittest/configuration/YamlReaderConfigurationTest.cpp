@@ -17,6 +17,7 @@
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
 
+#include <ddspipe_participants/configuration/XmlParticipantConfiguration.hpp>
 #include <ddspipe_yaml/yaml_configuration_tags.hpp>
 #include <ddspipe_yaml/testing/generate_yaml.hpp>
 
@@ -703,4 +704,95 @@ int main(
 {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
+}
+
+/**
+ * Test load of the endpoint QoS mode of an XML participant in the configuration
+ *
+ * CASES:
+ * - Not set                                   -> XML_OVERRIDABLE (default)
+ * - xml-overridable                           -> XML_OVERRIDABLE
+ * - xml-standalone                            -> XML_STANDALONE
+ * - Unknown value                             -> ConfigurationException
+ * - Set in a participant that is not XML      -> ConfigurationException
+ */
+TEST(YamlReaderConfigurationTest, xml_participant_endpoint_qos_mode)
+{
+    auto load_xml_participant = [](const std::string& endpoint_qos_mode)
+            {
+                std::string yml_configuration =
+                        "version: v5.0\n"
+                        "participants:\n"
+                        "  - name: P1\n"
+                        "    kind: echo\n"
+                        "  - name: P2\n"
+                        "    kind: xml\n"
+                        "    profile: participant_profile\n";
+
+                if (!endpoint_qos_mode.empty())
+                {
+                    yml_configuration += "    endpoint-qos-mode: " + endpoint_qos_mode + "\n";
+                }
+
+                ddsrouter::core::DdsRouterConfiguration configuration =
+                        ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(
+                    YAML::Load(yml_configuration));
+
+                for (const auto& participant : configuration.participants_configurations)
+                {
+                    if (participant.first == ddsrouter::core::types::ParticipantKind::xml)
+                    {
+                        auto xml_configuration =
+                                std::dynamic_pointer_cast<ddspipe::participants::XmlParticipantConfiguration>(
+                            participant.second);
+                        EXPECT_NE(nullptr, xml_configuration);
+                        return xml_configuration;
+                    }
+                }
+
+                ADD_FAILURE() << "XML participant not found in the configuration";
+                return std::shared_ptr<ddspipe::participants::XmlParticipantConfiguration>();
+            };
+
+    // Not set
+    {
+        auto xml_configuration = load_xml_participant("");
+        ASSERT_NE(nullptr, xml_configuration);
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE, xml_configuration->endpoint_qos_mode);
+    }
+
+    // xml-overridable
+    {
+        auto xml_configuration = load_xml_participant(ddspipe::yaml::ENDPOINT_QOS_MODE_XML_OVERRIDABLE_TAG);
+        ASSERT_NE(nullptr, xml_configuration);
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE, xml_configuration->endpoint_qos_mode);
+    }
+
+    // xml-standalone
+    {
+        auto xml_configuration = load_xml_participant(ddspipe::yaml::ENDPOINT_QOS_MODE_XML_STANDALONE_TAG);
+        ASSERT_NE(nullptr, xml_configuration);
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_STANDALONE, xml_configuration->endpoint_qos_mode);
+    }
+
+    // Unknown value
+    EXPECT_THROW(load_xml_participant("xml-only"), utils::ConfigurationException);
+
+    // Set in a participant that is not XML
+    {
+        const char* yml_configuration =
+                R"(
+            version: v5.0
+            participants:
+              - name: P1
+                kind: echo
+              - name: P2
+                kind: local
+                endpoint-qos-mode: xml-standalone
+            )";
+
+        EXPECT_THROW(
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(YAML::Load(yml_configuration)),
+            utils::ConfigurationException);
+    }
 }

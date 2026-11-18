@@ -61,6 +61,8 @@ std::vector<std::string> invalid_files = {
     "./invalid_config_files_router/ds_guid_id_out_of_range.yaml",
     "./invalid_config_files_router/ds_participant_no_listening_nor_connection_addresses.yaml",
     "./invalid_config_files_router/ds_with_transport.yaml",
+    "./invalid_config_files_router/endpoint_qos_mode_invalid_value.yaml",
+    "./invalid_config_files_router/endpoint_qos_mode_non_xml_participant.yaml",
     "./invalid_config_files_router/easy_mode_with_whitelist.yaml",
     "./invalid_config_files_router/filter_topic_no_name.yaml",
     "./invalid_config_files_router/initial_peers_no_addresses.yaml",

@@ -83,6 +83,7 @@ Endpoint profiles
 When the XML Participant creates a :term:`DataWriter` or :term:`DataReader` for a topic, it looks for a loaded XML ``data_writer`` or ``data_reader`` profile to configure that endpoint.
 By default, the |ddsrouter| looks for a profile **whose name matches the topic name**.
 If a matching profile is found, the endpoint is configured using that profile's QoS, giving the user control over fields such as history, memory policy, transport, etc.
+By default, ``durability``, ``reliability``, ``ownership`` and ``history`` are still taken from the YAML configuration and from discovery; see :ref:`user_manual_participants_xml_endpoint_qos_mode` to use the profile as is.
 If no matching profile exists, the endpoint falls back to default QoS with values derived from the YAML configuration and from discovery.
 
 .. note::
@@ -130,20 +131,43 @@ Like any other Topic QoS, ``endpoint-profile-name`` can be set in the :ref:`Manu
 Since XML profiles are loaded for the whole |ddsrouter| process, this is the way to apply different profiles to the same topic in different XML Participants.
 If no profile with that name is loaded, the |ddsrouter| does not look for a profile named after the topic; the endpoint falls back to default QoS instead.
 
-Overriding profile QoS from the YAML configuration
-""""""""""""""""""""""""""""""""""""""""""""""""""
+.. _user_manual_participants_xml_endpoint_qos_mode:
 
-When a matching XML profile is applied, the following :ref:`Topic QoS <user_manual_configuration_topic_qos>` override the corresponding values from the profile, but only if they are explicitly set in the YAML configuration (in the Manual Topics, the Participant Topic QoS or the Specs Topic QoS):
-``durability``, ``reliability``, ``ownership`` and ``history-depth``.
-Every other field keeps the value from the XML profile.
+Endpoint QoS mode
+"""""""""""""""""
 
-QoS values that the |ddsrouter| learns from remote endpoints during discovery never override the XML profile.
-Fields that are set neither in the XML profile nor in the YAML configuration therefore take the |fastdds| default values (e.g. ``KEEP_LAST`` history with depth ``1``), instead of being adapted to the discovered endpoints.
+The ``endpoint-qos-mode`` tag of the XML Participant sets how a matching XML endpoint profile is applied:
+
+.. list-table::
+    :header-rows: 1
+
+    *   - Value
+        - Behavior
+
+    *   - ``xml-overridable`` (default)
+        - The XML profile is used as base.
+          ``durability``, ``reliability``, ``ownership`` and ``history`` are taken from the :ref:`Topic QoS <user_manual_configuration_topic_qos>`, with priority:
+          YAML configuration (Manual Topics, Participant Topic QoS or Specs Topic QoS) > QoS discovered from the remote endpoints > |ddsrouter| defaults.
+          Every other policy keeps the value of the XML profile.
+
+    *   - ``xml-standalone``
+        - The XML profile is used as is.
+          Neither the YAML configuration nor the discovered QoS override it.
+
+When no profile is found, the endpoint takes ``durability``, ``reliability``, ``ownership`` and ``history`` from the Topic QoS in both modes.
+The ``endpoint-qos-mode`` tag is only accepted by XML Participants.
+
+.. code-block:: yaml
+
+    - name: xml_participant
+      kind: xml
+      profile: custom_participant_configuration
+      endpoint-qos-mode: xml-standalone          # Use the XML endpoint profiles as is
 
 .. warning::
 
-    Setting ``history-depth`` in the Specs Topic QoS overrides the history of every matching XML profile, even when it is set to its default value of ``5000``.
-    Likewise, if the remote DataWriters use ``EXCLUSIVE_OWNERSHIP_QOS``, set ``ownership`` either in the XML profile or in the YAML configuration, otherwise the DataReaders of the XML Participant will not match them.
+    With ``xml-standalone``, the endpoints of the XML Participant do not adapt to the QoS of the remote endpoints.
+    Make sure the XML profiles are compatible with them; e.g. if the remote DataWriters use ``EXCLUSIVE_OWNERSHIP_QOS``, set it in the ``data_writer`` and ``data_reader`` profiles, otherwise the endpoints of the XML Participant will not match them.
 
 
 Repeater
@@ -166,3 +190,5 @@ Use |fastdds| or |ddsrouter| support to load XML configuration files as explaine
       kind: xml
 
       profile: custom_participant_configuration   # Configure participant with this profile
+
+      endpoint-qos-mode: xml-overridable          # XML endpoint profiles overridden by the Topic QoS (default)

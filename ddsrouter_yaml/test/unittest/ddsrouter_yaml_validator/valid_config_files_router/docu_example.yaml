@@ -190,6 +190,8 @@ participants:
 
     profile: custom_participant_configuration   # Configure participant with this profile
 
+    endpoint-qos-mode: xml-overridable          # XML endpoint profiles overridden by the Topic QoS (default)
+
 # Custom generic forwarding route.
 
 routes:
