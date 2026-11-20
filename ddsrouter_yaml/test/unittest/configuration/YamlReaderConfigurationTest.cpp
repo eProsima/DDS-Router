@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <iostream>
+#include <map>
 
 #include <cpp_utils/testing/gtest_aux.hpp>
 #include <gtest/gtest.h>
@@ -707,76 +708,94 @@ int main(
 }
 
 /**
- * Test load of the endpoint QoS mode of an XML participant in the configuration
+ * Test load of the endpoint QoS mode of the participants in the configuration.
  *
  * CASES:
- * - Not set                                   -> XML_OVERRIDABLE (default)
- * - xml-overridable                           -> XML_OVERRIDABLE
- * - xml-standalone                            -> XML_STANDALONE
- * - Unknown value                             -> ConfigurationException
- * - Set in a participant that is not XML      -> ConfigurationException
+ * - local participant (no XML endpoint profiles)    -> not an XML participant configuration (XML_DISABLED)
+ * - XML participant without endpoint-qos-mode       -> XML_OVERRIDABLE (default)
+ * - XML participant with xml-overridable            -> XML_OVERRIDABLE
+ * - XML participant with xml-standalone             -> XML_STANDALONE
+ * - XML participant with an unknown value           -> ConfigurationException
+ * - endpoint-qos-mode in a participant that is not XML -> ConfigurationException
  */
 TEST(YamlReaderConfigurationTest, xml_participant_endpoint_qos_mode)
 {
-    auto load_xml_participant = [](const std::string& endpoint_qos_mode)
-            {
-                std::string yml_configuration =
-                        "version: v5.0\n"
-                        "participants:\n"
-                        "  - name: P1\n"
-                        "    kind: echo\n"
-                        "  - name: P2\n"
-                        "    kind: xml\n"
-                        "    profile: participant_profile\n";
+    // One participant for each endpoint QoS mode
+    {
+        const char* yml_configuration =
+                R"(
+            version: v5.0
+            participants:
+              - name: local_participant
+                kind: local
+                domain: 0
+              - name: xml_default_participant
+                kind: xml
+                profile: participant_profile
+              - name: xml_overridable_participant
+                kind: xml
+                profile: participant_profile
+                endpoint-qos-mode: xml-overridable
+              - name: xml_standalone_participant
+                kind: xml
+                profile: participant_profile
+                endpoint-qos-mode: xml-standalone
+            )";
 
-                if (!endpoint_qos_mode.empty())
+        ddsrouter::core::DdsRouterConfiguration configuration =
+                ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(YAML::Load(yml_configuration));
+
+        std::map<std::string, std::shared_ptr<ddspipe::participants::ParticipantConfiguration>> participants;
+        for (const auto& participant : configuration.participants_configurations)
+        {
+            participants[participant.second->id] = participant.second;
+        }
+        ASSERT_EQ(4u, participants.size());
+
+        auto endpoint_qos_mode = [&participants](const std::string& name)
                 {
-                    yml_configuration += "    endpoint-qos-mode: " + endpoint_qos_mode + "\n";
-                }
+                    auto xml_configuration =
+                            std::dynamic_pointer_cast<ddspipe::participants::XmlParticipantConfiguration>(
+                        participants.at(name));
+                    EXPECT_NE(nullptr, xml_configuration) << name << " is not an XML participant";
+                    return xml_configuration ? xml_configuration->endpoint_qos_mode
+                                             : ddspipe::participants::EndpointQoSMode::XML_DISABLED;
+                };
 
-                ddsrouter::core::DdsRouterConfiguration configuration =
-                        ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(
-                    YAML::Load(yml_configuration));
+        // XML_DISABLED: the local participant is not an XML participant, so it never looks up XML endpoint profiles
+        EXPECT_EQ(nullptr,
+                std::dynamic_pointer_cast<ddspipe::participants::XmlParticipantConfiguration>(
+                    participants.at("local_participant")));
 
-                for (const auto& participant : configuration.participants_configurations)
-                {
-                    if (participant.first == ddsrouter::core::types::ParticipantKind::xml)
-                    {
-                        auto xml_configuration =
-                                std::dynamic_pointer_cast<ddspipe::participants::XmlParticipantConfiguration>(
-                            participant.second);
-                        EXPECT_NE(nullptr, xml_configuration);
-                        return xml_configuration;
-                    }
-                }
+        // XML_OVERRIDABLE
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE,
+                endpoint_qos_mode("xml_default_participant"));
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE,
+                endpoint_qos_mode("xml_overridable_participant"));
 
-                ADD_FAILURE() << "XML participant not found in the configuration";
-                return std::shared_ptr<ddspipe::participants::XmlParticipantConfiguration>();
-            };
-
-    // Not set
-    {
-        auto xml_configuration = load_xml_participant("");
-        ASSERT_NE(nullptr, xml_configuration);
-        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE, xml_configuration->endpoint_qos_mode);
-    }
-
-    // xml-overridable
-    {
-        auto xml_configuration = load_xml_participant(ddspipe::yaml::ENDPOINT_QOS_MODE_XML_OVERRIDABLE_TAG);
-        ASSERT_NE(nullptr, xml_configuration);
-        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_OVERRIDABLE, xml_configuration->endpoint_qos_mode);
-    }
-
-    // xml-standalone
-    {
-        auto xml_configuration = load_xml_participant(ddspipe::yaml::ENDPOINT_QOS_MODE_XML_STANDALONE_TAG);
-        ASSERT_NE(nullptr, xml_configuration);
-        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_STANDALONE, xml_configuration->endpoint_qos_mode);
+        // XML_STANDALONE
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_STANDALONE,
+                endpoint_qos_mode("xml_standalone_participant"));
     }
 
     // Unknown value
-    EXPECT_THROW(load_xml_participant("xml-only"), utils::ConfigurationException);
+    {
+        const char* yml_configuration =
+                R"(
+            version: v5.0
+            participants:
+              - name: P1
+                kind: echo
+              - name: P2
+                kind: xml
+                profile: participant_profile
+                endpoint-qos-mode: xml-only
+            )";
+
+        EXPECT_THROW(
+            ddsrouter::yaml::YamlReaderConfiguration::load_ddsrouter_configuration(YAML::Load(yml_configuration)),
+            utils::ConfigurationException);
+    }
 
     // Set in a participant that is not XML
     {

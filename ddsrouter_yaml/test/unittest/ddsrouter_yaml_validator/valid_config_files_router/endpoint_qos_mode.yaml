@@ -1,0 +1,25 @@
+version: v5.0
+
+participants:
+
+  # Not an XML participant: XML endpoint profiles are never looked up (XML_DISABLED)
+  - name: local_participant
+    kind: local
+    domain: 0
+
+  # XML participant without endpoint-qos-mode: xml-overridable by default (XML_OVERRIDABLE)
+  - name: xml_default_participant
+    kind: xml
+    profile: participant_profile
+
+  # XML profile as base, overridden by the Topic QoS (XML_OVERRIDABLE)
+  - name: xml_overridable_participant
+    kind: xml
+    profile: participant_profile
+    endpoint-qos-mode: xml-overridable
+
+  # XML profile used as is (XML_STANDALONE)
+  - name: xml_standalone_participant
+    kind: xml
+    profile: participant_profile
+    endpoint-qos-mode: xml-standalone

@@ -32,6 +32,7 @@ std::string schema_path = "./ddsrouter_config_schema.json";
 // Vectors with the valid and invalid YAML files
 std::vector<std::string> valid_files = {
     "./valid_config_files_router/docu_example.yaml",
+    "./valid_config_files_router/endpoint_qos_mode.yaml",
     "./valid_config_files_router/schema_rules.yaml",
     // Config files copied automatically from DDS-Router/docs/resources/getting_started
     "./valid_config_files_router/client-ddsrouter.yaml",
