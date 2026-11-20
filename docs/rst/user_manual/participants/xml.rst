@@ -156,6 +156,7 @@ The ``endpoint-qos-mode`` tag of the XML Participant sets how a matching XML end
 
 When no profile is found, the endpoint takes ``durability``, ``reliability``, ``ownership`` and ``history`` from the Topic QoS in both modes.
 The ``endpoint-qos-mode`` tag is only accepted by XML Participants.
+The endpoints of any other Participant kind never look up XML endpoint profiles, so they always take their QoS from the Topic QoS.
 
 .. code-block:: yaml
 
