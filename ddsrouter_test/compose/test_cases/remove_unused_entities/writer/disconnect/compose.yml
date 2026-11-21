@@ -1,0 +1,90 @@
+# Test description:
+#   This test checks that tracks get deleted when their last publisher disconnects.
+#
+# Test architecture:
+#
+# 1. Check that the subscribers connect to the publisher.
+#
+# ┌───────────────────┐            ┌────────────────────┐
+# │  Domain 80        │            │         Domain 81  │
+# │ ┌──────────────┐ ┌┼────────────┼┐ ┌───────────────┐ │
+# │ │publisher_0_t0│ ││  ddsrouter ││ │subscriber_1_t0│ │
+# │ │             ─┼─┼┤►          ─┼┼─┤►              │ │
+# │ │(local)       │ ││  (local)   ││ │(local)        │ │
+# │ └──────────────┘ └┼──────────┬─┼┘ └───────────────┘ │
+# │                   │          │ │                    │
+# └───────────────────┘          │ │  ┌───────────────┐ │
+#                                │ │  │subscriber_2_t0│ │
+#                                └─┼──┤►              │ │
+#                                  │  │(local)        │ │
+#                                  │  └───────────────┘ │
+#                                  │                    │
+#                                  └────────────────────┘
+#
+# 2. Check that when the publisher disconnects the track gets deleted.
+#
+# ┌───────────────────┐             ┌────────────────────┐
+# │  Domain 80        │             │         Domain 81  │
+# │                  ┌┼─────────────┼┐ ┌───────────────┐ │
+# │                  ││  ddsrouter  ││ │subscriber_2_t0| │
+# │                  ││             ││ │               │ │
+# │                  ││  (local)    ││ │(local)        │ │
+# │                  └┼─────────────┼┘ └───────────────┘ │
+# │                   │             │                    │
+# └───────────────────┘             └────────────────────┘
+#
+
+services:
+
+  # ROUTER
+  ddsrouter:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ./ddsrouter.yaml:/config.yaml
+    command: ddsrouter -c /config.yaml --timeout 10
+
+  # DOMAIN 80
+  publisher_0_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: publisher_0_t0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_publisher.py --exe build/fastdds_configuration_example/configuration --timeout 4 --args "--samples 40 --domain 80 --name topic0 --interval 100"
+
+  # DOMAIN 81
+
+  # Subscriber to verify the track has been created
+  subscriber_1_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_1_t0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --samples 10 --timeout 8 --args "--domain 81 --samples 10 --name topic0"
+
+  # Subscriber to verify the track has been deleted
+  subscriber_2_t0:
+    image: ${DDSROUTER_COMPOSE_TEST_DOCKER_IMAGE}
+    container_name: subscriber_2_t0
+    depends_on:
+      - ddsrouter
+    networks:
+      - std_net
+    volumes:
+      - ../../../../scripts:/scripts
+    command: python3 /scripts/execute_and_validate_subscriber.py --exe build/fastdds_configuration_example/configuration --n-unmatches 1 --timeout 8 --args "--domain 81 --name topic0"
+
+networks:
+  std_net:
+  default:
+    driver: none
