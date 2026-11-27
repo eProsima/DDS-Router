@@ -40,6 +40,7 @@ set(TEST_LIST
         max_tx_rate
         max_rx_rate
         downsampling
+        xml_participant_endpoint_qos_mode
     )
 
 set(TEST_EXTRA_LIBRARIES

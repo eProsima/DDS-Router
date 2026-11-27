@@ -1,0 +1,11 @@
+version: v5.0
+
+participants:
+
+  - name: EchoParticipant
+    kind: echo
+
+  - name: simple_participant
+    kind: local
+    domain: 0
+    endpoint-qos-mode: xml-standalone

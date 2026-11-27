@@ -481,6 +481,14 @@
                 },
                 "profile":{
                     "type":"string"
+                },
+                "endpoint-qos-mode":{
+                    "type":"string",
+                    "enum":[
+                        "xml-overridable",
+                        "xml-standalone",
+                        "disabled"
+                    ]
                 }
             },
             "required":[
@@ -560,6 +568,11 @@
                                 "not":{
 
                                 }
+                            },
+                            "endpoint-qos-mode":{
+                                "not":{
+
+                                }
                             }
                         }
                     }
@@ -621,6 +634,11 @@
                                         }
                                     },
                                     "profile":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "endpoint-qos-mode":{
                                         "not":{
 
                                         }
@@ -715,6 +733,11 @@
                                         "not":{
 
                                         }
+                                    },
+                                    "endpoint-qos-mode":{
+                                        "not":{
+
+                                        }
                                     }
                                 }
                             },
@@ -788,6 +811,11 @@
                                         }
                                     },
                                     "profile":{
+                                        "not":{
+
+                                        }
+                                    },
+                                    "endpoint-qos-mode":{
                                         "not":{
 
                                         }

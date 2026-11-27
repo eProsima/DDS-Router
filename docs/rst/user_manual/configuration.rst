@@ -746,6 +746,7 @@ The tags of a Participant are arranged as follows, and the sections below follow
         tls: ...                      # TLS configuration (see WAN Configuration)
 
         profile: ...                  # XML profile of an XML Participant
+        endpoint-qos-mode: ...        # How the XML endpoint profiles are applied in an XML Participant
 
         qos: ...                      # Topic QoS of the Participant
 
@@ -1062,6 +1063,19 @@ It will use such profile for configuring the Participant.
 
     profile: participant_custom_configuration
 
+.. _user_manual_configuration_endpoint_qos_mode:
+
+Endpoint QoS mode
+-----------------
+
+Tag ``endpoint-qos-mode`` sets how an :ref:`XML Participant <user_manual_participants_xml>` applies the XML endpoint
+profiles: ``xml-overridable`` (default), ``xml-standalone`` or ``disabled``.
+See :ref:`user_manual_participants_xml_endpoint_qos_mode`.
+
+.. code-block:: yaml
+
+    endpoint-qos-mode: xml-standalone
+
 
 .. _user_manual_configuration_participant_topic_qos:
 
@@ -1356,6 +1370,8 @@ A complete example of all the configurations described on this page can be found
         kind: xml
 
         profile: custom_participant_configuration   # Configure participant with this profile
+
+        endpoint-qos-mode: xml-overridable          # XML endpoint profiles overridden by the Topic QoS (default)
 
     # Custom generic forwarding route.
 
