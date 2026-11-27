@@ -12,4 +12,4 @@ Next release will include the following **features**:
   (see :ref:`Endpoint QoS mode <user_manual_participants_xml_endpoint_qos_mode>`).
   By default (``xml-overridable``), the profile is used as base and its durability, reliability, ownership and history
   are taken from the YAML configuration or from the discovered remote endpoints; ``xml-standalone`` applies the profile
-  as is.
+  as is; ``disabled`` does not look up any XML endpoint profile.

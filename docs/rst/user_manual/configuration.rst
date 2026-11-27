@@ -1069,7 +1069,7 @@ Endpoint QoS mode
 -----------------
 
 Tag ``endpoint-qos-mode`` sets how an :ref:`XML Participant <user_manual_participants_xml>` applies the XML endpoint
-profiles: ``xml-overridable`` (default) or ``xml-standalone``.
+profiles: ``xml-overridable`` (default), ``xml-standalone`` or ``disabled``.
 See :ref:`user_manual_participants_xml_endpoint_qos_mode`.
 
 .. code-block:: yaml

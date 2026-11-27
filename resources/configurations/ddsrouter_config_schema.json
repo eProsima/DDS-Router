@@ -486,7 +486,8 @@
                     "type":"string",
                     "enum":[
                         "xml-overridable",
-                        "xml-standalone"
+                        "xml-standalone",
+                        "disabled"
                     ]
                 }
             },

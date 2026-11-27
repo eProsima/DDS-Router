@@ -154,7 +154,11 @@ The ``endpoint-qos-mode`` tag of the XML Participant sets how a matching XML end
         - The XML profile is used as is.
           Neither the YAML configuration nor the discovered QoS override it.
 
-When no profile is found, the endpoint takes ``durability``, ``reliability``, ``ownership`` and ``history`` from the Topic QoS in both modes.
+    *   - ``disabled``
+        - No XML endpoint profile is looked up, as if none were loaded: the endpoints take their QoS from the :ref:`Topic QoS <user_manual_configuration_topic_qos>`.
+          Useful to stop applying the XML endpoint profiles without removing them from the XML configuration.
+
+When no profile is found, the endpoint takes ``durability``, ``reliability``, ``ownership`` and ``history`` from the Topic QoS with ``xml-overridable`` and ``xml-standalone``.
 The ``endpoint-qos-mode`` tag is only accepted by XML Participants.
 The endpoints of any other Participant kind never look up XML endpoint profiles, so they always take their QoS from the Topic QoS.
 
