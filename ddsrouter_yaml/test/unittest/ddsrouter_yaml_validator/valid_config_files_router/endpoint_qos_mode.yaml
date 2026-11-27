@@ -23,3 +23,9 @@ participants:
     kind: xml
     profile: participant_profile
     endpoint-qos-mode: xml-standalone
+
+  # XML endpoint profiles not looked up (XML_DISABLED)
+  - name: xml_disabled_participant
+    kind: xml
+    profile: participant_profile
+    endpoint-qos-mode: disabled

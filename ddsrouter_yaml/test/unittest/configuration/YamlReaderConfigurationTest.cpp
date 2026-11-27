@@ -715,6 +715,7 @@ int main(
  * - XML participant without endpoint-qos-mode       -> XML_OVERRIDABLE (default)
  * - XML participant with xml-overridable            -> XML_OVERRIDABLE
  * - XML participant with xml-standalone             -> XML_STANDALONE
+ * - XML participant with disabled                   -> XML_DISABLED
  * - XML participant with an unknown value           -> ConfigurationException
  * - endpoint-qos-mode in a participant that is not XML -> ConfigurationException
  */
@@ -740,6 +741,10 @@ TEST(YamlReaderConfigurationTest, xml_participant_endpoint_qos_mode)
                 kind: xml
                 profile: participant_profile
                 endpoint-qos-mode: xml-standalone
+              - name: xml_disabled_participant
+                kind: xml
+                profile: participant_profile
+                endpoint-qos-mode: disabled
             )";
 
         ddsrouter::core::DdsRouterConfiguration configuration =
@@ -750,7 +755,7 @@ TEST(YamlReaderConfigurationTest, xml_participant_endpoint_qos_mode)
         {
             participants[participant.second->id] = participant.second;
         }
-        ASSERT_EQ(4u, participants.size());
+        ASSERT_EQ(5u, participants.size());
 
         auto endpoint_qos_mode = [&participants](const std::string& name)
                 {
@@ -776,6 +781,10 @@ TEST(YamlReaderConfigurationTest, xml_participant_endpoint_qos_mode)
         // XML_STANDALONE
         EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_STANDALONE,
                 endpoint_qos_mode("xml_standalone_participant"));
+
+        // XML_DISABLED: XML participant that does not look up XML endpoint profiles
+        EXPECT_EQ(ddspipe::participants::EndpointQoSMode::XML_DISABLED,
+                endpoint_qos_mode("xml_disabled_participant"));
     }
 
     // Unknown value
